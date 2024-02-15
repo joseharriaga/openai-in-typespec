@@ -171,17 +171,6 @@ namespace OpenAI
             return message;
         }
 
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
-        internal static RequestOptions FromCancellationToken(CancellationToken cancellationToken = default)
-        {
-            if (!cancellationToken.CanBeCanceled)
-            {
-                return DefaultRequestContext;
-            }
-
-            return new RequestOptions() { CancellationToken = cancellationToken };
-        }
-
         private static PipelineMessageClassifier _responseErrorClassifier200;
         private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
     }

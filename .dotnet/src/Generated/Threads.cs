@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class Threads
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of Threads for mocking. </summary>
         protected Threads()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of Threads. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Threads(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal Threads(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -51,7 +51,7 @@ namespace OpenAI
         /// <param name="thread"> The <see cref="CreateThreadRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="thread"/> is null. </exception>
-        public virtual async Task<Result<ThreadObject>> CreateThreadAsync(CreateThreadRequest thread, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ThreadObject>> CreateThreadAsync(CreateThreadRequest thread, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(thread, nameof(thread));
 
@@ -65,7 +65,7 @@ namespace OpenAI
         /// <param name="thread"> The <see cref="CreateThreadRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="thread"/> is null. </exception>
-        public virtual Result<ThreadObject> CreateThread(CreateThreadRequest thread, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ThreadObject> CreateThread(CreateThreadRequest thread, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(thread, nameof(thread));
 
@@ -156,7 +156,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<ThreadObject>> GetThreadAsync(string threadId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ThreadObject>> GetThreadAsync(string threadId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
@@ -170,7 +170,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<ThreadObject> GetThread(string threadId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ThreadObject> GetThread(string threadId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
@@ -263,7 +263,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="thread"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<ThreadObject>> ModifyThreadAsync(string threadId, ModifyThreadRequest thread, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ThreadObject>> ModifyThreadAsync(string threadId, ModifyThreadRequest thread, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNull(thread, nameof(thread));
@@ -280,7 +280,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="thread"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<ThreadObject> ModifyThread(string threadId, ModifyThreadRequest thread, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ThreadObject> ModifyThread(string threadId, ModifyThreadRequest thread, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNull(thread, nameof(thread));
@@ -378,7 +378,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<DeleteThreadResponse>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<DeleteThreadResponse>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
@@ -392,7 +392,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<DeleteThreadResponse> DeleteThread(string threadId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<DeleteThreadResponse> DeleteThread(string threadId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
 

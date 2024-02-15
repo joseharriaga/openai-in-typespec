@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class Embeddings
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of Embeddings for mocking. </summary>
         protected Embeddings()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of Embeddings. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Embeddings(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal Embeddings(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -51,7 +51,7 @@ namespace OpenAI
         /// <param name="embedding"> The <see cref="CreateEmbeddingRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="embedding"/> is null. </exception>
-        public virtual async Task<Result<CreateEmbeddingResponse>> CreateEmbeddingAsync(CreateEmbeddingRequest embedding, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<CreateEmbeddingResponse>> CreateEmbeddingAsync(CreateEmbeddingRequest embedding, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(embedding, nameof(embedding));
 
@@ -65,7 +65,7 @@ namespace OpenAI
         /// <param name="embedding"> The <see cref="CreateEmbeddingRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="embedding"/> is null. </exception>
-        public virtual Result<CreateEmbeddingResponse> CreateEmbedding(CreateEmbeddingRequest embedding, CancellationToken cancellationToken = default)
+        public virtual ClientResult<CreateEmbeddingResponse> CreateEmbedding(CreateEmbeddingRequest embedding, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(embedding, nameof(embedding));
 

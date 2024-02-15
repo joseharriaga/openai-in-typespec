@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class Assistants
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of Assistants for mocking. </summary>
         protected Assistants()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of Assistants. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Assistants(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal Assistants(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -51,7 +51,7 @@ namespace OpenAI
         /// <param name="assistant"> The <see cref="CreateAssistantRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistant"/> is null. </exception>
-        public virtual async Task<Result<AssistantObject>> CreateAssistantAsync(CreateAssistantRequest assistant, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<AssistantObject>> CreateAssistantAsync(CreateAssistantRequest assistant, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(assistant, nameof(assistant));
 
@@ -65,7 +65,7 @@ namespace OpenAI
         /// <param name="assistant"> The <see cref="CreateAssistantRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistant"/> is null. </exception>
-        public virtual Result<AssistantObject> CreateAssistant(CreateAssistantRequest assistant, CancellationToken cancellationToken = default)
+        public virtual ClientResult<AssistantObject> CreateAssistant(CreateAssistantRequest assistant, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(assistant, nameof(assistant));
 
@@ -171,7 +171,7 @@ namespace OpenAI
         /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
         /// </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Result<ListAssistantsResponse>> GetAssistantsAsync(int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListAssistantsResponse>> GetAssistantsAsync(int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             RequestOptions context = FromCancellationToken(cancellationToken);
             Result result = await GetAssistantsAsync(limit, order?.ToString(), after, before, context).ConfigureAwait(false);
@@ -198,7 +198,7 @@ namespace OpenAI
         /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
         /// </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Result<ListAssistantsResponse> GetAssistants(int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListAssistantsResponse> GetAssistants(int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             RequestOptions context = FromCancellationToken(cancellationToken);
             Result result = GetAssistants(limit, order?.ToString(), after, before, context);
@@ -314,7 +314,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<AssistantObject>> GetAssistantAsync(string assistantId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<AssistantObject>> GetAssistantAsync(string assistantId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
@@ -328,7 +328,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<AssistantObject> GetAssistant(string assistantId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<AssistantObject> GetAssistant(string assistantId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
@@ -421,7 +421,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="assistant"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<AssistantObject>> ModifyAssistantAsync(string assistantId, ModifyAssistantRequest assistant, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<AssistantObject>> ModifyAssistantAsync(string assistantId, ModifyAssistantRequest assistant, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             ClientUtilities.AssertNotNull(assistant, nameof(assistant));
@@ -438,7 +438,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="assistant"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<AssistantObject> ModifyAssistant(string assistantId, ModifyAssistantRequest assistant, CancellationToken cancellationToken = default)
+        public virtual ClientResult<AssistantObject> ModifyAssistant(string assistantId, ModifyAssistantRequest assistant, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             ClientUtilities.AssertNotNull(assistant, nameof(assistant));
@@ -536,7 +536,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<DeleteAssistantResponse>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<DeleteAssistantResponse>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
@@ -550,7 +550,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<DeleteAssistantResponse> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<DeleteAssistantResponse> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
@@ -646,7 +646,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="file"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<AssistantFileObject>> CreateAssistantFileAsync(string assistantId, CreateAssistantFileRequest file, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<AssistantFileObject>> CreateAssistantFileAsync(string assistantId, CreateAssistantFileRequest file, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             ClientUtilities.AssertNotNull(file, nameof(file));
@@ -666,7 +666,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="file"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<AssistantFileObject> CreateAssistantFile(string assistantId, CreateAssistantFileRequest file, CancellationToken cancellationToken = default)
+        public virtual ClientResult<AssistantFileObject> CreateAssistantFile(string assistantId, CreateAssistantFileRequest file, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             ClientUtilities.AssertNotNull(file, nameof(file));
@@ -784,7 +784,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<ListAssistantFilesResponse>> GetAssistantFilesAsync(string assistantId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListAssistantFilesResponse>> GetAssistantFilesAsync(string assistantId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
@@ -816,7 +816,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<ListAssistantFilesResponse> GetAssistantFiles(string assistantId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListAssistantFilesResponse> GetAssistantFiles(string assistantId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
@@ -945,7 +945,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<AssistantFileObject>> GetAssistantFileAsync(string assistantId, string fileId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<AssistantFileObject>> GetAssistantFileAsync(string assistantId, string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -961,7 +961,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<AssistantFileObject> GetAssistantFile(string assistantId, string fileId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<AssistantFileObject> GetAssistantFile(string assistantId, string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -1059,7 +1059,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<DeleteAssistantFileResponse>> DeleteAssistantFileAsync(string assistantId, string fileId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<DeleteAssistantFileResponse>> DeleteAssistantFileAsync(string assistantId, string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -1075,7 +1075,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<DeleteAssistantFileResponse> DeleteAssistantFile(string assistantId, string fileId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<DeleteAssistantFileResponse> DeleteAssistantFile(string assistantId, string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));

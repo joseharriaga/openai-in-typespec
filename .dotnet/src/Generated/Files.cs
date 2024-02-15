@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class Files
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of Files for mocking. </summary>
         protected Files()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of Files. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Files(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal Files(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -60,7 +60,7 @@ namespace OpenAI
         /// <param name="file"> The <see cref="CreateFileRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-        public virtual async Task<Result<OpenAIFile>> CreateFileAsync(CreateFileRequest file, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<OpenAIFile>> CreateFileAsync(CreateFileRequest file, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(file, nameof(file));
 
@@ -83,7 +83,7 @@ namespace OpenAI
         /// <param name="file"> The <see cref="CreateFileRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-        public virtual Result<OpenAIFile> CreateFile(CreateFileRequest file, CancellationToken cancellationToken = default)
+        public virtual ClientResult<OpenAIFile> CreateFile(CreateFileRequest file, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(file, nameof(file));
 
@@ -186,7 +186,7 @@ namespace OpenAI
         /// <summary> Returns a list of files that belong to the user's organization. </summary>
         /// <param name="purpose"> Only return files with the given purpose. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Result<ListFilesResponse>> GetFilesAsync(string purpose = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListFilesResponse>> GetFilesAsync(string purpose = null, CancellationToken cancellationToken = default)
         {
             RequestOptions context = FromCancellationToken(cancellationToken);
             Result result = await GetFilesAsync(purpose, context).ConfigureAwait(false);
@@ -196,7 +196,7 @@ namespace OpenAI
         /// <summary> Returns a list of files that belong to the user's organization. </summary>
         /// <param name="purpose"> Only return files with the given purpose. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Result<ListFilesResponse> GetFiles(string purpose = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListFilesResponse> GetFiles(string purpose = null, CancellationToken cancellationToken = default)
         {
             RequestOptions context = FromCancellationToken(cancellationToken);
             Result result = GetFiles(purpose, context);
@@ -278,7 +278,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<OpenAIFile>> RetrieveFileAsync(string fileId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<OpenAIFile>> RetrieveFileAsync(string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -292,7 +292,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<OpenAIFile> RetrieveFile(string fileId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<OpenAIFile> RetrieveFile(string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -384,7 +384,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<DeleteFileResponse>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<DeleteFileResponse>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -398,7 +398,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<DeleteFileResponse> DeleteFile(string fileId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<DeleteFileResponse> DeleteFile(string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -490,7 +490,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<string>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<string>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -504,7 +504,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<string> DownloadFile(string fileId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<string> DownloadFile(string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fileId, nameof(fileId));
 

@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class FineTuningJobs
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of FineTuningJobs for mocking. </summary>
         protected FineTuningJobs()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of FineTuningJobs. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal FineTuningJobs(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal FineTuningJobs(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -58,7 +58,7 @@ namespace OpenAI
         /// <param name="job"> The <see cref="CreateFineTuningJobRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="job"/> is null. </exception>
-        public virtual async Task<Result<FineTuningJob>> CreateFineTuningJobAsync(CreateFineTuningJobRequest job, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<FineTuningJob>> CreateFineTuningJobAsync(CreateFineTuningJobRequest job, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(job, nameof(job));
 
@@ -79,7 +79,7 @@ namespace OpenAI
         /// <param name="job"> The <see cref="CreateFineTuningJobRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="job"/> is null. </exception>
-        public virtual Result<FineTuningJob> CreateFineTuningJob(CreateFineTuningJobRequest job, CancellationToken cancellationToken = default)
+        public virtual ClientResult<FineTuningJob> CreateFineTuningJob(CreateFineTuningJobRequest job, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(job, nameof(job));
 
@@ -178,7 +178,7 @@ namespace OpenAI
         /// <param name="after"> Identifier for the last job from the previous pagination request. </param>
         /// <param name="limit"> Number of fine-tuning jobs to retrieve. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Result<ListPaginatedFineTuningJobsResponse>> GetPaginatedFineTuningJobsAsync(string after = null, long? limit = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListPaginatedFineTuningJobsResponse>> GetPaginatedFineTuningJobsAsync(string after = null, long? limit = null, CancellationToken cancellationToken = default)
         {
             RequestOptions context = FromCancellationToken(cancellationToken);
             Result result = await GetPaginatedFineTuningJobsAsync(after, limit, context).ConfigureAwait(false);
@@ -188,7 +188,7 @@ namespace OpenAI
         /// <param name="after"> Identifier for the last job from the previous pagination request. </param>
         /// <param name="limit"> Number of fine-tuning jobs to retrieve. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Result<ListPaginatedFineTuningJobsResponse> GetPaginatedFineTuningJobs(string after = null, long? limit = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListPaginatedFineTuningJobsResponse> GetPaginatedFineTuningJobs(string after = null, long? limit = null, CancellationToken cancellationToken = default)
         {
             RequestOptions context = FromCancellationToken(cancellationToken);
             Result result = GetPaginatedFineTuningJobs(after, limit, context);
@@ -276,7 +276,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<FineTuningJob>> RetrieveFineTuningJobAsync(string fineTuningJobId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<FineTuningJob>> RetrieveFineTuningJobAsync(string fineTuningJobId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -294,7 +294,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<FineTuningJob> RetrieveFineTuningJob(string fineTuningJobId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<FineTuningJob> RetrieveFineTuningJob(string fineTuningJobId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -392,7 +392,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<ListFineTuningJobEventsResponse>> GetFineTuningEventsAsync(string fineTuningJobId, string after = null, int? limit = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListFineTuningJobEventsResponse>> GetFineTuningEventsAsync(string fineTuningJobId, string after = null, int? limit = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -408,7 +408,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<ListFineTuningJobEventsResponse> GetFineTuningEvents(string fineTuningJobId, string after = null, int? limit = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListFineTuningJobEventsResponse> GetFineTuningEvents(string fineTuningJobId, string after = null, int? limit = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -504,7 +504,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<FineTuningJob>> CancelFineTuningJobAsync(string fineTuningJobId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<FineTuningJob>> CancelFineTuningJobAsync(string fineTuningJobId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -518,7 +518,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<FineTuningJob> CancelFineTuningJob(string fineTuningJobId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<FineTuningJob> CancelFineTuningJob(string fineTuningJobId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 

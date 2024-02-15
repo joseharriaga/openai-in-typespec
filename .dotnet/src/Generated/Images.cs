@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class Images
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of Images for mocking. </summary>
         protected Images()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of Images. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Images(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal Images(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -51,7 +51,7 @@ namespace OpenAI
         /// <param name="image"> The <see cref="CreateImageRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="image"/> is null. </exception>
-        public virtual async Task<Result<ImagesResponse>> CreateImageAsync(CreateImageRequest image, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ImagesResponse>> CreateImageAsync(CreateImageRequest image, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(image, nameof(image));
 
@@ -65,7 +65,7 @@ namespace OpenAI
         /// <param name="image"> The <see cref="CreateImageRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="image"/> is null. </exception>
-        public virtual Result<ImagesResponse> CreateImage(CreateImageRequest image, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ImagesResponse> CreateImage(CreateImageRequest image, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(image, nameof(image));
 
@@ -155,7 +155,7 @@ namespace OpenAI
         /// <param name="image"> The <see cref="CreateImageEditRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="image"/> is null. </exception>
-        public virtual async Task<Result<ImagesResponse>> CreateImageEditAsync(CreateImageEditRequest image, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ImagesResponse>> CreateImageEditAsync(CreateImageEditRequest image, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(image, nameof(image));
 
@@ -169,7 +169,7 @@ namespace OpenAI
         /// <param name="image"> The <see cref="CreateImageEditRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="image"/> is null. </exception>
-        public virtual Result<ImagesResponse> CreateImageEdit(CreateImageEditRequest image, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ImagesResponse> CreateImageEdit(CreateImageEditRequest image, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(image, nameof(image));
 
@@ -259,7 +259,7 @@ namespace OpenAI
         /// <param name="image"> The <see cref="CreateImageVariationRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="image"/> is null. </exception>
-        public virtual async Task<Result<ImagesResponse>> CreateImageVariationAsync(CreateImageVariationRequest image, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ImagesResponse>> CreateImageVariationAsync(CreateImageVariationRequest image, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(image, nameof(image));
 
@@ -273,7 +273,7 @@ namespace OpenAI
         /// <param name="image"> The <see cref="CreateImageVariationRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="image"/> is null. </exception>
-        public virtual Result<ImagesResponse> CreateImageVariation(CreateImageVariationRequest image, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ImagesResponse> CreateImageVariation(CreateImageVariationRequest image, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(image, nameof(image));
 

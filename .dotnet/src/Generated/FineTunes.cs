@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class FineTunes
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of FineTunes for mocking. </summary>
         protected FineTunes()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of FineTunes. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal FineTunes(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal FineTunes(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -58,7 +58,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fineTune"/> is null. </exception>
         [Obsolete("deprecated")]
-        public virtual async Task<Result<FineTune>> CreateFineTuneAsync(CreateFineTuneRequest fineTune, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<FineTune>> CreateFineTuneAsync(CreateFineTuneRequest fineTune, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(fineTune, nameof(fineTune));
 
@@ -79,7 +79,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fineTune"/> is null. </exception>
         [Obsolete("deprecated")]
-        public virtual Result<FineTune> CreateFineTune(CreateFineTuneRequest fineTune, CancellationToken cancellationToken = default)
+        public virtual ClientResult<FineTune> CreateFineTune(CreateFineTuneRequest fineTune, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(fineTune, nameof(fineTune));
 
@@ -178,7 +178,7 @@ namespace OpenAI
         /// <summary> List your organization's fine-tuning jobs. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         [Obsolete("deprecated")]
-        public virtual async Task<Result<ListFineTunesResponse>> GetFineTunesAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListFineTunesResponse>> GetFineTunesAsync(CancellationToken cancellationToken = default)
         {
             RequestOptions context = FromCancellationToken(cancellationToken);
             Result result = await GetFineTunesAsync(context).ConfigureAwait(false);
@@ -188,7 +188,7 @@ namespace OpenAI
         /// <summary> List your organization's fine-tuning jobs. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         [Obsolete("deprecated")]
-        public virtual Result<ListFineTunesResponse> GetFineTunes(CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListFineTunesResponse> GetFineTunes(CancellationToken cancellationToken = default)
         {
             RequestOptions context = FromCancellationToken(cancellationToken);
             Result result = GetFineTunes(context);
@@ -275,7 +275,7 @@ namespace OpenAI
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuneId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuneId"/> is an empty string, and was expected to be non-empty. </exception>
         [Obsolete("deprecated")]
-        public virtual async Task<Result<FineTune>> RetrieveFineTuneAsync(string fineTuneId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<FineTune>> RetrieveFineTuneAsync(string fineTuneId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuneId, nameof(fineTuneId));
 
@@ -294,7 +294,7 @@ namespace OpenAI
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuneId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuneId"/> is an empty string, and was expected to be non-empty. </exception>
         [Obsolete("deprecated")]
-        public virtual Result<FineTune> RetrieveFineTune(string fineTuneId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<FineTune> RetrieveFineTune(string fineTuneId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuneId, nameof(fineTuneId));
 
@@ -402,7 +402,7 @@ namespace OpenAI
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuneId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuneId"/> is an empty string, and was expected to be non-empty. </exception>
         [Obsolete("deprecated")]
-        public virtual async Task<Result<ListFineTuneEventsResponse>> GetFineTuneEventsAsync(string fineTuneId, bool? stream = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListFineTuneEventsResponse>> GetFineTuneEventsAsync(string fineTuneId, bool? stream = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuneId, nameof(fineTuneId));
 
@@ -426,7 +426,7 @@ namespace OpenAI
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuneId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuneId"/> is an empty string, and was expected to be non-empty. </exception>
         [Obsolete("deprecated")]
-        public virtual Result<ListFineTuneEventsResponse> GetFineTuneEvents(string fineTuneId, bool? stream = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListFineTuneEventsResponse> GetFineTuneEvents(string fineTuneId, bool? stream = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuneId, nameof(fineTuneId));
 
@@ -539,7 +539,7 @@ namespace OpenAI
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuneId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuneId"/> is an empty string, and was expected to be non-empty. </exception>
         [Obsolete("deprecated")]
-        public virtual async Task<Result<FineTune>> CancelFineTuneAsync(string fineTuneId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<FineTune>> CancelFineTuneAsync(string fineTuneId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuneId, nameof(fineTuneId));
 
@@ -554,7 +554,7 @@ namespace OpenAI
         /// <exception cref="ArgumentNullException"> <paramref name="fineTuneId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fineTuneId"/> is an empty string, and was expected to be non-empty. </exception>
         [Obsolete("deprecated")]
-        public virtual Result<FineTune> CancelFineTune(string fineTuneId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<FineTune> CancelFineTune(string fineTuneId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(fineTuneId, nameof(fineTuneId));
 

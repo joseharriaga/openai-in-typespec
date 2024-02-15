@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class Audio
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of Audio for mocking. </summary>
         protected Audio()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of Audio. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Audio(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal Audio(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -51,7 +51,7 @@ namespace OpenAI
         /// <param name="speech"> The <see cref="CreateSpeechRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="speech"/> is null. </exception>
-        public virtual async Task<Result<BinaryData>> CreateSpeechAsync(CreateSpeechRequest speech, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<BinaryData>> CreateSpeechAsync(CreateSpeechRequest speech, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(speech, nameof(speech));
 
@@ -65,7 +65,7 @@ namespace OpenAI
         /// <param name="speech"> The <see cref="CreateSpeechRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="speech"/> is null. </exception>
-        public virtual Result<BinaryData> CreateSpeech(CreateSpeechRequest speech, CancellationToken cancellationToken = default)
+        public virtual ClientResult<BinaryData> CreateSpeech(CreateSpeechRequest speech, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(speech, nameof(speech));
 
@@ -155,7 +155,7 @@ namespace OpenAI
         /// <param name="audio"> The <see cref="CreateTranscriptionRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audio"/> is null. </exception>
-        public virtual async Task<Result<CreateTranscriptionResponse>> CreateTranscriptionAsync(CreateTranscriptionRequest audio, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<CreateTranscriptionResponse>> CreateTranscriptionAsync(CreateTranscriptionRequest audio, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(audio, nameof(audio));
 
@@ -169,7 +169,7 @@ namespace OpenAI
         /// <param name="audio"> The <see cref="CreateTranscriptionRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audio"/> is null. </exception>
-        public virtual Result<CreateTranscriptionResponse> CreateTranscription(CreateTranscriptionRequest audio, CancellationToken cancellationToken = default)
+        public virtual ClientResult<CreateTranscriptionResponse> CreateTranscription(CreateTranscriptionRequest audio, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(audio, nameof(audio));
 
@@ -259,7 +259,7 @@ namespace OpenAI
         /// <param name="audio"> The <see cref="CreateTranslationRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audio"/> is null. </exception>
-        public virtual async Task<Result<CreateTranslationResponse>> CreateTranslationAsync(CreateTranslationRequest audio, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<CreateTranslationResponse>> CreateTranslationAsync(CreateTranslationRequest audio, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(audio, nameof(audio));
 
@@ -273,7 +273,7 @@ namespace OpenAI
         /// <param name="audio"> The <see cref="CreateTranslationRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audio"/> is null. </exception>
-        public virtual Result<CreateTranslationResponse> CreateTranslation(CreateTranslationRequest audio, CancellationToken cancellationToken = default)
+        public virtual ClientResult<CreateTranslationResponse> CreateTranslation(CreateTranslationRequest audio, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(audio, nameof(audio));
 

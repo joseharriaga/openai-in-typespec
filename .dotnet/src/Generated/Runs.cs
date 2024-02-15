@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class Runs
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of Runs for mocking. </summary>
         protected Runs()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of Runs. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Runs(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal Runs(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -51,7 +51,7 @@ namespace OpenAI
         /// <param name="threadAndRun"> The <see cref="CreateThreadAndRunRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadAndRun"/> is null. </exception>
-        public virtual async Task<Result<RunObject>> CreateThreadAndRunAsync(CreateThreadAndRunRequest threadAndRun, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<RunObject>> CreateThreadAndRunAsync(CreateThreadAndRunRequest threadAndRun, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(threadAndRun, nameof(threadAndRun));
 
@@ -65,7 +65,7 @@ namespace OpenAI
         /// <param name="threadAndRun"> The <see cref="CreateThreadAndRunRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadAndRun"/> is null. </exception>
-        public virtual Result<RunObject> CreateThreadAndRun(CreateThreadAndRunRequest threadAndRun, CancellationToken cancellationToken = default)
+        public virtual ClientResult<RunObject> CreateThreadAndRun(CreateThreadAndRunRequest threadAndRun, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNull(threadAndRun, nameof(threadAndRun));
 
@@ -157,7 +157,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="run"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<RunObject>> CreateRunAsync(string threadId, CreateRunRequest run, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<RunObject>> CreateRunAsync(string threadId, CreateRunRequest run, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNull(run, nameof(run));
@@ -174,7 +174,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="run"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<RunObject> CreateRun(string threadId, CreateRunRequest run, CancellationToken cancellationToken = default)
+        public virtual ClientResult<RunObject> CreateRun(string threadId, CreateRunRequest run, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNull(run, nameof(run));
@@ -290,7 +290,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<ListRunsResponse>> GetRunsAsync(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListRunsResponse>> GetRunsAsync(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
@@ -322,7 +322,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<ListRunsResponse> GetRuns(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListRunsResponse> GetRuns(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
@@ -451,7 +451,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<RunObject>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<RunObject>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -467,7 +467,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<RunObject> GetRun(string threadId, string runId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<RunObject> GetRun(string threadId, string runId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -566,7 +566,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="run"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<RunObject>> ModifyRunAsync(string threadId, string runId, ModifyRunRequest run, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<RunObject>> ModifyRunAsync(string threadId, string runId, ModifyRunRequest run, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -585,7 +585,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="run"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<RunObject> ModifyRun(string threadId, string runId, ModifyRunRequest run, CancellationToken cancellationToken = default)
+        public virtual ClientResult<RunObject> ModifyRun(string threadId, string runId, ModifyRunRequest run, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -689,7 +689,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<RunObject>> CancelRunAsync(string threadId, string runId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<RunObject>> CancelRunAsync(string threadId, string runId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -705,7 +705,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<RunObject> CancelRun(string threadId, string runId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<RunObject> CancelRun(string threadId, string runId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -808,7 +808,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="submitToolOutputsRun"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<RunObject>> SubmitToolOuputsToRunAsync(string threadId, string runId, SubmitToolOutputsRunRequest submitToolOutputsRun, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<RunObject>> SubmitToolOuputsToRunAsync(string threadId, string runId, SubmitToolOutputsRunRequest submitToolOutputsRun, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -831,7 +831,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="submitToolOutputsRun"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<RunObject> SubmitToolOuputsToRun(string threadId, string runId, SubmitToolOutputsRunRequest submitToolOutputsRun, CancellationToken cancellationToken = default)
+        public virtual ClientResult<RunObject> SubmitToolOuputsToRun(string threadId, string runId, SubmitToolOutputsRunRequest submitToolOutputsRun, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -957,7 +957,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<ListRunStepsResponse>> GetRunStepsAsync(string threadId, string runId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListRunStepsResponse>> GetRunStepsAsync(string threadId, string runId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -991,7 +991,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<ListRunStepsResponse> GetRunSteps(string threadId, string runId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListRunStepsResponse> GetRunSteps(string threadId, string runId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -1126,7 +1126,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<RunStepObject>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<RunStepObject>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -1144,7 +1144,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<RunStepObject> GetRunStep(string threadId, string runId, string stepId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<RunStepObject> GetRunStep(string threadId, string runId, string stepId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(runId, nameof(runId));

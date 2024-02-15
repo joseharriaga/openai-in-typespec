@@ -18,16 +18,16 @@ namespace OpenAI
     public partial class Messages
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly KeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly MessagePipeline _pipeline;
+        private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal TelemetrySource ClientDiagnostics { get; }
 
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-        public virtual MessagePipeline Pipeline => _pipeline;
+        public virtual ClientPipeline Pipeline => _pipeline;
 
         /// <summary> Initializes a new instance of Messages for mocking. </summary>
         protected Messages()
@@ -37,13 +37,13 @@ namespace OpenAI
         /// <summary> Initializes a new instance of Messages. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
+        /// <param name="credential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Messages(TelemetrySource clientDiagnostics, MessagePipeline pipeline, KeyCredential keyCredential, Uri endpoint)
+        internal Messages(TelemetrySource clientDiagnostics, ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
         {
             ClientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
-            _keyCredential = keyCredential;
+            _credential = credential;
             _endpoint = endpoint;
         }
 
@@ -53,7 +53,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="message"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<MessageObject>> CreateMessageAsync(string threadId, CreateMessageRequest message, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<MessageObject>> CreateMessageAsync(string threadId, CreateMessageRequest message, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNull(message, nameof(message));
@@ -70,7 +70,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="message"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<MessageObject> CreateMessage(string threadId, CreateMessageRequest message, CancellationToken cancellationToken = default)
+        public virtual ClientResult<MessageObject> CreateMessage(string threadId, CreateMessageRequest message, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNull(message, nameof(message));
@@ -186,7 +186,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<ListMessagesResponse>> GetMessagesAsync(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListMessagesResponse>> GetMessagesAsync(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
@@ -218,7 +218,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<ListMessagesResponse> GetMessages(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListMessagesResponse> GetMessages(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
@@ -347,7 +347,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<MessageObject>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<MessageObject>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(messageId, nameof(messageId));
@@ -363,7 +363,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<MessageObject> GetMessage(string threadId, string messageId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<MessageObject> GetMessage(string threadId, string messageId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(messageId, nameof(messageId));
@@ -462,7 +462,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="message"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<MessageObject>> ModifyMessageAsync(string threadId, string messageId, ModifyMessageRequest message, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<MessageObject>> ModifyMessageAsync(string threadId, string messageId, ModifyMessageRequest message, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(messageId, nameof(messageId));
@@ -481,7 +481,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="message"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<MessageObject> ModifyMessage(string threadId, string messageId, ModifyMessageRequest message, CancellationToken cancellationToken = default)
+        public virtual ClientResult<MessageObject> ModifyMessage(string threadId, string messageId, ModifyMessageRequest message, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(messageId, nameof(messageId));
@@ -603,7 +603,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<ListMessageFilesResponse>> GetMessageFilesAsync(string threadId, string messageId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<ListMessageFilesResponse>> GetMessageFilesAsync(string threadId, string messageId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(messageId, nameof(messageId));
@@ -637,7 +637,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<ListMessageFilesResponse> GetMessageFiles(string threadId, string messageId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
+        public virtual ClientResult<ListMessageFilesResponse> GetMessageFiles(string threadId, string messageId, int? limit = null, ListOrder? order = null, string after = null, string before = null, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(messageId, nameof(messageId));
@@ -772,7 +772,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual async Task<Result<MessageFileObject>> GetMessageFileAsync(string threadId, string messageId, string fileId, CancellationToken cancellationToken = default)
+        public virtual async Task<ClientResult<MessageFileObject>> GetMessageFileAsync(string threadId, string messageId, string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(messageId, nameof(messageId));
@@ -790,7 +790,7 @@ namespace OpenAI
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        public virtual Result<MessageFileObject> GetMessageFile(string threadId, string messageId, string fileId, CancellationToken cancellationToken = default)
+        public virtual ClientResult<MessageFileObject> GetMessageFile(string threadId, string messageId, string fileId, CancellationToken cancellationToken = default)
         {
             ClientUtilities.AssertNotNullOrEmpty(threadId, nameof(threadId));
             ClientUtilities.AssertNotNullOrEmpty(messageId, nameof(messageId));

@@ -35,7 +35,7 @@ public partial class ChatCompletionOptions
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.TopP" />
     public double? NucleusSamplingFactor { get; set; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Tools" />
-    public IList<ChatToolDefinition> Tools { get; } = new OptionalList<ChatToolDefinition>();
+    public IList<ChatToolDefinition> Tools { get; init; } = new OptionalList<ChatToolDefinition>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.ToolChoice" />
     public ChatToolConstraint? ToolConstraint { get; set; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.User" />

@@ -4,12 +4,12 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace OpenAI.Chat;
+namespace OpenAI;
 
 public class AzureOpenAIClientOptions : OpenAIClientOptions
 {
     ToAzureRequestPolicy _policy;
-    DeploymentOptions _deployments = new DeploymentOptions();
+    DeploymentsOptions _deployments = new DeploymentsOptions();
 
     public AzureOpenAIClientOptions(Uri endpoint, ApiKeyCredential apiKey, ServiceVersion version = ServiceVersion.V20231201_preview)
     {
@@ -17,7 +17,7 @@ public class AzureOpenAIClientOptions : OpenAIClientOptions
         base.AddPolicy(_policy, PipelinePosition.BeforeTransport);
     }
 
-    public DeploymentOptions Deployments => _deployments;
+    public DeploymentsOptions Deployments => _deployments;
 
     public enum ServiceVersion
     {
@@ -29,9 +29,9 @@ public class AzureOpenAIClientOptions : OpenAIClientOptions
         Uri _endpoint;
         string _version;
         ApiKeyCredential _apiKey;
-        DeploymentOptions _deployments;
+        DeploymentsOptions _deployments;
 
-        public ToAzureRequestPolicy(Uri endpoint, ApiKeyCredential apiKey, ServiceVersion version, DeploymentOptions deployments)
+        public ToAzureRequestPolicy(Uri endpoint, ApiKeyCredential apiKey, ServiceVersion version, DeploymentsOptions deployments)
         {
             _endpoint=endpoint;
             _version=version == ServiceVersion.V20231201_preview ? "2023-12-01-preview" : throw new NotSupportedException();
@@ -71,7 +71,7 @@ public class AzureOpenAIClientOptions : OpenAIClientOptions
     }
 }
 
-public class DeploymentOptions
+public class DeploymentsOptions
 {
     public string Chat { get; set; }
     public string Embeddigs { get; set; }

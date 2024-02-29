@@ -99,16 +99,18 @@ public class AzureExtensionsTests
 
         // helper APIs
         ChatFunctions funtions = new(typeof(MyFunctions));
-        Knowledgebase facts = new(embeddingsClient, embeddingsDeployment);
-        facts.Add("I don't like Washington weather.");
+        Vectorbase vectors = new(embeddingsClient);
+        vectors.Add("I don't like Washington weather.");
 
         ChatCompletionOptions completionOptions = new() { Tools = funtions.Definitions };
         List<ChatRequestMessage> prompt = new();
 
         foreach (var testMessage in testMessages)
         {
-            var relevantFacts = facts.FindRelevant(testMessage);
-            prompt.AddRange(relevantFacts);
+            IEnumerable<VectorbaseEntry> relatedItems = vectors.Find(testMessage);
+            foreach (VectorbaseEntry relatedItem in relatedItems) {
+                prompt.Add(ChatRequestMessage.CreateSystemMessage(relatedItem.Data.ToString()));
+            }
 
             prompt.Add(ChatRequestMessage.CreateUserMessage(testMessage));
 

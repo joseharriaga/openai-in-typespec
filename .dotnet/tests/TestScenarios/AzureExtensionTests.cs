@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenAI.Chat;
+using OpenAI.Embeddings;
 using System;
 using System.ClientModel;
 using System.Collections.Generic;
@@ -13,11 +14,14 @@ public class AzureExtensionsTests
     static readonly string key = Environment.GetEnvironmentVariable("AZ_OPENAI_KEY")!;
     static readonly ApiKeyCredential credential = new(key);
     static readonly string chatDeployment = "gpt35turbo";
+    static readonly string embeddingsDeployment = "embeddingsAda2";
 
     [Test]
     public void HelloChat()
     {
-        var clientOptions = new AzureOpenAIClientOptions(new Uri(endpoint), credential, chatDeployment);
+        var clientOptions = new AzureOpenAIClientOptions(new Uri(endpoint), credential);
+        clientOptions.Deployments.Chat = chatDeployment;
+
         ChatClient client = new ChatClient(model: "", credential, clientOptions);
 
         Assert.That(client, Is.InstanceOf<ChatClient>());
@@ -30,9 +34,10 @@ public class AzureExtensionsTests
     [Test]
     public void ChatWithFunctionCalling()
     {
-        var clientOptions = new AzureOpenAIClientOptions(new Uri(endpoint), credential, chatDeployment);
-        ChatClient client = new ChatClient(model: "", credential, clientOptions);
+        var clientOptions = new AzureOpenAIClientOptions(new Uri(endpoint), credential);
+        clientOptions.Deployments.Chat = chatDeployment;
 
+        ChatClient client = new ChatClient(model: "", credential, clientOptions);
         ChatFunctions funtions = new(typeof(MyFunctions));
 
         List<ChatRequestMessage> prompt = [
@@ -46,7 +51,7 @@ public class AzureExtensionsTests
 
         while (true)
         {
-            CALL_SERVICE:
+        CALL_SERVICE:
             ChatCompletion chatCompletion = client.CompleteChat(prompt, completionOptions);
 
             switch (chatCompletion.FinishReason)
@@ -80,24 +85,34 @@ public class AzureExtensionsTests
     public void ChatRag()
     {
         string[] testMessages = [
-            "How is your day?",
             "What time is it?",
-            "What's the weather in Seattle?"
+            "What's the weather in Seattle?",
+            "Do you think I would like the weather there?"
         ];
 
-        var clientOptions = new AzureOpenAIClientOptions(new Uri(endpoint), credential, chatDeployment);
-        ChatClient client = new ChatClient(model: "", credential, clientOptions);
+        var clientOptions = new AzureOpenAIClientOptions(new Uri(endpoint), credential);
+        clientOptions.Deployments.Chat = chatDeployment;
+        clientOptions.Deployments.Embeddigs = embeddingsDeployment;
 
+        ChatClient client = new(model: "", credential, clientOptions);
+        EmbeddingClient embeddingsClient = new(model: "", credential, clientOptions);
+
+        // helper APIs
         ChatFunctions funtions = new(typeof(MyFunctions));
+        Knowledgebase facts = new(embeddingsClient, embeddingsDeployment);
+        facts.Add("I don't like Washington weather.");
 
         ChatCompletionOptions completionOptions = new() { Tools = funtions.Definitions };
         List<ChatRequestMessage> prompt = new();
 
         foreach (var testMessage in testMessages)
         {
+            var relevantFacts = facts.FindRelevant(testMessage);
+            prompt.AddRange(relevantFacts);
+
             prompt.Add(ChatRequestMessage.CreateUserMessage(testMessage));
 
-            CALL_SERVICE:
+        CALL_SERVICE:
             ChatCompletion chatCompletion = client.CompleteChat(prompt, completionOptions);
 
             switch (chatCompletion.FinishReason)

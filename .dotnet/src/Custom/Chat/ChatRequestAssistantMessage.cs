@@ -110,7 +110,7 @@ public class ChatRequestAssistantMessage : ChatRequestMessage
         {
             writer.WriteString("name"u8, Name);
         }
-        if (OptionalProperty.IsCollectionDefined(ToolCalls))
+        if (OptionalProperty.IsCollectionDefined(ToolCalls) && ToolCalls.Count > 0)
         {
             writer.WritePropertyName("tool_calls"u8);
             writer.WriteStartArray();

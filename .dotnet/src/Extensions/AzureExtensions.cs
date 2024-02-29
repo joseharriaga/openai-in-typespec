@@ -8,10 +8,16 @@ namespace OpenAI.Chat;
 
 public class AzureOpenAIClientOptions : OpenAIClientOptions
 {
-    public AzureOpenAIClientOptions(Uri endpoint, ApiKeyCredential apiKey, string deployment, ServiceVersion version = ServiceVersion.V20231201_preview)
+    ToAzureRequestPolicy _policy;
+    DeploymentOptions _deployments = new DeploymentOptions();
+
+    public AzureOpenAIClientOptions(Uri endpoint, ApiKeyCredential apiKey, ServiceVersion version = ServiceVersion.V20231201_preview)
     {
-        base.AddPolicy(new ToAzureRequestPolicy(endpoint, apiKey, deployment, version), PipelinePosition.BeforeTransport);
+        _policy = new ToAzureRequestPolicy(endpoint, apiKey, version, _deployments);
+        base.AddPolicy(_policy, PipelinePosition.BeforeTransport);
     }
+
+    public DeploymentOptions Deployments => _deployments;
 
     public enum ServiceVersion
     {
@@ -20,30 +26,35 @@ public class AzureOpenAIClientOptions : OpenAIClientOptions
 
     class ToAzureRequestPolicy : PipelinePolicy
     {
-        Uri endpoint;
-        string deployment;
-        string version;
-        ApiKeyCredential apiKey;
+        Uri _endpoint;
+        string _version;
+        ApiKeyCredential _apiKey;
+        DeploymentOptions _deployments;
 
-        public ToAzureRequestPolicy(Uri endpoint, ApiKeyCredential apiKey, string deployment, ServiceVersion version)
+        public ToAzureRequestPolicy(Uri endpoint, ApiKeyCredential apiKey, ServiceVersion version, DeploymentOptions deployments)
         {
-            this.endpoint = endpoint;
-            this.deployment = deployment;
-            this.version = version == ServiceVersion.V20231201_preview ? "2023-12-01-preview" : throw new NotSupportedException();
-            this.apiKey = apiKey;
+            _endpoint=endpoint;
+            _version=version == ServiceVersion.V20231201_preview ? "2023-12-01-preview" : throw new NotSupportedException();
+            _apiKey=apiKey;
+            _deployments=deployments;
         }
 
         private void RewriteRequest(PipelineMessage message)
         {
-            apiKey.Deconstruct(out string key);
+            _apiKey.Deconstruct(out string key);
             message.Request.Headers.Add("api-key", key);
             message.Request.Headers.Remove("Authorization");
 
             var uri = message.Request.Uri.PathAndQuery.ToString();
-            string operation = "";
-            if (uri.EndsWith("chat/completions")) operation = "chat/completions";
+            if (uri.EndsWith("chat/completions"))
+            {
+                message.Request.Uri = new Uri($"{_endpoint}openai/deployments/{_deployments.Chat}/chat/completions?api-version={_version}");
+            }
+            else if (uri.EndsWith("embeddings"))
+            {
+                message.Request.Uri = new Uri($"{_endpoint}openai/deployments/{_deployments.Embeddigs}/embeddings?api-version={_version}");
+            }
             else throw new NotImplementedException();
-            message.Request.Uri = new Uri($"{endpoint}openai/deployments/{deployment}/{operation}?api-version={version}");
         }
 
         public override void Process(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
@@ -59,4 +70,11 @@ public class AzureOpenAIClientOptions : OpenAIClientOptions
         }
     }
 }
+
+public class DeploymentOptions
+{
+    public string Chat { get; set; }
+    public string Embeddigs { get; set; }
+}
+
 

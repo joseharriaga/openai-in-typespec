@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenAI.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -91,7 +92,7 @@ public class ChatFunctions
     {
         var description = function.Name;
         var attribute = function.GetCustomAttribute<DescriptionAttribute>();
-        if (attribute != null)
+        if (attribute!=null)
         {
             description = attribute.Description;
         }
@@ -101,7 +102,7 @@ public class ChatFunctions
     {
         var description = parameter.Name;
         var attribute = parameter.GetCustomAttribute<DescriptionAttribute>();
-        if (attribute != null)
+        if (attribute!=null)
         {
             description = attribute.Description;
         }

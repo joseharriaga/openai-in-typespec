@@ -1,8 +1,6 @@
 using System;
 using System.ClientModel;
-using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace OpenAI.LegacyCompletions;
@@ -16,7 +14,7 @@ namespace OpenAI.LegacyCompletions;
 /// </summary>
 public partial class LegacyCompletionClient
 {
-    private OpenAIClientConnector _clientConnector;
+    private readonly OpenAIClientConnector _clientConnector;
     private Internal.Completions Shim => _clientConnector.InternalClient.GetCompletionsClient();
 
     /// <summary>
@@ -97,10 +95,10 @@ public partial class LegacyCompletionClient
     { }
 
     /// <inheritdoc cref="Internal.Completions.CreateCompletion(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult GenerateLegacyCompletions(BinaryContent content, RequestOptions context = null)
-        => Shim.CreateCompletion(content, context);
+    public virtual ClientResult GenerateLegacyCompletions(BinaryContent content, RequestOptions options = null)
+        => Shim.CreateCompletion(content, options);
 
     /// <inheritdoc cref="Internal.Completions.CreateCompletionAsync(BinaryContent, RequestOptions)"/>
-    public virtual Task<ClientResult> GenerateLegacyCompletionsAsync(BinaryContent content, RequestOptions context = null)
-        => Shim.CreateCompletionAsync(content, context);
+    public virtual async Task<ClientResult> GenerateLegacyCompletionsAsync(BinaryContent content, RequestOptions options = null)
+        => await Shim.CreateCompletionAsync(content, options).ConfigureAwait(false);
 }

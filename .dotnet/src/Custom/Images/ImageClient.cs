@@ -1,10 +1,8 @@
 using System;
 using System.ClientModel;
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.Images;
@@ -12,7 +10,7 @@ namespace OpenAI.Images;
 /// <summary> The service client for OpenAI image operations. </summary>
 public partial class ImageClient
 {
-    private OpenAIClientConnector _clientConnector;
+    private readonly OpenAIClientConnector _clientConnector;
     private Internal.Images Shim => _clientConnector.InternalClient.GetImagesClient();
 
     /// <summary>
@@ -172,15 +170,29 @@ public partial class ImageClient
         return ClientResult.FromValue(new ImageGenerationCollection(ImageGenerations), response.GetRawResponse());
     }
 
-    /// <inheritdoc cref="Internal.Models.Images.CreateImage(BinaryContent, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GenerateImage(BinaryContent content, RequestOptions context = null)
-        => Shim.CreateImage(content, context);
+    /// <inheritdoc cref="Internal.Images.CreateImage(BinaryContent, RequestOptions)"/>
+    public virtual ClientResult GenerateImage(BinaryContent content, RequestOptions options = null)
+        => Shim.CreateImage(content, options);
 
-    /// <inheritdoc cref="Internal.Models.Images.CreateImageAsync(BinaryContent, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual Task<ClientResult> GenerateImageAsync(BinaryContent content, RequestOptions context = null)
-        => Shim.CreateImageAsync(content, context);
+    /// <inheritdoc cref="Internal.Images.CreateImageAsync(BinaryContent, RequestOptions)"/>
+    public virtual async Task<ClientResult> GenerateImageAsync(BinaryContent content, RequestOptions options = null)
+        => await Shim.CreateImageAsync(content, options).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Internal.Images.CreateImageEdit(BinaryContent, RequestOptions)"/>
+    public virtual ClientResult GenerateImageEdit(BinaryContent content, RequestOptions options = null)
+        => Shim.CreateImageEdit(content, options);
+
+    /// <inheritdoc cref="Internal.Images.CreateImageEditAsync(BinaryContent, RequestOptions)"/>
+    public virtual async Task<ClientResult> GenerateImageEditAsync(BinaryContent content, RequestOptions options = null)
+        => await Shim.CreateImageEditAsync(content, options).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Internal.Images.CreateImageVariation(BinaryContent, RequestOptions)"/>
+    public virtual ClientResult GenerateImageVariation(BinaryContent content, RequestOptions options = null)
+        => Shim.CreateImageVariation(content, options);
+
+    /// <inheritdoc cref="Internal.Images.CreateImageVariationAsync(BinaryContent, RequestOptions)"/>
+    public virtual async Task<ClientResult> GenerateImageVariationAsync(BinaryContent content, RequestOptions options = null)
+        => await Shim.CreateImageVariationAsync(content, options).ConfigureAwait(false);
 
     private Internal.Models.CreateImageRequest CreateInternalRequest(
         string prompt,

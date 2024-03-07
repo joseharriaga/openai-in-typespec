@@ -167,14 +167,6 @@ public partial class AudioClient
         return GetTranscriptionResultFromResponse(message.Response);
     }
 
-    /// <inheritdoc cref="Internal.Audio.CreateTranscription(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult TranscribeAudio(BinaryContent content, RequestOptions options = null)
-        => Shim.CreateTranscription(content, options);
-
-    /// <inheritdoc cref="Internal.Audio.CreateTranscriptionAsync(BinaryContent, RequestOptions)"/>
-    public virtual async Task<ClientResult> TranscribeAudioAsync(BinaryContent content, RequestOptions options = null)
-        => await Shim.CreateTranscriptionAsync(content, options).ConfigureAwait(false);
-
     public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
         PipelineMessage message = CreateInternalTranslationRequestMessage(audioBytes, filename, options);
@@ -188,14 +180,6 @@ public partial class AudioClient
         await Shim.Pipeline.SendAsync(message);
         return GetTranslationResultFromResponse(message.Response);
     }
-
-    /// <inheritdoc cref="Internal.Audio.CreateTranslation(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult TranslateAudio(BinaryContent content, RequestOptions options = null)
-        => Shim.CreateTranslation(content, options);
-
-    /// <inheritdoc cref="Internal.Audio.CreateTranslationAsync(BinaryContent, RequestOptions)"/>
-    public virtual async Task<ClientResult> TranslateAudioAsync(BinaryContent content, RequestOptions options = null)
-        => await Shim.CreateTranslationAsync(content, options).ConfigureAwait(false);
 
     private PipelineMessage CreateInternalTranscriptionRequestMessage(BinaryData audioBytes, string filename, AudioTranscriptionOptions options)
     {

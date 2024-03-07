@@ -178,22 +178,6 @@ public partial class ImageClient
     public virtual async Task<ClientResult> GenerateImageAsync(BinaryContent content, RequestOptions options = null)
         => await Shim.CreateImageAsync(content, options).ConfigureAwait(false);
 
-    /// <inheritdoc cref="Internal.Images.CreateImageEdit(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult GenerateImageEdit(BinaryContent content, RequestOptions options = null)
-        => Shim.CreateImageEdit(content, options);
-
-    /// <inheritdoc cref="Internal.Images.CreateImageEditAsync(BinaryContent, RequestOptions)"/>
-    public virtual async Task<ClientResult> GenerateImageEditAsync(BinaryContent content, RequestOptions options = null)
-        => await Shim.CreateImageEditAsync(content, options).ConfigureAwait(false);
-
-    /// <inheritdoc cref="Internal.Images.CreateImageVariation(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult GenerateImageVariation(BinaryContent content, RequestOptions options = null)
-        => Shim.CreateImageVariation(content, options);
-
-    /// <inheritdoc cref="Internal.Images.CreateImageVariationAsync(BinaryContent, RequestOptions)"/>
-    public virtual async Task<ClientResult> GenerateImageVariationAsync(BinaryContent content, RequestOptions options = null)
-        => await Shim.CreateImageVariationAsync(content, options).ConfigureAwait(false);
-
     private Internal.Models.CreateImageRequest CreateInternalRequest(
         string prompt,
         int? imageCount = null,

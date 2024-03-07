@@ -113,14 +113,6 @@ public partial class FileClient
         return GetUploadResultFromResponse(uploadMessage.Response);
     }
 
-    /// <inheritdoc cref="Internal.Files.CreateFile(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult UploadFile(BinaryContent requestBody, RequestOptions options)
-        =>  Shim.CreateFile(requestBody, options);
-
-    /// <inheritdoc cref="Internal.Files.CreateFileAsync(BinaryContent, RequestOptions)"/>
-    public virtual async Task<ClientResult> UploadFileAsync(BinaryContent requestBody, RequestOptions options)
-        => await Shim.CreateFileAsync(requestBody, options).ConfigureAwait(false);
-
     public virtual ClientResult<OpenAIFileInfo> GetFileInfo(string fileId)
     {
         ClientResult<Internal.Models.OpenAIFile> internalResult = Shim.RetrieveFile(fileId);

@@ -2,7 +2,6 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -314,14 +313,6 @@ public partial class ChatClient
                 responseForEnumeration.GetRawResponse().ContentStream,
                 e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));   
     }
-
-    /// <inheritdoc cref="Internal.Chat.CreateChatCompletion(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult CompleteChat(BinaryContent content, RequestOptions options = null)
-        => Shim.CreateChatCompletion(content, options);
-
-    /// <inheritdoc cref="Internal.Chat.CreateChatCompletionAsync(BinaryContent, RequestOptions)"/>
-    public virtual async Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null)
-        => await Shim.CreateChatCompletionAsync(content, options).ConfigureAwait(false);
 
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(
         IEnumerable<ChatRequestMessage> messages,

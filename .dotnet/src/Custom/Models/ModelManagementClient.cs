@@ -1,8 +1,6 @@
 using OpenAI.ClientShared.Internal;
 using System;
 using System.ClientModel;
-using System.ClientModel.Primitives;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace OpenAI.ModelManagement;
@@ -104,14 +102,6 @@ public partial class ModelManagementClient
         return ClientResult.FromValue(new ModelDetails(internalResult.Value), internalResult.GetRawResponse());
     }
 
-    /// <inheritdoc cref="Internal.ModelsOps.Retrieve(string, RequestOptions)"/>
-    public virtual ClientResult GetModelInfo(string modelId, RequestOptions options)
-        => Shim.Retrieve(modelId, options);
-
-    /// <inheritdoc cref="Internal.ModelsOps.RetrieveAsync(string, RequestOptions)"/>
-    public virtual async Task<ClientResult> GetModelInfoAsync(string modelId, RequestOptions options)
-        => await Shim.RetrieveAsync(modelId, options).ConfigureAwait(false);
-
     public virtual ClientResult<ModelDetailCollection> GetModels()
     {
         ClientResult<Internal.Models.ListModelsResponse> internalResult = Shim.GetModels();
@@ -135,15 +125,6 @@ public partial class ModelManagementClient
         return ClientResult.FromValue(new ModelDetailCollection(modelEntries), internalResult.GetRawResponse());
     }
 
-    /// <inheritdoc cref="Internal.ModelsOps.GetModels(RequestOptions)"/>
-    public virtual ClientResult GetModels(RequestOptions options)
-        => Shim.GetModels(options);
-
-    /// <inheritdoc cref="Internal.ModelsOps.GetModelsAsync(RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetModelsAsync(RequestOptions options)
-        => await Shim.GetModelsAsync(options).ConfigureAwait(false);
-
     public virtual ClientResult<bool> DeleteModel(string modelId)
     {
         ClientResult<Internal.Models.DeleteModelResponse> internalResult = Shim.Delete(modelId);
@@ -156,12 +137,4 @@ public partial class ModelManagementClient
             = await Shim.DeleteAsync(modelId).ConfigureAwait(false);
         return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
     }
-
-    /// <inheritdoc cref="Internal.ModelsOps.Delete(string, RequestOptions)"/>
-    public virtual ClientResult DeleteModel(string modelId, RequestOptions options)
-        => Shim.Delete(modelId, options);
-
-    /// <inheritdoc cref="Internal.ModelsOps.DeleteAsync(string, RequestOptions)"/>
-    public virtual async Task<ClientResult> DeleteModelAsync(string modelId, RequestOptions options)
-        => await Shim.DeleteAsync(modelId, options).ConfigureAwait(false);
 }

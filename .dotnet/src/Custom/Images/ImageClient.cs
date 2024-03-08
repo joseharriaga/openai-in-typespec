@@ -1,8 +1,6 @@
 using System;
 using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace OpenAI.Images;
@@ -169,14 +167,6 @@ public partial class ImageClient
         }
         return ClientResult.FromValue(new ImageGenerationCollection(ImageGenerations), response.GetRawResponse());
     }
-
-    /// <inheritdoc cref="Internal.Images.CreateImage(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult GenerateImage(BinaryContent content, RequestOptions options = null)
-        => Shim.CreateImage(content, options);
-
-    /// <inheritdoc cref="Internal.Images.CreateImageAsync(BinaryContent, RequestOptions)"/>
-    public virtual async Task<ClientResult> GenerateImageAsync(BinaryContent content, RequestOptions options = null)
-        => await Shim.CreateImageAsync(content, options).ConfigureAwait(false);
 
     private Internal.Models.CreateImageRequest CreateInternalRequest(
         string prompt,

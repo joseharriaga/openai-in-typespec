@@ -3,7 +3,6 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -144,14 +143,6 @@ public partial class AudioClient
         Internal.Models.CreateSpeechRequest request = CreateInternalTtsRequest(text, voice, options);
         return Shim.CreateSpeechAsync(request);
     }
-
-    /// <inheritdoc cref="Internal.Audio.CreateSpeech(BinaryContent, RequestOptions)"/>
-    public virtual ClientResult GenerateSpeechFromText(BinaryContent content, RequestOptions options = null)
-        => Shim.CreateSpeech(content, options);
-
-    /// <inheritdoc cref="Internal.Audio.CreateSpeechAsync(BinaryContent, RequestOptions)"/>
-    public virtual async Task<ClientResult> GenerateSpeechFromTextAsync(BinaryContent content, RequestOptions options = null)
-        => await Shim.CreateSpeechAsync(content, options).ConfigureAwait(false);
 
     public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {

@@ -12,7 +12,7 @@ namespace System.ClientModel;
 // Placeholder implementation adapted from:
 // https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/src/Shared/Multipart/MultipartContent.cs
 
-internal partial class MultipartContent : BinaryContent
+internal partial class MultipartContent2 : BinaryContent
 {
     #region Fields
 

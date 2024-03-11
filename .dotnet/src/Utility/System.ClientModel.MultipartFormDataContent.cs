@@ -5,7 +5,7 @@ namespace System.ClientModel;
 // Placeholder implementation adapted from:
 // https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/src/Shared/Multipart/MultipartFormDataContent.cs
 
-internal partial class MultipartFormDataContent : MultipartContent
+internal partial class MultipartFormDataContent2 : MultipartContent2
 {
     // Copyright (c) Microsoft Corporation. All rights reserved.
     // Licensed under the MIT License.

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System.IO;
 
 namespace OpenAI.Audio;
 
@@ -185,7 +187,8 @@ public partial class AudioClient
         request.Uri = uriBuilder.Uri;
 
         MultipartFormDataContent requestContent = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
-        requestContent.ApplyToRequest(request);
+
+        request.Headers.Set("content-type", $"multipart/form-data; boundary={_boundary}");
 
         return message;
     }
@@ -247,32 +250,36 @@ public partial class AudioClient
         bool? enableSegmentTimestamps = null)
     {
         MultipartFormDataContent content = new();
-        content.Add(MultipartContent.Create(BinaryData.FromString(_clientConnector.Model)), name: "model", []);
+
+        content.Add(new StringContent(_clientConnector.Model), "model");
+
         if (OptionalProperty.IsDefined(language))
         {
-            content.Add(MultipartContent.Create(BinaryData.FromString(language)), name: "language", []);
+            content.Add(new StringContent(language), "language");
         }
+
         if (OptionalProperty.IsDefined(prompt))
         {
-            content.Add(MultipartContent.Create(BinaryData.FromString(prompt)), name: "prompt", []);
+            content.Add(new StringContent(prompt), "prompt");
         }
+
         if (OptionalProperty.IsDefined(transcriptionFormat))
         {
-            content.Add(MultipartContent.Create(BinaryData.FromString(transcriptionFormat switch
+            content.Add(new StringContent(transcriptionFormat switch
             {
                 AudioTranscriptionFormat.Simple => "json",
                 AudioTranscriptionFormat.Detailed => "verbose_json",
                 AudioTranscriptionFormat.Srt => "srt",
                 AudioTranscriptionFormat.Vtt => "vtt",
                 _ => throw new ArgumentException(nameof(transcriptionFormat)),
-            })),
-            name: "response_format",
-            []);
+            }), "response_format");
         }
+
         if (OptionalProperty.IsDefined(temperature))
         {
-            content.Add(MultipartContent.Create(BinaryData.FromString($"{temperature}")), name: "temperature", []);
+            content.Add(new StringContent($"{temperature}"), "temperature");
         }
+
         if (OptionalProperty.IsDefined(enableWordTimestamps) || OptionalProperty.IsDefined(enableSegmentTimestamps))
         {
             List<string> granularities = [];
@@ -284,9 +291,13 @@ public partial class AudioClient
             {
                 granularities.Add("segment");
             }
-            content.Add(MultipartContent.Create(BinaryData.FromObjectAsJson(granularities)), name: "timestamp_granularities", []);
+
+            byte[] json = JsonSerializer.SerializeToUtf8Bytes(granularities);
+            content.Add(new ByteArrayContent(json), "timestamp_granularities");
         }
-        content.Add(MultipartContent.Create(audioBytes), name: "file", fileName: filename, []);
+
+        Stream audioStream = audioBytes.ToStream();
+        content.Add(new StreamContent(audioStream), "file", filename);
 
         return content;
     }

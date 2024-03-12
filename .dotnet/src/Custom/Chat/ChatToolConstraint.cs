@@ -1,4 +1,5 @@
 using System;
+using System.ClientModel.Primitives;
 
 namespace OpenAI.Chat;
 
@@ -6,7 +7,7 @@ namespace OpenAI.Chat;
 /// Represents <c>tool_choice</c>, the desired manner in which the model should use the <c>tools</c> defined in a
 /// chat completion request.
 /// </summary>
-public readonly struct ChatToolConstraint : IEquatable<ChatToolConstraint>
+public partial class ChatToolConstraint : IEquatable<ChatToolConstraint>, IJsonModel<ChatToolConstraint>
 {
     private enum ToolConstraintKind
     {

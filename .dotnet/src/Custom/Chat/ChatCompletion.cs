@@ -33,6 +33,9 @@ public class ChatCompletion
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Index"/>
     public long Index => _internalResponse.Choices[(int)_internalChoiceIndex].Index;
 
+    protected ChatCompletion()
+    { }
+
     internal ChatCompletion(Internal.Models.CreateChatCompletionResponse internalResponse, long internalChoiceIndex)
     {
         Internal.Models.CreateChatCompletionResponseChoice internalChoice = internalResponse.Choices[(int)internalChoiceIndex];

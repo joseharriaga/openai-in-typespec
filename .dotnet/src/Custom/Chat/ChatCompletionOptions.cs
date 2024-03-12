@@ -1,9 +1,6 @@
 using OpenAI.ClientShared.Internal;
-using System;
-using System.ClientModel.Internal;
 
 using System.Collections.Generic;
-using System.Text.Json;
 
 namespace OpenAI.Chat;
 
@@ -37,79 +34,11 @@ public partial class ChatCompletionOptions
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Tools" />
     public IList<ChatToolDefinition> Tools { get; } = new OptionalList<ChatToolDefinition>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.ToolChoice" />
-    public ChatToolConstraint? ToolConstraint { get; set; }
+    public ChatToolConstraint ToolConstraint { get; set; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.User" />
     public string User { get; set; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Functions" />
     public IList<ChatFunctionDefinition> Functions { get; } = new OptionalList<ChatFunctionDefinition>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.FunctionCall" />
-    public ChatFunctionConstraint? FunctionConstraint { get; set; }
-
-    internal BinaryData GetInternalStopSequences()
-    {
-        if (!OptionalProperty.IsCollectionDefined(StopSequences))
-        {
-            return null;
-        }
-        return BinaryData.FromObjectAsJson(StopSequences);
-    }
-
-    internal IDictionary<string, long> GetInternalLogitBias()
-    {
-        OptionalDictionary<string, long> packedLogitBias = [];
-        foreach (KeyValuePair<long, long> pair in TokenSelectionBiases)
-        {
-            packedLogitBias[$"{pair.Key}"] = pair.Value;
-        }
-        return packedLogitBias;
-    }
-
-    internal IList<Internal.Models.ChatCompletionTool> GetInternalTools()
-    {
-        OptionalList<Internal.Models.ChatCompletionTool> internalTools = [];
-        foreach (ChatToolDefinition tool in Tools)
-        {
-            if (tool is ChatFunctionToolDefinition functionTool)
-            {
-                Internal.Models.FunctionObject functionObject = new(
-                    functionTool.Description,
-                    functionTool.Name,
-                    CreateInternalFunctionParameters(functionTool.Parameters),
-                    serializedAdditionalRawData: null);
-                internalTools.Add(new(functionObject));
-            }
-        }
-        return internalTools;
-    }
-
-    internal IList<Internal.Models.ChatCompletionFunctions> GetInternalFunctions()
-    {
-        OptionalList<Internal.Models.ChatCompletionFunctions> internalFunctions = [];
-        foreach (ChatFunctionDefinition function in Functions)
-        {
-            Internal.Models.ChatCompletionFunctions internalFunction = new(
-                function.Description,
-                function.Name,
-                CreateInternalFunctionParameters(function.Parameters),
-                serializedAdditionalRawData: null);
-            internalFunctions.Add(internalFunction);
-        }
-        return internalFunctions;
-    }
-
-    internal static Internal.Models.FunctionParameters CreateInternalFunctionParameters(BinaryData parameters)
-    {
-        if (parameters == null)
-        {
-            return null;
-        }
-        JsonElement parametersElement = JsonDocument.Parse(parameters.ToString()).RootElement;
-        Internal.Models.FunctionParameters internalParameters = new();
-        foreach (JsonProperty property in parametersElement.EnumerateObject())
-        {
-            BinaryData propertyData = BinaryData.FromString(property.Value.GetRawText());
-            internalParameters.AdditionalProperties.Add(property.Name, propertyData);
-        }
-        return internalParameters;
-    }
+    public ChatFunctionConstraint FunctionConstraint { get; set; }
 }

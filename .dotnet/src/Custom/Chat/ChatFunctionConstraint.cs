@@ -5,7 +5,7 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Represents a desired manner in which the model should use the functions defined in a chat completion request.
 /// </summary>
-public readonly partial struct ChatFunctionConstraint : IEquatable<ChatFunctionConstraint>
+public partial class ChatFunctionConstraint : IEquatable<ChatFunctionConstraint>
 {
     private readonly string _value;
     private readonly bool _isPredefined;

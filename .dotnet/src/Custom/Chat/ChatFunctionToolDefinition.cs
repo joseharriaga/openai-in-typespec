@@ -6,7 +6,7 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Represents the definition of a function tool that is callable by the model for a chat completion request.
 /// </summary>
-public class ChatFunctionToolDefinition : ChatToolDefinition
+public partial class ChatFunctionToolDefinition : ChatToolDefinition
 {
     /// <summary>
     /// The name of the function that the tool represents.

@@ -1,8 +1,12 @@
+using OpenAI.ClientShared.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OpenAI.Chat;
@@ -123,10 +127,7 @@ public partial class ChatClient
         IEnumerable<ChatRequestMessage> messages,
         ChatCompletionOptions options = null)
     {
-        Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options); 
-        ClientResult<Internal.Models.CreateChatCompletionResponse> response = Shim.CreateChatCompletion(request);
-        ChatCompletion chatCompletion = new(response.Value, internalChoiceIndex: 0);
-        return ClientResult.FromValue(chatCompletion, response.GetRawResponse());
+        return CompleteChatInternal(CreateSingleItemResponseInternal, messages, options);
     }
 
     /// <summary>
@@ -135,14 +136,11 @@ public partial class ChatClient
     /// <param name="messages"> The messages to provide as input and history for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A result for a single chat completion. </returns>
-    public virtual async Task<ClientResult<ChatCompletion>> CompleteChatAsync(
+    public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(
         IEnumerable<ChatRequestMessage> messages,
         ChatCompletionOptions options = null)
     {
-        Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options);
-        ClientResult<Internal.Models.CreateChatCompletionResponse> response = await Shim.CreateChatCompletionAsync(request).ConfigureAwait(false);
-        ChatCompletion chatCompletion = new(response.Value, internalChoiceIndex: 0);
-        return ClientResult.FromValue(chatCompletion, response.GetRawResponse());
+        return CompleteChatInternalAsync(CreateSingleItemResponseInternal, messages, options);
     }
 
     /// <summary>
@@ -153,21 +151,13 @@ public partial class ChatClient
     ///     The number of independent, alternative response choices that should be generated.
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A result for a single chat completion. </returns>
     public virtual ClientResult<ChatCompletionCollection> CompleteChat(
         IEnumerable<ChatRequestMessage> messages,
         int choiceCount,
         ChatCompletionOptions options = null)
     {
-        Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options, choiceCount);
-        ClientResult<Internal.Models.CreateChatCompletionResponse> response = Shim.CreateChatCompletion(request);
-        List<ChatCompletion> chatCompletions = [];
-        for (int i = 0; i < response.Value.Choices.Count; i++)
-        {
-            chatCompletions.Add(new(response.Value, response.Value.Choices[i].Index));
-        }
-        return ClientResult.FromValue(new ChatCompletionCollection(chatCompletions), response.GetRawResponse());
+        return CompleteChatInternal(CreateResponseCollectionInternal, messages, options, choiceCount, stream: false);
     }
 
     /// <summary>
@@ -179,19 +169,12 @@ public partial class ChatClient
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A result for a single chat completion. </returns>
-    public virtual async Task<ClientResult<ChatCompletionCollection>> CompleteChatAsync(
+    public virtual Task<ClientResult<ChatCompletionCollection>> CompleteChatAsync(
         IEnumerable<ChatRequestMessage> messages,
         int choiceCount,
         ChatCompletionOptions options = null)
     {
-        Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options, choiceCount);
-        ClientResult<Internal.Models.CreateChatCompletionResponse> response = await Shim.CreateChatCompletionAsync(request).ConfigureAwait(false);
-        List<ChatCompletion> chatCompletions = [];
-        for (int i = 0; i < response.Value.Choices.Count; i++)
-        {
-            chatCompletions.Add(new(response.Value, response.Value.Choices[i].Index));
-        }
-        return ClientResult.FromValue(new ChatCompletionCollection(chatCompletions), response.GetRawResponse());
+        return CompleteChatInternalAsync(CreateResponseCollectionInternal, messages, options, choiceCount, stream: false);
     }
 
     /// <summary>
@@ -258,22 +241,7 @@ public partial class ChatClient
         int? choiceCount = null,
         ChatCompletionOptions options = null)
     {
-        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
-        requestMessage.BufferResponse = false;
-        Shim.Pipeline.Send(requestMessage);
-        PipelineResponse response = requestMessage.ExtractResponse();
-
-        if (response.IsError)
-        {
-            throw new ClientResultException(response);
-        }
-
-        ClientResult genericResult = ClientResult.FromResponse(response);
-        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            genericResult,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
-                responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
+        return CompleteChatInternal(CreateStreamingResponseInternal, messages, options, choiceCount, stream: true);
     }
 
     /// <summary>
@@ -289,99 +257,148 @@ public partial class ChatClient
     ///     The number of independent, alternative choices that the chat completion request should generate.
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual async Task<StreamingClientResult<StreamingChatUpdate>> CompleteChatStreamingAsync(
+    public virtual Task<StreamingClientResult<StreamingChatUpdate>> CompleteChatStreamingAsync(
         IEnumerable<ChatRequestMessage> messages,
         int? choiceCount = null,
         ChatCompletionOptions options = null)
     {
-        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
-        requestMessage.BufferResponse = false;
-        await Shim.Pipeline.SendAsync(requestMessage);
-        PipelineResponse response = requestMessage.ExtractResponse();
-
-        if (response.IsError)
-        {
-            throw new ClientResultException(response);
-        }
-
-        ClientResult genericResult = ClientResult.FromResponse(response);
-        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            genericResult,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
-                responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));   
+        return CompleteChatInternalAsync(CreateStreamingResponseInternal, messages, options, choiceCount, stream: true);
     }
 
-    private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(
+    protected virtual T CompleteChatInternal<T>(
+        Func<PipelineMessage, T> resultCreationFunc,
+        IEnumerable<ChatRequestMessage> messages,
+        ChatCompletionOptions options,
+        int? choiceCount = null,
+        bool? stream = null)
+    {
+        using PipelineMessage requestMessage = CreateChatRequest(messages, options, choiceCount, stream);
+        Shim.Pipeline.Send(requestMessage);
+        if (requestMessage.Response.IsError)
+        {
+            throw new ClientResultException(requestMessage.Response);
+        }
+        return resultCreationFunc.Invoke(requestMessage);
+    }
+
+    protected virtual async Task<T> CompleteChatInternalAsync<T>(
+        Func<PipelineMessage, T> resultCreationFunc,
+        IEnumerable<ChatRequestMessage> messages,
+        ChatCompletionOptions options,
+        int? choiceCount = null,
+        bool? stream = null)
+    {
+        using PipelineMessage requestMessage = CreateChatRequest(messages, options, choiceCount, stream);
+        await Shim.Pipeline.SendAsync(requestMessage);
+        if (requestMessage.Response.IsError)
+        {
+            throw new ClientResultException(requestMessage.Response);
+        }
+        return resultCreationFunc.Invoke(requestMessage);
+    }
+
+    protected virtual PipelineMessage CreateChatRequest(
         IEnumerable<ChatRequestMessage> messages,
         ChatCompletionOptions options = null,
         int? choiceCount = null,
         bool? stream = null)
     {
-        options ??= new();
-        Internal.Models.CreateChatCompletionRequestResponseFormat? internalFormat = null;
-        if (options.ResponseFormat is not null)
-        {
-            internalFormat = new(options.ResponseFormat switch
-            {
-                ChatResponseFormat.Text => Internal.Models.CreateChatCompletionRequestResponseFormatType.Text,
-                ChatResponseFormat.JsonObject => Internal.Models.CreateChatCompletionRequestResponseFormatType.JsonObject,
-                _ => throw new ArgumentException(nameof(options.ResponseFormat)),
-            }, null);
-        }
-        List<BinaryData> messageDataItems = [];
-        foreach (ChatRequestMessage message in messages)
-        {
-            messageDataItems.Add(ModelReaderWriter.Write(message));
-        }
-        Dictionary<string, BinaryData> additionalData = [];
-        return new Internal.Models.CreateChatCompletionRequest(
-            messageDataItems,
-            _clientConnector.Model,
-            options?.FrequencyPenalty,
-            options?.GetInternalLogitBias(),
-            options?.IncludeLogProbabilities,
-            options?.LogProbabilityCount,
-            options?.MaxTokens,
-            choiceCount,
-            options?.PresencePenalty,
-            internalFormat,
-            options?.Seed,
-            options?.GetInternalStopSequences(),
-            stream,
-            options?.Temperature,
-            options?.NucleusSamplingFactor,
-            options?.GetInternalTools(),
-            options?.ToolConstraint?.GetBinaryData(),
-            options?.User,
-            options?.FunctionConstraint?.ToBinaryData(),
-            options?.GetInternalFunctions(),
-            additionalData
-        );
-    }
-
-    private PipelineMessage CreateCustomRequestMessage(IEnumerable<ChatRequestMessage> messages, int? choiceCount, ChatCompletionOptions options)
-    {
-        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
-        BinaryContent content = BinaryContent.Create(internalRequest);
-
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
-        message.BufferResponse = false;
+        if (stream == true)
+        {
+            message.BufferResponse = false;
+        }
         PipelineRequest request = message.Request;
         request.Method = "POST";
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+        request.Uri = CreateChatRequestUri();
+        request.Headers.Set("Accept", "application/json");
+        request.Headers.Set("Content-Type", "application/json");
+        request.Content = CreateChatRequestBody(messages, options, choiceCount, stream);
+
+        return message;
+    }
+
+    protected virtual BinaryContent CreateChatRequestBody(
+        IEnumerable<ChatRequestMessage> messages,
+        ChatCompletionOptions options,
+        int? choiceCount = null,
+        bool? stream = null)
+    {
+        using MemoryStream jsonStream = new();
+        using Utf8JsonWriter jsonWriter = new(jsonStream);
+        jsonWriter.WriteStartObject();
+        jsonWriter.WritePropertyName("messages"u8);
+        jsonWriter.WriteStartArray();
+        foreach (ChatRequestMessage message in messages)
+        {
+            jsonWriter.WriteObjectValue(message);
+        }
+        jsonWriter.WriteEndArray();
+        jsonWriter.WriteString("model"u8, _clientConnector.Model);
+        if (choiceCount.HasValue)
+        {
+            jsonWriter.WriteNumber("n"u8, choiceCount.Value);
+        }
+        if (stream.HasValue)
+        {
+            jsonWriter.WriteBoolean("stream"u8, stream.Value);
+        }
+        (options as IJsonModel<ChatCompletionOptions>)?.Write(jsonWriter, new ModelReaderWriterOptions("J"));
+        jsonWriter.WriteEndObject();
+        jsonWriter.Flush();
+        jsonStream.Position = 0;
+        BinaryData jsonData = BinaryData.FromStream(jsonStream);
+        return BinaryContent.Create(jsonData);
+    }
+
+    protected ClientResult<ChatCompletionCollection> CreateResponseCollectionInternal(PipelineMessage message)
+    {
+        using JsonDocument responseDocument = JsonDocument.Parse(message.Response.Content);
+        ChatCompletionCollection chatCompletionCollection
+            = ChatCompletionCollection.DeserializeChatCompletionCollection(responseDocument.RootElement);
+        return ClientResult.FromValue(chatCompletionCollection, message.Response);
+    }
+
+    protected ClientResult<ChatCompletion> CreateSingleItemResponseInternal(PipelineMessage message)
+    {
+        using JsonDocument responseDocument = JsonDocument.Parse(message.Response.Content);
+        ChatCompletionCollection chatCompletionCollection
+            = ChatCompletionCollection.DeserializeChatCompletionCollection(responseDocument.RootElement);
+        return ClientResult.FromValue(chatCompletionCollection[0], message.Response);
+    }
+
+    protected StreamingClientResult<StreamingChatUpdate> CreateStreamingResponseInternal(PipelineMessage message)
+    {
+        PipelineResponse extractedResponse = null;
+        try
+        {
+            extractedResponse = message.ExtractResponse();
+            ClientResult genericResult = ClientResult.FromResponse(extractedResponse);
+            StreamingClientResult<StreamingChatUpdate> result = StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
+                genericResult,
+                (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
+                    responseForEnumeration.GetRawResponse().ContentStream,
+                    e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
+            extractedResponse = null;
+            return result;
+        }
+        finally
+        {
+            extractedResponse?.Dispose();
+        }
+    }
+
+    protected Uri GetEndpoint() => _clientConnector.Endpoint;
+
+    protected virtual Uri CreateChatRequestUri()
+    {
+        UriBuilder uriBuilder = new(GetEndpoint());
         StringBuilder path = new();
         path.Append("/chat/completions");
         uriBuilder.Path += path.ToString();
-        request.Uri = uriBuilder.Uri;
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", "application/json");
-        request.Content = content;
-
-        return message;
+        return uriBuilder.Uri;
     }
 
     private static PipelineMessageClassifier _responseErrorClassifier200;

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Net.Http;
 using System.IO;
 
 namespace OpenAI.Audio;
@@ -190,7 +189,6 @@ public partial class AudioClient
         Stream stream = content.ReadAsStream();
         request.Content = content;
 
-
         foreach (var header in content.Headers)
         {
             request.Headers.Add(header.Key, header.Value);
@@ -255,9 +253,13 @@ public partial class AudioClient
         bool? enableWordTimestamps = null,
         bool? enableSegmentTimestamps = null)
     {
+        List<(BinaryContent Content, PipelineRequestHeaders Headers)> parts = new();
+
+        BinaryContent model = BinaryContent.FromString(_clientConnector.Model);
+
         MultipartFormDataContent content = new();
 
-        content.Add(new StringContent(_clientConnector.Model), "model");
+        content.Add(new StringContent(), "model");
 
         if (OptionalProperty.IsDefined(language))
         {

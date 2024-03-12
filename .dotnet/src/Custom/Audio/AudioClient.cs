@@ -186,9 +186,15 @@ public partial class AudioClient
         uriBuilder.Path += path.ToString();
         request.Uri = uriBuilder.Uri;
 
-        MultipartFormDataContent requestContent = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
+        MultipartFormDataContent content = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
+        Stream stream = content.ReadAsStream();
+        request.Content = content;
 
-        request.Headers.Set("content-type", $"multipart/form-data; boundary={_boundary}");
+
+        foreach (var header in content.Headers)
+        {
+            request.Headers.Add(header.Key, header.Value);
+        }
 
         return message;
     }

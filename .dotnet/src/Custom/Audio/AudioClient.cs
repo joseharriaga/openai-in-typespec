@@ -154,15 +154,11 @@ public partial class AudioClient
         if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
         if (filename is null) throw new ArgumentNullException(nameof(filename));
 
-        // TODO: should this move into a model serialization routine?
+        options ??= new();
 
         // TODO: ensure correct patterns for sync-over-async
         (BinaryContent content, RequestOptions requestOptions) =
-            CreateCreateTranscriptionContentAsync(
-                audioBytes,
-                filename,
-                _clientConnector.Model,
-                options).Result;
+            options.CreateContentAsync(audioBytes, filename, _clientConnector.Model).Result;
 
         ClientResult result = TranscribeAudio(content, requestOptions);
 
@@ -181,13 +177,8 @@ public partial class AudioClient
         if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
         if (filename is null) throw new ArgumentNullException(nameof(filename));
 
-        // TODO: should this move into a model serialization routine?
-        (BinaryContent content, RequestOptions requestOptions) = 
-            await CreateCreateTranscriptionContentAsync(
-                audioBytes, 
-                filename, 
-                _clientConnector.Model, 
-                options).ConfigureAwait(false);
+        (BinaryContent content, RequestOptions requestOptions) =
+            await options.CreateContentAsync(audioBytes, filename, _clientConnector.Model).ConfigureAwait(false);
 
         ClientResult result = await TranscribeAudioAsync(content, requestOptions).ConfigureAwait(false);
 
@@ -240,116 +231,6 @@ public partial class AudioClient
         }
 
         return ClientResult.FromResponse(response);
-    }
-
-    // content-creation helper for TranscribeAudio convenience method
-    //
-    // TODO: ideally, this would live in a Model.Serialization.cs file for the
-    // relevant model (example in CreateTranscriptionRequest.Serialization.cs),
-    // but there are enough customizations today that we don't have the model
-    // infrastructure to support this out of the box from TypeSpec today.
-    private async Task<(BinaryContent, RequestOptions)> CreateCreateTranscriptionContentAsync(
-        BinaryData audioBytes,
-        string filename,
-        string model,
-        AudioTranscriptionOptions transcriptionOptions)
-    {
-        transcriptionOptions ??= new();
-
-        // TODO: add boundary
-        MultipartFormDataContent content = new();
-
-        // file
-        // TODO: Better to take the stream as an input parameter?
-        // TODO: if we need to use BinaryData, is it better to call ToArray/ToStream/other for perf?
-
-        // TODO: I think we need to add the content header manually because the
-        // default implementation is adding a `filename*` parameter to the header,
-        // which RFC 7578 says not to do -- I am following up with the BCL team
-        // on this to learn more about when this is/isn't needed.
-        HttpContent audioContent = new ByteArrayContent(audioBytes.ToArray());
-        ContentDispositionHeaderValue header = new ContentDispositionHeaderValue("form-data")
-        {
-            Name = "file",
-            FileName = filename
-        };
-        audioContent.Headers.ContentDisposition = header;
-        content.Add(audioContent);
-
-        // model
-        content.Add(new StringContent(model), name: "model");
-
-        // language - optional
-        if (transcriptionOptions.Language is not null)
-        {
-            content.Add(new StringContent(transcriptionOptions.Language), name: "language");
-        }
-
-        // prompt - optional
-        if (transcriptionOptions.Prompt is not null)
-        {
-            content.Add(new StringContent(transcriptionOptions.Prompt), name: "prompt");
-        }
-
-        // response_format - optional
-        if (transcriptionOptions.ResponseFormat is not null)
-        {
-            // TODO: another way to represent this in the model/enum?
-            content.Add(new StringContent(transcriptionOptions.ResponseFormat switch
-            {
-                AudioTranscriptionFormat.Simple => "json",
-                AudioTranscriptionFormat.Detailed => "verbose_json",
-                AudioTranscriptionFormat.Srt => "srt",
-                AudioTranscriptionFormat.Vtt => "vtt",
-                _ => throw new ArgumentException(nameof(transcriptionOptions.ResponseFormat)),
-            }),
-            name: "response_format");
-        }
-
-        // temperature - optional
-        if (transcriptionOptions.Temperature is not null)
-        {
-            // TODO: preferred way to handle floats/numerics?
-            content.Add(new StringContent($"{transcriptionOptions.Temperature}"), name: "temperature");
-        }
-
-        // timestamp_granularities[] - optional
-        if (transcriptionOptions.EnableWordTimestamps is not null  ||
-            (transcriptionOptions.EnableSegmentTimestamps is not null))
-        {
-            List<string> granularities = [];
-            if (transcriptionOptions.EnableWordTimestamps.Value)
-            {
-                granularities.Add("word");
-            }
-            if (transcriptionOptions.EnableSegmentTimestamps.Value)
-            {
-                granularities.Add("segment");
-            }
-
-            // TODO: preferred way to serialize models?
-            byte[] data = JsonSerializer.SerializeToUtf8Bytes(granularities);
-            content.Add(new ByteArrayContent(data), name: "timestamp_granularities");
-        }
-
-        // multipart/form-data operations must transfer the headers from the
-        // MultipartFormDataContent instance over to the request, using RequestOptions.
-        RequestOptions requestOptions = new();
-
-        // TODO: can we improve perf when transferring headers?
-        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
-        {
-            requestOptions.SetHeader("Content-Type", contentType.ToString());
-        }
-
-        if (content.Headers.ContentLength is long contentLength)
-        {
-            requestOptions.SetHeader("Content-Length", contentLength.ToString());
-        }
-
-        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-        
-        return (BinaryContent.Create(stream), requestOptions);
     }
 
     // request-creation helper for TranscribeAudio protocol method
@@ -535,7 +416,7 @@ public partial class AudioClient
             content.Add(new StringContent($"{temperature}"), name: "temperature");
         }
 
-        if (enableWordTimestamps is not null || 
+        if (enableWordTimestamps is not null ||
             enableSegmentTimestamps is not null)
         {
             // TODO: preferred way to serialize models?

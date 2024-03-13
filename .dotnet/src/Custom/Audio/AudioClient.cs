@@ -245,9 +245,11 @@ public partial class AudioClient
         request.Method = "POST";
 
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+
         StringBuilder path = new();
         path.Append("/audio/transcriptions");
         uriBuilder.Path += path.ToString();
+
         request.Uri = uriBuilder.Uri;
 
         request.Content = content;
@@ -271,42 +273,6 @@ public partial class AudioClient
         await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
         return GetTranslationResultFromResponse(message.Response);
     }
-
-    // request-creation helper for TranscribeAudio protocol method
-    private async Task<PipelineMessage> CreateCreateTranscriptionRequestAsync_orig(BinaryData audioBytes, string filename, AudioTranscriptionOptions options)
-    {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append("/audio/transcriptions");
-        uriBuilder.Path += path.ToString();
-        request.Uri = uriBuilder.Uri;
-
-        MultipartFormDataContent content = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
-        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-        request.Content = BinaryContent.Create(stream);
-
-        // Add headers
-        // TODO: can we improve perf?
-
-        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
-        {
-            request.Headers.Set("Content-Type", contentType.ToString());
-        }
-
-        if (content.Headers.ContentLength is long contentLength)
-        {
-            request.Headers.Set("Content-Length", contentLength.ToString());
-        }
-
-        // TODO: other headers to transfer from content as part of MPFD spec?
-
-        return message;
-    }
-
 
     // request-creation helper for TranslateAudio protocol method
     private async Task<PipelineMessage> CreateCreateTranslationRequestAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options)
@@ -437,17 +403,6 @@ public partial class AudioClient
         }
 
         return content;
-    }
-
-    private static ClientResult<AudioTranscription> GetTranscriptionResultFromResponse(PipelineResponse response)
-    {
-        if (response.IsError)
-        {
-            throw new ClientResultException(response);
-        }
-
-        using JsonDocument responseDocument = JsonDocument.Parse(response.Content);
-        return ClientResult.FromValue(AudioTranscription.DeserializeAudioTranscription(responseDocument.RootElement), response);
     }
 
     private static ClientResult<AudioTranslation> GetTranslationResultFromResponse(PipelineResponse response)

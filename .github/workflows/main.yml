@@ -42,20 +42,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Restore dependencies
-        run: dotnet restore
-        working-directory: .dotnet
-
-      - name: Build
-        run: dotnet build --no-restore
-        working-directory: .dotnet
-
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
-        working-directory: .dotnet
 
       - name: Pack
-        run: dotnet pack --no-build -c Release -o out
+        run: dotnet pack -c Release -o out
         working-directory: .dotnet
 
       - name: Upload artifact

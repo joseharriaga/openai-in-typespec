@@ -8,6 +8,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.IO;
+using System.Net.Http.Headers;
+using System.Linq;
 
 namespace OpenAI.Audio;
 
@@ -148,33 +150,35 @@ public partial class AudioClient
 
     public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {
-        PipelineMessage message = CreateInternalTranscriptionRequestMessage(audioBytes, filename, options);
+        // TODO: ensure correct patterns for sync-over-async
+        PipelineMessage message = CreateInternalTranscriptionRequestMessageAsync(audioBytes, filename, options).Result;
         Shim.Pipeline.Send(message);
         return GetTranscriptionResultFromResponse(message.Response);
     }
 
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {
-        PipelineMessage message = CreateInternalTranscriptionRequestMessage(audioBytes, filename, options);
+        PipelineMessage message = await CreateInternalTranscriptionRequestMessageAsync(audioBytes, filename, options).ConfigureAwait(false);
         await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
         return GetTranscriptionResultFromResponse(message.Response);
     }
 
     public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
-        PipelineMessage message = CreateInternalTranslationRequestMessage(audioBytes, filename, options);
+        // TODO: ensure correct patterns for sync-over-async
+        PipelineMessage message = CreateInternalTranslationRequestMessageAsync(audioBytes, filename, options).Result;
         Shim.Pipeline.Send(message);
         return GetTranslationResultFromResponse(message.Response);
     }
 
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
-        PipelineMessage message = CreateInternalTranslationRequestMessage(audioBytes, filename, options);
+        PipelineMessage message = await CreateInternalTranslationRequestMessageAsync(audioBytes, filename, options).ConfigureAwait(false);
         await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
         return GetTranslationResultFromResponse(message.Response);
     }
 
-    private PipelineMessage CreateInternalTranscriptionRequestMessage(BinaryData audioBytes, string filename, AudioTranscriptionOptions options)
+    private async Task<PipelineMessage> CreateInternalTranscriptionRequestMessageAsync(BinaryData audioBytes, string filename, AudioTranscriptionOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
@@ -187,18 +191,28 @@ public partial class AudioClient
         request.Uri = uriBuilder.Uri;
 
         MultipartFormDataContent content = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
-        Stream stream = content.ReadAsStream();
-        request.Content = content;
+        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+        request.Content = BinaryContent.Create(stream);
 
-        foreach (var header in content.Headers)
+        // Add headers
+        // TODO: can we improve perf?
+
+        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
         {
-            request.Headers.Add(header.Key, header.Value);
+            request.Headers.Set("Content-Type", contentType.ToString());
         }
+
+        if (content.Headers.ContentLength is long contentLength)
+        {
+            request.Headers.Set("Content-Length", contentLength.ToString());
+        }
+
+        // TODO: other headers to transfer from content as part of MPFD spec?
 
         return message;
     }
 
-    private PipelineMessage CreateInternalTranslationRequestMessage(BinaryData audioBytes, string filename, AudioTranslationOptions options)
+    private async Task<PipelineMessage> CreateInternalTranslationRequestMessageAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
@@ -209,9 +223,24 @@ public partial class AudioClient
         path.Append("/audio/translations");
         uriBuilder.Path += path.ToString();
         request.Uri = uriBuilder.Uri;
+        MultipartFormDataContent content = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
+        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+        request.Content = BinaryContent.Create(stream);
 
-        MultipartFormDataContent requestContent = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
-        requestContent.ApplyToRequest(request);
+        // Add headers
+        // TODO: can we improve perf?
+
+        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
+        {
+            request.Headers.Set("Content-Type", contentType.ToString());
+        }
+
+        if (content.Headers.ContentLength is long contentLength)
+        {
+            request.Headers.Set("Content-Length", contentLength.ToString());
+        }
+
+        // TODO: other headers to transfer from content as part of MPFD spec?
 
         return message;
     }
@@ -254,10 +283,6 @@ public partial class AudioClient
         bool? enableWordTimestamps = null,
         bool? enableSegmentTimestamps = null)
     {
-        List<(BinaryContent Content, PipelineRequestHeaders Headers)> parts = new();
-
-        BinaryContent model = BinaryContent.FromString(_clientConnector.Model);
-
         MultipartFormDataContent content = new();
 
         content.Add(new StringContent(), "model");

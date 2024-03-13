@@ -3,6 +3,7 @@
 using System;
 using OpenAI.ClientShared.Internal;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OpenAI.Internal.Models
 {
@@ -116,8 +117,10 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public BinaryData File { get; }
+
         /// <summary> ID of the model to use. Only `whisper-1` is currently available. </summary>
         public CreateTranscriptionRequestModel Model { get; }
+
         /// <summary>
         /// The language of the input audio. Supplying the input language in
         /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy

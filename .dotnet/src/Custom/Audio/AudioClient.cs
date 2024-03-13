@@ -147,37 +147,77 @@ public partial class AudioClient
         return Shim.CreateSpeechAsync(request);
     }
 
+    // convenience method - sync
     public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {
         // TODO: ensure correct patterns for sync-over-async
-        PipelineMessage message = CreateInternalTranscriptionRequestMessageAsync(audioBytes, filename, options).Result;
+        PipelineMessage message = CreateCreateTranscriptionRequestAsync(audioBytes, filename, options).Result;
         Shim.Pipeline.Send(message);
         return GetTranscriptionResultFromResponse(message.Response);
     }
 
+    // convenience method - async
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {
-        PipelineMessage message = await CreateInternalTranscriptionRequestMessageAsync(audioBytes, filename, options).ConfigureAwait(false);
+        PipelineMessage message = await CreateCreateTranscriptionRequestAsync(audioBytes, filename, options).ConfigureAwait(false);
         await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
         return GetTranscriptionResultFromResponse(message.Response);
+    }
+
+    // protocol method - sync
+
+    // protocol method - async
+    public virtual async Task<ClientResult> TranscribeAudioAsync(BinaryContent content, RequestOptions options = null)
+    {
+        if (content is null) throw new ArgumentNullException(nameof(content));
+
+        options ??= new RequestOptions();
+
+
+
+        // Create a message that can be sent through the client pipeline.
+        using PipelineMessage message = CreateAddCountryCodeRequest(country, options);
+
+        // Send the message.
+        _pipeline.Send(message);
+
+        // Obtain the response from the message Response property.
+        // The PipelineTransport ensures that the Response value is set
+        // so that every policy in the pipeline can access the property.
+        PipelineResponse response = message.Response!;
+
+        // If the response is considered an error response, throw an
+        // exception that exposes the response details.  The protocol method
+        // caller can change the default exception behavior by setting error
+        // options differently.
+        if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
+        {
+            // Use the CreateAsync factory method to create an exception instance
+            // in an async context. In a sync method, the exception constructor can be used.
+            throw await ClientResultException.CreateAsync(response).ConfigureAwait(false);
+        }
+
+        // Return a ClientResult holding the HTTP response details.
+        return ClientResult.FromResponse(response);
     }
 
     public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
         // TODO: ensure correct patterns for sync-over-async
-        PipelineMessage message = CreateInternalTranslationRequestMessageAsync(audioBytes, filename, options).Result;
+        PipelineMessage message = CreateCreateTranslationRequestAsync(audioBytes, filename, options).Result;
         Shim.Pipeline.Send(message);
         return GetTranslationResultFromResponse(message.Response);
     }
 
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
-        PipelineMessage message = await CreateInternalTranslationRequestMessageAsync(audioBytes, filename, options).ConfigureAwait(false);
+        PipelineMessage message = await CreateCreateTranslationRequestAsync(audioBytes, filename, options).ConfigureAwait(false);
         await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
         return GetTranslationResultFromResponse(message.Response);
     }
 
-    private async Task<PipelineMessage> CreateInternalTranscriptionRequestMessageAsync(BinaryData audioBytes, string filename, AudioTranscriptionOptions options)
+    // request-creation helper for TranscribeAudio protocol method
+    private async Task<PipelineMessage> CreateCreateTranscriptionRequestAsync_orig(BinaryData audioBytes, string filename, AudioTranscriptionOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
@@ -211,17 +251,45 @@ public partial class AudioClient
         return message;
     }
 
-    private async Task<PipelineMessage> CreateInternalTranslationRequestMessageAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options)
+    // request-creation helper for TranscribeAudio protocol method
+    private PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
+
         PipelineRequest request = message.Request;
         request.Method = "POST";
+
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+        StringBuilder path = new();
+        path.Append("/audio/transcriptions");
+        uriBuilder.Path += path.ToString();
+        request.Uri = uriBuilder.Uri;
+
+        request.Content = content;
+
+        message.Apply(options);
+
+        return message;
+    }
+
+    // request-creation helper for TranslateAudio protocol method
+    private async Task<PipelineMessage> CreateCreateTranslationRequestAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options)
+    {
+        PipelineMessage message = Shim.Pipeline.CreateMessage();
+        message.ResponseClassifier = ResponseErrorClassifier200;
+
+        PipelineRequest request = message.Request;
+        request.Method = "POST";
+
+        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+
         StringBuilder path = new();
         path.Append("/audio/translations");
         uriBuilder.Path += path.ToString();
+
         request.Uri = uriBuilder.Uri;
+
         MultipartFormDataContent content = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
         Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
         request.Content = BinaryContent.Create(stream);

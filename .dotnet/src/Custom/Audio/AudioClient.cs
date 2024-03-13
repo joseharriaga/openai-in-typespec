@@ -335,7 +335,19 @@ public partial class AudioClient
 
         // TODO: Better to take the stream as an input parameter?
         // TODO: if we need to use BinaryData, is it better to call ToArray/ToStream/other for perf?
-        content.Add(new ByteArrayContent(audioBytes.ToArray()), name: "file", fileName: filename);
+
+        // TODO: I think we need to add the content header manually because the
+        // default implementation is adding a `filename*` parameter to the header,
+        // which RFC 7578 says not to do -- I am following up with the BCL team
+        // on this to learn more about when this is/isn't needed.
+        HttpContent audioContent = new ByteArrayContent(audioBytes.ToArray());
+        ContentDispositionHeaderValue header = new ContentDispositionHeaderValue("form-data")
+        {
+            Name = "file",
+            FileName = filename
+        };
+        audioContent.Headers.ContentDisposition = header;
+        content.Add(audioContent);
 
         return content;
     }

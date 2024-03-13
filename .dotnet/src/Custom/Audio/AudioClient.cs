@@ -154,40 +154,15 @@ public partial class AudioClient
         if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
         if (filename is null) throw new ArgumentNullException(nameof(filename));
 
-        // multipart/form-data operations will need to create an instance of 
-        // System.Net.Http.MultipartFormDataContent - this has both the request
-        // content and headers stored in it.
-
         // TODO: should this move into a model serialization routine?
-        MultipartFormDataContent multipartContent = CreateCreateTranscriptionRequestContent(
-            audioBytes,
-            filename,
-            _clientConnector.Model,
-            options);
-
-        // TODO: is there a way to factor this more nicely?
-        // It would be nice to return BinaryContent and have headers come back in
-        // an out parameter, but you can't pass an out-parameter out of an async
-        // method.  Revisit to improve ease-of-generation.
-
-        // multipart/form-data operations must transfer the headers from the
-        // MultipartFormDataContent instance over to the request, using RequestOptions.
-        RequestOptions requestOptions = new();
-
-        // TODO: can we improve perf when transferring headers?
-        if (multipartContent.Headers.ContentType is MediaTypeHeaderValue contentType)
-        {
-            requestOptions.SetHeader("Content-Type", contentType.ToString());
-        }
-
-        if (multipartContent.Headers.ContentLength is long contentLength)
-        {
-            requestOptions.SetHeader("Content-Length", contentLength.ToString());
-        }
 
         // TODO: ensure correct patterns for sync-over-async
-        Stream stream = multipartContent.ReadAsStreamAsync().Result;
-        BinaryContent content = BinaryContent.Create(stream);
+        (BinaryContent content, RequestOptions requestOptions) =
+            CreateCreateTranscriptionContentAsync(
+                audioBytes,
+                filename,
+                _clientConnector.Model,
+                options).Result;
 
         ClientResult result = TranscribeAudio(content, requestOptions);
 
@@ -206,39 +181,13 @@ public partial class AudioClient
         if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
         if (filename is null) throw new ArgumentNullException(nameof(filename));
 
-        // multipart/form-data operations will need to create an instance of 
-        // System.Net.Http.MultipartFormDataContent - this has both the request
-        // content and headers stored in it.
-
         // TODO: should this move into a model serialization routine?
-        MultipartFormDataContent multipartContent = CreateCreateTranscriptionRequestContent(
-            audioBytes, 
-            filename, 
-            _clientConnector.Model, 
-            options);
-
-        // TODO: is there a way to factor this more nicely?
-        // It would be nice to return BinaryContent and have headers come back in
-        // an out parameter, but you can't pass an out-parameter out of an async
-        // method.  Revisit to improve ease-of-generation.
-
-        // multipart/form-data operations must transfer the headers from the
-        // MultipartFormDataContent instance over to the request, using RequestOptions.
-        RequestOptions requestOptions = new();
-
-        // TODO: can we improve perf when transferring headers?
-        if (multipartContent.Headers.ContentType is MediaTypeHeaderValue contentType)
-        {
-            requestOptions.SetHeader("Content-Type", contentType.ToString());
-        }
-
-        if (multipartContent.Headers.ContentLength is long contentLength)
-        {
-            requestOptions.SetHeader("Content-Length", contentLength.ToString());
-        }
-
-        Stream stream = await multipartContent.ReadAsStreamAsync().ConfigureAwait(false);
-        BinaryContent content = BinaryContent.Create(stream);
+        (BinaryContent content, RequestOptions requestOptions) = 
+            await CreateCreateTranscriptionContentAsync(
+                audioBytes, 
+                filename, 
+                _clientConnector.Model, 
+                options).ConfigureAwait(false);
 
         ClientResult result = await TranscribeAudioAsync(content, requestOptions).ConfigureAwait(false);
 
@@ -299,13 +248,13 @@ public partial class AudioClient
     // relevant model (example in CreateTranscriptionRequest.Serialization.cs),
     // but there are enough customizations today that we don't have the model
     // infrastructure to support this out of the box from TypeSpec today.
-    private MultipartFormDataContent CreateCreateTranscriptionRequestContent(
+    private async Task<(BinaryContent, RequestOptions)> CreateCreateTranscriptionContentAsync(
         BinaryData audioBytes,
         string filename,
         string model,
-        AudioTranscriptionOptions options)
+        AudioTranscriptionOptions transcriptionOptions)
     {
-        options ??= new();
+        transcriptionOptions ??= new();
 
         // TODO: add boundary
         MultipartFormDataContent content = new();
@@ -331,49 +280,49 @@ public partial class AudioClient
         content.Add(new StringContent(model), name: "model");
 
         // language - optional
-        if (options.Language is not null)
+        if (transcriptionOptions.Language is not null)
         {
-            content.Add(new StringContent(options.Language), name: "language");
+            content.Add(new StringContent(transcriptionOptions.Language), name: "language");
         }
 
         // prompt - optional
-        if (options.Prompt is not null)
+        if (transcriptionOptions.Prompt is not null)
         {
-            content.Add(new StringContent(options.Prompt), name: "prompt");
+            content.Add(new StringContent(transcriptionOptions.Prompt), name: "prompt");
         }
 
         // response_format - optional
-        if (options.ResponseFormat is not null)
+        if (transcriptionOptions.ResponseFormat is not null)
         {
             // TODO: another way to represent this in the model/enum?
-            content.Add(new StringContent(options.ResponseFormat switch
+            content.Add(new StringContent(transcriptionOptions.ResponseFormat switch
             {
                 AudioTranscriptionFormat.Simple => "json",
                 AudioTranscriptionFormat.Detailed => "verbose_json",
                 AudioTranscriptionFormat.Srt => "srt",
                 AudioTranscriptionFormat.Vtt => "vtt",
-                _ => throw new ArgumentException(nameof(options.ResponseFormat)),
+                _ => throw new ArgumentException(nameof(transcriptionOptions.ResponseFormat)),
             }),
             name: "response_format");
         }
 
         // temperature - optional
-        if (options.Temperature is not null)
+        if (transcriptionOptions.Temperature is not null)
         {
             // TODO: preferred way to handle floats/numerics?
-            content.Add(new StringContent($"{options.Temperature}"), name: "temperature");
+            content.Add(new StringContent($"{transcriptionOptions.Temperature}"), name: "temperature");
         }
 
         // timestamp_granularities[] - optional
-        if (options.EnableWordTimestamps is not null  ||
-            (options.EnableSegmentTimestamps is not null))
+        if (transcriptionOptions.EnableWordTimestamps is not null  ||
+            (transcriptionOptions.EnableSegmentTimestamps is not null))
         {
             List<string> granularities = [];
-            if (options.EnableWordTimestamps.Value)
+            if (transcriptionOptions.EnableWordTimestamps.Value)
             {
                 granularities.Add("word");
             }
-            if (options.EnableSegmentTimestamps.Value)
+            if (transcriptionOptions.EnableSegmentTimestamps.Value)
             {
                 granularities.Add("segment");
             }
@@ -383,7 +332,24 @@ public partial class AudioClient
             content.Add(new ByteArrayContent(data), name: "timestamp_granularities");
         }
 
-        return content;
+        // multipart/form-data operations must transfer the headers from the
+        // MultipartFormDataContent instance over to the request, using RequestOptions.
+        RequestOptions requestOptions = new();
+
+        // TODO: can we improve perf when transferring headers?
+        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
+        {
+            requestOptions.SetHeader("Content-Type", contentType.ToString());
+        }
+
+        if (content.Headers.ContentLength is long contentLength)
+        {
+            requestOptions.SetHeader("Content-Length", contentLength.ToString());
+        }
+
+        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+        
+        return (BinaryContent.Create(stream), requestOptions);
     }
 
     // request-creation helper for TranscribeAudio protocol method

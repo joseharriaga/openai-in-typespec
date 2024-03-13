@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -150,21 +151,126 @@ public partial class AudioClient
     // convenience method - sync
     public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {
+        if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
+        if (filename is null) throw new ArgumentNullException(nameof(filename));
+
+        // multipart/form-data operations will need to create an instance of 
+        // System.Net.Http.MultipartFormDataContent - this has both the request
+        // content and headers stored in it.
+
+        // TODO: should this move into a model serialization routine?
+        MultipartFormDataContent multipartContent = CreateCreateTranscriptionRequestContent(
+            audioBytes,
+            filename,
+            _clientConnector.Model,
+            options);
+
+        // TODO: is there a way to factor this more nicely?
+        // It would be nice to return BinaryContent and have headers come back in
+        // an out parameter, but you can't pass an out-parameter out of an async
+        // method.  Revisit to improve ease-of-generation.
+
+        // multipart/form-data operations must transfer the headers from the
+        // MultipartFormDataContent instance over to the request, using RequestOptions.
+        RequestOptions requestOptions = new();
+
+        // TODO: can we improve perf when transferring headers?
+        if (multipartContent.Headers.ContentType is MediaTypeHeaderValue contentType)
+        {
+            requestOptions.SetHeader("Content-Type", contentType.ToString());
+        }
+
+        if (multipartContent.Headers.ContentLength is long contentLength)
+        {
+            requestOptions.SetHeader("Content-Length", contentLength.ToString());
+        }
+
         // TODO: ensure correct patterns for sync-over-async
-        PipelineMessage message = CreateCreateTranscriptionRequestAsync(audioBytes, filename, options).Result;
-        Shim.Pipeline.Send(message);
-        return GetTranscriptionResultFromResponse(message.Response);
+        Stream stream = multipartContent.ReadAsStreamAsync().Result;
+        BinaryContent content = BinaryContent.Create(stream);
+
+        ClientResult result = TranscribeAudio(content, requestOptions);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        // TODO: implement IJsonModel<AudioTranscription>
+        //AudioTranscription value = ModelReaderWriter.Read<AudioTranscription>(response.Content)!;
+        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
     // convenience method - async
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {
-        PipelineMessage message = await CreateCreateTranscriptionRequestAsync(audioBytes, filename, options).ConfigureAwait(false);
-        await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
-        return GetTranscriptionResultFromResponse(message.Response);
+        if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
+        if (filename is null) throw new ArgumentNullException(nameof(filename));
+
+        // multipart/form-data operations will need to create an instance of 
+        // System.Net.Http.MultipartFormDataContent - this has both the request
+        // content and headers stored in it.
+
+        // TODO: should this move into a model serialization routine?
+        MultipartFormDataContent multipartContent = CreateCreateTranscriptionRequestContent(
+            audioBytes, 
+            filename, 
+            _clientConnector.Model, 
+            options);
+
+        // TODO: is there a way to factor this more nicely?
+        // It would be nice to return BinaryContent and have headers come back in
+        // an out parameter, but you can't pass an out-parameter out of an async
+        // method.  Revisit to improve ease-of-generation.
+
+        // multipart/form-data operations must transfer the headers from the
+        // MultipartFormDataContent instance over to the request, using RequestOptions.
+        RequestOptions requestOptions = new();
+
+        // TODO: can we improve perf when transferring headers?
+        if (multipartContent.Headers.ContentType is MediaTypeHeaderValue contentType)
+        {
+            requestOptions.SetHeader("Content-Type", contentType.ToString());
+        }
+
+        if (multipartContent.Headers.ContentLength is long contentLength)
+        {
+            requestOptions.SetHeader("Content-Length", contentLength.ToString());
+        }
+
+        Stream stream = await multipartContent.ReadAsStreamAsync().ConfigureAwait(false);
+        BinaryContent content = BinaryContent.Create(stream);
+
+        ClientResult result = await TranscribeAudioAsync(content, requestOptions).ConfigureAwait(false);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        // TODO: implement IJsonModel<AudioTranscription>
+        //AudioTranscription value = ModelReaderWriter.Read<AudioTranscription>(response.Content)!;
+        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
     // protocol method - sync
+    public virtual ClientResult TranscribeAudio(BinaryContent content, RequestOptions options = null)
+    {
+        if (content is null) throw new ArgumentNullException(nameof(content));
+
+        options ??= new RequestOptions();
+
+        using PipelineMessage message = CreateCreateTranscriptionRequest(content, options);
+
+        Shim.Pipeline.Send(message);
+
+        PipelineResponse response = message.Response!;
+
+        if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
+        {
+            throw new ClientResultException(response);
+        }
+
+        return ClientResult.FromResponse(response);
+    }
 
     // protocol method - async
     public virtual async Task<ClientResult> TranscribeAudioAsync(BinaryContent content, RequestOptions options = null)
@@ -173,32 +279,133 @@ public partial class AudioClient
 
         options ??= new RequestOptions();
 
+        using PipelineMessage message = CreateCreateTranscriptionRequest(content, options);
 
+        Shim.Pipeline.Send(message);
 
-        // Create a message that can be sent through the client pipeline.
-        using PipelineMessage message = CreateAddCountryCodeRequest(country, options);
-
-        // Send the message.
-        _pipeline.Send(message);
-
-        // Obtain the response from the message Response property.
-        // The PipelineTransport ensures that the Response value is set
-        // so that every policy in the pipeline can access the property.
         PipelineResponse response = message.Response!;
 
-        // If the response is considered an error response, throw an
-        // exception that exposes the response details.  The protocol method
-        // caller can change the default exception behavior by setting error
-        // options differently.
         if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
         {
-            // Use the CreateAsync factory method to create an exception instance
-            // in an async context. In a sync method, the exception constructor can be used.
             throw await ClientResultException.CreateAsync(response).ConfigureAwait(false);
         }
 
-        // Return a ClientResult holding the HTTP response details.
         return ClientResult.FromResponse(response);
+    }
+
+    // content-creation helper for TranscribeAudio convenience method
+    //
+    // TODO: ideally, this would live in a Model.Serialization.cs file for the
+    // relevant model (example in CreateTranscriptionRequest.Serialization.cs),
+    // but there are enough customizations today that we don't have the model
+    // infrastructure to support this out of the box from TypeSpec today.
+    private MultipartFormDataContent CreateCreateTranscriptionRequestContent(
+        BinaryData audioBytes,
+        string filename,
+        string model,
+        AudioTranscriptionOptions options)
+    {
+        options ??= new();
+
+        // TODO: add boundary
+        MultipartFormDataContent content = new();
+
+        // file
+        // TODO: Better to take the stream as an input parameter?
+        // TODO: if we need to use BinaryData, is it better to call ToArray/ToStream/other for perf?
+
+        // TODO: I think we need to add the content header manually because the
+        // default implementation is adding a `filename*` parameter to the header,
+        // which RFC 7578 says not to do -- I am following up with the BCL team
+        // on this to learn more about when this is/isn't needed.
+        HttpContent audioContent = new ByteArrayContent(audioBytes.ToArray());
+        ContentDispositionHeaderValue header = new ContentDispositionHeaderValue("form-data")
+        {
+            Name = "file",
+            FileName = filename
+        };
+        audioContent.Headers.ContentDisposition = header;
+        content.Add(audioContent);
+
+        // model
+        content.Add(new StringContent(model), name: "model");
+
+        // language - optional
+        if (options.Language is not null)
+        {
+            content.Add(new StringContent(options.Language), name: "language");
+        }
+
+        // prompt - optional
+        if (options.Prompt is not null)
+        {
+            content.Add(new StringContent(options.Prompt), name: "prompt");
+        }
+
+        // response_format - optional
+        if (options.ResponseFormat is not null)
+        {
+            // TODO: another way to represent this in the model/enum?
+            content.Add(new StringContent(options.ResponseFormat switch
+            {
+                AudioTranscriptionFormat.Simple => "json",
+                AudioTranscriptionFormat.Detailed => "verbose_json",
+                AudioTranscriptionFormat.Srt => "srt",
+                AudioTranscriptionFormat.Vtt => "vtt",
+                _ => throw new ArgumentException(nameof(options.ResponseFormat)),
+            }),
+            name: "response_format");
+        }
+
+        // temperature - optional
+        if (options.Temperature is not null)
+        {
+            // TODO: preferred way to handle floats/numerics?
+            content.Add(new StringContent($"{options.Temperature}"), name: "temperature");
+        }
+
+        // timestamp_granularities[] - optional
+        if (options.EnableWordTimestamps is not null  ||
+            (options.EnableSegmentTimestamps is not null))
+        {
+            List<string> granularities = [];
+            if (options.EnableWordTimestamps.Value)
+            {
+                granularities.Add("word");
+            }
+            if (options.EnableSegmentTimestamps.Value)
+            {
+                granularities.Add("segment");
+            }
+
+            // TODO: preferred way to serialize models?
+            byte[] data = JsonSerializer.SerializeToUtf8Bytes(granularities);
+            content.Add(new ByteArrayContent(data), name: "timestamp_granularities");
+        }
+
+        return content;
+    }
+
+    // request-creation helper for TranscribeAudio protocol method
+    private PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, RequestOptions options)
+    {
+        PipelineMessage message = Shim.Pipeline.CreateMessage();
+        message.ResponseClassifier = ResponseErrorClassifier200;
+
+        PipelineRequest request = message.Request;
+        request.Method = "POST";
+
+        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+        StringBuilder path = new();
+        path.Append("/audio/transcriptions");
+        uriBuilder.Path += path.ToString();
+        request.Uri = uriBuilder.Uri;
+
+        request.Content = content;
+
+        message.Apply(options);
+
+        return message;
     }
 
     public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
@@ -251,27 +458,6 @@ public partial class AudioClient
         return message;
     }
 
-    // request-creation helper for TranscribeAudio protocol method
-    private PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, RequestOptions options)
-    {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
-
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
-
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append("/audio/transcriptions");
-        uriBuilder.Path += path.ToString();
-        request.Uri = uriBuilder.Uri;
-
-        request.Content = content;
-
-        message.Apply(options);
-
-        return message;
-    }
 
     // request-creation helper for TranslateAudio protocol method
     private async Task<PipelineMessage> CreateCreateTranslationRequestAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options)
@@ -400,22 +586,6 @@ public partial class AudioClient
             byte[] data = JsonSerializer.SerializeToUtf8Bytes(granularities);
             content.Add(new ByteArrayContent(data), name: "timestamp_granularities");
         }
-
-        // TODO: Better to take the stream as an input parameter?
-        // TODO: if we need to use BinaryData, is it better to call ToArray/ToStream/other for perf?
-
-        // TODO: I think we need to add the content header manually because the
-        // default implementation is adding a `filename*` parameter to the header,
-        // which RFC 7578 says not to do -- I am following up with the BCL team
-        // on this to learn more about when this is/isn't needed.
-        HttpContent audioContent = new ByteArrayContent(audioBytes.ToArray());
-        ContentDispositionHeaderValue header = new ContentDispositionHeaderValue("form-data")
-        {
-            Name = "file",
-            FileName = filename
-        };
-        audioContent.Headers.ContentDisposition = header;
-        content.Add(audioContent);
 
         return content;
     }

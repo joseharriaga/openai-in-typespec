@@ -3,13 +3,12 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.IO;
-using System.Net.Http.Headers;
-using System.Linq;
 
 namespace OpenAI.Audio;
 
@@ -285,19 +284,19 @@ public partial class AudioClient
     {
         MultipartFormDataContent content = new();
 
-        content.Add(new StringContent(), "model");
+        content.Add(new StringContent(_clientConnector.Model), name: "model");
 
-        if (OptionalProperty.IsDefined(language))
+        if (language is not null)
         {
-            content.Add(new StringContent(language), "language");
+            content.Add(new StringContent(language), name: "language");
         }
 
-        if (OptionalProperty.IsDefined(prompt))
+        if (prompt is not null)
         {
-            content.Add(new StringContent(prompt), "prompt");
+            content.Add(new StringContent(prompt), name: "prompt");
         }
 
-        if (OptionalProperty.IsDefined(transcriptionFormat))
+        if (transcriptionFormat is not null)
         {
             content.Add(new StringContent(transcriptionFormat switch
             {
@@ -306,16 +305,20 @@ public partial class AudioClient
                 AudioTranscriptionFormat.Srt => "srt",
                 AudioTranscriptionFormat.Vtt => "vtt",
                 _ => throw new ArgumentException(nameof(transcriptionFormat)),
-            }), "response_format");
+            }),
+            name: "response_format");
         }
 
-        if (OptionalProperty.IsDefined(temperature))
+        if (temperature is not null)
         {
-            content.Add(new StringContent($"{temperature}"), "temperature");
+            // TODO: preferred way to handle floats/numerics?
+            content.Add(new StringContent($"{temperature}"), name: "temperature");
         }
 
-        if (OptionalProperty.IsDefined(enableWordTimestamps) || OptionalProperty.IsDefined(enableSegmentTimestamps))
+        if (enableWordTimestamps is not null || 
+            enableSegmentTimestamps is not null)
         {
+            // TODO: preferred way to serialize models?
             List<string> granularities = [];
             if (enableWordTimestamps == true)
             {
@@ -326,12 +329,13 @@ public partial class AudioClient
                 granularities.Add("segment");
             }
 
-            byte[] json = JsonSerializer.SerializeToUtf8Bytes(granularities);
-            content.Add(new ByteArrayContent(json), "timestamp_granularities");
+            byte[] data = JsonSerializer.SerializeToUtf8Bytes(granularities);
+            content.Add(new ByteArrayContent(data), name: "timestamp_granularities");
         }
 
-        Stream audioStream = audioBytes.ToStream();
-        content.Add(new StreamContent(audioStream), "file", filename);
+        // TODO: Better to take the stream as an input parameter?
+        // TODO: if we need to use BinaryData, is it better to call ToArray/ToStream/other for perf?
+        content.Add(new ByteArrayContent(audioBytes.ToArray()), name: "file", fileName: filename);
 
         return content;
     }

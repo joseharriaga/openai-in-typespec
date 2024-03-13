@@ -1,10 +1,11 @@
-using OpenAI.Audio;
 using OpenAI.ClientShared.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -188,7 +189,8 @@ public partial class ImageClient
         int? imageCount = null,
         ImageEditOptions options = null)
     {
-        PipelineMessage message = CreateInternalImageEditsPipelineMessage(imageBytes, prompt, imageCount, options);
+        // TODO: ensure correct patterns for sync-over-async
+        PipelineMessage message = CreateInternalImageEditsPipelineMessageAsync(imageBytes, prompt, imageCount, options).Result;
         Shim.Pipeline.Send(message);
 
         if (message.Response.IsError)
@@ -214,7 +216,7 @@ public partial class ImageClient
         int? imageCount = null,
         ImageEditOptions options = null)
     {
-        PipelineMessage message = CreateInternalImageEditsPipelineMessage(imageBytes, prompt, imageCount, options);
+        PipelineMessage message = await CreateInternalImageEditsPipelineMessageAsync(imageBytes, prompt, imageCount, options).ConfigureAwait(false);
         await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
 
         if (message.Response.IsError)
@@ -349,7 +351,7 @@ public partial class ImageClient
             serializedAdditionalRawData: null);
     }
 
-    private PipelineMessage CreateInternalImageEditsPipelineMessage(
+    private async Task<PipelineMessage> CreateInternalImageEditsPipelineMessageAsync(
         BinaryData imageBytes,
         string prompt,
         int? imageCount = null,
@@ -366,7 +368,7 @@ public partial class ImageClient
         request.Uri = uriBuilder.Uri;
 
         options ??= new();
-        MultipartFormDataContent requestContent = CreateInternalImageEditsMultipartFormDataContent(
+        MultipartFormDataContent content = CreateInternalImageEditsMultipartFormDataContent(
             imageBytes,
             prompt,
             options.MaskBytes,
@@ -374,7 +376,24 @@ public partial class ImageClient
             options.ResponseFormat,
             options.Size,
             options.User);
-        requestContent.ApplyToRequest(request);
+
+        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+        request.Content = BinaryContent.Create(stream);
+
+        // Add headers
+        // TODO: can we improve perf?
+
+        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
+        {
+            request.Headers.Set("Content-Type", contentType.ToString());
+        }
+
+        if (content.Headers.ContentLength is long contentLength)
+        {
+            request.Headers.Set("Content-Length", contentLength.ToString());
+        }
+
+        // TODO: other headers to transfer from content as part of MPFD spec?
 
         return message;
     }
@@ -390,41 +409,37 @@ public partial class ImageClient
     {
         MultipartFormDataContent content = new();
 
-        content.Add(MultipartContent.Create(imageBytes), name: "image", fileName: "image.png", headers: []);
+        content.Add(new ByteArrayContent(imageBytes.ToArray()), name: "image", fileName: "image.png");
 
-        content.Add(MultipartContent.Create(BinaryData.FromString(prompt)), name: "prompt", headers: []);
+        content.Add(new StringContent(prompt), name: "prompt");
 
-        content.Add(MultipartContent.Create(BinaryData.FromString(_clientConnector.Model)), name: "model", headers: []);
+        content.Add(new StringContent(_clientConnector.Model), name: "model");
 
-        if (OptionalProperty.IsDefined(maskBytes))
+        if (maskBytes is not null)
         {
-            content.Add(MultipartContent.Create(maskBytes), name: "mask", fileName: "mask.png", headers: []);
+            content.Add(new ByteArrayContent(maskBytes.ToArray()), name: "mask", fileName: "mask.png");
         }
 
-        if (OptionalProperty.IsDefined(imageCount))
+        if (imageCount is not null)
         {
-            content.Add(MultipartContent.Create(BinaryData.FromString(imageCount.ToString())), name: "n", headers: []);
+            content.Add(new StringContent(imageCount.ToString()), name: "n");
         }
 
-        if (OptionalProperty.IsDefined(imageResponseFormat))
+        if (imageResponseFormat is not null)
         {
-            content.Add(MultipartContent.Create(
-                BinaryData.FromString(
+            content.Add(new StringContent(
                     imageResponseFormat switch
                     {
                         ImageResponseFormat.Uri => "url",
                         ImageResponseFormat.Bytes => "b64_json",
                         _ => throw new ArgumentException(nameof(imageResponseFormat)),
-                    })
-                ),
-                name: "response_format",
-                headers: []);
+                    }),
+                name: "response_format");
         }
 
-        if (OptionalProperty.IsDefined(imageSize))
+        if (imageSize is not null)
         {
-            content.Add(MultipartContent.Create(
-                BinaryData.FromString(
+            content.Add(new StringContent(
                     imageSize switch
                     {
                         ImageSize.Size256x256 => "256x256",
@@ -434,15 +449,13 @@ public partial class ImageClient
                         ImageSize.Size1024x1792 => "1024x1792",
                         ImageSize.Size1792x1024 => "1792x1024",
                         _ => throw new ArgumentException(nameof(imageSize))
-                    })
-                ),
-                name: "size",
-                headers: []);
+                    }),
+                name: "size");
         }
 
-        if (OptionalProperty.IsDefined(user))
+        if (user is not null)
         {
-            content.Add(MultipartContent.Create(BinaryData.FromString(user)), "user", []);
+            content.Add(new StringContent(user), "user");
         }
 
         return content;

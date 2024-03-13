@@ -10,6 +10,7 @@ using OpenAI.ModelManagement;
 using OpenAI.Moderations;
 using System;
 using System.ClientModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI;
 
@@ -91,6 +92,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="AssistantClient"/>. </returns>
+    [Experimental("AssistantsBetaV1")]
     public AssistantClient GetAssistantClient()
         => new(_cachedEndpoint, _cachedCredential, _cachedOptions);
 

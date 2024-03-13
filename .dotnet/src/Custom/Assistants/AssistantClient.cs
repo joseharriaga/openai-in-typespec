@@ -3,6 +3,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -10,6 +11,7 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// The service client for OpenAI assistants.
 /// </summary>
+[Experimental("AssistantsBetaV1")]
 public partial class AssistantClient
 {
     private OpenAIClientConnector _clientConnector;

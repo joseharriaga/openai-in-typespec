@@ -177,6 +177,8 @@ public partial class AudioClient
         if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
         if (filename is null) throw new ArgumentNullException(nameof(filename));
 
+        options ??= new();
+
         (BinaryContent content, RequestOptions requestOptions) =
             await options.CreateContentAsync(audioBytes, filename, _clientConnector.Model).ConfigureAwait(false);
 

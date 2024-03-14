@@ -1,4 +1,4 @@
-name: Validate OpenAPI definition
+name: Build and Test
 on:
   workflow_dispatch:
   push:

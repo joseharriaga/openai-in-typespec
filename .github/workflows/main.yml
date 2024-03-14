@@ -23,7 +23,7 @@ jobs:
         run: dotnet pack
           -c Release
           -o "${{github.workspace}}/packages"
-          ${{ github.ref == 'refs/heads/main' && '' || format('--version-suffix="alpha.{0}"', github.run_number) }}
+          ${{ github.ref != 'refs/heads/main' && format('--version-suffix="alpha.{0}"', github.run_number) || '' }}
         working-directory: .dotnet
 
       - name: Upload artifact

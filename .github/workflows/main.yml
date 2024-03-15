@@ -8,6 +8,12 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
 
+permissions:
+  actions: read
+  checks: write
+  contents: read
+  packages: write
+
 jobs:
   build: # Test, pack and publish the Open AI nuget package as a build artifact 
     runs-on: ubuntu-latest

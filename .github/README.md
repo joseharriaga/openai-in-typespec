@@ -10,8 +10,6 @@ https://docs.github.com/en/actions/automating-builds-and-tests/building-and-test
 - Test the built libraries
   - Use a repository secret to hold the OpenAI token used for live testing  
     https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions
-  - To have the test results reported in the Actions UI, we use the test-reporter action  
-    https://github.com/marketplace/actions/test-reporter
 - Package the built libraries
 - Publish the package as a GitHub Release
 - Publish the package to a GitHub NuGet registry  

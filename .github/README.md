@@ -14,5 +14,6 @@ https://docs.github.com/en/actions/automating-builds-and-tests/building-and-test
     https://github.com/marketplace/actions/test-reporter
 - Package the built libraries
 - Publish the package as a GitHub Release
-- Publish the package to a GitHub NuGet feed
+- Publish the package to a GitHub NuGet registry  
+  https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 - Publish a single build artifact containing test results and a nuget package

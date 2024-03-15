@@ -9,7 +9,7 @@ public partial class GitHubTests
     [Category("GitHub")]
     public void CanUseGitHubSecret()
     {
-        string gitHubSecretString = Environment.GetEnvironmentVariable("SECRET_VARIABLE");
+        string gitHubSecretString = Environment.GetEnvironmentVariable("SECRET_VALUE");
         Assert.That(gitHubSecretString, Is.Not.Null.Or.Empty);
     }
 }

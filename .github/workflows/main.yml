@@ -10,6 +10,7 @@ on:
 jobs:
   build: # Test, pack and publish the Open AI nuget package as a build artifact 
     runs-on: ubuntu-latest
+    environment: livetest
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -19,9 +20,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Build
+        run: dotnet build
+          -c Release
+        working-directory: .dotnet
+
+      - name: Test
+        run: dotnet test
+          -c Release --no-build
+          --filter="TestCategory~GitHub"
+        working-directory: .dotnet
+    
       - name: Pack
         run: dotnet pack
-          -c Release
+          -c Release --no-build
           -o "${{github.workspace}}/packages"
           ${{ github.ref != 'refs/heads/main' && format('--version-suffix="alpha.{0}"', github.run_number) || '' }}
         working-directory: .dotnet

@@ -42,6 +42,12 @@ model CreateRunRequest {
    */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
+
+  /**
+   * If true, returns a stream of events that happen during the Run as server-sent events,
+   * terminating when the Run enters a terminal state with a data: [DONE] message.
+   */
+  stream?: boolean;
 }
 
 model ModifyRunRequest {
@@ -87,6 +93,12 @@ model CreateThreadAndRunRequest {
    */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
+
+  /**
+   * If true, returns a stream of events that happen during the Run as server-sent events,
+   * terminating when the Run enters a terminal state with a data: [DONE] message.
+   */
+  stream?: boolean;
 }
 
 model SubmitToolOutputsRunRequest {

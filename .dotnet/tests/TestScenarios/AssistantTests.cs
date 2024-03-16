@@ -126,6 +126,32 @@ public partial class AssistantTests
         Assert.That(runResult.Value.Status, Is.Not.EqualTo(RunStatus.RequiresAction));
     }
 
+    [Test]
+    public async Task StreamingRunWorks()
+    {
+        AssistantClient client = GetTestClient();
+        Assistant assistant = await CreateCommonTestAssistantAsync();
+
+        StreamingClientResult<StreamingRunUpdate> runUpdateResult = client.CreateThreadAndRunStreaming(
+            assistant.Id,
+            new ThreadCreationOptions()
+            {
+                Messages =
+                {
+                    "Hello, assistant! Can you help me?",
+                }
+            });
+        Assert.That(runUpdateResult, Is.Not.Null);
+        await foreach (StreamingRunUpdate runUpdate in runUpdateResult)
+        {
+            if (runUpdate.MessageRole.HasValue)
+            {
+                Console.Write($"[{runUpdate.MessageRole}]");
+            }
+            Console.Write(runUpdate.MessageContentUpdate?.GetText());
+        }
+    }
+
     private async Task<Assistant> CreateCommonTestAssistantAsync()
     {
         AssistantClient client = new();
@@ -141,7 +167,8 @@ public partial class AssistantTests
         return newAssistantResult.Value;
     }
 
-    private async Task DeleteRecentTestThings()
+    [TearDown]
+    protected async Task DeleteRecentTestThings()
     {
         AssistantClient client = new();
         foreach(Assistant assistant in client.GetAssistants().Value)

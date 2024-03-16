@@ -77,8 +77,12 @@ namespace OpenAI.Internal.Models
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
+        /// <param name="stream">
+        /// If true, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a data: [DONE] message.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateRunRequest(string assistantId, string model, string instructions, string additionalInstructions, IList<BinaryData> tools, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateRunRequest(string assistantId, string model, string instructions, string additionalInstructions, IList<BinaryData> tools, IDictionary<string, string> metadata, bool? stream, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Model = model;
@@ -86,6 +90,7 @@ namespace OpenAI.Internal.Models
             AdditionalInstructions = additionalInstructions;
             Tools = tools;
             Metadata = metadata;
+            Stream = stream;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -150,5 +155,10 @@ namespace OpenAI.Internal.Models
         /// characters long and values can be a maxium of 512 characters long.
         /// </summary>
         public IDictionary<string, string> Metadata { get; set; }
+        /// <summary>
+        /// If true, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a data: [DONE] message.
+        /// </summary>
+        public bool? Stream { get; set; }
     }
 }

@@ -19,20 +19,18 @@ internal static class SseAsyncEnumerator<T>
             using SseReader sseReader = new(stream);
             while (!cancellationToken.IsCancellationRequested)
             {
-                SseLine? sseEvent = await sseReader.TryReadSingleFieldEventAsync().ConfigureAwait(false);
-                if (sseEvent is not null)
+                SseEvent? sseEvent = await sseReader.TryGetNextEventAsync(cancellationToken).ConfigureAwait(false);
+                if (sseEvent is null)
                 {
-                    ReadOnlyMemory<char> name = sseEvent.Value.FieldName;
-                    if (!name.Span.SequenceEqual("data".AsSpan()))
-                    {
-                        throw new InvalidDataException();
-                    }
-                    ReadOnlyMemory<char> value = sseEvent.Value.FieldValue;
-                    if (value.Span.SequenceEqual("[DONE]".AsSpan()))
+                    break;
+                }
+                else
+                {
+                    if (sseEvent.Value.Data.Span.SequenceEqual("[DONE]".AsSpan()))
                     {
                         break;
                     }
-                    using JsonDocument sseMessageJson = JsonDocument.Parse(value);
+                    using JsonDocument sseMessageJson = JsonDocument.Parse(sseEvent.Value.Data);
                     IEnumerable<T> newItems = multiElementDeserializer.Invoke(sseMessageJson.RootElement);
                     foreach (T item in newItems)
                     {

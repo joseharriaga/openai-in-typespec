@@ -27,6 +27,35 @@ namespace OpenAI.Internal.Models
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("thread_id"u8);
             writer.WriteStringValue(ThreadId);
+            writer.WritePropertyName("status"u8);
+            writer.WriteStringValue(Status.ToString());
+            if (IncompleteDetails != null)
+            {
+                writer.WritePropertyName("incomplete_details"u8);
+                writer.WriteObjectValue(IncompleteDetails);
+            }
+            else
+            {
+                writer.WriteNull("incomplete_details");
+            }
+            if (CompletedAt != null)
+            {
+                writer.WritePropertyName("completed_at"u8);
+                writer.WriteStringValue(CompletedAt.Value, "O");
+            }
+            else
+            {
+                writer.WriteNull("completed_at");
+            }
+            if (IncompleteAt != null)
+            {
+                writer.WritePropertyName("incomplete_at"u8);
+                writer.WriteStringValue(IncompleteAt.Value, "O");
+            }
+            else
+            {
+                writer.WriteNull("incomplete_at");
+            }
             writer.WritePropertyName("role"u8);
             writer.WriteStringValue(Role.ToString());
             writer.WritePropertyName("content"u8);
@@ -130,6 +159,10 @@ namespace OpenAI.Internal.Models
             MessageObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string threadId = default;
+            MessageObjectStatus status = default;
+            MessageObjectIncompleteDetails incompleteDetails = default;
+            DateTimeOffset? completedAt = default;
+            DateTimeOffset? incompleteAt = default;
             MessageObjectRole role = default;
             IReadOnlyList<BinaryData> content = default;
             string assistantId = default;
@@ -158,6 +191,41 @@ namespace OpenAI.Internal.Models
                 if (property.NameEquals("thread_id"u8))
                 {
                     threadId = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("status"u8))
+                {
+                    status = new MessageObjectStatus(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("incomplete_details"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        incompleteDetails = null;
+                        continue;
+                    }
+                    incompleteDetails = MessageObjectIncompleteDetails.DeserializeMessageObjectIncompleteDetails(property.Value);
+                    continue;
+                }
+                if (property.NameEquals("completed_at"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        completedAt = null;
+                        continue;
+                    }
+                    completedAt = property.Value.GetDateTimeOffset("O");
+                    continue;
+                }
+                if (property.NameEquals("incomplete_at"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        incompleteAt = null;
+                        continue;
+                    }
+                    incompleteAt = property.Value.GetDateTimeOffset("O");
                     continue;
                 }
                 if (property.NameEquals("role"u8))
@@ -233,7 +301,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = additionalPropertiesDictionary;
-            return new MessageObject(id, @object, createdAt, threadId, role, content, assistantId, runId, fileIds, metadata, serializedAdditionalRawData);
+            return new MessageObject(id, @object, createdAt, threadId, status, incompleteDetails, completedAt, incompleteAt, role, content, assistantId, runId, fileIds, metadata, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<MessageObject>.Write(ModelReaderWriterOptions options)

@@ -97,6 +97,11 @@ namespace OpenAI.Internal.Models
                     writer.WriteNull("metadata");
                 }
             }
+            if (OptionalProperty.IsDefined(Stream))
+            {
+                writer.WritePropertyName("stream"u8);
+                writer.WriteBooleanValue(Stream.Value);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -141,6 +146,7 @@ namespace OpenAI.Internal.Models
             OptionalProperty<string> instructions = default;
             OptionalProperty<IList<BinaryData>> tools = default;
             OptionalProperty<IDictionary<string, string>> metadata = default;
+            OptionalProperty<bool> stream = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> additionalPropertiesDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -214,13 +220,22 @@ namespace OpenAI.Internal.Models
                     metadata = dictionary;
                     continue;
                 }
+                if (property.NameEquals("stream"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    stream = property.Value.GetBoolean();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalPropertiesDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
             serializedAdditionalRawData = additionalPropertiesDictionary;
-            return new CreateThreadAndRunRequest(assistantId, thread.Value, model.Value, instructions.Value, OptionalProperty.ToList(tools), OptionalProperty.ToDictionary(metadata), serializedAdditionalRawData);
+            return new CreateThreadAndRunRequest(assistantId, thread.Value, model.Value, instructions.Value, OptionalProperty.ToList(tools), OptionalProperty.ToDictionary(metadata), OptionalProperty.ToNullable(stream), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateThreadAndRunRequest>.Write(ModelReaderWriterOptions options)

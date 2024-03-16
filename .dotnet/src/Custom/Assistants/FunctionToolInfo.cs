@@ -75,7 +75,9 @@ public partial class FunctionToolInfo : ToolInfo
         }
         if (OptionalProperty.IsDefined(Parameters))
         {
-            writer.WriteRawValue(Parameters.ToString());
+            writer.WritePropertyName("parameters"u8);
+            using JsonDocument parametersJson = JsonDocument.Parse(Parameters);
+            parametersJson.WriteTo(writer);
         }
         writer.WriteEndObject();
     }

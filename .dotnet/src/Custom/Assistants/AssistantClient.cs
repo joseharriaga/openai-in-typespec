@@ -1,8 +1,11 @@
+using OpenAI.Chat;
 using OpenAI.ClientShared.Internal;
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -506,6 +509,26 @@ public partial class AssistantClient
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
+    public virtual StreamingClientResult<StreamingRunUpdate> CreateRunStreaming(
+        string threadId,
+        string assistantId,
+        RunCreationOptions options = null)
+    {
+        PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options);
+        RunShim.Pipeline.Send(message);
+        return CreateStreamingRunResult(message);
+    }
+
+    public virtual async Task<StreamingClientResult<StreamingRunUpdate>> CreateRunStreamingAsync(
+        string threadId,
+        string assistantId,
+        RunCreationOptions options = null)
+    {
+        PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options);
+        await RunShim.Pipeline.SendAsync(message);
+        return CreateStreamingRunResult(message);
+    }
+
     public virtual ClientResult<ThreadRun> CreateThreadAndRun(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
@@ -527,6 +550,26 @@ public partial class AssistantClient
         ClientResult<Internal.Models.RunObject> internalResult
             = await RunShim.CreateThreadAndRunAsync(request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+    }
+
+    public virtual StreamingClientResult<StreamingRunUpdate> CreateThreadAndRunStreaming(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+    {
+        PipelineMessage message = CreateCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
+        Shim.Pipeline.Send(message);
+        return CreateStreamingRunResult(message);
+    }
+
+    public virtual async Task<StreamingClientResult<StreamingRunUpdate>> CreateThreadAndRunStreamingAsync(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+    {
+        PipelineMessage message = CreateCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
+        await Shim.Pipeline.SendAsync(message);
+        return CreateStreamingRunResult(message);
     }
 
     public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId)
@@ -630,6 +673,50 @@ public partial class AssistantClient
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
+    internal PipelineMessage CreateCreateRunRequest(string threadId, string assistantId, RunCreationOptions runOptions, bool? stream = null)
+    {
+        Internal.Models.CreateRunRequest internalCreateRunRequest = CreateInternalCreateRunRequest(assistantId, runOptions, stream);
+        BinaryContent requestBody = BinaryContent.Create(internalCreateRunRequest);
+        return CreateCreateRunRequest(threadId, requestBody, stream: true);
+    }
+
+    internal PipelineMessage CreateCreateThreadAndRunRequest(
+        string assistantId,
+        ThreadCreationOptions threadOptions,
+        RunCreationOptions runOptions,
+        bool? stream = null)
+    {
+        Internal.Models.CreateThreadAndRunRequest internalRequest
+            = CreateInternalCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
+        BinaryContent content = BinaryContent.Create(internalRequest);
+        return CreateCreateThreadAndRunRequest(content, stream: true);
+    }
+
+    internal static StreamingClientResult<StreamingRunUpdate> CreateStreamingRunResult(PipelineMessage message)
+    {
+        if (message.Response.IsError)
+        {
+            throw new ClientResultException(message.Response);
+        }
+        PipelineResponse response = null;
+        try
+        {
+            response = message.ExtractResponse();
+            ClientResult genericResult = ClientResult.FromResponse(response);
+            StreamingClientResult<StreamingRunUpdate> streamingResult = StreamingClientResult<StreamingRunUpdate>.CreateFromResponse(
+                genericResult,
+                (responseForEnumeration) => SseAsyncEnumerator<StreamingRunUpdate>.EnumerateFromSseStream(
+                    responseForEnumeration.GetRawResponse().ContentStream,
+                    e => StreamingRunUpdate.DeserializeStreamingRunUpdates(e)));
+            response = null;
+            return streamingResult;
+        }
+        finally
+        {
+            response?.Dispose();
+        }
+    }
+
     internal static Internal.Models.CreateAssistantRequest CreateInternalCreateAssistantRequest(
         string modelName,
         AssistantCreationOptions options)
@@ -670,7 +757,8 @@ public partial class AssistantClient
 
     internal static Internal.Models.CreateRunRequest CreateInternalCreateRunRequest(
         string assistantId,
-        RunCreationOptions options = null)
+        RunCreationOptions options = null,
+        bool? stream = null)
     {
         options ??= new();
         return new(
@@ -680,13 +768,15 @@ public partial class AssistantClient
             options.AdditionalInstructions,
             ToInternalBinaryDataList(options.OverrideTools),
             options.Metadata,
+            stream,
             serializedAdditionalRawData: null);
     }
 
     internal static Internal.Models.CreateThreadAndRunRequest CreateInternalCreateThreadAndRunRequest(
         string assistantId,
         ThreadCreationOptions threadOptions,
-        RunCreationOptions runOptions)
+        RunCreationOptions runOptions,
+        bool? stream = null)
     {
         threadOptions ??= new();
         runOptions ??= new();
@@ -698,6 +788,7 @@ public partial class AssistantClient
             runOptions.OverrideInstructions,
             ToInternalBinaryDataList(runOptions?.OverrideTools),
             runOptions?.Metadata,
+            stream,
             serializedAdditionalRawData: null);
     }
 
@@ -766,4 +857,7 @@ public partial class AssistantClient
         ListQueryPage<T> convertedValue = ListQueryPage.Create(internalResult.Value) as ListQueryPage<T>;
         return ClientResult.FromValue(convertedValue, internalResult.GetRawResponse());
     }
+
+    private static PipelineMessageClassifier _responseErrorClassifier200;
+    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

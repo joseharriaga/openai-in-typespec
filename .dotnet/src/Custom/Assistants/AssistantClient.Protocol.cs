@@ -1,6 +1,8 @@
+using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -318,6 +320,15 @@ public partial class AssistantClient
         RequestOptions options = null)
         => RunShim.CreateRun(threadId, content, options);
 
+    /// <inheritdoc cref="Internal.Runs.CreateRun(string, BinaryContent, RequestOptions)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult CreateRunStreaming(string threadId, BinaryContent content, RequestOptions options = null)
+    {
+        PipelineMessage message = CreateCreateRunRequest(threadId, content, stream: true, options);
+        RunShim.Pipeline.Send(message);
+        return ClientResult.FromResponse(message.ExtractResponse());
+    }
+
     /// <inheritdoc cref="Internal.Runs.CreateRunAsync(string, BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> CreateRunAsync(
@@ -326,6 +337,15 @@ public partial class AssistantClient
         RequestOptions options = null)
         => await RunShim.CreateRunAsync(threadId, content, options).ConfigureAwait(false);
 
+    /// <inheritdoc cref="Internal.Runs.CreateRunAsync(string, BinaryContent, RequestOptions)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> CreateRunStreamingAsync(string threadId, BinaryContent content, RequestOptions options = null)
+    {
+        PipelineMessage message = CreateCreateRunRequest(threadId, content, stream: true, options);
+        await RunShim.Pipeline.SendAsync(message);
+        return ClientResult.FromResponse(message.ExtractResponse());
+    }
+
     /// <inheritdoc cref="Internal.Runs.CreateThreadAndRun(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult CreateThreadAndRun(
@@ -333,12 +353,30 @@ public partial class AssistantClient
         RequestOptions options = null)
         => RunShim.CreateThreadAndRun(content, options);
 
+    /// <inheritdoc cref="Internal.Runs.CreateThreadAndRun(BinaryContent, RequestOptions)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult CreateThreadAndRunStreaming(BinaryContent content, RequestOptions options = null)
+    {
+        PipelineMessage message = CreateCreateThreadAndRunRequest(content, stream: true, options);
+        RunShim.Pipeline.Send(message);
+        return ClientResult.FromResponse(message.ExtractResponse());
+    }
+
     /// <inheritdoc cref="Internal.Runs.CreateThreadAndRunAsync(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> CreateThreadAndRunAsync(
         BinaryContent content,
         RequestOptions options = null)
         => await RunShim.CreateThreadAndRunAsync(content, options).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Internal.Runs.CreateThreadAndRun(BinaryContent, RequestOptions)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> CreateThreadAndRunStreamingAsync(BinaryContent content, RequestOptions options = null)
+    {
+        PipelineMessage message = CreateCreateThreadAndRunRequest(content, stream: true, options);
+        await RunShim.Pipeline.SendAsync(message);
+        return ClientResult.FromResponse(message.ExtractResponse());
+    }
 
     /// <inheritdoc cref="Internal.Runs.GetRun(string, string, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -467,4 +505,51 @@ public partial class AssistantClient
         string subsequentStepId,
         RequestOptions options)
         => await RunShim.GetRunStepsAsync(threadId, runId, maxResults, createdSortOrder, previousStepId, subsequentStepId, options).ConfigureAwait(false);
+
+    internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, bool? stream = null, RequestOptions options = null)
+    {
+        PipelineMessage message = Shim.Pipeline.CreateMessage();
+        message.ResponseClassifier = ResponseErrorClassifier200;
+        if (stream == true)
+        {
+            message.BufferResponse = false;
+        }
+        PipelineRequest request = message.Request;
+        request.Method = "POST";
+        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+        StringBuilder path = new();
+        path.Append("/threads/");
+        path.Append(threadId);
+        path.Append("/runs");
+        uriBuilder.Path += path.ToString();
+        uriBuilder.Query += $"?thread_id={threadId}";
+        request.Uri = uriBuilder.Uri;
+        request.Headers.Set("Content-Type", "application/json");
+        request.Headers.Set("Accept", "text/event-stream");
+        request.Content = content;
+        message.Apply(options ?? new());
+        return message;
+    }
+
+    internal PipelineMessage CreateCreateThreadAndRunRequest(BinaryContent content, bool? stream = null, RequestOptions options = null)
+    {
+        PipelineMessage message = Shim.Pipeline.CreateMessage();
+        message.ResponseClassifier = ResponseErrorClassifier200;
+        if (stream == true)
+        {
+            message.BufferResponse = false;
+        }
+        PipelineRequest request = message.Request;
+        request.Method = "POST";
+        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+        StringBuilder path = new();
+        path.Append("/threads/runs");
+        uriBuilder.Path += path.ToString();
+        request.Uri = uriBuilder.Uri;
+        request.Headers.Set("Content-Type", "application/json");
+        request.Headers.Set("Accept", "text/event-stream");
+        request.Content = content;
+        message.Apply(options ?? new());
+        return message;
+    }
 }

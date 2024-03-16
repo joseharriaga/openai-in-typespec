@@ -46,6 +46,10 @@ namespace OpenAI.Internal.Models
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
+        /// <param name="status"> The status of the message, which can be either in_progress, incomplete, or completed. </param>
+        /// <param name="incompleteDetails"> On an incomplete message, details about why the message is incomplete. </param>
+        /// <param name="completedAt"> The Unix timestamp at which the message was completed. </param>
+        /// <param name="incompleteAt"> The Unix timestamp at which the message was marked as incomplete. </param>
         /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
         /// <param name="assistantId">
@@ -67,7 +71,7 @@ namespace OpenAI.Internal.Models
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="threadId"/>, <paramref name="content"/> or <paramref name="fileIds"/> is null. </exception>
-        internal MessageObject(string id, DateTimeOffset createdAt, string threadId, MessageObjectRole role, IEnumerable<BinaryData> content, string assistantId, string runId, IEnumerable<string> fileIds, IReadOnlyDictionary<string, string> metadata)
+        internal MessageObject(string id, DateTimeOffset createdAt, string threadId, MessageObjectStatus status, MessageObjectIncompleteDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageObjectRole role, IEnumerable<BinaryData> content, string assistantId, string runId, IEnumerable<string> fileIds, IReadOnlyDictionary<string, string> metadata)
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
             if (threadId is null) throw new ArgumentNullException(nameof(threadId));
@@ -77,6 +81,10 @@ namespace OpenAI.Internal.Models
             Id = id;
             CreatedAt = createdAt;
             ThreadId = threadId;
+            Status = status;
+            IncompleteDetails = incompleteDetails;
+            CompletedAt = completedAt;
+            IncompleteAt = incompleteAt;
             Role = role;
             Content = content.ToList();
             AssistantId = assistantId;
@@ -90,6 +98,10 @@ namespace OpenAI.Internal.Models
         /// <param name="object"> The object type, which is always `thread.message`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
+        /// <param name="status"> The status of the message, which can be either in_progress, incomplete, or completed. </param>
+        /// <param name="incompleteDetails"> On an incomplete message, details about why the message is incomplete. </param>
+        /// <param name="completedAt"> The Unix timestamp at which the message was completed. </param>
+        /// <param name="incompleteAt"> The Unix timestamp at which the message was marked as incomplete. </param>
         /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
         /// <param name="assistantId">
@@ -111,12 +123,16 @@ namespace OpenAI.Internal.Models
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageObject(string id, MessageObjectObject @object, DateTimeOffset createdAt, string threadId, MessageObjectRole role, IReadOnlyList<BinaryData> content, string assistantId, string runId, IReadOnlyList<string> fileIds, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageObject(string id, MessageObjectObject @object, DateTimeOffset createdAt, string threadId, MessageObjectStatus status, MessageObjectIncompleteDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageObjectRole role, IReadOnlyList<BinaryData> content, string assistantId, string runId, IReadOnlyList<string> fileIds, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
             CreatedAt = createdAt;
             ThreadId = threadId;
+            Status = status;
+            IncompleteDetails = incompleteDetails;
+            CompletedAt = completedAt;
+            IncompleteAt = incompleteAt;
             Role = role;
             Content = content;
             AssistantId = assistantId;
@@ -140,6 +156,14 @@ namespace OpenAI.Internal.Models
         public DateTimeOffset CreatedAt { get; }
         /// <summary> The [thread](/docs/api-reference/threads) ID that this message belongs to. </summary>
         public string ThreadId { get; }
+        /// <summary> The status of the message, which can be either in_progress, incomplete, or completed. </summary>
+        public MessageObjectStatus Status { get; }
+        /// <summary> On an incomplete message, details about why the message is incomplete. </summary>
+        public MessageObjectIncompleteDetails IncompleteDetails { get; }
+        /// <summary> The Unix timestamp at which the message was completed. </summary>
+        public DateTimeOffset? CompletedAt { get; }
+        /// <summary> The Unix timestamp at which the message was marked as incomplete. </summary>
+        public DateTimeOffset? IncompleteAt { get; }
         /// <summary> The entity that produced the message. One of `user` or `assistant`. </summary>
         public MessageObjectRole Role { get; }
         /// <summary>

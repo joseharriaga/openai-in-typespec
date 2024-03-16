@@ -363,6 +363,10 @@ namespace OpenAI.Internal.Models
         /// <param name="object"> The object type, which is always `thread.message`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
+        /// <param name="status"> The status of the message, which can be either in_progress, incomplete, or completed. </param>
+        /// <param name="incompleteDetails"> On an incomplete message, details about why the message is incomplete. </param>
+        /// <param name="completedAt"> The Unix timestamp at which the message was completed. </param>
+        /// <param name="incompleteAt"> The Unix timestamp at which the message was marked as incomplete. </param>
         /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
         /// <param name="assistantId">
@@ -384,13 +388,21 @@ namespace OpenAI.Internal.Models
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <returns> A new <see cref="Models.MessageObject"/> instance for mocking. </returns>
-        public static MessageObject MessageObject(string id = null, MessageObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, MessageObjectRole role = default, IEnumerable<BinaryData> content = null, string assistantId = null, string runId = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null)
+        public static MessageObject MessageObject(string id = null, MessageObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, MessageObjectStatus status = default, MessageObjectIncompleteDetails incompleteDetails = null, DateTimeOffset? completedAt = null, DateTimeOffset? incompleteAt = null, MessageObjectRole role = default, IEnumerable<BinaryData> content = null, string assistantId = null, string runId = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null)
         {
             content ??= new List<BinaryData>();
             fileIds ??= new List<string>();
             metadata ??= new Dictionary<string, string>();
 
-            return new MessageObject(id, @object, createdAt, threadId, role, content?.ToList(), assistantId, runId, fileIds?.ToList(), metadata, serializedAdditionalRawData: null);
+            return new MessageObject(id, @object, createdAt, threadId, status, incompleteDetails, completedAt, incompleteAt, role, content?.ToList(), assistantId, runId, fileIds?.ToList(), metadata, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageObjectIncompleteDetails"/>. </summary>
+        /// <param name="reason"> The reason the message is incomplete. </param>
+        /// <returns> A new <see cref="Models.MessageObjectIncompleteDetails"/> instance for mocking. </returns>
+        public static MessageObjectIncompleteDetails MessageObjectIncompleteDetails(string reason = null)
+        {
+            return new MessageObjectIncompleteDetails(reason, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ListMessagesResponse"/>. </summary>
@@ -485,13 +497,17 @@ namespace OpenAI.Internal.Models
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
+        /// <param name="stream">
+        /// If true, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a data: [DONE] message.
+        /// </param>
         /// <returns> A new <see cref="Models.CreateThreadAndRunRequest"/> instance for mocking. </returns>
-        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null)
+        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null, bool? stream = null)
         {
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
 
-            return new CreateThreadAndRunRequest(assistantId, thread, model, instructions, tools?.ToList(), metadata, serializedAdditionalRawData: null);
+            return new CreateThreadAndRunRequest(assistantId, thread, model, instructions, tools?.ToList(), metadata, stream, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunObject"/>. </summary>
@@ -624,13 +640,17 @@ namespace OpenAI.Internal.Models
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
+        /// <param name="stream">
+        /// If true, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a data: [DONE] message.
+        /// </param>
         /// <returns> A new <see cref="Models.CreateRunRequest"/> instance for mocking. </returns>
-        public static CreateRunRequest CreateRunRequest(string assistantId = null, string model = null, string instructions = null, string additionalInstructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null)
+        public static CreateRunRequest CreateRunRequest(string assistantId = null, string model = null, string instructions = null, string additionalInstructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null, bool? stream = null)
         {
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
 
-            return new CreateRunRequest(assistantId, model, instructions, additionalInstructions, tools?.ToList(), metadata, serializedAdditionalRawData: null);
+            return new CreateRunRequest(assistantId, model, instructions, additionalInstructions, tools?.ToList(), metadata, stream, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ListRunsResponse"/>. </summary>

@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace OpenAI.Audio;
 
+// TODO: implement IJsonModel<AudioTranscription> to use ModelReaderWriter for deserialization.
 public partial class AudioTranscription
 {
     public string Language { get; }
@@ -20,6 +21,12 @@ public partial class AudioTranscription
         Text = text;
         Words = words;
         Segments = segments;
+    }
+
+    internal static AudioTranscription Deserialize(BinaryData content)
+    {
+        using JsonDocument responseDocument = JsonDocument.Parse(content);
+        return DeserializeAudioTranscription(responseDocument.RootElement);
     }
 
     internal static AudioTranscription DeserializeAudioTranscription(JsonElement element, ModelReaderWriterOptions options = default)

@@ -2,6 +2,9 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -97,7 +100,8 @@ public partial class FileClient
         if (file is null) throw new ArgumentNullException(nameof(file));
         if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException(nameof(filename));
 
-        PipelineMessage uploadMessage = CreateInternalUploadMessage(file, filename, purpose);
+        // TODO: ensure correct patterns for sync-over-async
+        PipelineMessage uploadMessage = CreateInternalUploadMessageAsync(file, filename, purpose).Result;
         Shim.Pipeline.Send(uploadMessage);
         return GetUploadResultFromResponse(uploadMessage.Response);
     }
@@ -107,7 +111,7 @@ public partial class FileClient
         if (file is null) throw new ArgumentNullException(nameof(file));
         if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException(nameof(filename));
 
-        PipelineMessage uploadMessage = CreateInternalUploadMessage(file, filename, purpose);
+        PipelineMessage uploadMessage = await CreateInternalUploadMessageAsync(file, filename, purpose).ConfigureAwait(false);
         await Shim.Pipeline.SendAsync(uploadMessage).ConfigureAwait(false);
         return GetUploadResultFromResponse(uploadMessage.Response);
     }
@@ -213,36 +217,45 @@ public partial class FileClient
         _ = Shim.DeleteFileAsync(fileId);
     }
 
-    internal PipelineMessage CreateInternalUploadMessage(BinaryData fileData, string filename, OpenAIFilePurpose purpose)
+    internal async Task<PipelineMessage> CreateInternalUploadMessageAsync(BinaryData fileData, string filename, OpenAIFilePurpose purpose)
     {
-        MultipartFormDataContent content = new();
-        content.Add(BinaryContent.Create(fileData),
-            name: "file",
-            fileName: filename,
-            headers: []);
-        content.Add(MultipartContent.Create(
-            BinaryData.FromString(purpose switch
-            {
-                OpenAIFilePurpose.FineTuning => "fine-tune",
-                OpenAIFilePurpose.Assistants => "assistants",
-                _ => throw new ArgumentException($"Unsupported purpose for file upload: {purpose}"),
-            })),
-            name: "\"purpose\"",
-            headers: []);
-
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
+
         PipelineRequest request = message.Request;
         request.Method = "POST";
+
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
         StringBuilder path = new();
         path.Append("/files");
         uriBuilder.Path += path.ToString();
         request.Uri = uriBuilder.Uri;
-        request.Headers.Set("Accept", "application/json");
-        request.Content = content;
 
-        content.ApplyToRequest(request);
+        request.Headers.Set("Accept", "application/json");
+
+        MultipartFormDataContent content = new();
+        content.Add(new ByteArrayContent(fileData.ToArray()), name: "file", fileName: filename);
+        content.Add(new StringContent(purpose switch
+        {
+            OpenAIFilePurpose.FineTuning => "fine-tune",
+            OpenAIFilePurpose.Assistants => "assistants",
+            _ => throw new ArgumentException($"Unsupported purpose for file upload: {purpose}"),
+        }), name: "\"purpose\"");
+        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+        request.Content = BinaryContent.Create(stream);
+
+        // Add headers
+        // TODO: can we improve perf?
+
+        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
+        {
+            request.Headers.Set("Content-Type", contentType.ToString());
+        }
+
+        if (content.Headers.ContentLength is long contentLength)
+        {
+            request.Headers.Set("Content-Length", contentLength.ToString());
+        }
 
         return message;
     }

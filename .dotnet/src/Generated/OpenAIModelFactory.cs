@@ -127,7 +127,25 @@ namespace OpenAI.Internal.Models
         {
             logitBias ??= new Dictionary<string, long>();
 
-            return new CreateCompletionRequest(model, prompt, bestOf, echo, frequencyPenalty, logitBias, logprobs, maxTokens, n, presencePenalty, seed, stop, stream, suffix, temperature, topP, user, serializedAdditionalRawData: null);
+            return new CreateCompletionRequest(
+                model,
+                prompt,
+                bestOf,
+                echo,
+                frequencyPenalty,
+                logitBias,
+                logprobs,
+                maxTokens,
+                n,
+                presencePenalty,
+                seed,
+                stop,
+                stream,
+                suffix,
+                temperature,
+                topP,
+                user,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateCompletionResponse"/>. </summary>
@@ -148,7 +166,15 @@ namespace OpenAI.Internal.Models
         {
             choices ??= new List<CreateCompletionResponseChoice>();
 
-            return new CreateCompletionResponse(id, choices?.ToList(), created, model, systemFingerprint, @object, usage, serializedAdditionalRawData: null);
+            return new CreateCompletionResponse(
+                id,
+                choices?.ToList(),
+                created,
+                model,
+                systemFingerprint,
+                @object,
+                usage,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateCompletionResponseChoice"/>. </summary>
@@ -221,7 +247,13 @@ namespace OpenAI.Internal.Models
         /// <returns> A new <see cref="Models.CreateFineTuningJobRequest"/> instance for mocking. </returns>
         public static CreateFineTuningJobRequest CreateFineTuningJobRequest(CreateFineTuningJobRequestModel model = default, string trainingFile = null, CreateFineTuningJobRequestHyperparameters hyperparameters = null, string suffix = null, string validationFile = null)
         {
-            return new CreateFineTuningJobRequest(model, trainingFile, hyperparameters, suffix, validationFile, serializedAdditionalRawData: null);
+            return new CreateFineTuningJobRequest(
+                model,
+                trainingFile,
+                hyperparameters,
+                suffix,
+                validationFile,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.FineTuningJob"/>. </summary>
@@ -271,7 +303,22 @@ namespace OpenAI.Internal.Models
         {
             resultFiles ??= new List<string>();
 
-            return new FineTuningJob(id, createdAt, error, fineTunedModel, finishedAt, hyperparameters, model, @object, organizationId, resultFiles?.ToList(), status, trainedTokens, trainingFile, validationFile, serializedAdditionalRawData: null);
+            return new FineTuningJob(
+                id,
+                createdAt,
+                error,
+                fineTunedModel,
+                finishedAt,
+                hyperparameters,
+                model,
+                @object,
+                organizationId,
+                resultFiles?.ToList(),
+                status,
+                trainedTokens,
+                trainingFile,
+                validationFile,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.FineTuningJobError"/>. </summary>
@@ -333,7 +380,13 @@ namespace OpenAI.Internal.Models
         /// <returns> A new <see cref="Models.FineTuningJobEvent"/> instance for mocking. </returns>
         public static FineTuningJobEvent FineTuningJobEvent(string id = null, DateTimeOffset createdAt = default, FineTuningJobEventLevel level = default, string message = null, FineTuningJobEventObject @object = default)
         {
-            return new FineTuningJobEvent(id, createdAt, level, message, @object, serializedAdditionalRawData: null);
+            return new FineTuningJobEvent(
+                id,
+                createdAt,
+                level,
+                message,
+                @object,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateMessageRequest"/>. </summary>
@@ -394,7 +447,22 @@ namespace OpenAI.Internal.Models
             fileIds ??= new List<string>();
             metadata ??= new Dictionary<string, string>();
 
-            return new MessageObject(id, @object, createdAt, threadId, status, incompleteDetails, completedAt, incompleteAt, role, content?.ToList(), assistantId, runId, fileIds?.ToList(), metadata, serializedAdditionalRawData: null);
+            return new MessageObject(
+                id,
+                @object,
+                createdAt,
+                threadId,
+                status,
+                incompleteDetails,
+                completedAt,
+                incompleteAt,
+                role,
+                content?.ToList(),
+                assistantId,
+                runId,
+                fileIds?.ToList(),
+                metadata,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageObjectIncompleteDetails"/>. </summary>
@@ -416,7 +484,13 @@ namespace OpenAI.Internal.Models
         {
             data ??= new List<MessageObject>();
 
-            return new ListMessagesResponse(@object, data?.ToList(), firstId, lastId, hasMore, serializedAdditionalRawData: null);
+            return new ListMessagesResponse(
+                @object,
+                data?.ToList(),
+                firstId,
+                lastId,
+                hasMore,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ListMessageFilesResponse"/>. </summary>
@@ -430,7 +504,13 @@ namespace OpenAI.Internal.Models
         {
             data ??= new List<MessageFileObject>();
 
-            return new ListMessageFilesResponse(@object, data?.ToList(), firstId, lastId, hasMore, serializedAdditionalRawData: null);
+            return new ListMessageFilesResponse(
+                @object,
+                data?.ToList(),
+                firstId,
+                lastId,
+                hasMore,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageFileObject"/>. </summary>
@@ -507,7 +587,15 @@ namespace OpenAI.Internal.Models
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
 
-            return new CreateThreadAndRunRequest(assistantId, thread, model, instructions, tools?.ToList(), metadata, stream, serializedAdditionalRawData: null);
+            return new CreateThreadAndRunRequest(
+                assistantId,
+                thread,
+                model,
+                instructions,
+                tools?.ToList(),
+                metadata,
+                stream,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunObject"/>. </summary>
@@ -553,7 +641,27 @@ namespace OpenAI.Internal.Models
             fileIds ??= new List<string>();
             metadata ??= new Dictionary<string, string>();
 
-            return new RunObject(id, @object, createdAt, threadId, assistantId, status, requiredAction, lastError, expiresAt, startedAt, cancelledAt, failedAt, completedAt, model, instructions, tools?.ToList(), fileIds?.ToList(), metadata, usage, serializedAdditionalRawData: null);
+            return new RunObject(
+                id,
+                @object,
+                createdAt,
+                threadId,
+                assistantId,
+                status,
+                requiredAction,
+                lastError,
+                expiresAt,
+                startedAt,
+                cancelledAt,
+                failedAt,
+                completedAt,
+                model,
+                instructions,
+                tools?.ToList(),
+                fileIds?.ToList(),
+                metadata,
+                usage,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunObjectRequiredAction"/>. </summary>
@@ -650,7 +758,15 @@ namespace OpenAI.Internal.Models
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
 
-            return new CreateRunRequest(assistantId, model, instructions, additionalInstructions, tools?.ToList(), metadata, stream, serializedAdditionalRawData: null);
+            return new CreateRunRequest(
+                assistantId,
+                model,
+                instructions,
+                additionalInstructions,
+                tools?.ToList(),
+                metadata,
+                stream,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ListRunsResponse"/>. </summary>
@@ -664,7 +780,13 @@ namespace OpenAI.Internal.Models
         {
             data ??= new List<RunObject>();
 
-            return new ListRunsResponse(@object, data?.ToList(), firstId, lastId, hasMore, serializedAdditionalRawData: null);
+            return new ListRunsResponse(
+                @object,
+                data?.ToList(),
+                firstId,
+                lastId,
+                hasMore,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ListRunStepsResponse"/>. </summary>
@@ -678,7 +800,13 @@ namespace OpenAI.Internal.Models
         {
             data ??= new List<RunStepObject>();
 
-            return new ListRunStepsResponse(@object, data?.ToList(), firstId, lastId, hasMore, serializedAdditionalRawData: null);
+            return new ListRunStepsResponse(
+                @object,
+                data?.ToList(),
+                firstId,
+                lastId,
+                hasMore,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunStepObject"/>. </summary>
@@ -713,7 +841,24 @@ namespace OpenAI.Internal.Models
         {
             metadata ??= new Dictionary<string, string>();
 
-            return new RunStepObject(id, @object, createdAt, assistantId, threadId, runId, type, status, stepDetails, lastError, expiresAt, cancelledAt, failedAt, completedAt, metadata, usage, serializedAdditionalRawData: null);
+            return new RunStepObject(
+                id,
+                @object,
+                createdAt,
+                assistantId,
+                threadId,
+                runId,
+                type,
+                status,
+                stepDetails,
+                lastError,
+                expiresAt,
+                cancelledAt,
+                failedAt,
+                completedAt,
+                metadata,
+                usage,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunStepObjectLastError"/>. </summary>

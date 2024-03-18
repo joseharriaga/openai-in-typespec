@@ -705,9 +705,9 @@ public partial class AssistantClient
             ClientResult genericResult = ClientResult.FromResponse(response);
             StreamingClientResult<StreamingRunUpdate> streamingResult = StreamingClientResult<StreamingRunUpdate>.CreateFromResponse(
                 genericResult,
-                (responseForEnumeration) => SseAsyncEnumerator<StreamingRunUpdate>.EnumerateFromSseStream(
+                (responseForEnumeration) => SseAsyncEnumerator<StreamingRunUpdate>.EnumerateFromSseJsonStream(
                     responseForEnumeration.GetRawResponse().ContentStream,
-                    e => StreamingRunUpdate.DeserializeStreamingRunUpdates(e)));
+                    StreamingRunUpdate.DeserializeSseRunUpdates));
             response = null;
             return streamingResult;
         }

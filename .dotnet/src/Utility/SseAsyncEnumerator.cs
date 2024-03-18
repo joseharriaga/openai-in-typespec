@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 
@@ -9,9 +11,9 @@ namespace OpenAI;
 
 internal static class SseAsyncEnumerator<T>
 {
-    internal static async IAsyncEnumerable<T> EnumerateFromSseStream(
+    internal static async IAsyncEnumerable<T> EnumerateFromSseJsonStream(
         Stream stream,
-        Func<JsonElement, IEnumerable<T>> multiElementDeserializer,
+        Func<ReadOnlyMemory<char>, JsonElement, IEnumerable<T>> multiElementDeserializer,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         try
@@ -26,13 +28,9 @@ internal static class SseAsyncEnumerator<T>
                 }
                 else
                 {
-                    if (sseEvent.Value.Data.Span.SequenceEqual("[DONE]".AsSpan()))
-                    {
-                        break;
-                    }
-                    using JsonDocument sseMessageJson = JsonDocument.Parse(sseEvent.Value.Data);
-                    IEnumerable<T> newItems = multiElementDeserializer.Invoke(sseMessageJson.RootElement);
-                    foreach (T item in newItems)
+                    if (IsWellKnownDoneToken(sseEvent.Value.Data)) continue;
+                    using JsonDocument sseDocument = JsonDocument.Parse(sseEvent.Value.Data);
+                    foreach (T item in multiElementDeserializer(sseEvent.Value.EventType, sseDocument.RootElement))
                     {
                         yield return item;
                     }
@@ -46,12 +44,12 @@ internal static class SseAsyncEnumerator<T>
         }
     }
 
-    internal static IAsyncEnumerable<T> EnumerateFromSseStream(
-        Stream stream,
-        Func<JsonElement, T> elementDeserializer,
-        CancellationToken cancellationToken = default)
-        => EnumerateFromSseStream(
-            stream,
-            (element) => new T[] { elementDeserializer.Invoke(element) },
-            cancellationToken);
+    private static bool IsWellKnownDoneToken(ReadOnlyMemory<char> data)
+    {
+        ReadOnlyMemory<char>[] wellKnownTokens =
+        [
+            "[DONE]".AsMemory(),
+        ];
+        return wellKnownTokens.Any(token => data.Span.SequenceEqual(token.Span));
+    }
 }

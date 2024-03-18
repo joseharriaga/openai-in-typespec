@@ -144,11 +144,19 @@ public partial class AssistantTests
         Assert.That(runUpdateResult, Is.Not.Null);
         await foreach (StreamingRunUpdate runUpdate in runUpdateResult)
         {
-            if (runUpdate.MessageRole.HasValue)
+            if (runUpdate is StreamingMessageCreation messageCreation)
             {
-                Console.Write($"[{runUpdate.MessageRole}]");
+                Console.WriteLine($"Message created, id={messageCreation.Id}");
             }
-            Console.Write(runUpdate.MessageContentUpdate?.GetText());
+            if (runUpdate is StreamingMessageUpdate messageUpdate)
+            {
+                Console.Write(messageUpdate.ContentUpdate.GetText());
+            }
+            if (runUpdate is StreamingMessageCompletion messageCompletion)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"Message complete: {messageCompletion.Message.ContentItems[0].GetText()}");
+            }
         }
     }
 

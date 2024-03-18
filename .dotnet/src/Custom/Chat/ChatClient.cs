@@ -271,9 +271,9 @@ public partial class ChatClient
         ClientResult genericResult = ClientResult.FromResponse(response);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
             genericResult,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
+            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseJsonStream(
                 responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
+                StreamingChatUpdate.DeserializeSseChatUpdates));
     }
 
     /// <summary>
@@ -309,9 +309,9 @@ public partial class ChatClient
         ClientResult genericResult = ClientResult.FromResponse(response);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
             genericResult,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
+            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseJsonStream(
                 responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));   
+                StreamingChatUpdate.DeserializeSseChatUpdates));
     }
 
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(

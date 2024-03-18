@@ -182,17 +182,17 @@ public partial class StreamingChatUpdate
         LogProbabilities = logProbabilities;
     }
 
-    internal static List<StreamingChatUpdate> DeserializeStreamingChatUpdates(JsonElement element)
+    internal static IEnumerable<StreamingChatUpdate> DeserializeSseChatUpdates(ReadOnlyMemory<char> _, JsonElement sseDataJson)
     {
         List<StreamingChatUpdate> results = [];
-        if (element.ValueKind == JsonValueKind.Null)
+        if (sseDataJson.ValueKind == JsonValueKind.Null)
         {
             return results;
         }
         string id = default;
         DateTimeOffset created = default;
         string systemFingerprint = null;
-        foreach (JsonProperty property in element.EnumerateObject())
+        foreach (JsonProperty property in sseDataJson.EnumerateObject())
         {
             if (property.NameEquals("id"u8))
             {

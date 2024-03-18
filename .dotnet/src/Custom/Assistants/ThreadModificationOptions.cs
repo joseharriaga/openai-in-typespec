@@ -1,6 +1,3 @@
-using OpenAI.ClientShared.Internal;
-using System.ClientModel.Internal;
-
 using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
@@ -20,5 +17,5 @@ public partial class ThreadModificationOptions
     ///     <item><b>Values</b> can be a maximum of 512 characters in length.</item>
     /// </list>
     /// </remarks>
-    public IDictionary<string, string> Metadata { get; } = new OptionalDictionary<string, string>();
+    public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
 }

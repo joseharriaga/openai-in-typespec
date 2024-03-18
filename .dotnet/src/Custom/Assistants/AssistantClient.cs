@@ -1,4 +1,3 @@
-using OpenAI.ClientShared.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -115,8 +114,7 @@ public partial class AssistantClient
         AssistantCreationOptions options = null)
     {
         Internal.Models.CreateAssistantRequest request = CreateInternalCreateAssistantRequest(modelName, options);
-        ClientResult<Internal.Models.AssistantObject> internalResult
-            = await Shim.CreateAssistantAsync(request).ConfigureAwait(false);
+        ClientResult<Internal.Models.AssistantObject> internalResult = await Shim.CreateAssistantAsync(request).ConfigureAwait(false);
         return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -129,8 +127,7 @@ public partial class AssistantClient
     public virtual async Task<ClientResult<Assistant>> GetAssistantAsync(
         string assistantId)
     {
-        ClientResult<Internal.Models.AssistantObject> internalResult
-            = await Shim.GetAssistantAsync(assistantId).ConfigureAwait(false);
+        ClientResult<Internal.Models.AssistantObject> internalResult = await Shim.GetAssistantAsync(assistantId).ConfigureAwait(false);
         return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -176,8 +173,7 @@ public partial class AssistantClient
         AssistantModificationOptions options)
     {
         Internal.Models.ModifyAssistantRequest request = CreateInternalModifyAssistantRequest(options);
-        ClientResult<Internal.Models.AssistantObject> internalResult
-            = await Shim.ModifyAssistantAsync(assistantId, request).ConfigureAwait(false);
+        ClientResult<Internal.Models.AssistantObject> internalResult = await Shim.ModifyAssistantAsync(assistantId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -191,8 +187,7 @@ public partial class AssistantClient
     public virtual async Task<ClientResult<bool>> DeleteAssistantAsync(
         string assistantId)
     {
-        ClientResult<Internal.Models.DeleteAssistantResponse> internalResponse
-            = await Shim.DeleteAssistantAsync(assistantId).ConfigureAwait(false);
+        ClientResult<Internal.Models.DeleteAssistantResponse> internalResponse = await Shim.DeleteAssistantAsync(assistantId).ConfigureAwait(false);
         return ClientResult.FromValue(internalResponse.Value.Deleted, internalResponse.GetRawResponse());
     }
 
@@ -209,8 +204,7 @@ public partial class AssistantClient
         string assistantId,
         string fileId)
     {
-        ClientResult<Internal.Models.AssistantFileObject> internalResult
-            = await Shim.CreateAssistantFileAsync(assistantId, new(fileId)).ConfigureAwait(false);
+        ClientResult<Internal.Models.AssistantFileObject> internalResult = await Shim.CreateAssistantFileAsync(assistantId, new(fileId)).ConfigureAwait(false);
         return ClientResult.FromValue(new AssistantFileAssociation(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -226,8 +220,7 @@ public partial class AssistantClient
         string assistantId,
         string fileId)
     {
-        ClientResult<Internal.Models.AssistantFileObject> internalResult
-            = await Shim.GetAssistantFileAsync(assistantId, fileId).ConfigureAwait(false);
+        ClientResult<Internal.Models.AssistantFileObject> internalResult = await Shim.GetAssistantFileAsync(assistantId, fileId).ConfigureAwait(false);
         return ClientResult.FromValue(new AssistantFileAssociation(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -277,8 +270,7 @@ public partial class AssistantClient
         string assistantId,
         string fileId)
     {
-        ClientResult<Internal.Models.DeleteAssistantFileResponse> internalResult
-            = await Shim.DeleteAssistantFileAsync(assistantId, fileId).ConfigureAwait(false);
+        ClientResult<Internal.Models.DeleteAssistantFileResponse> internalResult = await Shim.DeleteAssistantFileAsync(assistantId, fileId).ConfigureAwait(false);
         return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
     }
 
@@ -294,8 +286,7 @@ public partial class AssistantClient
         ThreadCreationOptions options = null)
     {
         Internal.Models.CreateThreadRequest request = CreateInternalCreateThreadRequest(options);
-        ClientResult<Internal.Models.ThreadObject> internalResult
-            = await ThreadShim.CreateThreadAsync(request).ConfigureAwait(false);
+        ClientResult<Internal.Models.ThreadObject> internalResult = await ThreadShim.CreateThreadAsync(request).ConfigureAwait(false);
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -308,8 +299,7 @@ public partial class AssistantClient
     public virtual async Task<ClientResult<AssistantThread>> GetThreadAsync(
         string threadId)
     {
-        ClientResult<Internal.Models.ThreadObject> internalResult
-            = await ThreadShim.GetThreadAsync(threadId).ConfigureAwait(false);
+        ClientResult<Internal.Models.ThreadObject> internalResult = await ThreadShim.GetThreadAsync(threadId).ConfigureAwait(false);
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -331,8 +321,7 @@ public partial class AssistantClient
         Internal.Models.ModifyThreadRequest request = new(
             options.Metadata,
             serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.ThreadObject> internalResult
-            = await ThreadShim.ModifyThreadAsync(threadId, request);
+        ClientResult<Internal.Models.ThreadObject> internalResult = await ThreadShim.ModifyThreadAsync(threadId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -344,8 +333,7 @@ public partial class AssistantClient
 
      public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId)
     {
-        ClientResult<Internal.Models.DeleteThreadResponse> internalResult
-            = await ThreadShim.DeleteThreadAsync(threadId).ConfigureAwait(false);
+        ClientResult<Internal.Models.DeleteThreadResponse> internalResult = await ThreadShim.DeleteThreadAsync(threadId).ConfigureAwait(false);
         return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
     }
 
@@ -377,8 +365,7 @@ public partial class AssistantClient
             options.FileIds,
             options.Metadata,
             serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.MessageObject> internalResult
-            = await MessageShim.CreateMessageAsync(threadId, request).ConfigureAwait(false);
+        ClientResult<Internal.Models.MessageObject> internalResult = await MessageShim.CreateMessageAsync(threadId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -394,8 +381,31 @@ public partial class AssistantClient
         string threadId,
         string messageId)
     {
-        ClientResult<Internal.Models.MessageObject> internalResult
-            = await MessageShim.GetMessageAsync(threadId, messageId).ConfigureAwait(false);
+        ClientResult<Internal.Models.MessageObject> internalResult = await MessageShim.GetMessageAsync(threadId, messageId).ConfigureAwait(false);
+        return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
+    }
+
+    public virtual ClientResult<ThreadMessage> ModifyMessage(
+        string threadId,
+        string messageId,
+        MessageModificationOptions options)
+    {
+        Internal.Models.ModifyMessageRequest request = new(
+            options.Metadata,
+            serializedAdditionalRawData: null);
+        ClientResult<Internal.Models.MessageObject> internalResult = MessageShim.ModifyMessage(threadId, messageId, request);
+        return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<ThreadMessage>> ModifyMessageAsync(
+        string threadId,
+        string messageId,
+        MessageModificationOptions options)
+    {
+        Internal.Models.ModifyMessageRequest request = new(
+            options.Metadata,
+            serializedAdditionalRawData: null);
+        ClientResult<Internal.Models.MessageObject> internalResult = await MessageShim.ModifyMessageAsync(threadId, messageId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -446,8 +456,7 @@ public partial class AssistantClient
         string messageId,
         string fileId)
     {
-        ClientResult<Internal.Models.MessageFileObject> internalResult
-            = await MessageShim.GetMessageFileAsync(threadId, messageId, fileId).ConfigureAwait(false);
+        ClientResult<Internal.Models.MessageFileObject> internalResult = await MessageShim.GetMessageFileAsync(threadId, messageId, fileId).ConfigureAwait(false);
         return ClientResult.FromValue(new MessageFileAssociation(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -503,8 +512,7 @@ public partial class AssistantClient
         RunCreationOptions options = null)
     {
         Internal.Models.CreateRunRequest request = CreateInternalCreateRunRequest(assistantId, options);
-        ClientResult<Internal.Models.RunObject> internalResult
-            = await RunShim.CreateRunAsync(threadId, request).ConfigureAwait(false);
+        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.CreateRunAsync(threadId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -526,8 +534,7 @@ public partial class AssistantClient
     {
         Internal.Models.CreateThreadAndRunRequest request
             = CreateInternalCreateThreadAndRunRequest(assistantId, threadOptions, runOptions);
-        ClientResult<Internal.Models.RunObject> internalResult
-            = await RunShim.CreateThreadAndRunAsync(request).ConfigureAwait(false);
+        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.CreateThreadAndRunAsync(request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -539,8 +546,7 @@ public partial class AssistantClient
 
     public virtual async Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId)
     {
-        ClientResult<Internal.Models.RunObject> internalResult
-            = await RunShim.GetRunAsync(threadId, runId).ConfigureAwait(false);
+        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.GetRunAsync(threadId, runId).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -586,8 +592,7 @@ public partial class AssistantClient
     public virtual async Task<ClientResult<ThreadRun>> ModifyRunAsync(string threadId, string runId, RunModificationOptions options)
     {
         Internal.Models.ModifyRunRequest request = new(options.Metadata, serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.RunObject> internalResult
-            = await RunShim.ModifyRunAsync(threadId, runId, request).ConfigureAwait(false);
+        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.ModifyRunAsync(threadId, runId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
@@ -599,8 +604,7 @@ public partial class AssistantClient
 
     public virtual async Task<ClientResult<bool>> CancelRunAsync(string threadId, string runId)
     {
-        ClientResult<Internal.Models.RunObject> internalResult
-            = await RunShim.CancelRunAsync(threadId, runId);
+        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.CancelRunAsync(threadId, runId).ConfigureAwait(false);
         return ClientResult.FromValue(true, internalResult.GetRawResponse());
     }
 
@@ -648,7 +652,8 @@ public partial class AssistantClient
             serializedAdditionalRawData: null);
     }
 
-    internal static Internal.Models.ModifyAssistantRequest CreateInternalModifyAssistantRequest(AssistantModificationOptions options)
+    internal static Internal.Models.ModifyAssistantRequest CreateInternalModifyAssistantRequest(
+        AssistantModificationOptions options)
     {
         return new Internal.Models.ModifyAssistantRequest(
             options.Model,
@@ -661,7 +666,8 @@ public partial class AssistantClient
             serializedAdditionalRawData: null);
     }
 
-    internal static Internal.Models.CreateThreadRequest CreateInternalCreateThreadRequest(ThreadCreationOptions options)
+    internal static Internal.Models.CreateThreadRequest CreateInternalCreateThreadRequest(
+        ThreadCreationOptions options)
     {
         options ??= new();
         return new Internal.Models.CreateThreadRequest(
@@ -703,10 +709,10 @@ public partial class AssistantClient
             serializedAdditionalRawData: null);
     }
 
-    internal static OptionalList<BinaryData> ToInternalBinaryDataList<T>(IEnumerable<T> values)
+    internal static ChangeTrackingList<BinaryData> ToInternalBinaryDataList<T>(IEnumerable<T> values)
         where T : IPersistableModel<T>
     {
-        OptionalList<BinaryData> internalList = [];
+        ChangeTrackingList<BinaryData> internalList = [];
         foreach (T value in values)
         {
             internalList.Add(ModelReaderWriter.Write(value));
@@ -735,10 +741,10 @@ public partial class AssistantClient
         _ => throw new ArgumentException(nameof(role)),
     };
 
-    internal static OptionalList<Internal.Models.CreateMessageRequest> ToInternalCreateMessageRequestList(
+    internal static ChangeTrackingList<Internal.Models.CreateMessageRequest> ToInternalCreateMessageRequestList(
         IEnumerable<ThreadInitializationMessage> messages)
     {
-        OptionalList<Internal.Models.CreateMessageRequest> internalList = [];
+        ChangeTrackingList<Internal.Models.CreateMessageRequest> internalList = [];
         foreach (ThreadInitializationMessage message in messages)
         {
             internalList.Add(new Internal.Models.CreateMessageRequest(
@@ -764,7 +770,7 @@ public partial class AssistantClient
         where T : class
         where U : class
     {
-        ClientResult<U> internalResult = await internalAsyncFunc.Invoke();
+        ClientResult<U> internalResult = await internalAsyncFunc.Invoke().ConfigureAwait(false);
         ListQueryPage<T> convertedValue = ListQueryPage.Create(internalResult.Value) as ListQueryPage<T>;
         return ClientResult.FromValue(convertedValue, internalResult.GetRawResponse());
     }

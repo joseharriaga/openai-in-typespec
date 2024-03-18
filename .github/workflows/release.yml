@@ -39,6 +39,17 @@ jobs:
           --output "${{github.workspace}}/artifacts/packages"
         working-directory: .dotnet
 
+      # Append the nuget package to the github release that triggered this workflow
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{github.workspace}}/artifacts/packages/*.nupkg
+          asset_name: NuGet Package
+          asset_content_type: application/zip
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:

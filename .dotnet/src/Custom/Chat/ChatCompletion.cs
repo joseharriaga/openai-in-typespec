@@ -8,7 +8,7 @@ namespace OpenAI.Chat;
 public class ChatCompletion
 {
     private Internal.Models.CreateChatCompletionResponse _internalResponse;
-    private long _internalChoiceIndex;
+    private int _internalChoiceIndex;
 
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponse.Id"/>
     public string Id => _internalResponse.Id;
@@ -31,9 +31,9 @@ public class ChatCompletion
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Logprobs"/>
     public ChatLogProbabilityCollection LogProbabilities { get; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Index"/>
-    public long Index => _internalResponse.Choices[(int)_internalChoiceIndex].Index;
+    public int Index => (int)_internalResponse.Choices[(int)_internalChoiceIndex].Index;
 
-    internal ChatCompletion(Internal.Models.CreateChatCompletionResponse internalResponse, long internalChoiceIndex)
+    internal ChatCompletion(Internal.Models.CreateChatCompletionResponse internalResponse, int internalChoiceIndex)
     {
         Internal.Models.CreateChatCompletionResponseChoice internalChoice = internalResponse.Choices[(int)internalChoiceIndex];
         _internalResponse = internalResponse;
@@ -60,7 +60,7 @@ public class ChatCompletion
         Content = internalChoice.Message.Content;
         if (internalChoice.Message.ToolCalls != null)
         {
-            OptionalList<ChatToolCall> toolCalls = [];
+            ChangeTrackingList<ChatToolCall> toolCalls = [];
             foreach (Internal.Models.ChatCompletionMessageToolCall internalToolCall in internalChoice.Message.ToolCalls)
             {
                 if (internalToolCall.Type == "function")

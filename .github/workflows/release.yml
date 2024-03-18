@@ -2,7 +2,8 @@ name: Release package
 
 on:
   release:
-    types: [created]
+    types: [published]
+
 
 jobs:
   deploy:

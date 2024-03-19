@@ -2,17 +2,11 @@
 
 using System;
 using OpenAI.ClientShared.Internal;
+using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.ClientModel;
-using System.Threading.Tasks;
-using System.IO;
-using System.Net.Http;
-using System.Runtime.InteropServices.ComTypes;
-using OpenAI.Audio;
-using System.Net.Http.Headers;
-using System.Threading;
+using OpenAI;
 
 namespace OpenAI.Internal.Models
 {
@@ -31,22 +25,22 @@ namespace OpenAI.Internal.Models
             writer.WriteBase64StringValue(File.ToArray(), "D");
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model.ToString());
-            if (OptionalProperty.IsDefined(Language))
+            if (Optional.IsDefined(Language))
             {
                 writer.WritePropertyName("language"u8);
                 writer.WriteStringValue(Language);
             }
-            if (OptionalProperty.IsDefined(Prompt))
+            if (Optional.IsDefined(Prompt))
             {
                 writer.WritePropertyName("prompt"u8);
                 writer.WriteStringValue(Prompt);
             }
-            if (OptionalProperty.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteStringValue(ResponseFormat.Value.ToString());
             }
-            if (OptionalProperty.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature))
             {
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
@@ -91,10 +85,10 @@ namespace OpenAI.Internal.Models
             }
             BinaryData file = default;
             CreateTranscriptionRequestModel model = default;
-            OptionalProperty<string> language = default;
-            OptionalProperty<string> prompt = default;
-            OptionalProperty<CreateTranscriptionRequestResponseFormat> responseFormat = default;
-            OptionalProperty<double> temperature = default;
+            string language = default;
+            string prompt = default;
+            CreateTranscriptionRequestResponseFormat? responseFormat = default;
+            double? temperature = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> additionalPropertiesDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -143,7 +137,14 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = additionalPropertiesDictionary;
-            return new CreateTranscriptionRequest(file, model, language.Value, prompt.Value, OptionalProperty.ToNullable(responseFormat), OptionalProperty.ToNullable(temperature), serializedAdditionalRawData);
+            return new CreateTranscriptionRequest(
+                file,
+                model,
+                language,
+                prompt,
+                responseFormat,
+                temperature,
+                serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateTranscriptionRequest>.Write(ModelReaderWriterOptions options)
@@ -185,75 +186,12 @@ namespace OpenAI.Internal.Models
             return DeserializeCreateTranscriptionRequest(document.RootElement);
         }
 
-        private MultipartFormDataContent _multipartContent = default;
-        internal async Task<BinaryContent> ToBinaryContentAsync(CancellationToken cancellationToken = default)
+        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
+        internal virtual BinaryContent ToRequestBody()
         {
-            // In the current implementation, calling this method overrides any cached content.
-            // TODO: is that the behavior we want?
-            _multipartContent = new();
-
-            _multipartContent.Add(new StringContent(Model.ToString()), name: "model");
-
-            if (Language is not null)
-            {
-                _multipartContent.Add(new StringContent(Language), name: "language");
-            }
-
-            if (Prompt is not null)
-            {
-                _multipartContent.Add(new StringContent(Prompt), name: "prompt");
-            }
-
-            if (ResponseFormat is not null)
-            {
-                _multipartContent.Add(new StringContent(ResponseFormat.ToString()), name: "response_format");
-            }
-
-            if (Temperature is not null)
-            {
-                // TODO: preferred way to handle floats/numerics?
-                _multipartContent.Add(new StringContent($"{Temperature}"), name: "temperature");
-            }
-
-            // TODO: is granularities handled this way?
-            //if (enableWordTimestamps is not null ||
-            //    enableSegmentTimestamps is not null)
-            //{
-            //    // TODO: preferred way to serialize models?
-            //    List<string> granularities = [];
-            //    if (enableWordTimestamps == true)
-            //    {
-            //        granularities.Add("word");
-            //    }
-            //    if (enableSegmentTimestamps == true)
-            //    {
-            //        granularities.Add("segment");
-            //    }
-            //    byte[] data = JsonSerializer.SerializeToUtf8Bytes(_serializedAdditionalRawData);
-            //    content.Add(new ByteArrayContent(data), name: "timestamp_granularities");
-            //}
-
-            // TODO: Better to take the stream as an input parameter?
-            // TODO: if we need to use BinaryData, is it better to call ToArray/ToStream/other for perf?
-
-            // TODO: I think we need to add the content header manually because the
-            // default implementation is adding a `filename*` parameter to the header,
-            // which RFC 7578 says not to do -- I am following up with the BCL team
-            // on this to learn more about when this is/isn't needed.
-
-            // TODO: plumb through filename... need to know where it comes from in the TypeSpec
-            HttpContent audioContent = new ByteArrayContent(File.ToArray());
-            ContentDispositionHeaderValue header = new ContentDispositionHeaderValue("form-data")
-            {
-                Name = "file",
-                //FileName = filename
-            };
-            audioContent.Headers.ContentDisposition = header;
-            _multipartContent.Add(audioContent);
-
-            // TODO: take a cancellation token?  Show this for both net6.0 and netstandard2.0.
-            Stream stream = await _multipartContent.ReadAsStreamAsync().ConfigureAwait(false);
-            return BinaryContent.Create(stream);
+            var content = new Utf8JsonRequestBody();
+            content.JsonWriter.WriteObjectValue(this);
+            return content;
         }
     }
 }

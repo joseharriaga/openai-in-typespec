@@ -29,7 +29,7 @@ namespace OpenAI.Samples
                 ResponseFormat = ImageResponseFormat.Bytes
             };
 
-            GeneratedImageCollection image = await client.GenerateImageEditsAsync(imageBytes, prompt, 1, options);
+            GeneratedImageCollection image = await client.GenerateImageEditsAsync(imageBytes, "edit_sample_image.png", prompt, 1, options);
             BinaryData bytes = image[0].ImageBytes;
 
             using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");

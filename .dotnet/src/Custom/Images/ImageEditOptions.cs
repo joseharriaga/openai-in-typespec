@@ -12,6 +12,13 @@ public partial class ImageEditOptions
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Mask"/>
     public BinaryData MaskBytes { get; set; }
 
+    // The generator will need to add file-name to models for properties that
+    // represent files in order to enable setting the header.
+    /// <summary>
+    /// TODO
+    /// </summary>
+    public string MaskFileName { get; set; }
+
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.ResponseFormat"/>
     public ImageResponseFormat? ResponseFormat { get; set; }
 
@@ -22,27 +29,29 @@ public partial class ImageEditOptions
     public string User { get; set; }
 
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream,
+        string fileName,
         string prompt,
         string model,
         int? imageCount)
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(fileStream, "file", "image.png");
+        content.Add(fileStream, "file", fileName);
 
         AddContent(model, prompt, imageCount, content);
 
         return content;
     }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData imageBytes,
+    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData imageBytes, 
+        string fileName,
         string prompt,
         string model,
         int? imageCount)
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(imageBytes, "file", "image.png");
+        content.Add(imageBytes, "file", fileName);
 
         AddContent(model, prompt, imageCount, content);
 

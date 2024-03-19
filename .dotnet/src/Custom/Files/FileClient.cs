@@ -1,4 +1,3 @@
-using OpenAI.Audio;
 using OpenAI.Internal;
 using System;
 using System.ClientModel;

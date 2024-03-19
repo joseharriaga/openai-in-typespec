@@ -3,6 +3,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -93,6 +94,25 @@ public partial class FileClient
         : this(endpoint: null, credential: null, options)
     { }
 
+    // convenience method - sync; Stream overload
+    // TODO: add refdoc comment
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string fileName, OpenAIFilePurpose purpose)
+    {
+        Argument.AssertNotNull(file, nameof(file));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+
+        ClientResult result = UploadFile(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
+        OpenAIFileInfo fileInfo = new(internalFile);
+
+        return ClientResult.FromValue(fileInfo, response);
+    }
+
     // convenience method - sync
     // TODO: add refdoc comment
     public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string fileName, OpenAIFilePurpose purpose)
@@ -103,6 +123,25 @@ public partial class FileClient
         using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
 
         ClientResult result = UploadFile(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
+        OpenAIFileInfo fileInfo = new(internalFile);
+
+        return ClientResult.FromValue(fileInfo, response);
+    }
+
+    // convenience method - async; Stream overload
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string fileName, OpenAIFilePurpose purpose)
+    {
+        Argument.AssertNotNull(file, nameof(file));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+
+        ClientResult result = await UploadFileAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 

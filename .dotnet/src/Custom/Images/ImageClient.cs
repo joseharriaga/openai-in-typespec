@@ -282,6 +282,8 @@ public partial class ImageClient
     {
         Argument.AssertNotNull(imageBytes, nameof(imageBytes));
 
+        // TODO: Do we want to allow passing file-name?  Or is it ok to hard-code?
+
         options ??= new();
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, _clientConnector.Model, imageCount);

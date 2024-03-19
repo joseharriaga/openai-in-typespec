@@ -296,11 +296,14 @@ public partial class AudioClient
         return message;
     }
 
+    // convenience method - sync; Stream overload
+    // TODO: add refdoc comment
     public virtual ClientResult<AudioTranslation> TranslateAudio(Stream fileStream, string fileName, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(fileStream, nameof(fileStream));
-        Argument.AssertNotNull(fileName, nameof(fileName));
 
+        // TODO: do we want to validate fileName is non-null for audio files?
+        
         options ??= new();
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model);
@@ -314,11 +317,12 @@ public partial class AudioClient
         return ClientResult.FromValue(value, response);
     }
 
+    // convenience method - sync
+    // TODO: add refdoc comment
     public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audioBytes, nameof(audioBytes));
-        Argument.AssertNotNull(filename, nameof(filename));
-
+        
         options ??= new();
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, filename, _clientConnector.Model);
@@ -332,11 +336,12 @@ public partial class AudioClient
         return ClientResult.FromValue(value, response);
     }
 
+    // convenience method - async; Stream overload
+    // TODO: add refdoc comment
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream fileStream, string fileName, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(fileStream, nameof(fileStream));
-        Argument.AssertNotNull(fileName, nameof(fileName));
-
+        
         options ??= new();
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model);
@@ -350,11 +355,12 @@ public partial class AudioClient
         return ClientResult.FromValue(value, response);
     }
 
+    // convenience method - async
+    // TODO: add refdoc comment
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audioBytes, nameof(audioBytes));
-        Argument.AssertNotNull(filename, nameof(filename));
-
+        
         options ??= new();
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, filename, _clientConnector.Model);

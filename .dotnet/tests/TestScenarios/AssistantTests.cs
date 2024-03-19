@@ -134,7 +134,7 @@ public partial class AssistantTests
         AssistantClient client = GetTestClient();
         Assistant assistant = await CreateCommonTestAssistantAsync();
 
-        StreamingClientResult<StreamingRunUpdate> runUpdateResult = client.CreateThreadAndRunStreaming(
+        StreamingClientResult<StreamingUpdate> runUpdateResult = client.CreateThreadAndRunStreaming(
             assistant.Id,
             new ThreadCreationOptions()
             {
@@ -144,11 +144,11 @@ public partial class AssistantTests
                 }
             });
         Assert.That(runUpdateResult, Is.Not.Null);
-        await foreach (StreamingRunUpdate runUpdate in runUpdateResult)
+        await foreach (StreamingUpdate runUpdate in runUpdateResult)
         {
             if (runUpdate is StreamingMessageCreation messageCreation)
             {
-                Console.WriteLine($"Message created, id={messageCreation.Id}");
+                Console.WriteLine($"Message created, id={messageCreation.Message.Id}");
             }
             if (runUpdate is StreamingMessageUpdate messageUpdate)
             {
@@ -189,11 +189,11 @@ public partial class AssistantTests
         AssistantThread thread = threadResult.Value;
         Assert.That(thread, Is.Not.Null);
 
-        StreamingClientResult<StreamingRunUpdate> streamingResult = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        StreamingClientResult<StreamingUpdate> streamingResult = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
         Assert.That(streamingResult, Is.Not.Null);
         List<RunRequiredAction> requiredActions = [];
         ThreadRun initialStreamedRun = null;
-        await foreach (StreamingRunUpdate streamingUpdate in streamingResult)
+        await foreach (StreamingUpdate streamingUpdate in streamingResult)
         {
             if (streamingUpdate is StreamingRunCreation streamingRunCreation)
             {
@@ -220,7 +220,7 @@ public partial class AssistantTests
             }
         }
         streamingResult = await client.SubmitToolOutputsStreamingAsync(thread.Id, initialStreamedRun.Id, toolOutputs);
-        await foreach (StreamingRunUpdate streamingUpdate in streamingResult)
+        await foreach (StreamingUpdate streamingUpdate in streamingResult)
         {
             Console.WriteLine(streamingUpdate.GetRawSseEvent().ToString());
         }

@@ -1,6 +1,6 @@
 namespace OpenAI.Assistants;
 
-public partial class StreamingRequiredAction : StreamingRunUpdate
+public partial class StreamingRequiredAction : StreamingUpdate
 {
     public RunRequiredAction RequiredAction { get; }
 

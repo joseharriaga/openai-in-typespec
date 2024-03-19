@@ -1,10 +1,6 @@
 namespace OpenAI.Assistants;
 
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
-
-public partial class StreamingRunCreation : StreamingRunUpdate
+public partial class StreamingRunCreation : StreamingUpdate
 {
     public ThreadRun Run { get; }
 

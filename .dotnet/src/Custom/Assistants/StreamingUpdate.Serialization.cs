@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 
-public partial class StreamingRunUpdate
+public partial class StreamingUpdate
 {
-    internal static IEnumerable<StreamingRunUpdate> DeserializeSseRunUpdates(
+    internal static IEnumerable<StreamingUpdate> DeserializeSseRunUpdates(
         ReadOnlyMemory<char> sseEventName,
         JsonElement sseDataJson)
     {
-        IEnumerable<StreamingRunUpdate> results = [];
+        IEnumerable<StreamingUpdate> results = [];
         if (sseEventName.Span.SequenceEqual(s_threadMessageCreationEventName.Span))
         {
             results = [StreamingMessageCreation.DeserializeSseMessageCreation(sseDataJson)];
@@ -34,11 +34,11 @@ public partial class StreamingRunUpdate
         }
         else
         {
-            results = [new StreamingRunUpdate()];
+            results = [new StreamingUpdate()];
         }
 
         JsonElement rawElementClone = sseDataJson.Clone();
-        foreach (StreamingRunUpdate baseUpdate in results)
+        foreach (StreamingUpdate baseUpdate in results)
         {
             baseUpdate._originalJson = rawElementClone;
         }

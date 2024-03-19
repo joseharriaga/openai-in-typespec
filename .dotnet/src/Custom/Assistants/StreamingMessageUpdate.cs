@@ -1,9 +1,6 @@
 namespace OpenAI.Assistants;
 
-using System.Collections.Generic;
-using System.Text.Json;
-
-public partial class StreamingMessageUpdate : StreamingRunUpdate
+public partial class StreamingMessageUpdate : StreamingUpdate
 {
     public MessageContent ContentUpdate { get; }
     public int? ContentUpdateIndex { get; }

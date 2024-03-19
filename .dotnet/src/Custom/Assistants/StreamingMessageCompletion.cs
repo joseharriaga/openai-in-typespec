@@ -1,10 +1,6 @@
 namespace OpenAI.Assistants;
 
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
-
-public partial class StreamingMessageCompletion : StreamingRunUpdate
+public partial class StreamingMessageCompletion : StreamingUpdate
 {
     public ThreadMessage Message { get; }
 

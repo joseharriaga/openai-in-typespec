@@ -509,7 +509,7 @@ public partial class AssistantClient
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
-    public virtual StreamingClientResult<StreamingRunUpdate> CreateRunStreaming(
+    public virtual StreamingClientResult<StreamingUpdate> CreateRunStreaming(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
@@ -519,7 +519,7 @@ public partial class AssistantClient
         return CreateStreamingRunResult(message);
     }
 
-    public virtual async Task<StreamingClientResult<StreamingRunUpdate>> CreateRunStreamingAsync(
+    public virtual async Task<StreamingClientResult<StreamingUpdate>> CreateRunStreamingAsync(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
@@ -552,7 +552,7 @@ public partial class AssistantClient
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
-    public virtual StreamingClientResult<StreamingRunUpdate> CreateThreadAndRunStreaming(
+    public virtual StreamingClientResult<StreamingUpdate> CreateThreadAndRunStreaming(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -562,7 +562,7 @@ public partial class AssistantClient
         return CreateStreamingRunResult(message);
     }
 
-    public virtual async Task<StreamingClientResult<StreamingRunUpdate>> CreateThreadAndRunStreamingAsync(
+    public virtual async Task<StreamingClientResult<StreamingUpdate>> CreateThreadAndRunStreamingAsync(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -673,14 +673,14 @@ public partial class AssistantClient
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
-    public virtual StreamingClientResult<StreamingRunUpdate> SubmitToolOutputsStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
+    public virtual StreamingClientResult<StreamingUpdate> SubmitToolOutputsStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
     {
         PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
         Shim.Pipeline.SendAsync(message);
         return CreateStreamingRunResult(message);
     }
 
-    public virtual async Task<StreamingClientResult<StreamingRunUpdate>> SubmitToolOutputsStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
+    public virtual async Task<StreamingClientResult<StreamingUpdate>> SubmitToolOutputsStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
     {
         PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
         await Shim.Pipeline.SendAsync(message);
@@ -718,7 +718,7 @@ public partial class AssistantClient
         return CreateSubmitToolOutputsRequest(threadId, runId, content, stream: true);
     }
 
-    internal static StreamingClientResult<StreamingRunUpdate> CreateStreamingRunResult(PipelineMessage message)
+    internal static StreamingClientResult<StreamingUpdate> CreateStreamingRunResult(PipelineMessage message)
     {
         if (message.Response.IsError)
         {
@@ -729,11 +729,11 @@ public partial class AssistantClient
         {
             response = message.ExtractResponse();
             ClientResult genericResult = ClientResult.FromResponse(response);
-            StreamingClientResult<StreamingRunUpdate> streamingResult = StreamingClientResult<StreamingRunUpdate>.CreateFromResponse(
+            StreamingClientResult<StreamingUpdate> streamingResult = StreamingClientResult<StreamingUpdate>.CreateFromResponse(
                 genericResult,
-                (responseForEnumeration) => SseAsyncEnumerator<StreamingRunUpdate>.EnumerateFromSseJsonStream(
+                (responseForEnumeration) => SseAsyncEnumerator<StreamingUpdate>.EnumerateFromSseJsonStream(
                     responseForEnumeration.GetRawResponse().ContentStream,
-                    StreamingRunUpdate.DeserializeSseRunUpdates));
+                    StreamingUpdate.DeserializeSseRunUpdates));
             response = null;
             return streamingResult;
         }

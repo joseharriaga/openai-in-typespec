@@ -1,17 +1,16 @@
 namespace OpenAI.Assistants;
 
-using System;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
 public partial class StreamingMessageUpdate
 {
-    internal static IEnumerable<StreamingRunUpdate> DeserializeSseMessageUpdates(
+    internal static IEnumerable<StreamingUpdate> DeserializeSseMessageUpdates(
         JsonElement sseDataJson,
         ModelReaderWriterOptions options = default)
     {
-        List<StreamingRunUpdate> results = [];
+        List<StreamingUpdate> results = [];
         if (sseDataJson.ValueKind == JsonValueKind.Null)
         {
             return results;
@@ -54,10 +53,5 @@ public partial class StreamingMessageUpdate
             results.Add(new StreamingMessageUpdate(contentItem, index));
         }
         return results;
-    }
-
-    internal StreamingMessageUpdate() : base()
-    {
-
     }
 }

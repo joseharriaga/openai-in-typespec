@@ -279,7 +279,7 @@ public partial class FileClient
         _ = Shim.DeleteFileAsync(fileId);
     }
 
-    internal PipelineMessage CreateUploadFileRequest(BinaryContent content, string contentType, RequestOptions options)
+    private PipelineMessage CreateUploadFileRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
@@ -305,7 +305,7 @@ public partial class FileClient
         return message;
     }
 
-    internal static Internal.Models.OpenAIFilePurpose? ToInternalFilePurpose(OpenAIFilePurpose? purpose)
+    private static Internal.Models.OpenAIFilePurpose? ToInternalFilePurpose(OpenAIFilePurpose? purpose)
     {
         if (purpose == null)
         {

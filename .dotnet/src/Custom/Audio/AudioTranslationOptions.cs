@@ -10,7 +10,6 @@ public partial class AudioTranslationOptions
     public AudioTranscriptionFormat? ResponseFormat { get; set; }
     public float? Temperature { get; set; }
 
-
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName, string model)
     {
         MultipartFormDataBinaryContent content = new();

@@ -5,17 +5,17 @@ using System.Text;
 namespace OpenAI;
 
 // SSE specification: https://html.spec.whatwg.org/multipage/server-sent-events.html#parsing-an-event-stream
-internal readonly struct SseEvent
+internal readonly struct ServerSentEvent
 {
-    public ReadOnlyMemory<char> EventType { get; }
+    public ReadOnlyMemory<char> EventName { get; }
     public ReadOnlyMemory<char> Data { get; }
     public ReadOnlyMemory<char> LastEventId { get; }
     public TimeSpan? ReconnectionTime { get; }
 
-    private readonly IReadOnlyList<SseEventField> _fields;
+    private readonly IReadOnlyList<ServerSentEventField> _fields;
     private readonly string _multiLineData;
 
-    internal SseEvent(IReadOnlyList<SseEventField> fields)
+    internal ServerSentEvent(IReadOnlyList<ServerSentEventField> fields)
     {
         _fields = fields;
         StringBuilder multiLineDataBuilder = null;
@@ -24,10 +24,10 @@ internal readonly struct SseEvent
             ReadOnlyMemory<char> fieldValue = _fields[i].Value;
             switch (_fields[i].FieldType)
             {
-                case SseEventFieldType.Event:
-                    EventType = fieldValue;
+                case ServerSentEventFieldKind.Event:
+                    EventName = fieldValue;
                     break;
-                case SseEventFieldType.Data:
+                case ServerSentEventFieldKind.Data:
                     {
                         if (multiLineDataBuilder != null)
                         {
@@ -45,10 +45,10 @@ internal readonly struct SseEvent
                         }
                         break;
                     }
-                case SseEventFieldType.Id:
+                case ServerSentEventFieldKind.Id:
                     LastEventId = fieldValue;
                     break;
-                case SseEventFieldType.Retry:
+                case ServerSentEventFieldKind.Retry:
                     ReconnectionTime = Int32.TryParse(fieldValue.ToString(), out int retry) ? TimeSpan.FromMilliseconds(retry) : null;
                     break;
                 default:

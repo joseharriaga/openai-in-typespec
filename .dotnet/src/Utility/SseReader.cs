@@ -18,11 +18,11 @@ internal sealed class SseReader : IDisposable
         _reader = new StreamReader(stream);
     }
 
-    public SseEvent? TryGetNextEvent()
+    public ServerSentEvent? TryGetNextEvent(CancellationToken cancellationToken = default)
     {
-        List<SseEventField> fields = [];
+        List<ServerSentEventField> fields = [];
 
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
             string line = _reader.ReadLine();
             if (line == null)
@@ -33,7 +33,7 @@ internal sealed class SseReader : IDisposable
             else if (line.Length == 0)
             {
                 // An empty line should dispatch an event for pending accumulated fields
-                SseEvent nextEvent = new(fields);
+                ServerSentEvent nextEvent = new(fields);
                 fields = [];
                 return nextEvent;
             }
@@ -45,14 +45,16 @@ internal sealed class SseReader : IDisposable
             else
             {
                 // Otherwise, process the the field + value and accumulate it for the next dispatched event
-                fields.Add(new SseEventField(line));
+                fields.Add(new ServerSentEventField(line));
             }
         }
+
+        return null;
     }
 
-    public async Task<SseEvent?> TryGetNextEventAsync(CancellationToken cancellationToken = default)
+    public async Task<ServerSentEvent?> TryGetNextEventAsync(CancellationToken cancellationToken = default)
     {
-        List<SseEventField> fields = [];
+        List<ServerSentEventField> fields = [];
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -65,7 +67,7 @@ internal sealed class SseReader : IDisposable
             else if (line.Length == 0)
             {
                 // An empty line should dispatch an event for pending accumulated fields
-                SseEvent nextEvent = new(fields);
+                ServerSentEvent nextEvent = new(fields);
                 fields = [];
                 return nextEvent;
             }
@@ -77,9 +79,10 @@ internal sealed class SseReader : IDisposable
             else
             {
                 // Otherwise, process the the field + value and accumulate it for the next dispatched event
-                fields.Add(new SseEventField(line));
+                fields.Add(new ServerSentEventField(line));
             }
         }
+
         return null;
     }
 

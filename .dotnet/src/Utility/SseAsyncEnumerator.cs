@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 
@@ -11,9 +10,8 @@ namespace OpenAI;
 
 internal static class SseAsyncEnumerator<T>
 {
-    internal static async IAsyncEnumerable<T> EnumerateFromSseJsonStream(
+    internal static async IAsyncEnumerable<ServerSentEvent> EnumerateServerSentEvents(
         Stream stream,
-        Func<ReadOnlyMemory<char>, JsonElement, IEnumerable<T>> multiElementDeserializer,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         try
@@ -21,19 +19,14 @@ internal static class SseAsyncEnumerator<T>
             using SseReader sseReader = new(stream);
             while (!cancellationToken.IsCancellationRequested)
             {
-                SseEvent? sseEvent = await sseReader.TryGetNextEventAsync(cancellationToken).ConfigureAwait(false);
+                ServerSentEvent? sseEvent = await sseReader.TryGetNextEventAsync(cancellationToken).ConfigureAwait(false);
                 if (sseEvent is null)
                 {
                     break;
                 }
                 else
                 {
-                    if (IsWellKnownDoneToken(sseEvent.Value.Data)) continue;
-                    using JsonDocument sseDocument = JsonDocument.Parse(sseEvent.Value.Data);
-                    foreach (T item in multiElementDeserializer(sseEvent.Value.EventType, sseDocument.RootElement))
-                    {
-                        yield return item;
-                    }
+                    yield return sseEvent.Value;
                 }
             }
         }
@@ -41,6 +34,22 @@ internal static class SseAsyncEnumerator<T>
         {
             // Always dispose the stream immediately once enumeration is complete for any reason
             stream.Dispose();
+        }
+    }
+
+    internal static async IAsyncEnumerable<T> EnumerateFromSseJsonStream(
+        Stream stream,
+        Func<ReadOnlyMemory<char>, JsonElement, IEnumerable<T>> multiElementDeserializer,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        await foreach (ServerSentEvent sseEvent in EnumerateServerSentEvents(stream, cancellationToken))
+        {
+            if (IsWellKnownDoneToken(sseEvent.Data)) continue;
+            using JsonDocument sseDocument = JsonDocument.Parse(sseEvent.Data);
+            foreach (T item in multiElementDeserializer(sseEvent.EventName, sseDocument.RootElement))
+            {
+                yield return item;
+            }
         }
     }
 

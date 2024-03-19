@@ -3,9 +3,9 @@ using System;
 namespace OpenAI;
 
 // SSE specification: https://html.spec.whatwg.org/multipage/server-sent-events.html#parsing-an-event-stream
-internal readonly struct SseEventField
+internal readonly struct ServerSentEventField
 {
-    public SseEventFieldType FieldType { get; }
+    public ServerSentEventFieldKind FieldType { get; }
 
     // TODO: we should not expose UTF16 publicly
     public ReadOnlyMemory<char> Value
@@ -26,7 +26,7 @@ internal readonly struct SseEventField
     private readonly string _original;
     private readonly int _valueStartIndex;
 
-    internal SseEventField(string line)
+    internal ServerSentEventField(string line)
     {
         _original = line;
         int colonIndex = _original.AsSpan().IndexOf(':');
@@ -34,11 +34,11 @@ internal readonly struct SseEventField
         ReadOnlyMemory<char> fieldName = colonIndex < 0 ? _original.AsMemory(): _original.AsMemory(0, colonIndex);
         FieldType = fieldName.Span switch
         {
-            var x when x.SequenceEqual(s_eventFieldName.Span) => SseEventFieldType.Event,
-            var x when x.SequenceEqual(s_dataFieldName.Span) => SseEventFieldType.Data,
-            var x when x.SequenceEqual(s_lastEventIdFieldName.Span) => SseEventFieldType.Id,
-            var x when x.SequenceEqual(s_retryFieldName.Span) => SseEventFieldType.Retry,
-            _ => SseEventFieldType.Ignored,
+            var x when x.SequenceEqual(s_eventFieldName.Span) => ServerSentEventFieldKind.Event,
+            var x when x.SequenceEqual(s_dataFieldName.Span) => ServerSentEventFieldKind.Data,
+            var x when x.SequenceEqual(s_lastEventIdFieldName.Span) => ServerSentEventFieldKind.Id,
+            var x when x.SequenceEqual(s_retryFieldName.Span) => ServerSentEventFieldKind.Retry,
+            _ => ServerSentEventFieldKind.Ignored,
         };
 
         if (colonIndex < 0)

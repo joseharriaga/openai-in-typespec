@@ -286,7 +286,7 @@ public partial class AudioClient
 
         request.Uri = uriBuilder.Uri;
 
-        request.Headers.Set("content-type", contentType);
+        request.Headers.Set("Content-Type", contentType);
 
         request.Content = content;
 
@@ -429,7 +429,7 @@ public partial class AudioClient
 
         request.Uri = uriBuilder.Uri;
 
-        request.Headers.Set("content-type", contentType);
+        request.Headers.Set("Content-Type", contentType);
 
         request.Content = content;
 

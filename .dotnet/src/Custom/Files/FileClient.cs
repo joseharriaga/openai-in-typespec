@@ -1,10 +1,9 @@
+using OpenAI.Audio;
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -95,25 +94,88 @@ public partial class FileClient
         : this(endpoint: null, credential: null, options)
     { }
 
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, OpenAIFilePurpose purpose)
+    // TODO: add refdoc comment
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string fileName, OpenAIFilePurpose purpose)
     {
-        if (file is null) throw new ArgumentNullException(nameof(file));
-        if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException(nameof(filename));
+        Argument.AssertNotNull(file, nameof(file));
+        Argument.AssertNotNull(fileName, nameof(fileName));
 
-        // TODO: ensure correct patterns for sync-over-async
-        PipelineMessage uploadMessage = CreateInternalUploadMessageAsync(file, filename, purpose).Result;
-        Shim.Pipeline.Send(uploadMessage);
-        return GetUploadResultFromResponse(uploadMessage.Response);
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+
+        ClientResult result = UploadFile(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
+
+        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
+        OpenAIFileInfo fileInfo = new(internalFile);
+        return ClientResult.FromValue(fileInfo, response);
     }
 
-    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, OpenAIFilePurpose purpose)
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string fileName, OpenAIFilePurpose purpose)
     {
-        if (file is null) throw new ArgumentNullException(nameof(file));
-        if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException(nameof(filename));
+        Argument.AssertNotNull(file, nameof(file));
+        Argument.AssertNotNull(fileName, nameof(fileName));
 
-        PipelineMessage uploadMessage = await CreateInternalUploadMessageAsync(file, filename, purpose).ConfigureAwait(false);
-        await Shim.Pipeline.SendAsync(uploadMessage).ConfigureAwait(false);
-        return GetUploadResultFromResponse(uploadMessage.Response);
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+
+        ClientResult result = await UploadFileAsync(content, content.ContentType).ConfigureAwait(false);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
+
+        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
+        OpenAIFileInfo fileInfo = new(internalFile);
+        return ClientResult.FromValue(fileInfo, response);
+    }
+
+    // protocol method - sync
+    // TODO: add refdoc comment
+    public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null)
+    {
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNull(contentType, nameof(contentType));
+
+        options ??= new RequestOptions();
+
+        using PipelineMessage message = CreateUploadFileRequest(content, contentType, options);
+
+        Shim.Pipeline.Send(message);
+
+        PipelineResponse response = message.Response!;
+
+        if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
+        {
+            throw new ClientResultException(response);
+        }
+
+        return ClientResult.FromResponse(response);
+    }
+
+    // protocol method - async
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    {
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNull(contentType, nameof(contentType));
+
+        options ??= new RequestOptions();
+
+        using PipelineMessage message = CreateUploadFileRequest(content, contentType, options);
+
+        Shim.Pipeline.Send(message);
+
+        PipelineResponse response = message.Response!;
+
+        if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
+        {
+            throw await ClientResultException.CreateAsync(response).ConfigureAwait(false);
+        }
+
+        return ClientResult.FromResponse(response);
     }
 
     public virtual ClientResult<OpenAIFileInfo> GetFileInfo(string fileId)
@@ -217,7 +279,7 @@ public partial class FileClient
         _ = Shim.DeleteFileAsync(fileId);
     }
 
-    internal async Task<PipelineMessage> CreateInternalUploadMessageAsync(BinaryData fileData, string filename, OpenAIFilePurpose purpose)
+    internal PipelineMessage CreateUploadFileRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
@@ -226,50 +288,21 @@ public partial class FileClient
         request.Method = "POST";
 
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+
         StringBuilder path = new();
         path.Append("/files");
         uriBuilder.Path += path.ToString();
+
         request.Uri = uriBuilder.Uri;
 
         request.Headers.Set("Accept", "application/json");
+        request.Headers.Set("Content-Type", contentType);
 
-        MultipartFormDataContent content = new();
-        content.Add(new ByteArrayContent(fileData.ToArray()), name: "file", fileName: filename);
-        content.Add(new StringContent(purpose switch
-        {
-            OpenAIFilePurpose.FineTuning => "fine-tune",
-            OpenAIFilePurpose.Assistants => "assistants",
-            _ => throw new ArgumentException($"Unsupported purpose for file upload: {purpose}"),
-        }), name: "\"purpose\"");
-        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-        request.Content = BinaryContent.Create(stream);
+        request.Content = content;
 
-        // Add headers
-        // TODO: can we improve perf?
-
-        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
-        {
-            request.Headers.Set("Content-Type", contentType.ToString());
-        }
-
-        if (content.Headers.ContentLength is long contentLength)
-        {
-            request.Headers.Set("Content-Length", contentLength.ToString());
-        }
+        message.Apply(options);
 
         return message;
-    }
-
-    internal ClientResult<OpenAIFileInfo> GetUploadResultFromResponse(PipelineResponse response)
-    {
-        if (response.IsError)
-        {
-            throw new ClientResultException(response);
-        }
-
-        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
-        OpenAIFileInfo fileInfo = new(internalFile);
-        return ClientResult.FromValue(fileInfo, response);
     }
 
     internal static Internal.Models.OpenAIFilePurpose? ToInternalFilePurpose(OpenAIFilePurpose? purpose)
@@ -287,7 +320,7 @@ public partial class FileClient
             _ => throw new ArgumentException($"Unsupported file purpose: {purpose}"),
         };
     }
+
     private static PipelineMessageClassifier _responseErrorClassifier200;
     private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
-
 }

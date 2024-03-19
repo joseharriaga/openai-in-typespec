@@ -1,31 +1,45 @@
 using OpenAI.Internal;
-using OpenAI.Internal.Models;
 using System;
-using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace OpenAI.Audio;
 
 public partial class AudioTranscriptionOptions
 {
     public string Language { get; set; }
-    public string Prompt { get; set;  }
+    public string Prompt { get; set; }
     public AudioTranscriptionFormat? ResponseFormat { get; set; }
     public float? Temperature { get; set; }
     public bool? EnableWordTimestamps { get; set; }
     public bool? EnableSegmentTimestamps { get; set; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData audioBytes, string filename, string model)
+
+    internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName, string model)
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(audioBytes, "file", filename);
+        content.Add(fileStream, "file", fileName);
+
+        AddContent(model, content);
+
+        return content;
+    }
+
+    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData audioBytes, string fileName, string model)
+    {
+        MultipartFormDataBinaryContent content = new();
+
+        content.Add(audioBytes, "file", fileName);
+
+        AddContent(model, content);
+
+        return content;
+    }
+
+    private void AddContent(string model, MultipartFormDataBinaryContent content)
+    {
         content.Add(model, "model");
 
         if (Language is not null)
@@ -72,7 +86,5 @@ public partial class AudioTranscriptionOptions
             byte[] data = JsonSerializer.SerializeToUtf8Bytes(granularities);
             content.Add(data, "timestamp_granularities");
         }
-
-        return content;
     }
 }

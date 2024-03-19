@@ -2,6 +2,7 @@ using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -142,18 +143,59 @@ public partial class AudioClient
         return Shim.CreateSpeechAsync(request);
     }
 
+    // TODO: add refdoc comment
+    public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream fileStream, string fileName, AudioTranscriptionOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model);
+
+        ClientResult result = TranscribeAudio(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
     // convenience method - sync
     // TODO: add refdoc comment
-    public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
+    public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audioBytes, string fileName, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audioBytes, nameof(audioBytes));
+
+        // TODO: is this required?
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, fileName, _clientConnector.Model);
+
+        ClientResult result = TranscribeAudio(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    // convenience method - async
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream fileStream, string filename, AudioTranscriptionOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
         Argument.AssertNotNull(filename, nameof(filename));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, filename, _clientConnector.Model);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, filename, _clientConnector.Model);
 
-        ClientResult result = TranscribeAudio(content, content.ContentType);
+        ClientResult result = await TranscribeAudioAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 
@@ -253,6 +295,24 @@ public partial class AudioClient
         return message;
     }
 
+    public virtual ClientResult<AudioTranslation> TranslateAudio(Stream fileStream, string fileName, AudioTranslationOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model);
+
+        ClientResult result = TranslateAudio(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        AudioTranslation value = AudioTranslation.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
     public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audioBytes, nameof(audioBytes));
@@ -263,6 +323,24 @@ public partial class AudioClient
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, filename, _clientConnector.Model);
 
         ClientResult result = TranslateAudio(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        AudioTranslation value = AudioTranslation.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream fileStream, string fileName, AudioTranslationOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model);
+
+        ClientResult result = await TranslateAudioAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 

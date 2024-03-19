@@ -112,6 +112,12 @@ model SubmitToolOutputsRunRequest {
     /** The output of the tool call to be submitted to continue the run. */
     output?: string;
   }[];
+
+  /**
+   * If true, returns a stream of events that happen during the Run as server-sent events,
+   * terminating when the Run enters a terminal state.
+   */
+  stream?: boolean;
 }
 
 model ListRunsResponse {

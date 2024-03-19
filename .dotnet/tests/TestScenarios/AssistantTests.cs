@@ -1,7 +1,9 @@
 ﻿using NUnit.Framework;
 using OpenAI.Assistants;
+using OpenAI.Chat;
 using System;
 using System.ClientModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
@@ -127,7 +129,7 @@ public partial class AssistantTests
     }
 
     [Test]
-    public async Task StreamingRunWorks()
+    public async Task SimpleStreamingRunWorks()
     {
         AssistantClient client = GetTestClient();
         Assistant assistant = await CreateCommonTestAssistantAsync();
@@ -157,6 +159,70 @@ public partial class AssistantTests
                 Console.WriteLine();
                 Console.WriteLine($"Message complete: {messageCompletion.Message.ContentItems[0].GetText()}");
             }
+        }
+    }
+
+    [Test]
+    public async Task StreamingWithToolsWorks()
+    {
+        AssistantClient client = GetTestClient();
+        ClientResult<Assistant> assistantResult = await client.CreateAssistantAsync("gpt-3.5-turbo", new AssistantCreationOptions()
+        {
+            Instructions = "You are a helpful math assistant that helps with visualizing equations. Use the code interpreter tool when asked to generate images. Use provided functions to resolve appropriate unknown values",
+            Tools =
+            {
+                new CodeInterpreterToolDefinition(),
+                new FunctionToolDefinition("get_boilerplate_equation", "Retrieves a predefined 'boilerplate equation' from the caller."),
+            },
+            Metadata = { [s_cleanupMetadataKey] = "true" },
+        });
+        Assistant assistant = assistantResult.Value;
+        Assert.That(assistant, Is.Not.Null);
+
+        ClientResult<AssistantThread> threadResult = await client.CreateThreadAsync(new ThreadCreationOptions()
+        {
+            Messages =
+            {
+                "Please make a graph for my boilerplate equation",
+            },
+        });
+        AssistantThread thread = threadResult.Value;
+        Assert.That(thread, Is.Not.Null);
+
+        StreamingClientResult<StreamingRunUpdate> streamingResult = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        Assert.That(streamingResult, Is.Not.Null);
+        List<RunRequiredAction> requiredActions = [];
+        ThreadRun initialStreamedRun = null;
+        await foreach (StreamingRunUpdate streamingUpdate in streamingResult)
+        {
+            if (streamingUpdate is StreamingRunCreation streamingRunCreation)
+            {
+                initialStreamedRun = streamingRunCreation.Run;
+            }
+            if (streamingUpdate is StreamingRequiredAction streamedRequiredAction)
+            {
+                requiredActions.Add(streamedRequiredAction.RequiredAction);
+            }
+            Console.WriteLine(streamingUpdate.GetRawSseEvent().ToString());
+        }
+        Assert.That(initialStreamedRun?.Id, Is.Not.Null.Or.Empty);
+        Assert.That(requiredActions, Is.Not.Empty);
+
+        List<ToolOutput> toolOutputs = [];
+        foreach (RunRequiredAction requiredAction in requiredActions)
+        {
+            if (requiredAction is RequiredFunctionToolCall functionCall)
+            {
+                if (functionCall.Name == "get_boilerplate_equation")
+                {
+                    toolOutputs.Add(new(functionCall, "y = 14x - 3"));
+                }
+            }
+        }
+        streamingResult = await client.SubmitToolOutputsStreamingAsync(thread.Id, initialStreamedRun.Id, toolOutputs);
+        await foreach (StreamingRunUpdate streamingUpdate in streamingResult)
+        {
+            Console.WriteLine(streamingUpdate.GetRawSseEvent().ToString());
         }
     }
 

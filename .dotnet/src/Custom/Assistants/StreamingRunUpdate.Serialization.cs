@@ -23,10 +23,24 @@ public partial class StreamingRunUpdate
         {
             results = [StreamingMessageCompletion.DeserializeStreamingMessageCompletion(sseDataJson)];
         }
+        else if (sseEventName.Span.SequenceEqual(s_runCreatedEventName.Span))
+        {
+            results = [StreamingRunCreation.DeserializeStreamingRunCreation(sseDataJson)];
+        }
 
+        else if (sseEventName.Span.SequenceEqual(s_runRequiredActionEventName.Span))
+        {
+            results = StreamingRequiredAction.DeserializeStreamingRequiredActions(sseDataJson);
+        }
+        else
+        {
+            results = [new StreamingRunUpdate()];
+        }
+
+        JsonElement rawElementClone = sseDataJson.Clone();
         foreach (StreamingRunUpdate baseUpdate in results)
         {
-            baseUpdate._originalJson = sseDataJson.Clone();
+            baseUpdate._originalJson = rawElementClone;
         }
         return results;
     }
@@ -34,4 +48,6 @@ public partial class StreamingRunUpdate
     private static readonly ReadOnlyMemory<char> s_threadMessageCreationEventName = "thread.message.created".AsMemory();
     private static readonly ReadOnlyMemory<char> s_threadMessageDeltaEventName = "thread.message.delta".AsMemory();
     private static readonly ReadOnlyMemory<char> s_threadMessageCompletionEventName = "thread.message.completed".AsMemory();
+    private static readonly ReadOnlyMemory<char> s_runCreatedEventName = "thread.run.created".AsMemory();
+    private static readonly ReadOnlyMemory<char> s_runRequiredActionEventName = "thread.run.requires_action".AsMemory();
 }

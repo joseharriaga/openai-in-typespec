@@ -459,6 +459,19 @@ public partial class AssistantClient
         RequestOptions options = null)
         => RunShim.SubmitToolOuputsToRun(threadId, runId, content, options);
 
+    /// <inheritdoc cref="Internal.Runs.SubmitToolOuputsToRun(string, string, BinaryContent, RequestOptions)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult SubmitToolOutputsStreaming(
+        string threadId,
+        string runId,
+        BinaryContent content,
+        RequestOptions options = null)
+    {
+        PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, content, stream: true, options);
+        RunShim.Pipeline.Send(message);
+        return ClientResult.FromResponse(message.ExtractResponse());
+    }
+
     /// <inheritdoc cref="Internal.Runs.SubmitToolOuputsToRunAsync(string, string, BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> SubmitToolOutputsAsync(
@@ -467,6 +480,19 @@ public partial class AssistantClient
         BinaryContent content,
         RequestOptions options = null)
         => await RunShim.SubmitToolOuputsToRunAsync(threadId, runId, content, options).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Internal.Runs.SubmitToolOuputsToRunAsync(string, string, BinaryContent, RequestOptions)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> SubmitToolOutputsStreamingAsync(
+        string threadId,
+        string runId,
+        BinaryContent content,
+        RequestOptions options = null)
+    {
+        PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, content, stream: true, options);
+        await RunShim.Pipeline.SendAsync(message);
+        return ClientResult.FromResponse(message.ExtractResponse());
+    }
 
     /// <inheritdoc cref="Internal.Runs.GetRunStep(string, string, string, RequestOptions)"/>
     public virtual ClientResult GetRunStep(
@@ -507,31 +533,15 @@ public partial class AssistantClient
         => await RunShim.GetRunStepsAsync(threadId, runId, maxResults, createdSortOrder, previousStepId, subsequentStepId, options).ConfigureAwait(false);
 
     internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, bool? stream = null, RequestOptions options = null)
-    {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
-        if (stream == true)
-        {
-            message.BufferResponse = false;
-        }
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append("/threads/");
-        path.Append(threadId);
-        path.Append("/runs");
-        uriBuilder.Path += path.ToString();
-        uriBuilder.Query += $"?thread_id={threadId}";
-        request.Uri = uriBuilder.Uri;
-        request.Headers.Set("Content-Type", "application/json");
-        request.Headers.Set("Accept", "text/event-stream");
-        request.Content = content;
-        message.Apply(options ?? new());
-        return message;
-    }
+        => CreateAssistantProtocolRequest($"/threads/{threadId}/runs", content, stream, options);
 
     internal PipelineMessage CreateCreateThreadAndRunRequest(BinaryContent content, bool? stream = null, RequestOptions options = null)
+        => CreateAssistantProtocolRequest($"/threads/runs", content, stream, options);
+
+    internal PipelineMessage CreateSubmitToolOutputsRequest(string threadId, string runId, BinaryContent content, bool? stream = null, RequestOptions options = null)
+        => CreateAssistantProtocolRequest($"/threads/{threadId}/runs/{runId}/submit_tool_outputs", content, stream, options);
+
+    internal PipelineMessage CreateAssistantProtocolRequest(string path, BinaryContent content, bool? stream = null, RequestOptions options = null)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
@@ -542,12 +552,10 @@ public partial class AssistantClient
         PipelineRequest request = message.Request;
         request.Method = "POST";
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append("/threads/runs");
-        uriBuilder.Path += path.ToString();
+        uriBuilder.Path += path;
         request.Uri = uriBuilder.Uri;
         request.Headers.Set("Content-Type", "application/json");
-        request.Headers.Set("Accept", "text/event-stream");
+        request.Headers.Set("Accept", stream == true ? "text/event-stream" : "application/json");
         request.Content = content;
         message.Apply(options ?? new());
         return message;

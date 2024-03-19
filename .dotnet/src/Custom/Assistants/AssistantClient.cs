@@ -514,7 +514,7 @@ public partial class AssistantClient
         string assistantId,
         RunCreationOptions options = null)
     {
-        PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options);
+        PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options, stream: true);
         RunShim.Pipeline.Send(message);
         return CreateStreamingRunResult(message);
     }
@@ -524,7 +524,7 @@ public partial class AssistantClient
         string assistantId,
         RunCreationOptions options = null)
     {
-        PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options);
+        PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options, stream: true);
         await RunShim.Pipeline.SendAsync(message);
         return CreateStreamingRunResult(message);
     }
@@ -654,7 +654,7 @@ public partial class AssistantClient
             requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
         }
 
-        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null);
+        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null, serializedAdditionalRawData: null);
         ClientResult<Internal.Models.RunObject> internalResult = RunShim.SubmitToolOuputsToRun(threadId, runId, request);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
@@ -668,9 +668,23 @@ public partial class AssistantClient
             requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
         }
 
-        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null);
+        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null, serializedAdditionalRawData: null);
         ClientResult<Internal.Models.RunObject> internalResult = await RunShim.SubmitToolOuputsToRunAsync(threadId, runId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+    }
+
+    public virtual StreamingClientResult<StreamingRunUpdate> SubmitToolOutputsStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
+    {
+        PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
+        Shim.Pipeline.SendAsync(message);
+        return CreateStreamingRunResult(message);
+    }
+
+    public virtual async Task<StreamingClientResult<StreamingRunUpdate>> SubmitToolOutputsStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
+    {
+        PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
+        await Shim.Pipeline.SendAsync(message);
+        return CreateStreamingRunResult(message);
     }
 
     internal PipelineMessage CreateCreateRunRequest(string threadId, string assistantId, RunCreationOptions runOptions, bool? stream = null)
@@ -690,6 +704,18 @@ public partial class AssistantClient
             = CreateInternalCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
         BinaryContent content = BinaryContent.Create(internalRequest);
         return CreateCreateThreadAndRunRequest(content, stream: true);
+    }
+
+    internal PipelineMessage CreateSubmitToolOutputsRequest(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, bool? stream)
+    {
+        List<Internal.Models.SubmitToolOutputsRunRequestToolOutput> requestToolOutputs = [];
+        foreach (ToolOutput toolOutput in toolOutputs)
+        {
+            requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
+        }
+        Internal.Models.SubmitToolOutputsRunRequest internalRequest = new(requestToolOutputs, stream, serializedAdditionalRawData: null);
+        BinaryContent content = BinaryContent.Create(internalRequest);
+        return CreateSubmitToolOutputsRequest(threadId, runId, content, stream: true);
     }
 
     internal static StreamingClientResult<StreamingRunUpdate> CreateStreamingRunResult(PipelineMessage message)

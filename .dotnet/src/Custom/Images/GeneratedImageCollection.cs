@@ -16,7 +16,6 @@ public class GeneratedImageCollection : ReadOnlyCollection<GeneratedImage>
     {
         using JsonDocument responseDocument = JsonDocument.Parse(content);
         return Deserialize(responseDocument.RootElement);
-
     }
 
     internal static GeneratedImageCollection Deserialize(JsonElement element)

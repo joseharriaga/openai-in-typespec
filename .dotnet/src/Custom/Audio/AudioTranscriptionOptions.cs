@@ -15,7 +15,6 @@ public partial class AudioTranscriptionOptions
     public bool? EnableWordTimestamps { get; set; }
     public bool? EnableSegmentTimestamps { get; set; }
 
-
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName, string model)
     {
         MultipartFormDataBinaryContent content = new();

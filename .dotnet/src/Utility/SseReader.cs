@@ -18,6 +18,14 @@ internal sealed class SseReader : IDisposable
         _reader = new StreamReader(stream);
     }
 
+    /// <summary>
+    /// Synchronously retrieves the next server-sent event from the underlying stream, blocking until a new event is
+    /// available and returning null once no further data is present on the stream.
+    /// </summary>
+    /// <param name="cancellationToken"> An optional cancellation token that can abort subsequent reads. </param>
+    /// <returns>
+    ///     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
+    /// </returns>
     public ServerSentEvent? TryGetNextEvent(CancellationToken cancellationToken = default)
     {
         List<ServerSentEventField> fields = [];
@@ -52,6 +60,14 @@ internal sealed class SseReader : IDisposable
         return null;
     }
 
+    /// <summary>
+    /// Asynchronously retrieves the next server-sent event from the underlying stream, blocking until a new event is
+    /// available and returning null once no further data is present on the stream.
+    /// </summary>
+    /// <param name="cancellationToken"> An optional cancellation token that can abort subsequent reads. </param>
+    /// <returns>
+    ///     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
+    /// </returns>
     public async Task<ServerSentEvent?> TryGetNextEventAsync(CancellationToken cancellationToken = default)
     {
         List<ServerSentEventField> fields = [];

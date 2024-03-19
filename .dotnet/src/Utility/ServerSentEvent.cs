@@ -7,9 +7,13 @@ namespace OpenAI;
 // SSE specification: https://html.spec.whatwg.org/multipage/server-sent-events.html#parsing-an-event-stream
 internal readonly struct ServerSentEvent
 {
+    // Gets the value of the SSE "event type" buffer, used to distinguish between event kinds.
     public ReadOnlyMemory<char> EventName { get; }
+    // Gets the value of the SSE "data" buffer, which holds the payload of the server-sent event.
     public ReadOnlyMemory<char> Data { get; }
+    // Gets the value of the "last event ID" buffer, with which a user agent can reestablish a session.
     public ReadOnlyMemory<char> LastEventId { get; }
+    // If present, gets the defined "retry" value for the event, which represents the delay before reconnecting.
     public TimeSpan? ReconnectionTime { get; }
 
     private readonly IReadOnlyList<ServerSentEventField> _fields;

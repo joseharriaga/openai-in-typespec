@@ -384,7 +384,7 @@ public partial class AudioClient
 
         options ??= new RequestOptions();
 
-        using PipelineMessage message = CreateCreateTranscriptionRequest(content, contentType, options);
+        using PipelineMessage message = CreateCreateTranslationRequest(content, contentType, options);
 
         Shim.Pipeline.Send(message);
 

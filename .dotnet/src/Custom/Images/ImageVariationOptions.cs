@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenAI.Internal;
+using System;
 
 namespace OpenAI.Images;
 
@@ -15,4 +16,54 @@ public partial class ImageVariationOptions
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
     public string User { get; set; }
+
+    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData imageBytes,
+        string model,
+        int? imageCount)
+    {
+        MultipartFormDataBinaryContent content = new();
+
+        content.Add(imageBytes, "file", "image.png");
+        content.Add(model, "model");
+
+        if (imageCount is not null)
+        {
+            content.Add(imageCount.Value, "n");
+        }
+
+        if (ResponseFormat is not null)
+        {
+            string format = ResponseFormat switch
+            {
+                ImageResponseFormat.Uri => "url",
+                ImageResponseFormat.Bytes => "b64_json",
+                _ => throw new ArgumentException(nameof(ResponseFormat)),
+            };
+
+            content.Add(format, "response_format");
+        }
+
+        if (Size is not null)
+        {
+            string imageSize = Size switch
+            {
+                ImageSize.Size256x256 => "256x256",
+                ImageSize.Size512x512 => "512x512",
+                ImageSize.Size1024x1024 => "1024x1024",
+                // TODO: 1024x1792 and 1792x1024 are currently not supported in image edits.
+                ImageSize.Size1024x1792 => "1024x1792",
+                ImageSize.Size1792x1024 => "1792x1024",
+                _ => throw new ArgumentException(nameof(imageSize))
+            };
+
+            content.Add(imageSize, "size");
+        }
+
+        if (User is not null)
+        {
+            content.Add(User, "user");
+        }
+
+        return content;
+    }
 }

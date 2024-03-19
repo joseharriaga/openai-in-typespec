@@ -21,7 +21,7 @@ public class GeneratedImageCollection : ReadOnlyCollection<GeneratedImage>
 
     internal static GeneratedImageCollection Deserialize(JsonElement element)
     {
-        Internal.Models.ImagesResponse response = Internal.Models.ImagesResponse.DeserializeImagesResponse(responseDocument.RootElement);
+        Internal.Models.ImagesResponse response = Internal.Models.ImagesResponse.DeserializeImagesResponse(element);
 
         List<GeneratedImage> images = [];
         for (int i = 0; i < response.Data.Count; i++)

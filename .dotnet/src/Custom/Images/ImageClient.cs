@@ -3,6 +3,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -179,6 +180,31 @@ public partial class ImageClient
         return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
     }
 
+
+    // convenience method - sync; Stream overload
+    // TODO: add refdoc comment
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
+        Stream fileStream,
+        string prompt,
+        int? imageCount = null,
+        ImageEditOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(prompt, nameof(prompt));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, prompt, _clientConnector.Model, imageCount);
+
+        ClientResult result = GenerateImageEdits(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
     // convenience method - sync
     // TODO: add refdoc comment
     public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
@@ -195,6 +221,30 @@ public partial class ImageClient
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, prompt, _clientConnector.Model, imageCount);
 
         ClientResult result = GenerateImageEdits(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    // convenience method - async; Stream overload
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(
+        Stream fileStream,
+        string prompt,
+        int? imageCount = null,
+        ImageEditOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(prompt, nameof(prompt));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, prompt, _clientConnector.Model, imageCount);
+
+        ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 
@@ -276,6 +326,30 @@ public partial class ImageClient
     // convenience method - sync
     // TODO: add refdoc comment
     public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
+        Stream fileStream,
+        int? imageCount = null,
+        ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+
+        // TODO: Do we want to allow passing file-name?  Or is it ok to hard-code?
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, _clientConnector.Model, imageCount);
+
+        ClientResult result = GenerateImageVariations(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    // convenience method - sync
+    // TODO: add refdoc comment
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
         BinaryData imageBytes,
         int? imageCount = null,
         ImageVariationOptions options = null)
@@ -289,6 +363,28 @@ public partial class ImageClient
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, _clientConnector.Model, imageCount);
 
         ClientResult result = GenerateImageVariations(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    // convenience method - async; Stream overload
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(
+        Stream fileStream,
+        int? imageCount = null,
+        ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, _clientConnector.Model, imageCount);
+
+        ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 

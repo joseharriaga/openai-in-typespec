@@ -1,12 +1,13 @@
 ﻿using OpenAI.Internal;
 using System;
+using System.IO;
 
 namespace OpenAI.Images;
 
 /// <summary>
 /// Represents additional options available to control the behavior of an image generation operation.
 /// </summary>
-public /*partial TODO: where are other parts? */ class ImageEditOptions
+public partial class ImageEditOptions
 {
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Mask"/>
     public BinaryData MaskBytes { get; set; }
@@ -20,7 +21,21 @@ public /*partial TODO: where are other parts? */ class ImageEditOptions
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
     public string User { get; set; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData imageBytes, 
+    internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream,
+        string prompt,
+        string model,
+        int? imageCount)
+    {
+        MultipartFormDataBinaryContent content = new();
+
+        content.Add(fileStream, "file", "image.png");
+
+        AddContent(model, prompt, imageCount, content);
+
+        return content;
+    }
+
+    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData imageBytes,
         string prompt,
         string model,
         int? imageCount)
@@ -28,8 +43,16 @@ public /*partial TODO: where are other parts? */ class ImageEditOptions
         MultipartFormDataBinaryContent content = new();
 
         content.Add(imageBytes, "file", "image.png");
+
+        AddContent(model, prompt, imageCount, content);
+
+        return content;
+    }
+
+    private void AddContent(string model, string prompt, int? imageCount, MultipartFormDataBinaryContent content)
+    {
         content.Add(prompt, "prompt");
-        content.Add(model,"model");
+        content.Add(model, "model");
 
         if (MaskBytes is not null)
         {
@@ -73,7 +96,5 @@ public /*partial TODO: where are other parts? */ class ImageEditOptions
         {
             content.Add(User, "user");
         }
-
-        return content;
     }
 }

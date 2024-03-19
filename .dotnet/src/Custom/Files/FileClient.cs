@@ -96,12 +96,12 @@ public partial class FileClient
 
     // convenience method - sync; Stream overload
     // TODO: add refdoc comment
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string fileName, OpenAIFilePurpose purpose)
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream fileStream, string fileName, OpenAIFilePurpose purpose)
     {
-        Argument.AssertNotNull(file, nameof(file));
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
-        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(fileStream, fileName, purpose);
 
         ClientResult result = UploadFile(content, content.ContentType);
 

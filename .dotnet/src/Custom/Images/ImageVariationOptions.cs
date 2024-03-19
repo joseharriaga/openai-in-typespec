@@ -1,5 +1,6 @@
 ﻿using OpenAI.Internal;
 using System;
+using System.IO;
 
 namespace OpenAI.Images;
 
@@ -17,13 +18,30 @@ public partial class ImageVariationOptions
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
     public string User { get; set; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData imageBytes,
-        string model,
-        int? imageCount)
+    internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string model, int? imageCount)
+    {
+        MultipartFormDataBinaryContent content = new();
+
+        content.Add(fileStream, "file", "image.png");
+
+        AddContent(model, imageCount, content);
+
+        return content;
+    }
+
+    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData imageBytes, string model, int? imageCount)
     {
         MultipartFormDataBinaryContent content = new();
 
         content.Add(imageBytes, "file", "image.png");
+
+        AddContent(model, imageCount, content);
+
+        return content;
+    }
+
+    private void AddContent(string model, int? imageCount, MultipartFormDataBinaryContent content)
+    {
         content.Add(model, "model");
 
         if (imageCount is not null)
@@ -63,7 +81,5 @@ public partial class ImageVariationOptions
         {
             content.Add(User, "user");
         }
-
-        return content;
     }
 }

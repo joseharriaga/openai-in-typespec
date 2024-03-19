@@ -143,6 +143,7 @@ public partial class AudioClient
         return Shim.CreateSpeechAsync(request);
     }
 
+    // convenience method - sync; Stream overload
     // TODO: add refdoc comment
     public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream fileStream, string fileName, AudioTranscriptionOptions options = null)
     {

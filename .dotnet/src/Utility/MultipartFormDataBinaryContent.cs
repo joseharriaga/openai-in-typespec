@@ -44,12 +44,20 @@ internal class MultipartFormDataBinaryContent : BinaryContent
         Add(new StringContent(content), name, fileName);
     }
 
+    public void Add(int content, string name, string fileName = default)
+    {
+        // https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings#GFormatString
+        string value = content.ToString("G", CultureInfo.InvariantCulture);
+        Add(new StringContent(value), name, fileName);
+    }
+
     public void Add(double content, string name, string fileName = default)
     {
         // https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings#GFormatString
         string value = content.ToString("G", CultureInfo.InvariantCulture);
         Add(new StringContent(value), name, fileName);
     }
+
     public void Add(byte[] content, string name, string fileName = default)
     {
         Add(new ByteArrayContent(content), name, fileName);

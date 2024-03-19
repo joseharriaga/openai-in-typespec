@@ -1,4 +1,4 @@
-using OpenAI.ClientShared.Internal;
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -183,59 +183,102 @@ public partial class ImageClient
         return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
     }
 
+    // convenience method - sync
+    // TODO: add refdoc comment
     public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
         BinaryData imageBytes,
         string prompt,
         int? imageCount = null,
         ImageEditOptions options = null)
     {
-        // TODO: ensure correct patterns for sync-over-async
-        PipelineMessage message = CreateInternalImageEditsPipelineMessageAsync(imageBytes, prompt, imageCount, options).Result;
-        Shim.Pipeline.Send(message);
+        Argument.AssertNotNull(imageBytes, nameof(imageBytes));
+        Argument.AssertNotNull(prompt, nameof(prompt));
 
-        if (message.Response.IsError)
-        {
-            throw new ClientResultException(message.Response);
-        }
+        options ??= new();
 
-        using JsonDocument responseDocument = JsonDocument.Parse(message.Response.Content);
-        Internal.Models.ImagesResponse response = Internal.Models.ImagesResponse.DeserializeImagesResponse(responseDocument.RootElement);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, prompt, _clientConnector.Model, imageCount);
 
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response, i));
-        }
+        ClientResult result = GenerateImageEdits(content, content.ContentType);
 
-        return ClientResult.FromValue(new GeneratedImageCollection(images), message.Response);
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
+    // convenience method - async
+    // TODO: add refdoc comment
     public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(
         BinaryData imageBytes,
         string prompt,
         int? imageCount = null,
         ImageEditOptions options = null)
     {
-        PipelineMessage message = await CreateInternalImageEditsPipelineMessageAsync(imageBytes, prompt, imageCount, options).ConfigureAwait(false);
-        await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
+        Argument.AssertNotNull(imageBytes, nameof(imageBytes));
+        Argument.AssertNotNull(prompt, nameof(prompt));
 
-        if (message.Response.IsError)
-        {
-            throw new ClientResultException(message.Response);
-        }
+        options ??= new();
 
-        using JsonDocument responseDocument = JsonDocument.Parse(message.Response.Content);
-        Internal.Models.ImagesResponse response = Internal.Models.ImagesResponse.DeserializeImagesResponse(responseDocument.RootElement);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, prompt, _clientConnector.Model, imageCount);
 
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response, i));
-        }
+        ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
 
-        return ClientResult.FromValue(new GeneratedImageCollection(images), message.Response);
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
+    // protocol method - sync
+    // TODO: add refdoc comment
+    public virtual ClientResult GenerateImageEdits(BinaryContent content, string contentType, RequestOptions options = null)
+    {
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNull(contentType, nameof(contentType));
+
+        options ??= new RequestOptions();
+
+        using PipelineMessage message = CreateCreateImageEditsRequest(content, contentType, options);
+
+        Shim.Pipeline.Send(message);
+
+        PipelineResponse response = message.Response!;
+
+        if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
+        {
+            throw new ClientResultException(response);
+        }
+
+        return ClientResult.FromResponse(response);
+    }
+
+    // protocol method - async
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult> GenerateImageEditsAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    {
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNull(contentType, nameof(contentType));
+
+        options ??= new RequestOptions();
+
+        using PipelineMessage message = CreateCreateImageEditsRequest(content, contentType, options);
+
+        Shim.Pipeline.Send(message);
+
+        PipelineResponse response = message.Response!;
+
+        if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
+        {
+            throw await ClientResultException.CreateAsync(response).ConfigureAwait(false);
+        }
+
+        return ClientResult.FromResponse(response);
+    }
+
+    // convenience method - sync
+    // TODO: add refdoc comment
     public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
         BinaryData imageBytes,
         int? imageCount = null,
@@ -262,6 +305,8 @@ public partial class ImageClient
         return ClientResult.FromValue(new GeneratedImageCollection(images), message.Response);
     }
 
+    // convenience method - async
+    // TODO: add refdoc comment
     public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(
         BinaryData imageBytes,
         int? imageCount = null,
@@ -352,114 +397,29 @@ public partial class ImageClient
             serializedAdditionalRawData: null);
     }
 
-    private async Task<PipelineMessage> CreateInternalImageEditsPipelineMessageAsync(
-        BinaryData imageBytes,
-        string prompt,
-        int? imageCount = null,
-        ImageEditOptions options = null)
+    private PipelineMessage CreateCreateImageEditsRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
+
         PipelineRequest request = message.Request;
         request.Method = "POST";
+
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+
         StringBuilder path = new();
         path.Append("/images/edits");
         uriBuilder.Path += path.ToString();
+
         request.Uri = uriBuilder.Uri;
 
-        options ??= new();
-        MultipartFormDataContent content = CreateInternalImageEditsMultipartFormDataContent(
-            imageBytes,
-            prompt,
-            options.MaskBytes,
-            imageCount,
-            options.ResponseFormat,
-            options.Size,
-            options.User);
+        request.Headers.Set("Content-Type", contentType);
 
-        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-        request.Content = BinaryContent.Create(stream);
+        request.Content = content;
 
-        // Add headers
-        // TODO: can we improve perf?
-
-        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
-        {
-            request.Headers.Set("Content-Type", contentType.ToString());
-        }
-
-        if (content.Headers.ContentLength is long contentLength)
-        {
-            request.Headers.Set("Content-Length", contentLength.ToString());
-        }
-
-        // TODO: other headers to transfer from content as part of MPFD spec?
+        message.Apply(options);
 
         return message;
-    }
-
-    private MultipartFormDataContent CreateInternalImageEditsMultipartFormDataContent(
-        BinaryData imageBytes,
-        string prompt,
-        BinaryData maskBytes,
-        int? imageCount,
-        ImageResponseFormat? imageResponseFormat,
-        ImageSize? imageSize,
-        string user)
-    {
-        MultipartFormDataContent content = new();
-
-        content.Add(new ByteArrayContent(imageBytes.ToArray()), name: "image", fileName: "image.png");
-
-        content.Add(new StringContent(prompt), name: "prompt");
-
-        content.Add(new StringContent(_clientConnector.Model), name: "model");
-
-        if (maskBytes is not null)
-        {
-            content.Add(new ByteArrayContent(maskBytes.ToArray()), name: "mask", fileName: "mask.png");
-        }
-
-        if (imageCount is not null)
-        {
-            content.Add(new StringContent(imageCount.ToString()), name: "n");
-        }
-
-        if (imageResponseFormat is not null)
-        {
-            content.Add(new StringContent(
-                    imageResponseFormat switch
-                    {
-                        ImageResponseFormat.Uri => "url",
-                        ImageResponseFormat.Bytes => "b64_json",
-                        _ => throw new ArgumentException(nameof(imageResponseFormat)),
-                    }),
-                name: "response_format");
-        }
-
-        if (imageSize is not null)
-        {
-            content.Add(new StringContent(
-                    imageSize switch
-                    {
-                        ImageSize.Size256x256 => "256x256",
-                        ImageSize.Size512x512 => "512x512",
-                        ImageSize.Size1024x1024 => "1024x1024",
-                        // TODO: 1024x1792 and 1792x1024 are currently not supported in image edits.
-                        ImageSize.Size1024x1792 => "1024x1792",
-                        ImageSize.Size1792x1024 => "1792x1024",
-                        _ => throw new ArgumentException(nameof(imageSize))
-                    }),
-                name: "size");
-        }
-
-        if (user is not null)
-        {
-            content.Add(new StringContent(user), "user");
-        }
-
-        return content;
     }
 
     private async Task<PipelineMessage> CreateInternalImageVariationsPipelineMessageAsync(
@@ -557,9 +517,6 @@ public partial class ImageClient
         return content;
     }
 
-    private static PipelineMessageClassifier _responseErrorClassifier200;
-    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
-
     private Internal.Models.CreateImageEditRequest CreateInternalImageEditRequest(
         BinaryData imageBytes,
         string prompt,
@@ -607,4 +564,7 @@ public partial class ImageClient
             options.User,
             serializedAdditionalRawData: null);
     }
+
+    private static PipelineMessageClassifier _responseErrorClassifier200;
+    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

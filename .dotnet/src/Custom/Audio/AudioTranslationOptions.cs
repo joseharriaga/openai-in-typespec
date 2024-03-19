@@ -30,7 +30,6 @@ public partial class AudioTranslationOptions
         AddContent(model, content);
 
         return content;
-
     }
 
     private void AddContent(string model, MultipartFormDataBinaryContent content)

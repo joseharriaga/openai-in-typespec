@@ -116,6 +116,13 @@ internal class MultipartFormDataBinaryContent : BinaryContent
     public override bool TryComputeLength(out long length)
     {
         // We can't call the protected method on HttpContent
+
+        if (_multipartContent.Headers.ContentLength is long contentLength)
+        {
+            length = contentLength;
+            return true;
+        }
+
         length = 0;
         return false;
     }

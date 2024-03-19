@@ -94,6 +94,7 @@ public partial class FileClient
         : this(endpoint: null, credential: null, options)
     { }
 
+    // convenience method - sync
     // TODO: add refdoc comment
     public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string fileName, OpenAIFilePurpose purpose)
     {
@@ -106,13 +107,13 @@ public partial class FileClient
 
         PipelineResponse response = result.GetRawResponse();
 
-        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
-
         Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
         OpenAIFileInfo fileInfo = new(internalFile);
+
         return ClientResult.FromValue(fileInfo, response);
     }
 
+    // convenience method - async
     // TODO: add refdoc comment
     public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string fileName, OpenAIFilePurpose purpose)
     {
@@ -125,10 +126,9 @@ public partial class FileClient
 
         PipelineResponse response = result.GetRawResponse();
 
-        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
-
         Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
         OpenAIFileInfo fileInfo = new(internalFile);
+
         return ClientResult.FromValue(fileInfo, response);
     }
 

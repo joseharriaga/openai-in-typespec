@@ -51,7 +51,7 @@ public partial class ImageEditOptions
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(imageBytes, "file", fileName);
+        content.Add(imageBytes, "image", fileName);
 
         AddContent(model, prompt, imageCount, content);
 

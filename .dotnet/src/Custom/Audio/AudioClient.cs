@@ -2,12 +2,7 @@ using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OpenAI.Audio;
@@ -260,21 +255,87 @@ public partial class AudioClient
 
     public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
-        // TODO: ensure correct patterns for sync-over-async
-        PipelineMessage message = CreateCreateTranslationRequestAsync(audioBytes, filename, options).Result;
-        Shim.Pipeline.Send(message);
-        return GetTranslationResultFromResponse(message.Response);
+        Argument.AssertNotNull(audioBytes, nameof(audioBytes));
+        Argument.AssertNotNull(filename, nameof(filename));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, filename, _clientConnector.Model);
+
+        ClientResult result = TranslateAudio(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        AudioTranslation value = AudioTranslation.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options = null)
     {
-        PipelineMessage message = await CreateCreateTranslationRequestAsync(audioBytes, filename, options).ConfigureAwait(false);
-        await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
-        return GetTranslationResultFromResponse(message.Response);
+        Argument.AssertNotNull(audioBytes, nameof(audioBytes));
+        Argument.AssertNotNull(filename, nameof(filename));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, filename, _clientConnector.Model);
+
+        ClientResult result = await TranslateAudioAsync(content, content.ContentType).ConfigureAwait(false);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        AudioTranslation value = AudioTranslation.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
-    // request-creation helper for TranslateAudio protocol method
-    private async Task<PipelineMessage> CreateCreateTranslationRequestAsync(BinaryData audioBytes, string filename, AudioTranslationOptions options)
+    // protocol method - sync
+    // TODO: add refdoc comment
+    public virtual ClientResult TranslateAudio(BinaryContent content, string contentType, RequestOptions options = null)
+    {
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNull(contentType, nameof(contentType));
+
+        options ??= new RequestOptions();
+
+        using PipelineMessage message = CreateCreateTranscriptionRequest(content, contentType, options);
+
+        Shim.Pipeline.Send(message);
+
+        PipelineResponse response = message.Response!;
+
+        if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
+        {
+            throw new ClientResultException(response);
+        }
+
+        return ClientResult.FromResponse(response);
+    }
+
+    // protocol method - async
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult> TranslateAudioAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    {
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNull(contentType, nameof(contentType));
+
+        options ??= new RequestOptions();
+
+        using PipelineMessage message = CreateCreateTranscriptionRequest(content, contentType, options);
+
+        Shim.Pipeline.Send(message);
+
+        PipelineResponse response = message.Response!;
+
+        if (response.IsError && options.ErrorOptions == ClientErrorBehaviors.Default)
+        {
+            throw await ClientResultException.CreateAsync(response).ConfigureAwait(false);
+        }
+
+        return ClientResult.FromResponse(response);
+    }
+
+    private PipelineMessage CreateCreateTranslationRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
@@ -290,129 +351,13 @@ public partial class AudioClient
 
         request.Uri = uriBuilder.Uri;
 
-        MultipartFormDataContent content = CreateInternalTranscriptionRequestContent(audioBytes, filename, options);
-        Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-        request.Content = BinaryContent.Create(stream);
+        request.Headers.Set("content-type", contentType);
 
-        // Add headers
-        // TODO: can we improve perf?
+        request.Content = content;
 
-        if (content.Headers.ContentType is MediaTypeHeaderValue contentType)
-        {
-            request.Headers.Set("Content-Type", contentType.ToString());
-        }
-
-        if (content.Headers.ContentLength is long contentLength)
-        {
-            request.Headers.Set("Content-Length", contentLength.ToString());
-        }
-
-        // TODO: other headers to transfer from content as part of MPFD spec?
+        message.Apply(options);
 
         return message;
-    }
-
-    private MultipartFormDataContent CreateInternalTranscriptionRequestContent(BinaryData audioBytes, string filename, AudioTranscriptionOptions options)
-    {
-        options ??= new();
-        return CreateInternalTranscriptionRequestContent(
-            audioBytes,
-            filename,
-            options.Language,
-            options.Prompt,
-            options.ResponseFormat,
-            options.Temperature,
-            options.EnableWordTimestamps,
-            options.EnableSegmentTimestamps);
-    }
-
-    private MultipartFormDataContent CreateInternalTranscriptionRequestContent(BinaryData audioBytes, string filename, AudioTranslationOptions options)
-    {
-        options ??= new();
-        return CreateInternalTranscriptionRequestContent(
-            audioBytes,
-            filename,
-            language: null,
-            options.Prompt,
-            options.ResponseFormat,
-            options.Temperature,
-            enableWordTimestamps: null,
-            enableSegmentTimestamps: null);
-    }
-
-    private MultipartFormDataContent CreateInternalTranscriptionRequestContent(
-        BinaryData audioBytes,
-        string filename,
-        string language = null,
-        string prompt = null,
-        AudioTranscriptionFormat? transcriptionFormat = null,
-        float? temperature = null,
-        bool? enableWordTimestamps = null,
-        bool? enableSegmentTimestamps = null)
-    {
-        MultipartFormDataContent content = new();
-
-        content.Add(new StringContent(_clientConnector.Model), name: "model");
-
-        if (language is not null)
-        {
-            content.Add(new StringContent(language), name: "language");
-        }
-
-        if (prompt is not null)
-        {
-            content.Add(new StringContent(prompt), name: "prompt");
-        }
-
-        if (transcriptionFormat is not null)
-        {
-            content.Add(new StringContent(transcriptionFormat switch
-            {
-                AudioTranscriptionFormat.Simple => "json",
-                AudioTranscriptionFormat.Detailed => "verbose_json",
-                AudioTranscriptionFormat.Srt => "srt",
-                AudioTranscriptionFormat.Vtt => "vtt",
-                _ => throw new ArgumentException(nameof(transcriptionFormat)),
-            }),
-            name: "response_format");
-        }
-
-        if (temperature is not null)
-        {
-            // TODO: preferred way to handle floats/numerics?
-            content.Add(new StringContent($"{temperature}"), name: "temperature");
-        }
-
-        if (enableWordTimestamps is not null ||
-            enableSegmentTimestamps is not null)
-        {
-            // TODO: preferred way to serialize models?
-            List<string> granularities = [];
-            if (enableWordTimestamps == true)
-            {
-                granularities.Add("word");
-            }
-            if (enableSegmentTimestamps == true)
-            {
-                granularities.Add("segment");
-            }
-
-            byte[] data = JsonSerializer.SerializeToUtf8Bytes(granularities);
-            content.Add(new ByteArrayContent(data), name: "timestamp_granularities");
-        }
-
-        return content;
-    }
-
-    private static ClientResult<AudioTranslation> GetTranslationResultFromResponse(PipelineResponse response)
-    {
-        if (response.IsError)
-        {
-            throw new ClientResultException(response);
-        }
-
-        using JsonDocument responseDocument = JsonDocument.Parse(response.Content);
-        return ClientResult.FromValue(AudioTranslation.DeserializeAudioTranscription(responseDocument.RootElement), response);
     }
 
     private Internal.Models.CreateSpeechRequest CreateInternalTtsRequest(
@@ -448,7 +393,7 @@ public partial class AudioClient
             options?.SpeedMultiplier,
             serializedAdditionalRawData: null);
     }
+
     private static PipelineMessageClassifier _responseErrorClassifier200;
     private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
-
 }

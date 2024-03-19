@@ -33,7 +33,7 @@ public partial class ImageVariationOptions
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(imageBytes, "file", fileName);
+        content.Add(imageBytes, "image", fileName);
 
         AddContent(model, imageCount, content);
 

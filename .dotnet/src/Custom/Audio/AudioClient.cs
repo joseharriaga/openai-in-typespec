@@ -1,4 +1,4 @@
-using OpenAI.ClientShared.Internal;
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -149,58 +148,55 @@ public partial class AudioClient
     }
 
     // convenience method - sync
+    // TODO: add refdoc comment
     public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {
-        if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
-        if (filename is null) throw new ArgumentNullException(nameof(filename));
+        Argument.AssertNotNull(audioBytes, nameof(audioBytes));
+        Argument.AssertNotNull(filename, nameof(filename));
 
         options ??= new();
 
-        // TODO: ensure correct patterns for sync-over-async
-        (BinaryContent content, RequestOptions requestOptions) =
-            options.CreateContentAsync(audioBytes, filename, _clientConnector.Model).Result;
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, filename, _clientConnector.Model);
 
-        ClientResult result = TranscribeAudio(content, requestOptions);
+        ClientResult result = TranscribeAudio(content, content.ContentType);
 
         PipelineResponse response = result.GetRawResponse();
 
-        // TODO: implement IJsonModel<AudioTranscription>
-        //AudioTranscription value = ModelReaderWriter.Read<AudioTranscription>(response.Content)!;
         AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
 
         return ClientResult.FromValue(value, response);
     }
 
     // convenience method - async
+    // TODO: add refdoc comment
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(BinaryData audioBytes, string filename, AudioTranscriptionOptions options = null)
     {
-        if (audioBytes is null) throw new ArgumentNullException(nameof(audioBytes));
-        if (filename is null) throw new ArgumentNullException(nameof(filename));
+        Argument.AssertNotNull(audioBytes, nameof(audioBytes));
+        Argument.AssertNotNull(filename, nameof(filename));
 
         options ??= new();
 
-        (BinaryContent content, RequestOptions requestOptions) =
-            await options.CreateContentAsync(audioBytes, filename, _clientConnector.Model).ConfigureAwait(false);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audioBytes, filename, _clientConnector.Model);
 
-        ClientResult result = await TranscribeAudioAsync(content, requestOptions).ConfigureAwait(false);
+        ClientResult result = await TranscribeAudioAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 
-        // TODO: implement IJsonModel<AudioTranscription>
-        //AudioTranscription value = ModelReaderWriter.Read<AudioTranscription>(response.Content)!;
         AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
 
         return ClientResult.FromValue(value, response);
     }
 
     // protocol method - sync
-    public virtual ClientResult TranscribeAudio(BinaryContent content, RequestOptions options = null)
+    // TODO: add refdoc comment
+    public virtual ClientResult TranscribeAudio(BinaryContent content, string contentType, RequestOptions options = null)
     {
-        if (content is null) throw new ArgumentNullException(nameof(content));
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNull(contentType, nameof(contentType));
 
         options ??= new RequestOptions();
 
-        using PipelineMessage message = CreateCreateTranscriptionRequest(content, options);
+        using PipelineMessage message = CreateCreateTranscriptionRequest(content, contentType, options);
 
         Shim.Pipeline.Send(message);
 
@@ -215,13 +211,15 @@ public partial class AudioClient
     }
 
     // protocol method - async
-    public virtual async Task<ClientResult> TranscribeAudioAsync(BinaryContent content, RequestOptions options = null)
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult> TranscribeAudioAsync(BinaryContent content, string contentType, RequestOptions options = null)
     {
-        if (content is null) throw new ArgumentNullException(nameof(content));
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNull(contentType, nameof(contentType));
 
         options ??= new RequestOptions();
 
-        using PipelineMessage message = CreateCreateTranscriptionRequest(content, options);
+        using PipelineMessage message = CreateCreateTranscriptionRequest(content, contentType, options);
 
         Shim.Pipeline.Send(message);
 
@@ -235,8 +233,7 @@ public partial class AudioClient
         return ClientResult.FromResponse(response);
     }
 
-    // request-creation helper for TranscribeAudio protocol method
-    private PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, RequestOptions options)
+    private PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
@@ -251,6 +248,8 @@ public partial class AudioClient
         uriBuilder.Path += path.ToString();
 
         request.Uri = uriBuilder.Uri;
+
+        request.Headers.Set("content-type", contentType);
 
         request.Content = content;
 

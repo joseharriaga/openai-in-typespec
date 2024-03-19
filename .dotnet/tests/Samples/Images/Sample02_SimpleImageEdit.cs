@@ -24,6 +24,7 @@ namespace OpenAI.Samples
             ImageEditOptions options = new()
             {
                 MaskBytes = maskBytes,
+                MaskFileName = "edit_sample_mask.png",
                 Size = ImageSize.Size1024x1024,
                 ResponseFormat = ImageResponseFormat.Bytes
             };

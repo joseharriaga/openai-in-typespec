@@ -195,6 +195,11 @@ public partial class ImageClient
         Argument.AssertNotNull(fileName, nameof(fileName));
         Argument.AssertNotNull(prompt, nameof(prompt));
 
+        if (options?.MaskBytes is not null)
+        {
+            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
+        }
+
         options ??= new();
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, prompt, _clientConnector.Model, imageCount);
@@ -220,6 +225,11 @@ public partial class ImageClient
         Argument.AssertNotNull(imageBytes, nameof(imageBytes));
         Argument.AssertNotNull(fileName, nameof(fileName));
         Argument.AssertNotNull(prompt, nameof(prompt));
+
+        if (options?.MaskBytes is not null)
+        {
+            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
+        }
 
         options ??= new();
 
@@ -247,6 +257,11 @@ public partial class ImageClient
         Argument.AssertNotNull(fileName, nameof(fileName));
         Argument.AssertNotNull(prompt, nameof(prompt));
 
+        if (options?.MaskBytes is not null)
+        {
+            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
+        }
+
         options ??= new();
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, prompt, _clientConnector.Model, imageCount);
@@ -272,6 +287,11 @@ public partial class ImageClient
         Argument.AssertNotNull(imageBytes, nameof(imageBytes));
         Argument.AssertNotNull(fileName, nameof(fileName));
         Argument.AssertNotNull(prompt, nameof(prompt));
+
+        if (options?.MaskBytes is not null)
+        {
+            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
+        }
 
         options ??= new();
 

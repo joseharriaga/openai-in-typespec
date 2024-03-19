@@ -65,7 +65,7 @@ public partial class ImageEditOptions
 
         if (MaskBytes is not null)
         {
-            content.Add(MaskBytes.ToArray(), "mask", "mask.png");
+            content.Add(MaskBytes.ToArray(), "mask", MaskFileName);
         }
 
         if (imageCount is not null)

@@ -23,7 +23,7 @@ namespace OpenAI.Samples.Miscellaneous
                 {
                     Style = ImageStyle.Vivid,
                     Quality = ImageQuality.High,
-                    Size = ImageSize.Size1792x1024,
+                    Size = GeneratedImageSize.WideRectangle,
                 });
             GeneratedImage imageGeneration = imageResult.Value;
             Console.WriteLine($"Majestic alpaca available at:\n{imageGeneration.ImageUri.AbsoluteUri}");
@@ -108,7 +108,7 @@ namespace OpenAI.Samples.Miscellaneous
                 description,
                 new ImageGenerationOptions()
                 {
-                    Size = ImageSize.Size1792x1024,
+                    Size = GeneratedImageSize.WideRectangle,
                     Quality = ImageQuality.High,
                 });
             Uri imageLocation = imageGenerationResult.Value.ImageUri;

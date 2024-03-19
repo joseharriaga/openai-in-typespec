@@ -24,7 +24,7 @@ namespace OpenAI.Samples
             ImageEditOptions options = new()
             {
                 MaskBytes = maskBytes,
-                Size = ImageSize.Size1024x1024,
+                Size = GeneratedImageSize.Square,
                 ResponseFormat = ImageResponseFormat.Bytes
             };
 

@@ -11,7 +11,7 @@ public partial class ImageEditOptions
     public BinaryData MaskBytes { get; set; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Size"/>
-    public ImageSize? Size { get; set; }
+    public GeneratedImageSize Size { get; set; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.ResponseFormat"/>
     public ImageResponseFormat? ResponseFormat { get; set; }

@@ -315,15 +315,7 @@ public partial class ImageClient
         Internal.Models.CreateImageRequestSize? internalSize = null;
         if (options.Size != null)
         {
-            internalSize = options.Size switch
-            {
-                ImageSize.Size256x256 => Internal.Models.CreateImageRequestSize._256x256,
-                ImageSize.Size512x512 => Internal.Models.CreateImageRequestSize._512x512,
-                ImageSize.Size1024x1024 => Internal.Models.CreateImageRequestSize._1024x1024,
-                ImageSize.Size1024x1792 => Internal.Models.CreateImageRequestSize._1024x1792,
-                ImageSize.Size1792x1024 => Internal.Models.CreateImageRequestSize._1792x1024,
-                _ => throw new ArgumentException(nameof(options.Size)),
-            };
+            internalSize = ModelReaderWriter.Write(options.Size).ToString();
         }
 
         Internal.Models.CreateImageRequestStyle? internalStyle = null;
@@ -385,7 +377,7 @@ public partial class ImageClient
         BinaryData maskBytes,
         int? imageCount,
         ImageResponseFormat? imageResponseFormat,
-        ImageSize? imageSize,
+        GeneratedImageSize imageSize,
         string user)
     {
         MultipartFormDataContent content = new();
@@ -423,19 +415,7 @@ public partial class ImageClient
 
         if (Optional.IsDefined(imageSize))
         {
-            content.Add(MultipartContent.Create(
-                BinaryData.FromString(
-                    imageSize switch
-                    {
-                        ImageSize.Size256x256 => "256x256",
-                        ImageSize.Size512x512 => "512x512",
-                        ImageSize.Size1024x1024 => "1024x1024",
-                        // TODO: 1024x1792 and 1792x1024 are currently not supported in image edits.
-                        ImageSize.Size1024x1792 => "1024x1792",
-                        ImageSize.Size1792x1024 => "1792x1024",
-                        _ => throw new ArgumentException(nameof(imageSize))
-                    })
-                ),
+            content.Add(MultipartContent.Create(ModelReaderWriter.Write(imageSize)),
                 name: "size",
                 headers: []);
         }
@@ -479,7 +459,7 @@ public partial class ImageClient
         BinaryData imageBytes,
         int? imageCount,
         ImageResponseFormat? imageResponseFormat,
-        ImageSize? imageSize,
+        GeneratedImageSize imageSize,
         string user)
     {
         MultipartFormDataContent content = new();
@@ -510,19 +490,8 @@ public partial class ImageClient
 
         if (Optional.IsDefined(imageSize))
         {
-            content.Add(MultipartContent.Create(
-                BinaryData.FromString(
-                    imageSize switch
-                    {
-                        ImageSize.Size256x256 => "256x256",
-                        ImageSize.Size512x512 => "512x512",
-                        ImageSize.Size1024x1024 => "1024x1024",
-                        // TODO: 1024x1792 and 1792x1024 are currently not supported in image variations.
-                        ImageSize.Size1024x1792 => "1024x1792",
-                        ImageSize.Size1792x1024 => "1792x1024",
-                        _ => throw new ArgumentException(nameof(imageSize))
-                    })
-                ),
+            content.Add(
+                MultipartContent.Create(ModelReaderWriter.Write(imageSize)),
                 name: "size",
                 headers: []);
         }
@@ -550,17 +519,7 @@ public partial class ImageClient
         Internal.Models.CreateImageEditRequestSize? internalSize = null;
         if (options.Size != null)
         {
-            internalSize = options.Size switch
-            {
-
-                ImageSize.Size256x256 => Internal.Models.CreateImageEditRequestSize._256x256,
-                ImageSize.Size512x512 => Internal.Models.CreateImageEditRequestSize._512x512,
-                ImageSize.Size1024x1024 => Internal.Models.CreateImageEditRequestSize._1024x1024,
-                // TODO: 1024x1792 and 1792x1024 are currently not supported in image edits.
-                ImageSize.Size1024x1792 => new Internal.Models.CreateImageEditRequestSize("1024x1792"),
-                ImageSize.Size1792x1024 => new Internal.Models.CreateImageEditRequestSize("1792x1024"),
-                _ => throw new ArgumentException(nameof(options.Size)),
-            };
+            internalSize = ModelReaderWriter.Write(options.Size).ToString();
         }
 
         Internal.Models.CreateImageEditRequestResponseFormat? internalFormat = null;

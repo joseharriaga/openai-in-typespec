@@ -8,7 +8,7 @@ namespace OpenAI.Images;
 public partial class ImageVariationOptions
 {
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Size"/>
-    public ImageSize? Size { get; set; }
+    public GeneratedImageSize Size { get; set; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.ResponseFormat"/>
     public ImageResponseFormat? ResponseFormat { get; set; }

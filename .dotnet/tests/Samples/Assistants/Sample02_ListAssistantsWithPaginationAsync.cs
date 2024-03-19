@@ -12,7 +12,7 @@ namespace OpenAI.Samples
         public async Task Sample02_ListAssistantsWithPaginationAsync()
         {
             // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
-#pragma warning disable AssistantsBetaV1
+#pragma warning disable OPENAI001
             AssistantClient client = new(Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
 
             string latestId = null;

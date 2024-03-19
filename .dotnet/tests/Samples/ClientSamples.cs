@@ -17,9 +17,9 @@ namespace OpenAI.Samples.Miscellaneous
         {
             OpenAIClient openAIClient = new("<insert your OpenAI API key here>");
             FileClient fileClient = openAIClient.GetFileClient();
-#pragma warning disable AssistantsBetaV1
+#pragma warning disable OPENAI001
             AssistantClient assistantClient = openAIClient.GetAssistantClient();
-#pragma warning restore AssistantsBetaV1
+#pragma warning restore OPENAI001
         }
 
         [Test]

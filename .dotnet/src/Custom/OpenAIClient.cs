@@ -92,7 +92,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="AssistantClient"/>. </returns>
-    [Experimental("AssistantsBetaV1")]
+    [Experimental("OPENAI001")]
     public AssistantClient GetAssistantClient()
         => new(_cachedEndpoint, _cachedCredential, _cachedOptions);
 

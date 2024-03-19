@@ -10,7 +10,7 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// The service client for OpenAI assistants.
 /// </summary>
-[Experimental("AssistantsBetaV1")]
+[Experimental("OPENAI001")]
 public partial class AssistantClient
 {
     private OpenAIClientConnector _clientConnector;

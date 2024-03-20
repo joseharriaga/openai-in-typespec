@@ -1,12 +1,11 @@
-using OpenAI.Audio;
-using OpenAI.ClientShared.Internal;
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OpenAI.Images;
@@ -30,73 +29,13 @@ public partial class ImageClient
     ///    if it is defined.
     /// </para>
     /// </remarks>
-    /// <param name="endpoint">The connection endpoint to use.</param>
     /// <param name="model">The model name for image operations that the client should use.</param>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
-    public ImageClient(Uri endpoint, string model, ApiKeyCredential credential, OpenAIClientOptions options = null)
+    public ImageClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = null)
     {
-        _clientConnector = new(model, endpoint, credential, options);
+        _clientConnector = new(model, credential, options);
     }
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="ImageClient"/>, used for image operation requests. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
-    /// </remarks>
-    /// <param name="endpoint">The connection endpoint to use.</param>
-    /// <param name="model">The model name for image operations that the client should use.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public ImageClient(Uri endpoint, string model, OpenAIClientOptions options = null)
-        : this(endpoint, model, credential: null, options)
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="ImageClient"/>, used for image operation requests. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
-    /// </remarks>
-    /// <param name="model">The model name for image operations that the client should use.</param>
-    /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public ImageClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null)
-        : this(endpoint: null, model, credential, options)
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="ImageClient"/>, used for image operation requests. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
-    /// </remarks>
-    /// <param name="model">The model name for image operations that the client should use.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public ImageClient(string model, OpenAIClientOptions options = null)
-        : this(endpoint: null, model, credential: null, options)
-    { }
 
     /// <summary>
     /// Generates a single image for a provided prompt.
@@ -172,7 +111,7 @@ public partial class ImageClient
     {
         Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
         ClientResult<Internal.Models.ImagesResponse> response = await Shim.CreateImageAsync(request).ConfigureAwait(false);
-        
+
         List<GeneratedImage> images = [];
         for (int i = 0; i < response.Value.Data.Count; i++)
         {
@@ -182,106 +121,224 @@ public partial class ImageClient
         return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
     }
 
+    // convenience method - sync; Stream overload
+    // TODO: add refdoc comment
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
+        Stream fileStream,
+        string fileName,
+        string prompt,
+        int? imageCount = null,
+        ImageEditOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+        Argument.AssertNotNull(prompt, nameof(prompt));
+
+        if (options?.MaskBytes is not null)
+        {
+            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
+        }
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, prompt, _clientConnector.Model, imageCount);
+
+        ClientResult result = GenerateImageEdits(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    // convenience method - sync
+    // TODO: add refdoc comment
     public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
         BinaryData imageBytes,
+        string fileName,
         string prompt,
         int? imageCount = null,
         ImageEditOptions options = null)
     {
-        PipelineMessage message = CreateInternalImageEditsPipelineMessage(imageBytes, prompt, imageCount, options);
-        Shim.Pipeline.Send(message);
+        Argument.AssertNotNull(imageBytes, nameof(imageBytes));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+        Argument.AssertNotNull(prompt, nameof(prompt));
 
-        if (message.Response.IsError)
+        if (options?.MaskBytes is not null)
         {
-            throw new ClientResultException(message.Response);
+            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
         }
 
-        using JsonDocument responseDocument = JsonDocument.Parse(message.Response.Content);
-        Internal.Models.ImagesResponse response = Internal.Models.ImagesResponse.DeserializeImagesResponse(responseDocument.RootElement);
+        options ??= new();
 
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response, i));
-        }
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, prompt, _clientConnector.Model, imageCount);
 
-        return ClientResult.FromValue(new GeneratedImageCollection(images), message.Response);
+        ClientResult result = GenerateImageEdits(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
+    // convenience method - async; Stream overload
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(
+        Stream fileStream,
+        string fileName,
+        string prompt,
+        int? imageCount = null,
+        ImageEditOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+        Argument.AssertNotNull(prompt, nameof(prompt));
+
+        if (options?.MaskBytes is not null)
+        {
+            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
+        }
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, prompt, _clientConnector.Model, imageCount);
+
+        ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    // convenience method - async
+    // TODO: add refdoc comment
     public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(
         BinaryData imageBytes,
+        string fileName,
         string prompt,
         int? imageCount = null,
         ImageEditOptions options = null)
     {
-        PipelineMessage message = CreateInternalImageEditsPipelineMessage(imageBytes, prompt, imageCount, options);
-        await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
+        Argument.AssertNotNull(imageBytes, nameof(imageBytes));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+        Argument.AssertNotNull(prompt, nameof(prompt));
 
-        if (message.Response.IsError)
+        if (options?.MaskBytes is not null)
         {
-            throw new ClientResultException(message.Response);
+            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
         }
 
-        using JsonDocument responseDocument = JsonDocument.Parse(message.Response.Content);
-        Internal.Models.ImagesResponse response = Internal.Models.ImagesResponse.DeserializeImagesResponse(responseDocument.RootElement);
+        options ??= new();
 
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response, i));
-        }
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, prompt, _clientConnector.Model, imageCount);
 
-        return ClientResult.FromValue(new GeneratedImageCollection(images), message.Response);
+        ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
+    // convenience method - sync
+    // TODO: add refdoc comment
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
+        Stream fileStream,
+        string fileName,
+        int? imageCount = null,
+        ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model, imageCount);
+
+        ClientResult result = GenerateImageVariations(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    // convenience method - sync
+    // TODO: add refdoc comment
     public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
         BinaryData imageBytes,
+        string fileName,
         int? imageCount = null,
         ImageVariationOptions options = null)
     {
-        PipelineMessage message = CreateInternalImageVariationsPipelineMessage(imageBytes, imageCount, options);
-        Shim.Pipeline.Send(message);
+        Argument.AssertNotNull(imageBytes, nameof(imageBytes));
+        Argument.AssertNotNull(fileName, nameof(fileName));
 
-        if (message.Response.IsError)
-        {
-            throw new ClientResultException(message.Response);
-        }
+        options ??= new();
 
-        using JsonDocument responseDocument = JsonDocument.Parse(message.Response.Content);
-        Internal.Models.ImagesResponse response = Internal.Models.ImagesResponse.DeserializeImagesResponse(responseDocument.RootElement);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, _clientConnector.Model, imageCount);
 
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response, i));
-        }
+        ClientResult result = GenerateImageVariations(content, content.ContentType);
 
-        return ClientResult.FromValue(new GeneratedImageCollection(images), message.Response);
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
+    // convenience method - async; Stream overload
+    // TODO: add refdoc comment
     public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(
-        BinaryData imageBytes,
+        Stream fileStream,
+        string fileName,
         int? imageCount = null,
         ImageVariationOptions options = null)
     {
-        PipelineMessage message = CreateInternalImageVariationsPipelineMessage(imageBytes, imageCount, options);
-        await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(fileName, nameof(fileName));
 
-        if (message.Response.IsError)
-        {
-            throw new ClientResultException(message.Response);
-        }
+        options ??= new();
 
-        using JsonDocument responseDocument = JsonDocument.Parse(message.Response.Content);
-        Internal.Models.ImagesResponse response = Internal.Models.ImagesResponse.DeserializeImagesResponse(responseDocument.RootElement);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model, imageCount);
 
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response, i));
-        }
+        ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType).ConfigureAwait(false);
 
-        return ClientResult.FromValue(new GeneratedImageCollection(images), message.Response);
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
+    }
+
+    // convenience method - async
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(
+        BinaryData imageBytes,
+        string fileName,
+        int? imageCount = null,
+        ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNull(imageBytes, nameof(imageBytes));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        options ??= new();
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, _clientConnector.Model, imageCount);
+
+        ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType).ConfigureAwait(false);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+
+        return ClientResult.FromValue(value, response);
     }
 
     private Internal.Models.CreateImageRequest CreateInternalImageRequest(
@@ -349,240 +406,56 @@ public partial class ImageClient
             serializedAdditionalRawData: null);
     }
 
-    private PipelineMessage CreateInternalImageEditsPipelineMessage(
-        BinaryData imageBytes,
-        string prompt,
-        int? imageCount = null,
-        ImageEditOptions options = null)
+    private PipelineMessage CreateCreateImageEditsRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
+
         PipelineRequest request = message.Request;
         request.Method = "POST";
+
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+
         StringBuilder path = new();
         path.Append("/images/edits");
         uriBuilder.Path += path.ToString();
+
         request.Uri = uriBuilder.Uri;
 
-        options ??= new();
-        MultipartFormDataContent requestContent = CreateInternalImageEditsMultipartFormDataContent(
-            imageBytes,
-            prompt,
-            options.MaskBytes,
-            imageCount,
-            options.ResponseFormat,
-            options.Size,
-            options.User);
-        requestContent.ApplyToRequest(request);
+        request.Headers.Set("Content-Type", contentType);
+
+        request.Content = content;
+
+        message.Apply(options);
 
         return message;
     }
 
-    private MultipartFormDataContent CreateInternalImageEditsMultipartFormDataContent(
-        BinaryData imageBytes,
-        string prompt,
-        BinaryData maskBytes,
-        int? imageCount,
-        ImageResponseFormat? imageResponseFormat,
-        ImageSize? imageSize,
-        string user)
-    {
-        MultipartFormDataContent content = new();
-
-        content.Add(MultipartContent.Create(imageBytes), name: "image", fileName: "image.png", headers: []);
-
-        content.Add(MultipartContent.Create(BinaryData.FromString(prompt)), name: "prompt", headers: []);
-
-        content.Add(MultipartContent.Create(BinaryData.FromString(_clientConnector.Model)), name: "model", headers: []);
-
-        if (Optional.IsDefined(maskBytes))
-        {
-            content.Add(MultipartContent.Create(maskBytes), name: "mask", fileName: "mask.png", headers: []);
-        }
-
-        if (Optional.IsDefined(imageCount))
-        {
-            content.Add(MultipartContent.Create(BinaryData.FromString(imageCount.ToString())), name: "n", headers: []);
-        }
-
-        if (Optional.IsDefined(imageResponseFormat))
-        {
-            content.Add(MultipartContent.Create(
-                BinaryData.FromString(
-                    imageResponseFormat switch
-                    {
-                        ImageResponseFormat.Uri => "url",
-                        ImageResponseFormat.Bytes => "b64_json",
-                        _ => throw new ArgumentException(nameof(imageResponseFormat)),
-                    })
-                ),
-                name: "response_format",
-                headers: []);
-        }
-
-        if (Optional.IsDefined(imageSize))
-        {
-            content.Add(MultipartContent.Create(
-                BinaryData.FromString(
-                    imageSize switch
-                    {
-                        ImageSize.Size256x256 => "256x256",
-                        ImageSize.Size512x512 => "512x512",
-                        ImageSize.Size1024x1024 => "1024x1024",
-                        // TODO: 1024x1792 and 1792x1024 are currently not supported in image edits.
-                        ImageSize.Size1024x1792 => "1024x1792",
-                        ImageSize.Size1792x1024 => "1792x1024",
-                        _ => throw new ArgumentException(nameof(imageSize))
-                    })
-                ),
-                name: "size",
-                headers: []);
-        }
-
-        if (Optional.IsDefined(user))
-        {
-            content.Add(MultipartContent.Create(BinaryData.FromString(user)), "user", []);
-        }
-
-        return content;
-    }
-
-    private PipelineMessage CreateInternalImageVariationsPipelineMessage(
-        BinaryData imageBytes,
-        int? imageCount = null,
-        ImageVariationOptions options = null)
+    private PipelineMessage CreateImageVariationsRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
+
         PipelineRequest request = message.Request;
         request.Method = "POST";
+
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+
         StringBuilder path = new();
         path.Append("/images/variations");
         uriBuilder.Path += path.ToString();
+
         request.Uri = uriBuilder.Uri;
 
-        options ??= new();
-        MultipartFormDataContent requestContent = CreateInternalImageVariationsMultipartFormDataContent(
-            imageBytes,
-            imageCount,
-            options.ResponseFormat,
-            options.Size,
-            options.User);
-        requestContent.ApplyToRequest(request);
+        request.Headers.Set("Content-Type", contentType);
+
+        request.Content = content;
+
+        message.Apply(options);
 
         return message;
-    }
-
-    private MultipartFormDataContent CreateInternalImageVariationsMultipartFormDataContent(
-        BinaryData imageBytes,
-        int? imageCount,
-        ImageResponseFormat? imageResponseFormat,
-        ImageSize? imageSize,
-        string user)
-    {
-        MultipartFormDataContent content = new();
-
-        content.Add(MultipartContent.Create(imageBytes), name: "image", fileName: "image.png", headers: []);
-
-        content.Add(MultipartContent.Create(BinaryData.FromString(_clientConnector.Model)), name: "model", headers: []);
-
-        if (Optional.IsDefined(imageCount))
-        {
-            content.Add(MultipartContent.Create(BinaryData.FromString(imageCount.ToString())), name: "n", headers: []);
-        }
-
-        if (Optional.IsDefined(imageResponseFormat))
-        {
-            content.Add(MultipartContent.Create(
-                BinaryData.FromString(
-                    imageResponseFormat switch
-                    {
-                        ImageResponseFormat.Uri => "url",
-                        ImageResponseFormat.Bytes => "b64_json",
-                        _ => throw new ArgumentException(nameof(imageResponseFormat)),
-                    })
-                ),
-                name: "response_format",
-                headers: []);
-        }
-
-        if (Optional.IsDefined(imageSize))
-        {
-            content.Add(MultipartContent.Create(
-                BinaryData.FromString(
-                    imageSize switch
-                    {
-                        ImageSize.Size256x256 => "256x256",
-                        ImageSize.Size512x512 => "512x512",
-                        ImageSize.Size1024x1024 => "1024x1024",
-                        // TODO: 1024x1792 and 1792x1024 are currently not supported in image variations.
-                        ImageSize.Size1024x1792 => "1024x1792",
-                        ImageSize.Size1792x1024 => "1792x1024",
-                        _ => throw new ArgumentException(nameof(imageSize))
-                    })
-                ),
-                name: "size",
-                headers: []);
-        }
-
-        if (Optional.IsDefined(user))
-        {
-            content.Add(MultipartContent.Create(BinaryData.FromString(user)), "user", []);
-        }
-
-        return content;
     }
 
     private static PipelineMessageClassifier _responseErrorClassifier200;
     private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
-
-    private Internal.Models.CreateImageEditRequest CreateInternalImageEditRequest(
-        BinaryData imageBytes,
-        string prompt,
-        int? imageCount = null,
-        ImageEditOptions options = null)
-    {
-        options ??= new();
-
-        
-        Internal.Models.CreateImageEditRequestSize? internalSize = null;
-        if (options.Size != null)
-        {
-            internalSize = options.Size switch
-            {
-
-                ImageSize.Size256x256 => Internal.Models.CreateImageEditRequestSize._256x256,
-                ImageSize.Size512x512 => Internal.Models.CreateImageEditRequestSize._512x512,
-                ImageSize.Size1024x1024 => Internal.Models.CreateImageEditRequestSize._1024x1024,
-                // TODO: 1024x1792 and 1792x1024 are currently not supported in image edits.
-                ImageSize.Size1024x1792 => new Internal.Models.CreateImageEditRequestSize("1024x1792"),
-                ImageSize.Size1792x1024 => new Internal.Models.CreateImageEditRequestSize("1792x1024"),
-                _ => throw new ArgumentException(nameof(options.Size)),
-            };
-        }
-
-        Internal.Models.CreateImageEditRequestResponseFormat? internalFormat = null;
-        if (options.ResponseFormat != null)
-        {
-            internalFormat = options.ResponseFormat switch
-            {
-                ImageResponseFormat.Bytes => Internal.Models.CreateImageEditRequestResponseFormat.B64Json,
-                ImageResponseFormat.Uri => Internal.Models.CreateImageEditRequestResponseFormat.Url,
-                _ => throw new ArgumentException(nameof(options.ResponseFormat)),
-            };
-        }
-
-        return new Internal.Models.CreateImageEditRequest(
-            imageBytes,
-            prompt,
-            options.MaskBytes,
-            _clientConnector.Model,
-            imageCount,
-            internalSize,
-            internalFormat,
-            options.User,
-            serializedAdditionalRawData: null);
-    }
 }

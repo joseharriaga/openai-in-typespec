@@ -20,7 +20,7 @@ public partial class GeneratedImageSize
     /// </summary>
     /// <remarks>
     /// <b>Note:</b> arbitrary dimensions are not supported and a given model will only support a set of predefined
-    /// sizes. If supported dimensions are not known, try using one of the static properties like <see cref="Square"/>.
+    /// sizes. If supported dimensions are not known, try using one of the static properties like <see cref="W1024xH1024"/>.
     /// </remarks>
     /// <param name="width"> The desired width, in pixels, for an image. </param>
     /// <param name="height"> The desired height, in pixels, for an image. </param>
@@ -36,7 +36,7 @@ public partial class GeneratedImageSize
     /// Supported <b>only</b> for the older <c>dall-e-2</c> model.
     /// </para>
     /// </summary>
-    public static readonly GeneratedImageSize TinySquare = new(256, 256);
+    public static readonly GeneratedImageSize W256xH256 = new(256, 256);
 
     /// <summary>
     /// A medium-small, square image with 512 pixels of both width and height.
@@ -44,7 +44,7 @@ public partial class GeneratedImageSize
     /// Supported <b>only</b> for the older <c>dall-e-2</c> model.
     /// </para>
     /// </summary>
-    public static readonly GeneratedImageSize SmallSquare = new(512, 512);
+    public static readonly GeneratedImageSize W512xH512 = new(512, 512);
 
     /// <summary>
     /// A square image with 1024 pixels of both width and height.
@@ -52,7 +52,7 @@ public partial class GeneratedImageSize
     /// <b>Supported</b> and <b>default</b> for both <c>dall-e-2</c> and <c>dall-e-3</c> models.
     /// </para>
     /// </summary>
-    public static readonly GeneratedImageSize Square = new(1024, 1024);
+    public static readonly GeneratedImageSize W1024xH1024 = new(1024, 1024);
 
     /// <summary>
     /// An extra tall image, 1024 pixels wide by 1792 pixels high.
@@ -60,7 +60,7 @@ public partial class GeneratedImageSize
     /// Supported <b>only</b> for the <c>dall-e-3</c> model.
     /// </para>
     /// </summary>
-    public static readonly GeneratedImageSize TallRectangle = new(1024, 1792);
+    public static readonly GeneratedImageSize W1024xH1792 = new(1024, 1792);
 
     /// <summary>
     /// An extra wide image, 1792 pixels wide by 1024 pixels high.
@@ -68,7 +68,7 @@ public partial class GeneratedImageSize
     /// Supported <b>only</b> for the <c>dall-e-3</c> model.
     /// </para>
     /// </summary>
-    public static readonly GeneratedImageSize WideRectangle = new(1792, 1024);
+    public static readonly GeneratedImageSize W1792xH1024 = new(1792, 1024);
 
     /// <inheritdoc/>
     public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right)

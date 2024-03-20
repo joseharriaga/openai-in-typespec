@@ -1,7 +1,9 @@
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,88 +30,87 @@ public partial class FileClient
     ///    if it is defined.
     /// </para>
     /// </remarks>
-    /// <param name="endpoint">The connection endpoint to use.</param>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
-    public FileClient(Uri endpoint, ApiKeyCredential credential, OpenAIClientOptions options = null)
+    public FileClient(ApiKeyCredential credential = default, OpenAIClientOptions options = null)
     {
-        _clientConnector = new("none", endpoint, credential, options);
+        _clientConnector = new(model: null, credential, options);
     }
 
-    /// <summary>
-    /// Initializes a new instance of <see cref="FileClient"/>, used for file operation requests. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
-    /// </remarks>
-    /// <param name="endpoint">The connection endpoint to use.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public FileClient(Uri endpoint, OpenAIClientOptions options = null)
-        : this(endpoint, credential: null, options)
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="FileClient"/>, used for file operation requests. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
-    /// </remarks>
-    /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public FileClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
-        : this(endpoint: null, credential, options)
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="FileClient"/>, used for file operation requests. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
-    /// </remarks>
-    /// <param name="options">Additional options to customize the client.</param>
-    public FileClient(OpenAIClientOptions options = null)
-        : this(endpoint: null, credential: null, options)
-    { }
-
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, OpenAIFilePurpose purpose)
+    // convenience method - sync; Stream overload
+    // TODO: add refdoc comment
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream fileStream, string fileName, OpenAIFilePurpose purpose)
     {
-        if (file is null) throw new ArgumentNullException(nameof(file));
-        if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException(nameof(filename));
+        Argument.AssertNotNull(fileStream, nameof(fileStream));
+        Argument.AssertNotNull(fileName, nameof(fileName));
 
-        PipelineMessage uploadMessage = CreateInternalUploadMessage(file, filename, purpose);
-        Shim.Pipeline.Send(uploadMessage);
-        return GetUploadResultFromResponse(uploadMessage.Response);
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(fileStream, fileName, purpose);
+
+        ClientResult result = UploadFile(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
+        OpenAIFileInfo fileInfo = new(internalFile);
+
+        return ClientResult.FromValue(fileInfo, response);
     }
 
-    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, OpenAIFilePurpose purpose)
+    // convenience method - sync
+    // TODO: add refdoc comment
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string fileName, OpenAIFilePurpose purpose)
     {
-        if (file is null) throw new ArgumentNullException(nameof(file));
-        if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException(nameof(filename));
+        Argument.AssertNotNull(file, nameof(file));
+        Argument.AssertNotNull(fileName, nameof(fileName));
 
-        PipelineMessage uploadMessage = CreateInternalUploadMessage(file, filename, purpose);
-        await Shim.Pipeline.SendAsync(uploadMessage).ConfigureAwait(false);
-        return GetUploadResultFromResponse(uploadMessage.Response);
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+
+        ClientResult result = UploadFile(content, content.ContentType);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
+        OpenAIFileInfo fileInfo = new(internalFile);
+
+        return ClientResult.FromValue(fileInfo, response);
+    }
+
+    // convenience method - async; Stream overload
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string fileName, OpenAIFilePurpose purpose)
+    {
+        Argument.AssertNotNull(file, nameof(file));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+
+        ClientResult result = await UploadFileAsync(content, content.ContentType).ConfigureAwait(false);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
+        OpenAIFileInfo fileInfo = new(internalFile);
+
+        return ClientResult.FromValue(fileInfo, response);
+    }
+
+    // convenience method - async
+    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string fileName, OpenAIFilePurpose purpose)
+    {
+        Argument.AssertNotNull(file, nameof(file));
+        Argument.AssertNotNull(fileName, nameof(fileName));
+
+        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+
+        ClientResult result = await UploadFileAsync(content, content.ContentType).ConfigureAwait(false);
+
+        PipelineResponse response = result.GetRawResponse();
+
+        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
+        OpenAIFileInfo fileInfo = new(internalFile);
+
+        return ClientResult.FromValue(fileInfo, response);
     }
 
     public virtual ClientResult<OpenAIFileInfo> GetFileInfo(string fileId)
@@ -213,53 +214,33 @@ public partial class FileClient
         _ = Shim.DeleteFileAsync(fileId);
     }
 
-    internal PipelineMessage CreateInternalUploadMessage(BinaryData fileData, string filename, OpenAIFilePurpose purpose)
+    private PipelineMessage CreateUploadFileRequest(BinaryContent content, string contentType, RequestOptions options)
     {
-        MultipartFormDataContent content = new();
-        content.Add(BinaryContent.Create(fileData),
-            name: "file",
-            fileName: filename,
-            headers: []);
-        content.Add(MultipartContent.Create(
-            BinaryData.FromString(purpose switch
-            {
-                OpenAIFilePurpose.FineTuning => "fine-tune",
-                OpenAIFilePurpose.Assistants => "assistants",
-                _ => throw new ArgumentException($"Unsupported purpose for file upload: {purpose}"),
-            })),
-            name: "\"purpose\"",
-            headers: []);
-
         PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
+
         PipelineRequest request = message.Request;
         request.Method = "POST";
+
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
+
         StringBuilder path = new();
         path.Append("/files");
         uriBuilder.Path += path.ToString();
+
         request.Uri = uriBuilder.Uri;
+
         request.Headers.Set("Accept", "application/json");
+        request.Headers.Set("Content-Type", contentType);
+
         request.Content = content;
 
-        content.ApplyToRequest(request);
+        message.Apply(options);
 
         return message;
     }
 
-    internal ClientResult<OpenAIFileInfo> GetUploadResultFromResponse(PipelineResponse response)
-    {
-        if (response.IsError)
-        {
-            throw new ClientResultException(response);
-        }
-
-        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
-        OpenAIFileInfo fileInfo = new(internalFile);
-        return ClientResult.FromValue(fileInfo, response);
-    }
-
-    internal static Internal.Models.OpenAIFilePurpose? ToInternalFilePurpose(OpenAIFilePurpose? purpose)
+    private static Internal.Models.OpenAIFilePurpose? ToInternalFilePurpose(OpenAIFilePurpose? purpose)
     {
         if (purpose == null)
         {
@@ -274,7 +255,7 @@ public partial class FileClient
             _ => throw new ArgumentException($"Unsupported file purpose: {purpose}"),
         };
     }
+
     private static PipelineMessageClassifier _responseErrorClassifier200;
     private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
-
 }

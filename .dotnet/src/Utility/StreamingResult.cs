@@ -6,15 +6,12 @@ using System.Threading;
 
 namespace OpenAI;
 
-
-#pragma warning disable CS1591 // public XML comments
-
 /// <summary>
 /// Represents an operation response with streaming content that can be deserialized and enumerated while the response
 /// is still being received.
 /// </summary>
 /// <typeparam name="T"> The data type representative of distinct, streamable items. </typeparam>
-public class StreamingEventResult<T> : StreamingClientResult<T>
+internal class StreamingEventResult<T> : StreamingClientResult<T>
 {
     private IAsyncEnumerable<T> _asyncEnumerableSource { get; }
     
@@ -39,5 +36,3 @@ public class StreamingEventResult<T> : StreamingClientResult<T>
     public override IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         => _asyncEnumerableSource.GetAsyncEnumerator(cancellationToken);
 }
-
-#pragma warning restore CS1591 // public XML comments

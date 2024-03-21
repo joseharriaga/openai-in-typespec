@@ -116,8 +116,13 @@ public partial class ImageClient
         return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
     }
 
-    // convenience method - sync; Stream overload
-    // TODO: add refdoc comment
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
+        FileStream image,
+        string prompt,
+        int? imageCount = null,
+        ImageEditOptions options = null)
+     => GenerateImageEdits(image, Path.GetFileName(image.Name), prompt, imageCount, options);
+
     public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
         Stream image,
         string fileName,
@@ -147,8 +152,13 @@ public partial class ImageClient
         return ClientResult.FromValue(value, response);
     }
 
-    // convenience method - async; Stream overload
-    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(
+        FileStream image,
+        string prompt,
+        int? imageCount = null,
+        ImageEditOptions options = null)
+        => await GenerateImageEditsAsync(image, Path.GetFileName(image.Name), prompt, imageCount, options).ConfigureAwait(false);
+
     public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(
         Stream image,
         string fileName,
@@ -178,8 +188,12 @@ public partial class ImageClient
         return ClientResult.FromValue(value, response);
     }
 
-    // convenience method - sync
-    // TODO: add refdoc comment
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
+        FileStream image,
+        int? imageCount = null,
+        ImageVariationOptions options = null)
+        => GenerateImageVariations(image, Path.GetFileName(image.Name), imageCount, options);
+
     public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
         Stream image,
         string fileName,
@@ -202,8 +216,13 @@ public partial class ImageClient
         return ClientResult.FromValue(value, response);
     }
 
-    // convenience method - async; Stream overload
-    // TODO: add refdoc comment
+
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(
+        FileStream image,
+        int? imageCount = null,
+        ImageVariationOptions options = null)
+        => await GenerateImageVariationsAsync(image, Path.GetFileName(image.Name), imageCount, options).ConfigureAwait(false);
+
     public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(
         Stream image,
         string fileName,

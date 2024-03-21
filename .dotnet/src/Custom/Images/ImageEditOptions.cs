@@ -28,7 +28,7 @@ public partial class ImageEditOptions
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
     public string User { get; set; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream,
+    internal MultipartFormDataBinaryContent ToMultipartContent(Stream image,
         string fileName,
         string prompt,
         string model,
@@ -36,15 +36,7 @@ public partial class ImageEditOptions
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(fileStream, "image", fileName);
-
-        AddContent(model, prompt, imageCount, content);
-
-        return content;
-    }
-
-    private void AddContent(string model, string prompt, int? imageCount, MultipartFormDataBinaryContent content)
-    {
+        content.Add(image, "image", fileName);
         content.Add(prompt, "prompt");
         content.Add(model, "model");
 
@@ -90,5 +82,7 @@ public partial class ImageEditOptions
         {
             content.Add(User, "user");
         }
+
+        return content;
     }
 }

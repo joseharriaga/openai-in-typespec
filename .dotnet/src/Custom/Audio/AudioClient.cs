@@ -83,8 +83,9 @@ public partial class AudioClient
         return Shim.CreateSpeechAsync(request);
     }
 
-    // convenience method - sync; Stream overload
-    // TODO: add refdoc comment
+    public virtual ClientResult<AudioTranscription> TranscribeAudio(FileStream audio, AudioTranscriptionOptions options = null)
+        => TranscribeAudio(audio, Path.GetFileName(audio.Name), options);
+
     public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string fileName, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
@@ -103,8 +104,9 @@ public partial class AudioClient
         return ClientResult.FromValue(value, response);
     }
 
-    // convenience method - async
-    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(FileStream audio, AudioTranscriptionOptions options = null)
+        => await TranscribeAudioAsync(audio, Path.GetFileName(audio.Name), options).ConfigureAwait(false);
+
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string filename, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
@@ -148,8 +150,9 @@ public partial class AudioClient
         return message;
     }
 
-    // convenience method - sync; Stream overload
-    // TODO: add refdoc comment
+    public virtual ClientResult<AudioTranslation> TranslateAudio(FileStream audio, AudioTranslationOptions options = null)
+        => TranslateAudio(audio, Path.GetFileName(audio.Name), options);
+
     public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string fileName, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
@@ -168,8 +171,9 @@ public partial class AudioClient
         return ClientResult.FromValue(value, response);
     }
 
-    // convenience method - async; Stream overload
-    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(FileStream audio, AudioTranslationOptions options = null)
+        => await TranslateAudioAsync(audio, Path.GetFileName(audio.Name), options).ConfigureAwait(false);
+
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string fileName, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));

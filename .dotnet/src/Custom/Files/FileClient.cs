@@ -37,8 +37,9 @@ public partial class FileClient
         _clientConnector = new(model: null, credential, options);
     }
 
-    // convenience method - sync; Stream overload
-    // TODO: add refdoc comment
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(FileStream file, OpenAIFilePurpose purpose)
+        => UploadFile(file, Path.GetFileName(file.Name), purpose);
+
     public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string fileName, OpenAIFilePurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
@@ -56,8 +57,9 @@ public partial class FileClient
         return ClientResult.FromValue(fileInfo, response);
     }
 
-    // convenience method - async; Stream overload
-    // TODO: add refdoc comment
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(FileStream file, OpenAIFilePurpose purpose)
+        => await UploadFileAsync(file, Path.GetFileName(file.Name), purpose).ConfigureAwait(false);
+
     public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string fileName, OpenAIFilePurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));

@@ -39,26 +39,7 @@ public partial class FileClient
 
     // convenience method - sync; Stream overload
     // TODO: add refdoc comment
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream fileStream, string fileName, OpenAIFilePurpose purpose)
-    {
-        Argument.AssertNotNull(fileStream, nameof(fileStream));
-        Argument.AssertNotNull(fileName, nameof(fileName));
-
-        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(fileStream, fileName, purpose);
-
-        ClientResult result = UploadFile(content, content.ContentType);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
-        OpenAIFileInfo fileInfo = new(internalFile);
-
-        return ClientResult.FromValue(fileInfo, response);
-    }
-
-    // convenience method - sync
-    // TODO: add refdoc comment
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string fileName, OpenAIFilePurpose purpose)
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string fileName, OpenAIFilePurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
         Argument.AssertNotNull(fileName, nameof(fileName));
@@ -78,25 +59,6 @@ public partial class FileClient
     // convenience method - async; Stream overload
     // TODO: add refdoc comment
     public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string fileName, OpenAIFilePurpose purpose)
-    {
-        Argument.AssertNotNull(file, nameof(file));
-        Argument.AssertNotNull(fileName, nameof(fileName));
-
-        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
-
-        ClientResult result = await UploadFileAsync(content, content.ContentType).ConfigureAwait(false);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
-        OpenAIFileInfo fileInfo = new(internalFile);
-
-        return ClientResult.FromValue(fileInfo, response);
-    }
-
-    // convenience method - async
-    // TODO: add refdoc comment
-    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string fileName, OpenAIFilePurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
         Argument.AssertNotNull(fileName, nameof(fileName));
@@ -159,10 +121,11 @@ public partial class FileClient
         return ClientResult.FromValue(new OpenAIFileInfoCollection(infoItems), result.GetRawResponse());
     }
 
-    public virtual ClientResult<BinaryData> DownloadFile(string fileId)
+    public virtual ClientResult<Stream> DownloadFile(string fileId)
     {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
+        using PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
+        message.BufferResponse = false;
         PipelineRequest request = message.Request;
         request.Method = "GET";
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
@@ -178,12 +141,13 @@ public partial class FileClient
             throw new ClientResultException(message.Response);
         }
 
-        return ClientResult.FromValue(message.Response.Content, message.Response);
+        PipelineResponse response = message.ExtractResponse();
+        return ClientResult.FromValue(response.ContentStream, response);
     }
 
-    public virtual async Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId)
+    public virtual async Task<ClientResult<Stream>> DownloadFileAsync(string fileId)
     {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
+        using PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
         PipelineRequest request = message.Request;
         request.Method = "GET";
@@ -201,7 +165,8 @@ public partial class FileClient
             throw new ClientResultException(message.Response);
         }
 
-        return ClientResult.FromValue(message.Response.Content, message.Response);
+        PipelineResponse response = message.ExtractResponse();
+        return ClientResult.FromValue(response.ContentStream, response);
     }
 
     public virtual void DeleteFile(string fileId)

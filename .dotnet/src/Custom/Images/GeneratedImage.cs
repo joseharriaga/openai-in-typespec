@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace OpenAI.Images;
 
@@ -15,13 +16,13 @@ public class GeneratedImage
     /// This property is mutually exclusive with <see cref="ImageUri"/> and will be <c>null</c> when the other
     /// is present.
     /// </remarks>
-    public BinaryData ImageBytes { get; }
+    public Stream Image { get; }
     /// <summary>
     /// A temporary internet location for an image, provided by default or when
     /// <see cref="ImageGenerationOptions.ResponseFormat"/> is set to <see cref="ImageResponseFormat.Uri"/>.
     /// </summary>
     /// <remarks>
-    /// This property is mutually exclusive with <see cref="ImageBytes"/> and will be <c>null</c> when the other
+    /// This property is mutually exclusive with <see cref="Image"/> and will be <c>null</c> when the other
     /// is present.
     /// </remarks>
     public Uri ImageUri { get; }
@@ -41,7 +42,11 @@ public class GeneratedImage
     internal GeneratedImage(Internal.Models.ImagesResponse internalResponse, int internalDataIndex)
     {
         CreatedAt = internalResponse.Created;
-        ImageBytes = internalResponse.Data[(int)internalDataIndex].B64Json;
+
+        // TODO: Generator will need to update to make file streams Streams instead of BinaryData
+        // with this proposal.  This is important if these files are going to be large, since 
+        // BinaryData loads the buffers into memory, and this could be problematic for applications.
+        Image = internalResponse.Data[(int)internalDataIndex].B64Json.ToStream();
         RevisedPrompt = internalResponse.Data[(int)internalDataIndex].RevisedPrompt;
         ImageUri = internalResponse.Data[(int)internalDataIndex].Url;
     }

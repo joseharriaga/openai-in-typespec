@@ -26,7 +26,7 @@ public partial class FileClientTests
     public void UploadFileWorks()
     {
         FileClient client = GetTestClient();
-        Stream uploadData = BinaryData.FromString("hello, this is a text file, please delete me").ToStream();
+        using Stream uploadData = BinaryData.FromString("hello, this is a text file, please delete me").ToStream();
 
         ClientResult<OpenAIFileInfo> uploadResult = client.UploadFile(uploadData, "test-file-delete-me.txt", OpenAIFilePurpose.Assistants);
         Assert.That(uploadResult.Value, Is.Not.Null);
@@ -45,7 +45,8 @@ public partial class FileClientTests
         Assert.That(fileInfoResult.Value, Is.Not.Null);
 
         ClientResult<Stream> downloadResult = client.DownloadFile("file-S7roYWamZqfMK9D979HU4q6m");
-        Assert.That(downloadResult.Value, Is.Not.Null);
+        using Stream value = downloadResult.Value;
+        Assert.That(value, Is.Not.Null);
     }
 
     private static FileClient GetTestClient() => GetTestClient<FileClient>(TestScenario.Files);

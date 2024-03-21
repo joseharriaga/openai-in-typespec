@@ -20,7 +20,7 @@ namespace OpenAI.Samples
             AssistantClient assistantClient = openAIClient.GetAssistantClient();
 
             // First, let's contrive a document we'll use retrieval with and upload it.
-            Stream document = BinaryData.FromString("""
+            using Stream document = BinaryData.FromString("""
                 {
                     "description": "This document contains the sale history data for Contoso products.",
                     "sales": [

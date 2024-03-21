@@ -15,7 +15,7 @@ namespace OpenAI.Samples
             ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
 
             string imagePath = Path.Combine("Assets", "edit_sample_image.png");
-            using Stream inputImage = File.OpenRead(imagePath);
+            using FileStream inputImage = File.OpenRead(imagePath);
 
             string prompt = "An inflatable flamingo float in a pool";
 
@@ -30,7 +30,7 @@ namespace OpenAI.Samples
                 ResponseFormat = ImageResponseFormat.Bytes
             };
 
-            GeneratedImageCollection imageCollection = await client.GenerateImageEditsAsync(inputImage, "edit_sample_image.png", prompt, 1, options);
+            GeneratedImageCollection imageCollection = await client.GenerateImageEditsAsync(inputImage, prompt, 1, options);
             using Stream editedImage = imageCollection[0].Image;
 
             using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");

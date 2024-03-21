@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace OpenAI.Audio;
 
-public partial class TranscriptionSegment
+public readonly partial struct TranscriptionSegment
 {
     public int Id { get; }
     public int SeekOffset { get; }

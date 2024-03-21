@@ -27,7 +27,7 @@ public partial class TranscriptionTests
         {
              EnableWordTimestamps = true,
              EnableSegmentTimestamps = true,
-             ResponseFormat = AudioTranscriptionFormat.Detailed,
+             ResponseFormat = AudioTranscriptionFormat.Verbose,
         });
         Assert.That(transcriptionResult.Value, Is.Not.Null);
         // Assert.That(transcriptionResult.Value.Segments, Is.Null);

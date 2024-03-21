@@ -13,8 +13,8 @@ public partial class ChatWithVision
     [Test]
     public void DescribeAnImage()
     {
-        var stopSignPath = Path.Combine("Assets", "stop_sign.png");
-        var stopSignData = BinaryData.FromBytes(File.ReadAllBytes(stopSignPath));
+        string stopSignPath = Path.Combine("Assets", "stop_sign.png");
+        using Stream stopSignStream = File.OpenRead(stopSignPath);
 
         ChatClient client = GetTestClient<ChatClient>(TestScenario.VisionChat);
 
@@ -22,7 +22,7 @@ public partial class ChatWithVision
             [
                 new ChatRequestUserMessage(
                     "Describe this image for me",
-                    ChatMessageContent.CreateImage(stopSignData, "image/png")),
+                    ChatMessageContent.FromImage(stopSignStream, "image/png")),
             ], new ChatCompletionOptions()
             {
                 MaxTokens = 2048,

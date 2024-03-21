@@ -13,7 +13,7 @@ public partial class ChatFunctionCall :  IJsonModel<ChatFunctionCall>
     void IJsonModel<ChatFunctionCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
-        writer.WriteString("name"u8, Name);
+        writer.WriteString("name"u8, FunctionName);
         writer.WriteString("arguments"u8, Arguments);
         writer.WriteEndObject();
     }

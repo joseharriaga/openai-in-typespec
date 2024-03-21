@@ -16,7 +16,7 @@ namespace OpenAI.Samples
             List<ChatRequestMessage> messages = [
                 new ChatRequestUserMessage(
                     "Describe this image for me",
-                    ChatMessageContent.CreateImage(imageUri))
+                    ChatMessageContent.FromImage(imageUri))
             ];
 
             ChatCompletion chatCompletion = client.CompleteChat(messages);

@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace OpenAI.Audio;
 
-public partial class TranscribedWord
+public readonly partial struct TranscribedWord
 {
     public string Word { get; }
     public TimeSpan Start { get; }

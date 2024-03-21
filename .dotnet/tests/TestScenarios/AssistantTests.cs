@@ -121,7 +121,7 @@ public partial class AssistantTests
         Assert.That(requiredFunctionToolCall, Is.Not.Null);
         _ = await client.SubmitToolOutputsAsync(threadResult.Value.Id, runResult.Value.Id,
             [
-                new ToolOutput(requiredFunctionToolCall, "tacos"),
+                new ToolOutput(requiredFunctionToolCall.Id, "tacos"),
             ]);
         runResult = await client.GetRunAsync(threadResult.Value.Id, runResult.Value.Id);
         Assert.That(runResult.Value.Status, Is.Not.EqualTo(RunStatus.RequiresAction));

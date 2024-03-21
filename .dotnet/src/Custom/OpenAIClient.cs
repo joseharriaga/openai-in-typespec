@@ -33,11 +33,11 @@ public partial class OpenAIClient
     /// of the scenario-specific subclients like <see cref="ChatClient"/>.
     /// </remarks>
     /// <param name="credential"> An explicitly defined credential that all clients created by this <see cref="OpenAIClient"/> should use. </param>
-    /// <param name="clientOptions"> A common client options definition that all clients created by this <see cref="OpenAIClient"/> should use. </param>
-    public OpenAIClient(ApiKeyCredential credential = default, OpenAIClientOptions clientOptions = default)
+    /// <param name="options"> A common client options definition that all clients created by this <see cref="OpenAIClient"/> should use. </param>
+    public OpenAIClient(ApiKeyCredential credential = default, OpenAIClientOptions options = default)
     {
         _cachedCredential = credential;
-        _cachedOptions = clientOptions;
+        _cachedOptions = options;
     }
 
     /// <summary>

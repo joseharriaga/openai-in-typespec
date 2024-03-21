@@ -46,7 +46,7 @@ public partial class AudioTranslationOptions
             string value = ResponseFormat switch
             {
                 AudioTranscriptionFormat.Simple => "json",
-                AudioTranscriptionFormat.Detailed => "verbose_json",
+                AudioTranscriptionFormat.Verbose => "verbose_json",
                 AudioTranscriptionFormat.Srt => "srt",
                 AudioTranscriptionFormat.Vtt => "vtt",
                 _ => throw new ArgumentException(nameof(ResponseFormat))

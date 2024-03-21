@@ -19,9 +19,4 @@ public partial class ToolOutput
         Id = toolCallId;
         Output = output;
     }
-
-    [SetsRequiredMembers]
-    public ToolOutput(RequiredToolCall toolCall, string output = null)
-        : this(toolCall.Id, output)
-    { }
 }

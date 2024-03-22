@@ -9,13 +9,13 @@ public partial class FineTuningManagementClient
     /// <inheritdoc cref="Internal.FineTuning.CreateFineTuningJob(BinaryContent, RequestOptions)"/>
     public virtual ClientResult CreateFineTuningJob(
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => FineTuningShim.CreateFineTuningJob(content, options);
 
     /// <inheritdoc cref="Internal.FineTuning.CreateFineTuningJobAsync(BinaryContent, RequestOptions)"/>
     public virtual async Task<ClientResult> CreateFineTuningJobAsync(
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await FineTuningShim.CreateFineTuningJobAsync(content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.FineTuning.RetrieveFineTuningJob(string, RequestOptions)"/>

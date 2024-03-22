@@ -1,9 +1,5 @@
 using System;
-using System.ClientModel.Internal;
-
-using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace OpenAI.Chat;

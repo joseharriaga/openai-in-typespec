@@ -30,7 +30,7 @@ public class ChatRequestToolMessage : ChatRequestMessage
     /// <summary>
     /// The <c>id</c> correlating to the prior <see cref="ChatToolCall"/> made by the model.
     /// </summary>
-    public required string ToolCallId { get; set; }
+    public string ToolCallId { get; set; }
 
     /// <summary>
     /// Creates a new instance of <see cref="ChatRequestToolMessage"/>.

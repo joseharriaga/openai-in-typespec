@@ -33,7 +33,7 @@ public readonly partial struct TranscriptionSegment
         NoSpeechProbability = noSpeechProbability;
     }
 
-    internal static TranscriptionSegment DeserializeTranscriptionSegment(JsonElement element, ModelReaderWriterOptions options = default)
+    internal static TranscriptionSegment DeserializeTranscriptionSegment(JsonElement element, ModelReaderWriterOptions? options = default)
     {
         int id = 0;
         int seekOffset = 0;

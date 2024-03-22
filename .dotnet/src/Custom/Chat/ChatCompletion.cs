@@ -7,8 +7,8 @@ namespace OpenAI.Chat;
 /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponse"/>
 public class ChatCompletion
 {
-    private Internal.Models.CreateChatCompletionResponse _internalResponse;
-    private int _internalChoiceIndex;
+    private readonly Internal.Models.CreateChatCompletionResponse _internalResponse;
+    private readonly int _internalChoiceIndex;
 
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponse.Id"/>
     public string Id => _internalResponse.Id;
@@ -21,17 +21,17 @@ public class ChatCompletion
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.FinishReason"/>
     public ChatFinishReason FinishReason { get; }
     /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.Content"/>
-    public ChatMessageContent Content { get; }
+    public ChatMessageContent? Content { get; }
     /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.ToolCalls"/>
-    public IReadOnlyList<ChatToolCall> ToolCalls { get; }
+    public IReadOnlyList<ChatToolCall>? ToolCalls { get; }
     /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.FunctionCall"/>
-    public ChatFunctionCall FunctionCall { get; }
+    public ChatFunctionCall? FunctionCall { get; }
     /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.Role"/>
     public ChatRole Role { get; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Logprobs"/>
-    public ChatLogProbabilityCollection LogProbabilities { get; }
+    public ChatLogProbabilityCollection? LogProbabilities { get; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Index"/>
-    public int Index => (int)_internalResponse.Choices[(int)_internalChoiceIndex].Index;
+    public int ChoiceIndex => (int)_internalResponse.Choices[(int)_internalChoiceIndex].Index;
 
     internal ChatCompletion(Internal.Models.CreateChatCompletionResponse internalResponse, int internalChoiceIndex)
     {

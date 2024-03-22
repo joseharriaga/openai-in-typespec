@@ -41,7 +41,7 @@ public class TextContentFileCitationAnnotation : TextContentAnnotation
 
     internal static TextContentFileCitationAnnotation DeserializeTextContentFileCitationAnnotation(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

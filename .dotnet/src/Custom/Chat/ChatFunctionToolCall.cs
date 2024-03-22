@@ -16,10 +16,10 @@ public class ChatFunctionToolCall : ChatToolCall
     /// <summary>
     /// Gets the <c>name</c> of the function.
     /// </summary>
-    public required string Name
+    public required string FunctionName
     {
         get => InternalToolCall.Name;
-        set => InternalToolCall.Name = value;
+        init => InternalToolCall.Name = value;
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class ChatFunctionToolCall : ChatToolCall
     public required string Arguments
     {
         get => InternalToolCall.Arguments;
-        set => InternalToolCall.Arguments = value;
+        init => InternalToolCall.Arguments = value;
 
     }
     /// <summary>
@@ -53,7 +53,7 @@ public class ChatFunctionToolCall : ChatToolCall
         : this()
     {
         Id = toolCallId;
-        Name = functionName;
+        FunctionName = functionName;
         Arguments = arguments;
     }
 
@@ -62,7 +62,7 @@ public class ChatFunctionToolCall : ChatToolCall
         writer.WriteString("type"u8, "function"u8);
         writer.WritePropertyName("function"u8);
         writer.WriteStartObject();
-        writer.WriteString("name"u8, Name);
+        writer.WriteString("name"u8, FunctionName);
         writer.WriteString("arguments"u8, Arguments);
         writer.WriteEndObject();
     }

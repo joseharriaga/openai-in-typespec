@@ -62,7 +62,7 @@ public abstract partial class ToolDefinition :  IJsonModel<ToolDefinition>
 
     internal static ToolDefinition DeserializeToolDefinition(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

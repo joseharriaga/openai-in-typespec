@@ -11,12 +11,12 @@ public partial class EmbeddingClient
     private readonly OpenAIClientConnector _clientConnector;
     private Internal.Embeddings Shim => _clientConnector.InternalClient.GetEmbeddingsClient();
 
-    public EmbeddingClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+    public EmbeddingClient(string model, ApiKeyCredential? credential = default, OpenAIClientOptions? options = default)
     {
         _clientConnector = new(model, credential, options);
     }
 
-    public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingOptions options = null)
+    public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingOptions? options = default)
     {
         Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(input, options);
         ClientResult<Internal.Models.CreateEmbeddingResponse> response = Shim.CreateEmbedding(request);
@@ -24,23 +24,7 @@ public partial class EmbeddingClient
         return ClientResult.FromValue(embeddingResult, response.GetRawResponse());
     }
 
-    public virtual async Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingOptions options = null)
-    {
-        Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(input, options);
-        ClientResult<Internal.Models.CreateEmbeddingResponse> response = await Shim.CreateEmbeddingAsync(request);
-        Embedding embeddingResult = new(response.Value, internalDataIndex: 0);
-        return ClientResult.FromValue(embeddingResult, response.GetRawResponse());
-    }
-
-    public virtual ClientResult<Embedding> GenerateEmbedding(IEnumerable<int> input, EmbeddingOptions options = null)
-    {
-        Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(input, options);
-        ClientResult<Internal.Models.CreateEmbeddingResponse> response = Shim.CreateEmbedding(request);
-        Embedding embeddingResult = new(response.Value, internalDataIndex: 0);
-        return ClientResult.FromValue(embeddingResult, response.GetRawResponse());
-    }
-
-    public virtual async Task<ClientResult<Embedding>> GenerateEmbeddingAsync(IEnumerable<int> input, EmbeddingOptions options = null)
+    public virtual async Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingOptions? options = default)
     {
         Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(input, options);
         ClientResult<Internal.Models.CreateEmbeddingResponse> response = await Shim.CreateEmbeddingAsync(request);
@@ -48,7 +32,23 @@ public partial class EmbeddingClient
         return ClientResult.FromValue(embeddingResult, response.GetRawResponse());
     }
 
-    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingOptions options = null)
+    public virtual ClientResult<Embedding> GenerateEmbedding(IEnumerable<int> input, EmbeddingOptions? options = default)
+    {
+        Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(input, options);
+        ClientResult<Internal.Models.CreateEmbeddingResponse> response = Shim.CreateEmbedding(request);
+        Embedding embeddingResult = new(response.Value, internalDataIndex: 0);
+        return ClientResult.FromValue(embeddingResult, response.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<Embedding>> GenerateEmbeddingAsync(IEnumerable<int> input, EmbeddingOptions? options = default)
+    {
+        Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(input, options);
+        ClientResult<Internal.Models.CreateEmbeddingResponse> response = await Shim.CreateEmbeddingAsync(request);
+        Embedding embeddingResult = new(response.Value, internalDataIndex: 0);
+        return ClientResult.FromValue(embeddingResult, response.GetRawResponse());
+    }
+
+    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingOptions? options = default)
     {
         Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(inputs, options);
         ClientResult<Internal.Models.CreateEmbeddingResponse> response = Shim.CreateEmbedding(request);
@@ -56,7 +56,7 @@ public partial class EmbeddingClient
         return ClientResult.FromValue(resultCollection, response.GetRawResponse());
     }
 
-    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingOptions options = null)
+    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingOptions? options = default)
     {
         Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(inputs, options);
         ClientResult<Internal.Models.CreateEmbeddingResponse> response = await Shim.CreateEmbeddingAsync(request);
@@ -64,7 +64,7 @@ public partial class EmbeddingClient
         return ClientResult.FromValue(resultCollection, response.GetRawResponse());
     }
 
-    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingOptions options = null)
+    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingOptions? options = default)
     {
         Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(inputs, options);
         ClientResult<Internal.Models.CreateEmbeddingResponse> response = Shim.CreateEmbedding(request);
@@ -72,7 +72,7 @@ public partial class EmbeddingClient
         return ClientResult.FromValue(resultCollection, response.GetRawResponse());
     }
 
-    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingOptions options = null)
+    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingOptions? options = default)
     {
         Internal.Models.CreateEmbeddingRequest request = CreateInternalRequest(inputs, options);
         ClientResult<Internal.Models.CreateEmbeddingResponse> response = await Shim.CreateEmbeddingAsync(request);

@@ -62,7 +62,7 @@ public abstract partial class MessageContent :  IJsonModel<MessageContent>
 
     internal static MessageContent DeserializeMessageContent(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

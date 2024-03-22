@@ -13,9 +13,9 @@ public partial class ThreadRun
 
     public RunStatus Status { get; }
 
-    public IReadOnlyList<RunRequiredAction> RequiredActions { get; }
+    public IReadOnlyList<RunRequiredAction>? RequiredActions { get; }
 
-    public RunError LastError { get; }
+    public RunError? LastError { get; }
     public DateTimeOffset? ExpiresAt { get; }
     public DateTimeOffset? StartedAt { get; } 
     public DateTimeOffset? CancelledAt { get; }
@@ -35,7 +35,7 @@ public partial class ThreadRun
     ///     <item><b>Values</b> can be a maximum of 512 characters in length.</item>
     /// </list>
     /// </remarks>
-    public IReadOnlyDictionary<string, string> Metadata { get; }
+    public IReadOnlyDictionary<string, string>? Metadata { get; }
     public RunTokenUsage Usage { get; }
 
     internal ThreadRun(Internal.Models.RunObject internalRun)

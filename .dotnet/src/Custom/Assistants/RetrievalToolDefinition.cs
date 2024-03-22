@@ -11,7 +11,7 @@ public partial class RetrievalToolDefinition : ToolDefinition
 
     internal static RetrievalToolDefinition DeserializeRetrievalToolDefinition(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

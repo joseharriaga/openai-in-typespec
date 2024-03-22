@@ -39,13 +39,13 @@ public partial class ChatCompletionOptions
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.ToolChoice" />
     public ChatToolConstraint? ToolConstraint { get; set; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.User" />
-    public string User { get; set; }
+    public string? User { get; set; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Functions" />
     public IList<ChatFunctionDefinition> Functions { get; } = new ChangeTrackingList<ChatFunctionDefinition>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.FunctionCall" />
     public ChatFunctionConstraint? FunctionConstraint { get; set; }
 
-    internal BinaryData GetInternalStopSequences()
+    internal BinaryData? GetInternalStopSequences()
     {
         if (!Optional.IsCollectionDefined(StopSequences))
         {
@@ -73,7 +73,7 @@ public partial class ChatCompletionOptions
             {
                 Internal.Models.FunctionObject functionObject = new(
                     functionTool.Description,
-                    functionTool.Name,
+                    functionTool.FunctionName,
                     CreateInternalFunctionParameters(functionTool.Parameters),
                     serializedAdditionalRawData: null);
                 internalTools.Add(new(functionObject));
@@ -89,7 +89,7 @@ public partial class ChatCompletionOptions
         {
             Internal.Models.ChatCompletionFunctions internalFunction = new(
                 function.Description,
-                function.Name,
+                function.FunctionName,
                 CreateInternalFunctionParameters(function.Parameters),
                 serializedAdditionalRawData: null);
             internalFunctions.Add(internalFunction);

@@ -17,7 +17,7 @@ public partial class ChatToolTests
         ChatClient client = new("gpt-3.5-turbo");
         ChatFunctionToolDefinition getFavoriteColorTool = new()
         {
-            Name = "get_favorite_color",
+            FunctionName = "get_favorite_color",
             Description = "gets the favorite color of the caller",
         };
         ChatCompletionOptions options = new()
@@ -30,7 +30,7 @@ public partial class ChatToolTests
         var functionToolCall = result.Value.ToolCalls[0] as ChatFunctionToolCall;
         var toolCallArguments = BinaryData.FromString(functionToolCall.Arguments).ToObjectFromJson<Dictionary<string, object>>();
         Assert.That(functionToolCall, Is.Not.Null);
-        Assert.That(functionToolCall.Name, Is.EqualTo(getFavoriteColorTool.Name));
+        Assert.That(functionToolCall.FunctionName, Is.EqualTo(getFavoriteColorTool.FunctionName));
         Assert.That(functionToolCall.Id, Is.Not.Null.Or.Empty);
         Assert.That(toolCallArguments.Count, Is.EqualTo(0));
 
@@ -50,7 +50,7 @@ public partial class ChatToolTests
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
         ChatFunctionToolDefinition favoriteColorForMonthTool = new()
         {
-            Name = "get_favorite_color_for_month",
+            FunctionName = "get_favorite_color_for_month",
             Description = "gets the caller's favorite color for a given month",
             Parameters = BinaryData.FromString("""
                 {
@@ -77,7 +77,7 @@ public partial class ChatToolTests
         Assert.That(result.Value.FinishReason, Is.EqualTo(ChatFinishReason.ToolCalls));
         Assert.That(result.Value.ToolCalls?.Count, Is.EqualTo(1));
         var functionToolCall = result.Value.ToolCalls[0] as ChatFunctionToolCall;
-        Assert.That(functionToolCall.Name, Is.EqualTo(favoriteColorForMonthTool.Name));
+        Assert.That(functionToolCall.FunctionName, Is.EqualTo(favoriteColorForMonthTool.FunctionName));
         JsonObject argumentsJson = JsonSerializer.Deserialize<JsonObject>(functionToolCall.Arguments);
         Assert.That(argumentsJson.Count, Is.EqualTo(1));
         Assert.That(argumentsJson.ContainsKey("month_name"));

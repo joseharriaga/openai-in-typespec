@@ -60,7 +60,7 @@ public abstract partial class TextContentAnnotation :  IJsonModel<TextContentAnn
 
     internal static TextContentAnnotation DeserializeTextContentAnnotation(
       JsonElement element,
-      ModelReaderWriterOptions options = null)
+      ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

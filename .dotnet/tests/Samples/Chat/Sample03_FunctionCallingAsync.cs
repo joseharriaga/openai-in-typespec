@@ -56,7 +56,7 @@ namespace OpenAI.Samples
                             {
                                 ChatFunctionToolCall functionToolCall = toolCall as ChatFunctionToolCall;
 
-                                switch (functionToolCall?.Name)
+                                switch (functionToolCall?.FunctionName)
                                 {
                                     case GetCurrentLocationFunctionName:
                                         {

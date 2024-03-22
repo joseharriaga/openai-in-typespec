@@ -11,12 +11,12 @@ public class ChatFunctionDefinition
     /// <summary>
     /// The name of the function.
     /// </summary>
-    public required string Name { get; set; }
+    public required string FunctionName { get; init; }
     /// <summary>
-    /// A friendly description of the function. This supplements <see cref="Name"/> in informing the model about when
+    /// A friendly description of the function. This supplements <see cref="FunctionName"/> in informing the model about when
     /// it should call the function.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; init; }
     /// <summary>
     /// The parameter information for the function, provided in JSON Schema format.
     /// </summary>
@@ -39,7 +39,7 @@ public class ChatFunctionDefinition
     /// })
     /// </code></para>
     /// </remarks>
-    public BinaryData Parameters { get; set; }
+    public BinaryData? Parameters { get; init; }
     /// <summary>
     /// Creates a new instance of <see cref="ChatFunctionDefinition"/>.
     /// </summary>
@@ -51,9 +51,9 @@ public class ChatFunctionDefinition
     /// <param name="description"> A description of the function's behavior or purpose. </param>
     /// <param name="parameters"> The parameter information for the function, in JSON Schema format. </param>
     [SetsRequiredMembers]
-    public ChatFunctionDefinition(string name, string description = null, BinaryData parameters = null)
+    public ChatFunctionDefinition(string name, string? description = null, BinaryData? parameters = null)
     {
-        Name = name;
+        FunctionName = name;
         Description = description;
         Parameters = parameters;
     }

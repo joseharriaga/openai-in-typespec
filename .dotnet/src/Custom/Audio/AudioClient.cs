@@ -31,7 +31,7 @@ public partial class AudioClient
     /// <param name="model">The model name for audio operations that the client should use.</param>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
-    public AudioClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+    public AudioClient(string model, ApiKeyCredential? credential = default, OpenAIClientOptions? options = default)
     {
         _clientConnector = new(model, credential, options);
     }
@@ -54,7 +54,7 @@ public partial class AudioClient
     public virtual ClientResult<BinaryData> GenerateSpeechFromText(
         string text,
         TextToSpeechVoice voice,
-        TextToSpeechOptions options = null)
+        TextToSpeechOptions? options = default)
     {
         Internal.Models.CreateSpeechRequest request = CreateInternalTtsRequest(text, voice, options);
         return Shim.CreateSpeech(request);
@@ -78,7 +78,7 @@ public partial class AudioClient
     public virtual Task<ClientResult<BinaryData>> GenerateSpeechFromTextAsync(
         string text,
         TextToSpeechVoice voice,
-        TextToSpeechOptions options = null)
+        TextToSpeechOptions? options = default)
     {
         Internal.Models.CreateSpeechRequest request = CreateInternalTtsRequest(text, voice, options);
         return Shim.CreateSpeechAsync(request);
@@ -86,14 +86,14 @@ public partial class AudioClient
 
     // convenience method - sync; Stream overload
     // TODO: add refdoc comment
-    public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string fileName, AudioTranscriptionOptions options = null)
+    public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string fileName, AudioTranscriptionOptions? options = default)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model!);
 
         ClientResult result = TranscribeAudio(content, content.ContentType);
 
@@ -106,14 +106,14 @@ public partial class AudioClient
 
     // convenience method - sync
     // TODO: add refdoc comment
-    public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audio, string fileName, AudioTranscriptionOptions options = null)
+    public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audio, string fileName, AudioTranscriptionOptions? options = default)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model!);
 
         ClientResult result = TranscribeAudio(content, content.ContentType);
 
@@ -126,7 +126,7 @@ public partial class AudioClient
 
     // convenience method - async
     // TODO: add refdoc comment
-    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string filename, AudioTranscriptionOptions options = null)
+    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string filename, AudioTranscriptionOptions? options = default)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(filename, nameof(filename));
@@ -146,14 +146,14 @@ public partial class AudioClient
 
     // convenience method - async
     // TODO: add refdoc comment
-    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(BinaryData audio, string fileName, AudioTranscriptionOptions options = null)
+    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(BinaryData audio, string fileName, AudioTranscriptionOptions? options = default)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model!);
 
         ClientResult result = await TranscribeAudioAsync(content, content.ContentType).ConfigureAwait(false);
 
@@ -167,7 +167,7 @@ public partial class AudioClient
     private PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        message.ResponseClassifier = PipelineMessageClassifiers.ResponseErrorClassifier200;
 
         PipelineRequest request = message.Request;
         request.Method = "POST";
@@ -191,14 +191,14 @@ public partial class AudioClient
 
     // convenience method - sync; Stream overload
     // TODO: add refdoc comment
-    public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string fileName, AudioTranslationOptions options = null)
+    public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string fileName, AudioTranslationOptions? options = default)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model!);
 
         ClientResult result = TranslateAudio(content, content.ContentType);
 
@@ -211,14 +211,14 @@ public partial class AudioClient
 
     // convenience method - sync
     // TODO: add refdoc comment
-    public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audio, string fileName, AudioTranslationOptions options = null)
+    public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audio, string fileName, AudioTranslationOptions? options = default)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model!);
 
         ClientResult result = TranslateAudio(content, content.ContentType);
 
@@ -231,14 +231,14 @@ public partial class AudioClient
 
     // convenience method - async; Stream overload
     // TODO: add refdoc comment
-    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string fileName, AudioTranslationOptions options = null)
+    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string fileName, AudioTranslationOptions? options = default)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model!);
 
         ClientResult result = await TranslateAudioAsync(content, content.ContentType).ConfigureAwait(false);
 
@@ -251,14 +251,14 @@ public partial class AudioClient
 
     // convenience method - async
     // TODO: add refdoc comment
-    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(BinaryData audio, string fileName, AudioTranslationOptions options = null)
+    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(BinaryData audio, string fileName, AudioTranslationOptions? options = default)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model!);
 
         ClientResult result = await TranslateAudioAsync(content, content.ContentType).ConfigureAwait(false);
 
@@ -272,7 +272,7 @@ public partial class AudioClient
     private PipelineMessage CreateCreateTranslationRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        message.ResponseClassifier = PipelineMessageClassifiers.ResponseErrorClassifier200;
 
         PipelineRequest request = message.Request;
         request.Method = "POST";
@@ -297,7 +297,7 @@ public partial class AudioClient
     private Internal.Models.CreateSpeechRequest CreateInternalTtsRequest(
         string input,
         TextToSpeechVoice voice,
-        TextToSpeechOptions options = null)
+        TextToSpeechOptions? options = default)
     {
         options ??= new();
         Internal.Models.CreateSpeechRequestResponseFormat? internalResponseFormat = null;
@@ -327,7 +327,4 @@ public partial class AudioClient
             options?.SpeedMultiplier,
             serializedAdditionalRawData: null);
     }
-
-    private static PipelineMessageClassifier _responseErrorClassifier200;
-    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

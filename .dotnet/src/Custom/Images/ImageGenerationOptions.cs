@@ -10,15 +10,15 @@ public partial class ImageGenerationOptions
     /// the <c>dall-e-3</c> model.
     /// <list type="bullet">
     /// <item>
-    ///     <c>hd</c> - <see cref="ImageQuality.High"/> - Finer details, greater consistency, slower, more intensive.
+    ///     <c>hd</c> - <see cref="GeneratedImageQuality.High"/> - Finer details, greater consistency, slower, more intensive.
     /// </item>
     /// <item>
-    ///     <c>standard</c> - <see cref="ImageQuality.Standard"/> - The default quality level that's faster and less
+    ///     <c>standard</c> - <see cref="GeneratedImageQuality.Standard"/> - The default quality level that's faster and less
     ///     intensive but may also be less detailed and consistent than <c>hd</c>.
     /// </item>
     /// </list>
     /// </summary>
-    public ImageQuality? Quality { get; set; }
+    public GeneratedImageQuality? Quality { get; set; }
     /// <summary>
     /// Specifies the desired output representation of the generated image.
     /// <list type="bullet">
@@ -53,23 +53,23 @@ public partial class ImageGenerationOptions
     /// </list>
     /// </para>
     /// </summary>
-    public GeneratedImageSize Size { get; set; }
+    public GeneratedImageSize? Size { get; set; }
     /// <summary>
     /// The style kind to guide the generation of the image.
     /// <list type="bullet">
     /// <item>
-    ///     <c>vivid</c> - <see cref="ImageStyle.Vivid"/> - default, a style that tends towards more realistic,
+    ///     <c>vivid</c> - <see cref="GeneratedImageStyle.Vivid"/> - default, a style that tends towards more realistic,
     ///     dramatic images.
     /// </item>
     /// <item>
-    ///     <c>natural</c> - <see cref="ImageStyle.Natural"/> - a more subdued style with less tendency towards
+    ///     <c>natural</c> - <see cref="GeneratedImageStyle.Natural"/> - a more subdued style with less tendency towards
     ///     realism and striking imagery.
     /// </item>
     /// </list>
     /// </summary>
-    public ImageStyle? Style { get; set; }
+    public GeneratedImageStyle? Style { get; set; }
     /// <summary>
     /// An optional identifier for the end user that can help OpenAI monitor for and detect abuse.
     /// </summary>
-    public string User { get; set; }
+    public string? User { get; set; }
 }

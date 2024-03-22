@@ -23,7 +23,7 @@ namespace OpenAI.Samples
             AssistantCreationOptions assistantOptions = new()
             {
                 Name = "Sample: Function Calling",
-                Instructions =
+                DefaultInstructions =
                     "Don't make assumptions about what values to plug into functions."
                     + " Ask for clarification if a user request is ambiguous.",
                 Tools = { getCurrentLocationFunction, getCurrentWeatherFunction },
@@ -59,7 +59,7 @@ namespace OpenAI.Samples
                     {
                         RequiredFunctionToolCall requiredFunctionToolCall = action as RequiredFunctionToolCall;
 
-                        switch (requiredFunctionToolCall?.Name)
+                        switch (requiredFunctionToolCall?.FunctionName)
                         {
                             case GetCurrentLocationFunctionName:
                                 {

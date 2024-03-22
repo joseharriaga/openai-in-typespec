@@ -11,5 +11,5 @@ public abstract partial class ChatToolCall
     /// A unique identifier associated with the tool call, used in a subsequent <see cref="ChatRequestToolMessage"/> to
     /// resolve the tool call and continue the logical conversation.
     /// </summary>
-    public required string Id { get; set; }
+    public required string Id { get; init; }
 }

@@ -21,7 +21,7 @@ public class ChatRequestSystemMessage : ChatRequestMessage
     /// <summary>
     /// An optional <c>name</c> for the participant.
     /// </summary>
-    public string Name { get; set; } // JSON "name"
+    public string ParticipantName { get; set; } // JSON "name"
 
     /// <summary>
     /// Creates a new instance of <see cref="ChatRequestSystemMessage"/>.
@@ -31,9 +31,9 @@ public class ChatRequestSystemMessage : ChatRequestMessage
 
     internal override void WriteDerivedAdditions(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        if (Optional.IsDefined(Name))
+        if (Optional.IsDefined(ParticipantName))
         {
-            writer.WriteString("name"u8, Name);
+            writer.WriteString("name"u8, ParticipantName);
         }
     }
 }

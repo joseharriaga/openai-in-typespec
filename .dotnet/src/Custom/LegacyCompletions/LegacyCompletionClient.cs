@@ -30,7 +30,7 @@ public partial class LegacyCompletionClient
     /// </remarks>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
-    public LegacyCompletionClient(ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+    public LegacyCompletionClient(ApiKeyCredential? credential = default, OpenAIClientOptions? options = default)
     {
         _clientConnector = new(model: null, credential, options);
     }

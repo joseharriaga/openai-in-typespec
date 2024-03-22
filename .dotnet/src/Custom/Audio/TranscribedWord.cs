@@ -17,7 +17,7 @@ public readonly partial struct TranscribedWord
         End = end;
     }
 
-    internal static TranscribedWord DeserializeTranscribedWord(JsonElement element, ModelReaderWriterOptions options = default)
+    internal static TranscribedWord DeserializeTranscribedWord(JsonElement element, ModelReaderWriterOptions? options = default)
     {
         string word = null;
         TimeSpan? start = null;

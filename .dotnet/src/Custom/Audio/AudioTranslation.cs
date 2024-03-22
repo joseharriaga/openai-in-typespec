@@ -19,7 +19,7 @@ public partial class AudioTranslation
         return DeserializeAudioTranslation(responseDocument.RootElement);
     }
 
-    internal static AudioTranslation DeserializeAudioTranslation(JsonElement element, ModelReaderWriterOptions options = default)
+    internal static AudioTranslation DeserializeAudioTranslation(JsonElement element, ModelReaderWriterOptions? options = default)
     {
         string text = null;
 

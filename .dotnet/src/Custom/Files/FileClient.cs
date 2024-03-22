@@ -32,7 +32,7 @@ public partial class FileClient
     /// </remarks>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
-    public FileClient(ApiKeyCredential credential = default, OpenAIClientOptions options = null)
+    public FileClient(ApiKeyCredential? credential = default, OpenAIClientOptions? options = default)
     {
         _clientConnector = new(model: null, credential, options);
     }
@@ -162,7 +162,7 @@ public partial class FileClient
     public virtual ClientResult<BinaryData> DownloadFile(string fileId)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        message.ResponseClassifier = PipelineMessageClassifiers.ResponseErrorClassifier200;
         PipelineRequest request = message.Request;
         request.Method = "GET";
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
@@ -184,7 +184,7 @@ public partial class FileClient
     public virtual async Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        message.ResponseClassifier = PipelineMessageClassifiers.ResponseErrorClassifier200;
         PipelineRequest request = message.Request;
         request.Method = "GET";
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
@@ -217,7 +217,7 @@ public partial class FileClient
     private PipelineMessage CreateUploadFileRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        message.ResponseClassifier = PipelineMessageClassifiers.ResponseErrorClassifier200;
 
         PipelineRequest request = message.Request;
         request.Method = "POST";
@@ -255,7 +255,4 @@ public partial class FileClient
             _ => throw new ArgumentException($"Unsupported file purpose: {purpose}"),
         };
     }
-
-    private static PipelineMessageClassifier _responseErrorClassifier200;
-    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

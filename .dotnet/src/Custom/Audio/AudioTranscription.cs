@@ -10,8 +10,8 @@ public partial class AudioTranscription
     public string Language { get; }
     public TimeSpan? Duration { get; }
     public string Text { get; }
-    public IReadOnlyList<TranscribedWord> Words { get; }
-    public IReadOnlyList<TranscriptionSegment> Segments { get; }
+    public IReadOnlyList<TranscribedWord>? Words { get; }
+    public IReadOnlyList<TranscriptionSegment>? Segments { get; }
 
     internal AudioTranscription(string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedWord> words, IReadOnlyList<TranscriptionSegment> segments)
     {
@@ -28,7 +28,7 @@ public partial class AudioTranscription
         return DeserializeAudioTranscription(responseDocument.RootElement);
     }
 
-    internal static AudioTranscription DeserializeAudioTranscription(JsonElement element, ModelReaderWriterOptions options = default)
+    internal static AudioTranscription DeserializeAudioTranscription(JsonElement element, ModelReaderWriterOptions? options = default)
     {
         string language = null;
         TimeSpan? duration = null;

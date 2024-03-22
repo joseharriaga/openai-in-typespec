@@ -32,7 +32,7 @@ public partial class ImageClient
     /// <param name="model">The model name for image operations that the client should use.</param>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
-    public ImageClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = null)
+    public ImageClient(string model, ApiKeyCredential? credential = default, OpenAIClientOptions? options = default)
     {
         _clientConnector = new(model, credential, options);
     }
@@ -46,7 +46,7 @@ public partial class ImageClient
     /// <returns> A result for a single image generation. </returns>
     public virtual ClientResult<GeneratedImage> GenerateImage(
         string prompt,
-        ImageGenerationOptions options = null)
+        ImageGenerationOptions? options = default)
     {
         ClientResult<GeneratedImageCollection> multiResult = GenerateImages(prompt, imageCount: null, options);
         return ClientResult.FromValue(multiResult.Value[0], multiResult.GetRawResponse());
@@ -57,11 +57,10 @@ public partial class ImageClient
     /// </summary>
     /// <param name="prompt"> The description and instructions for the image. </param>
     /// <param name="options"> Additional options for the image generation request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A result for a single image generation. </returns>
     public virtual async Task<ClientResult<GeneratedImage>> GenerateImageAsync(
         string prompt,
-        ImageGenerationOptions options = null)
+        ImageGenerationOptions? options = default)
     {
         ClientResult<GeneratedImageCollection> multiResult = await GenerateImagesAsync(prompt, imageCount: null, options).ConfigureAwait(false);
         return ClientResult.FromValue(multiResult.Value[0], multiResult.GetRawResponse());
@@ -75,23 +74,16 @@ public partial class ImageClient
     ///     The number of alternative images to generate for the prompt.
     /// </param>
     /// <param name="options"> Additional options for the image generation request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A result for a single image generation. </returns>
     public virtual ClientResult<GeneratedImageCollection> GenerateImages(
         string prompt,
         int? imageCount = null,
-        ImageGenerationOptions options = null)
+        ImageGenerationOptions? options = default)
     {
-        Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
-        ClientResult<Internal.Models.ImagesResponse> response = Shim.CreateImage(request);
-
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Value.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response.Value, i));
-        }
-
-        return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
+        BinaryContent content = BinaryContent.Create(CreateInternalImageRequest(prompt, imageCount, options));
+        ClientResult result = GenerateImages(content);
+        GeneratedImageCollection generatedImages = GeneratedImageCollection.FromResponse(result.GetRawResponse())!;
+        return ClientResult.FromValue(generatedImages, result.GetRawResponse());
     }
 
     /// <summary>
@@ -102,23 +94,16 @@ public partial class ImageClient
     ///     The number of alternative images to generate for the prompt.
     /// </param>
     /// <param name="options"> Additional options for the image generation request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A result for a single image generation. </returns>
     public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(
         string prompt,
         int? imageCount = null,
-        ImageGenerationOptions options = null)
+        ImageGenerationOptions? options = default)
     {
-        Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
-        ClientResult<Internal.Models.ImagesResponse> response = await Shim.CreateImageAsync(request).ConfigureAwait(false);
-
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Value.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response.Value, i));
-        }
-
-        return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
+        BinaryContent content = BinaryContent.Create(CreateInternalImageRequest(prompt, imageCount, options));
+        ClientResult result = await GenerateImagesAsync(content);
+        GeneratedImageCollection generatedImages = GeneratedImageCollection.FromResponse(result.GetRawResponse())!;
+        return ClientResult.FromValue(generatedImages, result.GetRawResponse());
     }
 
     // convenience method - sync; Stream overload
@@ -128,7 +113,7 @@ public partial class ImageClient
         string fileName,
         string prompt,
         int? imageCount = null,
-        ImageEditOptions options = null)
+        ImageEditOptions? options = default)
     {
         Argument.AssertNotNull(fileStream, nameof(fileStream));
         Argument.AssertNotNull(fileName, nameof(fileName));
@@ -141,13 +126,13 @@ public partial class ImageClient
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, prompt, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, prompt, _clientConnector.Model!, imageCount);
 
         ClientResult result = GenerateImageEdits(content, content.ContentType);
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response)!;
 
         return ClientResult.FromValue(value, response);
     }
@@ -159,7 +144,7 @@ public partial class ImageClient
         string fileName,
         string prompt,
         int? imageCount = null,
-        ImageEditOptions options = null)
+        ImageEditOptions? options = default)
     {
         Argument.AssertNotNull(imageBytes, nameof(imageBytes));
         Argument.AssertNotNull(fileName, nameof(fileName));
@@ -172,13 +157,13 @@ public partial class ImageClient
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, prompt, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, prompt, _clientConnector.Model!, imageCount);
 
         ClientResult result = GenerateImageEdits(content, content.ContentType);
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response)!;
 
         return ClientResult.FromValue(value, response);
     }
@@ -190,7 +175,7 @@ public partial class ImageClient
         string fileName,
         string prompt,
         int? imageCount = null,
-        ImageEditOptions options = null)
+        ImageEditOptions? options = default)
     {
         Argument.AssertNotNull(fileStream, nameof(fileStream));
         Argument.AssertNotNull(fileName, nameof(fileName));
@@ -203,13 +188,13 @@ public partial class ImageClient
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, prompt, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, prompt, _clientConnector.Model!, imageCount);
 
         ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response)!;
 
         return ClientResult.FromValue(value, response);
     }
@@ -221,7 +206,7 @@ public partial class ImageClient
         string fileName,
         string prompt,
         int? imageCount = null,
-        ImageEditOptions options = null)
+        ImageEditOptions? options = default)
     {
         Argument.AssertNotNull(imageBytes, nameof(imageBytes));
         Argument.AssertNotNull(fileName, nameof(fileName));
@@ -234,13 +219,13 @@ public partial class ImageClient
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, prompt, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, prompt, _clientConnector.Model!, imageCount);
 
         ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response)!;
 
         return ClientResult.FromValue(value, response);
     }
@@ -251,20 +236,20 @@ public partial class ImageClient
         Stream fileStream,
         string fileName,
         int? imageCount = null,
-        ImageVariationOptions options = null)
+        ImageVariationOptions? options = default)
     {
         Argument.AssertNotNull(fileStream, nameof(fileStream));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model!, imageCount);
 
         ClientResult result = GenerateImageVariations(content, content.ContentType);
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response)!;
 
         return ClientResult.FromValue(value, response);
     }
@@ -275,20 +260,20 @@ public partial class ImageClient
         BinaryData imageBytes,
         string fileName,
         int? imageCount = null,
-        ImageVariationOptions options = null)
+        ImageVariationOptions? options = default)
     {
         Argument.AssertNotNull(imageBytes, nameof(imageBytes));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, _clientConnector.Model!, imageCount);
 
         ClientResult result = GenerateImageVariations(content, content.ContentType);
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response)!;
 
         return ClientResult.FromValue(value, response);
     }
@@ -299,20 +284,20 @@ public partial class ImageClient
         Stream fileStream,
         string fileName,
         int? imageCount = null,
-        ImageVariationOptions options = null)
+        ImageVariationOptions? options = default)
     {
         Argument.AssertNotNull(fileStream, nameof(fileStream));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(fileStream, fileName, _clientConnector.Model!, imageCount);
 
         ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response)!;
 
         return ClientResult.FromValue(value, response);
     }
@@ -323,20 +308,20 @@ public partial class ImageClient
         BinaryData imageBytes,
         string fileName,
         int? imageCount = null,
-        ImageVariationOptions options = null)
+        ImageVariationOptions? options = default)
     {
         Argument.AssertNotNull(imageBytes, nameof(imageBytes));
         Argument.AssertNotNull(fileName, nameof(fileName));
 
         options ??= new();
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(imageBytes, fileName, _clientConnector.Model!, imageCount);
 
         ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType).ConfigureAwait(false);
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response)!;
 
         return ClientResult.FromValue(value, response);
     }
@@ -344,7 +329,7 @@ public partial class ImageClient
     private Internal.Models.CreateImageRequest CreateInternalImageRequest(
         string prompt,
         int? imageCount = null,
-        ImageGenerationOptions options = null)
+        ImageGenerationOptions? options = default)
     {
         options ??= new();
         Internal.Models.CreateImageRequestQuality? internalQuality = null;
@@ -352,8 +337,8 @@ public partial class ImageClient
         {
             internalQuality = options.Quality switch
             {
-                ImageQuality.Standard => Internal.Models.CreateImageRequestQuality.Standard,
-                ImageQuality.High => Internal.Models.CreateImageRequestQuality.Hd,
+                GeneratedImageQuality.Standard => Internal.Models.CreateImageRequestQuality.Standard,
+                GeneratedImageQuality.High => Internal.Models.CreateImageRequestQuality.Hd,
                 _ => throw new ArgumentException(nameof(options.Quality)),
             };
         }
@@ -370,18 +355,18 @@ public partial class ImageClient
         }
 
         Internal.Models.CreateImageRequestSize? internalSize = null;
-        if (options.Size != null)
+        if (options.Size is not null)
         {
             internalSize = ModelReaderWriter.Write(options.Size).ToString();
         }
 
         Internal.Models.CreateImageRequestStyle? internalStyle = null;
-        if (options.Style != null)
+        if (options.Style is not null)
         {
             internalStyle = options.Style switch
             {
-                ImageStyle.Vivid => Internal.Models.CreateImageRequestStyle.Vivid,
-                ImageStyle.Natural => Internal.Models.CreateImageRequestStyle.Natural,
+                GeneratedImageStyle.Vivid => Internal.Models.CreateImageRequestStyle.Vivid,
+                GeneratedImageStyle.Natural => Internal.Models.CreateImageRequestStyle.Natural,
                 _ => throw new ArgumentException(nameof(options.Style)),
             };
         }
@@ -401,7 +386,7 @@ public partial class ImageClient
     private PipelineMessage CreateCreateImageEditsRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        message.ResponseClassifier = PipelineMessageClassifiers.ResponseErrorClassifier200;
 
         PipelineRequest request = message.Request;
         request.Method = "POST";
@@ -426,7 +411,7 @@ public partial class ImageClient
     private PipelineMessage CreateImageVariationsRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        message.ResponseClassifier = PipelineMessageClassifiers.ResponseErrorClassifier200;
 
         PipelineRequest request = message.Request;
         request.Method = "POST";
@@ -447,7 +432,4 @@ public partial class ImageClient
 
         return message;
     }
-
-    private static PipelineMessageClassifier _responseErrorClassifier200;
-    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

@@ -24,11 +24,11 @@ public partial class ChatFunctionCall
     /// <summary>
     /// The name of the function being called by the model.
     /// </summary>
-    public required string FunctionName { get; set; }
+    public required string FunctionName { get; init; }
     /// <summary>
     /// The arguments to the function being called by the model.
     /// </summary>
-    public required string Arguments { get; set; }
+    public required string Arguments { get; init; }
     /// <summary>
     /// Creates a new instance of <see cref="ChatFunctionCall"/>.
     /// </summary>

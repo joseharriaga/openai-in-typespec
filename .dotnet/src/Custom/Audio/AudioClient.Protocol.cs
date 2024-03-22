@@ -11,12 +11,12 @@ public partial class AudioClient
 {
     /// <inheritdoc cref="Internal.Audio.CreateSpeech(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GenerateSpeechFromText(BinaryContent content, RequestOptions options = null)
+    public virtual ClientResult GenerateSpeechFromText(BinaryContent content, RequestOptions? options = default)
         => Shim.CreateSpeech(content, options);
 
     /// <inheritdoc cref="Internal.Audio.CreateSpeechAsync(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GenerateSpeechFromTextAsync(BinaryContent content, RequestOptions options = null)
+    public virtual async Task<ClientResult> GenerateSpeechFromTextAsync(BinaryContent content, RequestOptions? options = default)
         => await Shim.CreateSpeechAsync(content, options).ConfigureAwait(false);
 
     /// <summary>
@@ -42,7 +42,7 @@ public partial class AudioClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult TranscribeAudio(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual ClientResult TranscribeAudio(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -86,7 +86,7 @@ public partial class AudioClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> TranscribeAudioAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual async Task<ClientResult> TranscribeAudioAsync(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -130,7 +130,7 @@ public partial class AudioClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult TranslateAudio(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual ClientResult TranslateAudio(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -174,7 +174,7 @@ public partial class AudioClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> TranslateAudioAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual async Task<ClientResult> TranslateAudioAsync(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));

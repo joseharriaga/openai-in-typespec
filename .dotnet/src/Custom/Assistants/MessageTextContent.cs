@@ -32,7 +32,7 @@ public class MessageTextContent : MessageContent
 
     internal static MessageContent DeserializeMessageTextContent(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

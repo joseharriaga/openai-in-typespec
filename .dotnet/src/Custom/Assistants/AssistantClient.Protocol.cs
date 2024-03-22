@@ -11,14 +11,14 @@ public partial class AssistantClient
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult CreateAssistant(
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => Shim.CreateAssistant(content, options);
 
     /// <inheritdoc cref="Internal.Assistants.CreateAssistantAsync(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> CreateAssistantAsync(
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await Shim.CreateAssistantAsync(content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Assistants.GetAssistant(string, RequestOptions)"/>
@@ -61,7 +61,7 @@ public partial class AssistantClient
     public virtual ClientResult ModifyAssistant(
         string assistantId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => Shim.ModifyAssistant(assistantId, content, options);
 
     /// <inheritdoc cref="Internal.Assistants.ModifyAssistantAsync(string, BinaryContent, RequestOptions)"/>
@@ -69,7 +69,7 @@ public partial class AssistantClient
     public virtual async Task<ClientResult> ModifyAssistantAsync(
         string assistantId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await Shim.ModifyAssistantAsync(assistantId, content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Assistants.DeleteAssistant(string, RequestOptions)"/>
@@ -91,7 +91,7 @@ public partial class AssistantClient
     public virtual ClientResult CreateAssistantFileAssociation(
         string assistantId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => Shim.CreateAssistantFile(assistantId, content, options);
 
     /// <inheritdoc cref="Internal.Assistants.CreateAssistantFileAsync(string, BinaryContent, RequestOptions)"/>
@@ -99,7 +99,7 @@ public partial class AssistantClient
     public virtual async Task<ClientResult> CreateAssistantFileAssociationAsync(
         string assistantId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await Shim.CreateAssistantFileAsync(assistantId, content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Assistants.GetAssistantFile(string, string, RequestOptions)"/>
@@ -160,14 +160,14 @@ public partial class AssistantClient
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult CreateThread(
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => ThreadShim.CreateThread(content, options);
 
     /// <inheritdoc cref="Internal.Threads.CreateThreadAsync(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> CreateThreadAsync(
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await ThreadShim.CreateThreadAsync(content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Threads.GetThread(string, RequestOptions)"/>
@@ -189,7 +189,7 @@ public partial class AssistantClient
     public virtual ClientResult ModifyThread(
         string threadId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => ThreadShim.ModifyThread(threadId, content, options);
 
     /// <inheritdoc cref="Internal.Threads.ModifyThreadAsync(string, BinaryContent, RequestOptions)"/>
@@ -197,7 +197,7 @@ public partial class AssistantClient
     public virtual async Task<ClientResult> ModifyThreadAsync(
         string threadId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await ThreadShim.ModifyThreadAsync(threadId, content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Threads.DeleteThread(string, RequestOptions)"/>
@@ -219,7 +219,7 @@ public partial class AssistantClient
     public virtual ClientResult CreateMessage(
         string threadId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => MessageShim.CreateMessage(threadId, content, options);
 
     /// <inheritdoc cref="Internal.Messages.CreateMessageAsync(string, BinaryContent, RequestOptions)"/>
@@ -227,7 +227,7 @@ public partial class AssistantClient
     public virtual async Task<ClientResult> CreateMessageAsync(
         string threadId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await MessageShim.CreateMessageAsync(threadId, content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Messages.GetMessage(string, string, RequestOptions)"/>
@@ -333,7 +333,7 @@ public partial class AssistantClient
     public virtual ClientResult CreateRun(
         string threadId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => RunShim.CreateRun(threadId, content, options);
 
     /// <inheritdoc cref="Internal.Runs.CreateRunAsync(string, BinaryContent, RequestOptions)"/>
@@ -341,21 +341,21 @@ public partial class AssistantClient
     public virtual async Task<ClientResult> CreateRunAsync(
         string threadId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await RunShim.CreateRunAsync(threadId, content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Runs.CreateThreadAndRun(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult CreateThreadAndRun(
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => RunShim.CreateThreadAndRun(content, options);
 
     /// <inheritdoc cref="Internal.Runs.CreateThreadAndRunAsync(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> CreateThreadAndRunAsync(
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await RunShim.CreateThreadAndRunAsync(content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Runs.GetRun(string, string, RequestOptions)"/>
@@ -402,7 +402,7 @@ public partial class AssistantClient
         string threadId,
         string runId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => RunShim.ModifyRun(threadId, runId, content, options);
 
     /// <inheritdoc cref="Internal.Runs.ModifyRunAsync(string, string, BinaryContent, RequestOptions)"/>
@@ -411,7 +411,7 @@ public partial class AssistantClient
         string threadId,
         string runId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await RunShim.ModifyRunAsync(threadId, runId, content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Runs.CancelRun(string, string, RequestOptions)"/>
@@ -436,7 +436,7 @@ public partial class AssistantClient
         string threadId,
         string runId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => RunShim.SubmitToolOuputsToRun(threadId, runId, content, options);
 
     /// <inheritdoc cref="Internal.Runs.SubmitToolOuputsToRunAsync(string, string, BinaryContent, RequestOptions)"/>
@@ -445,7 +445,7 @@ public partial class AssistantClient
         string threadId,
         string runId,
         BinaryContent content,
-        RequestOptions options = null)
+        RequestOptions? options = default)
         => await RunShim.SubmitToolOuputsToRunAsync(threadId, runId, content, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Runs.GetRunStep(string, string, string, RequestOptions)"/>

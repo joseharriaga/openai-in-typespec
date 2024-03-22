@@ -63,7 +63,7 @@ public abstract partial class RunRequiredAction :  IJsonModel<IList<RunRequiredA
 
     internal static IList<RunRequiredAction> DeserializeRunRequiredActions(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

@@ -11,7 +11,7 @@ namespace OpenAI.Images;
 /// <item><see cref="High"/> - <c>hd</c> - Better consistency and finer details, but may be slower. </item>
 /// </list>
 /// </remarks>
-public enum ImageQuality
+public enum GeneratedImageQuality
 {
     /// <summary>
     /// The <c>hd</c> image quality that provides finer details and greater consistency but may be slower.

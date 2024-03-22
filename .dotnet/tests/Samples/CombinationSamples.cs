@@ -21,8 +21,8 @@ namespace OpenAI.Samples.Miscellaneous
                 "a majestic alpaca on a mountain ridge, backed by an expansive blue sky accented with sparse clouds",
                 new()
                 {
-                    Style = ImageStyle.Vivid,
-                    Quality = ImageQuality.High,
+                    Style = GeneratedImageStyle.Vivid,
+                    Quality = GeneratedImageQuality.High,
                     Size = GeneratedImageSize.W1792xH1024,
                 });
             GeneratedImage imageGeneration = imageResult.Value;
@@ -42,7 +42,7 @@ namespace OpenAI.Samples.Miscellaneous
                 {
                     MaxTokens = 2048,
                 });
-            string chatResponseText = chatResult.Value.Content;
+            string chatResponseText = chatResult.Value.Content.ToText();
             Console.WriteLine($"Art critique of majestic alpaca:\n{chatResponseText}");
 
             // Finally, we'll get some text-to-speech for that critical evaluation using tts-1-hd:
@@ -79,7 +79,7 @@ namespace OpenAI.Samples.Miscellaneous
                 {
                     MaxTokens = 2048,
                 });
-            string description = creativeWriterResult.Value.Content;
+            string description = (string)creativeWriterResult.Value.Content;
             Console.WriteLine($"Creative helper's creature description:\n{description}");
 
             // Asynchronously, in parallel to the next steps, we'll get the creative description in the voice of Onyx
@@ -109,7 +109,7 @@ namespace OpenAI.Samples.Miscellaneous
                 new ImageGenerationOptions()
                 {
                     Size = GeneratedImageSize.W1792xH1024,
-                    Quality = ImageQuality.High,
+                    Quality = GeneratedImageQuality.High,
                 });
             Uri imageLocation = imageGenerationResult.Value.ImageUri;
             Console.WriteLine($"Creature image available at:\n{imageLocation.AbsoluteUri}");
@@ -127,7 +127,7 @@ namespace OpenAI.Samples.Miscellaneous
                 {
                     MaxTokens = 2048,
                 });
-            string appraisal = criticalAppraisalResult.Value.Content;
+            string appraisal = (string)criticalAppraisalResult.Value.Content;
             Console.WriteLine($"Critic's appraisal:\n{appraisal}");
 
             // Finally, we'll get that art expert's laudations in the voice of Fable

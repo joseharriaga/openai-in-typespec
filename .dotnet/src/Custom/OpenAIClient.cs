@@ -21,8 +21,8 @@ namespace OpenAI;
 /// </summary>
 public partial class OpenAIClient
 {
-    private readonly ApiKeyCredential _cachedCredential = null;
-    private readonly OpenAIClientOptions _cachedOptions = null;
+    private readonly ApiKeyCredential? _cachedCredential = default;
+    private readonly OpenAIClientOptions? _cachedOptions = default;
 
     /// <summary>
     /// Creates a new instance of <see cref="OpenAIClient"/> will store common client configuration details to permit
@@ -34,7 +34,7 @@ public partial class OpenAIClient
     /// </remarks>
     /// <param name="credential"> An explicitly defined credential that all clients created by this <see cref="OpenAIClient"/> should use. </param>
     /// <param name="options"> A common client options definition that all clients created by this <see cref="OpenAIClient"/> should use. </param>
-    public OpenAIClient(ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+    public OpenAIClient(ApiKeyCredential? credential = default, OpenAIClientOptions? options = default)
     {
         _cachedCredential = credential;
         _cachedOptions = options;

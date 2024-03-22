@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace OpenAI.Chat;
@@ -12,16 +13,16 @@ public partial class ChatMessageContent
     /// The type of message content data, e.g. text or image, that this <see cref="ChatMessageContent"/> instance
     /// represents.
     /// </summary>
-    public ChatMessageContentKind ContentKind { get; }
+    public ChatMessageContentKind ContentKind { get; init; }
 
-    private object _contentValue;
-    private string _contentMediaTypeName;
+    private readonly object _contentValue;
+    private readonly string _contentMediaType;
 
-    internal ChatMessageContent(object value,  ChatMessageContentKind kind, string contentMediaTypeName = null)
+    internal ChatMessageContent(object value, ChatMessageContentKind kind, string? mediaType = null)
     {
         _contentValue = value;
         ContentKind = kind;
-        _contentMediaTypeName = contentMediaTypeName;
+        _contentMediaType = mediaType;
     }
 
     /// <summary>
@@ -60,7 +61,7 @@ public partial class ChatMessageContent
     /// </remarks>
     /// <returns> The content string for the text content item. </returns>
     /// <exception cref="InvalidOperationException"> The content does not support a text representation. </exception>
-    public string ToText()
+    public string? ToText()
         => ContentKind switch
         {
             ChatMessageContentKind.Text => _contentValue?.ToString(),
@@ -74,13 +75,13 @@ public partial class ChatMessageContent
     /// </summary>
     /// <returns> A URI representation of the content item. </returns>
     /// <exception cref="InvalidOperationException"> The content does not support a URI representation. </exception>
-    public Uri ToUri()
+    public Uri? ToUri()
         => ContentKind switch
         {
             ChatMessageContentKind.Image => _contentValue switch
             {
                 Uri imageUri => imageUri,
-                Stream imageStream => CreateDataUriFromStream(imageStream, _contentMediaTypeName),
+                Stream imageStream => CreateDataUriFromStream(imageStream, _contentMediaType),
                 _ => throw new InvalidOperationException(
                     $"Cannot convert underlying image data type '{_contentValue?.GetType()}' to a {nameof(Uri)}"),
             },
@@ -96,10 +97,16 @@ public partial class ChatMessageContent
     public static implicit operator ChatMessageContent(string value) => FromText(value);
 
     /// <summary>
-    /// An implicit operator allowing a content item to be treated as a string.
+    /// An explicit operator allowing a content item to be treated as a string.
     /// </summary>
-    /// <param name="content"></param>
-    public static implicit operator string(ChatMessageContent content) => content.ToText();
+    /// <param name="content"> The content to convert to a string representation. </param>
+    public static explicit operator string(ChatMessageContent content) => content.ToText();
+
+    /// <summary>
+    /// An explicit operator allowing a content item to be treated as a Uri.
+    /// </summary>
+    /// <param name="content"> The content to convert to a Uri representation. </param>
+    public static explicit operator Uri(ChatMessageContent content) => content.ToUri();
 
     /// <inheritdoc/>
     public override string ToString()

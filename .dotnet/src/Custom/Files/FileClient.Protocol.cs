@@ -39,7 +39,7 @@ public partial class FileClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -89,7 +89,7 @@ public partial class FileClient
     /// <exception cref="ArgumentException"> <paramref name="contentType"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual async Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));

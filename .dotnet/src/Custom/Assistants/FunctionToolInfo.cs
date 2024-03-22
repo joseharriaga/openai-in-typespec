@@ -10,13 +10,13 @@ namespace OpenAI.Assistants;
 
 public partial class FunctionToolInfo : ToolInfo
 {
-    public string Name { get; }
+    public string FunctionName { get; }
     public string Description { get; }
     public BinaryData Parameters { get; }
 
     internal FunctionToolInfo(string name, string description, BinaryData parameters)
     {
-        Name = name;
+        FunctionName = name;
         Description = description;
         Parameters = parameters;
     }
@@ -68,7 +68,7 @@ public partial class FunctionToolInfo : ToolInfo
         writer.WriteString("type"u8, "function"u8);
         writer.WritePropertyName("function"u8);
         writer.WriteStartObject();
-        writer.WriteString("name"u8, Name);
+        writer.WriteString("name"u8, FunctionName);
         if (Optional.IsDefined(Description))
         {
             writer.WriteString("description"u8, Description);

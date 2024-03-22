@@ -11,12 +11,12 @@ public partial class ImageClient
 {
     /// <inheritdoc cref="Internal.Images.CreateImage(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GenerateImage(BinaryContent content, RequestOptions options = null)
+    public virtual ClientResult GenerateImages(BinaryContent content, RequestOptions? options = default)
         => Shim.CreateImage(content, options);
 
     /// <inheritdoc cref="Internal.Images.CreateImageAsync(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GenerateImageAsync(BinaryContent content, RequestOptions options = null)
+    public virtual async Task<ClientResult> GenerateImagesAsync(BinaryContent content, RequestOptions? options = default)
         => await Shim.CreateImageAsync(content, options).ConfigureAwait(false);
 
     /// <summary>
@@ -42,7 +42,7 @@ public partial class ImageClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GenerateImageEdits(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual ClientResult GenerateImageEdits(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -86,7 +86,7 @@ public partial class ImageClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GenerateImageEditsAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual async Task<ClientResult> GenerateImageEditsAsync(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -130,7 +130,7 @@ public partial class ImageClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GenerateImageVariations(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual ClientResult GenerateImageVariations(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -174,7 +174,7 @@ public partial class ImageClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GenerateImageVariationsAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual async Task<ClientResult> GenerateImageVariationsAsync(BinaryContent content, string contentType, RequestOptions? options = default)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));

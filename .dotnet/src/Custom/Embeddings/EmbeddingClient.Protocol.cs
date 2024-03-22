@@ -9,11 +9,11 @@ public partial class EmbeddingClient
 {
     /// <inheritdoc cref="Internal.Embeddings.CreateEmbedding(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GenerateEmbeddings(BinaryContent content, RequestOptions options = null)
+    public virtual ClientResult GenerateEmbeddings(BinaryContent content, RequestOptions? options = default)
         => Shim.CreateEmbedding(content, options);
 
     /// <inheritdoc cref="Internal.Embeddings.CreateEmbeddingAsync(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GenerateEmbeddingsAsync(BinaryContent content, RequestOptions options = null)
+    public virtual async Task<ClientResult> GenerateEmbeddingsAsync(BinaryContent content, RequestOptions? options = default)
         => await Shim.CreateEmbeddingAsync(content, options).ConfigureAwait(false);
 }

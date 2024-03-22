@@ -11,14 +11,14 @@ namespace OpenAI.Assistants;
 
 public partial class FunctionToolDefinition : ToolDefinition
 {
-    public required string Name { get; set; }
-    public string Description { get; set; }
-    public BinaryData Parameters { get; set; }
+    public required string FunctionName { get; init; }
+    public string? Description { get; init; }
+    public BinaryData? Parameters { get; init; }
 
     [SetsRequiredMembers]
-    public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null)
+    public FunctionToolDefinition(string name, string? description = null, BinaryData? parameters = null)
     {
-        Name = name;
+        FunctionName = name;
         Description = description;
         Parameters = parameters;
     }
@@ -28,7 +28,7 @@ public partial class FunctionToolDefinition : ToolDefinition
 
     internal static FunctionToolDefinition DeserializeFunctionToolDefinition(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 
@@ -74,7 +74,7 @@ public partial class FunctionToolDefinition : ToolDefinition
         writer.WriteString("type"u8, "function"u8);
         writer.WritePropertyName("function"u8);
         writer.WriteStartObject();
-        writer.WriteString("name"u8, Name);
+        writer.WriteString("name"u8, FunctionName);
         if (Optional.IsDefined(Description))
         {
             writer.WriteString("description"u8, Description);

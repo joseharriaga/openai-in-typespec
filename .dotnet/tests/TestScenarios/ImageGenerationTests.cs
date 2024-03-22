@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenAI.Images;
+using OpenAI.Tests.Chat;
 using System;
 using System.ClientModel;
 using static OpenAI.Tests.TestHelpers;
@@ -21,13 +22,24 @@ public partial class ImageGenerationTests
     }
 
     [Test]
+    public void DataResponseFormatWorks()
+    {
+        ImageClient client = GetTestClient();
+        ClientResult<GeneratedImage> result = client.GenerateImage("an isolated stop sign", new ImageGenerationOptions()
+        {
+            ResponseFormat = ImageResponseFormat.Bytes,
+        });
+        Assert.That(result?.Value?.ImageBytes, Is.Not.Null);
+    }
+
+    [Test]
     public void GenerationWithOptionsWorks()
     {
         ImageClient client = GetTestClient();
         ClientResult<GeneratedImage> result = client.GenerateImage("an isolated stop sign", new ImageGenerationOptions()
         {
-            Quality = ImageQuality.Standard,
-            Style = ImageStyle.Natural,
+            Quality = GeneratedImageQuality.Standard,
+            Style = GeneratedImageStyle.Natural,
         });
         Assert.That(result.Value.ImageUri, Is.Not.Null);
     }

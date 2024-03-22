@@ -26,7 +26,7 @@ public partial class FineTuningManagementClient
     /// </remarks>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
-    public FineTuningManagementClient(ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+    public FineTuningManagementClient(ApiKeyCredential? credential = default, OpenAIClientOptions? options = default)
     {
         _clientConnector = new(model: null, credential, options);
     }

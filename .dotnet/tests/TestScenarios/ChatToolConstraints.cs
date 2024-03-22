@@ -16,12 +16,12 @@ public partial class ChatToolConstraintTests
 
         ChatFunctionToolDefinition functionTool = new()
         {
-            Name = "test_function_tool",
+            FunctionName = "test_function_tool",
             Description = "description isn't applicable",
         };
 
         ChatToolConstraint constraintFromDefinition = new(functionTool);
-        Assert.That(constraintFromDefinition.ToString(), Is.EqualTo(@$"{{""type"":""function"",""function"":{{""name"":""{functionTool.Name}""}}}}"));
+        Assert.That(constraintFromDefinition.ToString(), Is.EqualTo(@$"{{""type"":""function"",""function"":{{""name"":""{functionTool.FunctionName}""}}}}"));
 
         ChatToolConstraint otherConstraint = new(new ChatFunctionToolDefinition("test_function_tool"));
         Assert.That(constraintFromDefinition, Is.EqualTo(otherConstraint));
@@ -53,7 +53,7 @@ public partial class ChatToolConstraintTests
 
     private static ChatFunctionToolDefinition s_numberForWordTool = new()
     {
-        Name = "get_number_for_word",
+        FunctionName = "get_number_for_word",
         Description = "gets an arbitrary number assigned to a given word",
         Parameters = BinaryData.FromObjectAsJson(new
         {

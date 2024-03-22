@@ -29,7 +29,7 @@ public partial class ChatClient
     /// <param name="model">The model name for chat completions that the client should use.</param>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
-    public ChatClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = null)
+    public ChatClient(string model, ApiKeyCredential? credential = default, OpenAIClientOptions? options = default)
     {
         _clientConnector = new(model, credential, options);
     }
@@ -40,7 +40,7 @@ public partial class ChatClient
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A result for a single chat completion. </returns>
-     public virtual ClientResult<ChatCompletion> CompleteChat(string message, ChatCompletionOptions options = null)
+     public virtual ClientResult<ChatCompletion> CompleteChat(string message, ChatCompletionOptions? options = default)
          => CompleteChat(new List<ChatRequestMessage>() { new ChatRequestUserMessage(message) }, options);
 
     /// <summary>
@@ -49,7 +49,7 @@ public partial class ChatClient
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A result for a single chat completion. </returns>
-     public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(string message, ChatCompletionOptions options = null)
+     public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(string message, ChatCompletionOptions? options = default)
         => CompleteChatAsync(
              new List<ChatRequestMessage>() { new ChatRequestUserMessage(message) }, options);
 
@@ -61,7 +61,7 @@ public partial class ChatClient
     /// <returns> A result for a single chat completion. </returns>
     public virtual ClientResult<ChatCompletion> CompleteChat(
         IEnumerable<ChatRequestMessage> messages,
-        ChatCompletionOptions options = null)
+        ChatCompletionOptions? options = default)
     {
         Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options); 
         ClientResult<Internal.Models.CreateChatCompletionResponse> response = Shim.CreateChatCompletion(request);
@@ -77,7 +77,7 @@ public partial class ChatClient
     /// <returns> A result for a single chat completion. </returns>
     public virtual async Task<ClientResult<ChatCompletion>> CompleteChatAsync(
         IEnumerable<ChatRequestMessage> messages,
-        ChatCompletionOptions options = null)
+        ChatCompletionOptions? options = default)
     {
         Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options);
         ClientResult<Internal.Models.CreateChatCompletionResponse> response = await Shim.CreateChatCompletionAsync(request).ConfigureAwait(false);
@@ -93,12 +93,11 @@ public partial class ChatClient
     ///     The number of independent, alternative response choices that should be generated.
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A result for a single chat completion. </returns>
     public virtual ClientResult<ChatCompletionCollection> CompleteChat(
         IEnumerable<ChatRequestMessage> messages,
         int choiceCount,
-        ChatCompletionOptions options = null)
+        ChatCompletionOptions? options = default)
     {
         Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options, choiceCount);
         ClientResult<Internal.Models.CreateChatCompletionResponse> response = Shim.CreateChatCompletion(request);
@@ -122,7 +121,7 @@ public partial class ChatClient
     public virtual async Task<ClientResult<ChatCompletionCollection>> CompleteChatAsync(
         IEnumerable<ChatRequestMessage> messages,
         int choiceCount,
-        ChatCompletionOptions options = null)
+        ChatCompletionOptions? options = default)
     {
         Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options, choiceCount);
         ClientResult<Internal.Models.CreateChatCompletionResponse> response = await Shim.CreateChatCompletionAsync(request).ConfigureAwait(false);
@@ -150,7 +149,7 @@ public partial class ChatClient
    public virtual StreamingClientResult<StreamingChatUpdate> CompleteChatStreaming(
         string message,
         int? choiceCount = null,
-        ChatCompletionOptions options = null)
+        ChatCompletionOptions? options = default)
         => CompleteChatStreaming(
             new List<ChatRequestMessage> { new ChatRequestUserMessage(message) },
             choiceCount,
@@ -172,7 +171,7 @@ public partial class ChatClient
     public virtual Task<StreamingClientResult<StreamingChatUpdate>> CompleteChatStreamingAsync(
         string message,
         int? choiceCount = null,
-        ChatCompletionOptions options = null)
+        ChatCompletionOptions? options = default)
     => CompleteChatStreamingAsync(
         new List<ChatRequestMessage> { new ChatRequestUserMessage(message) },
         choiceCount,
@@ -191,14 +190,13 @@ public partial class ChatClient
     ///     The number of independent, alternative choices that the chat completion request should generate.
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
     public virtual StreamingClientResult<StreamingChatUpdate> CompleteChatStreaming(
         IEnumerable<ChatRequestMessage> messages,
         int? choiceCount = null,
-        ChatCompletionOptions options = null)
+        ChatCompletionOptions? options = default)
     {
-        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
+        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, stream: true, options);
         requestMessage.BufferResponse = false;
         Shim.Pipeline.Send(requestMessage);
         PipelineResponse response = requestMessage.ExtractResponse();
@@ -234,12 +232,12 @@ public partial class ChatClient
     public virtual async Task<StreamingClientResult<StreamingChatUpdate>> CompleteChatStreamingAsync(
         IEnumerable<ChatRequestMessage> messages,
         int? choiceCount = null,
-        ChatCompletionOptions options = null)
+        ChatCompletionOptions? options = default)
     {
-        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
+        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, stream: true, options);
         requestMessage.BufferResponse = false;
         await Shim.Pipeline.SendAsync(requestMessage).ConfigureAwait(false);
-        PipelineResponse response = requestMessage.ExtractResponse();
+        PipelineResponse response = requestMessage.ExtractResponse()!;
 
         if (response.IsError)
         {
@@ -256,7 +254,7 @@ public partial class ChatClient
 
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(
         IEnumerable<ChatRequestMessage> messages,
-        ChatCompletionOptions options = null,
+        ChatCompletionOptions? options = default,
         int? choiceCount = null,
         bool? stream = null)
     {
@@ -302,28 +300,10 @@ public partial class ChatClient
         );
     }
 
-    private PipelineMessage CreateCustomRequestMessage(IEnumerable<ChatRequestMessage> messages, int? choiceCount, ChatCompletionOptions options)
+    private PipelineMessage CreateCustomRequestMessage(IEnumerable<ChatRequestMessage> messages, int? choiceCount, bool stream, ChatCompletionOptions? options)
     {
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
         BinaryContent content = BinaryContent.Create(internalRequest);
-
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
-        message.BufferResponse = false;
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append("/chat/completions");
-        uriBuilder.Path += path.ToString();
-        request.Uri = uriBuilder.Uri;
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", "application/json");
-        request.Content = content;
-
-        return message;
+        return CreateCustomRequestMessage(content, stream);
     }
-
-    private static PipelineMessageClassifier _responseErrorClassifier200;
-    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

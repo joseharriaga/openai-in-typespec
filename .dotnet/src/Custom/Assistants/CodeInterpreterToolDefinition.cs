@@ -11,7 +11,7 @@ public partial class CodeInterpreterToolDefinition : ToolDefinition
 
     internal static CodeInterpreterToolDefinition DeserializeCodeInterpreterToolDefinition(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

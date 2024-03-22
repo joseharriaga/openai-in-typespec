@@ -68,7 +68,7 @@ public partial class ToolOutput :  IJsonModel<ToolOutput>
 
     internal static ToolOutput DeserializeToolOutput(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

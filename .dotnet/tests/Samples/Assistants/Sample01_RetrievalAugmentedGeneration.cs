@@ -55,7 +55,7 @@ namespace OpenAI.Samples
             AssistantCreationOptions assistantOptions = new()
             {
                 Name = "Example: Contoso sales RAG",
-                Instructions =
+                DefaultInstructions =
                     "You are an assistant that looks up sales data and helps visualize the information based"
                     + " on user queries. When asked to generate a graph, chart, or other visualization, use"
                     + " the code interpreter tool to do so.",

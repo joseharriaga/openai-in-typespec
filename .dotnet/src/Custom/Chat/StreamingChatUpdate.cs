@@ -60,7 +60,7 @@ public partial class StreamingChatUpdate
     /// response, all <see cref="ContentUpdate"/> values for the same <see cref="ChoiceIndex"/> should be
     /// combined.
     /// </remarks>
-    public string ContentUpdate { get; }
+    public string? ContentUpdate { get; }
 
     /// <summary>
     /// Gets the name of a function to be called.
@@ -68,7 +68,7 @@ public partial class StreamingChatUpdate
     /// <remarks>
     /// Corresponds to e.g. <c>$.choices[0].delta.function_call.name</c> in the underlying REST schema.
     /// </remarks>
-    public string FunctionName { get; }
+    public string? FunctionName { get; }
 
     /// <summary>
     /// Gets a function arguments fragment associated with this update.
@@ -90,7 +90,7 @@ public partial class StreamingChatUpdate
     /// function arguments before using them.
     /// </para>
     /// </remarks>
-    public string FunctionArgumentsUpdate { get; }
+    public string? FunctionArgumentsUpdate { get; }
 
     /// <summary>
     /// An incremental update payload for a tool call that is part of this response.
@@ -110,7 +110,7 @@ public partial class StreamingChatUpdate
     /// The available derived classes include: <see cref="StreamingFunctionToolCallUpdate"/>.
     /// </para>
     /// </remarks>
-    public StreamingToolCallUpdate ToolCallUpdate { get; }
+    public StreamingToolCallUpdate? ToolCallUpdate { get; }
 
     /// <summary>
     /// Gets the <see cref="ChatFinishReason"/> associated with this update.
@@ -148,26 +148,26 @@ public partial class StreamingChatUpdate
     public int? ChoiceIndex { get; }
 
     /// <inheritdoc cref="ChatCompletion.SystemFingerprint"/>
-    public string SystemFingerprint { get; }
+    public string? SystemFingerprint { get; }
 
     /// <summary>
     /// The log probability information for choices in the chat completion response, as requested via
     /// <see cref="ChatCompletionOptions.IncludeLogProbabilities"/>.
     /// </summary>
-    public ChatLogProbabilityCollection LogProbabilities { get; }
+    public ChatLogProbabilityCollection? LogProbabilities { get; }
 
     internal StreamingChatUpdate(
         string id,
         DateTimeOffset created,
-        string systemFingerprint = null,
+        string? systemFingerprint = null,
         int? choiceIndex = null,
         ChatRole? role = null,
-        string contentUpdate = null,
+        string? contentUpdate = null,
         ChatFinishReason? finishReason = null,
-        string functionName = null,
-        string functionArgumentsUpdate = null,
-        StreamingToolCallUpdate toolCallUpdate = null,
-        ChatLogProbabilityCollection logProbabilities = null)
+        string? functionName = null,
+        string? functionArgumentsUpdate = null,
+        StreamingToolCallUpdate? toolCallUpdate = null,
+        ChatLogProbabilityCollection? logProbabilities = null)
     {
         Id = id;
         Created = created;

@@ -9,7 +9,7 @@ namespace OpenAI;
 /// <summary>
 /// Client-level options for the OpenAI service.
 /// </summary>
-public partial class OpenAIClientOptions : RequestOptions
+public partial class OpenAIClientOptions : ClientPipelineOptions
 {
     /// <summary>
     /// Gets or sets a non-default base endpoint that clients should use when connecting.
@@ -30,7 +30,7 @@ public partial class OpenAIClientOptions : RequestOptions
         : this(internalOptions: null)
     { }
 
-    internal OpenAIClientOptions(Internal.OpenAIClientOptions internalOptions = null)
+    internal OpenAIClientOptions(Internal.OpenAIClientOptions? internalOptions = default)
     {
         internalOptions ??= new();
         InternalOptions = internalOptions;

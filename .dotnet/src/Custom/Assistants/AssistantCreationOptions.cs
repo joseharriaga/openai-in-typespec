@@ -13,16 +13,16 @@ public partial class AssistantCreationOptions
     /// <summary>
     /// An optional display name for the assistant.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
     /// <summary>
     /// A description to associate with the assistant.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Default instructions for the assistant to use when creating messages.
     /// </summary>
-    public string Instructions { get; set; }
+    public string? DefaultInstructions { get; set; }
 
     /// <summary>
     /// A collection of default tool definitions to enable for the assistant. Available tools include:

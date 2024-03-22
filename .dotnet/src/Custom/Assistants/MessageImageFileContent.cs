@@ -25,7 +25,7 @@ public class MessageImageFileContent : MessageContent
 
     internal static MessageContent DeserializeMessageImageFileContent(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 

@@ -17,7 +17,7 @@ public class ChatRequestAssistantMessage : ChatRequestMessage
     /// An optional <c>name</c> associated with the assistant message. This is typically defined with a <c>system</c>
     /// message and is used to differentiate between multiple participants of the same role.
     /// </summary>
-    public string Name { get; set; }
+    public string ParticipantName { get; set; }
 
     /// <summary>
     /// The <c>tool_calls</c> furnished by the model that are needed to continue the logical conversation across chat
@@ -58,7 +58,7 @@ public class ChatRequestAssistantMessage : ChatRequestMessage
     /// </summary>
     /// <param name="toolCalls"> The <c>tool_calls</c> made by the model. </param>
     /// <param name="content"> Optional text content associated with the message. </param>
-    public ChatRequestAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null)
+    public ChatRequestAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string? content = null)
         : base(ChatRole.Assistant, content)
     {
         ToolCalls = new List<ChatToolCall>(toolCalls);
@@ -69,9 +69,9 @@ public class ChatRequestAssistantMessage : ChatRequestMessage
     /// (deprecated in favor of <c>tool_calls</c>) that was made by the model.
     /// </summary>
     /// <param name="functionCall"> The <c>function_call</c> made by the model. </param>
-    /// <param name="content"> Optional text content associated with the message. </param>
-    public ChatRequestAssistantMessage(ChatFunctionCall functionCall, string content = null)
-        : base(ChatRole.Assistant, content)
+    /// <param name="text"> Optional text content associated with the message. </param>
+    public ChatRequestAssistantMessage(ChatFunctionCall functionCall, string? text = null)
+        : base(ChatRole.Assistant, text)
     {
         FunctionCall = functionCall;
     }
@@ -105,9 +105,9 @@ public class ChatRequestAssistantMessage : ChatRequestMessage
 
     internal override void WriteDerivedAdditions(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        if (Optional.IsDefined(Name))
+        if (Optional.IsDefined(ParticipantName))
         {
-            writer.WriteString("name"u8, Name);
+            writer.WriteString("name"u8, ParticipantName);
         }
         if (Optional.IsCollectionDefined(ToolCalls))
         {

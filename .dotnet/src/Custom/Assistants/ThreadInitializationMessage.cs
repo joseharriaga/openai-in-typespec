@@ -8,9 +8,9 @@ namespace OpenAI.Assistants;
 
 public partial class ThreadInitializationMessage
 {
-    public required MessageRole Role { get; set; }
+    public required MessageRole Role { get; init; }
 
-    public required string Content { get; set; }
+    public required string Content { get; init; }
 
     /// <summary>
     /// A list of File IDs that the message should use.There can be a maximum of 10 files attached to a message. Useful

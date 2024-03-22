@@ -117,17 +117,6 @@ public partial class OpenAIClient
     public ImageClient GetImageClient(string model) => new(model, _cachedCredential, _cachedOptions);
 
     /// <summary>
-    /// Gets a new instance of <see cref="LegacyCompletionClient"/> that reuses the client configuration details provided to
-    /// the <see cref="OpenAIClient"/> instance.
-    /// </summary>
-    /// <remarks>
-    /// This method is functionally equivalent to using the <see cref="LegacyCompletionClient"/> constructor directly with
-    /// the same configuration details.
-    /// </remarks>
-    /// <returns> A new <see cref="LegacyCompletionClient"/>. </returns>
-    public LegacyCompletionClient GetLegacyCompletionClient() => new(_cachedCredential, _cachedOptions);
-
-    /// <summary>
     /// Gets a new instance of <see cref="ModelManagementClient"/> that reuses the client configuration details provided to
     /// the <see cref="OpenAIClient"/> instance.
     /// </summary>

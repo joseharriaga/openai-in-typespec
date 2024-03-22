@@ -1,5 +1,4 @@
-﻿using System;
-using System.ClientModel;
+﻿using System.ClientModel;
 
 namespace OpenAI.FineTuningManagement;
 

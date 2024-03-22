@@ -1,4 +1,3 @@
-using System;
 using System.ClientModel;
 
 namespace OpenAI.LegacyCompletions;

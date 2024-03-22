@@ -1,6 +1,5 @@
 using System;
 using System.ClientModel;
-using System.ClientModel.Internal;
 
 
 namespace OpenAI;

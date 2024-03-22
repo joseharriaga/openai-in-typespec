@@ -1,7 +1,4 @@
 using System;
-using System.ClientModel.Internal;
-
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
 

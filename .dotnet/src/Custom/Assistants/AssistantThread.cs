@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 namespace OpenAI.Assistants;
 
 public partial class AssistantThread

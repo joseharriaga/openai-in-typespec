@@ -1,13 +1,7 @@
-using System.ClientModel.Internal;
-
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Text.Json;
-using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using System.Linq;
-using OpenAI.ClientShared.Internal;
+using System.Text.Json;
 
 namespace OpenAI.Chat;
 

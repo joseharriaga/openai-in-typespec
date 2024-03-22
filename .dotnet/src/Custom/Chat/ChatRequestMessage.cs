@@ -1,7 +1,4 @@
 using System;
-using System.ClientModel;
-using System.ClientModel.Primitives;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace OpenAI.Chat;

@@ -1,4 +1,3 @@
-using OpenAI.ClientShared.Internal;
 using System;
 using System.Collections.Generic;
 

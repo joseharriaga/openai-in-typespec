@@ -1,8 +1,8 @@
-namespace OpenAI.Chat;
-
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+
+namespace OpenAI.Chat;
 
 /// <summary>
 /// Represents an incremental item of new data in a streaming response to a chat completion request.

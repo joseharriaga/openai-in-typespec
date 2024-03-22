@@ -39,7 +39,7 @@ public class ChatFunctionToolDefinition : ChatToolDefinition
     /// })
     /// </code></para>
     /// </remarks>
-    public BinaryData Parameters { get; init; }
+    public BinaryData? Parameters { get; init; }
     /// <summary>
     /// Creates a new instance of <see cref="ChatFunctionToolDefinition"/>.
     /// </summary>

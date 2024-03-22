@@ -1,5 +1,3 @@
-using OpenAI.Chat;
-
 namespace OpenAI.Assistants;
 
 public partial class RunError

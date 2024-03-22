@@ -1,9 +1,8 @@
-using System.ClientModel;
+using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Collections.Generic;
-using System;
+using System.Threading;
 
 namespace OpenAI;
 

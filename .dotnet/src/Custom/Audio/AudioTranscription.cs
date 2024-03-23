@@ -7,19 +7,19 @@ namespace OpenAI.Audio;
 
 public partial class AudioTranscription
 {
-    public string Language { get; }
+    public string? Language { get; }
     public TimeSpan? Duration { get; }
     public string Text { get; }
-    public IReadOnlyList<TranscribedWord>? Words { get; }
-    public IReadOnlyList<TranscriptionSegment>? Segments { get; }
+    public IReadOnlyList<TranscribedWord> Words { get; }
+    public IReadOnlyList<TranscribedSegment> Segments { get; }
 
-    internal AudioTranscription(string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedWord> words, IReadOnlyList<TranscriptionSegment> segments)
+    internal AudioTranscription(string? language, TimeSpan? duration, string? text, IReadOnlyList<TranscribedWord>? words, IReadOnlyList<TranscribedSegment>? segments)
     {
         Language = language;
         Duration = duration;
-        Text = text;
-        Words = words;
-        Segments = segments;
+        Text = text!;
+        Words = words ?? [];
+        Segments = segments ?? [];
     }
 
     internal static AudioTranscription Deserialize(BinaryData content)
@@ -30,11 +30,11 @@ public partial class AudioTranscription
 
     internal static AudioTranscription DeserializeAudioTranscription(JsonElement element, ModelReaderWriterOptions? options = default)
     {
-        string language = null;
+        string? language = null;
         TimeSpan? duration = null;
-        string text = null;
-        List<TranscribedWord> words = null;
-        List<TranscriptionSegment> segments = null;
+        string? text = null;
+        List<TranscribedWord>? words = null;
+        List<TranscribedSegment>? segments = null;
 
         foreach (JsonProperty topLevelProperty in element.EnumerateObject())
         {
@@ -67,7 +67,7 @@ public partial class AudioTranscription
                 segments = [];
                 foreach (JsonElement segmentElement in topLevelProperty.Value.EnumerateArray())
                 {
-                    segments.Add(TranscriptionSegment.DeserializeTranscriptionSegment(segmentElement, options));
+                    segments.Add(TranscribedSegment.DeserializeTranscribedSegment(segmentElement, options));
                 }
                 continue;
             }

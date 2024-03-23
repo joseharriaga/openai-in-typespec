@@ -22,7 +22,7 @@ public class ChatLogProbabilityResultItem
     /// characters are represented by multiple tokens and their byte representations must be combined to generate
     /// the correct text representation. Can be null if there is no bytes representation for the token.
     /// </summary>
-    public IReadOnlyList<int>? Utf8ByteValues { get; }
+    public IReadOnlyList<int> Utf8ByteValues { get; }
     /// <summary>
     /// Creates a new instance of <see cref="ChatLogProbabilityResultItem"/>.
     /// </summary>

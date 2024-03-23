@@ -8,36 +8,16 @@ namespace OpenAI.Assistants;
 public abstract partial class RunRequiredAction :  IJsonModel<IList<RunRequiredAction>>
 {
     IList<RunRequiredAction> IJsonModel<IList<RunRequiredAction>>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<IList<RunRequiredAction>>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(RunRequiredAction)} does not support '{format}' format.");
-        }
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeRunRequiredActions(document.RootElement, options);
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeRunRequiredActions, ref reader, options);
 
     IList<RunRequiredAction> IPersistableModel<IList<RunRequiredAction>>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<IList<RunRequiredAction>>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                {
-                    using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeRunRequiredActions(document.RootElement, options);
-                }
-            default:
-                throw new FormatException($"The model {nameof(RunRequiredAction)} does not support '{options.Format}' format.");
-        }
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeRunRequiredActions, data, options);
 
     string IPersistableModel<IList<RunRequiredAction>>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
     void IJsonModel<IList<RunRequiredAction>>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        ModelSerializationHelpers.AssertSupportedJsonWriteFormat<IList<RunRequiredAction>,RunRequiredAction>(this, options);
         writer.WriteStartObject();
         WriteDerived(writer, options);
         writer.WriteEndObject();
@@ -45,6 +25,7 @@ public abstract partial class RunRequiredAction :  IJsonModel<IList<RunRequiredA
 
     BinaryData IPersistableModel<IList<RunRequiredAction>>.Write(ModelReaderWriterOptions options)
     {
+        ModelSerializationHelpers.AssertSupportedPersistableWriteFormat<IList<RunRequiredAction>,RunRequiredAction>(this, options);
         var format = options.Format == "W" ? ((IPersistableModel<IList<RunRequiredAction>>)this).GetFormatFromOptions(options) : options.Format;
 
         switch (format)

@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace OpenAI.Audio;
 
-public readonly partial struct TranscriptionSegment
+public readonly partial struct TranscribedSegment
 {
     public int Id { get; }
     public int SeekOffset { get; }
@@ -18,7 +18,7 @@ public readonly partial struct TranscriptionSegment
     public float CompressionRatio { get; }
     public float NoSpeechProbability { get; }
 
-    internal TranscriptionSegment(int id, int seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<int> tokenIds, float temperature, float averageLogProbability, float compressionRatio, float noSpeechProbability)
+    internal TranscribedSegment(int id, int seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<int> tokenIds, float temperature, float averageLogProbability, float compressionRatio, float noSpeechProbability)
     {
         Id = id;
         SeekOffset = seekOffset;
@@ -32,7 +32,7 @@ public readonly partial struct TranscriptionSegment
         NoSpeechProbability = noSpeechProbability;
     }
 
-    internal static TranscriptionSegment DeserializeTranscriptionSegment(JsonElement element, ModelReaderWriterOptions? options = default)
+    internal static TranscribedSegment DeserializeTranscribedSegment(JsonElement element, ModelReaderWriterOptions? options = default)
     {
         int id = 0;
         int seekOffset = 0;
@@ -103,6 +103,6 @@ public readonly partial struct TranscriptionSegment
             }
         }
 
-        return new TranscriptionSegment(id, seekOffset, start, end, text, tokenIds, temperature, averageLogProbability, compressionRatio, noSpeechProbability);
+        return new TranscribedSegment(id, seekOffset, start, end, text, tokenIds, temperature, averageLogProbability, compressionRatio, noSpeechProbability);
     }
 }

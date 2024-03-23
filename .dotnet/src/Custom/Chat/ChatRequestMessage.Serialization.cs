@@ -8,6 +8,7 @@ public abstract partial class ChatRequestMessage :  IJsonModel<ChatRequestMessag
 {
     void IJsonModel<ChatRequestMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        ModelSerializationHelpers.AssertSupportedJsonWriteFormat(this, options);
         writer.WriteStartObject();
         writer.WriteString("role"u8, Role switch
         {
@@ -75,7 +76,8 @@ public abstract partial class ChatRequestMessage :  IJsonModel<ChatRequestMessag
 
     BinaryData IPersistableModel<ChatRequestMessage>.Write(ModelReaderWriterOptions options)
     {
-        throw new NotImplementedException();
+        ModelSerializationHelpers.AssertSupportedPersistableWriteFormat(this, options);
+        return ModelReaderWriter.Write(this, options);
     }
 
     ChatRequestMessage IPersistableModel<ChatRequestMessage>.Create(BinaryData data, ModelReaderWriterOptions options)

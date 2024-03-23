@@ -8,43 +8,16 @@ namespace OpenAI.Images;
 public partial class GeneratedImage : IJsonModel<GeneratedImage>
 {
     GeneratedImage IJsonModel<GeneratedImage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<GeneratedImage>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(GeneratedImage)} does not support '{format}' format.");
-        }
-
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeGeneratedImage(document.RootElement, options)!;
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeGeneratedImage, ref reader, options);
 
     GeneratedImage IPersistableModel<GeneratedImage>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<GeneratedImage>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                {
-                    using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeGeneratedImage(document.RootElement, options)!;
-                }
-            default:
-                throw new FormatException($"The model {nameof(GeneratedImage)} does not support '{options.Format}' format.");
-        }
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeGeneratedImage, data, options);
 
     string IPersistableModel<GeneratedImage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
     void IJsonModel<GeneratedImage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<GeneratedImage>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(GeneratedImage)} does not support '{format}' format.");
-        }
-
+        ModelSerializationHelpers.AssertSupportedJsonWriteFormat(this, options);
         writer.WriteStartObject();
         if (Optional.IsDefined(ImageBytes))
         {
@@ -64,22 +37,15 @@ public partial class GeneratedImage : IJsonModel<GeneratedImage>
 
     BinaryData IPersistableModel<GeneratedImage>.Write(ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<GeneratedImage>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                return ModelReaderWriter.Write(this, options);
-            default:
-                throw new FormatException($"The model {nameof(GeneratedImage)} does not support '{options.Format}' format.");
-        }
+        ModelSerializationHelpers.AssertSupportedPersistableWriteFormat(this, options);
+        return ModelReaderWriter.Write(this, options);
     }
 
-    internal static GeneratedImage? DeserializeGeneratedImage(JsonElement element, ModelReaderWriterOptions? options = default)
+    internal static GeneratedImage DeserializeGeneratedImage(JsonElement element, ModelReaderWriterOptions? options = default)
     {
         if (element.ValueKind != JsonValueKind.Object)
         {
-            return null;
+            throw new ArgumentException(nameof(element));
         }
 
         BinaryData? b64Json = null;

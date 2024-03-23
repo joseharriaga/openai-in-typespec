@@ -8,9 +8,10 @@ public partial class AudioTranslation
 {
     public string Text { get; }
 
-    internal AudioTranslation(string text)
+    internal AudioTranslation(string? text)
     {
-        Text = text;
+        Argument.AssertNotNull(text, nameof(text));
+        Text = text!;
     }
 
     internal static AudioTranslation Deserialize(BinaryData content)
@@ -21,7 +22,7 @@ public partial class AudioTranslation
 
     internal static AudioTranslation DeserializeAudioTranslation(JsonElement element, ModelReaderWriterOptions? options = default)
     {
-        string text = null;
+        string? text = null;
 
         foreach (JsonProperty property in element.EnumerateObject())
         {

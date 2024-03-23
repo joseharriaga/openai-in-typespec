@@ -7,36 +7,16 @@ namespace OpenAI.Assistants;
 public partial class ToolOutput :  IJsonModel<ToolOutput>
 {
     ToolOutput IJsonModel<ToolOutput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolOutput>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(ToolOutput)} does not support '{format}' format.");
-        }
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeToolOutput(document.RootElement, options);
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeToolOutput, ref reader, options);
 
     ToolOutput IPersistableModel<ToolOutput>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolOutput>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                {
-                    using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeToolOutput(document.RootElement, options);
-                }
-            default:
-                throw new FormatException($"The model {nameof(ToolOutput)} does not support '{options.Format}' format.");
-        }
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeToolOutput, data, options);
 
     string IPersistableModel<ToolOutput>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
     void IJsonModel<ToolOutput>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        ModelSerializationHelpers.AssertSupportedJsonWriteFormat(this, options);
         writer.WriteStartObject();
         if (Optional.IsDefined(Id))
         {
@@ -51,15 +31,8 @@ public partial class ToolOutput :  IJsonModel<ToolOutput>
 
     BinaryData IPersistableModel<ToolOutput>.Write(ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolOutput>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                return ModelReaderWriter.Write(this, options);
-            default:
-                throw new FormatException($"The model {nameof(ToolOutput)} does not support '{options.Format}' format.");
-        }
+        ModelSerializationHelpers.AssertSupportedPersistableWriteFormat(this, options);
+        return ModelReaderWriter.Write(this, options);
     }
 
     internal static ToolOutput DeserializeToolOutput(

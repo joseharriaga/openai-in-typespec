@@ -14,15 +14,11 @@ public class ChatLogProbabilityCollection : ReadOnlyCollection<ChatLogProbabilit
     internal static ChatLogProbabilityCollection FromInternalData(
         Internal.Models.CreateChatCompletionResponseChoiceLogprobs internalLogprobs)
     {
-        if (internalLogprobs == null)
-        {
-            return null;
-        }
         List<ChatLogProbabilityResult> logProbabilities = [];
-        foreach (Internal.Models.ChatCompletionTokenLogprob internalLogprob in internalLogprobs.Content)
+        foreach (Internal.Models.ChatCompletionTokenLogprob internalLogprob in internalLogprobs?.Content ?? [])
         {
-            List<ChatLogProbabilityResultItem> alternateLogProbabilities = null;
-            if (internalLogprob.TopLogprobs != null)
+            List<ChatLogProbabilityResultItem> alternateLogProbabilities = [];
+            if (internalLogprob.TopLogprobs is not null)
             {
                 alternateLogProbabilities = [];
                 foreach (Internal.Models.ChatCompletionTokenLogprobTopLogprob internalTopLogprob in internalLogprob.TopLogprobs)

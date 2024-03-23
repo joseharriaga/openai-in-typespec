@@ -22,13 +22,13 @@ public class ChatCompletion
     /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.Content"/>
     public ChatMessageContent? Content { get; }
     /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.ToolCalls"/>
-    public IReadOnlyList<ChatToolCall>? ToolCalls { get; }
+    public IReadOnlyList<ChatToolCall> ToolCalls { get; }
     /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.FunctionCall"/>
     public ChatFunctionCall? FunctionCall { get; }
     /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.Role"/>
     public ChatRole Role { get; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Logprobs"/>
-    public ChatLogProbabilityCollection? LogProbabilities { get; }
+    public ChatLogProbabilityCollection LogProbabilities { get; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Index"/>
     public int ChoiceIndex => (int)_internalResponse.Choices[(int)_internalChoiceIndex].Index;
 
@@ -73,9 +73,6 @@ public class ChatCompletion
         {
             FunctionCall = new(internalChoice.Message.FunctionCall.Name, internalChoice.Message.FunctionCall.Arguments);
         }
-        if (internalChoice.Logprobs != null)
-        {
-            LogProbabilities = ChatLogProbabilityCollection.FromInternalData(internalChoice.Logprobs);
-        }
+        LogProbabilities = ChatLogProbabilityCollection.FromInternalData(internalChoice.Logprobs);
     }
 }

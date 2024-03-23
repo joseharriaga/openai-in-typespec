@@ -20,6 +20,7 @@ public abstract partial class ChatToolCall :  IJsonModel<ChatToolCall>
 
     void IJsonModel<ChatToolCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        ModelSerializationHelpers.AssertSupportedJsonWriteFormat(this, options);
         writer.WriteStartObject();
         writer.WriteString("id"u8, Id);
         WriteDerivedAdditions(writer, options);
@@ -28,7 +29,8 @@ public abstract partial class ChatToolCall :  IJsonModel<ChatToolCall>
 
     BinaryData IPersistableModel<ChatToolCall>.Write(ModelReaderWriterOptions options)
     {
-        throw new NotImplementedException();
+        ModelSerializationHelpers.AssertSupportedPersistableWriteFormat(this, options);
+        return ModelReaderWriter.Write(this, options);
     }
 
     internal abstract void WriteDerivedAdditions(Utf8JsonWriter writer, ModelReaderWriterOptions options);

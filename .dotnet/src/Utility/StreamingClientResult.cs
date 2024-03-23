@@ -56,19 +56,6 @@ public class StreamingClientResult<T>
     /// <returns> The <see cref="PipelineResponse"/> instance attached to this <see cref="StreamingClientResult{T}"/>. </returns>
     public PipelineResponse GetRawResponse() => _rawResult.GetRawResponse();
 
-    /// <summary>
-    /// Gets the asynchronously enumerable collection of distinct, streamable items in the response.
-    /// </summary>
-    /// <remarks>
-    /// <para> The return value of this method may be used with the "await foreach" statement. </para>
-    /// <para>
-    /// As <see cref="StreamingClientResult{T}"/> explicitly implements <see cref="IAsyncEnumerable{T}"/>, callers may
-    /// enumerate a <see cref="StreamingClientResult{T}"/> instance directly instead of calling this method.
-    /// </para>
-    /// </remarks>
-    /// <returns></returns>
-    public IAsyncEnumerable<T> EnumerateValues() => this;
-
     /// <inheritdoc/>
     public void Dispose()
     {

@@ -276,15 +276,7 @@ public partial class ImageClient
         Internal.Models.CreateImageRequestSize? internalSize = null;
         if (options.Size != null)
         {
-            internalSize = options.Size switch
-            {
-                ImageSize.Size256x256 => Internal.Models.CreateImageRequestSize._256x256,
-                ImageSize.Size512x512 => Internal.Models.CreateImageRequestSize._512x512,
-                ImageSize.Size1024x1024 => Internal.Models.CreateImageRequestSize._1024x1024,
-                ImageSize.Size1024x1792 => Internal.Models.CreateImageRequestSize._1024x1792,
-                ImageSize.Size1792x1024 => Internal.Models.CreateImageRequestSize._1792x1024,
-                _ => throw new ArgumentException(nameof(options.Size)),
-            };
+            internalSize = ModelReaderWriter.Write(options.Size).ToString();
         }
 
         Internal.Models.CreateImageRequestStyle? internalStyle = null;

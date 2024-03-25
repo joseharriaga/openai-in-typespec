@@ -1,5 +1,6 @@
 ﻿using OpenAI.Internal;
 using System;
+using System.ClientModel.Primitives;
 using System.IO;
 
 namespace OpenAI.Images;
@@ -23,7 +24,7 @@ public partial class ImageEditOptions
     public ImageResponseFormat? ResponseFormat { get; set; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Size"/>
-    public ImageSize? Size { get; set; }
+    public GeneratedImageSize Size { get; set; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
     public string User { get; set; }
@@ -64,17 +65,7 @@ public partial class ImageEditOptions
 
         if (Size is not null)
         {
-            string imageSize = Size switch
-            {
-                ImageSize.Size256x256 => "256x256",
-                ImageSize.Size512x512 => "512x512",
-                ImageSize.Size1024x1024 => "1024x1024",
-                // TODO: 1024x1792 and 1792x1024 are currently not supported in image edits.
-                ImageSize.Size1024x1792 => "1024x1792",
-                ImageSize.Size1792x1024 => "1792x1024",
-                _ => throw new ArgumentException(nameof(imageSize))
-            };
-
+            string imageSize = ModelReaderWriter.Write(Size).ToString();
             content.Add(imageSize, "size");
         }
 

@@ -564,11 +564,6 @@ namespace OpenAI.Internal
             try
             {
                 using PipelineMessage message = CreateDownloadFileRequest(fileId, options);
-
-                // TODO: If we want the end-user to be able to Stream the response, we'll
-                // need to update this somehow to apply that pattern.  Let's sync on the
-                // best approach for implementing this in this client.
-
                 return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
             }
             catch (Exception e)

@@ -16,7 +16,7 @@ public partial class ImageGenerationTests
         Assert.That(result, Is.InstanceOf<ClientResult<GeneratedImage>>());
         Assert.That(result.Value.ImageUri, Is.Not.Null);
         Console.WriteLine(result.Value.ImageUri.AbsoluteUri);
-        Assert.That(result.Value.Image, Is.Null);
+        Assert.That(result.Value.ImageBytes, Is.Null);
         Assert.That(result.Value.CreatedAt, Is.GreaterThan(new DateTimeOffset(new DateTime(year: 2020, month: 1, day: 1))));
     }
 

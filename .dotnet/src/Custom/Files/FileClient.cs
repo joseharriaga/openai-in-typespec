@@ -123,11 +123,10 @@ public partial class FileClient
         return ClientResult.FromValue(new OpenAIFileInfoCollection(infoItems), result.GetRawResponse());
     }
 
-    public virtual ClientResult<Stream> DownloadFile(string fileId)
+    public virtual ClientResult<BinaryData> DownloadFile(string fileId)
     {
-        using PipelineMessage message = Shim.Pipeline.CreateMessage();
+        PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
-        message.BufferResponse = false;
         PipelineRequest request = message.Request;
         request.Method = "GET";
         UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
@@ -143,13 +142,12 @@ public partial class FileClient
             throw new ClientResultException(message.Response);
         }
 
-        PipelineResponse response = message.ExtractResponse();
-        return ClientResult.FromValue(response.ContentStream, response);
+        return ClientResult.FromValue(message.Response.Content, message.Response);
     }
 
-    public virtual async Task<ClientResult<Stream>> DownloadFileAsync(string fileId)
+    public virtual async Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId)
     {
-        using PipelineMessage message = Shim.Pipeline.CreateMessage();
+        PipelineMessage message = Shim.Pipeline.CreateMessage();
         message.ResponseClassifier = ResponseErrorClassifier200;
         PipelineRequest request = message.Request;
         request.Method = "GET";
@@ -167,8 +165,7 @@ public partial class FileClient
             throw new ClientResultException(message.Response);
         }
 
-        PipelineResponse response = message.ExtractResponse();
-        return ClientResult.FromValue(response.ContentStream, response);
+        return ClientResult.FromValue(message.Response.Content, message.Response);
     }
 
     public virtual void DeleteFile(string fileId)

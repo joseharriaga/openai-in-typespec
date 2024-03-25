@@ -23,11 +23,11 @@ namespace OpenAI.Samples
                 ResponseFormat = ImageResponseFormat.Bytes
             };
 
-            GeneratedImageCollection imageCollection = await client.GenerateImageVariationsAsync(inputImage, 1, options);
-            using Stream outputImage = imageCollection[0].Image;
+            GeneratedImageCollection images = await client.GenerateImageVariationsAsync(inputImage, 1, options);
+            BinaryData bytes = images[0].ImageBytes;
 
             using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");
-            await outputImage.CopyToAsync(stream);
+            bytes.ToStream().CopyTo(stream);
         }
     }
 }

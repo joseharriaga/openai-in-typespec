@@ -44,9 +44,8 @@ public partial class FileClientTests
         ClientResult<OpenAIFileInfo> fileInfoResult = client.GetFileInfo("file-S7roYWamZqfMK9D979HU4q6m");
         Assert.That(fileInfoResult.Value, Is.Not.Null);
 
-        ClientResult<Stream> downloadResult = client.DownloadFile("file-S7roYWamZqfMK9D979HU4q6m");
-        using Stream value = downloadResult.Value;
-        Assert.That(value, Is.Not.Null);
+        ClientResult<BinaryData> downloadResult = client.DownloadFile("file-S7roYWamZqfMK9D979HU4q6m");
+        Assert.That(downloadResult.Value, Is.Not.Null);
     }
 
     private static FileClient GetTestClient() => GetTestClient<FileClient>(TestScenario.Files);

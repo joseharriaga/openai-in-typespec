@@ -21,7 +21,7 @@ namespace OpenAI.Samples
 
             string maskPath = Path.Combine("Assets", "edit_sample_mask.png");
             using Stream mask = File.OpenRead(maskPath);
-            
+
             ImageEditOptions options = new()
             {
                 Mask = mask,

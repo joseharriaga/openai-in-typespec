@@ -50,12 +50,12 @@ model CreateChatCompletionRequest {
   logprobs?: boolean | null = false;
 
   /**
-   * An integer between 0 and 5 specifying the number of most likely tokens to return at each token
+   * An integer between 0 and 20 specifying the number of most likely tokens to return at each token
    * position, each with an associated log probability. `logprobs` must be set to `true` if this
    * parameter is used.
    */
   @minValue(0)
-  @maxValue(5)
+  @maxValue(20)
   top_logprobs?: safeint | null;
 
   /**
@@ -87,9 +87,10 @@ model CreateChatCompletionRequest {
   @maxValue(2)
   presence_penalty?: float64 | null = 0;
 
-  /** 
+  /**
    * An object specifying the format that the model must output. Compatible with
-   * [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and `gpt-3.5-turbo-1106`.
+   * [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
+   * `gpt-3.5-turbo-1106`.
    * 
    * Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the
    * model generates is valid JSON.
@@ -262,6 +263,7 @@ alias CHAT_COMPLETION_MODELS =
   | "gpt-3.5-turbo-0301"
   | "gpt-3.5-turbo-0613"
   | "gpt-3.5-turbo-1106"
+  | "gpt-3.5-turbo-0125"
   | "gpt-3.5-turbo-16k-0613";
 
 @oneOf
@@ -358,8 +360,8 @@ model ChatCompletionRequestMessageContentPartImage {
   type: "image_url";
 
   image_url: {
+    // TODO: The OpenAPI spec only describes this as a URL.
     /** Either a URL of the image or the base64 encoded image data. */
-    // TODO: The original OpenAPI spec only describes this as a URL.
     url: url | string;
 
     /**
@@ -521,7 +523,10 @@ model ChatCompletionTokenLogprob {
   /**  The token. */
   token: string;
 
-  /** The log probability of this token. */
+  /**
+   * The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+   * the value `-9999.0` is used to signify that the token is very unlikely.
+   */
   logprob: float64;
 
   /** 
@@ -555,7 +560,7 @@ model ChatCompletionTokenLogprob {
 
 /**
  * Specifying a particular function via `{"name": "my_function"}` forces the model to call that
- * function. 
+ * function.
  */
 model ChatCompletionFunctionCallOption {
   /** The name of the function to call. */

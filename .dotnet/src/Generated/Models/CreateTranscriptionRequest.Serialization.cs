@@ -45,6 +45,28 @@ namespace OpenAI.Internal.Models
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
+            if (Optional.IsCollectionDefined(TimestampGranularities))
+            {
+                writer.WritePropertyName("timestamp_granularities"u8);
+                writer.WriteStartArray();
+                foreach (var item in TimestampGranularities)
+                {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(item);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(item))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
+                }
+                writer.WriteEndArray();
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -89,6 +111,7 @@ namespace OpenAI.Internal.Models
             string prompt = default;
             CreateTranscriptionRequestResponseFormat? responseFormat = default;
             double? temperature = default;
+            IList<BinaryData> timestampGranularities = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> additionalPropertiesDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -131,6 +154,27 @@ namespace OpenAI.Internal.Models
                     temperature = property.Value.GetDouble();
                     continue;
                 }
+                if (property.NameEquals("timestamp_granularities"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<BinaryData> array = new List<BinaryData>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        if (item.ValueKind == JsonValueKind.Null)
+                        {
+                            array.Add(null);
+                        }
+                        else
+                        {
+                            array.Add(BinaryData.FromString(item.GetRawText()));
+                        }
+                    }
+                    timestampGranularities = array;
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalPropertiesDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
@@ -144,6 +188,7 @@ namespace OpenAI.Internal.Models
                 prompt,
                 responseFormat,
                 temperature,
+                timestampGranularities ?? new ChangeTrackingList<BinaryData>(),
                 serializedAdditionalRawData);
         }
 

@@ -67,7 +67,7 @@ namespace OpenAI.Internal.Models
         /// `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the
         /// [Text to speech guide](/docs/guides/text-to-speech/voice-options).
         /// </param>
-        /// <param name="responseFormat"> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, and `flac`. </param>
+        /// <param name="responseFormat"> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`. </param>
         /// <param name="speed"> The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateSpeechRequest(CreateSpeechRequestModel model, string input, CreateSpeechRequestVoice voice, CreateSpeechRequestResponseFormat? responseFormat, double? speed, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -95,7 +95,7 @@ namespace OpenAI.Internal.Models
         /// [Text to speech guide](/docs/guides/text-to-speech/voice-options).
         /// </summary>
         public CreateSpeechRequestVoice Voice { get; }
-        /// <summary> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, and `flac`. </summary>
+        /// <summary> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`. </summary>
         public CreateSpeechRequestResponseFormat? ResponseFormat { get; set; }
         /// <summary> The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. </summary>
         public double? Speed { get; set; }

@@ -94,7 +94,7 @@ namespace OpenAI.Internal.Models
         /// currently not available on the `gpt-4-vision-preview` model.
         /// </param>
         /// <param name="topLogprobs">
-        /// An integer between 0 and 5 specifying the number of most likely tokens to return at each token
+        /// An integer between 0 and 20 specifying the number of most likely tokens to return at each token
         /// position, each with an associated log probability. `logprobs` must be set to `true` if this
         /// parameter is used.
         /// </param>
@@ -118,7 +118,8 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="responseFormat">
         /// An object specifying the format that the model must output. Compatible with
-        /// [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and `gpt-3.5-turbo-1106`.
+        /// [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
+        /// `gpt-3.5-turbo-1106`.
         ///
         /// Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the
         /// model generates is valid JSON.
@@ -277,7 +278,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public bool? Logprobs { get; set; }
         /// <summary>
-        /// An integer between 0 and 5 specifying the number of most likely tokens to return at each token
+        /// An integer between 0 and 20 specifying the number of most likely tokens to return at each token
         /// position, each with an associated log probability. `logprobs` must be set to `true` if this
         /// parameter is used.
         /// </summary>
@@ -305,7 +306,8 @@ namespace OpenAI.Internal.Models
         public double? PresencePenalty { get; set; }
         /// <summary>
         /// An object specifying the format that the model must output. Compatible with
-        /// [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and `gpt-3.5-turbo-1106`.
+        /// [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
+        /// `gpt-3.5-turbo-1106`.
         ///
         /// Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the
         /// model generates is valid JSON.

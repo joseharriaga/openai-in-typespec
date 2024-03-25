@@ -17,9 +17,7 @@ model CreateModerationRequest {
   `model`?: string | MODERATION_MODELS = "text-moderation-latest";
 }
 
-/**
- * Represents policy compliance report by OpenAI's content moderation model against a given input.
- */
+/** Represents if a given text input is potentially harmful. */
 model CreateModerationResponse {
   /** The unique identifier for the moderation request. */
   id: string;
@@ -29,7 +27,7 @@ model CreateModerationResponse {
 
   /** A list of moderation objects. */
   results: {
-    /** Whether the content violates [OpenAI's usage policies](/policies/usage-policies). */
+    /** Whether any of the below categories are flagged. */
     flagged: boolean;
 
     /** A list of the categories, and whether they are flagged or not. */

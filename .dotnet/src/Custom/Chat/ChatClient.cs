@@ -198,7 +198,9 @@ public partial class ChatClient
     {
         PipelineMessage message = CreateCustomRequestMessage(messages, choiceCount, options);
         message.BufferResponse = false;
+
         Shim.Pipeline.Send(message);
+
         PipelineResponse response = message.Response;
 
         if (response.IsError)
@@ -230,7 +232,9 @@ public partial class ChatClient
     {
         PipelineMessage message = CreateCustomRequestMessage(messages, choiceCount, options);
         message.BufferResponse = false;
+
         await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
+
         PipelineResponse response = message.Response;
 
         if (response.IsError)

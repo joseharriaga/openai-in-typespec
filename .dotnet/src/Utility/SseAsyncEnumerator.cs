@@ -19,26 +19,8 @@ internal static class SseAsyncEnumerator<T>
             using SseReader sseReader = new(stream);
             while (!cancellationToken.IsCancellationRequested)
             {
-                SseLine? sseEvent = await sseReader.TryReadSingleFieldEventAsync().ConfigureAwait(false);
-                if (sseEvent is not null)
-                {
-                    ReadOnlyMemory<char> name = sseEvent.Value.FieldName;
-                    if (!name.Span.SequenceEqual("data".AsSpan()))
-                    {
-                        throw new InvalidDataException();
-                    }
-                    ReadOnlyMemory<char> value = sseEvent.Value.FieldValue;
-                    if (value.Span.SequenceEqual("[DONE]".AsSpan()))
-                    {
-                        break;
-                    }
-                    using JsonDocument sseMessageJson = JsonDocument.Parse(value);
-                    IEnumerable<T> newItems = multiElementDeserializer.Invoke(sseMessageJson.RootElement);
-                    foreach (T item in newItems)
-                    {
-                        yield return item;
-                    }
-                }
+
+                
             }
         }
         finally
@@ -47,13 +29,4 @@ internal static class SseAsyncEnumerator<T>
             stream.Dispose();
         }
     }
-
-    internal static IAsyncEnumerable<T> EnumerateFromSseStream(
-        Stream stream,
-        Func<JsonElement, T> elementDeserializer,
-        CancellationToken cancellationToken = default)
-        => EnumerateFromSseStream(
-            stream,
-            (element) => new T[] { elementDeserializer.Invoke(element) },
-            cancellationToken);
 }

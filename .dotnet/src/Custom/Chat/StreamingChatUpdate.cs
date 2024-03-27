@@ -184,11 +184,16 @@ public partial class StreamingChatUpdate
 
     internal static List<StreamingChatUpdate> DeserializeStreamingChatUpdates(JsonElement element)
     {
+        // TODO: Do we need to validate that we didn't get null or empty?
+        // What's the contract for the JSON updates?
+
         List<StreamingChatUpdate> results = [];
+
         if (element.ValueKind == JsonValueKind.Null)
         {
             return results;
         }
+
         string id = default;
         DateTimeOffset created = default;
         string systemFingerprint = null;

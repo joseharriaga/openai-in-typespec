@@ -1,14 +1,12 @@
-using OpenAI.Chat;
-using OpenAI.ClientShared.Internal;
-using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
+
+#pragma warning disable CS1591 // public XML comments
 
 /// <summary>
 /// The service client for OpenAI assistants.
@@ -887,3 +885,5 @@ public partial class AssistantClient
     private static PipelineMessageClassifier _responseErrorClassifier200;
     private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }
+
+#pragma warning restore CS1591 // public XML comments

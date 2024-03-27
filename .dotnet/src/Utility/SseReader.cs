@@ -1,6 +1,4 @@
 using System;
-using System.ClientModel;
-using System.ClientModel.Internal;
 using System.IO;
 using System.Threading.Tasks;
 

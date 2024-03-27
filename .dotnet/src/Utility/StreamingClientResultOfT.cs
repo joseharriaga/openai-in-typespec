@@ -1,10 +1,7 @@
-using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace OpenAI;
 
@@ -15,48 +12,16 @@ namespace OpenAI;
 /// is still being received.
 /// </summary>
 /// <typeparam name="T"> The data type representative of distinct, streamable items. </typeparam>
-public abstract class StreamingClientResult<T> : IDisposable, IAsyncEnumerable<T>
+public abstract class StreamingClientResult<T> : ClientResult, IAsyncEnumerable<T>
 {
-    private ClientResult _rawResult { get; }
-    private bool _disposedValue { get; set; }
-
-    private StreamingClientResult() { }
-
-    // TODO: Should constructor take PipelineResponse instead?
-    protected StreamingClientResult(ClientResult rawResult)
+    protected StreamingClientResult(PipelineResponse response) : base(response)
     {
-        _rawResult = rawResult;
     }
 
-    /// <summary>
-    /// Gets the underlying <see cref="PipelineResponse"/> instance that this <see cref="StreamingClientResult{T}"/> may enumerate
-    /// over.
-    /// </summary>
-    /// <returns> The <see cref="PipelineResponse"/> instance attached to this <see cref="StreamingClientResult{T}"/>. </returns>
-    public PipelineResponse GetRawResponse() => _rawResult.GetRawResponse();
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <inheritdoc/>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                _rawResult?.GetRawResponse()?.Dispose();
-            }
-            _disposedValue = true;
-        }
-    }
-
+    // Note that if the implementation disposes the stream, the caller can only
+    // enumerate the results once.  I think this makes sense, but we should
+    // make sure architects agree.
     public abstract IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default);
-
 }
 
 #pragma warning restore CS1591 // public XML comments

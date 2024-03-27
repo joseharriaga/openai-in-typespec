@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -12,25 +12,36 @@ namespace OpenAI.Chat;
 
 internal class StreamingChatResult : StreamingClientResult<StreamingChatUpdate>
 {
-    public StreamingChatResult(ClientResult result) : base(result)
+    public StreamingChatResult(PipelineResponse response) : base(response)
     {
-
     }
 
     public override IAsyncEnumerator<StreamingChatUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        // Note: this implementation disposes the stream after the caller has
+        // enumerated the elements obtained from the stream.  That is to say,
+        // the `await foreach` loop can only happen once -- if it is tried a
+        // second time, the caller will get an ObjectDisposedException trying
+        // to access a disposed Stream.
+        using PipelineResponse response = GetRawResponse();
+
+        // Extract the content stream from the response to obtain dispose
+        // ownership of it.  This means the content stream will not be disposed
+        // when the response is disposed.
+        Stream contentStream = response.ContentStream ?? throw new InvalidOperationException("Cannot enumerate null response ContentStream.");
+        response.ContentStream = null;
+
+        return new ChatUpdateEnumerator(contentStream);
     }
 
-
-    private class StreamingClientResultEnumerator : IAsyncEnumerator<StreamingChatUpdate>
+    private class ChatUpdateEnumerator : IAsyncEnumerator<StreamingChatUpdate>
     {
         private readonly SseReader _sseReader;
 
         private List<StreamingChatUpdate>? _currentUpdates;
         private int _currentUpdateIndex;
 
-        public StreamingClientResultEnumerator(Stream stream)
+        public ChatUpdateEnumerator(Stream stream)
         {
             _sseReader = new(stream);
         }

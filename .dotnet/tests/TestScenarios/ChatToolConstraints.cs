@@ -16,12 +16,12 @@ public partial class ChatToolConstraintTests
 
         ChatFunctionToolDefinition functionTool = new()
         {
-            Name = "test_function_tool",
+            FunctionName = "test_function_tool",
             Description = "description isn't applicable",
         };
 
         ChatToolConstraint constraintFromDefinition = new(functionTool);
-        Assert.That(constraintFromDefinition.ToString(), Is.EqualTo(@$"{{""type"":""function"",""function"":{{""name"":""{functionTool.Name}""}}}}"));
+        Assert.That(constraintFromDefinition.ToString(), Is.EqualTo(@$"{{""type"":""function"",""function"":{{""name"":""{functionTool.FunctionName}""}}}}"));
 
         ChatToolConstraint otherConstraint = new(new ChatFunctionToolDefinition("test_function_tool"));
         Assert.That(constraintFromDefinition, Is.EqualTo(otherConstraint));
@@ -32,10 +32,6 @@ public partial class ChatToolConstraintTests
     public void ConstraintsWork()
     {
         ChatClient client = new("gpt-3.5-turbo");
-        ChatCompletionOptions options = new()
-        {
-            Tools = { s_numberForWordTool },
-        };
 
         foreach (var (constraint, reason) in new (ChatToolConstraint?, ChatFinishReason)[]
         {
@@ -45,7 +41,11 @@ public partial class ChatToolConstraintTests
             (ChatToolConstraint.Auto, ChatFinishReason.ToolCalls),
         })
         {
-            options.ToolConstraint = constraint;
+            ChatCompletionOptions options = new()
+            {
+                Tools = { s_numberForWordTool },
+                ToolConstraint = constraint,
+            };
             ClientResult<ChatCompletion> result = client.CompleteChat("What's the number for the word 'banana'?", options);
             Assert.That(result.Value.FinishReason, Is.EqualTo(reason));
         }
@@ -53,7 +53,7 @@ public partial class ChatToolConstraintTests
 
     private static ChatFunctionToolDefinition s_numberForWordTool = new()
     {
-        Name = "get_number_for_word",
+        FunctionName = "get_number_for_word",
         Description = "gets an arbitrary number assigned to a given word",
         Parameters = BinaryData.FromObjectAsJson(new
         {

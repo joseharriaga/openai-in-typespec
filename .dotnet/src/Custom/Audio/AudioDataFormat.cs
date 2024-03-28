@@ -74,6 +74,11 @@ public enum AudioDataFormat
     /// </summary>
     Opus,
     /// <summary>
+    /// PCM, an uncompressed, lossless format that is similar to WAV but uses headerless 24khz audio chunks rather than
+    /// a header-configured format.
+    /// </summary>
+    Pcm,
+    /// <summary>
     /// WAV, an uncompressed, lossless format with maximum quality, highest file size, and minimal decoding.
     /// <para>
     /// <c>wav</c> is supported as input into translation and transcription but is <b>not</b> available for

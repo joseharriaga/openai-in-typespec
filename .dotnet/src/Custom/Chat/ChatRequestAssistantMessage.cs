@@ -17,7 +17,7 @@ public class ChatRequestAssistantMessage : ChatRequestMessage
     /// An optional <c>name</c> associated with the assistant message. This is typically defined with a <c>system</c>
     /// message and is used to differentiate between multiple participants of the same role.
     /// </summary>
-    public string Name { get; set; }
+    public string ParticipantName { get; init; }
 
     /// <summary>
     /// The <c>tool_calls</c> furnished by the model that are needed to continue the logical conversation across chat
@@ -105,9 +105,9 @@ public class ChatRequestAssistantMessage : ChatRequestMessage
 
     internal override void WriteDerivedAdditions(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        if (Optional.IsDefined(Name))
+        if (Optional.IsDefined(ParticipantName))
         {
-            writer.WriteString("name"u8, Name);
+            writer.WriteString("name"u8, ParticipantName);
         }
         if (Optional.IsCollectionDefined(ToolCalls))
         {

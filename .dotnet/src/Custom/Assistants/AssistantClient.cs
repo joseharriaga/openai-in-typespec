@@ -626,10 +626,10 @@ public partial class AssistantClient
         options ??= new();
         return new(
             assistantId,
-            options.OverrideModel,
-            options.OverrideInstructions,
+            options.ModelOverride,
+            options.InstructionsOverride,
             options.AdditionalInstructions,
-            ToInternalBinaryDataList(options.OverrideTools),
+            ToInternalBinaryDataList(options.ToolsOverride),
             options.Metadata,
             serializedAdditionalRawData: null);
     }
@@ -645,9 +645,9 @@ public partial class AssistantClient
         return new Internal.Models.CreateThreadAndRunRequest(
             assistantId,
             internalThreadOptions,
-            runOptions?.OverrideModel,
-            runOptions.OverrideInstructions,
-            ToInternalBinaryDataList(runOptions?.OverrideTools),
+            runOptions?.ModelOverride,
+            runOptions.InstructionsOverride,
+            ToInternalBinaryDataList(runOptions?.ToolsOverride),
             runOptions?.Metadata,
             serializedAdditionalRawData: null);
     }

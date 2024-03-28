@@ -11,23 +11,23 @@ namespace OpenAI.Images;
 public partial class ImageEditOptions
 {
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Mask"/>
-    public BinaryData MaskBytes { get; set; }
+    public BinaryData MaskBytes { get; init; }
 
     // The generator will need to add file-name to models for properties that
     // represent files in order to enable setting the header.
     /// <summary>
     /// TODO
     /// </summary>
-    public string MaskFileName { get; set; }
+    public string MaskFileName { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.ResponseFormat"/>
-    public ImageResponseFormat? ResponseFormat { get; set; }
+    public ImageResponseFormat? ResponseFormat { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Size"/>
-    public GeneratedImageSize Size { get; set; }
+    public GeneratedImageSize? Size { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
-    public string User { get; set; }
+    public string User { get; init; }
 
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream,
         string fileName,

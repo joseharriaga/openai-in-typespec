@@ -4,7 +4,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -83,15 +82,9 @@ public partial class ImageClient
         ImageGenerationOptions options = null)
     {
         Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
-        ClientResult<Internal.Models.ImagesResponse> response = Shim.CreateImage(request);
-
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Value.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response.Value, i));
-        }
-
-        return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
+        ClientResult response = Shim.CreateImage(BinaryContent.Create(request));
+        GeneratedImageCollection resultValue = GeneratedImageCollection.Deserialize(response.GetRawResponse().Content);
+        return ClientResult.FromValue(resultValue, response.GetRawResponse());
     }
 
     /// <summary>
@@ -110,15 +103,9 @@ public partial class ImageClient
         ImageGenerationOptions options = null)
     {
         Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
-        ClientResult<Internal.Models.ImagesResponse> response = await Shim.CreateImageAsync(request).ConfigureAwait(false);
-
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Value.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response.Value, i));
-        }
-
-        return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
+        ClientResult response = await Shim.CreateImageAsync(BinaryContent.Create(request));
+        GeneratedImageCollection resultValue = GeneratedImageCollection.Deserialize(response.GetRawResponse().Content);
+        return ClientResult.FromValue(resultValue, response.GetRawResponse());
     }
 
     // convenience method - sync; Stream overload
@@ -352,8 +339,8 @@ public partial class ImageClient
         {
             internalQuality = options.Quality switch
             {
-                ImageQuality.Standard => Internal.Models.CreateImageRequestQuality.Standard,
-                ImageQuality.High => Internal.Models.CreateImageRequestQuality.Hd,
+                GeneratedImageQuality.Standard => Internal.Models.CreateImageRequestQuality.Standard,
+                GeneratedImageQuality.High => Internal.Models.CreateImageRequestQuality.Hd,
                 _ => throw new ArgumentException(nameof(options.Quality)),
             };
         }
@@ -380,8 +367,8 @@ public partial class ImageClient
         {
             internalStyle = options.Style switch
             {
-                ImageStyle.Vivid => Internal.Models.CreateImageRequestStyle.Vivid,
-                ImageStyle.Natural => Internal.Models.CreateImageRequestStyle.Natural,
+                GeneratedImageStyle.Vivid => Internal.Models.CreateImageRequestStyle.Vivid,
+                GeneratedImageStyle.Natural => Internal.Models.CreateImageRequestStyle.Natural,
                 _ => throw new ArgumentException(nameof(options.Style)),
             };
         }

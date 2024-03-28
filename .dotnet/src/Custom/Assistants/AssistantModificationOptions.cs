@@ -1,6 +1,3 @@
-using OpenAI.ClientShared.Internal;
-using System.ClientModel.Internal;
-
 using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
@@ -13,22 +10,22 @@ public partial class AssistantModificationOptions
     /// <summary>
     /// The new model that the assistant should use when creating messages.
     /// </summary>
-    public string Model { get; }
+    public string Model { get; init; }
 
     /// <summary>
     /// A new, friendly name for the assistant. Its <see cref="Assistant.Id"/> will remain unchanged.
     /// </summary>
-    public string Name { get; }
+    public string Name { get; init; }
 
     /// <summary>
     /// A new description to associate with the assistant.
     /// </summary>
-    public string Description { get; }
+    public string Description { get; init; }
 
     /// <summary>
     /// New, default instructions for the assistant to use when creating messages.
     /// </summary>
-    public string Instructions { get; }
+    public string Instructions { get; init; }
 
     /// <summary>
     /// A new collection of default tool definitions to enable for the assistant. Available tools include:

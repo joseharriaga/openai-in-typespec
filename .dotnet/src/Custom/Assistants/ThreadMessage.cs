@@ -53,8 +53,8 @@ public partial class ThreadMessage
         AssistantId = internalMessage.AssistantId;
         ThreadId = internalMessage.ThreadId;
         RunId = internalMessage.RunId;
-        Metadata = internalMessage.Metadata;
-        FileIds = internalMessage.FileIds;
+        Metadata = internalMessage.Metadata ?? new Dictionary<string, string>();
+        FileIds = internalMessage.FileIds ?? [];
         CreatedAt = internalMessage.CreatedAt;
         Role = convertedRole;
         ContentItems = content;

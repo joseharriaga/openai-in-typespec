@@ -5,10 +5,8 @@ namespace OpenAI.Assistants;
 
 public partial class ToolOutput
 {
-    [JsonPropertyName("tool_call_id")]
-    public required string Id { get; set; }
-    [JsonPropertyName("output")]
-    public string Output { get; set; }
+    public required string Id { get; init; }
+    public string Output { get; init; }
 
     public ToolOutput()
     { }

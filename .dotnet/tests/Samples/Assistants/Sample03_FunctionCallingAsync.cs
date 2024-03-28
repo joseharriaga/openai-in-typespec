@@ -59,7 +59,7 @@ namespace OpenAI.Samples
                     {
                         RequiredFunctionToolCall requiredFunctionToolCall = action as RequiredFunctionToolCall;
 
-                        switch (requiredFunctionToolCall?.Name)
+                        switch (requiredFunctionToolCall?.FunctionName)
                         {
                             case GetCurrentLocationFunctionName:
                                 {

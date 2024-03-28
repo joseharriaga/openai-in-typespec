@@ -15,10 +15,12 @@ public partial class OpenAIFileInfo
         Id = internalFile.Id;
         Purpose = internalFile.Purpose.ToString() switch
         {
-            "fine-tune" => OpenAIFilePurpose.FineTuning,
-            "fine-tune-results" => OpenAIFilePurpose.FineTuningResults,
             "assistants" => OpenAIFilePurpose.Assistants,
             "assistants_output" => OpenAIFilePurpose.AssistantOutputs,
+            "batch" => OpenAIFilePurpose.BatchInput,
+            "batch_output" => OpenAIFilePurpose.BatchOutput,
+            "fine-tune" => OpenAIFilePurpose.FineTuning,
+            "fine-tune-results" => OpenAIFilePurpose.FineTuningResults,
             _ => throw new ArgumentException(nameof(internalFile)),
         };
         Filename = internalFile.Filename;
@@ -29,8 +31,10 @@ public partial class OpenAIFileInfo
 
 public enum OpenAIFilePurpose
 {
-    FineTuning,
-    FineTuningResults,
     Assistants,
     AssistantOutputs,
+    BatchInput,
+    BatchOutput,
+    FineTuning,
+    FineTuningResults,
 }

@@ -220,7 +220,7 @@ public partial class StreamingChatUpdate
                     int choiceIndex = 0;
                     ChatFinishReason? finishReason = null;
                     List<StreamingToolCallUpdate> toolCallUpdates = [];
-                    ChatLogProbabilityCollection logProbabilities = null;
+                    ChatLogProbabilityCollection logProbabilities = new([]);
 
                     foreach (JsonProperty choiceProperty in choiceElement.EnumerateObject())
                     {

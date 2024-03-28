@@ -1,5 +1,3 @@
-using OpenAI.ClientShared.Internal;
-using System;
 using System.ClientModel;
 using System.Threading.Tasks;
 

@@ -11,13 +11,13 @@ namespace OpenAI.Images;
 public partial class ImageVariationOptions
 {
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Size"/>
-    public GeneratedImageSize Size { get; set; }
+    public GeneratedImageSize? Size { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.ResponseFormat"/>
-    public ImageResponseFormat? ResponseFormat { get; set; }
+    public ImageResponseFormat? ResponseFormat { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
-    public string User { get; set; }
+    public string User { get; init; }
 
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName,  string model, int? imageCount)
     {

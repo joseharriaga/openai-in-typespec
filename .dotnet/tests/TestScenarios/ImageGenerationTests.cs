@@ -26,8 +26,8 @@ public partial class ImageGenerationTests
         ImageClient client = GetTestClient();
         ClientResult<GeneratedImage> result = client.GenerateImage("an isolated stop sign", new ImageGenerationOptions()
         {
-            Quality = ImageQuality.Standard,
-            Style = ImageStyle.Natural,
+            Quality = GeneratedImageQuality.Standard,
+            Style = GeneratedImageStyle.Natural,
         });
         Assert.That(result.Value.ImageUri, Is.Not.Null);
     }

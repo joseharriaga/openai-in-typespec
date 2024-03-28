@@ -61,9 +61,8 @@ public partial class ThreadRun
             "expired" => RunStatus.Expired,
             _ => throw new ArgumentException(nameof(Status)),
         };
-        Metadata = internalRun.Metadata;
-        FileIds = internalRun.FileIds;
-        Metadata = internalRun.Metadata;
+        Metadata = internalRun.Metadata ?? new Dictionary<string, string>();
+        FileIds = internalRun.FileIds ?? [];
         Model = internalRun.Model;
         Instructions = internalRun.Instructions;
 
@@ -77,21 +76,21 @@ public partial class ThreadRun
             Usage = new(internalRun.Usage);
         }
 
+        List<ToolInfo> tools = [];
         if (internalRun.Tools != null)
         {
-            List<ToolInfo> tools = [];
             foreach (BinaryData unionToolInfo in internalRun.Tools)
             {
                 tools.Add(ToolInfo.DeserializeToolInfo(JsonDocument.Parse(unionToolInfo).RootElement));
             }
-            Tools = tools;
         }
+        Tools = tools;
 
+        List<RunRequiredAction> actions = [];
         IReadOnlyList<Internal.Models.RunToolCallObject> internalFunctionCalls
             = internalRun.RequiredAction?.SubmitToolOutputs?.ToolCalls;
         if (internalFunctionCalls != null)
         {
-            List<RunRequiredAction> actions = [];
             foreach (Internal.Models.RunToolCallObject internalToolCall in internalFunctionCalls)
             {
                 actions.Add(new RequiredFunctionToolCall(
@@ -99,7 +98,7 @@ public partial class ThreadRun
                     internalToolCall.Function.Name,
                     internalToolCall.Function.Arguments));
             }
-            RequiredActions = actions;
         }
+        RequiredActions = actions;
     }
 }

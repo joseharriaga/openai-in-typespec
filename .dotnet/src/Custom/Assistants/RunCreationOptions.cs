@@ -1,6 +1,3 @@
-using OpenAI.ClientShared.Internal;
-using System.ClientModel.Internal;
-
 using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
@@ -10,26 +7,24 @@ namespace OpenAI.Assistants;
 /// </summary>
 public partial class RunCreationOptions
 {
-
-
     /// <summary>
     /// A run-specific model name that will override the assistant's defined model. If not provided, the assistant's
     /// selection will be used.
     /// </summary>
-    public string OverrideModel { get; set; }
+    public string ModelOverride { get; init; }
 
     /// <summary>
     /// A run specific replacement for the assistant's default instructions that will override the assistant-level
     /// instructions. If not specified, the assistant's instructions will be used.
     /// </summary>
-    public string OverrideInstructions { get; set; }
+    public string InstructionsOverride { get; init; }
 
     /// <summary>
     /// Run-specific additional instructions that will be appended to the assistant-level instructions solely for this
-    /// run. Unlike <see cref="OverrideInstructions"/>, the assistant's instructions are preserved and these additional
+    /// run. Unlike <see cref="InstructionsOverride"/>, the assistant's instructions are preserved and these additional
     /// instructions are concatenated.
     /// </summary>
-    public string AdditionalInstructions { get; set; }
+    public string AdditionalInstructions { get; init; }
 
     /// <summary>
     /// A run-specific collection of tool definitions that will override the assistant-level defaults. If not provided,
@@ -51,7 +46,7 @@ public partial class RunCreationOptions
     /// </list>
     /// </para>
     /// </summary>
-    public IList<ToolDefinition> OverrideTools { get; } = new ChangeTrackingList<ToolDefinition>();
+    public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
 
     /// <summary>
     /// An optional key/value mapping of additional, supplemental data items to attach to the <see cref="ThreadRun"/>.

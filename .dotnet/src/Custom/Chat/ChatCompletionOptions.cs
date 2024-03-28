@@ -1,6 +1,4 @@
-using OpenAI.ClientShared.Internal;
 using System;
-using System.ClientModel.Internal;
 
 using System.Collections.Generic;
 using System.Text.Json;
@@ -13,37 +11,37 @@ namespace OpenAI.Chat;
 public partial class ChatCompletionOptions
 {
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.FrequencyPenalty" />
-    public double? FrequencyPenalty { get; set; }
+    public double? FrequencyPenalty { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.LogitBias" />
-    public IDictionary<int, int> TokenSelectionBiases { get; set; } = new ChangeTrackingDictionary<int, int>();
+    public IDictionary<int, int> TokenSelectionBiases { get; init; } = new ChangeTrackingDictionary<int, int>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Logprobs" />
-    public bool? IncludeLogProbabilities { get; set; }
+    public bool? IncludeLogProbabilities { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.TopLogprobs" />
-    public int? LogProbabilityCount { get; set; }
+    public int? LogProbabilityCount { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.MaxTokens" />
-    public int? MaxTokens { get; set; }
+    public int? MaxTokens { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.PresencePenalty" />
-    public double? PresencePenalty { get; set; }
+    public double? PresencePenalty { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.ResponseFormat" />
-    public ChatResponseFormat? ResponseFormat { get; set; }
+    public ChatResponseFormat? ResponseFormat { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Seed" />
-    public int? Seed { get; set; }
+    public int? Seed { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Stop" />
     public IList<string> StopSequences { get; } = new ChangeTrackingList<string>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Temperature" />
-    public double? Temperature { get; set; }
+    public double? Temperature { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.TopP" />
-    public double? NucleusSamplingFactor { get; set; }
+    public double? NucleusSamplingFactor { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Tools" />
     public IList<ChatToolDefinition> Tools { get; } = new ChangeTrackingList<ChatToolDefinition>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.ToolChoice" />
-    public ChatToolConstraint? ToolConstraint { get; set; }
+    public ChatToolConstraint? ToolConstraint { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.User" />
-    public string User { get; set; }
+    public string User { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Functions" />
     public IList<ChatFunctionDefinition> Functions { get; } = new ChangeTrackingList<ChatFunctionDefinition>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.FunctionCall" />
-    public ChatFunctionConstraint? FunctionConstraint { get; set; }
+    public ChatFunctionConstraint? FunctionConstraint { get; init; }
 
     internal BinaryData GetInternalStopSequences()
     {
@@ -73,7 +71,7 @@ public partial class ChatCompletionOptions
             {
                 Internal.Models.FunctionObject functionObject = new(
                     functionTool.Description,
-                    functionTool.Name,
+                    functionTool.FunctionName,
                     CreateInternalFunctionParameters(functionTool.Parameters),
                     serializedAdditionalRawData: null);
                 internalTools.Add(new(functionObject));
@@ -89,7 +87,7 @@ public partial class ChatCompletionOptions
         {
             Internal.Models.ChatCompletionFunctions internalFunction = new(
                 function.Description,
-                function.Name,
+                function.FunctionName,
                 CreateInternalFunctionParameters(function.Parameters),
                 serializedAdditionalRawData: null);
             internalFunctions.Add(internalFunction);

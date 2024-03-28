@@ -28,13 +28,13 @@ namespace OpenAI.Samples
 
         private static readonly FunctionToolDefinition getCurrentLocationFunction = new()
         {
-            Name = GetCurrentLocationFunctionName,
+            FunctionName = GetCurrentLocationFunctionName,
             Description = "Get the user's current location"
         };
 
         private static readonly FunctionToolDefinition getCurrentWeatherFunction = new()
         {
-            Name = GetCurrentWeatherFunctionName,
+            FunctionName = GetCurrentWeatherFunctionName,
             Description = "Get the current weather in a given location",
             Parameters = BinaryData.FromString("""
                 {
@@ -105,7 +105,7 @@ namespace OpenAI.Samples
                     {
                         RequiredFunctionToolCall requiredFunctionToolCall = action as RequiredFunctionToolCall;
 
-                        switch (requiredFunctionToolCall?.Name)
+                        switch (requiredFunctionToolCall?.FunctionName)
                         {
                             case GetCurrentLocationFunctionName:
                                 {

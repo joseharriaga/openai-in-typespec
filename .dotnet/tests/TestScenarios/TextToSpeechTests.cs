@@ -24,11 +24,7 @@ public partial class TextToSpeechTests
     public void OutputFormatWorks(AudioDataFormat? responseFormat)
     {
         AudioClient client = new("tts-1");
-        TextToSpeechOptions options = new();
-        if (responseFormat != null)
-        {
-            options.ResponseFormat = responseFormat;
-        }
+        TextToSpeechOptions options = responseFormat == null ? new() : new() { ResponseFormat = responseFormat };
         ClientResult<BinaryData> result = client.GenerateSpeechFromText("Hello, world!", TextToSpeechVoice.Alloy, options);
         Assert.That(result.Value, Is.Not.Null);
     }

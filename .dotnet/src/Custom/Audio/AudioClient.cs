@@ -3,7 +3,6 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -314,6 +313,7 @@ public partial class AudioClient
                 AudioDataFormat.Mpga => "mpga",
                 AudioDataFormat.Ogg => "ogg",
                 AudioDataFormat.Opus => "opus",
+                AudioDataFormat.Pcm => "pcm",
                 AudioDataFormat.Wav => "wav",
                 AudioDataFormat.Webm => "webm",
                 _ => throw new ArgumentException(nameof(options.ResponseFormat)),

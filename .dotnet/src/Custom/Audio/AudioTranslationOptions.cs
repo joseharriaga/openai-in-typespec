@@ -6,9 +6,9 @@ namespace OpenAI.Audio;
 
 public partial class AudioTranslationOptions
 {
-    public string Prompt { get; set;  }
-    public AudioTranscriptionFormat? ResponseFormat { get; set; }
-    public float? Temperature { get; set; }
+    public string Prompt { get; init;  }
+    public AudioTranscriptionFormat? ResponseFormat { get; init; }
+    public float? Temperature { get; init; }
 
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName, string model)
     {

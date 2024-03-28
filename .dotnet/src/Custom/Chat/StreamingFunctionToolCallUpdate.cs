@@ -20,7 +20,7 @@ public partial class StreamingFunctionToolCallUpdate : StreamingToolCallUpdate
     /// parallel tool calls when streaming.
     /// </para>
     /// </remarks>
-    public string Name { get; }
+    public string FunctionName { get; }
 
     /// <summary>
     /// The next new segment of the function arguments for the function tool called by a streaming tool call.
@@ -43,7 +43,7 @@ public partial class StreamingFunctionToolCallUpdate : StreamingToolCallUpdate
         string functionArgumentsUpdate)
         : base("function", id, toolCallIndex)
     {
-        Name = functionName;
+        FunctionName = functionName;
         ArgumentsUpdate = functionArgumentsUpdate;
     }
 

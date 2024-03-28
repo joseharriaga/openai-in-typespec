@@ -9,30 +9,30 @@ namespace OpenAI.Images;
 /// <summary>
 /// Represents the available output dimensions for generated images.
 /// </summary>
-public partial class GeneratedImageSize : IJsonModel<GeneratedImageSize>
+public readonly partial struct GeneratedImageSize : IJsonModel<GeneratedImageSize>
 {
     GeneratedImageSize IJsonModel<GeneratedImageSize>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<ChatCompletionFunctionCallOption>)this).GetFormatFromOptions(options) : options.Format;
+        var format = options.Format == "W" ? ((IJsonModel<GeneratedImageSize>)this).GetFormatFromOptions(options) : options.Format;
         if (format != "J")
         {
             throw new FormatException($"The model {nameof(GeneratedImageSize)} does not support '{format}' format.");
         }
 
         using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeGeneratedImageSize(document.RootElement, options);
+        return DeserializeGeneratedImageSize(document.RootElement, options).Value;
     }
 
     GeneratedImageSize IPersistableModel<GeneratedImageSize>.Create(BinaryData data, ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<ChatCompletionFunctionCallOption>)this).GetFormatFromOptions(options) : options.Format;
+        var format = options.Format == "W" ? ((IPersistableModel<GeneratedImageSize>)this).GetFormatFromOptions(options) : options.Format;
 
         switch (format)
         {
             case "J":
                 {
                     using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeGeneratedImageSize(document.RootElement, options);
+                    return DeserializeGeneratedImageSize(document.RootElement, options).Value;
                 }
             default:
                 throw new FormatException($"The model {nameof(GeneratedImageSize)} does not support '{options.Format}' format.");
@@ -43,7 +43,7 @@ public partial class GeneratedImageSize : IJsonModel<GeneratedImageSize>
 
     void IJsonModel<GeneratedImageSize>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<ChatCompletionFunctionCallOption>)this).GetFormatFromOptions(options) : options.Format;
+        var format = options.Format == "W" ? ((IJsonModel<GeneratedImageSize>)this).GetFormatFromOptions(options) : options.Format;
         if (format != "J")
         {
             throw new FormatException($"The model {nameof(ChatCompletionFunctionCallOption)} does not support '{format}' format.");
@@ -64,7 +64,7 @@ public partial class GeneratedImageSize : IJsonModel<GeneratedImageSize>
         }
     }
 
-    internal static GeneratedImageSize DeserializeGeneratedImageSize(JsonElement element, ModelReaderWriterOptions options = null)
+    internal static GeneratedImageSize? DeserializeGeneratedImageSize(JsonElement element, ModelReaderWriterOptions options = null)
     {
         if (element.ValueKind != JsonValueKind.String)
         {

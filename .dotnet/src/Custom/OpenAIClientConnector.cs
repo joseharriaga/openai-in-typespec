@@ -1,7 +1,5 @@
 using System;
 using System.ClientModel;
-using System.ClientModel.Internal;
-
 
 namespace OpenAI;
 
@@ -22,7 +20,6 @@ internal partial class OpenAIClientConnector
         ApiKeyCredential credential = null,
         OpenAIClientOptions options = null)
     {
-        if (model is null) throw new ArgumentNullException(nameof(model));
         Model = model;
         Endpoint ??= options?.Endpoint ?? new(Environment.GetEnvironmentVariable(s_OpenAIEndpointEnvironmentVariable) ?? s_defaultOpenAIV1Endpoint);
         credential ??= new(Environment.GetEnvironmentVariable(s_OpenAIApiKeyEnvironmentVariable) ?? string.Empty);

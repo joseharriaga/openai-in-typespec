@@ -24,9 +24,9 @@ namespace OpenAI.Samples
 
             ImageGenerationOptions options = new()
             {
-                Quality = ImageQuality.High,
+                Quality = GeneratedImageQuality.High,
                 Size = GeneratedImageSize.W1792xH1024,
-                Style = ImageStyle.Vivid,
+                Style = GeneratedImageStyle.Vivid,
                 ResponseFormat = ImageResponseFormat.Bytes
             };
 

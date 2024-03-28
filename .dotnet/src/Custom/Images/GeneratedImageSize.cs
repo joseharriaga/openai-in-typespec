@@ -3,7 +3,7 @@ namespace OpenAI.Images;
 /// <summary>
 /// Represents the available output dimensions for generated images.
 /// </summary>
-public partial class GeneratedImageSize
+public readonly partial struct GeneratedImageSize
 {
     /// <summary>
     /// Gets the desired width, in pixels, for an image.
@@ -71,15 +71,13 @@ public partial class GeneratedImageSize
     public static readonly GeneratedImageSize W1792xH1024 = new(1792, 1024);
 
     /// <inheritdoc/>
-    public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right)
-        => ((left is null) == (right is null)) && (left is null || left.Equals(right));
+    public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right) => left.Equals(right);
 
     /// <inheritdoc/>
-    public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right)
-        => ((left is null) != (right is null)) || (left is not null && !left.Equals(right));
+    public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right) => !left.Equals(right);
 
     /// <inheritdoc/>
-    public bool Equals(GeneratedImageSize other) => other?.Width == Width && other?.Height == Height;
+    public bool Equals(GeneratedImageSize other) => other.Width == Width && other.Height == Height;
 
     /// <inheritdoc/>
     public override bool Equals(object obj) => obj is GeneratedImageSize other && Equals(other);

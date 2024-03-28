@@ -29,13 +29,13 @@ namespace OpenAI.Samples
 
         private static readonly ChatFunctionToolDefinition getCurrentLocationFunction = new()
         {
-            Name = GetCurrentLocationFunctionName,
+            FunctionName = GetCurrentLocationFunctionName,
             Description = "Get the user's current location"
         };
 
         private static readonly ChatFunctionToolDefinition getCurrentWeatherFunction = new()
         {
-            Name = GetCurrentWeatherFunctionName,
+            FunctionName = GetCurrentWeatherFunctionName,
             Description = "Get the current weather in a given location",
             Parameters = BinaryData.FromString("""
                 {

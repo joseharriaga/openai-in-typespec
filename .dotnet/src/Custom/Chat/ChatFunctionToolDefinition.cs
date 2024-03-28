@@ -11,12 +11,12 @@ public class ChatFunctionToolDefinition : ChatToolDefinition
     /// <summary>
     /// The name of the function that the tool represents.
     /// </summary>
-    public required string Name { get; set; }
+    public required string FunctionName { get; init; }
     /// <summary>
-    /// A friendly description of the function. This supplements <see cref="Name"/> in informing the model about when
+    /// A friendly description of the function. This supplements <see cref="FunctionName"/> in informing the model about when
     /// it should call the function.
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; init; }
     /// <summary>
     /// The parameter information for the function, provided in JSON Schema format.
     /// </summary>
@@ -39,7 +39,7 @@ public class ChatFunctionToolDefinition : ChatToolDefinition
     /// })
     /// </code></para>
     /// </remarks>
-    public BinaryData Parameters { get; set; }
+    public BinaryData Parameters { get; init; }
     /// <summary>
     /// Creates a new instance of <see cref="ChatFunctionToolDefinition"/>.
     /// </summary>
@@ -53,7 +53,7 @@ public class ChatFunctionToolDefinition : ChatToolDefinition
     [SetsRequiredMembers]
     public ChatFunctionToolDefinition(string name, string description = null, BinaryData parameters = null)
     {
-        Name = name;
+        FunctionName = name;
         Description = description;
         Parameters = parameters;
     }

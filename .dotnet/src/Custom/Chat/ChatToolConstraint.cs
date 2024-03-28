@@ -37,7 +37,7 @@ public readonly struct ChatToolConstraint : IEquatable<ChatToolConstraint>
                 type = "function",
                 function = new
                 {
-                    name = functionToolDefinition.Name,
+                    name = functionToolDefinition.FunctionName,
                 }
             });
         }

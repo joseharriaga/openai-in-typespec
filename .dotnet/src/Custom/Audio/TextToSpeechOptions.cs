@@ -19,11 +19,11 @@ public partial class TextToSpeechOptions
     /// </list>
     /// </para>
     /// </summary>
-    public AudioDataFormat? ResponseFormat { get; set; }
+    public AudioDataFormat? ResponseFormat { get; init; }
 
     /// <summary>
     /// A multiplicative <c>speed</c> factor to apply to the generated audio, with 1.0 being the default and valid
     /// values ranging from 0.25 to 4.0.
     /// </summary>
-    public float? SpeedMultiplier { get; set; }
+    public float? SpeedMultiplier { get; init; }
 }

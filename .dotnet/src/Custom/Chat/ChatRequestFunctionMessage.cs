@@ -1,4 +1,3 @@
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
 
@@ -15,7 +14,7 @@ public class ChatRequestFunctionMessage : ChatRequestMessage
     /// <summary>
     /// The <c>name</c> of the called function that this message provides information from.
     /// </summary>
-    public string FunctionName { get; set; } // JSON "name"
+    public string FunctionName { get; } // JSON "name"
 
     /// <summary>
     /// Creates a new instance of <see cref="ChatRequestFunctionMessage"/>.

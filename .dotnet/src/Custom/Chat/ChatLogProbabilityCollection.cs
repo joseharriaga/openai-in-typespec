@@ -16,7 +16,7 @@ public class ChatLogProbabilityCollection : ReadOnlyCollection<ChatLogProbabilit
     {
         if (internalLogprobs == null)
         {
-            return null;
+            return new([]);
         }
         List<ChatLogProbabilityResult> logProbabilities = [];
         foreach (Internal.Models.ChatCompletionTokenLogprob internalLogprob in internalLogprobs.Content)

@@ -1,4 +1,3 @@
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -18,7 +17,7 @@ public class MessageTextContent : MessageContent
     internal MessageTextContent(string text, IReadOnlyList<TextContentAnnotation> annotations)
     {
         Text = text;
-        Annotations = annotations;
+        Annotations = annotations ?? [];
     }
 
     internal override void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options)

@@ -24,7 +24,7 @@ public partial class AssistantThread
     internal AssistantThread(Internal.Models.ThreadObject internalThread)
     {
         Id = internalThread.Id;
-        Metadata = internalThread.Metadata;
+        Metadata = internalThread.Metadata ?? new Dictionary<string, string>();
         CreatedAt = internalThread.CreatedAt;
     }
 

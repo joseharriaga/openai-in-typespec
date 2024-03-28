@@ -70,7 +70,7 @@ public partial class AssistantTests
                 {
                     new FunctionToolDefinition()
                     {
-                        Name = "get_favorite_food_for_day_of_week",
+                        FunctionName = "get_favorite_food_for_day_of_week",
                         Description = "gets the user's favorite food for a given day of the week, like Tuesday",
                         Parameters = BinaryData.FromObjectAsJson(new
                         {

@@ -33,16 +33,22 @@ public partial class Assistant
         Description = internalAssistant.Description;
         DefaultModel = internalAssistant.Model;
         DefaultInstructions = internalAssistant.Instructions;
-        Metadata = internalAssistant.Metadata;
+        DefaultTools = GetToolsFromInternalTools(internalAssistant.Tools);
+        Metadata = internalAssistant.Metadata ?? new Dictionary<string, string>();
+    }
 
-        if (internalAssistant.Tools != null)
+    private static IReadOnlyList<ToolDefinition> GetToolsFromInternalTools(IReadOnlyList<BinaryData>? internalTools)
+    {
+        if (internalTools is not null)
         {
             List<ToolDefinition> tools = [];
-            foreach (BinaryData unionToolDefinitionData in internalAssistant.Tools)
+            foreach (BinaryData unionToolDefinitionData in internalTools)
             {
-                tools.Add(ToolDefinition.DeserializeToolDefinition(JsonDocument.Parse(unionToolDefinitionData).RootElement));
+                using JsonDocument toolDocument = JsonDocument.Parse(unionToolDefinitionData);
+                tools.Add(ToolDefinition.DeserializeToolDefinition(toolDocument.RootElement));
             }
-            DefaultTools = tools;
+            return tools;
         }
+        return [];
     }
 }

@@ -1,4 +1,3 @@
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
 
@@ -6,13 +5,13 @@ namespace OpenAI.Assistants;
 
 public partial class RequiredFunctionToolCall : RequiredToolCall
 {
-    public string Name { get; }
+    public string FunctionName { get; }
     public string Arguments { get; }
 
     internal RequiredFunctionToolCall(string id, string name, string arguments)
         : base(id)
     {
-        Name = name;
+        FunctionName = name;
         Arguments = arguments;
     }
 

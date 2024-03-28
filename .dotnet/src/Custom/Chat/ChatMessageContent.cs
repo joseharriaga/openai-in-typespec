@@ -96,10 +96,16 @@ public partial class ChatMessageContent
     public static implicit operator ChatMessageContent(string value) => FromText(value);
 
     /// <summary>
-    /// An implicit operator allowing a content item to be treated as a string.
+    /// An explicit operator allowing a content item to be treated as a string.
     /// </summary>
     /// <param name="content"></param>
-    public static implicit operator string(ChatMessageContent content) => content.ToText();
+    public static explicit operator string(ChatMessageContent content) => content.ToText();
+
+    /// <summary>
+    /// An explicit operator allowing a content item to be treated as a URI.
+    /// </summary>
+    /// <param name="content"></param>
+    public static explicit operator Uri(ChatMessageContent content) => content.ToUri();
 
     /// <inheritdoc/>
     public override string ToString()

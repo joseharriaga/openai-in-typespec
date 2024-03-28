@@ -1,4 +1,3 @@
-using OpenAI.ClientShared.Internal;
 using System;
 using System.Collections.Generic;
 
@@ -58,9 +57,9 @@ public class ChatCompletion
             _ => throw new ArgumentException(nameof(internalChoice.FinishReason)),
         };
         Content = internalChoice.Message.Content;
+        ChangeTrackingList<ChatToolCall> toolCalls = [];
         if (internalChoice.Message.ToolCalls != null)
         {
-            ChangeTrackingList<ChatToolCall> toolCalls = [];
             foreach (Internal.Models.ChatCompletionMessageToolCall internalToolCall in internalChoice.Message.ToolCalls)
             {
                 if (internalToolCall.Type == "function")
@@ -68,15 +67,12 @@ public class ChatCompletion
                     toolCalls.Add(new ChatFunctionToolCall(internalToolCall.Id, internalToolCall.Function.Name, internalToolCall.Function.Arguments));
                 }
             }
-            ToolCalls = toolCalls;
         }
+        ToolCalls = toolCalls;
         if (internalChoice.Message.FunctionCall != null)
         {
             FunctionCall = new(internalChoice.Message.FunctionCall.Name, internalChoice.Message.FunctionCall.Arguments);
         }
-        if (internalChoice.Logprobs != null)
-        {
-            LogProbabilities = ChatLogProbabilityCollection.FromInternalData(internalChoice.Logprobs);
-        }
+        LogProbabilities = ChatLogProbabilityCollection.FromInternalData(internalChoice.Logprobs);
     }
 }

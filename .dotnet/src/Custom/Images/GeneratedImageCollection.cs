@@ -10,7 +10,16 @@ namespace OpenAI.Images;
 /// </summary>
 public class GeneratedImageCollection : ReadOnlyCollection<GeneratedImage>
 {
-    internal GeneratedImageCollection(IList<GeneratedImage> list) : base(list) { }
+    /// <summary>
+    /// The timestamp at which the result images were generated.
+    /// </summary>
+    public DateTimeOffset CreatedAt { get; }
+
+    internal GeneratedImageCollection(IList<GeneratedImage> list, DateTimeOffset createdAt)
+        : base(list)
+    {
+        CreatedAt = createdAt;
+    }
 
     internal static GeneratedImageCollection Deserialize(BinaryData content)
     {
@@ -28,6 +37,6 @@ public class GeneratedImageCollection : ReadOnlyCollection<GeneratedImage>
             images.Add(new GeneratedImage(response, i));
         }
 
-        return new GeneratedImageCollection(images);
+        return new GeneratedImageCollection(images, response.Created);
     }
 }

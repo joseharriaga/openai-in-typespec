@@ -44,7 +44,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionTokenLogprob"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob"> The log probability of this token. </param>
+        /// <param name="logprob">
+        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+        /// the value `-9999.0` is used to signify that the token is very unlikely.
+        /// </param>
         /// <param name="bytes">
         /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
         /// instances where characters are represented by multiple tokens and their byte representations
@@ -69,7 +72,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionTokenLogprob"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob"> The log probability of this token. </param>
+        /// <param name="logprob">
+        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+        /// the value `-9999.0` is used to signify that the token is very unlikely.
+        /// </param>
         /// <param name="bytes">
         /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
         /// instances where characters are represented by multiple tokens and their byte representations
@@ -97,7 +103,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The token. </summary>
         public string Token { get; }
-        /// <summary> The log probability of this token. </summary>
+        /// <summary>
+        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+        /// the value `-9999.0` is used to signify that the token is very unlikely.
+        /// </summary>
         public double Logprob { get; }
         /// <summary>
         /// A list of integers representing the UTF-8 bytes representation of the token. Useful in

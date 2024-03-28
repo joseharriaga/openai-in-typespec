@@ -42,7 +42,7 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResult"/>. </summary>
-        /// <param name="flagged"> Whether the content violates [OpenAI's usage policies](/policies/usage-policies). </param>
+        /// <param name="flagged"> Whether any of the below categories are flagged. </param>
         /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
         /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="categories"/> or <paramref name="categoryScores"/> is null. </exception>
@@ -57,7 +57,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResult"/>. </summary>
-        /// <param name="flagged"> Whether the content violates [OpenAI's usage policies](/policies/usage-policies). </param>
+        /// <param name="flagged"> Whether any of the below categories are flagged. </param>
         /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
         /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -74,7 +74,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Whether the content violates [OpenAI's usage policies](/policies/usage-policies). </summary>
+        /// <summary> Whether any of the below categories are flagged. </summary>
         public bool Flagged { get; }
         /// <summary> A list of the categories, and whether they are flagged or not. </summary>
         public CreateModerationResponseResultCategories Categories { get; }

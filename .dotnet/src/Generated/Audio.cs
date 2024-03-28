@@ -144,25 +144,25 @@ namespace OpenAI.Internal
         /// <summary> Transcribes audio into the input language. </summary>
         /// <param name="audio"> The <see cref="CreateTranscriptionRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audio"/> is null. </exception>
-        public virtual async Task<ClientResult<CreateTranscriptionResponse>> CreateTranscriptionAsync(CreateTranscriptionRequest audio)
+        public virtual async Task<ClientResult<CreateTranscriptionResponseVerboseJson>> CreateTranscriptionAsync(CreateTranscriptionRequest audio)
         {
             Argument.AssertNotNull(audio, nameof(audio));
 
             using BinaryContent content = BinaryContent.Create(audio);
             ClientResult result = await CreateTranscriptionAsync(content, DefaultRequestContext).ConfigureAwait(false);
-            return ClientResult.FromValue(CreateTranscriptionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            return ClientResult.FromValue(CreateTranscriptionResponseVerboseJson.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Transcribes audio into the input language. </summary>
         /// <param name="audio"> The <see cref="CreateTranscriptionRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audio"/> is null. </exception>
-        public virtual ClientResult<CreateTranscriptionResponse> CreateTranscription(CreateTranscriptionRequest audio)
+        public virtual ClientResult<CreateTranscriptionResponseVerboseJson> CreateTranscription(CreateTranscriptionRequest audio)
         {
             Argument.AssertNotNull(audio, nameof(audio));
 
             using BinaryContent content = BinaryContent.Create(audio);
             ClientResult result = CreateTranscription(content, DefaultRequestContext);
-            return ClientResult.FromValue(CreateTranscriptionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            return ClientResult.FromValue(CreateTranscriptionResponseVerboseJson.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary>
@@ -246,25 +246,25 @@ namespace OpenAI.Internal
         /// <summary> Translates audio into English.. </summary>
         /// <param name="audio"> The <see cref="CreateTranslationRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audio"/> is null. </exception>
-        public virtual async Task<ClientResult<CreateTranslationResponse>> CreateTranslationAsync(CreateTranslationRequest audio)
+        public virtual async Task<ClientResult<CreateTranslationResponseVerboseJson>> CreateTranslationAsync(CreateTranslationRequest audio)
         {
             Argument.AssertNotNull(audio, nameof(audio));
 
             using BinaryContent content = BinaryContent.Create(audio);
             ClientResult result = await CreateTranslationAsync(content, DefaultRequestContext).ConfigureAwait(false);
-            return ClientResult.FromValue(CreateTranslationResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            return ClientResult.FromValue(CreateTranslationResponseVerboseJson.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Translates audio into English.. </summary>
         /// <param name="audio"> The <see cref="CreateTranslationRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="audio"/> is null. </exception>
-        public virtual ClientResult<CreateTranslationResponse> CreateTranslation(CreateTranslationRequest audio)
+        public virtual ClientResult<CreateTranslationResponseVerboseJson> CreateTranslation(CreateTranslationRequest audio)
         {
             Argument.AssertNotNull(audio, nameof(audio));
 
             using BinaryContent content = BinaryContent.Create(audio);
             ClientResult result = CreateTranslation(content, DefaultRequestContext);
-            return ClientResult.FromValue(CreateTranslationResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            return ClientResult.FromValue(CreateTranslationResponseVerboseJson.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary>

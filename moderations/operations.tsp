@@ -14,7 +14,7 @@ interface Moderations {
   @post
   @operationId("createModeration")
   @tag("Moderations")
-  @summary("Classifies if text violates OpenAI's Content Policy")
+  @summary("Classifies if text is potentially harmful.")
   createModeration(
     @body content: CreateModerationRequest,
   ): CreateModerationResponse | ErrorResponse;

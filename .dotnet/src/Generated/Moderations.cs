@@ -39,7 +39,7 @@ namespace OpenAI.Internal
             _endpoint = endpoint;
         }
 
-        /// <summary> Classifies if text violates OpenAI's Content Policy. </summary>
+        /// <summary> Classifies if text is potentially harmful. </summary>
         /// <param name="content"> The <see cref="CreateModerationRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         public virtual async Task<ClientResult<CreateModerationResponse>> CreateModerationAsync(CreateModerationRequest content)
@@ -51,7 +51,7 @@ namespace OpenAI.Internal
             return ClientResult.FromValue(CreateModerationResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Classifies if text violates OpenAI's Content Policy. </summary>
+        /// <summary> Classifies if text is potentially harmful. </summary>
         /// <param name="content"> The <see cref="CreateModerationRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         public virtual ClientResult<CreateModerationResponse> CreateModeration(CreateModerationRequest content)
@@ -64,7 +64,7 @@ namespace OpenAI.Internal
         }
 
         /// <summary>
-        /// [Protocol Method] Classifies if text violates OpenAI's Content Policy
+        /// [Protocol Method] Classifies if text is potentially harmful.
         /// <list type="bullet">
         /// <item>
         /// <description>
@@ -103,7 +103,7 @@ namespace OpenAI.Internal
         }
 
         /// <summary>
-        /// [Protocol Method] Classifies if text violates OpenAI's Content Policy
+        /// [Protocol Method] Classifies if text is potentially harmful.
         /// <list type="bullet">
         /// <item>
         /// <description>

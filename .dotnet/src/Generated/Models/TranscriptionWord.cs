@@ -6,8 +6,8 @@ using OpenAI;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The RunObjectLastError. </summary>
-    internal partial class RunObjectLastError
+    /// <summary> The TranscriptionWord. </summary>
+    internal partial class TranscriptionWord
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -41,37 +41,43 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="RunObjectLastError"/>. </summary>
-        /// <param name="code"> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </param>
-        /// <param name="message"> A human-readable description of the error. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
-        internal RunObjectLastError(RunObjectLastErrorCode code, string message)
+        /// <summary> Initializes a new instance of <see cref="TranscriptionWord"/>. </summary>
+        /// <param name="word"> The text content of the word. </param>
+        /// <param name="start"> Start time of the word in seconds. </param>
+        /// <param name="end"> End time of the word in seconds. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="word"/> is null. </exception>
+        internal TranscriptionWord(string word, TimeSpan start, TimeSpan end)
         {
-            Argument.AssertNotNull(message, nameof(message));
+            Argument.AssertNotNull(word, nameof(word));
 
-            Code = code;
-            Message = message;
+            Word = word;
+            Start = start;
+            End = end;
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunObjectLastError"/>. </summary>
-        /// <param name="code"> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </param>
-        /// <param name="message"> A human-readable description of the error. </param>
+        /// <summary> Initializes a new instance of <see cref="TranscriptionWord"/>. </summary>
+        /// <param name="word"> The text content of the word. </param>
+        /// <param name="start"> Start time of the word in seconds. </param>
+        /// <param name="end"> End time of the word in seconds. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunObjectLastError(RunObjectLastErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal TranscriptionWord(string word, TimeSpan start, TimeSpan end, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Code = code;
-            Message = message;
+            Word = word;
+            Start = start;
+            End = end;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunObjectLastError"/> for deserialization. </summary>
-        internal RunObjectLastError()
+        /// <summary> Initializes a new instance of <see cref="TranscriptionWord"/> for deserialization. </summary>
+        internal TranscriptionWord()
         {
         }
 
-        /// <summary> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </summary>
-        public RunObjectLastErrorCode Code { get; }
-        /// <summary> A human-readable description of the error. </summary>
-        public string Message { get; }
+        /// <summary> The text content of the word. </summary>
+        public string Word { get; }
+        /// <summary> Start time of the word in seconds. </summary>
+        public TimeSpan Start { get; }
+        /// <summary> End time of the word in seconds. </summary>
+        public TimeSpan End { get; }
     }
 }

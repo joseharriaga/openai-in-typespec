@@ -35,9 +35,10 @@ interface Audio {
     @header contentType: "multipart/form-data",
     @body audio: CreateTranscriptionRequest,
   ):
-  | CreateTranscriptionResponse
+  | CreateTranscriptionResponseVerboseJson
+  | CreateTranscriptionResponseJson
   | {
-      // TODO: Is this the appropriate way to describe the multiple possible response types?
+      // TODO: This response is not defined in the OpenAPI spec.
       @header contentType: "text/plain";
       @body text: string; 
     }
@@ -51,10 +52,11 @@ interface Audio {
   createTranslation(
     @header contentType: "multipart/form-data",
     @body audio: CreateTranslationRequest,
-  ): 
-  | CreateTranslationResponse
+  ):
+  | CreateTranslationResponseVerboseJson
+  | CreateTranslationResponseJson
   | {
-      // TODO: Is this the appropriate way to describe the multiple possible response types?
+      // TODO: This response is not defined in the OpenAPI spec.
       @header contentType: "text/plain";
       @body text: string; 
     }

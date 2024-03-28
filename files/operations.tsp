@@ -34,8 +34,8 @@ interface Files {
   @tag("Files")
   @summary("Returns a list of files that belong to the user's organization.")
   listFiles(
+    // TODO: This is just a string in the OpenAPI spec.
     /** Only return files with the given purpose. */
-    // NOTE: This is just a string in the OpenAPI spec.
     @query purpose?: string,
   ): ListFilesResponse | ErrorResponse;
 
@@ -64,8 +64,10 @@ interface Files {
   @operationId("downloadFile")
   @tag("Files")
   @summary("Returns the contents of the specified file.")
+  // TODO: The OpenAPI spec says this returns a plain string but that the Content-Type is
+  // application/json and not text/plain.
   downloadFile(
     /** The ID of the file to use for this request. */
     @path file_id: string,
-  ): string | ErrorResponse; // TODO: The OpenAPI spec says this is a string but the Content-Type is application/json?
+  ): string | ErrorResponse;
 }

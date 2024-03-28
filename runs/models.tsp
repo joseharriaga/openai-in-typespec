@@ -339,8 +339,8 @@ model RunObject {
 
   /** The last error associated with this run. Will be `null` if there are no errors. */
   last_error: {
-    /** One of `server_error` or `rate_limit_exceeded`. */
-    code: "server_error" | "rate_limit_exceeded";
+    /** One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. */
+    code: "server_error" | "rate_limit_exceeded" | "invalid_prompt";
 
     /** A human-readable description of the error. */
     message: string;

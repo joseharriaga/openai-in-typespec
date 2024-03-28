@@ -1,8 +1,8 @@
-namespace OpenAI.Chat;
-
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+
+namespace OpenAI.Chat;
 
 /// <summary>
 /// Represents an incremental item of new data in a streaming response to a chat completion request.
@@ -182,17 +182,22 @@ public partial class StreamingChatUpdate
         LogProbabilities = logProbabilities;
     }
 
-    internal static IEnumerable<StreamingChatUpdate> DeserializeSseChatUpdates(ReadOnlyMemory<char> _, JsonElement sseDataJson)
+    internal static List<StreamingChatUpdate> DeserializeStreamingChatUpdates(JsonElement element)
     {
+        // TODO: Do we need to validate that we didn't get null or empty?
+        // What's the contract for the JSON updates?
+
         List<StreamingChatUpdate> results = [];
-        if (sseDataJson.ValueKind == JsonValueKind.Null)
+
+        if (element.ValueKind == JsonValueKind.Null)
         {
             return results;
         }
+
         string id = default;
         DateTimeOffset created = default;
         string systemFingerprint = null;
-        foreach (JsonProperty property in sseDataJson.EnumerateObject())
+        foreach (JsonProperty property in element.EnumerateObject())
         {
             if (property.NameEquals("id"u8))
             {

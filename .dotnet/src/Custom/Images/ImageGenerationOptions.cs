@@ -39,21 +39,21 @@ public partial class ImageGenerationOptions
     /// <para>
     /// <b>Available for <c>dall-e-2</c></b>:
     /// <list type="bullet">
-    /// <item><c>1024x1024</c> - <see cref="ImageSize.Size1024x1024"/> - default</item>
-    /// <item><c>256x256</c> - <see cref="ImageSize.Size256x256"/></item> - small
-    /// <item><c>512x512</c> - <see cref="ImageSize.Size512x512"/></item> - medium
+    /// <item><c>1024x1024</c> - <see cref="GeneratedImageSize.W1024xH1024"/> - default</item>
+    /// <item><c>256x256</c> - <see cref="GeneratedImageSize.W256xH256"/></item> - small
+    /// <item><c>512x512</c> - <see cref="GeneratedImageSize.W512xH512"/></item> - medium
     /// </list>
     /// </para>
     /// <para>
     /// <b>Available for <c>dall-e-3</c>:</b>
     /// <list type="bullet">
-    /// <item><c>1024x1024</c> - <see cref="ImageSize.Size1024x1024"/> - default</item>
-    /// <item><c>1024x1792</c> - <see cref="ImageSize.Size1024x1792"/> - extra tall</item>
-    /// <item><c>1792x1024</c> - <see cref="ImageSize.Size1792x1024"/> - extra wide</item>
+    /// <item><c>1024x1024</c> - <see cref="GeneratedImageSize.W1024xH1024"/> - default</item>
+    /// <item><c>1024x1792</c> - <see cref="GeneratedImageSize.W1024xH1792"/> - extra tall</item>
+    /// <item><c>1792x1024</c> - <see cref="GeneratedImageSize.W1792xH1024"/> - extra wide</item>
     /// </list>
     /// </para>
     /// </summary>
-    public ImageSize? Size { get; set; }
+    public GeneratedImageSize Size { get; set; }
     /// <summary>
     /// The style kind to guide the generation of the image.
     /// <list type="bullet">

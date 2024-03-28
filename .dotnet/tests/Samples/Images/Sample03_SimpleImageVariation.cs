@@ -18,11 +18,11 @@ namespace OpenAI.Samples
 
             ImageVariationOptions options = new()
             {
-                Size = ImageSize.Size1024x1024,
+                Size = GeneratedImageSize.W1024xH1024,
                 ResponseFormat = ImageResponseFormat.Bytes
             };
 
-            GeneratedImageCollection image = client.GenerateImageVariations(imageBytes, 1, options);
+            GeneratedImageCollection image = client.GenerateImageVariations(imageBytes, "variation_sample_image.png", 1, options);
             BinaryData bytes = image[0].ImageBytes;
 
             using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");

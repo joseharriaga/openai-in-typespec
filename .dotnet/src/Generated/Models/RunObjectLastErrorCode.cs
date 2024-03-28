@@ -19,11 +19,14 @@ namespace OpenAI.Internal.Models
 
         private const string ServerErrorValue = "server_error";
         private const string RateLimitExceededValue = "rate_limit_exceeded";
+        private const string InvalidPromptValue = "invalid_prompt";
 
         /// <summary> server_error. </summary>
         public static RunObjectLastErrorCode ServerError { get; } = new RunObjectLastErrorCode(ServerErrorValue);
         /// <summary> rate_limit_exceeded. </summary>
         public static RunObjectLastErrorCode RateLimitExceeded { get; } = new RunObjectLastErrorCode(RateLimitExceededValue);
+        /// <summary> invalid_prompt. </summary>
+        public static RunObjectLastErrorCode InvalidPrompt { get; } = new RunObjectLastErrorCode(InvalidPromptValue);
         /// <summary> Determines if two <see cref="RunObjectLastErrorCode"/> values are the same. </summary>
         public static bool operator ==(RunObjectLastErrorCode left, RunObjectLastErrorCode right) => left.Equals(right);
         /// <summary> Determines if two <see cref="RunObjectLastErrorCode"/> values are not the same. </summary>

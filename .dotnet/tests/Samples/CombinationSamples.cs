@@ -23,7 +23,7 @@ namespace OpenAI.Samples.Miscellaneous
                 {
                     Style = ImageStyle.Vivid,
                     Quality = ImageQuality.High,
-                    Size = ImageSize.Size1792x1024,
+                    Size = GeneratedImageSize.W1792xH1024,
                 });
             GeneratedImage imageGeneration = imageResult.Value;
             Console.WriteLine($"Majestic alpaca available at:\n{imageGeneration.ImageUri.AbsoluteUri}");
@@ -36,7 +36,7 @@ namespace OpenAI.Samples.Miscellaneous
                     + "evaluate imagery, focus on criticizing elements of subject, composition, and other details."),
                 new ChatRequestUserMessage(
                     "describe the following image in a few sentences",
-                    ChatMessageContent.CreateImage(imageGeneration.ImageUri)),
+                    ChatMessageContent.FromImage(imageGeneration.ImageUri)),
             ],
                 new ChatCompletionOptions()
                 {
@@ -108,7 +108,7 @@ namespace OpenAI.Samples.Miscellaneous
                 description,
                 new ImageGenerationOptions()
                 {
-                    Size = ImageSize.Size1792x1024,
+                    Size = GeneratedImageSize.W1792xH1024,
                     Quality = ImageQuality.High,
                 });
             Uri imageLocation = imageGenerationResult.Value.ImageUri;
@@ -121,7 +121,7 @@ namespace OpenAI.Samples.Miscellaneous
                     new ChatRequestSystemMessage("Assume the role of an art critic. Although usually cranky and occasionally even referred to as a 'curmudgeon', you're somehow entirely smitten with the subject presented to you and, despite your best efforts, can't help but lavish praise when you're asked to appraise a provided image."),
                 new ChatRequestUserMessage(
                     "Evaluate this image for me. What is it, and what do you think of it?",
-                    ChatMessageContent.CreateImage(imageLocation)),
+                    ChatMessageContent.FromImage(imageLocation)),
             ],
                 new ChatCompletionOptions()
                 {

@@ -46,7 +46,10 @@ namespace OpenAI.Internal.Models
         /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
         /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
-        /// <param name="model"> ID of the model to use. Only `whisper-1` is currently available. </param>
+        /// <param name="model">
+        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
+        /// is currently available.
+        /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
         public CreateTranslationRequest(BinaryData file, CreateTranslationRequestModel model)
         {
@@ -61,7 +64,10 @@ namespace OpenAI.Internal.Models
         /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
         /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
-        /// <param name="model"> ID of the model to use. Only `whisper-1` is currently available. </param>
+        /// <param name="model">
+        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
+        /// is currently available.
+        /// </param>
         /// <param name="prompt">
         /// An optional text to guide the model's style or continue a previous audio segment. The
         /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
@@ -110,7 +116,10 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public BinaryData File { get; }
-        /// <summary> ID of the model to use. Only `whisper-1` is currently available. </summary>
+        /// <summary>
+        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
+        /// is currently available.
+        /// </summary>
         public CreateTranslationRequestModel Model { get; }
         /// <summary>
         /// An optional text to guide the model's style or continue a previous audio segment. The

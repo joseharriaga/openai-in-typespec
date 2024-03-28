@@ -28,7 +28,7 @@ public class ChatRequestUserMessage : ChatRequestMessage
     /// </summary>
     /// <param name="content"> The textual content associated with the message. </param>
     public ChatRequestUserMessage(string content)
-        : base(ChatRole.User, ChatMessageContent.CreateText(content))
+        : base(ChatRole.User, ChatMessageContent.FromText(content))
     { }
 
     /// <summary>

@@ -6,7 +6,7 @@ namespace OpenAI.Audio;
 public enum AudioTranscriptionFormat
 {
     Simple,
-    Detailed,
+    Verbose,
     Srt,
     Vtt,
 }

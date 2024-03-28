@@ -10,14 +10,14 @@ using OpenAI;
 
 namespace OpenAI.Internal.Models
 {
-    internal partial class AudioSegment : IJsonModel<AudioSegment>
+    internal partial class TranscriptionSegment : IJsonModel<TranscriptionSegment>
     {
-        void IJsonModel<AudioSegment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<TranscriptionSegment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioSegment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionSegment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AudioSegment)} does not support '{format}' format.");
+                throw new FormatException($"The model {nameof(TranscriptionSegment)} does not support '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -64,19 +64,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        AudioSegment IJsonModel<AudioSegment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        TranscriptionSegment IJsonModel<TranscriptionSegment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioSegment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionSegment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AudioSegment)} does not support '{format}' format.");
+                throw new FormatException($"The model {nameof(TranscriptionSegment)} does not support '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAudioSegment(document.RootElement, options);
+            return DeserializeTranscriptionSegment(document.RootElement, options);
         }
 
-        internal static AudioSegment DeserializeAudioSegment(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static TranscriptionSegment DeserializeTranscriptionSegment(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -159,7 +159,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = additionalPropertiesDictionary;
-            return new AudioSegment(
+            return new TranscriptionSegment(
                 id,
                 seek,
                 start,
@@ -173,43 +173,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AudioSegment>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<TranscriptionSegment>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioSegment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionSegment>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AudioSegment)} does not support '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(TranscriptionSegment)} does not support '{options.Format}' format.");
             }
         }
 
-        AudioSegment IPersistableModel<AudioSegment>.Create(BinaryData data, ModelReaderWriterOptions options)
+        TranscriptionSegment IPersistableModel<TranscriptionSegment>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioSegment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionSegment>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAudioSegment(document.RootElement, options);
+                        return DeserializeTranscriptionSegment(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AudioSegment)} does not support '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(TranscriptionSegment)} does not support '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AudioSegment>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<TranscriptionSegment>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AudioSegment FromResponse(PipelineResponse response)
+        internal static TranscriptionSegment FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAudioSegment(document.RootElement);
+            return DeserializeTranscriptionSegment(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +27,7 @@ internal sealed class SseReader : IDisposable, IAsyncDisposable
     /// <returns>
     ///     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
     /// </returns>
-    public ServerSentEvent? TryGetNextEvent(CancellationToken cancellationToken = default)
+    public IEnumerable<ServerSentEvent> GetEvents(CancellationToken cancellationToken = default)
     {
         List<ServerSentEventField> fields = [];
 
@@ -36,14 +37,14 @@ internal sealed class SseReader : IDisposable, IAsyncDisposable
             if (line == null)
             {
                 // A null line indicates end of input
-                return null;
+                yield break;
             }
             else if (line.Length == 0)
             {
                 // An empty line should dispatch an event for pending accumulated fields
                 ServerSentEvent nextEvent = new(fields);
                 fields = [];
-                return nextEvent;
+                yield return nextEvent;
             }
             else if (line[0] == ':')
             {
@@ -57,7 +58,7 @@ internal sealed class SseReader : IDisposable, IAsyncDisposable
             }
         }
 
-        return null;
+        yield break;
     }
 
     /// <summary>
@@ -68,7 +69,7 @@ internal sealed class SseReader : IDisposable, IAsyncDisposable
     /// <returns>
     ///     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
     /// </returns>
-    public async Task<ServerSentEvent?> TryGetNextEventAsync(CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<ServerSentEvent> GetEventsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         List<ServerSentEventField> fields = [];
 
@@ -78,14 +79,14 @@ internal sealed class SseReader : IDisposable, IAsyncDisposable
             if (line == null)
             {
                 // A null line indicates end of input
-                return null;
+                yield break;
             }
             else if (line.Length == 0)
             {
                 // An empty line should dispatch an event for pending accumulated fields
                 ServerSentEvent nextEvent = new(fields);
                 fields = [];
-                return nextEvent;
+                yield return nextEvent;
             }
             else if (line[0] == ':')
             {
@@ -99,7 +100,7 @@ internal sealed class SseReader : IDisposable, IAsyncDisposable
             }
         }
 
-        return null;
+        yield break;
     }
 
     public void Dispose()

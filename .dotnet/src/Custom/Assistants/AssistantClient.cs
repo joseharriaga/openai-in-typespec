@@ -233,7 +233,7 @@ public partial class AssistantClient
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
     }
 
-     public virtual ClientResult<AssistantThread> GetThread(string threadId)
+    public virtual ClientResult<AssistantThread> GetThread(string threadId)
     {
         ClientResult<Internal.Models.ThreadObject> internalResult = ThreadShim.GetThread(threadId);
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
@@ -268,13 +268,13 @@ public partial class AssistantClient
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
     }
 
-     public virtual ClientResult<bool> DeleteThread(string threadId)
+    public virtual ClientResult<bool> DeleteThread(string threadId)
     {
         ClientResult<Internal.Models.DeleteThreadResponse> internalResult = ThreadShim.DeleteThread(threadId);
         return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
     }
 
-     public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId)
+    public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId)
     {
         ClientResult<Internal.Models.DeleteThreadResponse> internalResult = await ThreadShim.DeleteThreadAsync(threadId).ConfigureAwait(false);
         return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
@@ -464,7 +464,7 @@ public partial class AssistantClient
         string assistantId,
         RunCreationOptions options = null)
     {
-        PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options, stream: true);
+        using PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options, stream: true);
         RunShim.Pipeline.Send(message);
         return CreateStreamingRunResult(message);
     }
@@ -474,7 +474,7 @@ public partial class AssistantClient
         string assistantId,
         RunCreationOptions options = null)
     {
-        PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options, stream: true);
+        using PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options, stream: true);
         await RunShim.Pipeline.SendAsync(message);
         return CreateStreamingRunResult(message);
     }
@@ -506,7 +506,7 @@ public partial class AssistantClient
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
     {
-        PipelineMessage message = CreateCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
+        using PipelineMessage message = CreateCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
         Shim.Pipeline.Send(message);
         return CreateStreamingRunResult(message);
     }
@@ -516,7 +516,7 @@ public partial class AssistantClient
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
     {
-        PipelineMessage message = CreateCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
+        using PipelineMessage message = CreateCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
         await Shim.Pipeline.SendAsync(message);
         return CreateStreamingRunResult(message);
     }
@@ -621,14 +621,14 @@ public partial class AssistantClient
 
     public virtual StreamingClientResult<StreamingUpdate> SubmitToolOutputsStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
     {
-        PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
+        using PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
         Shim.Pipeline.SendAsync(message);
         return CreateStreamingRunResult(message);
     }
 
     public virtual async Task<StreamingClientResult<StreamingUpdate>> SubmitToolOutputsStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
     {
-        PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
+        using PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
         await Shim.Pipeline.SendAsync(message);
         return CreateStreamingRunResult(message);
     }

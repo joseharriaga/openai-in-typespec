@@ -379,8 +379,8 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: '#/components/schemas/CreateTranscriptionResponseJson'
                   - $ref: '#/components/schemas/CreateTranscriptionResponseVerboseJson'
+                  - $ref: '#/components/schemas/CreateTranscriptionResponseJson'
             text/plain:
               schema:
                 type: string
@@ -410,8 +410,8 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: '#/components/schemas/CreateTranslationResponseJson'
                   - $ref: '#/components/schemas/CreateTranslationResponseVerboseJson'
+                  - $ref: '#/components/schemas/CreateTranslationResponseJson'
             text/plain:
               schema:
                 type: string
@@ -3771,7 +3771,7 @@ components:
           format: binary
           description: |-
             The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-            mpeg, mpga, m4a, ogg, wav, or webm.
+            mpeg, mpga, m4a, ogg, pcm, wav, or webm.
           x-oaiTypeLabel: file
         model:
           anyOf:
@@ -3889,7 +3889,7 @@ components:
           format: binary
           description: |-
             The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-            mpeg, mpga, m4a, ogg, wav, or webm.
+            mpeg, mpga, m4a, ogg, pcm, wav, or webm.
           x-oaiTypeLabel: file
         model:
           anyOf:
@@ -4921,6 +4921,8 @@ components:
             - fine-tune-results
             - assistants
             - assistants_output
+            - batch
+            - batch_output
           description: |-
             The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`,
             `assistants`, and `assistants_output`.

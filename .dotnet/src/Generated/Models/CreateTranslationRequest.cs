@@ -44,7 +44,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/>. </summary>
         /// <param name="file">
         /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, wav, or webm.
+        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
         /// </param>
         /// <param name="model">
         /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
@@ -62,7 +62,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/>. </summary>
         /// <param name="file">
         /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, wav, or webm.
+        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
         /// </param>
         /// <param name="model">
         /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
@@ -100,7 +100,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary>
         /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, wav, or webm.
+        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
         /// <para>
         /// To assign a byte[] to this property use <see cref="BinaryData.FromBytes(byte[])"/>.
         /// The byte[] will be serialized to a Base64 encoded string.

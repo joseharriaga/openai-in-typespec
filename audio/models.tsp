@@ -39,7 +39,7 @@ model CreateSpeechRequest {
 model CreateTranscriptionRequest {
   /**
    * The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-   * mpeg, mpga, m4a, ogg, wav, or webm.
+   * mpeg, mpga, m4a, ogg, pcm, wav, or webm.
    */
   @encode("binary")
   @extension("x-oaiTypeLabel", "file")
@@ -94,7 +94,7 @@ model CreateTranscriptionRequest {
 model CreateTranslationRequest {
   /**
    * The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-   * mpeg, mpga, m4a, ogg, wav, or webm.
+   * mpeg, mpga, m4a, ogg, pcm, wav, or webm.
    */
   @encode("binary")
   @extension("x-oaiTypeLabel", "file")

@@ -19,30 +19,11 @@ public partial class ImageVariationOptions
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
     public string User { get; set; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName,  string model, int? imageCount)
+    internal MultipartFormDataBinaryContent ToMultipartContent(Stream image, string fileName,  string model, int? imageCount)
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(fileStream, "image", fileName);
-
-        AddContent(model, imageCount, content);
-
-        return content;
-    }
-
-    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData imageBytes, string fileName, string model, int? imageCount)
-    {
-        MultipartFormDataBinaryContent content = new();
-
-        content.Add(imageBytes, "image", fileName);
-
-        AddContent(model, imageCount, content);
-
-        return content;
-    }
-
-    private void AddContent(string model, int? imageCount, MultipartFormDataBinaryContent content)
-    {
+        content.Add(image, "image", fileName);
         content.Add(model, "model");
 
         if (imageCount is not null)
@@ -72,5 +53,7 @@ public partial class ImageVariationOptions
         {
             content.Add(User, "user");
         }
+
+        return content;
     }
 }

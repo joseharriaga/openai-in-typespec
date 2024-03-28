@@ -670,18 +670,14 @@ public partial class AssistantClient
         {
             throw new ClientResultException(message.Response);
         }
-        PipelineResponse response = null;
+
+        // TODO: why do we need to wrap this in a try-catch?
+        // Would putting the message in a `using` block suffice?
+        PipelineResponse response = message.Response;
         try
         {
-            response = message.ExtractResponse();
-            ClientResult genericResult = ClientResult.FromResponse(response);
-            StreamingClientResult<StreamingUpdate> streamingResult = StreamingClientResult<StreamingUpdate>.CreateFromResponse(
-                genericResult,
-                (responseForEnumeration) => SseAsyncEnumerator<StreamingUpdate>.EnumerateFromSseJsonStream(
-                    responseForEnumeration.GetRawResponse().ContentStream,
-                    StreamingUpdate.DeserializeSseRunUpdates));
-            response = null;
-            return streamingResult;
+            // TODO: dust this part up...
+            return new StreamingAssistantResult(response);
         }
         finally
         {

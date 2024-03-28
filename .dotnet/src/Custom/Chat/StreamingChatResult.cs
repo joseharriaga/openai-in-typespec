@@ -2,7 +2,6 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,22 +35,24 @@ internal class StreamingChatResult : StreamingClientResult<StreamingChatUpdate>
 
     private class ChatUpdateEnumerator : IAsyncEnumerator<StreamingChatUpdate>
     {
-        private readonly SseReader _sseReader;
+        private readonly IAsyncEnumerator<ServerSentEvent> _sseEvents;
 
         private List<StreamingChatUpdate>? _currentUpdates;
         private int _currentUpdateIndex;
 
         public ChatUpdateEnumerator(Stream stream)
         {
-            _sseReader = new(stream);
+            AsyncSseReader reader = new AsyncSseReader(stream);
+
+            // TODO: Pass CancellationToken.
+            _sseEvents = reader.GetAsyncEnumerator();
         }
 
         public StreamingChatUpdate Current => throw new NotImplementedException();
 
         public async ValueTask<bool> MoveNextAsync()
         {
-            // TODO: How to handle the CancellationToken?
-
+            // Still have leftovers from the last event we pulled from the reader.
             if (_currentUpdates is not null && _currentUpdateIndex < _currentUpdates.Count)
             {
                 _currentUpdateIndex++;
@@ -62,38 +63,30 @@ internal class StreamingChatResult : StreamingClientResult<StreamingChatUpdate>
             // count of the ones we have.  Get the next set.
 
             // TODO: Call different configure await variant in this context, or no?
-
-            // TODO: Update to new reader APIs
-            SseLine? sseEvent = await _sseReader.TryReadSingleFieldEventAsync().ConfigureAwait(false);
-            if (sseEvent is null)
+            if (!await _sseEvents.MoveNextAsync().ConfigureAwait(false))
             {
-                // TODO: does this mean we're done or not?
+                // Done with events from the stream.
                 return false;
             }
 
-            ReadOnlyMemory<char> name = sseEvent.Value.FieldName;
-            if (!name.Span.SequenceEqual("data".AsSpan()))
-            {
-                throw new InvalidDataException();
-            }
+            ServerSentEvent ssEvent = _sseEvents.Current;
 
-            ReadOnlyMemory<char> value = sseEvent.Value.FieldValue;
-            if (value.Span.SequenceEqual("[DONE]".AsSpan()))
-            {
-                // enumerator semantics are that MoveNextAsync returns false when done.
-                return false;
-            }
+            // TODO: optimize
+            BinaryData data = BinaryData.FromString(new string(ssEvent.Data.ToArray()));
 
-            // TODO:optimize performance using Utf8JsonReader?
-            using JsonDocument sseMessageJson = JsonDocument.Parse(value);
-            _currentUpdates = StreamingChatUpdate.DeserializeSseChatUpdates(/*TODO: update*/ sseMessageJson.RootElement);
+            // TODO: don't instantiate every time.
+            StreamingChatUpdateCollection justToCreate = new StreamingChatUpdateCollection();
+
+            _currentUpdates = justToCreate.Create(data, ModelReaderWriterOptions.Json);
+            _currentUpdateIndex = 0;
+
             return true;
         }
 
         public ValueTask DisposeAsync()
         {
             // TODO: revisit per platforms where async dispose is available.
-            _sseReader?.Dispose();
+            _sseEvents?.DisposeAsync();
             return new ValueTask();
         }
     }

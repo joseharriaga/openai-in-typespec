@@ -33,9 +33,7 @@ alias FILE_PURPOSE =
   | "fine-tune"
   | "fine-tune-results"
   | "assistants"
-  | "assistants_output"
-  | "batch"
-  | "batch_output";
+  | "assistants_output";
 
 /** The `File` object represents a document that has been uploaded to OpenAI. */
 model OpenAIFile {

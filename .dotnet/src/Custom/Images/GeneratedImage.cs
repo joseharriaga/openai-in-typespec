@@ -9,7 +9,7 @@ public class GeneratedImage
 {
     /// <summary>
     /// The binary image data received from the response, provided when
-    /// <see cref="ImageGenerationOptions.ResponseFormat"/> is set to <see cref="ImageResponseFormat.Bytes"/>.
+    /// <see cref="ImageGenerationOptions.ResponseFormat"/> is set to <see cref="GeneratedImageFormat.Bytes"/>.
     /// </summary>
     /// <remarks>
     /// This property is mutually exclusive with <see cref="ImageUri"/> and will be <c>null</c> when the other
@@ -18,7 +18,7 @@ public class GeneratedImage
     public BinaryData ImageBytes { get; }
     /// <summary>
     /// A temporary internet location for an image, provided by default or when
-    /// <see cref="ImageGenerationOptions.ResponseFormat"/> is set to <see cref="ImageResponseFormat.Uri"/>.
+    /// <see cref="ImageGenerationOptions.ResponseFormat"/> is set to <see cref="GeneratedImageFormat.Uri"/>.
     /// </summary>
     /// <remarks>
     /// This property is mutually exclusive with <see cref="ImageBytes"/> and will be <c>null</c> when the other

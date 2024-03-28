@@ -91,13 +91,7 @@ public partial class FileClient
 
     public virtual ClientResult<OpenAIFileInfoCollection> GetFileInfoList(OpenAIFilePurpose? purpose = null)
     {
-        Internal.Models.OpenAIFilePurpose? internalPurpose = ToInternalFilePurpose(purpose);
-        string internalPurposeText = null;
-        if (internalPurpose != null)
-        {
-            internalPurposeText = internalPurpose.ToString();
-        }
-        ClientResult<Internal.Models.ListFilesResponse> result = Shim.GetFiles(internalPurposeText);
+        ClientResult<Internal.Models.ListFilesResponse> result = Shim.GetFiles(purpose?.ToString());
         List<OpenAIFileInfo> infoItems = [];
         foreach (Internal.Models.OpenAIFile internalFile in result.Value.Data)
         {
@@ -108,13 +102,7 @@ public partial class FileClient
 
     public virtual async Task<ClientResult<OpenAIFileInfoCollection>> GetFileInfoListAsync(OpenAIFilePurpose? purpose = null)
     {
-        Internal.Models.OpenAIFilePurpose? internalPurpose = ToInternalFilePurpose(purpose);
-        string internalPurposeText = null;
-        if (internalPurpose != null)
-        {
-            internalPurposeText = internalPurpose.ToString();
-        }
-        ClientResult<Internal.Models.ListFilesResponse> result = await Shim.GetFilesAsync(internalPurposeText).ConfigureAwait(false);
+        ClientResult<Internal.Models.ListFilesResponse> result = await Shim.GetFilesAsync(purpose?.ToString()).ConfigureAwait(false);
         List<OpenAIFileInfo> infoItems = [];
         foreach (Internal.Models.OpenAIFile internalFile in result.Value.Data)
         {
@@ -202,22 +190,6 @@ public partial class FileClient
         message.Apply(options);
 
         return message;
-    }
-
-    private static Internal.Models.OpenAIFilePurpose? ToInternalFilePurpose(OpenAIFilePurpose? purpose)
-    {
-        if (purpose == null)
-        {
-            return null;
-        }
-        return purpose switch
-        {
-            OpenAIFilePurpose.FineTuning => Internal.Models.OpenAIFilePurpose.FineTune,
-            OpenAIFilePurpose.FineTuningResults => Internal.Models.OpenAIFilePurpose.FineTuneResults,
-            OpenAIFilePurpose.Assistants => Internal.Models.OpenAIFilePurpose.Assistants,
-            OpenAIFilePurpose.AssistantOutputs => Internal.Models.OpenAIFilePurpose.AssistantsOutput,
-            _ => throw new ArgumentException($"Unsupported file purpose: {purpose}"),
-        };
     }
 
     private static PipelineMessageClassifier _responseErrorClassifier200;

@@ -12,14 +12,7 @@ internal class UploadFileOptions
 
         content.Add(file, "file", fileName);
 
-        string purposeValue = purpose switch
-        {
-            OpenAIFilePurpose.FineTuning => "fine-tune",
-            OpenAIFilePurpose.Assistants => "assistants",
-            _ => throw new ArgumentException($"Unsupported purpose for file upload: {purpose}"),
-        };
-
-        content.Add(purposeValue, "\"purpose\"");
+        content.Add(purpose.ToString(), "\"purpose\"");
 
         return content;
     }

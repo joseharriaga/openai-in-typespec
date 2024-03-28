@@ -21,7 +21,7 @@ public partial class ImageEditOptions
     public string MaskFileName { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.ResponseFormat"/>
-    public ImageResponseFormat? ResponseFormat { get; init; }
+    public GeneratedImageFormat? ResponseFormat { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Size"/>
     public GeneratedImageSize? Size { get; init; }
@@ -55,8 +55,8 @@ public partial class ImageEditOptions
         {
             string format = ResponseFormat switch
             {
-                ImageResponseFormat.Uri => "url",
-                ImageResponseFormat.Bytes => "b64_json",
+                GeneratedImageFormat.Uri => "url",
+                GeneratedImageFormat.Bytes => "b64_json",
                 _ => throw new ArgumentException(nameof(ResponseFormat)),
             };
 

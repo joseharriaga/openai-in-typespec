@@ -2,6 +2,7 @@
 using OpenAI.Files;
 using System;
 using System.ClientModel;
+using System.IO;
 using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Files;
@@ -25,7 +26,7 @@ public partial class FileClientTests
     public void UploadFileWorks()
     {
         FileClient client = GetTestClient();
-        BinaryData uploadData = BinaryData.FromString("hello, this is a text file, please delete me");
+        using Stream uploadData = BinaryData.FromString("hello, this is a text file, please delete me").ToStream();
 
         ClientResult<OpenAIFileInfo> uploadResult = client.UploadFile(uploadData, "test-file-delete-me.txt", OpenAIFilePurpose.Assistants);
         Assert.That(uploadResult.Value, Is.Not.Null);

@@ -20,7 +20,7 @@ namespace OpenAI.Samples
             AssistantClient assistantClient = openAIClient.GetAssistantClient();
 
             // First, let's contrive a document we'll use retrieval with and upload it.
-            BinaryData document = BinaryData.FromString("""
+            using Stream document = BinaryData.FromString("""
                 {
                     "description": "This document contains the sale history data for Contoso products.",
                     "sales": [
@@ -47,7 +47,7 @@ namespace OpenAI.Samples
                         }
                     ]
                 }
-                """);
+                """).ToStream();
 
             OpenAIFileInfo openAIFileInfo = await fileClient.UploadFileAsync(document, "test-rag-file-delete-me.json", OpenAIFilePurpose.Assistants);
 
@@ -127,7 +127,7 @@ namespace OpenAI.Samples
                         OpenAIFileInfo imageInfo = await fileClient.GetFileInfoAsync(imageFileContent.FileId);
                         BinaryData imageBytes = await fileClient.DownloadFileAsync(imageFileContent.FileId);
                         using FileStream stream = File.OpenWrite($"{imageInfo.Filename}.png");
-                        imageBytes.ToStream().CopyTo(stream);
+                        await imageBytes.ToStream().CopyToAsync(stream);
 
                         Console.WriteLine($"<image: {imageInfo.Filename}.png>");
                     }

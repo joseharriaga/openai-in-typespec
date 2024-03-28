@@ -6,30 +6,12 @@ namespace OpenAI.Files;
 
 internal class UploadFileOptions
 {
-    internal static MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName, OpenAIFilePurpose purpose)
+    internal static MultipartFormDataBinaryContent ToMultipartContent(Stream file, string fileName, OpenAIFilePurpose purpose)
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(fileStream, "file", fileName);
+        content.Add(file, "file", fileName);
 
-        AddContent(purpose, content);
-
-        return content;
-    }
-
-    internal static MultipartFormDataBinaryContent ToMultipartContent(BinaryData fileData, string fileName, OpenAIFilePurpose purpose)
-    {
-        MultipartFormDataBinaryContent content = new();
-
-        content.Add(fileData, "file", fileName);
-
-        AddContent(purpose, content);
-
-        return content;
-    }
-
-    private static void AddContent(OpenAIFilePurpose purpose, MultipartFormDataBinaryContent content)
-    {
         string purposeValue = purpose switch
         {
             OpenAIFilePurpose.FineTuning => "fine-tune",
@@ -38,5 +20,7 @@ internal class UploadFileOptions
         };
 
         content.Add(purposeValue, "\"purpose\"");
+
+        return content;
     }
 }

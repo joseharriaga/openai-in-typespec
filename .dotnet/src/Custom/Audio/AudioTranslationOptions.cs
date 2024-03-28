@@ -10,30 +10,11 @@ public partial class AudioTranslationOptions
     public AudioTranscriptionFormat? ResponseFormat { get; init; }
     public float? Temperature { get; init; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName, string model)
+    internal MultipartFormDataBinaryContent ToMultipartContent(Stream file, string fileName, string model)
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(fileStream, "file", fileName);
-
-        AddContent(model, content);
-
-        return content;
-    }
-
-    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData audioBytes, string fileName, string model)
-    {
-        MultipartFormDataBinaryContent content = new();
-
-        content.Add(audioBytes, "file", fileName);
-
-        AddContent(model, content);
-
-        return content;
-    }
-
-    private void AddContent(string model, MultipartFormDataBinaryContent content)
-    { 
+        content.Add(file, "file", fileName);
         content.Add(model, "model");
 
         if (Prompt is not null)
@@ -54,5 +35,7 @@ public partial class AudioTranslationOptions
 
             content.Add(value, "response_format");
         }
+
+        return content;
     }
 }

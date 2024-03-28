@@ -83,8 +83,9 @@ public partial class AudioClient
         return Shim.CreateSpeechAsync(request);
     }
 
-    // convenience method - sync; Stream overload
-    // TODO: add refdoc comment
+    public virtual ClientResult<AudioTranscription> TranscribeAudio(FileStream audio, AudioTranscriptionOptions options = null)
+        => TranscribeAudio(audio, Path.GetFileName(audio.Name), options);
+
     public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string fileName, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
@@ -103,28 +104,9 @@ public partial class AudioClient
         return ClientResult.FromValue(value, response);
     }
 
-    // convenience method - sync
-    // TODO: add refdoc comment
-    public virtual ClientResult<AudioTranscription> TranscribeAudio(BinaryData audio, string fileName, AudioTranscriptionOptions options = null)
-    {
-        Argument.AssertNotNull(audio, nameof(audio));
-        Argument.AssertNotNull(fileName, nameof(fileName));
+    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(FileStream audio, AudioTranscriptionOptions options = null)
+        => await TranscribeAudioAsync(audio, Path.GetFileName(audio.Name), options).ConfigureAwait(false);
 
-        options ??= new();
-
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
-
-        ClientResult result = TranscribeAudio(content, content.ContentType);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
-
-        return ClientResult.FromValue(value, response);
-    }
-
-    // convenience method - async
-    // TODO: add refdoc comment
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string filename, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
@@ -133,26 +115,6 @@ public partial class AudioClient
         options ??= new();
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, filename, _clientConnector.Model);
-
-        ClientResult result = await TranscribeAudioAsync(content, content.ContentType).ConfigureAwait(false);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        AudioTranscription value = AudioTranscription.Deserialize(response.Content!);
-
-        return ClientResult.FromValue(value, response);
-    }
-
-    // convenience method - async
-    // TODO: add refdoc comment
-    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(BinaryData audio, string fileName, AudioTranscriptionOptions options = null)
-    {
-        Argument.AssertNotNull(audio, nameof(audio));
-        Argument.AssertNotNull(fileName, nameof(fileName));
-
-        options ??= new();
-
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
 
         ClientResult result = await TranscribeAudioAsync(content, content.ContentType).ConfigureAwait(false);
 
@@ -188,8 +150,9 @@ public partial class AudioClient
         return message;
     }
 
-    // convenience method - sync; Stream overload
-    // TODO: add refdoc comment
+    public virtual ClientResult<AudioTranslation> TranslateAudio(FileStream audio, AudioTranslationOptions options = null)
+        => TranslateAudio(audio, Path.GetFileName(audio.Name), options);
+
     public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string fileName, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
@@ -208,49 +171,10 @@ public partial class AudioClient
         return ClientResult.FromValue(value, response);
     }
 
-    // convenience method - sync
-    // TODO: add refdoc comment
-    public virtual ClientResult<AudioTranslation> TranslateAudio(BinaryData audio, string fileName, AudioTranslationOptions options = null)
-    {
-        Argument.AssertNotNull(audio, nameof(audio));
-        Argument.AssertNotNull(fileName, nameof(fileName));
+    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(FileStream audio, AudioTranslationOptions options = null)
+        => await TranslateAudioAsync(audio, Path.GetFileName(audio.Name), options).ConfigureAwait(false);
 
-        options ??= new();
-
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
-
-        ClientResult result = TranslateAudio(content, content.ContentType);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        AudioTranslation value = AudioTranslation.Deserialize(response.Content!);
-
-        return ClientResult.FromValue(value, response);
-    }
-
-    // convenience method - async; Stream overload
-    // TODO: add refdoc comment
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string fileName, AudioTranslationOptions options = null)
-    {
-        Argument.AssertNotNull(audio, nameof(audio));
-        Argument.AssertNotNull(fileName, nameof(fileName));
-
-        options ??= new();
-
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, fileName, _clientConnector.Model);
-
-        ClientResult result = await TranslateAudioAsync(content, content.ContentType).ConfigureAwait(false);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        AudioTranslation value = AudioTranslation.Deserialize(response.Content!);
-
-        return ClientResult.FromValue(value, response);
-    }
-
-    // convenience method - async
-    // TODO: add refdoc comment
-    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(BinaryData audio, string fileName, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
         Argument.AssertNotNull(fileName, nameof(fileName));

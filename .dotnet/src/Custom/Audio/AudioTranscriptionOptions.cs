@@ -15,30 +15,11 @@ public partial class AudioTranscriptionOptions
     public bool? EnableWordTimestamps { get; init; }
     public bool? EnableSegmentTimestamps { get; init; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream fileStream, string fileName, string model)
+    internal MultipartFormDataBinaryContent ToMultipartContent(Stream file, string fileName, string model)
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(fileStream, "file", fileName);
-
-        AddContent(model, content);
-
-        return content;
-    }
-
-    internal MultipartFormDataBinaryContent ToMultipartContent(BinaryData audioBytes, string fileName, string model)
-    {
-        MultipartFormDataBinaryContent content = new();
-
-        content.Add(audioBytes, "file", fileName);
-
-        AddContent(model, content);
-
-        return content;
-    }
-
-    private void AddContent(string model, MultipartFormDataBinaryContent content)
-    {
+        content.Add(file, "file", fileName);
         content.Add(model, "model");
 
         if (Language is not null)
@@ -85,5 +66,7 @@ public partial class AudioTranscriptionOptions
             byte[] data = JsonSerializer.SerializeToUtf8Bytes(granularities);
             content.Add(data, "timestamp_granularities");
         }
+
+        return content;
     }
 }

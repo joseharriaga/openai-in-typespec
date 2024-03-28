@@ -1,4 +1,5 @@
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
@@ -81,7 +82,8 @@ public partial class ThreadRun
         {
             foreach (BinaryData unionToolInfo in internalRun.Tools)
             {
-                tools.Add(ToolInfo.DeserializeToolInfo(JsonDocument.Parse(unionToolInfo).RootElement));
+                using JsonDocument toolJson = JsonDocument.Parse(unionToolInfo);
+                tools.Add(ToolInfo.DeserializeToolInfo(toolJson.RootElement, options: new("W")));
             }
         }
         Tools = tools;

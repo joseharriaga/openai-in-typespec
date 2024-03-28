@@ -1,71 +1,27 @@
 using System;
-using System.ClientModel.Internal;
-
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
-public abstract partial class ToolDefinition :  IJsonModel<ToolDefinition>
+public abstract partial class ToolDefinition : IJsonModel<ToolDefinition>
 {
     ToolDefinition IJsonModel<ToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(ToolDefinition)} does not support '{format}' format.");
-        }
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeToolDefinition(document.RootElement, options);
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeToolDefinition, ref reader, options);
 
     ToolDefinition IPersistableModel<ToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeToolDefinition, data, options);
 
-        switch (format)
-        {
-            case "J":
-                {
-                    using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeToolDefinition(document.RootElement, options);
-                }
-            default:
-                throw new FormatException($"The model {nameof(ToolDefinition)} does not support '{options.Format}' format.");
-        }
-    }
+    void IJsonModel<ToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, SerializeToolDefinition, writer, options);
+
+    BinaryData IPersistableModel<ToolDefinition>.Write(ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, options);
 
     string IPersistableModel<ToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-    void IJsonModel<ToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal static ToolDefinition DeserializeToolDefinition(JsonElement element, ModelReaderWriterOptions options)
     {
-        writer.WriteStartObject();
-        WriteDerived(writer, options);
-        writer.WriteEndObject();
-    }
-
-    BinaryData IPersistableModel<ToolDefinition>.Write(ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                return ModelReaderWriter.Write(this, options);
-            default:
-                throw new FormatException($"The model {nameof(ToolDefinition)} does not support '{options.Format}' format.");
-        }
-    }
-
-    internal abstract void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-
-    internal static ToolDefinition DeserializeToolDefinition(
-        JsonElement element,
-        ModelReaderWriterOptions options = null)
-    {
-        options ??= new ModelReaderWriterOptions("W");
-
         if (element.ValueKind == JsonValueKind.Null)
         {
             return null;
@@ -95,4 +51,12 @@ public abstract partial class ToolDefinition :  IJsonModel<ToolDefinition>
         throw new ArgumentException(nameof(element));
     }
 
+    internal static void SerializeToolDefinition(ToolDefinition instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        writer.WriteStartObject();
+        instance.WriteDerived(writer, options);
+        writer.WriteEndObject();
+    }
+
+    internal abstract void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

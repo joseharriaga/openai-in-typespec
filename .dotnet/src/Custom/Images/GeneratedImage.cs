@@ -5,7 +5,7 @@ namespace OpenAI.Images;
 /// <summary>
 /// Represents the result data for an image generation request.
 /// </summary>
-public class GeneratedImage
+public partial class GeneratedImage
 {
     /// <summary>
     /// The binary image data received from the response, provided when
@@ -36,13 +36,13 @@ public class GeneratedImage
     /// <summary>
     /// The timestamp at which the result image was generated.
     /// </summary>
-    public DateTimeOffset CreatedAt { get; }
+    public DateTimeOffset CreatedAt { get; internal set; }
 
-    internal GeneratedImage(Internal.Models.ImagesResponse internalResponse, int internalDataIndex)
+    internal GeneratedImage(DateTimeOffset createdAt, Uri imageUri, BinaryData imageBytes, string revisedPrompt)
     {
-        CreatedAt = internalResponse.Created;
-        ImageBytes = internalResponse.Data[(int)internalDataIndex].B64Json;
-        RevisedPrompt = internalResponse.Data[(int)internalDataIndex].RevisedPrompt;
-        ImageUri = internalResponse.Data[(int)internalDataIndex].Url;
+        CreatedAt = createdAt;
+        ImageBytes = imageBytes;
+        ImageUri = imageUri;
+        RevisedPrompt = revisedPrompt;
     }
 }

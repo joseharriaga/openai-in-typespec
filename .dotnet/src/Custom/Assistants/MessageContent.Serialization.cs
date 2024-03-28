@@ -4,65 +4,24 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
-public abstract partial class MessageContent :  IJsonModel<MessageContent>
+public abstract partial class MessageContent : IJsonModel<MessageContent>
 {
     MessageContent IJsonModel<MessageContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<MessageContent>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(MessageContent)} does not support '{format}' format.");
-        }
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeMessageContent(document.RootElement, options);
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeMessageContent, ref reader, options);
 
     MessageContent IPersistableModel<MessageContent>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<MessageContent>)this).GetFormatFromOptions(options) : options.Format;
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeMessageContent, data, options);
 
-        switch (format)
-        {
-            case "J":
-                {
-                    using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeMessageContent(document.RootElement, options);
-                }
-            default:
-                throw new FormatException($"The model {nameof(MessageContent)} does not support '{options.Format}' format.");
-        }
-    }
+    void IJsonModel<MessageContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, SerializeMessageContent, writer, options);
+
+    BinaryData IPersistableModel<MessageContent>.Write(ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, options);
 
     string IPersistableModel<MessageContent>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-    void IJsonModel<MessageContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal static MessageContent DeserializeMessageContent(JsonElement element, ModelReaderWriterOptions options)
     {
-        writer.WriteStartObject();
-        WriteDerived(writer, options);
-        writer.WriteEndObject();
-    }
-
-    BinaryData IPersistableModel<MessageContent>.Write(ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<MessageContent>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                return ModelReaderWriter.Write(this, options);
-            default:
-                throw new FormatException($"The model {nameof(MessageContent)} does not support '{options.Format}' format.");
-        }
-    }
-
-    internal abstract void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-
-    internal static MessageContent DeserializeMessageContent(
-        JsonElement element,
-        ModelReaderWriterOptions options = null)
-    {
-        options ??= new ModelReaderWriterOptions("W");
-
         if (element.ValueKind == JsonValueKind.Null)
         {
             return null;
@@ -88,4 +47,12 @@ public abstract partial class MessageContent :  IJsonModel<MessageContent>
         throw new ArgumentException(nameof(element));
     }
 
+    internal static void SerializeMessageContent(MessageContent instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        writer.WriteStartObject();
+        instance.WriteDerived(writer, options);
+        writer.WriteEndObject();
+    }
+
+    internal abstract void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

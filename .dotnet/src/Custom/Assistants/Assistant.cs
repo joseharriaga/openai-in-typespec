@@ -45,7 +45,7 @@ public partial class Assistant
             foreach (BinaryData unionToolDefinitionData in internalTools)
             {
                 using JsonDocument toolDocument = JsonDocument.Parse(unionToolDefinitionData);
-                tools.Add(ToolDefinition.DeserializeToolDefinition(toolDocument.RootElement));
+                tools.Add(ToolDefinition.DeserializeToolDefinition(toolDocument.RootElement, options: new("W")));
             }
             return tools;
         }

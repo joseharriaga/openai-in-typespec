@@ -4,42 +4,61 @@ using System.Text.Json;
 
 namespace OpenAI.Chat;
 
-public abstract partial class ChatRequestMessage :  IJsonModel<ChatRequestMessage>
+public abstract partial class ChatRequestMessage : IJsonModel<ChatRequestMessage>
 {
+    ChatRequestMessage IJsonModel<ChatRequestMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeChatRequestMessage, ref reader, options);
+
+    ChatRequestMessage IPersistableModel<ChatRequestMessage>.Create(BinaryData data, ModelReaderWriterOptions options)
+    => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeChatRequestMessage, data, options);
+
     void IJsonModel<ChatRequestMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, SerializeChatRequestMessage, writer, options);
+
+    BinaryData IPersistableModel<ChatRequestMessage>.Write(ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, options);
+
+    string IPersistableModel<ChatRequestMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+
+    internal static ChatRequestMessage DeserializeChatRequestMessage(JsonElement element, ModelReaderWriterOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static void SerializeChatRequestMessage(ChatRequestMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
-        writer.WriteString("role"u8, Role switch
+        writer.WriteString("role"u8, instance.Role switch
         {
             ChatRole.System => "system",
             ChatRole.User => "user",
             ChatRole.Assistant => "assistant",
             ChatRole.Tool => "tool",
             ChatRole.Function => "function",
-            _ => throw new ArgumentException(nameof(Role))
+            _ => throw new ArgumentException(nameof(instance.Role))
         });
-        if (Optional.IsDefined(Content))
+        if (Optional.IsDefined(instance.Content))
         {
             writer.WritePropertyName("content"u8);
-            if (Content.Span.Length == 0)
+            if (instance.Content.Span.Length == 0)
             {
                 writer.WriteNullValue();
             }
-            else if (Content.Span.Length == 1)
+            else if (instance.Content.Span.Length == 1)
             {
-                if (Content.Span[0].ContentKind == ChatMessageContentKind.Text)
+                if (instance.Content.Span[0].ContentKind == ChatMessageContentKind.Text)
                 {
-                    writer.WriteStringValue(Content.Span[0].ToText());
+                    writer.WriteStringValue(instance.Content.Span[0].ToText());
                 }
                 else
                 {
                     throw new InvalidOperationException();
                 }
             }
-            else if (Content.Span.Length > 1)
+            else if (instance.Content.Span.Length > 1)
             {
                 writer.WriteStartArray();
-                foreach (ChatMessageContent contentItem in Content.Span)
+                foreach (ChatMessageContent contentItem in instance.Content.Span)
                 {
                     writer.WriteStartObject();
                     if (contentItem.ContentKind == ChatMessageContentKind.Text)
@@ -64,26 +83,9 @@ public abstract partial class ChatRequestMessage :  IJsonModel<ChatRequestMessag
                 writer.WriteEndArray();
             }
         }
-        WriteDerivedAdditions(writer, options);
+        instance.WriteDerivedAdditions(writer, options);
         writer.WriteEndObject();
     }
-
-    ChatRequestMessage IJsonModel<ChatRequestMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    BinaryData IPersistableModel<ChatRequestMessage>.Write(ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    ChatRequestMessage IPersistableModel<ChatRequestMessage>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    string IPersistableModel<ChatRequestMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
     internal abstract void WriteDerivedAdditions(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

@@ -1,7 +1,5 @@
-using OpenAI.Internal.Models;
 using System;
 using System.ClientModel.Primitives;
-using System.Linq;
 using System.Text.Json;
 
 namespace OpenAI.Images;
@@ -12,69 +10,34 @@ namespace OpenAI.Images;
 public readonly partial struct GeneratedImageSize : IJsonModel<GeneratedImageSize>
 {
     GeneratedImageSize IJsonModel<GeneratedImageSize>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IJsonModel<GeneratedImageSize>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(GeneratedImageSize)} does not support '{format}' format.");
-        }
-
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeGeneratedImageSize(document.RootElement, options).Value;
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeGeneratedImageSize, ref reader, options);
 
     GeneratedImageSize IPersistableModel<GeneratedImageSize>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<GeneratedImageSize>)this).GetFormatFromOptions(options) : options.Format;
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeGeneratedImageSize, data, options);
 
-        switch (format)
-        {
-            case "J":
-                {
-                    using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeGeneratedImageSize(document.RootElement, options).Value;
-                }
-            default:
-                throw new FormatException($"The model {nameof(GeneratedImageSize)} does not support '{options.Format}' format.");
-        }
-    }
+    void IJsonModel<GeneratedImageSize>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, SerializeGeneratedImageSize, writer, options);
+
+    BinaryData IPersistableModel<GeneratedImageSize>.Write(ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, options);
 
     string IPersistableModel<GeneratedImageSize>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-    void IJsonModel<GeneratedImageSize>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IJsonModel<GeneratedImageSize>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(ChatCompletionFunctionCallOption)} does not support '{format}' format.");
-        }
-        writer.WriteStringValue($"{Width}x{Height}");
-    }
-
-    BinaryData IPersistableModel<GeneratedImageSize>.Write(ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<GeneratedImageSize>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                return ModelReaderWriter.Write(this, options);
-            default:
-                throw new FormatException($"The model {nameof(GeneratedImageSize)} does not support '{options.Format}' format.");
-        }
-    }
-
-    internal static GeneratedImageSize? DeserializeGeneratedImageSize(JsonElement element, ModelReaderWriterOptions options = null)
+    internal static GeneratedImageSize DeserializeGeneratedImageSize(JsonElement element, ModelReaderWriterOptions options = default)
     {
         if (element.ValueKind != JsonValueKind.String)
         {
-            return null;
+            throw new ArgumentException(nameof(element));
         }
-        string[] parts = element.GetString().Split('x');
+
+        string[] parts = element.GetString()!.Split('x');
         if (parts.Length != 2 || !int.TryParse(parts[0], out int width) || !int.TryParse(parts[1], out int height))
         {
-            return null;
+            throw new ArgumentException(nameof(element));
         }
         return new GeneratedImageSize(width, height);
     }
+
+    internal static void SerializeGeneratedImageSize(GeneratedImageSize instance, Utf8JsonWriter writer, ModelReaderWriterOptions _)
+        => writer.WriteStringValue($"{instance.Width}x{instance.Height}");
 }

@@ -80,7 +80,7 @@ public partial class ImageClient
     {
         Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
         ClientResult response = Shim.CreateImage(BinaryContent.Create(request));
-        GeneratedImageCollection resultValue = GeneratedImageCollection.Deserialize(response.GetRawResponse().Content);
+        GeneratedImageCollection resultValue = GeneratedImageCollection.FromResponse(response.GetRawResponse());
         return ClientResult.FromValue(resultValue, response.GetRawResponse());
     }
 
@@ -100,7 +100,7 @@ public partial class ImageClient
     {
         Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
         ClientResult response = await Shim.CreateImageAsync(BinaryContent.Create(request));
-        GeneratedImageCollection resultValue = GeneratedImageCollection.Deserialize(response.GetRawResponse().Content);
+        GeneratedImageCollection resultValue = GeneratedImageCollection.FromResponse(response.GetRawResponse());
         return ClientResult.FromValue(resultValue, response.GetRawResponse());
     }
 
@@ -135,7 +135,7 @@ public partial class ImageClient
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response);
 
         return ClientResult.FromValue(value, response);
     }
@@ -171,7 +171,7 @@ public partial class ImageClient
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response);
 
         return ClientResult.FromValue(value, response);
     }
@@ -199,7 +199,7 @@ public partial class ImageClient
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response);
 
         return ClientResult.FromValue(value, response);
     }
@@ -228,7 +228,7 @@ public partial class ImageClient
 
         PipelineResponse response = result.GetRawResponse();
 
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
+        GeneratedImageCollection value = GeneratedImageCollection.FromResponse(response);
 
         return ClientResult.FromValue(value, response);
     }

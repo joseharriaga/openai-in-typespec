@@ -5,62 +5,25 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
-public abstract partial class RunRequiredAction :  IJsonModel<IList<RunRequiredAction>>
+public abstract partial class RunRequiredAction : IJsonModel<IList<RunRequiredAction>>
 {
     IList<RunRequiredAction> IJsonModel<IList<RunRequiredAction>>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<IList<RunRequiredAction>>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(RunRequiredAction)} does not support '{format}' format.");
-        }
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeRunRequiredActions(document.RootElement, options);
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeRunRequiredActions, ref reader, options);
 
     IList<RunRequiredAction> IPersistableModel<IList<RunRequiredAction>>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<IList<RunRequiredAction>>)this).GetFormatFromOptions(options) : options.Format;
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeRunRequiredActions, data, options);
 
-        switch (format)
-        {
-            case "J":
-                {
-                    using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeRunRequiredActions(document.RootElement, options);
-                }
-            default:
-                throw new FormatException($"The model {nameof(RunRequiredAction)} does not support '{options.Format}' format.");
-        }
-    }
+    void IJsonModel<IList<RunRequiredAction>>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance<IList<RunRequiredAction>,RunRequiredAction>(this, SerializeRunRequiredActions, writer, options);
+
+    BinaryData IPersistableModel<IList<RunRequiredAction>>.Write(ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance<IList<RunRequiredAction>,RunRequiredAction>(this, options);
 
     string IPersistableModel<IList<RunRequiredAction>>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-    void IJsonModel<IList<RunRequiredAction>>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        writer.WriteStartObject();
-        WriteDerived(writer, options);
-        writer.WriteEndObject();
-    }
-
-    BinaryData IPersistableModel<IList<RunRequiredAction>>.Write(ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<IList<RunRequiredAction>>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                return ModelReaderWriter.Write(this, options);
-            default:
-                throw new FormatException($"The model {nameof(RunRequiredAction)} does not support '{options.Format}' format.");
-        }
-    }
-
-    internal abstract void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-
     internal static IList<RunRequiredAction> DeserializeRunRequiredActions(
         JsonElement element,
-        ModelReaderWriterOptions options = null)
+        ModelReaderWriterOptions? options = default)
     {
         options ??= new ModelReaderWriterOptions("W");
 
@@ -101,4 +64,13 @@ public abstract partial class RunRequiredAction :  IJsonModel<IList<RunRequiredA
 
         return actions;
     }
+
+    internal static void SerializeRunRequiredActions(RunRequiredAction runRequiredAction, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        writer.WriteStartObject();
+        runRequiredAction.WriteDerived(writer, options);
+        writer.WriteEndObject();
+    }
+
+    internal abstract void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

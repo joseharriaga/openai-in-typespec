@@ -4,65 +4,24 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
-public abstract partial class ToolInfo :  IJsonModel<ToolInfo>
+public abstract partial class ToolInfo : IJsonModel<ToolInfo>
 {
     ToolInfo IJsonModel<ToolInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolInfo>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(ToolInfo)} does not support '{format}' format.");
-        }
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        return DeserializeToolInfo(document.RootElement, options);
-    }
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeToolInfo, ref reader, options);
 
     ToolInfo IPersistableModel<ToolInfo>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolInfo>)this).GetFormatFromOptions(options) : options.Format;
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeToolInfo, data, options);
 
-        switch (format)
-        {
-            case "J":
-                {
-                    using JsonDocument document = JsonDocument.Parse(data);
-                    return DeserializeToolInfo(document.RootElement, options);
-                }
-            default:
-                throw new FormatException($"The model {nameof(ToolInfo)} does not support '{options.Format}' format.");
-        }
-    }
+    void IJsonModel<ToolInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, SerializeToolInfo, writer, options);
+
+    BinaryData IPersistableModel<ToolInfo>.Write(ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance(this, options);
 
     string IPersistableModel<ToolInfo>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-    void IJsonModel<ToolInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal static ToolInfo DeserializeToolInfo(JsonElement element, ModelReaderWriterOptions options)
     {
-        writer.WriteStartObject();
-        WriteDerived(writer, options);
-        writer.WriteEndObject();
-    }
-
-    BinaryData IPersistableModel<ToolInfo>.Write(ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolInfo>)this).GetFormatFromOptions(options) : options.Format;
-
-        switch (format)
-        {
-            case "J":
-                return ModelReaderWriter.Write(this, options);
-            default:
-                throw new FormatException($"The model {nameof(ToolInfo)} does not support '{options.Format}' format.");
-        }
-    }
-
-    internal abstract void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-
-    internal static ToolInfo DeserializeToolInfo(
-        JsonElement element,
-        ModelReaderWriterOptions options = null)
-    {
-        options ??= new ModelReaderWriterOptions("W");
-
         if (element.ValueKind == JsonValueKind.Null)
         {
             return null;
@@ -91,4 +50,13 @@ public abstract partial class ToolInfo :  IJsonModel<ToolInfo>
         }
         throw new ArgumentException(nameof(element));
     }
+
+    internal static void SerializeToolInfo(ToolInfo instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        writer.WriteStartObject();
+        instance.WriteDerived(writer, options);
+        writer.WriteEndObject();
+    }
+
+    internal abstract void WriteDerived(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

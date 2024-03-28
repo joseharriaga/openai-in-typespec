@@ -1,4 +1,5 @@
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
@@ -46,7 +47,8 @@ public partial class ThreadMessage
         List<MessageContent> content = [];
         foreach (BinaryData unionContentData in internalMessage.Content)
         {
-            content.Add(MessageContent.DeserializeMessageContent(JsonDocument.Parse(unionContentData).RootElement));
+            using JsonDocument contentJson = JsonDocument.Parse(unionContentData);
+            content.Add(MessageContent.DeserializeMessageContent(contentJson.RootElement, options: new("W")));
         }
 
         Id = internalMessage.Id;

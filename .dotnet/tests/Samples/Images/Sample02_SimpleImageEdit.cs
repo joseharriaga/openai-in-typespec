@@ -13,23 +13,25 @@ namespace OpenAI.Samples
         {
             ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
 
-            string imagePath = Path.Combine("Assets", "edit_sample_image.png");
-            using FileStream inputImage = File.OpenRead(imagePath);
+            string imageFileName = "edit_sample_image.png";
+            string imagePath = Path.Combine("Assets", imageFileName);
+            using Stream inputImage = File.OpenRead(imagePath);
 
             string prompt = "An inflatable flamingo float in a pool";
 
-            string maskPath = Path.Combine("Assets", "edit_sample_mask.png");
+            string maskFileName = "edit_sample_mask.png";
+            string maskPath = Path.Combine("Assets", maskFileName);
             using Stream mask = File.OpenRead(maskPath);
 
             ImageEditOptions options = new()
             {
                 Mask = mask,
-                MaskFileName = "edit_sample_mask.png",
+                MaskFileName = maskFileName,
                 Size = GeneratedImageSize.W1024xH1024,
                 ResponseFormat = ImageResponseFormat.Bytes
             };
 
-            GeneratedImageCollection images = client.GenerateImageEdits(inputImage, prompt, 1, options);
+            GeneratedImageCollection images = client.GenerateImageEdits(inputImage, imageFileName, prompt, 1, options);
             BinaryData bytes = images[0].ImageBytes;
 
             using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");

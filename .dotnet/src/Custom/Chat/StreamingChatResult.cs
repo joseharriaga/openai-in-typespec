@@ -84,7 +84,7 @@ internal class StreamingChatResult : StreamingClientResult<StreamingChatUpdate>
 
             // TODO:optimize performance using Utf8JsonReader?
             using JsonDocument sseMessageJson = JsonDocument.Parse(value);
-            _currentUpdates = StreamingChatUpdate.DeserializeStreamingChatUpdates(sseMessageJson.RootElement);
+            _currentUpdates = StreamingChatUpdate.DeserializeSseChatUpdates(sseMessageJson.RootElement);
             return true;
         }
 

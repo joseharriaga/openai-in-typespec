@@ -26,12 +26,14 @@ internal sealed class SseReader : IDisposable
     /// <returns>
     ///     The next <see cref="ServerSentEvent"/> in the stream, or null once no more data can be read from the stream.
     /// </returns>
+    // TODO: Can this be an IEnumerable instead of using retur-null semantics?
     public ServerSentEvent? TryGetNextEvent(CancellationToken cancellationToken = default)
     {
         List<ServerSentEventField> fields = [];
 
         while (!cancellationToken.IsCancellationRequested)
         {
+            // TODO: can this be UTF-8 all the way down?
             string line = _reader.ReadLine();
             if (line == null)
             {

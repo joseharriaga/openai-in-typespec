@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace OpenAI.Chat;
 
@@ -28,7 +29,7 @@ public partial class ChatMessageContent
     /// </summary>
     /// <param name="text"> The content for the new instance. </param>
     /// <returns> A new instance of <see cref="ChatMessageContent"/>. </returns>
-    public static ChatMessageContent CreateText(string text) => new(text, ChatMessageContentKind.Text);
+    public static ChatMessageContent FromText(string text) => new(text, ChatMessageContentKind.Text);
 
     /// <summary>
     /// Creates a new instance of <see cref="ChatMessageContent"/> that encapsulates image content obtained from
@@ -38,16 +39,16 @@ public partial class ChatMessageContent
     ///     An internet location pointing to an image. This must be accessible to the model.
     /// </param>
     /// <returns> A new instance of <see cref="ChatMessageContent"/>. </returns>
-    public static ChatMessageContent CreateImage(Uri imageUri) => new(imageUri, ChatMessageContentKind.Image);
+    public static ChatMessageContent FromImage(Uri imageUri) => new(imageUri, ChatMessageContentKind.Image);
 
     /// <summary>
     /// Creates a new instance of <see cref="ChatMessageContent"/> that encapsulates binary image content.
     /// </summary>
-    /// <param name="imageBytes"> The binary representation of the image content. </param>
+    /// <param name="image"> The data stream containing the image content. </param>
     /// <param name="mediaType"> The media type name, e.g. image/png, for the image. </param>
     /// <returns> A new instance of <see cref="ChatMessageContent"/>. </returns>
-    public static ChatMessageContent CreateImage(BinaryData imageBytes, string mediaType)
-        => new(imageBytes, ChatMessageContentKind.Image, mediaType);
+    public static ChatMessageContent FromImage(Stream image, string mediaType)
+        => new(image, ChatMessageContentKind.Image, mediaType);
 
     /// <summary>
     /// Provides the <see cref="string"/> associated with a content item using
@@ -79,7 +80,7 @@ public partial class ChatMessageContent
             ChatMessageContentKind.Image => _contentValue switch
             {
                 Uri imageUri => imageUri,
-                BinaryData imageData => new Uri($"data:{_contentMediaTypeName};base64,{Convert.ToBase64String(imageData.ToArray())}"),
+                Stream imageStream => CreateDataUriFromStream(imageStream, _contentMediaTypeName),
                 _ => throw new InvalidOperationException(
                     $"Cannot convert underlying image data type '{_contentValue?.GetType()}' to a {nameof(Uri)}"),
             },
@@ -92,7 +93,7 @@ public partial class ChatMessageContent
     /// a plain <see cref="string"/>.
     /// </summary>
     /// <param name="value"> The text for the message content. </param>
-    public static implicit operator ChatMessageContent(string value) => CreateText(value);
+    public static implicit operator ChatMessageContent(string value) => FromText(value);
 
     /// <summary>
     /// An implicit operator allowing a content item to be treated as a string.
@@ -108,5 +109,14 @@ public partial class ChatMessageContent
             return ToText();
         }
         return base.ToString();
+    }
+
+    private static Uri CreateDataUriFromStream(Stream dataStream, string mediaType)
+    {
+        using MemoryStream byteStream = new();
+        dataStream.CopyTo(byteStream);
+        byte[] bytes = byteStream.ToArray();
+        string base64Bytes = Convert.ToBase64String(bytes);
+        return new Uri($"data:{mediaType};base64,{base64Bytes}");
     }
 }

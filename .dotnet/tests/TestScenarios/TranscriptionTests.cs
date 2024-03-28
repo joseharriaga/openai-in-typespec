@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using OpenAI.Audio;
-using System;
 using System.ClientModel;
 using System.IO;
 using static OpenAI.Tests.TestHelpers;
@@ -14,8 +13,7 @@ public partial class TranscriptionTests
     {
         AudioClient client = GetTestClient();
         using FileStream inputStream = File.OpenRead(Path.Combine("Assets", "hello_world.m4a"));
-        BinaryData inputData = BinaryData.FromStream(inputStream);
-        ClientResult<AudioTranscription> transcriptionResult = client.TranscribeAudio(inputData, "hello_world.m4a");
+        ClientResult<AudioTranscription> transcriptionResult = client.TranscribeAudio(inputStream, "hello_world.m4a");
         Assert.That(transcriptionResult.Value, Is.Not.Null);
         Assert.That(transcriptionResult.Value.Text.ToLowerInvariant(), Contains.Substring("hello"));
     }
@@ -25,12 +23,11 @@ public partial class TranscriptionTests
     {
         AudioClient client = GetTestClient();
         using FileStream inputStream = File.OpenRead(Path.Combine("Assets", "hello_world.m4a"));
-        BinaryData inputData = BinaryData.FromStream(inputStream);
-        ClientResult<AudioTranscription> transcriptionResult = client.TranscribeAudio(inputData, "hello_world.m4a", new AudioTranscriptionOptions()
+        ClientResult<AudioTranscription> transcriptionResult = client.TranscribeAudio(inputStream, "hello_world.m4a", new AudioTranscriptionOptions()
         {
              EnableWordTimestamps = true,
              EnableSegmentTimestamps = true,
-             ResponseFormat = AudioTranscriptionFormat.Detailed,
+             ResponseFormat = AudioTranscriptionFormat.Verbose,
         });
         Assert.That(transcriptionResult.Value, Is.Not.Null);
         // Assert.That(transcriptionResult.Value.Segments, Is.Null);

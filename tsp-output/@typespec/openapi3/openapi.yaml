@@ -378,7 +378,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateTranscriptionResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/CreateTranscriptionResponseJson'
+                  - $ref: '#/components/schemas/CreateTranscriptionResponseVerboseJson'
             text/plain:
               schema:
                 type: string
@@ -407,7 +409,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateTranslationResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/CreateTranslationResponseJson'
+                  - $ref: '#/components/schemas/CreateTranslationResponseVerboseJson'
             text/plain:
               schema:
                 type: string
@@ -954,7 +958,7 @@ paths:
       tags:
         - Moderations
       operationId: createModeration
-      summary: Classifies if text violates OpenAI's Content Policy
+      summary: Classifies if text is potentially harmful.
       parameters: []
       responses:
         '200':
@@ -1857,65 +1861,6 @@ components:
           enum:
             - retrieval
           description: 'The type of tool being defined: `retrieval`'
-    AudioSegment:
-      type: object
-      required:
-        - id
-        - seek
-        - start
-        - end
-        - text
-        - tokens
-        - temperature
-        - avg_logprob
-        - compression_ratio
-        - no_speech_prob
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The zero-based index of this segment.
-        seek:
-          type: integer
-          format: int64
-          description: |-
-            The seek position associated with the processing of this audio segment. Seek positions are
-            expressed as hundredths of seconds. The model may process several segments from a single seek
-            position, so while the seek position will never represent a later time than the segment's
-            start, the segment's start may represent a significantly later time than the segment's
-            associated seek position.
-        start:
-          type: number
-          format: double
-          description: The time at which this segment started relative to the beginning of the audio.
-        end:
-          type: number
-          format: double
-          description: The time at which this segment ended relative to the beginning of the audio.
-        text:
-          type: string
-          description: The text that was part of this audio segment.
-        tokens:
-          $ref: '#/components/schemas/TokenArrayItem'
-          description: The token IDs matching the text in this audio segment.
-        temperature:
-          type: number
-          format: double
-          minimum: 0
-          maximum: 1
-          description: The temperature score associated with this audio segment.
-        avg_logprob:
-          type: number
-          format: double
-          description: The average log probability associated with this audio segment.
-        compression_ratio:
-          type: number
-          format: double
-          description: The compression ratio of this audio segment.
-        no_speech_prob:
-          type: number
-          format: double
-          description: The probability of no speech detection within this audio segment.
     BatchSize:
       type: integer
       format: int64
@@ -2244,7 +2189,9 @@ components:
         logprob:
           type: number
           format: double
-          description: The log probability of this token.
+          description: |-
+            The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+            the value `-9999.0` is used to signify that the token is very unlikely.
         bytes:
           type: array
           items:
@@ -2444,6 +2391,7 @@ components:
                 - gpt-3.5-turbo-0301
                 - gpt-3.5-turbo-0613
                 - gpt-3.5-turbo-1106
+                - gpt-3.5-turbo-0125
                 - gpt-3.5-turbo-16k-0613
           description: |-
             ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility)
@@ -2491,9 +2439,9 @@ components:
           format: int64
           nullable: true
           minimum: 0
-          maximum: 5
+          maximum: 20
           description: |-
-            An integer between 0 and 5 specifying the number of most likely tokens to return at each token
+            An integer between 0 and 20 specifying the number of most likely tokens to return at each token
             position, each with an associated log probability. `logprobs` must be set to `true` if this
             parameter is used.
         max_tokens:
@@ -2543,7 +2491,8 @@ components:
               default: text
           description: |-
             An object specifying the format that the model must output. Compatible with
-            [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and `gpt-3.5-turbo-1106`.
+            [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
+            `gpt-3.5-turbo-1106`.
 
             Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the
             model generates is valid JSON.
@@ -3340,7 +3289,9 @@ components:
             - url
             - b64_json
           nullable: true
-          description: The format in which the generated images are returned. Must be one of `url` or `b64_json`.
+          description: |-
+            The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs
+            are only valid for 60 minutes after the image has been generated.
           default: url
         size:
           type: string
@@ -3512,7 +3463,7 @@ components:
             properties:
               flagged:
                 type: boolean
-                description: Whether the content violates [OpenAI's usage policies](/policies/usage-policies).
+                description: Whether any of the below categories are flagged.
               categories:
                 type: object
                 properties:
@@ -3641,7 +3592,7 @@ components:
               - categories
               - category_scores
           description: A list of moderation objects.
-      description: Represents policy compliance report by OpenAI's content moderation model against a given input.
+      description: Represents if a given text input is potentially harmful.
     CreateRunRequest:
       type: object
       required:
@@ -3743,7 +3694,9 @@ components:
             - opus
             - aac
             - flac
-          description: The format to audio in. Supported formats are `mp3`, `opus`, `aac`, and `flac`.
+            - wav
+            - pcm
+          description: The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`.
           default: mp3
         speed:
           type: number
@@ -3836,7 +3789,9 @@ components:
             - type: string
               enum:
                 - whisper-1
-          description: ID of the model to use. Only `whisper-1` is currently available.
+          description: |-
+            ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
+            is currently available.
           x-oaiTypeLabel: string
         language:
           type: string
@@ -3876,33 +3831,63 @@ components:
             the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
             automatically increase the temperature until certain thresholds are hit.
           default: 0
-    CreateTranscriptionResponse:
+        timestamp_granularities:
+          type: array
+          items:
+            type: string
+            enum:
+              - word
+              - segment
+          description: |-
+            The timestamp granularities to populate for this transcription. `response_format` must be set
+            `verbose_json` to use timestamp granularities. Either or both of these options are supported:
+            `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
+            generating word timestamps incurs additional latency.
+          default:
+            - segment
+    CreateTranscriptionResponseJson:
       type: object
       required:
         - text
       properties:
         text:
           type: string
-          description: The transcribed text for the provided audio data.
+          description: The transcribed text.
+      description: Represents a transcription response returned by model, based on the provided input.
+    CreateTranscriptionResponseVerboseJson:
+      type: object
+      required:
+        - task
+        - language
+        - duration
+        - text
+      properties:
         task:
           type: string
           enum:
             - transcribe
-          description: The label that describes which operation type generated the accompanying response data.
+          description: The task label.
         language:
           type: string
-          description: The spoken language that was detected in the audio data.
+          description: The language of the input audio.
         duration:
           type: number
           format: double
-          description: The total duration of the audio processed to produce accompanying transcription information.
+          description: The duration of the input audio.
+        text:
+          type: string
+          description: The transcribed text.
+        words:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranscriptionWord'
+          description: Extracted words and their corresponding timestamps.
         segments:
           type: array
           items:
-            $ref: '#/components/schemas/AudioSegment'
-          description: |-
-            A collection of information about the timing, probabilities, and other detail of each processed
-            audio segment.
+            $ref: '#/components/schemas/TranscriptionSegment'
+          description: Segments of the transcribed text and their corresponding details.
+      description: Represents a verbose json transcription response returned by model, based on the provided input.
     CreateTranslationRequestMultiPart:
       type: object
       required:
@@ -3922,7 +3907,9 @@ components:
             - type: string
               enum:
                 - whisper-1
-          description: ID of the model to use. Only `whisper-1` is currently available.
+          description: |-
+            ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
+            is currently available.
           x-oaiTypeLabel: string
         prompt:
           type: string
@@ -3956,33 +3943,41 @@ components:
             the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
             automatically increase the temperature until certain thresholds are hit.
           default: 0
-    CreateTranslationResponse:
+    CreateTranslationResponseJson:
       type: object
       required:
         - text
       properties:
         text:
           type: string
-          description: The translated text for the provided audio data.
+    CreateTranslationResponseVerboseJson:
+      type: object
+      required:
+        - task
+        - language
+        - duration
+        - text
+      properties:
         task:
           type: string
           enum:
             - translate
-          description: The label that describes which operation type generated the accompanying response data.
+          description: The task label.
         language:
           type: string
-          description: The spoken language that was detected in the audio data.
+          description: The language of the output translation (always `english`).
         duration:
           type: number
           format: double
-          description: The total duration of the audio processed to produce accompanying translation information.
+          description: The duration of the input audio.
+        text:
+          type: string
+          description: The translated text.
         segments:
           type: array
           items:
-            $ref: '#/components/schemas/AudioSegment'
-          description: |-
-            A collection of information about the timing, probabilities, and other detail of each processed
-            audio segment.
+            $ref: '#/components/schemas/TranscriptionSegment'
+          description: Segments of the translated text and their corresponding details.
     DeleteAssistantFileResponse:
       type: object
       required:
@@ -5108,7 +5103,8 @@ components:
               enum:
                 - server_error
                 - rate_limit_exceeded
-              description: One of `server_error` or `rate_limit_exceeded`.
+                - invalid_prompt
+              description: One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
             message:
               type: string
               description: A human-readable description of the error.
@@ -5608,6 +5604,82 @@ components:
         type: integer
         format: int64
       minItems: 1
+    TranscriptionSegment:
+      type: object
+      required:
+        - id
+        - seek
+        - start
+        - end
+        - text
+        - tokens
+        - temperature
+        - avg_logprob
+        - compression_ratio
+        - no_speech_prob
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the segment.
+        seek:
+          type: integer
+          format: int64
+          description: Seek offset of the segment.
+        start:
+          type: number
+          format: double
+          description: Start time of the segment in seconds.
+        end:
+          type: number
+          format: double
+          description: End time of the segment in seconds.
+        text:
+          type: string
+          description: Text content of the segment.
+        tokens:
+          $ref: '#/components/schemas/TokenArrayItem'
+          description: Array of token IDs for the text content.
+        temperature:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          description: Temperature parameter used for generating the segment.
+        avg_logprob:
+          type: number
+          format: double
+          description: Average logprob of the segment. If the value is lower than -1, consider the logprobs failed.
+        compression_ratio:
+          type: number
+          format: double
+          description: |-
+            Compression ratio of the segment. If the value is greater than 2.4, consider the compression
+            failed.
+        no_speech_prob:
+          type: number
+          format: double
+          description: |-
+            Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
+            is below -1, consider this segment silent.
+    TranscriptionWord:
+      type: object
+      required:
+        - word
+        - start
+        - end
+      properties:
+        word:
+          type: string
+          description: The text content of the word.
+        start:
+          type: number
+          format: double
+          description: Start time of the word in seconds.
+        end:
+          type: number
+          format: double
+          description: End time of the word in seconds.
     User:
       type: string
   securitySchemes:

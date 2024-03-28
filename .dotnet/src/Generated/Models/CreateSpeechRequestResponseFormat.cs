@@ -21,6 +21,8 @@ namespace OpenAI.Internal.Models
         private const string OpusValue = "opus";
         private const string AacValue = "aac";
         private const string FlacValue = "flac";
+        private const string WavValue = "wav";
+        private const string PcmValue = "pcm";
 
         /// <summary> mp3. </summary>
         public static CreateSpeechRequestResponseFormat Mp3 { get; } = new CreateSpeechRequestResponseFormat(Mp3Value);
@@ -30,6 +32,10 @@ namespace OpenAI.Internal.Models
         public static CreateSpeechRequestResponseFormat Aac { get; } = new CreateSpeechRequestResponseFormat(AacValue);
         /// <summary> flac. </summary>
         public static CreateSpeechRequestResponseFormat Flac { get; } = new CreateSpeechRequestResponseFormat(FlacValue);
+        /// <summary> wav. </summary>
+        public static CreateSpeechRequestResponseFormat Wav { get; } = new CreateSpeechRequestResponseFormat(WavValue);
+        /// <summary> pcm. </summary>
+        public static CreateSpeechRequestResponseFormat Pcm { get; } = new CreateSpeechRequestResponseFormat(PcmValue);
         /// <summary> Determines if two <see cref="CreateSpeechRequestResponseFormat"/> values are the same. </summary>
         public static bool operator ==(CreateSpeechRequestResponseFormat left, CreateSpeechRequestResponseFormat right) => left.Equals(right);
         /// <summary> Determines if two <see cref="CreateSpeechRequestResponseFormat"/> values are not the same. </summary>

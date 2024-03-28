@@ -13,12 +13,14 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public void Sample01_RetrievalAugmentedGeneration()
         {
+            // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
+#pragma warning disable OPENAI001
             OpenAIClient openAIClient = new(Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
             FileClient fileClient = openAIClient.GetFileClient();
             AssistantClient assistantClient = openAIClient.GetAssistantClient();
 
             // First, let's contrive a document we'll use retrieval with and upload it.
-            BinaryData document = BinaryData.FromString("""
+            using Stream document = BinaryData.FromString("""
                 {
                     "description": "This document contains the sale history data for Contoso products.",
                     "sales": [
@@ -45,7 +47,7 @@ namespace OpenAI.Samples
                         }
                     ]
                 }
-                """);
+                """).ToStream();
 
             OpenAIFileInfo openAIFileInfo = fileClient.UploadFile(document, "test-rag-file-delete-me.json", OpenAIFilePurpose.Assistants);
 

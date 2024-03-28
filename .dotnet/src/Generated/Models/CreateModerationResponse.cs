@@ -7,7 +7,7 @@ using OpenAI;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> Represents policy compliance report by OpenAI's content moderation model against a given input. </summary>
+    /// <summary> Represents if a given text input is potentially harmful. </summary>
     internal partial class CreateModerationResponse
     {
         /// <summary>

@@ -10,34 +10,25 @@ using OpenAI;
 
 namespace OpenAI.Internal.Models
 {
-    internal partial class CreateTranscriptionResponse : IJsonModel<CreateTranscriptionResponse>
+    internal partial class CreateTranslationResponseVerboseJson : IJsonModel<CreateTranslationResponseVerboseJson>
     {
-        void IJsonModel<CreateTranscriptionResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<CreateTranslationResponseVerboseJson>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranscriptionResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationResponseVerboseJson>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateTranscriptionResponse)} does not support '{format}' format.");
+                throw new FormatException($"The model {nameof(CreateTranslationResponseVerboseJson)} does not support '{format}' format.");
             }
 
             writer.WriteStartObject();
+            writer.WritePropertyName("task"u8);
+            writer.WriteStringValue(Task.ToString());
+            writer.WritePropertyName("language"u8);
+            writer.WriteStringValue(Language);
+            writer.WritePropertyName("duration"u8);
+            writer.WriteNumberValue(Convert.ToInt32(Duration.ToString("%s")));
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
-            if (Optional.IsDefined(Task))
-            {
-                writer.WritePropertyName("task"u8);
-                writer.WriteStringValue(Task.Value.ToString());
-            }
-            if (Optional.IsDefined(Language))
-            {
-                writer.WritePropertyName("language"u8);
-                writer.WriteStringValue(Language);
-            }
-            if (Optional.IsDefined(Duration))
-            {
-                writer.WritePropertyName("duration"u8);
-                writer.WriteNumberValue(Convert.ToInt32(Duration.Value.ToString("%s")));
-            }
             if (Optional.IsCollectionDefined(Segments))
             {
                 writer.WritePropertyName("segments"u8);
@@ -66,19 +57,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateTranscriptionResponse IJsonModel<CreateTranscriptionResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        CreateTranslationResponseVerboseJson IJsonModel<CreateTranslationResponseVerboseJson>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranscriptionResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationResponseVerboseJson>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateTranscriptionResponse)} does not support '{format}' format.");
+                throw new FormatException($"The model {nameof(CreateTranslationResponseVerboseJson)} does not support '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateTranscriptionResponse(document.RootElement, options);
+            return DeserializeCreateTranslationResponseVerboseJson(document.RootElement, options);
         }
 
-        internal static CreateTranscriptionResponse DeserializeCreateTranscriptionResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static CreateTranslationResponseVerboseJson DeserializeCreateTranslationResponseVerboseJson(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -86,27 +77,18 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            string text = default;
-            CreateTranscriptionResponseTask? task = default;
+            CreateTranslationResponseVerboseJsonTask task = default;
             string language = default;
-            TimeSpan? duration = default;
-            IReadOnlyList<AudioSegment> segments = default;
+            TimeSpan duration = default;
+            string text = default;
+            IReadOnlyList<TranscriptionSegment> segments = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> additionalPropertiesDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("text"u8))
-                {
-                    text = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("task"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    task = new CreateTranscriptionResponseTask(property.Value.GetString());
+                    task = new CreateTranslationResponseVerboseJsonTask(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("language"u8))
@@ -116,11 +98,12 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("duration"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     duration = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    continue;
+                }
+                if (property.NameEquals("text"u8))
+                {
+                    text = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("segments"u8))
@@ -129,10 +112,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<AudioSegment> array = new List<AudioSegment>();
+                    List<TranscriptionSegment> array = new List<TranscriptionSegment>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(AudioSegment.DeserializeAudioSegment(item, options));
+                        array.Add(TranscriptionSegment.DeserializeTranscriptionSegment(item, options));
                     }
                     segments = array;
                     continue;
@@ -143,52 +126,52 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = additionalPropertiesDictionary;
-            return new CreateTranscriptionResponse(
-                text,
+            return new CreateTranslationResponseVerboseJson(
                 task,
                 language,
                 duration,
-                segments ?? new ChangeTrackingList<AudioSegment>(),
+                text,
+                segments ?? new ChangeTrackingList<TranscriptionSegment>(),
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateTranscriptionResponse>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<CreateTranslationResponseVerboseJson>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranscriptionResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationResponseVerboseJson>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateTranscriptionResponse)} does not support '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CreateTranslationResponseVerboseJson)} does not support '{options.Format}' format.");
             }
         }
 
-        CreateTranscriptionResponse IPersistableModel<CreateTranscriptionResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
+        CreateTranslationResponseVerboseJson IPersistableModel<CreateTranslationResponseVerboseJson>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranscriptionResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationResponseVerboseJson>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateTranscriptionResponse(document.RootElement, options);
+                        return DeserializeCreateTranslationResponseVerboseJson(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateTranscriptionResponse)} does not support '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CreateTranslationResponseVerboseJson)} does not support '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateTranscriptionResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<CreateTranslationResponseVerboseJson>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateTranscriptionResponse FromResponse(PipelineResponse response)
+        internal static CreateTranslationResponseVerboseJson FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateTranscriptionResponse(document.RootElement);
+            return DeserializeCreateTranslationResponseVerboseJson(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

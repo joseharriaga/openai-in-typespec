@@ -36,12 +36,14 @@ internal static class TestHelpers
         options.ErrorOptions = throwOnError ? ClientErrorBehaviors.Default : ClientErrorBehaviors.NoThrow;
         object clientObject = scenario switch
         {
-            TestScenario.Chat => new ChatClient(overrideModel ?? "gpt-3.5-turbo", options),
-            TestScenario.VisionChat => new ChatClient(overrideModel ?? "gpt-4-vision-preview", options),
-            TestScenario.Assistants => new AssistantClient(options),
-            TestScenario.Images => new ImageClient(overrideModel ?? "dall-e-3", options),
-            TestScenario.Files => new FileClient(options),
-            TestScenario.Transcription => new AudioClient(overrideModel ?? "whisper-1", options),
+            TestScenario.Chat => new ChatClient(overrideModel ?? "gpt-3.5-turbo", credential: null, options),
+            TestScenario.VisionChat => new ChatClient(overrideModel ?? "gpt-4-vision-preview", credential: null, options),
+#pragma warning disable OPENAI001
+            TestScenario.Assistants => new AssistantClient(credential: null, options),
+#pragma warning restore OPENAI001
+            TestScenario.Images => new ImageClient(overrideModel ?? "dall-e-3", credential: null, options),
+            TestScenario.Files => new FileClient(credential: null, options),
+            TestScenario.Transcription => new AudioClient(overrideModel ?? "whisper-1", credential: null, options),
             _ => throw new NotImplementedException(),
         };
         return (T)clientObject;

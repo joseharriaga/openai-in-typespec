@@ -32,6 +32,7 @@ namespace OpenAI.Internal.Models
         private const string Gpt35Turbo0301Value = "gpt-3.5-turbo-0301";
         private const string Gpt35Turbo0613Value = "gpt-3.5-turbo-0613";
         private const string Gpt35Turbo1106Value = "gpt-3.5-turbo-1106";
+        private const string Gpt35Turbo0125Value = "gpt-3.5-turbo-0125";
         private const string Gpt35Turbo16k0613Value = "gpt-3.5-turbo-16k-0613";
 
         /// <summary> gpt-4-0125-preview. </summary>
@@ -64,6 +65,8 @@ namespace OpenAI.Internal.Models
         public static CreateChatCompletionRequestModel Gpt35Turbo0613 { get; } = new CreateChatCompletionRequestModel(Gpt35Turbo0613Value);
         /// <summary> gpt-3.5-turbo-1106. </summary>
         public static CreateChatCompletionRequestModel Gpt35Turbo1106 { get; } = new CreateChatCompletionRequestModel(Gpt35Turbo1106Value);
+        /// <summary> gpt-3.5-turbo-0125. </summary>
+        public static CreateChatCompletionRequestModel Gpt35Turbo0125 { get; } = new CreateChatCompletionRequestModel(Gpt35Turbo0125Value);
         /// <summary> gpt-3.5-turbo-16k-0613. </summary>
         public static CreateChatCompletionRequestModel Gpt35Turbo16k0613 { get; } = new CreateChatCompletionRequestModel(Gpt35Turbo16k0613Value);
         /// <summary> Determines if two <see cref="CreateChatCompletionRequestModel"/> values are the same. </summary>

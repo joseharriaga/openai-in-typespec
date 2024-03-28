@@ -22,14 +22,17 @@ model CreateImageRequest {
   // TODO: This is generated as a "oneOf" in the tsp-output?
   n?: ImagesN | null = 1;
 
+  // TODO: This is not marked as nullable in the OpenAPI spec.
   /**
    * The quality of the image that will be generated. `hd` creates images with finer details and
    * greater consistency across the image. This param is only supported for `dall-e-3`.
    */
-  // NOTE: This is not marked as nullable in the OpenAPI spec.
   quality?: "standard" | "hd" | null = "standard";
 
-  /** The format in which the generated images are returned. Must be one of `url` or `b64_json`. */
+  /**
+   * The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs
+   * are only valid for 60 minutes after the image has been generated.
+   */
   response_format?: "url" | "b64_json" | null = "url";
 
   /**
@@ -60,8 +63,8 @@ model CreateImageEditRequest {
   @encode("binary")
   image: bytes;
 
+  // TODO: Max length is not defined in the OpenAPI spec but mentioned in the description.
   /** A text description of the desired image(s). The maximum length is 1000 characters. */
-  // NOTE: Max length is not defined in the OpenAI spec but mentioned in the description.
   @maxLength(1000)
   prompt: string;
 

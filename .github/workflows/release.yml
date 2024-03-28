@@ -1,16 +1,16 @@
 name: Release package
 
 on:
-  workflow_dispatch:
   release:
-    types: [created]
+    types: [published]
+
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       packages: write
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v3
@@ -32,12 +32,22 @@ jobs:
           SECRET_VALUE: ${{ secrets.OPENAI_TOKEN }}
         working-directory: .dotnet
 
+      # Pack the client nuget package and include urls back to the repository and release tag
       - name: Pack
         run: dotnet pack
           --no-build
           --configuration Release
           --output "${{github.workspace}}/artifacts/packages"
+          /p:RepositoryUrl="https://github.com/${{ github.repository }}"
+          /p:PackageProjectUrl="https://github.com/${{ github.repository }}/tree/${{ github.event.release.tag_name }}"
         working-directory: .dotnet
+
+      # Append the nuget package to the github release that triggered this workflow
+      - name: Upload release asset
+        run: gh release upload ${{ github.event.release.tag_name }}
+          ${{github.workspace}}/artifacts/packages/*.nupkg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

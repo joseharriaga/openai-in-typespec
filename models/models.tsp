@@ -10,7 +10,7 @@ model ListModelsResponse {
 model DeleteModelResponse {
   id: string;
   deleted: boolean;
-  object: "model"; // NOTE: This is just a string in the OpenAPI spec, no enum.
+  object: "model"; // TODO: This is just a string in the OpenAPI spec, not an enum.
 }
 
 /** Describes an OpenAI model offering that can be used with the API. */

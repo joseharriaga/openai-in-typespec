@@ -24,7 +24,7 @@ public partial class ChatFunctionCall
     /// <summary>
     /// The name of the function being called by the model.
     /// </summary>
-    public required string Name { get; set; }
+    public required string FunctionName { get; set; }
     /// <summary>
     /// The arguments to the function being called by the model.
     /// </summary>
@@ -41,7 +41,7 @@ public partial class ChatFunctionCall
     [SetsRequiredMembers]
     public ChatFunctionCall(string functionName, string arguments)
     {
-        Name = functionName;
+        FunctionName = functionName;
         Arguments = arguments;
     }
 }

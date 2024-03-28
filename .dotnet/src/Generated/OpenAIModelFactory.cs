@@ -706,7 +706,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunObjectLastError"/>. </summary>
-        /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
+        /// <param name="code"> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <returns> A new <see cref="Models.RunObjectLastError"/> instance for mocking. </returns>
         public static RunObjectLastError RunObjectLastError(RunObjectLastErrorCode code = default, string message = null)

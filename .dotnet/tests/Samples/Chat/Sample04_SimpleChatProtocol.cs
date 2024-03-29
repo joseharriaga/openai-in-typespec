@@ -3,7 +3,6 @@ using OpenAI.Chat;
 using System;
 using System.ClientModel;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace OpenAI.Samples
 {
@@ -11,7 +10,7 @@ namespace OpenAI.Samples
     {
         [Test]
         [Ignore("Compilation validation only")]
-        public async Task Sample04_ProtocolAsync()
+        public void Sample04_SimpleChatProtocol()
         {
             ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
@@ -28,7 +27,7 @@ namespace OpenAI.Samples
                 """);
 
             using BinaryContent content = BinaryContent.Create(input);
-            ClientResult result = await client.CompleteChatAsync(content);
+            ClientResult result = client.CompleteChat(content);
             BinaryData output = result.GetRawResponse().Content;
 
             using JsonDocument outputAsJson = JsonDocument.Parse(output.ToString());

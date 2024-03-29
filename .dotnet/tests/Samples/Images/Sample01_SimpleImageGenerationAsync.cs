@@ -10,7 +10,7 @@ namespace OpenAI.Samples
     {
         [Test]
         [Ignore("Compilation validation only")]
-        public async Task Sample01_SimpleImageAsync()
+        public async Task Sample01_SimpleImageGenerationAsync()
         {
             ImageClient client = new("dall-e-3", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 

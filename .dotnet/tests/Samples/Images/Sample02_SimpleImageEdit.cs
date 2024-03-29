@@ -11,7 +11,7 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public void Sample02_SimpleImageEdit()
         {
-            ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
+            ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             string imageFileName = "edit_sample_image.png";
             string imagePath = Path.Combine("Assets", imageFileName);

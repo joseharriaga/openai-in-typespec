@@ -10,7 +10,7 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public void Sample01_SimpleChat()
         {
-            ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
+            ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             ChatCompletion chatCompletion = client.CompleteChat("How does AI work? Explain it in simple terms.");
 

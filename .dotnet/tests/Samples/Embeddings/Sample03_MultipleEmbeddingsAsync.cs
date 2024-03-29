@@ -12,7 +12,7 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public async Task Sample03_MultipleEmbeddingsAsync()
         {
-            EmbeddingClient client = new("text-embedding-3-small", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
+            EmbeddingClient client = new("text-embedding-3-small", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             string category = "Luxury";
             string description =

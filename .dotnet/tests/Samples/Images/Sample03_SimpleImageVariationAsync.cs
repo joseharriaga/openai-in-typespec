@@ -12,7 +12,7 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public async Task Sample03_SimpleImageVariationAsync()
         {
-            ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
+            ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             string imagePath = Path.Combine("Assets", "variation_sample_image.png");
             using FileStream inputImage = File.OpenRead(imagePath);

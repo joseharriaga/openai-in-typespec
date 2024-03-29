@@ -12,7 +12,7 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public void Sample04_Protocol()
         {
-            ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
+            ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             BinaryData input = BinaryData.FromString("""
                 {

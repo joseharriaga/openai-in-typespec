@@ -37,7 +37,7 @@ public partial class Assistant
         Metadata = internalAssistant.Metadata ?? new Dictionary<string, string>();
     }
 
-    private static IReadOnlyList<ToolDefinition> GetToolsFromInternalTools(IReadOnlyList<BinaryData>? internalTools)
+    private static IReadOnlyList<ToolDefinition> GetToolsFromInternalTools(IReadOnlyList<BinaryData> internalTools)
     {
         if (internalTools is not null)
         {

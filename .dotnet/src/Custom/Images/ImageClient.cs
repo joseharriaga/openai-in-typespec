@@ -255,8 +255,8 @@ public partial class ImageClient
         {
             internalFormat = options.ResponseFormat switch
             {
-                ImageResponseFormat.Bytes => Internal.Models.CreateImageRequestResponseFormat.B64Json,
-                ImageResponseFormat.Uri => Internal.Models.CreateImageRequestResponseFormat.Url,
+                GeneratedImageFormat.Bytes => Internal.Models.CreateImageRequestResponseFormat.B64Json,
+                GeneratedImageFormat.Uri => Internal.Models.CreateImageRequestResponseFormat.Url,
                 _ => throw new ArgumentException(nameof(options.ResponseFormat)),
             };
         }

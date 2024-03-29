@@ -28,7 +28,7 @@ namespace OpenAI.Samples
                 Mask = mask,
                 MaskFileName = maskFileName,
                 Size = GeneratedImageSize.W1024xH1024,
-                ResponseFormat = ImageResponseFormat.Bytes
+                ResponseFormat = GeneratedImageFormat.Bytes
             };
 
             GeneratedImageCollection images = client.GenerateImageEdits(inputImage, imageFileName, prompt, 1, options);

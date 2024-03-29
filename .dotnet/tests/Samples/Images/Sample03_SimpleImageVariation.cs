@@ -19,7 +19,7 @@ namespace OpenAI.Samples
             ImageVariationOptions options = new()
             {
                 Size = GeneratedImageSize.W1024xH1024,
-                ResponseFormat = ImageResponseFormat.Bytes
+                ResponseFormat = GeneratedImageFormat.Bytes
             };
 
             GeneratedImageCollection images = client.GenerateImageVariations(inputImage, 1, options);

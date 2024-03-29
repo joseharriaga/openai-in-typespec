@@ -6,17 +6,17 @@ namespace OpenAI.Images;
 /// Represents the available output methods for generated images.
 /// <list type="bullet">
 /// <item>
-///     <c>url</c> - <see cref="ImageResponseFormat.Uri"/> - Default, provides a temporary internet location that
+///     <c>url</c> - <see cref="GeneratedImageFormat.Uri"/> - Default, provides a temporary internet location that
 ///     the generated image can be retrieved from.
 /// </item>
 /// <item>
-///     <c>b64_json</c> - <see cref="ImageResponseFormat.Bytes"/> - Provides the full image data on the response,
+///     <c>b64_json</c> - <see cref="GeneratedImageFormat.Bytes"/> - Provides the full image data on the response,
 ///     encoded in the result as a base64 string. This offers the fastest round trip time but can drastically
 ///     increase the size of response payloads.
 /// </item>
 /// </list>
 /// </summary>
-public enum ImageResponseFormat
+public enum GeneratedImageFormat
 {
     /// <summary>
     /// Instructs the request to return image data directly on the response, encoded as a base64 string in the response

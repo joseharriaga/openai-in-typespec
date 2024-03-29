@@ -27,7 +27,7 @@ namespace OpenAI.Samples
                 Quality = GeneratedImageQuality.High,
                 Size = GeneratedImageSize.W1792xH1024,
                 Style = GeneratedImageStyle.Vivid,
-                ResponseFormat = ImageResponseFormat.Bytes
+                ResponseFormat = GeneratedImageFormat.Bytes
             };
 
             GeneratedImage image = await client.GenerateImageAsync(prompt, options);

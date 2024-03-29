@@ -14,6 +14,9 @@ namespace OpenAI;
 /// <typeparam name="T"> The data type representative of distinct, streamable items. </typeparam>
 // TODO: Revisit the IDisposable question
 public abstract class StreamingClientResult<T> : ClientResult, IAsyncEnumerable<T>
+    // TODO: Note that constraining the T means the implementation can use
+    // ModelReaderWriter for deserialization.
+    where T : IPersistableModel<T>
 {
     protected StreamingClientResult(PipelineResponse response) : base(response)
     {

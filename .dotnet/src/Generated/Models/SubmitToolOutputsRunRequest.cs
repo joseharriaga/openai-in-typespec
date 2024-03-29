@@ -54,10 +54,15 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="SubmitToolOutputsRunRequest"/>. </summary>
         /// <param name="toolOutputs"> A list of tools for which the outputs are being submitted. </param>
+        /// <param name="stream">
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal SubmitToolOutputsRunRequest(IList<SubmitToolOutputsRunRequestToolOutput> toolOutputs, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal SubmitToolOutputsRunRequest(IList<SubmitToolOutputsRunRequestToolOutput> toolOutputs, bool? stream, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             ToolOutputs = toolOutputs;
+            Stream = stream;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -68,5 +73,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> A list of tools for which the outputs are being submitted. </summary>
         public IList<SubmitToolOutputsRunRequestToolOutput> ToolOutputs { get; }
+        /// <summary>
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </summary>
+        public bool? Stream { get; set; }
     }
 }

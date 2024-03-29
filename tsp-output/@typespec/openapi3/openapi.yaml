@@ -1018,7 +1018,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/AssistantStreamEvent'
         default:
           description: An unexpected error response.
           content:
@@ -1402,7 +1406,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/AssistantStreamEvent'
         default:
           description: An unexpected error response.
           content:
@@ -1713,7 +1721,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/AssistantStreamEvent'
         default:
           description: An unexpected error response.
           content:
@@ -1828,6 +1840,33 @@ components:
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: Represents an `assistant` that can call the model and use tools.
+    AssistantStreamEvent:
+      oneOf:
+        - $ref: '#/components/schemas/ThreadStreamEvent'
+        - $ref: '#/components/schemas/RunStreamEvent'
+        - $ref: '#/components/schemas/RunStepStreamEvent'
+        - $ref: '#/components/schemas/MessageStreamEvent'
+        - $ref: '#/components/schemas/ErrorStreamEvent'
+        - $ref: '#/components/schemas/DoneStreamEvent'
+      description: |-
+        Represents an event when streaming a run.
+
+        Each event in a server-sent events stream has an `event` and `data` property:
+        ```
+        event: thread.created
+        data: {"id": "thread_123", "object": "thread", ...}
+        ```
+        We emit events whenever a new object is created, transitions to a new state, or is being
+        streamed in parts (deltas). For example, we emit `thread.run.created` when a new run
+        is created, `thread.run.completed` when a run completes, and so on. When an Assistant chooses
+        to create a message during a run, we emit a `thread.message.created event`, a
+        `thread.message.in_progress` event, many `thread.message.delta` events, and finally a
+        `thread.message.completed` event.
+
+        We may add additional events over time, so we recommend handling unknown events gracefully
+        in your code. See the [Assistants API quickstart](/docs/assistants/overview) to learn how to
+        integrate the Assistants API with streaming.
+      x-oaiExpandable: true
     AssistantToolsCode:
       type: object
       required:
@@ -3628,6 +3667,11 @@ components:
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
             behavior on a per-run basis.
+        stream:
+          type: boolean
+          description: |-
+            If `true`, returns a stream of events that happen during the Run as server-sent events,
+            terminating when the Run enters a terminal state with a `data: [DONE]` message.
         metadata:
           type: object
           additionalProperties:
@@ -3733,6 +3777,11 @@ components:
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
             behavior on a per-run basis.
+        stream:
+          type: boolean
+          description: |-
+            If `true`, returns a stream of events that happen during the Run as server-sent events,
+            terminating when the Run enters a terminal state with a `data: [DONE]` message.
         metadata:
           type: object
           additionalProperties:
@@ -4046,6 +4095,23 @@ components:
           type: string
           enum:
             - thread.deleted
+    DoneStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - done
+          description: The event label for the server-sent event, which is always `error`.
+        data:
+          type: string
+          enum:
+            - '[DONE]'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when the event stream is at its end.
     Embedding:
       type: object
       required:
@@ -4112,6 +4178,22 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/Error'
+    ErrorStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.cancelling
+          description: The event label for the server-sent event, which is always `error`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/Error'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters an error state.
     FineTuningJob:
       type: object
       required:
@@ -4537,6 +4619,22 @@ components:
           type: string
         has_more:
           type: boolean
+    MessageCompletedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.message.completed
+          description: The event label for the server-sent event, which is always `thread.message.completed`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/MessageObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a message enters in the `completed` status.
     MessageContentImageFileObject:
       type: object
       required:
@@ -4665,6 +4763,212 @@ components:
         - $ref: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
         - $ref: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
       x-oaiExpandable: true
+    MessageCreatedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.message.created
+          description: The event label for the server-sent event, which is always `thread.message.created`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/MessageObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a new message is created.
+    MessageDeltaContent:
+      oneOf:
+        - $ref: '#/components/schemas/MessageDeltaContentImageFileObject'
+        - $ref: '#/components/schemas/MessageDeltaContentTextObject'
+      x-oaiExpandable: true
+    MessageDeltaContentImageFileObject:
+      type: object
+      required:
+        - index
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the content part of the message.
+        image_file:
+          type: object
+          properties:
+            file_id:
+              type: string
+              description: The file ID of the image in the message content.
+          description: |-
+            The type of the content, which is always `image_file`.
+              type: "image_file";
+
+              /** The information about the image_file.
+      description: References an image file in the content of an image.
+    MessageDeltaContentTextAnnotation:
+      oneOf:
+        - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFileCitationObject'
+        - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFilePathObject'
+      x-oaiExpandable: true
+    MessageDeltaContentTextAnnotationsFileCitationObject:
+      type: object
+      required:
+        - index
+        - type
+        - file_citation
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the annotation in a text content part.
+        type:
+          type: string
+          enum:
+            - file_citation
+          description: The type of the citation, which is always `file_citation`.
+        file_citation:
+          type: object
+          properties:
+            file_id:
+              type: string
+              description: The ID of the specific file the citation is from.
+            quote:
+              type: string
+              description: The specific quote in the file.
+          description: |-
+            The text in the message content that needs to be replaced.
+              text?: string;
+
+              /**
+        start_index:
+          type: integer
+          format: int64
+          minimum: 0
+          description: The start index of the citation.
+        end_index:
+          type: integer
+          format: int64
+          minimum: 0
+          description: The end index of the citation.
+      description: |-
+        A citation within the message that points to a specific quote from a specific File associated
+        with the assistant or the message. Generated when the assistant uses the "retrieval" tool to
+        search files.
+    MessageDeltaContentTextAnnotationsFilePathObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the annotation in a text content part.
+        type:
+          type: string
+          enum:
+            - file_path
+          description: The type of the citation, which is always `file_path`.
+        file_path:
+          type: object
+          properties:
+            file_id:
+              type: string
+              description: The ID of the file that was generated.
+          description: The file ID data for the message.
+        start_index:
+          type: integer
+          format: int64
+          minimum: 0
+          description: The start index of the citation.
+        end_index:
+          type: integer
+          format: int64
+          minimum: 0
+          description: The end index of the citation.
+      description: |-
+        A URL for the file that's generated when the assistant used the `code_interpreter` tool to
+        generate a file.
+    MessageDeltaContentTextObject:
+      type: object
+      required:
+        - index
+        - text
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the content part of the message.
+        text:
+          type: object
+          properties:
+            value:
+              type: string
+              description: The data that makes up the text.
+            annotations:
+              type: array
+              items:
+                $ref: '#/components/schemas/MessageDeltaContentTextAnnotation'
+              description: Annotations for the text.
+          description: |-
+            The type of the content, which is always `text`.
+              type: "text";
+
+              /** The text data for the message.
+      description: References text in the content of an image.
+    MessageDeltaObject:
+      type: object
+      required:
+        - id
+        - object
+        - delta
+      properties:
+        id:
+          type: string
+          description: The identifier of the message, which can be referenced in API endpoints.
+        object:
+          type: string
+          enum:
+            - thread.message.delta
+          description: The object type, which is always `thread.message.delta`.
+        delta:
+          type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/MessageDeltaContent'
+              description: |-
+                The entity that produced the message.
+                    role: "user" | "assistant";
+
+                    /** The content of the message as an array of text and/or images.
+            file_ids:
+              type: array
+              items:
+                type: string
+              description: A list of file IDs that the assistant can use.
+              default: []
+          required:
+            - content
+          description: The delta containing the fields that have changed on the Message.
+      description: Represents a message delta i.e. any changed fields on a message during streaming.
+    MessageDeltaStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.message.delta
+          description: The event label for the server-sent event, which is always `thread.message.delta`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/MessageDeltaObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a message has new delta content.
     MessageFileObject:
       type: object
       required:
@@ -4689,6 +4993,38 @@ components:
           type: string
           description: The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to.
       description: A list of files attached to a `message`.
+    MessageInProgressStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.message.in_progress
+          description: The event label for the server-sent event, which is always `thread.message.in_progress`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/MessageObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a message enters in the `in_progress` status.
+    MessageIncompleteStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.message.incomplete
+          description: The event label for the server-sent event, which is always `thread.message.incomplete`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/MessageObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a message enters in the `incomplete` status.
     MessageObject:
       type: object
       required:
@@ -4696,6 +5032,10 @@ components:
         - object
         - created_at
         - thread_id
+        - status
+        - incomplete_details
+        - completed_at
+        - incomplete_at
         - role
         - content
         - assistant_id
@@ -4718,6 +5058,41 @@ components:
         thread_id:
           type: string
           description: The [thread](/docs/api-reference/threads) ID that this message belongs to.
+        status:
+          type: string
+          enum:
+            - in_progress
+            - incomplete
+            - completed
+            - cancelled
+            - failed
+            - completed
+            - expired
+          description: The status of the message.
+        incomplete_details:
+          type: object
+          properties:
+            reason:
+              type: string
+              enum:
+                - content_filter
+                - max_tokens
+                - run_cancelled
+                - run_failed
+              description: The reason the message is incomplete.
+          required:
+            - reason
+          description: On an incomplete message, details about why the message is incomplete.
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the message was completed.
+        incomplete_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the message was marked as incomplete.
         role:
           type: string
           enum:
@@ -4765,6 +5140,15 @@ components:
       oneOf:
         - $ref: '#/components/schemas/MessageContentImageFileObject'
         - $ref: '#/components/schemas/MessageContentTextObject'
+      x-oaiExpandable: true
+    MessageStreamEvent:
+      oneOf:
+        - $ref: '#/components/schemas/MessageCreatedStreamEvent'
+        - $ref: '#/components/schemas/MessageInProgressStreamEvent'
+        - $ref: '#/components/schemas/MessageDeltaStreamEvent'
+        - $ref: '#/components/schemas/MessageCompletedStreamEvent'
+        - $ref: '#/components/schemas/MessageIncompleteStreamEvent'
+      description: Represents a message-related server-sent event for streaming run operations.
       x-oaiExpandable: true
     Model:
       type: object
@@ -4949,6 +5333,54 @@ components:
             type: string
         - $ref: '#/components/schemas/TokenArrayItem'
         - $ref: '#/components/schemas/TokenArrayArray'
+    RunCancelledStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.cancelled
+          description: The event label for the server-sent event, which is always `thread.run.cancelled`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters the `cancelled` status.
+    RunCancellingStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.cancelling
+          description: The event label for the server-sent event, which is always `thread.run.cancelling`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters the `cancelling` status.
+    RunCompletedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.completed
+          description: The event label for the server-sent event, which is always `thread.run.completed`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters the `completed` status.
     RunCompletionUsage:
       type: object
       required:
@@ -4971,6 +5403,70 @@ components:
       description: |-
         Usage statistics related to the run. This value will be `null` if the run is not in a terminal
         state (i.e. `in_progress`, `queued`, etc.).
+    RunCreatedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.created
+          description: The event label for the server-sent event, which is always `thread.run.created`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a new run is created.
+    RunExpiredStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.expired
+          description: The event label for the server-sent event, which is always `thread.run.expired`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters the `expired` status.
+    RunFailedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.failed
+          description: The event label for the server-sent event, which is always `thread.run.failed`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters the `failed` status.
+    RunInProgressStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.in_progress
+          description: The event label for the server-sent event, which is always `thread.run.in_progress`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters the `in_progress` status.
     RunObject:
       type: object
       required:
@@ -5063,6 +5559,7 @@ components:
                 - server_error
                 - rate_limit_exceeded
                 - invalid_prompt
+                - rate_limit_exceeded
               description: One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
             message:
               type: string
@@ -5130,6 +5627,70 @@ components:
             - $ref: '#/components/schemas/RunCompletionUsage'
           nullable: true
       description: Represents an execution run on a [thread](/docs/api-reference/threads).
+    RunQueuedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.queued
+          description: The event label for the server-sent event, which is always `thread.run.queued`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters the `queued` status.
+    RunRequiresActionStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.requires_action
+          description: The event label for the server-sent event, which is always `thread.run.requires_action`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run enters the `requires_action` status.
+    RunStepCancelledStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.step.cancelled
+          description: The event label for the server-sent event, which is always `thread.run.step.cancelled`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunStepObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run step enters the `cancelled` status.
+    RunStepCompletedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.step.completed
+          description: The event label for the server-sent event, which is always `thread.run.step.completed`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunStepObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run step enters the `completed` status.
     RunStepCompletionUsage:
       type: object
       required:
@@ -5152,6 +5713,253 @@ components:
       description: |-
         Usage statistics related to the run step. This value will be `null` while the run step's status
         is `in_progress`.
+    RunStepCreatedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.step.created
+          description: The event label for the server-sent event, which is always `thread.run.step.created`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunStepObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a new run step is created.
+    RunStepDeltaDetailsToolCallsObject:
+      type: object
+      properties:
+        tool_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObject'
+          description: |-
+            The object type, which is always `tool_calls`.
+              type: "tool_calls";
+
+              /**
+            An array of tool calls the run step was involved in. These can be associated with one of three
+            types of tools: `code_interpreter`, `retrieval`, or `function`.
+      description: Represents details of tool calls within a streaming run step.
+    RunStepDeltaObject:
+      type: object
+      required:
+        - id
+        - delta
+      properties:
+        id:
+          type: string
+          description: The identifier of the run step, which can be referenced in API endpoints.
+        delta:
+          type: object
+          properties:
+            step_details:
+              type: array
+              items:
+                $ref: '#/components/schemas/RunStepDeltaStepDetailsObject'
+              description: The details of the run step.
+          description: |-
+            The object type, which is always `thread.run.step.delta`.
+              object: "thread.run.step.delta";
+
+              /** The delta containing the fields that have changed on the run step.
+      description: Represents a run step delta i.e. any changed fields on a run step during streaming.
+    RunStepDeltaStepDetailsMessageCreationObject:
+      type: object
+      required:
+        - message_creation
+      properties:
+        message_creation:
+          type: object
+          properties:
+            message_id:
+              type: string
+              description: The ID of the message that was created by this run step.
+          description: |-
+            The object type, which is always `message_creation`.
+              type: "message_creation";
+
+              /** The message creation data.
+      description: Represents details of a message creation within a streaming run step.
+    RunStepDeltaStepDetailsObject:
+      oneOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsMessageCreationObject'
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObject'
+      x-oaiExpandable: true
+    RunStepDeltaStepDetailsToolCallsCodeObject:
+      type: object
+      required:
+        - index
+        - id
+        - code_interpreter
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the tool call in the tool calls array.
+        id:
+          type: string
+          description: The ID of the tool call.
+        code_interpreter:
+          type: object
+          properties:
+            input:
+              type: string
+              description: The input to the Code Interpreter tool call.
+            outputs:
+              type: array
+              items:
+                $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutput'
+              description: |-
+                The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
+                items, including text (`logs`) or images (`image`). Each of these are represented by a
+                different object type.
+          required:
+            - input
+          description: |-
+            The type of the tool call, which is always `code_interpreter`.
+              type: "code_interpreter";
+
+              /** The Code Interpreter tool call definition.
+      description: Details of a code interpreter tool call that a streaming run step was involved in.
+    RunStepDeltaStepDetailsToolCallsCodeOutput:
+      oneOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject'
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutputImageObject'
+      x-oaiExpandable: true
+    RunStepDeltaStepDetailsToolCallsCodeOutputImageObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the output in the outputs array.
+        type:
+          type: string
+          enum:
+            - image
+          description: The type of the object, which is always `image`.
+        image:
+          type: object
+          properties:
+            file_id:
+              type: string
+              description: The file ID for the image.
+          description: The file ID data for the image.
+      description: Details of an image output from a Code Interpreter tool call within a streaming run step.
+    RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the output in the outputs array.
+        type:
+          type: string
+          enum:
+            - logs
+          description: The type of the object, which is always `logs`.
+        logs:
+          type: string
+          description: The text output from the Code Interpreter tool call.
+      description: Details of log outputs from a Code Interpreter tool call within a streaming run step.
+    RunStepDeltaStepDetailsToolCallsFunctionObject:
+      type: object
+      required:
+        - index
+        - id
+        - type
+        - function
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the tool call in the tool calls array.
+        id:
+          type: string
+          description: The ID of the tool call.
+        type:
+          type: string
+          enum:
+            - function
+          description: The type of the tool call, which is always `retrieval`.
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the function.
+            arguments:
+              type: string
+              description: The arguments passed to the function.
+            output:
+              type: string
+              nullable: true
+              description: The output of the function. This will be `null` if the outputs have not yet been submitted.
+          required:
+            - name
+            - arguments
+            - output
+          description: The function data for the tool call.
+      description: Details of a function tool call that a streaming run step was involved in.
+    RunStepDeltaStepDetailsToolCallsObject:
+      oneOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeObject'
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsRetrievalObject'
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsFunctionObject'
+      x-oaiExpandable: true
+    RunStepDeltaStepDetailsToolCallsRetrievalObject:
+      type: object
+      required:
+        - index
+        - id
+        - type
+      properties:
+        index:
+          type: integer
+          format: int64
+          description: The index of the tool call in the tool calls array.
+        id:
+          type: string
+          description: The ID of the tool call.
+        type:
+          type: string
+          enum:
+            - retrieval
+          description: The type of the tool call, which is always `retrieval`.
+        retrieval:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: Reserved for future use.
+          x-oaiTypeLabel: map
+      description: Details of a retrieval tool call that a streaming run step was involved in.
+    RunStepDeltaStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.step.delta
+          description: The event label for the server-sent event, which is always `thread.run.step.delta`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunStepDeltaObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run step has new delta content.
     RunStepDetails:
       oneOf:
         - $ref: '#/components/schemas/RunStepDetailsMessageCreationObject'
@@ -5167,6 +5975,7 @@ components:
           type: string
           enum:
             - message_creation
+            - tool_calls
           description: Details of the message creation by the run step.
         message_creation:
           type: object
@@ -5335,6 +6144,54 @@ components:
           type: object
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
+    RunStepExpiredStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.step.expired
+          description: The event label for the server-sent event, which is always `thread.run.step.expired`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunStepObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run step enters the `expired` status.
+    RunStepFailedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.step.failed
+          description: The event label for the server-sent event, which is always `thread.run.step.failed`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunStepObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run step enters the `failed` status.
+    RunStepInProgressStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.run.step.in_progress
+          description: The event label for the server-sent event, which is always `thread.run.step.in_progress`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/RunStepObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a run step enters the `in_progress` status.
     RunStepObject:
       type: object
       required:
@@ -5386,6 +6243,8 @@ components:
           type: string
           enum:
             - in_progress
+            - incomplete
+            - completed
             - cancelled
             - failed
             - completed
@@ -5404,6 +6263,8 @@ components:
               type: string
               enum:
                 - server_error
+                - rate_limit_exceeded
+                - invalid_prompt
                 - rate_limit_exceeded
               description: One of `server_error` or `rate_limit_exceeded`.
             message:
@@ -5452,6 +6313,30 @@ components:
             - $ref: '#/components/schemas/RunCompletionUsage'
           nullable: true
       description: Represents a step in execution of a run.
+    RunStepStreamEvent:
+      oneOf:
+        - $ref: '#/components/schemas/RunStepCreatedStreamEvent'
+        - $ref: '#/components/schemas/RunStepInProgressStreamEvent'
+        - $ref: '#/components/schemas/RunStepDeltaStreamEvent'
+        - $ref: '#/components/schemas/RunStepCompletedStreamEvent'
+        - $ref: '#/components/schemas/RunStepFailedStreamEvent'
+        - $ref: '#/components/schemas/RunStepCancelledStreamEvent'
+        - $ref: '#/components/schemas/RunStepExpiredStreamEvent'
+      description: Represents a run-step-related server-sent event for streaming run operations.
+      x-oaiExpandable: true
+    RunStreamEvent:
+      oneOf:
+        - $ref: '#/components/schemas/RunCreatedStreamEvent'
+        - $ref: '#/components/schemas/RunQueuedStreamEvent'
+        - $ref: '#/components/schemas/RunInProgressStreamEvent'
+        - $ref: '#/components/schemas/RunRequiresActionStreamEvent'
+        - $ref: '#/components/schemas/RunCompletedStreamEvent'
+        - $ref: '#/components/schemas/RunFailedStreamEvent'
+        - $ref: '#/components/schemas/RunCancellingStreamEvent'
+        - $ref: '#/components/schemas/RunCancelledStreamEvent'
+        - $ref: '#/components/schemas/RunExpiredStreamEvent'
+      description: Represents a run-related server-sent event for streaming run operations.
+      x-oaiExpandable: true
     RunToolCallObject:
       type: object
       required:
@@ -5512,10 +6397,31 @@ components:
                 type: string
                 description: The output of the tool call to be submitted to continue the run.
           description: A list of tools for which the outputs are being submitted.
+        stream:
+          type: boolean
+          description: |-
+            If `true`, returns a stream of events that happen during the Run as server-sent events,
+            terminating when the Run enters a terminal state with a `data: [DONE]` message.
     SuffixString:
       type: string
       minLength: 1
       maxLength: 40
+    ThreadCreatedStreamEvent:
+      type: object
+      required:
+        - event
+        - data
+      properties:
+        event:
+          type: string
+          enum:
+            - thread.created
+          description: The event label for the server-sent event, which is always `thread.created`.
+        data:
+          allOf:
+            - $ref: '#/components/schemas/ThreadObject'
+          description: The server-sent event data payload.
+      description: Represents the server-sent event raised when a new thread is created.
     ThreadObject:
       type: object
       required:
@@ -5547,6 +6453,12 @@ components:
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: Represents a thread that contains [messages](/docs/api-reference/messages).
+    ThreadStreamEvent:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ThreadCreatedStreamEvent'
+      description: Represents a thread-related server-sent event for streaming run operations.
+      x-oaiExpandable: true
     TokenArrayArray:
       type: array
       items:

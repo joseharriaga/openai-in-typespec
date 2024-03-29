@@ -36,6 +36,12 @@ model CreateRunRequest {
   tools?: CreateRunRequestTools | null;
 
   /**
+   * If `true`, returns a stream of events that happen during the Run as server-sent events,
+   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
+   */
+  stream?: boolean;
+
+  /**
    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
    * additional information about the object in a structured format. Keys can be a maximum of 64
    * characters long and values can be a maxium of 512 characters long.
@@ -81,6 +87,12 @@ model CreateThreadAndRunRequest {
   tools?: CreateRunRequestTools | null;
 
   /**
+   * If `true`, returns a stream of events that happen during the Run as server-sent events,
+   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
+   */
+  stream?: boolean;
+
+  /**
    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
    * additional information about the object in a structured format. Keys can be a maximum of 64
    * characters long and values can be a maxium of 512 characters long.
@@ -100,6 +112,12 @@ model SubmitToolOutputsRunRequest {
     /** The output of the tool call to be submitted to continue the run. */
     output?: string;
   }[];
+
+  /**
+   * If `true`, returns a stream of events that happen during the Run as server-sent events,
+   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
+   */
+  stream?: boolean;
 }
 
 model ListRunsResponse {
@@ -483,4 +501,163 @@ model RunToolCallObject {
     /** The arguments that the model expects you to pass to the function. */
     arguments: string;
   }
+}
+
+@oneOf
+@extension("x-oaiExpandable", true)
+union RunStepDeltaStepDetailsObject {
+  RunStepDeltaStepDetailsMessageCreationObject,
+  RunStepDeltaStepDetailsToolCallsObject,
+}
+
+/** Represents a run step delta i.e. any changed fields on a run step during streaming. */
+model RunStepDeltaObject {
+  /** The identifier of the run step, which can be referenced in API endpoints. */
+  id: string;
+
+  /** The object type, which is always `thread.run.step.delta`.
+  object: "thread.run.step.delta";
+
+  /** The delta containing the fields that have changed on the run step. */
+  delta: {
+    /** The details of the run step.  */
+    step_details?: RunStepDeltaStepDetailsObject[];
+  };
+}
+
+/** Represents details of a message creation within a streaming run step. */
+model RunStepDeltaStepDetailsMessageCreationObject {
+  /** The object type, which is always `message_creation`.
+  type: "message_creation";
+
+  /** The message creation data. */
+  message_creation: {
+    /** The ID of the message that was created by this run step. */
+    message_id?: string;
+  };
+}
+
+@oneOf
+@extension("x-oaiExpandable", true)
+union RunStepDeltaStepDetailsToolCallsObject {
+  RunStepDeltaStepDetailsToolCallsCodeObject,
+  RunStepDeltaStepDetailsToolCallsRetrievalObject,
+  RunStepDeltaStepDetailsToolCallsFunctionObject,
+}
+
+/** Represents details of tool calls within a streaming run step. */
+model RunStepDeltaDetailsToolCallsObject {
+  /** The object type, which is always `tool_calls`.
+  type: "tool_calls";
+
+  /**
+   * An array of tool calls the run step was involved in. These can be associated with one of three
+   * types of tools: `code_interpreter`, `retrieval`, or `function`.
+   */
+  tool_calls?: RunStepDeltaStepDetailsToolCallsObject[];
+}
+
+@oneOf
+@extension("x-oaiExpandable", true)
+union RunStepDeltaStepDetailsToolCallsCodeOutput {
+  RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject,
+  RunStepDeltaStepDetailsToolCallsCodeOutputImageObject,
+}
+
+/** Details of a code interpreter tool call that a streaming run step was involved in. */
+model RunStepDeltaStepDetailsToolCallsCodeObject {
+  /** The index of the tool call in the tool calls array. */
+  index: safeint;
+
+  /** The ID of the tool call. */
+  id: string;
+
+  /** The type of the tool call, which is always `code_interpreter`.
+  type: "code_interpreter";
+
+  /** The Code Interpreter tool call definition. */
+  code_interpreter: {
+    /** The input to the Code Interpreter tool call. */
+    input: string;
+
+    /**
+     * The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
+     * items, including text (`logs`) or images (`image`). Each of these are represented by a
+     * different object type.
+     */
+    outputs?: RunStepDeltaStepDetailsToolCallsCodeOutput[];
+  }
+}
+
+/**
+ * Details of log outputs from a Code Interpreter tool call within a streaming run step.
+ */
+model RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject {
+  /** The index of the output in the outputs array. */
+  index: safeint;
+
+  /** The type of the object, which is always `logs`. */
+  type: "logs";
+
+  /** The text output from the Code Interpreter tool call. */
+  logs?: string;
+}
+
+/**
+ * Details of an image output from a Code Interpreter tool call within a streaming run step.
+ */
+model RunStepDeltaStepDetailsToolCallsCodeOutputImageObject {
+  /** The index of the output in the outputs array. */
+  index: safeint;
+
+  /** The type of the object, which is always `image`. */
+  type: "image";
+
+  /** The file ID data for the image. */
+  image?: {
+    /** The file ID for the image. */
+    file_id?: string;
+  };
+}
+
+/** Details of a retrieval tool call that a streaming run step was involved in. */
+model RunStepDeltaStepDetailsToolCallsRetrievalObject {
+  /** The index of the tool call in the tool calls array. */
+  index: safeint;
+
+  /** The ID of the tool call. */
+  id: string;
+
+  /** The type of the tool call, which is always `retrieval`. */
+  type: "retrieval";
+
+  /** Reserved for future use. */
+  @extension("x-oaiTypeLabel", "map")
+  retrieval?: Record<string> | null;
+}
+
+/** Details of a function tool call that a streaming run step was involved in. */
+model RunStepDeltaStepDetailsToolCallsFunctionObject {
+  /** The index of the tool call in the tool calls array. */
+  index: safeint;
+
+  /** The ID of the tool call. */
+  id: string;
+
+  /** The type of the tool call, which is always `retrieval`. */
+  type: "function";
+
+  /** The function data for the tool call. */
+  function: {
+    /** The name of the function. */
+    name: string;
+
+    /** The arguments passed to the function. */
+    arguments: string;
+
+    /**
+     * The output of the function. This will be `null` if the outputs have not yet been submitted.
+     */
+    output: string | null;
+  };
 }

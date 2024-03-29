@@ -3638,6 +3638,11 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+        stream:
+          type: boolean
+          description: |-
+            If true, returns a stream of events that happen during the Run as server-sent events,
+            terminating when the Run enters a terminal state with a data: [DONE] message.
     CreateRunRequestTool:
       oneOf:
         - $ref: '#/components/schemas/AssistantToolsCode'
@@ -3743,6 +3748,11 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+        stream:
+          type: boolean
+          description: |-
+            If true, returns a stream of events that happen during the Run as server-sent events,
+            terminating when the Run enters a terminal state with a data: [DONE] message.
     CreateThreadRequest:
       type: object
       properties:
@@ -4696,6 +4706,10 @@ components:
         - object
         - created_at
         - thread_id
+        - status
+        - incomplete_details
+        - completed_at
+        - incomplete_at
         - role
         - content
         - assistant_id
@@ -4718,6 +4732,33 @@ components:
         thread_id:
           type: string
           description: The [thread](/docs/api-reference/threads) ID that this message belongs to.
+        status:
+          type: string
+          enum:
+            - in_progress
+            - incomplete
+            - completed
+          description: The status of the message, which can be either in_progress, incomplete, or completed.
+        incomplete_details:
+          type: object
+          properties:
+            reason:
+              type: string
+              description: The reason the message is incomplete.
+          required:
+            - reason
+          nullable: true
+          description: On an incomplete message, details about why the message is incomplete.
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: The Unix timestamp at which the message was completed.
+        incomplete_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: The Unix timestamp at which the message was marked as incomplete.
         role:
           type: string
           enum:
@@ -5512,6 +5553,11 @@ components:
                 type: string
                 description: The output of the tool call to be submitted to continue the run.
           description: A list of tools for which the outputs are being submitted.
+        stream:
+          type: boolean
+          description: |-
+            If true, returns a stream of events that happen during the Run as server-sent events,
+            terminating when the Run enters a terminal state.
     SuffixString:
       type: string
       minLength: 1

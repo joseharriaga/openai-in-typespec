@@ -82,7 +82,8 @@ public partial class FunctionToolDefinition : ToolDefinition
         if (Optional.IsDefined(Parameters))
         {
             writer.WritePropertyName("parameters"u8);
-            writer.WriteRawValue(Parameters.ToString());
+            using JsonDocument parametersJson = JsonDocument.Parse(Parameters);
+            parametersJson.WriteTo(writer);
         }
         writer.WriteEndObject();
     }

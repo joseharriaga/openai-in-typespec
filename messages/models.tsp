@@ -72,6 +72,33 @@ model MessageObject {
   /** The [thread](/docs/api-reference/threads) ID that this message belongs to. */
   thread_id: string;
 
+  /**
+   * The status of the message, which can be either in_progress, incomplete, or completed.
+   */
+  status: "in_progress" | "incomplete" | "completed";
+
+  /**
+   * On an incomplete message, details about why the message is incomplete.
+   */
+  incomplete_details: {
+    /**
+     * The reason the message is incomplete.
+     */
+    reason: string;
+  } | null;
+
+  /**
+   * The Unix timestamp at which the message was completed.
+   */
+  @encode("unixTimestamp", int32)
+  completed_at: utcDateTime | null;
+
+  /**
+   * The Unix timestamp at which the message was marked as incomplete.
+   */
+  @encode("unixTimestamp", int32)
+  incomplete_at: utcDateTime | null;
+
   /** The entity that produced the message. One of `user` or `assistant`. */
   role: "user" | "assistant";
 

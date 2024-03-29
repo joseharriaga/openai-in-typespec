@@ -106,6 +106,11 @@ namespace OpenAI.Internal.Models
                     writer.WriteNull("metadata");
                 }
             }
+            if (Optional.IsDefined(Stream))
+            {
+                writer.WritePropertyName("stream"u8);
+                writer.WriteBooleanValue(Stream.Value);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -150,6 +155,7 @@ namespace OpenAI.Internal.Models
             string additionalInstructions = default;
             IList<BinaryData> tools = default;
             IDictionary<string, string> metadata = default;
+            bool? stream = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> additionalPropertiesDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -224,6 +230,15 @@ namespace OpenAI.Internal.Models
                     metadata = dictionary;
                     continue;
                 }
+                if (property.NameEquals("stream"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    stream = property.Value.GetBoolean();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalPropertiesDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
@@ -237,6 +252,7 @@ namespace OpenAI.Internal.Models
                 additionalInstructions,
                 tools ?? new ChangeTrackingList<BinaryData>(),
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
+                stream,
                 serializedAdditionalRawData);
         }
 

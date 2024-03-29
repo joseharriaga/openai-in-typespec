@@ -1,8 +1,9 @@
+using OpenAI.Chat;
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -10,7 +11,6 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// The service client for OpenAI assistants.
 /// </summary>
-[Experimental("OPENAI001")]
 public partial class AssistantClient
 {
     private OpenAIClientConnector _clientConnector;
@@ -233,7 +233,7 @@ public partial class AssistantClient
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
     }
 
-     public virtual ClientResult<AssistantThread> GetThread(string threadId)
+    public virtual ClientResult<AssistantThread> GetThread(string threadId)
     {
         ClientResult<Internal.Models.ThreadObject> internalResult = ThreadShim.GetThread(threadId);
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
@@ -268,13 +268,13 @@ public partial class AssistantClient
         return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
     }
 
-     public virtual ClientResult<bool> DeleteThread(string threadId)
+    public virtual ClientResult<bool> DeleteThread(string threadId)
     {
         ClientResult<Internal.Models.DeleteThreadResponse> internalResult = ThreadShim.DeleteThread(threadId);
         return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
     }
 
-     public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId)
+    public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId)
     {
         ClientResult<Internal.Models.DeleteThreadResponse> internalResult = await ThreadShim.DeleteThreadAsync(threadId).ConfigureAwait(false);
         return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
@@ -459,6 +459,26 @@ public partial class AssistantClient
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
 
+    public virtual StreamingClientResult<StreamingUpdate> CreateRunStreaming(
+        string threadId,
+        string assistantId,
+        RunCreationOptions options = null)
+    {
+        using PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options, stream: true);
+        RunShim.Pipeline.Send(message);
+        return CreateStreamingRunResult(message);
+    }
+
+    public virtual async Task<StreamingClientResult<StreamingUpdate>> CreateRunStreamingAsync(
+        string threadId,
+        string assistantId,
+        RunCreationOptions options = null)
+    {
+        using PipelineMessage message = CreateCreateRunRequest(threadId, assistantId, options, stream: true);
+        await RunShim.Pipeline.SendAsync(message);
+        return CreateStreamingRunResult(message);
+    }
+
     public virtual ClientResult<ThreadRun> CreateThreadAndRun(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
@@ -479,6 +499,26 @@ public partial class AssistantClient
             = CreateInternalCreateThreadAndRunRequest(assistantId, threadOptions, runOptions);
         ClientResult<Internal.Models.RunObject> internalResult = await RunShim.CreateThreadAndRunAsync(request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+    }
+
+    public virtual StreamingClientResult<StreamingUpdate> CreateThreadAndRunStreaming(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+    {
+        using PipelineMessage message = CreateCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
+        Shim.Pipeline.Send(message);
+        return CreateStreamingRunResult(message);
+    }
+
+    public virtual async Task<StreamingClientResult<StreamingUpdate>> CreateThreadAndRunStreamingAsync(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+    {
+        using PipelineMessage message = CreateCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
+        await Shim.Pipeline.SendAsync(message);
+        return CreateStreamingRunResult(message);
     }
 
     public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId)
@@ -560,7 +600,7 @@ public partial class AssistantClient
             requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
         }
 
-        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null);
+        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null, serializedAdditionalRawData: null);
         ClientResult<Internal.Models.RunObject> internalResult = RunShim.SubmitToolOuputsToRun(threadId, runId, request);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
@@ -574,9 +614,75 @@ public partial class AssistantClient
             requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
         }
 
-        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null);
+        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null, serializedAdditionalRawData: null);
         ClientResult<Internal.Models.RunObject> internalResult = await RunShim.SubmitToolOuputsToRunAsync(threadId, runId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+    }
+
+    public virtual StreamingClientResult<StreamingUpdate> SubmitToolOutputsStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
+    {
+        using PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
+        Shim.Pipeline.SendAsync(message);
+        return CreateStreamingRunResult(message);
+    }
+
+    public virtual async Task<StreamingClientResult<StreamingUpdate>> SubmitToolOutputsStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
+    {
+        using PipelineMessage message = CreateSubmitToolOutputsRequest(threadId, runId, toolOutputs, stream: true);
+        await Shim.Pipeline.SendAsync(message);
+        return CreateStreamingRunResult(message);
+    }
+
+    internal PipelineMessage CreateCreateRunRequest(string threadId, string assistantId, RunCreationOptions runOptions, bool? stream = null)
+    {
+        Internal.Models.CreateRunRequest internalCreateRunRequest = CreateInternalCreateRunRequest(assistantId, runOptions, stream);
+        BinaryContent requestBody = BinaryContent.Create(internalCreateRunRequest);
+        return CreateCreateRunRequest(threadId, requestBody, stream: true);
+    }
+
+    internal PipelineMessage CreateCreateThreadAndRunRequest(
+        string assistantId,
+        ThreadCreationOptions threadOptions,
+        RunCreationOptions runOptions,
+        bool? stream = null)
+    {
+        Internal.Models.CreateThreadAndRunRequest internalRequest
+            = CreateInternalCreateThreadAndRunRequest(assistantId, threadOptions, runOptions, stream: true);
+        BinaryContent content = BinaryContent.Create(internalRequest);
+        return CreateCreateThreadAndRunRequest(content, stream: true);
+    }
+
+    internal PipelineMessage CreateSubmitToolOutputsRequest(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, bool? stream)
+    {
+        List<Internal.Models.SubmitToolOutputsRunRequestToolOutput> requestToolOutputs = [];
+        foreach (ToolOutput toolOutput in toolOutputs)
+        {
+            requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
+        }
+        Internal.Models.SubmitToolOutputsRunRequest internalRequest = new(requestToolOutputs, stream, serializedAdditionalRawData: null);
+        BinaryContent content = BinaryContent.Create(internalRequest);
+        return CreateSubmitToolOutputsRequest(threadId, runId, content, stream: true);
+    }
+
+    internal static StreamingClientResult<StreamingUpdate> CreateStreamingRunResult(PipelineMessage message)
+    {
+        if (message.Response.IsError)
+        {
+            throw new ClientResultException(message.Response);
+        }
+
+        // TODO: why do we need to wrap this in a try-catch?
+        // Would putting the message in a `using` block suffice?
+        PipelineResponse response = message.Response;
+        try
+        {
+            // TODO: dust this part up...
+            return new StreamingAssistantResult(response);
+        }
+        finally
+        {
+            response?.Dispose();
+        }
     }
 
     internal static Internal.Models.CreateAssistantRequest CreateInternalCreateAssistantRequest(
@@ -621,7 +727,8 @@ public partial class AssistantClient
 
     internal static Internal.Models.CreateRunRequest CreateInternalCreateRunRequest(
         string assistantId,
-        RunCreationOptions options = null)
+        RunCreationOptions options = null,
+        bool? stream = null)
     {
         options ??= new();
         return new(
@@ -631,13 +738,15 @@ public partial class AssistantClient
             options.AdditionalInstructions,
             ToInternalBinaryDataList(options.OverrideTools),
             options.Metadata,
+            stream,
             serializedAdditionalRawData: null);
     }
 
     internal static Internal.Models.CreateThreadAndRunRequest CreateInternalCreateThreadAndRunRequest(
         string assistantId,
         ThreadCreationOptions threadOptions,
-        RunCreationOptions runOptions)
+        RunCreationOptions runOptions,
+        bool? stream = null)
     {
         threadOptions ??= new();
         runOptions ??= new();
@@ -649,6 +758,7 @@ public partial class AssistantClient
             runOptions.OverrideInstructions,
             ToInternalBinaryDataList(runOptions?.OverrideTools),
             runOptions?.Metadata,
+            stream,
             serializedAdditionalRawData: null);
     }
 
@@ -717,4 +827,7 @@ public partial class AssistantClient
         ListQueryPage<T> convertedValue = ListQueryPage.Create(internalResult.Value) as ListQueryPage<T>;
         return ClientResult.FromValue(convertedValue, internalResult.GetRawResponse());
     }
+
+    private static PipelineMessageClassifier _responseErrorClassifier200;
+    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

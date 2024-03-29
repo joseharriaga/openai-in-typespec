@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
@@ -9,51 +10,37 @@ namespace OpenAI;
 
 internal static class SseAsyncEnumerator<T>
 {
-    internal static async IAsyncEnumerable<T> EnumerateFromSseStream(
+    private static ReadOnlyMemory<char>[] _wellKnownTokens =
+        [
+            "[DONE]".AsMemory(),
+        ];
+
+    internal static async IAsyncEnumerable<T> EnumerateFromSseJsonStream(
         Stream stream,
-        Func<JsonElement, IEnumerable<T>> multiElementDeserializer,
+        Func<ReadOnlyMemory<char>, JsonElement, IEnumerable<T>> multiElementDeserializer,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        try
+        using AsyncSseReader reader = new AsyncSseReader(stream);
+
+        await foreach (ServerSentEvent sseEvent in reader.GetEventsAsync(cancellationToken))
         {
-            using SseReader sseReader = new(stream);
-            while (!cancellationToken.IsCancellationRequested)
+            // TODO: does `continue` mean we keep reading from the Stream after
+            // the [DONE] event?  If so, figure out if this is what we want here.
+            if (IsWellKnownDoneToken(sseEvent.Data)) continue;
+
+            // TODO: Make faster with Utf8JsonReader, IModel?
+            using JsonDocument sseDocument = JsonDocument.Parse(sseEvent.Data);
+
+            foreach (T item in multiElementDeserializer(sseEvent.EventName, sseDocument.RootElement))
             {
-                SseLine? sseEvent = await sseReader.TryReadSingleFieldEventAsync().ConfigureAwait(false);
-                if (sseEvent is not null)
-                {
-                    ReadOnlyMemory<char> name = sseEvent.Value.FieldName;
-                    if (!name.Span.SequenceEqual("data".AsSpan()))
-                    {
-                        throw new InvalidDataException();
-                    }
-                    ReadOnlyMemory<char> value = sseEvent.Value.FieldValue;
-                    if (value.Span.SequenceEqual("[DONE]".AsSpan()))
-                    {
-                        break;
-                    }
-                    using JsonDocument sseMessageJson = JsonDocument.Parse(value);
-                    IEnumerable<T> newItems = multiElementDeserializer.Invoke(sseMessageJson.RootElement);
-                    foreach (T item in newItems)
-                    {
-                        yield return item;
-                    }
-                }
+                yield return item;
             }
-        }
-        finally
-        {
-            // Always dispose the stream immediately once enumeration is complete for any reason
-            stream.Dispose();
         }
     }
 
-    internal static IAsyncEnumerable<T> EnumerateFromSseStream(
-        Stream stream,
-        Func<JsonElement, T> elementDeserializer,
-        CancellationToken cancellationToken = default)
-        => EnumerateFromSseStream(
-            stream,
-            (element) => new T[] { elementDeserializer.Invoke(element) },
-            cancellationToken);
+    private static bool IsWellKnownDoneToken(ReadOnlyMemory<char> data)
+    {
+        // TODO: Make faster than LINQ.
+        return _wellKnownTokens.Any(token => data.Span.SequenceEqual(token.Span));
+    }
 }

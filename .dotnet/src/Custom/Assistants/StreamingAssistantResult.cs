@@ -30,17 +30,17 @@ internal class StreamingAssistantResult : StreamingClientResult<StreamingUpdate>
         Stream contentStream = response.ContentStream ?? throw new InvalidOperationException("Cannot enumerate null response ContentStream.");
         response.ContentStream = null;
 
-        return new ChatUpdateEnumerator(contentStream);
+        return new AssistantRunUpdateEnumerator(contentStream);
     }
 
-    private class ChatUpdateEnumerator : IAsyncEnumerator<StreamingUpdate>
+    private class AssistantRunUpdateEnumerator : IAsyncEnumerator<StreamingUpdate>
     {
         private readonly IAsyncEnumerator<ServerSentEvent> _sseEvents;
 
         private List<StreamingUpdate>? _currentUpdates;
         private int _currentUpdateIndex;
 
-        public ChatUpdateEnumerator(Stream stream)
+        public AssistantRunUpdateEnumerator(Stream stream)
         {
             AsyncSseReader reader = new AsyncSseReader(stream);
 

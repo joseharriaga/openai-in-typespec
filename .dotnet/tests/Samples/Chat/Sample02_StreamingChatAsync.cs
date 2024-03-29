@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using OpenAI.Chat;
 using System;
+using System.ClientModel.Primitives;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace OpenAI.Samples
@@ -21,6 +23,9 @@ namespace OpenAI.Samples
             {
                 Console.Write(chatUpdate.ContentUpdate);
             }
+
+            PipelineResponse response = result.GetRawResponse();
+            Stream stream = response.ContentStream;
         }
     }
 }

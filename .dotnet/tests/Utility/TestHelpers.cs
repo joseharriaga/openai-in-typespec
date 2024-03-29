@@ -29,7 +29,7 @@ internal static class TestHelpers
         Moderations,
     }
 
-    public static T GetTestClient<T>(TestScenario scenario, string overrideModel = null, bool throwOnError = true)
+    public static T GetTestClient<T>(TestScenario scenario, string overrideModel = null)
     {
         OpenAIClientOptions options = new();
         options.AddPolicy(GetDumpPolicy(), PipelinePosition.PerTry);

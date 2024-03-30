@@ -20,19 +20,20 @@ Note that the code samples included below were written using [.NET 8](https://do
 
 ## Using the client library
 
-For convenience, the client library is organized by feature area into nine different namespaces, each with a corresponding client class:
+For convenience, the client library is organized by feature area into ten different namespaces, each with a corresponding client class:
 
-| Namespace                   | Client class             |
-| ----------------------------|--------------------------|
-| `OpenAI.Assistants`         | `AssistantsClient`       |
-| `OpenAI.Audio`              | `AudioClient`            |
-| `OpenAI.Chat`               | `ChatClient`             |
-| `OpenAI.Embeddings`         | `EmbeddingClient`        |
-| `OpenAI.Files`              | `FileClient`             |
-| `OpenAI.Images`             | `ImageClient`            |
-| `OpenAI.LegacyCompletions`  | `LegacyCompletionClient` |
-| `OpenAI.ModelManagement`    | `ModelManagementClient`  |
-| `OpenAI.Moderations`        | `ModerationsClient`      |
+| Namespace                     | Client class                 |
+| ------------------------------|------------------------------|
+| `OpenAI.Assistants`           | `AssistantsClient`           |
+| `OpenAI.Audio`                | `AudioClient`                |
+| `OpenAI.Chat`                 | `ChatClient`                 |
+| `OpenAI.Embeddings`           | `EmbeddingClient`            |
+| `OpenAI.FineTuningManagement` | `FineTuningManagementClient` |
+| `OpenAI.Files`                | `FileClient`                 |
+| `OpenAI.Images`               | `ImageClient`                |
+| `OpenAI.LegacyCompletions`    | `LegacyCompletionClient`     |
+| `OpenAI.ModelManagement`      | `ModelManagementClient`      |
+| `OpenAI.Moderations`          | `ModerationClient`           |
 
 To use chat completions, for example, start by adding the corresponding `using` statement and create an instance of the `ChatClient` by specifying both:
 
@@ -49,7 +50,7 @@ ChatClient client = new("gpt-3.5-turbo", "<insert your OpenAI API key here>");
 ChatCompletion chatCompletion = client.CompleteChat("How does AI work? Explain it in simple terms.");
 
 Console.WriteLine($"[ASSISTANT]:");
-Console.WriteLine($"{ chatCompletion.Content }");
+Console.WriteLine($"{chatCompletion.Content}");
 ```
 
 For illustrative purposes, the code above prints the `Content` property of the resulting `ChatCompletion` object, yielding something like this:
@@ -74,7 +75,7 @@ ChatCompletion chatCompletion = await client.CompleteChatAsync("How does AI work
 
 ### Using the `OpenAIClient` class
 
-In addition to the nine namespaces mentioned above, there is also the parent `OpenAI` namespace itself:
+In addition to the ten namespaces mentioned above, there is also the parent `OpenAI` namespace itself:
 
 ```csharp
 using OpenAI;
@@ -143,13 +144,13 @@ private const string GetCurrentWeatherFunctionName = "get_current_weather";
 
 private static readonly ChatFunctionToolDefinition getCurrentLocationFunction = new()
 {
-    Name = GetCurrentLocationFunctionName,
+    FunctionName = GetCurrentLocationFunctionName,
     Description = "Get the user's current location"
 };
 
 private static readonly ChatFunctionToolDefinition getCurrentWeatherFunction = new()
 {
-    Name = GetCurrentWeatherFunctionName,
+    FunctionName = GetCurrentWeatherFunctionName,
     Description = "Get the current weather in a given location",
     Parameters = BinaryData.FromString("""
         {
@@ -291,7 +292,7 @@ EmbeddingClient client = new("text-embedding-3-small", "<insert your OpenAI API 
 
 string description =
     "Best hotel in town if you like luxury hotels. They have an amazing infinity pool, a spa,"
-    + " and a really helpful concierge. The location is perfect -- right downtown, close to all "
+    + " and a really helpful concierge. The location is perfect -- right downtown, close to all"
     + " the tourist attractions. We highly recommend this hotel.";
 
 Embedding embedding = client.GenerateEmbedding(description);
@@ -322,7 +323,7 @@ Next, instantiate the `ImageClient`:
 ImageClient client = new("dall-e-3", "<insert your OpenAI API key here>");
 ```
 
-To tailor the image generation to your specific needs, create an instance of the `ImageGenerationOptions` class and set the `Quality`, `Size`, and `Style` properties accordingly. Note that you can also set the `ResponseFormat` property of `ImageGenerationOptions` to `ImageResponseFormat.Bytes` in order to receive the resulting PNG as `BinaryData` if this is convenient for your use case.
+To tailor the image generation to your specific needs, create an instance of the `ImageGenerationOptions` class and set the `Quality`, `Size`, and `Style` properties accordingly. Note that you can also set the `ResponseFormat` property of `ImageGenerationOptions` to `GeneratedImageFormat.Bytes` in order to receive the resulting PNG as `BinaryData` if this is convenient for your use case.
 
 ```csharp
 string prompt = "The concept for a living room that blends Scandinavian simplicity with Japanese minimalism for"
@@ -335,10 +336,10 @@ string prompt = "The concept for a living room that blends Scandinavian simplici
 
 ImageGenerationOptions options = new()
 {
-    Quality = ImageQuality.High,
-    Size = ImageSize.Size1792x1024,
-    Style = ImageStyle.Vivid,
-    ResponseFormat = ImageResponseFormat.Bytes
+    Quality = GeneratedImageQuality.High,
+    Size = GeneratedImageSize.W1792xH1024,
+    Style = GeneratedImageStyle.Vivid,
+    ResponseFormat = GeneratedImageFormat.Bytes
 };
 ```
 
@@ -352,7 +353,7 @@ BinaryData bytes = image.ImageBytes;
 For illustrative purposes, you could save the generated image to local storage:
 
 ```csharp
-using FileStream stream = File.OpenWrite($"{ Guid.NewGuid() }.png");
+using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");
 bytes.ToStream().CopyTo(stream);
 ```
 
@@ -379,7 +380,7 @@ AssistantClient assistantClient = openAIClient.GetAssistantClient();
 Here is an example of what the JSON document might look like:
 
 ```csharp
-BinaryData document = BinaryData.FromString("""
+using Stream document = BinaryData.FromString("""
     {
         "description": "This document contains the sale history data for Contoso products.",
         "sales": [
@@ -406,7 +407,7 @@ BinaryData document = BinaryData.FromString("""
             }
         ]
     }
-    """);
+    """).ToStream();
 ```
 
 Upload this document to OpenAI using the `FileClient`'s `UploadFile` method:
@@ -515,10 +516,10 @@ for (int i = messages.Count - 1; i >= 0; i--)
         {
             OpenAIFileInfo imageInfo = fileClient.GetFileInfo(imageFileContent.FileId);
             BinaryData imageBytes = fileClient.DownloadFile(imageFileContent.FileId);
-            using FileStream stream = File.OpenWrite($"{ imageInfo.Filename }.png");
+            using FileStream stream = File.OpenWrite($"{imageInfo.Filename}.png");
             imageBytes.ToStream().CopyTo(stream);
 
-            Console.WriteLine($"<{ imageInfo.Filename }.png>");
+            Console.WriteLine($"<image: {imageInfo.Filename}.png>");
         }
     }
     Console.WriteLine();

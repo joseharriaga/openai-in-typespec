@@ -11,7 +11,7 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public async Task Sample01_SimpleChatAsync()
         {
-            ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
+            ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             ChatCompletion chatCompletion = await client.CompleteChatAsync("How does AI work? Explain it in simple terms.");
 

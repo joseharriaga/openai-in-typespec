@@ -11,14 +11,14 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public void Sample03_SimpleImageVariation()
         {
-            ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
+            ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             string imagePath = Path.Combine("Assets", "variation_sample_image.png");
             using FileStream inputImage = File.OpenRead(imagePath);
 
             ImageVariationOptions options = new()
             {
-                Size = GeneratedImageSize.W1024xH1024,
+                Size = GeneratedImageSize.W256xH256,
                 ResponseFormat = GeneratedImageFormat.Bytes
             };
 

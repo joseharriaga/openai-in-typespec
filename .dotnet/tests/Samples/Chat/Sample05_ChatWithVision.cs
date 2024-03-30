@@ -11,7 +11,7 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public void Sample05_ChatWithVision(Uri imageUri = null)
         {
-            ChatClient client = new("gpt-4-vision-preview", Environment.GetEnvironmentVariable("OpenAIClient_KEY"));
+            ChatClient client = new("gpt-4-vision-preview", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             List<ChatRequestMessage> messages = [
                 new ChatRequestUserMessage(

@@ -21,7 +21,7 @@ namespace OpenAI
                 throw new InvalidOperationException("Failed to receive Result.");
             }
 
-            if (!message.Response.IsError || requestContext.ErrorOptions == ClientErrorBehaviors.NoThrow)
+            if (!message.Response.IsError || requestContext?.ErrorOptions == ClientErrorBehaviors.NoThrow)
             {
                 return message.Response;
             }
@@ -38,12 +38,40 @@ namespace OpenAI
                 throw new InvalidOperationException("Failed to receive Result.");
             }
 
-            if (!message.Response.IsError || requestContext.ErrorOptions == ClientErrorBehaviors.NoThrow)
+            if (!message.Response.IsError || requestContext?.ErrorOptions == ClientErrorBehaviors.NoThrow)
             {
                 return message.Response;
             }
 
             throw new ClientResultException(message.Response);
+        }
+
+        public static async ValueTask<ClientResult<bool>> ProcessHeadAsBoolMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext)
+        {
+            PipelineResponse response = await pipeline.ProcessMessageAsync(message, requestContext).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case >= 200 and < 300:
+                    return ClientResult.FromValue(true, response);
+                case >= 400 and < 500:
+                    return ClientResult.FromValue(false, response);
+                default:
+                    return new ErrorResult<bool>(response, new ClientResultException(response));
+            }
+        }
+
+        public static ClientResult<bool> ProcessHeadAsBoolMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext)
+        {
+            PipelineResponse response = pipeline.ProcessMessage(message, requestContext);
+            switch (response.Status)
+            {
+                case >= 200 and < 300:
+                    return ClientResult.FromValue(true, response);
+                case >= 400 and < 500:
+                    return ClientResult.FromValue(false, response);
+                default:
+                    return new ErrorResult<bool>(response, new ClientResultException(response));
+            }
         }
     }
 }

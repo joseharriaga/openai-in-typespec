@@ -3,13 +3,18 @@ import "@typespec/openapi3";
 import "@typespec/openapi";
 
 import "./audio";
+import "./assistants";
+import "./chat";
 import "./completions";
-import "./edits";
 import "./embeddings";
 import "./files";
 import "./fine-tuning";
 import "./images";
-import "./moderation";
+import "./messages";
+import "./models";
+import "./moderations";
+import "./runs";
+import "./threads";
 
 using TypeSpec.Http;
 
@@ -24,8 +29,8 @@ using TypeSpec.Http;
   license: {
     name: "MIT",
     url: "https://github.com/openai/openai-openapi/blob/master/LICENSE",
-  },
-  version: "2.0.0",
+  }
 })
+@server("https://api.openai.com/v1", "OpenAI Endpoint")
 @useAuth(BearerAuth)
 namespace OpenAI;

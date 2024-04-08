@@ -84,7 +84,29 @@ function Update-InternalClientUriBuilder {
     $content | Set-Content -Path $file.FullName -NoNewline
 }
 
+function Remove-Utf8JsonRequestBody {
+    $root = Split-Path $PSScriptRoot -Parent
+    $filePath = Join-Path -Path $root -ChildPath "src\Generated\Internal\Utf8JsonRequestBody.cs"
+    $file = Get-ChildItem -Path $filePath
+
+    Write-Output "Removing $($file.FullName)"
+
+    Remove-Item $file
+}
+
+function Remove-RequestContentHelper {
+    $root = Split-Path $PSScriptRoot -Parent
+    $filePath = Join-Path -Path $root -ChildPath "src\Generated\Internal\RequestContentHelper.cs"
+    $file = Get-ChildItem -Path $filePath
+
+    Write-Output "Removing $($file.FullName)"
+
+    Remove-Item $file
+}
+
 Update-OpenAIClient
 Update-Subclients
 Update-AssemblyInfo
 Update-InternalClientUriBuilder
+Remove-Utf8JsonRequestBody
+Remove-RequestContentHelper

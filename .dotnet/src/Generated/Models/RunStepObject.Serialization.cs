@@ -109,7 +109,7 @@ namespace OpenAI.Internal.Models
             if (Usage != null)
             {
                 writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue<RunCompletionUsage>(Usage, options);
+                writer.WriteObjectValue<RunStepCompletionUsage>(Usage, options);
             }
             else
             {
@@ -168,7 +168,7 @@ namespace OpenAI.Internal.Models
             DateTimeOffset? failedAt = default;
             DateTimeOffset? completedAt = default;
             IReadOnlyDictionary<string, string> metadata = default;
-            RunCompletionUsage usage = default;
+            RunStepCompletionUsage usage = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> additionalPropertiesDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -290,7 +290,7 @@ namespace OpenAI.Internal.Models
                         usage = null;
                         continue;
                     }
-                    usage = RunCompletionUsage.DeserializeRunCompletionUsage(property.Value, options);
+                    usage = RunStepCompletionUsage.DeserializeRunStepCompletionUsage(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

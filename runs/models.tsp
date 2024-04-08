@@ -461,7 +461,7 @@ model RunStepObject {
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
-  usage: RunCompletionUsage | null;
+  usage: RunStepCompletionUsage | null;
 }
 
 /** Tool call objects */

@@ -5449,7 +5449,7 @@ components:
         usage:
           type: object
           allOf:
-            - $ref: '#/components/schemas/RunCompletionUsage'
+            - $ref: '#/components/schemas/RunStepCompletionUsage'
           nullable: true
       description: Represents a step in execution of a run.
     RunToolCallObject:

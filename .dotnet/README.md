@@ -538,6 +538,51 @@ Product 113045 sold 22 units in February. Here is the trend graph showing its sa
 January, February, and March.
 ```
 
+## Audio transcription
+
+In this sample, an audio file is transcribed using the whisper speech-to-text model, including both word- and audio-segment-level timestamp information.
+
+```csharp
+OpenAIClient openAIClient = new("<insert your OpenAI API key here>");
+AudioClient audioClient = openAIClient.GetAudioClient("whisper-1");
+
+AudioTranscriptionOptions options = new()
+{
+    ResponseFormat = AudioTranscriptionFormat.Verbose,
+    TimestampGranularityFlags = AudioTimestampGranularity.Word | AudioTimestampGranularity.Segment,
+};
+
+using FileStream audioStream = File.OpenRead(Path.Combine("Assets", "<audio file path>"));
+AudioTranscription transcription = audioClient.TranscribeAudio(audioStream, "<audio file path>", options);
+
+Console.WriteLine($"Transcription: {transcription.Text}");
+Console.WriteLine($"Words:");
+foreach (TranscribedWord word in transcription.Words)
+{
+    Console.WriteLine($"  {word.Word,10}: {word.Start.TotalMilliseconds,4:0} - {word.End.TotalMilliseconds,4:0}");
+}
+Console.WriteLine($"Segments:");
+foreach (TranscribedSegment segment in transcription.Segments)
+{
+    Console.WriteLine($"  [{segment.Id}] {segment.Text}: {segment.Start.TotalMilliseconds,4:0} - {segment.End.TotalMilliseconds,4:0}");
+}
+```
+
+The output of the above, providing a "hello world" file, yields:
+
+```csharp
+    Transcription: Hello, world. This is a test.
+Words:
+       Hello:  960 - 1280
+       world: 1400 - 1540
+        This: 1780 - 1900
+          is: 1900 - 2000
+           a: 2000 - 2240
+        test: 2240 - 2400
+Segments:
+  [0]  Hello, world. This is a test.:  960 - 2400
+```
+
 ## Advanced scenarios
 
 ### Using protocol methods

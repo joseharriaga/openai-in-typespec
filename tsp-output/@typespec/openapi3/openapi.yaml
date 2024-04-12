@@ -4470,10 +4470,12 @@ components:
           items:
             $ref: '#/components/schemas/Model'
     ListOrder:
-      type: string
-      enum:
-        - asc
-        - desc
+      anyOf:
+        - type: string
+        - type: string
+          enum:
+            - asc
+            - desc
     ListPaginatedFineTuningJobsResponse:
       type: object
       required:

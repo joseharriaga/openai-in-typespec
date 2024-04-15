@@ -1596,6 +1596,10 @@ namespace OpenAI.Internal.Models
         /// <param name="object"> The object type, which is always `thread.message`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
+        /// <param name="status"> The status of the message. </param>
+        /// <param name="incompleteDetails"> On an incomplete message, details about why the message is incomplete. </param>
+        /// <param name="completedAt"> The Unix timestamp (in seconds) for when the message was completed. </param>
+        /// <param name="incompleteAt"> The Unix timestamp (in seconds) for when the message was marked as incomplete. </param>
         /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
         /// <param name="assistantId">
@@ -1617,7 +1621,7 @@ namespace OpenAI.Internal.Models
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <returns> A new <see cref="Models.MessageObject"/> instance for mocking. </returns>
-        public static MessageObject MessageObject(string id = null, MessageObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, MessageObjectRole role = default, IEnumerable<BinaryData> content = null, string assistantId = null, string runId = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null)
+        public static MessageObject MessageObject(string id = null, MessageObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, MessageObjectStatus status = default, MessageObjectIncompleteDetails incompleteDetails = null, DateTimeOffset? completedAt = null, DateTimeOffset? incompleteAt = null, MessageObjectRole role = default, IEnumerable<BinaryData> content = null, string assistantId = null, string runId = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null)
         {
             content ??= new List<BinaryData>();
             fileIds ??= new List<string>();
@@ -1628,6 +1632,10 @@ namespace OpenAI.Internal.Models
                 @object,
                 createdAt,
                 threadId,
+                status,
+                incompleteDetails,
+                completedAt,
+                incompleteAt,
                 role,
                 content?.ToList(),
                 assistantId,
@@ -1635,6 +1643,14 @@ namespace OpenAI.Internal.Models
                 fileIds?.ToList(),
                 metadata,
                 serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageObjectIncompleteDetails"/>. </summary>
+        /// <param name="reason"> The reason the message is incomplete. </param>
+        /// <returns> A new <see cref="Models.MessageObjectIncompleteDetails"/> instance for mocking. </returns>
+        public static MessageObjectIncompleteDetails MessageObjectIncompleteDetails(MessageObjectIncompleteDetailsReason reason = default)
+        {
+            return new MessageObjectIncompleteDetails(reason, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageContentImageFileObject"/>. </summary>
@@ -1943,13 +1959,17 @@ namespace OpenAI.Internal.Models
         /// Override the tools the assistant can use for this run. This is useful for modifying the
         /// behavior on a per-run basis.
         /// </param>
+        /// <param name="stream">
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <returns> A new <see cref="Models.CreateThreadAndRunRequest"/> instance for mocking. </returns>
-        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null)
+        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, bool? stream = null, IDictionary<string, string> metadata = null)
         {
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
@@ -1960,6 +1980,7 @@ namespace OpenAI.Internal.Models
                 model,
                 instructions,
                 tools?.ToList(),
+                stream,
                 metadata,
                 serializedAdditionalRawData: null);
         }
@@ -2109,13 +2130,17 @@ namespace OpenAI.Internal.Models
         /// Override the tools the assistant can use for this run. This is useful for modifying the
         /// behavior on a per-run basis.
         /// </param>
+        /// <param name="stream">
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <returns> A new <see cref="Models.CreateRunRequest"/> instance for mocking. </returns>
-        public static CreateRunRequest CreateRunRequest(string assistantId = null, string model = null, string instructions = null, string additionalInstructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null)
+        public static CreateRunRequest CreateRunRequest(string assistantId = null, string model = null, string instructions = null, string additionalInstructions = null, IEnumerable<BinaryData> tools = null, bool? stream = null, IDictionary<string, string> metadata = null)
         {
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
@@ -2126,6 +2151,7 @@ namespace OpenAI.Internal.Models
                 instructions,
                 additionalInstructions,
                 tools?.ToList(),
+                stream,
                 metadata,
                 serializedAdditionalRawData: null);
         }
@@ -2462,6 +2488,508 @@ namespace OpenAI.Internal.Models
         public static BatchResponseOutputLineError BatchResponseOutputLineError(string code = null, string message = null)
         {
             return new BatchResponseOutputLineError(code, message, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaObject"/>. </summary>
+        /// <param name="id"> The identifier of the message, which can be referenced in API endpoints. </param>
+        /// <param name="object"> The object type, which is always `thread.message.delta`. </param>
+        /// <param name="delta"> The delta containing the fields that have changed on the Message. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaObject"/> instance for mocking. </returns>
+        public static MessageDeltaObject MessageDeltaObject(string id = null, MessageDeltaObjectObject @object = default, MessageDeltaObjectDelta delta = null)
+        {
+            return new MessageDeltaObject(id, @object, delta, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaObjectDelta"/>. </summary>
+        /// <param name="content">
+        /// The entity that produced the message.
+        ///     role: "user" | "assistant";
+        ///
+        ///     /** The content of the message as an array of text and/or images.
+        /// </param>
+        /// <param name="fileIds"> A list of file IDs that the assistant can use. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaObjectDelta"/> instance for mocking. </returns>
+        public static MessageDeltaObjectDelta MessageDeltaObjectDelta(IEnumerable<BinaryData> content = null, IEnumerable<string> fileIds = null)
+        {
+            content ??= new List<BinaryData>();
+            fileIds ??= new List<string>();
+
+            return new MessageDeltaObjectDelta(content?.ToList(), fileIds?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentImageFileObject"/>. </summary>
+        /// <param name="index"> The index of the content part of the message. </param>
+        /// <param name="imageFile">
+        /// The type of the content, which is always `image_file`.
+        ///   type: "image_file";
+        ///
+        ///   /** The information about the image_file.
+        /// </param>
+        /// <returns> A new <see cref="Models.MessageDeltaContentImageFileObject"/> instance for mocking. </returns>
+        public static MessageDeltaContentImageFileObject MessageDeltaContentImageFileObject(long index = default, MessageDeltaContentImageFileObjectImageFile imageFile = null)
+        {
+            return new MessageDeltaContentImageFileObject(index, imageFile, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentImageFileObjectImageFile"/>. </summary>
+        /// <param name="fileId"> The file ID of the image in the message content. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaContentImageFileObjectImageFile"/> instance for mocking. </returns>
+        public static MessageDeltaContentImageFileObjectImageFile MessageDeltaContentImageFileObjectImageFile(string fileId = null)
+        {
+            return new MessageDeltaContentImageFileObjectImageFile(fileId, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextObject"/>. </summary>
+        /// <param name="index"> The index of the content part of the message. </param>
+        /// <param name="text">
+        /// The type of the content, which is always `text`.
+        ///   type: "text";
+        ///
+        ///   /** The text data for the message.
+        /// </param>
+        /// <returns> A new <see cref="Models.MessageDeltaContentTextObject"/> instance for mocking. </returns>
+        public static MessageDeltaContentTextObject MessageDeltaContentTextObject(long index = default, MessageDeltaContentTextObjectText text = null)
+        {
+            return new MessageDeltaContentTextObject(index, text, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextObjectText"/>. </summary>
+        /// <param name="value"> The data that makes up the text. </param>
+        /// <param name="annotations"> Annotations for the text. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaContentTextObjectText"/> instance for mocking. </returns>
+        public static MessageDeltaContentTextObjectText MessageDeltaContentTextObjectText(string value = null, IEnumerable<BinaryData> annotations = null)
+        {
+            annotations ??= new List<BinaryData>();
+
+            return new MessageDeltaContentTextObjectText(value, annotations?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFileCitationObject"/>. </summary>
+        /// <param name="index"> The index of the annotation in a text content part. </param>
+        /// <param name="type"> The type of the citation, which is always `file_citation`. </param>
+        /// <param name="fileCitation">
+        /// The text in the message content that needs to be replaced.
+        ///   text?: string;
+        ///
+        ///   /**
+        /// </param>
+        /// <param name="startIndex"> The start index of the citation. </param>
+        /// <param name="endIndex"> The end index of the citation. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFileCitationObject"/> instance for mocking. </returns>
+        public static MessageDeltaContentTextAnnotationsFileCitationObject MessageDeltaContentTextAnnotationsFileCitationObject(long index = default, MessageDeltaContentTextAnnotationsFileCitationObjectType type = default, MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation fileCitation = null, long? startIndex = null, long? endIndex = null)
+        {
+            return new MessageDeltaContentTextAnnotationsFileCitationObject(
+                index,
+                type,
+                fileCitation,
+                startIndex,
+                endIndex,
+                serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation"/>. </summary>
+        /// <param name="fileId"> The ID of the specific file the citation is from. </param>
+        /// <param name="quote"> The specific quote in the file. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation"/> instance for mocking. </returns>
+        public static MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation(string fileId = null, string quote = null)
+        {
+            return new MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation(fileId, quote, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObject"/>. </summary>
+        /// <param name="index"> The index of the annotation in a text content part. </param>
+        /// <param name="type"> The type of the citation, which is always `file_path`. </param>
+        /// <param name="filePath"> The file ID data for the message. </param>
+        /// <param name="startIndex"> The start index of the citation. </param>
+        /// <param name="endIndex"> The end index of the citation. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObject"/> instance for mocking. </returns>
+        public static MessageDeltaContentTextAnnotationsFilePathObject MessageDeltaContentTextAnnotationsFilePathObject(long index = default, MessageDeltaContentTextAnnotationsFilePathObjectType type = default, MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath = null, long? startIndex = null, long? endIndex = null)
+        {
+            return new MessageDeltaContentTextAnnotationsFilePathObject(
+                index,
+                type,
+                filePath,
+                startIndex,
+                endIndex,
+                serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObjectFilePath"/>. </summary>
+        /// <param name="fileId"> The ID of the file that was generated. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObjectFilePath"/> instance for mocking. </returns>
+        public static MessageDeltaContentTextAnnotationsFilePathObjectFilePath MessageDeltaContentTextAnnotationsFilePathObjectFilePath(string fileId = null)
+        {
+            return new MessageDeltaContentTextAnnotationsFilePathObjectFilePath(fileId, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadCreatedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.created`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.ThreadCreatedStreamEvent"/> instance for mocking. </returns>
+        public static ThreadCreatedStreamEvent ThreadCreatedStreamEvent(ThreadCreatedStreamEventEvent @event = default, ThreadObject data = null)
+        {
+            return new ThreadCreatedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunCreatedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.created`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunCreatedStreamEvent"/> instance for mocking. </returns>
+        public static RunCreatedStreamEvent RunCreatedStreamEvent(RunCreatedStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunCreatedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunQueuedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.queued`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunQueuedStreamEvent"/> instance for mocking. </returns>
+        public static RunQueuedStreamEvent RunQueuedStreamEvent(RunQueuedStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunQueuedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunInProgressStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.in_progress`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunInProgressStreamEvent"/> instance for mocking. </returns>
+        public static RunInProgressStreamEvent RunInProgressStreamEvent(RunInProgressStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunInProgressStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunRequiresActionStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.requires_action`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunRequiresActionStreamEvent"/> instance for mocking. </returns>
+        public static RunRequiresActionStreamEvent RunRequiresActionStreamEvent(RunRequiresActionStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunRequiresActionStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunCompletedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.completed`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunCompletedStreamEvent"/> instance for mocking. </returns>
+        public static RunCompletedStreamEvent RunCompletedStreamEvent(RunCompletedStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunCompletedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunFailedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.failed`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunFailedStreamEvent"/> instance for mocking. </returns>
+        public static RunFailedStreamEvent RunFailedStreamEvent(RunFailedStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunFailedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunCancellingStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.cancelling`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunCancellingStreamEvent"/> instance for mocking. </returns>
+        public static RunCancellingStreamEvent RunCancellingStreamEvent(RunCancellingStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunCancellingStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunCancelledStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.cancelled`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunCancelledStreamEvent"/> instance for mocking. </returns>
+        public static RunCancelledStreamEvent RunCancelledStreamEvent(RunCancelledStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunCancelledStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunExpiredStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.expired`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunExpiredStreamEvent"/> instance for mocking. </returns>
+        public static RunExpiredStreamEvent RunExpiredStreamEvent(RunExpiredStreamEventEvent @event = default, RunObject data = null)
+        {
+            return new RunExpiredStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepCreatedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.step.created`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunStepCreatedStreamEvent"/> instance for mocking. </returns>
+        public static RunStepCreatedStreamEvent RunStepCreatedStreamEvent(RunStepCreatedStreamEventEvent @event = default, RunStepObject data = null)
+        {
+            return new RunStepCreatedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepInProgressStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.step.in_progress`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunStepInProgressStreamEvent"/> instance for mocking. </returns>
+        public static RunStepInProgressStreamEvent RunStepInProgressStreamEvent(RunStepInProgressStreamEventEvent @event = default, RunStepObject data = null)
+        {
+            return new RunStepInProgressStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.step.delta`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStreamEvent"/> instance for mocking. </returns>
+        public static RunStepDeltaStreamEvent RunStepDeltaStreamEvent(RunStepDeltaStreamEventEvent @event = default, RunStepDeltaObject data = null)
+        {
+            return new RunStepDeltaStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaObject"/>. </summary>
+        /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>
+        /// <param name="delta">
+        /// The object type, which is always `thread.run.step.delta`.
+        ///   object: "thread.run.step.delta";
+        ///
+        ///   /** The delta containing the fields that have changed on the run step.
+        /// </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaObject"/> instance for mocking. </returns>
+        public static RunStepDeltaObject RunStepDeltaObject(string id = null, RunStepDeltaObjectDelta delta = null)
+        {
+            return new RunStepDeltaObject(id, delta, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaObjectDelta"/>. </summary>
+        /// <param name="stepDetails"> The details of the run step. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaObjectDelta"/> instance for mocking. </returns>
+        public static RunStepDeltaObjectDelta RunStepDeltaObjectDelta(IEnumerable<BinaryData> stepDetails = null)
+        {
+            stepDetails ??= new List<BinaryData>();
+
+            return new RunStepDeltaObjectDelta(stepDetails?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsMessageCreationObject"/>. </summary>
+        /// <param name="messageCreation">
+        /// The object type, which is always `message_creation`.
+        ///   type: "message_creation";
+        ///
+        ///   /** The message creation data.
+        /// </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsMessageCreationObject"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsMessageCreationObject RunStepDeltaStepDetailsMessageCreationObject(RunStepDeltaStepDetailsMessageCreationObjectMessageCreation messageCreation = null)
+        {
+            return new RunStepDeltaStepDetailsMessageCreationObject(messageCreation, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsMessageCreationObjectMessageCreation"/>. </summary>
+        /// <param name="messageId"> The ID of the message that was created by this run step. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsMessageCreationObjectMessageCreation"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsMessageCreationObjectMessageCreation RunStepDeltaStepDetailsMessageCreationObjectMessageCreation(string messageId = null)
+        {
+            return new RunStepDeltaStepDetailsMessageCreationObjectMessageCreation(messageId, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObject"/>. </summary>
+        /// <param name="index"> The index of the tool call in the tool calls array. </param>
+        /// <param name="id"> The ID of the tool call. </param>
+        /// <param name="codeInterpreter">
+        /// The type of the tool call, which is always `code_interpreter`.
+        ///   type: "code_interpreter";
+        ///
+        ///   /** The Code Interpreter tool call definition.
+        /// </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObject"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsToolCallsCodeObject RunStepDeltaStepDetailsToolCallsCodeObject(long index = default, string id = null, RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = null)
+        {
+            return new RunStepDeltaStepDetailsToolCallsCodeObject(index, id, codeInterpreter, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
+        /// <param name="input"> The input to the Code Interpreter tool call. </param>
+        /// <param name="outputs">
+        /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
+        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
+        /// different object type.
+        /// </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(string input = null, IEnumerable<BinaryData> outputs = null)
+        {
+            outputs ??= new List<BinaryData>();
+
+            return new RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(input, outputs?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject"/>. </summary>
+        /// <param name="index"> The index of the output in the outputs array. </param>
+        /// <param name="type"> The type of the object, which is always `logs`. </param>
+        /// <param name="logs"> The text output from the Code Interpreter tool call. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(long index = default, RunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectType type = default, string logs = null)
+        {
+            return new RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(index, type, logs, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputImageObject"/>. </summary>
+        /// <param name="index"> The index of the output in the outputs array. </param>
+        /// <param name="type"> The type of the object, which is always `image`. </param>
+        /// <param name="image"> The file ID data for the image. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputImageObject"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsToolCallsCodeOutputImageObject RunStepDeltaStepDetailsToolCallsCodeOutputImageObject(long index = default, RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectType type = default, RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage image = null)
+        {
+            return new RunStepDeltaStepDetailsToolCallsCodeOutputImageObject(index, type, image, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage"/>. </summary>
+        /// <param name="fileId"> The file ID for the image. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage(string fileId = null)
+        {
+            return new RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage(fileId, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsRetrievalObject"/>. </summary>
+        /// <param name="index"> The index of the tool call in the tool calls array. </param>
+        /// <param name="id"> The ID of the tool call. </param>
+        /// <param name="type"> The type of the tool call, which is always `retrieval`. </param>
+        /// <param name="retrieval"> Reserved for future use. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsRetrievalObject"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsToolCallsRetrievalObject RunStepDeltaStepDetailsToolCallsRetrievalObject(long index = default, string id = null, RunStepDeltaStepDetailsToolCallsRetrievalObjectType type = default, IReadOnlyDictionary<string, string> retrieval = null)
+        {
+            retrieval ??= new Dictionary<string, string>();
+
+            return new RunStepDeltaStepDetailsToolCallsRetrievalObject(index, id, type, retrieval, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObject"/>. </summary>
+        /// <param name="index"> The index of the tool call in the tool calls array. </param>
+        /// <param name="id"> The ID of the tool call. </param>
+        /// <param name="type"> The type of the tool call, which is always `retrieval`. </param>
+        /// <param name="function"> The function data for the tool call. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObject"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsToolCallsFunctionObject RunStepDeltaStepDetailsToolCallsFunctionObject(long index = default, string id = null, RunStepDeltaStepDetailsToolCallsFunctionObjectType type = default, RunStepDeltaStepDetailsToolCallsFunctionObjectFunction function = null)
+        {
+            return new RunStepDeltaStepDetailsToolCallsFunctionObject(index, id, type, function, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/>. </summary>
+        /// <param name="name"> The name of the function. </param>
+        /// <param name="arguments"> The arguments passed to the function. </param>
+        /// <param name="output"> The output of the function. This will be `null` if the outputs have not yet been submitted. </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/> instance for mocking. </returns>
+        public static RunStepDeltaStepDetailsToolCallsFunctionObjectFunction RunStepDeltaStepDetailsToolCallsFunctionObjectFunction(string name = null, string arguments = null, string output = null)
+        {
+            return new RunStepDeltaStepDetailsToolCallsFunctionObjectFunction(name, arguments, output, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepCompletedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.step.completed`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunStepCompletedStreamEvent"/> instance for mocking. </returns>
+        public static RunStepCompletedStreamEvent RunStepCompletedStreamEvent(RunStepCompletedStreamEventEvent @event = default, RunStepObject data = null)
+        {
+            return new RunStepCompletedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepFailedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.step.failed`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunStepFailedStreamEvent"/> instance for mocking. </returns>
+        public static RunStepFailedStreamEvent RunStepFailedStreamEvent(RunStepFailedStreamEventEvent @event = default, RunStepObject data = null)
+        {
+            return new RunStepFailedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepCancelledStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.step.cancelled`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunStepCancelledStreamEvent"/> instance for mocking. </returns>
+        public static RunStepCancelledStreamEvent RunStepCancelledStreamEvent(RunStepCancelledStreamEventEvent @event = default, RunStepObject data = null)
+        {
+            return new RunStepCancelledStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepExpiredStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.run.step.expired`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.RunStepExpiredStreamEvent"/> instance for mocking. </returns>
+        public static RunStepExpiredStreamEvent RunStepExpiredStreamEvent(RunStepExpiredStreamEventEvent @event = default, RunStepObject data = null)
+        {
+            return new RunStepExpiredStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageCreatedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.message.created`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.MessageCreatedStreamEvent"/> instance for mocking. </returns>
+        public static MessageCreatedStreamEvent MessageCreatedStreamEvent(MessageCreatedStreamEventEvent @event = default, MessageObject data = null)
+        {
+            return new MessageCreatedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageInProgressStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.message.in_progress`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.MessageInProgressStreamEvent"/> instance for mocking. </returns>
+        public static MessageInProgressStreamEvent MessageInProgressStreamEvent(MessageInProgressStreamEventEvent @event = default, MessageObject data = null)
+        {
+            return new MessageInProgressStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.message.delta`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.MessageDeltaStreamEvent"/> instance for mocking. </returns>
+        public static MessageDeltaStreamEvent MessageDeltaStreamEvent(MessageDeltaStreamEventEvent @event = default, MessageDeltaObject data = null)
+        {
+            return new MessageDeltaStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageCompletedStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.message.completed`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.MessageCompletedStreamEvent"/> instance for mocking. </returns>
+        public static MessageCompletedStreamEvent MessageCompletedStreamEvent(MessageCompletedStreamEventEvent @event = default, MessageObject data = null)
+        {
+            return new MessageCompletedStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.MessageIncompleteStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `thread.message.incomplete`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.MessageIncompleteStreamEvent"/> instance for mocking. </returns>
+        public static MessageIncompleteStreamEvent MessageIncompleteStreamEvent(MessageIncompleteStreamEventEvent @event = default, MessageObject data = null)
+        {
+            return new MessageIncompleteStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ErrorStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `error`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.ErrorStreamEvent"/> instance for mocking. </returns>
+        public static ErrorStreamEvent ErrorStreamEvent(ErrorStreamEventEvent @event = default, Error data = null)
+        {
+            return new ErrorStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.DoneStreamEvent"/>. </summary>
+        /// <param name="event"> The event label for the server-sent event, which is always `error`. </param>
+        /// <param name="data"> The server-sent event data payload. </param>
+        /// <returns> A new <see cref="Models.DoneStreamEvent"/> instance for mocking. </returns>
+        public static DoneStreamEvent DoneStreamEvent(DoneStreamEventEvent @event = default, DoneStreamEventData data = default)
+        {
+            return new DoneStreamEvent(@event, data, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaDetailsToolCallsObject"/>. </summary>
+        /// <param name="toolCalls">
+        /// The object type, which is always `tool_calls`.
+        ///   type: "tool_calls";
+        ///
+        ///   /**
+        /// An array of tool calls the run step was involved in. These can be associated with one of three
+        /// types of tools: `code_interpreter`, `retrieval`, or `function`.
+        /// </param>
+        /// <returns> A new <see cref="Models.RunStepDeltaDetailsToolCallsObject"/> instance for mocking. </returns>
+        public static RunStepDeltaDetailsToolCallsObject RunStepDeltaDetailsToolCallsObject(IEnumerable<BinaryData> toolCalls = null)
+        {
+            toolCalls ??= new List<BinaryData>();
+
+            return new RunStepDeltaDetailsToolCallsObject(toolCalls?.ToList(), serializedAdditionalRawData: null);
         }
     }
 }

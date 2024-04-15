@@ -70,19 +70,24 @@ namespace OpenAI.Internal.Models
         /// Override the tools the assistant can use for this run. This is useful for modifying the
         /// behavior on a per-run basis.
         /// </param>
+        /// <param name="stream">
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateThreadAndRunRequest(string assistantId, CreateThreadRequest thread, string model, string instructions, IList<BinaryData> tools, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateThreadAndRunRequest(string assistantId, CreateThreadRequest thread, string model, string instructions, IList<BinaryData> tools, bool? stream, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Thread = thread;
             Model = model;
             Instructions = instructions;
             Tools = tools;
+            Stream = stream;
             Metadata = metadata;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -139,6 +144,11 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public IList<BinaryData> Tools { get; set; }
+        /// <summary>
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </summary>
+        public bool? Stream { get; set; }
         /// <summary>
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64

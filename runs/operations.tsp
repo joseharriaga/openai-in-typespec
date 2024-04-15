@@ -3,6 +3,7 @@ import "@typespec/openapi";
 
 import "../common/models.tsp";
 import "../common/errors.tsp";
+import "../streaming/models.tsp";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -19,7 +20,7 @@ interface Runs {
   @summary("Create a thread and run it in one request.")
   createThreadAndRun(
     @body threadAndRun: CreateThreadAndRunRequest;
-  ): RunObject | ErrorResponse;
+  ): RunObject | AssistantStreamEvent[] | ErrorResponse;
 
   @route("{thread_id}/runs")
   @post
@@ -31,7 +32,7 @@ interface Runs {
     @path thread_id: string,
 
     @body run: CreateRunRequest,
-  ): RunObject | ErrorResponse;
+  ): RunObject | AssistantStreamEvent[] | ErrorResponse;
 
   @route("{thread_id}/runs")
   @get
@@ -127,7 +128,7 @@ interface Runs {
     @path run_id: string,
 
     @body submitToolOutputsRun: SubmitToolOutputsRunRequest,
-  ): RunObject | ErrorResponse;
+  ): RunObject | AssistantStreamEvent[] | ErrorResponse;
 
   @route("{thread_id}/runs/{run_id}/steps")
   @get

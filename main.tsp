@@ -15,6 +15,7 @@ import "./messages";
 import "./models";
 import "./moderations";
 import "./runs";
+import "./streaming";
 import "./threads";
 
 using TypeSpec.Http;

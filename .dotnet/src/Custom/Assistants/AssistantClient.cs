@@ -560,7 +560,7 @@ public partial class AssistantClient
             requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
         }
 
-        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null);
+        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, stream: null, serializedAdditionalRawData: null);
         ClientResult<Internal.Models.RunObject> internalResult = RunShim.SubmitToolOuputsToRun(threadId, runId, request);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
@@ -574,7 +574,7 @@ public partial class AssistantClient
             requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
         }
 
-        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null);
+        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, stream: null, serializedAdditionalRawData: null);
         ClientResult<Internal.Models.RunObject> internalResult = await RunShim.SubmitToolOuputsToRunAsync(threadId, runId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
@@ -630,6 +630,7 @@ public partial class AssistantClient
             options.InstructionsOverride,
             options.AdditionalInstructions,
             ToInternalBinaryDataList(options.ToolsOverride),
+            stream: null,
             options.Metadata,
             serializedAdditionalRawData: null);
     }
@@ -648,6 +649,7 @@ public partial class AssistantClient
             runOptions?.ModelOverride,
             runOptions.InstructionsOverride,
             ToInternalBinaryDataList(runOptions?.ToolsOverride),
+            stream: null,
             runOptions?.Metadata,
             serializedAdditionalRawData: null);
     }

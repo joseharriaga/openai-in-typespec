@@ -58,7 +58,7 @@ namespace OpenAI.Samples
 
         [Test]
         [Ignore("Compilation validation only")]
-        public void Sample03_FunctionCalling()
+        public void Sample02_FunctionCalling()
         {
             // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
 #pragma warning disable OPENAI001

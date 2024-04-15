@@ -28,7 +28,7 @@ namespace OpenAI.Samples
             {
                 Mask = mask,
                 MaskFileName = maskFileName,
-                Size = GeneratedImageSize.W1024xH1024,
+                Size = GeneratedImageSize.W512xH512,
                 ResponseFormat = GeneratedImageFormat.Bytes
             };
 

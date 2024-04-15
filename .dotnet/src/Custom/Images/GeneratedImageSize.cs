@@ -81,4 +81,7 @@ public readonly partial struct GeneratedImageSize
 
     /// <inheritdoc/>
     public override bool Equals(object obj) => obj is GeneratedImageSize other && Equals(other);
+
+    /// <inheritdoc/>
+    public override string ToString() => $"{Width}x{Height}";
 }

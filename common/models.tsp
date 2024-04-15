@@ -10,7 +10,8 @@ model TokenArray is safeint[];
 @minItems(1)
 model TokenArrayArray is TokenArray[];
 
-enum ListOrder {
+union ListOrder {
+  string,
   asc: "asc",
   desc: "desc",
 }

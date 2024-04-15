@@ -16,7 +16,7 @@ namespace OpenAI.Samples
             string filePath = Path.Combine("Assets", "speed-talking.wav");
             using FileStream fileStream = File.OpenRead(filePath);
 
-            AudioTranscription transcription = client.TranscribeAudio(fileStream);
+            AudioTranscription transcription = client.TranscribeAudio(fileStream, "speed-talking.wav");
 
             Console.WriteLine($"{transcription.Text}");
         }

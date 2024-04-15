@@ -48,7 +48,7 @@ public readonly partial struct GeneratedImageSize : IJsonModel<GeneratedImageSiz
         {
             throw new FormatException($"The model {nameof(ChatCompletionFunctionCallOption)} does not support '{format}' format.");
         }
-        writer.WriteStringValue($"{Width}x{Height}");
+        writer.WriteStringValue(this.ToString());
     }
 
     BinaryData IPersistableModel<GeneratedImageSize>.Write(ModelReaderWriterOptions options)

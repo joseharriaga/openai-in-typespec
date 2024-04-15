@@ -12,7 +12,7 @@ namespace OpenAI.Samples
     {
         [Test]
         [Ignore("Compilation validation only")]
-        public async Task Sample03_FunctionCallingAsync()
+        public async Task Sample02_FunctionCallingAsync()
         {
             // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
 #pragma warning disable OPENAI001

@@ -65,7 +65,7 @@ public partial class ImageEditOptions
 
         if (Size is not null)
         {
-            string imageSize = ModelReaderWriter.Write(Size).ToString();
+            string imageSize = Size.ToString();
             content.Add(imageSize, "size");
         }
 

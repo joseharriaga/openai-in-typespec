@@ -262,9 +262,9 @@ public partial class ImageClient
         }
 
         Internal.Models.CreateImageRequestSize? internalSize = null;
-        if (options.Size != null)
+        if (options.Size is not null)
         {
-            internalSize = ModelReaderWriter.Write(options.Size).ToString();
+            internalSize = options.Size.ToString();
         }
 
         Internal.Models.CreateImageRequestStyle? internalStyle = null;

@@ -52,6 +52,7 @@ namespace OpenAI.Internal
 
         private OpenAI.Internal.Audio _cachedAudio;
         private OpenAI.Internal.Assistants _cachedAssistants;
+        private OpenAI.Internal.Batch _cachedBatch;
         private OpenAI.Internal.Chat _cachedChat;
         private OpenAI.Internal.Completions _cachedCompletions;
         private OpenAI.Internal.Embeddings _cachedEmbeddings;
@@ -74,6 +75,12 @@ namespace OpenAI.Internal
         public virtual OpenAI.Internal.Assistants GetAssistantsClient()
         {
             return Volatile.Read(ref _cachedAssistants) ?? Interlocked.CompareExchange(ref _cachedAssistants, new OpenAI.Internal.Assistants(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAssistants;
+        }
+
+        /// <summary> Initializes a new instance of Batch. </summary>
+        public virtual OpenAI.Internal.Batch GetBatchClient()
+        {
+            return Volatile.Read(ref _cachedBatch) ?? Interlocked.CompareExchange(ref _cachedBatch, new OpenAI.Internal.Batch(_pipeline, _keyCredential, _endpoint), null) ?? _cachedBatch;
         }
 
         /// <summary> Initializes a new instance of Chat. </summary>

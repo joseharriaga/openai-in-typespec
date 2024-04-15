@@ -4,6 +4,7 @@ import "@typespec/openapi";
 
 import "./audio";
 import "./assistants";
+import "./batch";
 import "./chat";
 import "./completions";
 import "./embeddings";

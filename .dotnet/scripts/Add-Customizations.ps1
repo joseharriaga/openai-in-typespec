@@ -38,20 +38,30 @@ function Set-LangVersionToLatest {
     $xml.Save($filePath)
 }
 
-function Edit-RunObjectSerialization {
+function Edit-DateTimeOffsetSerialization {
+    param(
+        [string]$filename
+    )
+
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
 
-    $file = Get-ChildItem -Path $directory -Filter "RunObject.Serialization.cs"
+    $file = Get-ChildItem -Path $directory -Filter $filename
     $content = Get-Content -Path $file -Raw
 
     Write-Output "Editing $($file.FullName)"
 
     $content = $content -creplace "expiresAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // expiresAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    expiresAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
     $content = $content -creplace "startedAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // startedAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    startedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
+    $content = $content -creplace "cancellingAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // completedAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
     $content = $content -creplace "cancelledAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // cancelledAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    cancelledAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
     $content = $content -creplace "failedAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // failedAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    failedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
     $content = $content -creplace "completedAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // completedAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
+    $content = $content -creplace "incompleteAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // completedAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
+    $content = $content -creplace "inProgressAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // inProgressAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    inProgressAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
+    $content = $content -creplace "expiredAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // expiredAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    expiredAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
+    $content = $content -creplace "finalizingAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // finalizingAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    finalizingAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
+    $content = $content -creplace "cancellingAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // cancellingAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    cancellingAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
 
     $content | Set-Content -Path $file.FullName -NoNewline
 }
@@ -59,4 +69,6 @@ function Edit-RunObjectSerialization {
 Update-SystemTextJsonPackage
 Update-MicrosoftBclAsyncInterfacesPackage
 Set-LangVersionToLatest
-Edit-RunObjectSerialization
+Edit-DateTimeOffsetSerialization -filename "RunObject.Serialization.cs"
+Edit-DateTimeOffsetSerialization -filename "MessageObject.Serialization.cs"
+Edit-DateTimeOffsetSerialization -filename "BatchResponse.Serialization.cs"

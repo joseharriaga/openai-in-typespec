@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.ComponentModel;
 
 namespace OpenAI.Files;
@@ -26,6 +26,8 @@ public readonly partial struct OpenAIFilePurpose
     public static OpenAIFilePurpose Assistants { get; } = new OpenAIFilePurpose(Internal.Models.OpenAIFilePurpose.Assistants);
     /// <summary> assistants_output. </summary>
     public static OpenAIFilePurpose AssistantsOutput { get; } = new OpenAIFilePurpose(Internal.Models.OpenAIFilePurpose.AssistantsOutput);
+    /// <summary> batch. </summary>
+    public static OpenAIFilePurpose BatchInput { get; } = new("batch");
 
     /// <summary> Determines if two <see cref="OpenAIFilePurpose"/> values are the same. </summary>
     public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right) => left.Equals(right);

@@ -32,6 +32,14 @@ public partial class BatchClientTests
         Assert.That(batchInfo.Errors, Is.Empty);
     }
 
+    [Test]
+    public async Task BatchOutputsExist()
+    {
+        FileClient client = new();
+        OpenAIFileInfoCollection batchOutputFiles = await client.GetFileInfoListAsync(OpenAIFilePurpose.BatchOutput);
+        Assert.That(batchOutputFiles.Count, Is.GreaterThan(0));
+    }
+
     private void EnsureTestInputFile()
     {
         using (FileStream batchInputStream = File.Create(s_inputFilename))

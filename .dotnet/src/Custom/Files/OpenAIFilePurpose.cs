@@ -27,7 +27,9 @@ public readonly partial struct OpenAIFilePurpose
     /// <summary> assistants_output. </summary>
     public static OpenAIFilePurpose AssistantsOutput { get; } = new OpenAIFilePurpose(Internal.Models.OpenAIFilePurpose.AssistantsOutput);
     /// <summary> batch. </summary>
-    public static OpenAIFilePurpose BatchInput { get; } = new("batch");
+    public static OpenAIFilePurpose BatchInput { get; } = new OpenAIFilePurpose(Internal.Models.OpenAIFilePurpose.Batch);
+    /// <summary> batch_output. </summary>
+    public static OpenAIFilePurpose BatchOutput { get; } = new OpenAIFilePurpose(Internal.Models.OpenAIFilePurpose.BatchOutput);
 
     /// <summary> Determines if two <see cref="OpenAIFilePurpose"/> values are the same. </summary>
     public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right) => left.Equals(right);

@@ -150,6 +150,18 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("usage");
             }
+            if (Optional.IsDefined(Temperature))
+            {
+                if (Temperature != null)
+                {
+                    writer.WritePropertyName("temperature"u8);
+                    writer.WriteNumberValue(Temperature.Value);
+                }
+                else
+                {
+                    writer.WriteNull("temperature");
+                }
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -207,6 +219,7 @@ namespace OpenAI.Internal.Models
             IReadOnlyList<string> fileIds = default;
             IReadOnlyDictionary<string, string> metadata = default;
             RunCompletionUsage usage = default;
+            double? temperature = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -383,6 +396,16 @@ namespace OpenAI.Internal.Models
                     usage = RunCompletionUsage.DeserializeRunCompletionUsage(property.Value, options);
                     continue;
                 }
+                if (property.NameEquals("temperature"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        temperature = null;
+                        continue;
+                    }
+                    temperature = property.Value.GetDouble();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
@@ -409,6 +432,7 @@ namespace OpenAI.Internal.Models
                 fileIds,
                 metadata,
                 usage,
+                temperature,
                 serializedAdditionalRawData);
         }
 

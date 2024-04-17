@@ -37,6 +37,7 @@ public partial class ThreadRun
     /// </remarks>
     public IReadOnlyDictionary<string, string> Metadata { get; }
     public RunTokenUsage Usage { get; }
+    public double? Temperature { get; }
 
     internal ThreadRun(Internal.Models.RunObject internalRun)
     {
@@ -65,6 +66,7 @@ public partial class ThreadRun
         FileIds = internalRun.FileIds ?? [];
         Model = internalRun.Model;
         Instructions = internalRun.Instructions;
+        Temperature = internalRun.Temperature;
 
         if (internalRun.LastError != null)
         {

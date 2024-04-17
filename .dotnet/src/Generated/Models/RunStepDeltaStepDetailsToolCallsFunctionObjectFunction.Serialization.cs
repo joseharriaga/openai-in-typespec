@@ -21,18 +21,27 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(Name);
-            writer.WritePropertyName("arguments"u8);
-            writer.WriteStringValue(Arguments);
-            if (Output != null)
+            if (Optional.IsDefined(Name))
             {
-                writer.WritePropertyName("output"u8);
-                writer.WriteStringValue(Output);
+                writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(Name);
             }
-            else
+            if (Optional.IsDefined(Arguments))
             {
-                writer.WriteNull("output");
+                writer.WritePropertyName("arguments"u8);
+                writer.WriteStringValue(Arguments);
+            }
+            if (Optional.IsDefined(Output))
+            {
+                if (Output != null)
+                {
+                    writer.WritePropertyName("output"u8);
+                    writer.WriteStringValue(Output);
+                }
+                else
+                {
+                    writer.WriteNull("output");
+                }
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {

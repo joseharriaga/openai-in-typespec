@@ -162,8 +162,9 @@ namespace OpenAI.Internal.Models
         /// We generally recommend altering this or `temperature` but not both.
         /// </param>
         /// <param name="tools">
-        /// A list of tools the model may call. Currently, only functions are supported as a tool. Use this
-        /// to provide a list of functions the model may generate JSON inputs for.
+        /// A list of tools the model may call.
+        /// Currently, only functions are supported as a tool.
+        /// Use this to provide a list of functions the model may generate JSON inputs for.
         /// </param>
         /// <param name="toolChoice"></param>
         /// <param name="user">
@@ -396,8 +397,9 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public double? TopP { get; set; }
         /// <summary>
-        /// A list of tools the model may call. Currently, only functions are supported as a tool. Use this
-        /// to provide a list of functions the model may generate JSON inputs for.
+        /// A list of tools the model may call.
+        /// Currently, only functions are supported as a tool.
+        /// Use this to provide a list of functions the model may generate JSON inputs for.
         /// </summary>
         public IList<ChatCompletionTool> Tools { get; }
         /// <summary>

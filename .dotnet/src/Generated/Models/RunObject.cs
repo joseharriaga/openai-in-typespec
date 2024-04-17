@@ -77,7 +77,11 @@ namespace OpenAI.Internal.Models
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
-        /// <param name="usage"></param>
+        /// <param name="usage">
+        /// The usage statistics related to the run.
+        /// This value will be 'null' if the run is not yet in a terminal state (e.g. 'in_progress',
+        /// 'completed', etc.).
+        /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="threadId"/>, <paramref name="assistantId"/>, <paramref name="model"/>, <paramref name="instructions"/>, <paramref name="tools"/> or <paramref name="fileIds"/> is null. </exception>
         internal RunObject(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunObjectStatus status, RunObjectRequiredAction requiredAction, RunObjectLastError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, string model, string instructions, IEnumerable<BinaryData> tools, IEnumerable<string> fileIds, IReadOnlyDictionary<string, string> metadata, RunCompletionUsage usage)
         {
@@ -144,9 +148,14 @@ namespace OpenAI.Internal.Models
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
-        /// <param name="usage"></param>
+        /// <param name="usage">
+        /// The usage statistics related to the run.
+        /// This value will be 'null' if the run is not yet in a terminal state (e.g. 'in_progress',
+        /// 'completed', etc.).
+        /// </param>
+        /// <param name="temperature"> The sampling temperature used for this run. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunObject(string id, RunObjectObject @object, DateTimeOffset createdAt, string threadId, string assistantId, RunObjectStatus status, RunObjectRequiredAction requiredAction, RunObjectLastError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, string model, string instructions, IReadOnlyList<BinaryData> tools, IReadOnlyList<string> fileIds, IReadOnlyDictionary<string, string> metadata, RunCompletionUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunObject(string id, RunObjectObject @object, DateTimeOffset createdAt, string threadId, string assistantId, RunObjectStatus status, RunObjectRequiredAction requiredAction, RunObjectLastError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, string model, string instructions, IReadOnlyList<BinaryData> tools, IReadOnlyList<string> fileIds, IReadOnlyDictionary<string, string> metadata, RunCompletionUsage usage, double? temperature, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -167,6 +176,7 @@ namespace OpenAI.Internal.Models
             FileIds = fileIds;
             Metadata = metadata;
             Usage = usage;
+            Temperature = temperature;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -257,7 +267,13 @@ namespace OpenAI.Internal.Models
         /// characters long and values can be a maxium of 512 characters long.
         /// </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
-        /// <summary> Gets the usage. </summary>
+        /// <summary>
+        /// The usage statistics related to the run.
+        /// This value will be 'null' if the run is not yet in a terminal state (e.g. 'in_progress',
+        /// 'completed', etc.).
+        /// </summary>
         public RunCompletionUsage Usage { get; }
+        /// <summary> The sampling temperature used for this run. </summary>
+        public double? Temperature { get; }
     }
 }

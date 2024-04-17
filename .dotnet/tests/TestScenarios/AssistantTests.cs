@@ -13,19 +13,19 @@ public partial class AssistantTests
     [Test]
     public void ListingAssistantsWorks()
     {
-        AssistantClient client = new();
+        AssistantClient client = GetTestClient();
         ClientResult<ListQueryPage<Assistant>> result = client.GetAssistants();
         Assert.That(result.Value, Is.Not.Null.Or.Empty);
     }
 
     [Test]
-    public void CreatingAndDeletingAssistantsWorks()
+    public async Task CreatingAndDeletingAssistantsWorks()
     {
-        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
-        ClientResult<Assistant> result = client.CreateAssistant("gpt-3.5-turbo");
-        Assert.That(result.Value, Is.Not.Null);
-        Assert.That(result.Value.Id, Is.Not.Null.Or.Empty);
-        ClientResult<bool> deletionResult = client.DeleteAssistant(result.Value.Id);
+        AssistantClient client = GetTestClient();
+        Assistant assistant = await CreateCommonTestAssistantAsync();
+        Assert.That(assistant, Is.Not.Null);
+        Assert.That(assistant.Id, Is.Not.Null.Or.Empty);
+        ClientResult<bool> deletionResult = client.DeleteAssistant(assistant.Id);
         Assert.That(deletionResult.Value, Is.True);
     }
 
@@ -125,6 +125,37 @@ public partial class AssistantTests
             ]);
         runResult = await client.GetRunAsync(threadResult.Value.Id, runResult.Value.Id);
         Assert.That(runResult.Value.Status, Is.Not.EqualTo(RunStatus.RequiresAction));
+    }
+
+    [Test]
+    public async Task CanRunBasicThread()
+    {
+        AssistantClient client = GetTestClient();
+        Assistant assistant = await CreateCommonTestAssistantAsync();
+        ClientResult<ThreadRun> runResult = await client.CreateThreadAndRunAsync(
+            assistant.Id,
+            new ThreadCreationOptions()
+            {
+                Messages =
+                {
+                    new ThreadInitializationMessage(MessageRole.User, "Please say hello!"),
+                },
+                Metadata = { [s_cleanupMetadataKey] = "true" },
+            });
+        Assert.That(runResult.Value, Is.Not.Null);
+        while (runResult.Value.Status == RunStatus.Queued || runResult.Value.Status == RunStatus.InProgress)
+        {
+            await Task.Delay(500);
+            runResult = await client.GetRunAsync(runResult.Value.ThreadId, runResult.Value.Id);
+        }
+        Assert.That(runResult.Value.Status, Is.EqualTo(RunStatus.CompletedSuccessfully));
+        ClientResult<ListQueryPage<ThreadMessage>> allMessagesResult = await client.GetMessagesAsync(runResult.Value.ThreadId);
+        Assert.That(allMessagesResult.Value, Is.Not.Null);
+        Assert.That(allMessagesResult.Value.Count, Is.EqualTo(2));
+        ClientResult<ListQueryPage<ThreadMessage>> newMessagesResult
+            = await client.GetMessagesAsync(runResult.Value.ThreadId, matchingRunId: runResult.Value.Id);
+        Assert.That(newMessagesResult.Value, Is.Not.Null);
+        Assert.That(newMessagesResult.Value.Count, Is.EqualTo(1));
     }
 
     private async Task<Assistant> CreateCommonTestAssistantAsync()

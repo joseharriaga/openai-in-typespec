@@ -30,16 +30,15 @@ model CreateRunRequest {
   additional_instructions?: string | null;
 
   /**
+   * Adds additional messages to the thread before creating the run.
+   */
+  additional_messages?: CreateMessageRequest[] | null;
+
+  /**
    * Override the tools the assistant can use for this run. This is useful for modifying the
    * behavior on a per-run basis.
    */
   tools?: CreateRunRequestTools | null;
-
-  /**
-   * If `true`, returns a stream of events that happen during the Run as server-sent events,
-   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
-   */
-  stream?: boolean;
 
   /**
    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -48,6 +47,12 @@ model CreateRunRequest {
    */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
+
+  /**
+   * If `true`, returns a stream of events that happen during the Run as server-sent events,
+   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
+   */
+  stream?: boolean | null;
 }
 
 model ModifyRunRequest {
@@ -366,7 +371,7 @@ model RunObject {
 
   /** The Unix timestamp (in seconds) for when the run will expire. */
   @encode("unixTimestamp", int32)
-  expires_at: utcDateTime | null; // TODO: This is not nullable in the OpenAPI spec, but it is in practice.
+  expires_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run was started. */
   @encode("unixTimestamp", int32)
@@ -407,7 +412,19 @@ model RunObject {
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
+  /**
+   * The usage statistics related to the run.
+   * This value will be 'null' if the run is not yet in a terminal state (e.g. 'in_progress', 
+   * 'completed', etc.).
+   */
   usage: RunCompletionUsage | null;
+
+  /**
+   * The sampling temperature used for this run.
+   */
+  @minValue(0)
+  @maxValue(2)
+  temperature?: float64 | null = 1;
 }
 
 /** Represents a step in execution of a run. */
@@ -647,17 +664,17 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
   /** The type of the tool call, which is always `retrieval`. */
   type: "function";
 
-  /** The function data for the tool call. */
+  /** The definition of the function that was called. */
   function: {
     /** The name of the function. */
-    name: string;
+    name?: string;
 
     /** The arguments passed to the function. */
-    arguments: string;
+    arguments?: string;
 
     /**
      * The output of the function. This will be `null` if the outputs have not yet been submitted.
      */
-    output: string | null;
+    output?: string | null;
   };
 }

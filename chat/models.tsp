@@ -161,8 +161,11 @@ model CreateChatCompletionRequest {
   top_p?: float64 | null = 1;
 
   /**
-   * A list of tools the model may call. Currently, only functions are supported as a tool. Use this
-   * to provide a list of functions the model may generate JSON inputs for. */
+   * A list of tools the model may call.
+   * Currently, only functions are supported as a tool.
+   * Use this to provide a list of functions the model may generate JSON inputs for.
+   */
+  @maxItems(128)
   tools?: ChatCompletionTool[];
 
   tool_choice?: ChatCompletionToolChoiceOption;

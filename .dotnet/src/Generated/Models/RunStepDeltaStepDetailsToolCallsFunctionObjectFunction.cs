@@ -43,18 +43,8 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/>. </summary>
-        /// <param name="name"> The name of the function. </param>
-        /// <param name="arguments"> The arguments passed to the function. </param>
-        /// <param name="output"> The output of the function. This will be `null` if the outputs have not yet been submitted. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="arguments"/> is null. </exception>
-        internal RunStepDeltaStepDetailsToolCallsFunctionObjectFunction(string name, string arguments, string output)
+        internal RunStepDeltaStepDetailsToolCallsFunctionObjectFunction()
         {
-            Argument.AssertNotNull(name, nameof(name));
-            Argument.AssertNotNull(arguments, nameof(arguments));
-
-            Name = name;
-            Arguments = arguments;
-            Output = output;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/>. </summary>
@@ -68,11 +58,6 @@ namespace OpenAI.Internal.Models
             Arguments = arguments;
             Output = output;
             _serializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/> for deserialization. </summary>
-        internal RunStepDeltaStepDetailsToolCallsFunctionObjectFunction()
-        {
         }
 
         /// <summary> The name of the function. </summary>

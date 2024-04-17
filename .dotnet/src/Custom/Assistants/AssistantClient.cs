@@ -357,14 +357,16 @@ public partial class AssistantClient
         int? maxResults = null,
         CreatedAtSortOrder? createdSortOrder = null,
         string previousMessageId = null,
-        string subsequentMessageId = null)
+        string subsequentMessageId = null,
+        string matchingRunId = null)
     {
         ClientResult<Internal.Models.ListMessagesResponse> internalFunc() => MessageShim.GetMessages(
             threadId,
             maxResults,
             ToInternalListOrder(createdSortOrder),
             previousMessageId,
-            subsequentMessageId);
+            subsequentMessageId,
+            matchingRunId);
         return GetListQueryPage<ThreadMessage, Internal.Models.ListMessagesResponse>(internalFunc);
     }
 
@@ -373,14 +375,16 @@ public partial class AssistantClient
         int? maxResults = null,
         CreatedAtSortOrder? createdSortOrder = null,
         string previousMessageId = null,
-        string subsequentMessageId = null)
+        string subsequentMessageId = null,
+        string matchingRunId = null)
     {
         Func<Task<ClientResult<Internal.Models.ListMessagesResponse>>> internalFunc = () => MessageShim.GetMessagesAsync(
                 threadId,
                 maxResults,
                 ToInternalListOrder(createdSortOrder),
                 previousMessageId,
-                subsequentMessageId);
+                subsequentMessageId,
+                matchingRunId);
         return GetListQueryPageAsync<ThreadMessage, Internal.Models.ListMessagesResponse>(internalFunc);
     }
 
@@ -629,9 +633,10 @@ public partial class AssistantClient
             options.ModelOverride,
             options.InstructionsOverride,
             options.AdditionalInstructions,
+            ToInternalCreateMessageRequestList(options.AdditionalMessages),
             ToInternalBinaryDataList(options.ToolsOverride),
-            stream: null,
             options.Metadata,
+            stream: null,
             serializedAdditionalRawData: null);
     }
 

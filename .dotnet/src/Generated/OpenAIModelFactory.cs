@@ -489,8 +489,9 @@ namespace OpenAI.Internal.Models
         /// We generally recommend altering this or `temperature` but not both.
         /// </param>
         /// <param name="tools">
-        /// A list of tools the model may call. Currently, only functions are supported as a tool. Use this
-        /// to provide a list of functions the model may generate JSON inputs for.
+        /// A list of tools the model may call.
+        /// Currently, only functions are supported as a tool.
+        /// Use this to provide a list of functions the model may generate JSON inputs for.
         /// </param>
         /// <param name="toolChoice"></param>
         /// <param name="user">
@@ -913,7 +914,11 @@ namespace OpenAI.Internal.Models
         /// as they become available, with the stream terminated by a `data: [DONE]` message.
         /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_stream_completions.ipynb).
         /// </param>
-        /// <param name="suffix"> The suffix that comes after a completion of inserted text. </param>
+        /// <param name="suffix">
+        /// The suffix that comes after a completion of inserted text.
+        ///
+        /// This parameter is only supported for the 'gpt-3.5-turbo-instruct' model.
+        /// </param>
         /// <param name="temperature">
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
         /// more random, while lower values like 0.2 will make it more focused and deterministic.
@@ -1903,9 +1908,14 @@ namespace OpenAI.Internal.Models
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
-        /// <param name="usage"></param>
+        /// <param name="usage">
+        /// The usage statistics related to the run.
+        /// This value will be 'null' if the run is not yet in a terminal state (e.g. 'in_progress',
+        /// 'completed', etc.).
+        /// </param>
+        /// <param name="temperature"> The sampling temperature used for this run. </param>
         /// <returns> A new <see cref="Models.RunObject"/> instance for mocking. </returns>
-        public static RunObject RunObject(string id = null, RunObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, string assistantId = null, RunObjectStatus status = default, RunObjectRequiredAction requiredAction = null, RunObjectLastError lastError = null, DateTimeOffset? expiresAt = null, DateTimeOffset? startedAt = null, DateTimeOffset? cancelledAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? completedAt = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null, RunCompletionUsage usage = null)
+        public static RunObject RunObject(string id = null, RunObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, string assistantId = null, RunObjectStatus status = default, RunObjectRequiredAction requiredAction = null, RunObjectLastError lastError = null, DateTimeOffset? expiresAt = null, DateTimeOffset? startedAt = null, DateTimeOffset? cancelledAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? completedAt = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null, RunCompletionUsage usage = null, double? temperature = null)
         {
             tools ??= new List<BinaryData>();
             fileIds ??= new List<string>();
@@ -1931,6 +1941,7 @@ namespace OpenAI.Internal.Models
                 fileIds?.ToList(),
                 metadata,
                 usage,
+                temperature,
                 serializedAdditionalRawData: null);
         }
 
@@ -2009,22 +2020,24 @@ namespace OpenAI.Internal.Models
         /// Appends additional instructions at the end of the instructions for the run. This is useful for
         /// modifying the behavior on a per-run basis without overriding other instructions.
         /// </param>
+        /// <param name="additionalMessages"> Adds additional messages to the thread before creating the run. </param>
         /// <param name="tools">
         /// Override the tools the assistant can use for this run. This is useful for modifying the
         /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="stream">
-        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
-        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
         /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
+        /// <param name="stream">
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </param>
         /// <returns> A new <see cref="Models.CreateRunRequest"/> instance for mocking. </returns>
-        public static CreateRunRequest CreateRunRequest(string assistantId = null, string model = null, string instructions = null, string additionalInstructions = null, IEnumerable<BinaryData> tools = null, bool? stream = null, IDictionary<string, string> metadata = null)
+        public static CreateRunRequest CreateRunRequest(string assistantId = null, string model = null, string instructions = null, string additionalInstructions = null, IEnumerable<CreateMessageRequest> additionalMessages = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null, bool? stream = null)
         {
+            additionalMessages ??= new List<CreateMessageRequest>();
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
 
@@ -2033,9 +2046,10 @@ namespace OpenAI.Internal.Models
                 model,
                 instructions,
                 additionalInstructions,
+                additionalMessages?.ToList(),
                 tools?.ToList(),
-                stream,
                 metadata,
+                stream,
                 serializedAdditionalRawData: null);
         }
 
@@ -2699,7 +2713,7 @@ namespace OpenAI.Internal.Models
         /// <param name="index"> The index of the tool call in the tool calls array. </param>
         /// <param name="id"> The ID of the tool call. </param>
         /// <param name="type"> The type of the tool call, which is always `retrieval`. </param>
-        /// <param name="function"> The function data for the tool call. </param>
+        /// <param name="function"> The definition of the function that was called. </param>
         /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObject"/> instance for mocking. </returns>
         public static RunStepDeltaStepDetailsToolCallsFunctionObject RunStepDeltaStepDetailsToolCallsFunctionObject(long index = default, string id = null, RunStepDeltaStepDetailsToolCallsFunctionObjectType type = default, RunStepDeltaStepDetailsToolCallsFunctionObjectFunction function = null)
         {

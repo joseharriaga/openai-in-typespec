@@ -147,7 +147,11 @@ namespace OpenAI.Internal.Models
         /// as they become available, with the stream terminated by a `data: [DONE]` message.
         /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_stream_completions.ipynb).
         /// </param>
-        /// <param name="suffix"> The suffix that comes after a completion of inserted text. </param>
+        /// <param name="suffix">
+        /// The suffix that comes after a completion of inserted text.
+        ///
+        /// This parameter is only supported for the 'gpt-3.5-turbo-instruct' model.
+        /// </param>
         /// <param name="temperature">
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
         /// more random, while lower values like 0.2 will make it more focused and deterministic.
@@ -374,7 +378,11 @@ namespace OpenAI.Internal.Models
         /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_stream_completions.ipynb).
         /// </summary>
         public bool? Stream { get; set; }
-        /// <summary> The suffix that comes after a completion of inserted text. </summary>
+        /// <summary>
+        /// The suffix that comes after a completion of inserted text.
+        ///
+        /// This parameter is only supported for the 'gpt-3.5-turbo-instruct' model.
+        /// </summary>
         public string Suffix { get; set; }
         /// <summary>
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output

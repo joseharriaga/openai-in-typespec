@@ -264,7 +264,7 @@ public partial class AssistantClient
         RequestOptions options)
         => await MessageShim.ModifyMessageAsync(threadId, messageId, content, options).ConfigureAwait(false);
 
-    /// <inheritdoc cref="Internal.Messages.GetMessages(string, int?, string, string, string, RequestOptions)"/>
+    /// <inheritdoc cref="Internal.Messages.GetMessages(string, int?, string, string, string, string, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult GetMessages(
         string threadId,
@@ -272,10 +272,11 @@ public partial class AssistantClient
         string createdSortOrder,
         string previousMessageId,
         string subsequentMessageId,
+        string matchingRunId,
         RequestOptions options)
-        => MessageShim.GetMessages(threadId, maxResults, createdSortOrder, previousMessageId, subsequentMessageId, options);
+        => MessageShim.GetMessages(threadId, maxResults, createdSortOrder, previousMessageId, subsequentMessageId, matchingRunId, options);
 
-    /// <inheritdoc cref="Internal.Messages.GetMessagesAsync(string, int?, string, string, string, RequestOptions)"/>
+    /// <inheritdoc cref="Internal.Messages.GetMessagesAsync(string, int?, string, string, string, string, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> GetMessagesAsync(
         string threadId,
@@ -283,8 +284,9 @@ public partial class AssistantClient
         string createdSortOrder,
         string previousMessageId,
         string subsequentMessageId,
+        string matchingRunId,
         RequestOptions options)
-        => await MessageShim.GetMessagesAsync(threadId, maxResults, createdSortOrder, previousMessageId, subsequentMessageId, options).ConfigureAwait(false);
+        => await MessageShim.GetMessagesAsync(threadId, maxResults, createdSortOrder, previousMessageId, subsequentMessageId, matchingRunId, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Messages.GetMessageFile(string, string, string, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]

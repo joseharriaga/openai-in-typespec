@@ -45,7 +45,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsFunctionObject"/>. </summary>
         /// <param name="index"> The index of the tool call in the tool calls array. </param>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="function"> The function data for the tool call. </param>
+        /// <param name="function"> The definition of the function that was called. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="function"/> is null. </exception>
         internal RunStepDeltaStepDetailsToolCallsFunctionObject(long index, string id, RunStepDeltaStepDetailsToolCallsFunctionObjectFunction function)
         {
@@ -61,7 +61,7 @@ namespace OpenAI.Internal.Models
         /// <param name="index"> The index of the tool call in the tool calls array. </param>
         /// <param name="id"> The ID of the tool call. </param>
         /// <param name="type"> The type of the tool call, which is always `retrieval`. </param>
-        /// <param name="function"> The function data for the tool call. </param>
+        /// <param name="function"> The definition of the function that was called. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDeltaStepDetailsToolCallsFunctionObject(long index, string id, RunStepDeltaStepDetailsToolCallsFunctionObjectType type, RunStepDeltaStepDetailsToolCallsFunctionObjectFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The type of the tool call, which is always `retrieval`. </summary>
         public RunStepDeltaStepDetailsToolCallsFunctionObjectType Type { get; } = RunStepDeltaStepDetailsToolCallsFunctionObjectType.Function;
 
-        /// <summary> The function data for the tool call. </summary>
+        /// <summary> The definition of the function that was called. </summary>
         public RunStepDeltaStepDetailsToolCallsFunctionObjectFunction Function { get; }
     }
 }

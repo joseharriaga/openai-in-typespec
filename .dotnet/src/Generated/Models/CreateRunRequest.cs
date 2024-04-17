@@ -50,6 +50,7 @@ namespace OpenAI.Internal.Models
             Argument.AssertNotNull(assistantId, nameof(assistantId));
 
             AssistantId = assistantId;
+            AdditionalMessages = new ChangeTrackingList<CreateMessageRequest>();
             Tools = new ChangeTrackingList<BinaryData>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
@@ -69,29 +70,31 @@ namespace OpenAI.Internal.Models
         /// Appends additional instructions at the end of the instructions for the run. This is useful for
         /// modifying the behavior on a per-run basis without overriding other instructions.
         /// </param>
+        /// <param name="additionalMessages"> Adds additional messages to the thread before creating the run. </param>
         /// <param name="tools">
         /// Override the tools the assistant can use for this run. This is useful for modifying the
         /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="stream">
-        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
-        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
         /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
+        /// <param name="stream">
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateRunRequest(string assistantId, string model, string instructions, string additionalInstructions, IList<BinaryData> tools, bool? stream, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateRunRequest(string assistantId, string model, string instructions, string additionalInstructions, IList<CreateMessageRequest> additionalMessages, IList<BinaryData> tools, IDictionary<string, string> metadata, bool? stream, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Model = model;
             Instructions = instructions;
             AdditionalInstructions = additionalInstructions;
+            AdditionalMessages = additionalMessages;
             Tools = tools;
-            Stream = stream;
             Metadata = metadata;
+            Stream = stream;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -118,6 +121,8 @@ namespace OpenAI.Internal.Models
         /// modifying the behavior on a per-run basis without overriding other instructions.
         /// </summary>
         public string AdditionalInstructions { get; set; }
+        /// <summary> Adds additional messages to the thread before creating the run. </summary>
+        public IList<CreateMessageRequest> AdditionalMessages { get; set; }
         /// <summary>
         /// Override the tools the assistant can use for this run. This is useful for modifying the
         /// behavior on a per-run basis.
@@ -151,15 +156,15 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public IList<BinaryData> Tools { get; set; }
         /// <summary>
-        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
-        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
-        /// </summary>
-        public bool? Stream { get; set; }
-        /// <summary>
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </summary>
         public IDictionary<string, string> Metadata { get; set; }
+        /// <summary>
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </summary>
+        public bool? Stream { get; set; }
     }
 }

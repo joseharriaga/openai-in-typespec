@@ -27,6 +27,11 @@ public partial class RunCreationOptions
     public string AdditionalInstructions { get; init; }
 
     /// <summary>
+    /// Additional messages that should be added to the thread before the run is created.
+    /// </summary>
+    public IEnumerable<ThreadInitializationMessage> AdditionalMessages { get; init; } = new ChangeTrackingList<ThreadInitializationMessage>();
+
+    /// <summary>
     /// A run-specific collection of tool definitions that will override the assistant-level defaults. If not provided,
     /// the assistant's defined tools will be used. Available tools include:
     /// <para>

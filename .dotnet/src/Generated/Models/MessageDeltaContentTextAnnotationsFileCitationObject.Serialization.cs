@@ -25,8 +25,11 @@ namespace OpenAI.Internal.Models
             writer.WriteNumberValue(Index);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type.ToString());
-            writer.WritePropertyName("file_citation"u8);
-            writer.WriteObjectValue<MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation>(FileCitation, options);
+            if (Optional.IsDefined(FileCitation))
+            {
+                writer.WritePropertyName("file_citation"u8);
+                writer.WriteObjectValue<MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation>(FileCitation, options);
+            }
             if (Optional.IsDefined(StartIndex))
             {
                 writer.WritePropertyName("start_index"u8);
@@ -96,6 +99,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("file_citation"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     fileCitation = MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation.DeserializeMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation(property.Value, options);
                     continue;
                 }

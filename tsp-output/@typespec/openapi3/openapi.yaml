@@ -2176,6 +2176,8 @@ components:
           enum:
             - user
             - assistant
+            - assistant
+            - assistant
           description: The role of the messages author, in this case `user`.
         name:
           type: string
@@ -3430,13 +3432,16 @@ components:
       required:
         - role
         - content
+        - file_ids
       properties:
         role:
           type: string
           enum:
             - user
             - assistant
-          description: The role of the entity that is creating the message. Currently only `user` is supported.
+            - assistant
+            - assistant
+          description: The entity that produced the message. One of `user` or `assistant`.
         content:
           type: string
           minLength: 1
@@ -3449,9 +3454,8 @@ components:
           minItems: 1
           maxItems: 10
           description: |-
-            A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-            maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-            `code_interpreter` that can access and use files.
+            A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+            Useful for tools like retrieval and code_interpreter that can access files.
           default: []
         metadata:
           type: object
@@ -3795,11 +3799,6 @@ components:
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
             behavior on a per-run basis.
-        stream:
-          type: boolean
-          description: |-
-            If `true`, returns a stream of events that happen during the Run as server-sent events,
-            terminating when the Run enters a terminal state with a `data: [DONE]` message.
         metadata:
           type: object
           additionalProperties:
@@ -3810,6 +3809,20 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+        temperature:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: The sampling temperature used for this run.
+          default: 1
+        stream:
+          type: boolean
+          nullable: true
+          description: |-
+            If `true`, returns a stream of events that happen during the Run as server-sent events,
+            terminating when the Run enters a terminal state with a `data: [DONE]` message.
     CreateThreadRequest:
       type: object
       properties:
@@ -4808,22 +4821,24 @@ components:
       type: object
       required:
         - index
+        - type
       properties:
         index:
           type: integer
           format: int64
           description: The index of the content part of the message.
+        type:
+          type: string
+          enum:
+            - image_file
+          description: The type of the content, which is always `image_file`.
         image_file:
           type: object
           properties:
             file_id:
               type: string
               description: The file ID of the image in the message content.
-          description: |-
-            The type of the content, which is always `image_file`.
-              type: "image_file";
-
-              /** The information about the image_file.
+          description: The information about the image_file.
       description: References an image file in the content of an image.
     MessageDeltaContentTextAnnotation:
       oneOf:
@@ -4835,7 +4850,6 @@ components:
       required:
         - index
         - type
-        - file_citation
       properties:
         index:
           type: integer
@@ -4889,6 +4903,9 @@ components:
           enum:
             - file_path
           description: The type of the citation, which is always `file_path`.
+        text:
+          type: string
+          description: The text in the message content that needs to be replaced.
         file_path:
           type: object
           properties:
@@ -4913,12 +4930,18 @@ components:
       type: object
       required:
         - index
-        - text
+        - type
       properties:
         index:
           type: integer
           format: int64
           description: The index of the content part of the message.
+        type:
+          type: string
+          enum:
+            - text
+            - json_object
+          description: The type of the content, which is always `text`.
         text:
           type: object
           properties:
@@ -4930,11 +4953,7 @@ components:
               items:
                 $ref: '#/components/schemas/MessageDeltaContentTextAnnotation'
               description: Annotations for the text.
-          description: |-
-            The type of the content, which is always `text`.
-              type: "text";
-
-              /** The text data for the message.
+          description: The text data for the message.
       description: References text in the content of an image.
     MessageDeltaObject:
       type: object
@@ -4954,23 +4973,33 @@ components:
         delta:
           type: object
           properties:
+            role:
+              type: string
+              enum:
+                - user
+                - assistant
+                - assistant
+                - assistant
+              description: The entity that produced the message.
             content:
               type: array
               items:
                 $ref: '#/components/schemas/MessageDeltaContent'
-              description: |-
-                The entity that produced the message.
-                    role: "user" | "assistant";
-
-                    /** The content of the message as an array of text and/or images.
+              description: The content of the message as an array of text and/or images.
             file_ids:
               type: array
               items:
                 type: string
-              description: A list of file IDs that the assistant can use.
+              minItems: 1
+              maxItems: 10
+              description: |-
+                A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+                Useful for tools like retrieval and code_interpreter that can access files.
               default: []
           required:
+            - role
             - content
+            - file_ids
           description: The delta containing the fields that have changed on the Message.
       description: Represents a message delta i.e. any changed fields on a message during streaming.
     MessageDeltaStreamEvent:
@@ -5088,7 +5117,7 @@ components:
             - failed
             - completed
             - expired
-          description: The status of the message.
+          description: The status of the message, which can be either `in_progress`, `incomplete`, or `completed`.
         incomplete_details:
           type: object
           properties:
@@ -5098,10 +5127,12 @@ components:
                 - content_filter
                 - max_tokens
                 - run_cancelled
+                - run_expired
                 - run_failed
               description: The reason the message is incomplete.
           required:
             - reason
+          nullable: true
           description: On an incomplete message, details about why the message is incomplete.
         completed_at:
           type: string
@@ -5117,6 +5148,8 @@ components:
           type: string
           enum:
             - user
+            - assistant
+            - assistant
             - assistant
           description: The entity that produced the message. One of `user` or `assistant`.
         content:
@@ -5134,17 +5167,18 @@ components:
           type: string
           nullable: true
           description: |-
-            If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-            this message.
+            The ID of the [run](/docs/api-reference/runs) associated with the creation of this message.
+            Value is `null` when messages are created manually using the create message or create thread
+            endpoints.
         file_ids:
           type: array
           items:
             type: string
+          minItems: 1
           maxItems: 10
           description: |-
-            A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-            tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-            attached to a message.
+            A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+            Useful for tools like retrieval and code_interpreter that can access files.
           default: []
         metadata:
           type: object
@@ -5763,16 +5797,19 @@ components:
       description: Represents the server-sent event raised when a new run step is created.
     RunStepDeltaDetailsToolCallsObject:
       type: object
+      required:
+        - type
       properties:
+        type:
+          type: string
+          enum:
+            - tool_calls
+          description: The object type, which is always `tool_calls`.
         tool_calls:
           type: array
           items:
             $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObject'
           description: |-
-            The object type, which is always `tool_calls`.
-              type: "tool_calls";
-
-              /**
             An array of tool calls the run step was involved in. These can be associated with one of three
             types of tools: `code_interpreter`, `retrieval`, or `function`.
       description: Represents details of tool calls within a streaming run step.
@@ -5825,8 +5862,7 @@ components:
       type: object
       required:
         - index
-        - id
-        - code_interpreter
+        - type
       properties:
         index:
           type: integer
@@ -5835,6 +5871,11 @@ components:
         id:
           type: string
           description: The ID of the tool call.
+        type:
+          type: string
+          enum:
+            - code_interpreter
+          description: The type of the tool call, which is always `code_interpreter`.
         code_interpreter:
           type: object
           properties:
@@ -5849,13 +5890,7 @@ components:
                 The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
                 items, including text (`logs`) or images (`image`). Each of these are represented by a
                 different object type.
-          required:
-            - input
-          description: |-
-            The type of the tool call, which is always `code_interpreter`.
-              type: "code_interpreter";
-
-              /** The Code Interpreter tool call definition.
+          description: The Code Interpreter tool call definition.
       description: Details of a code interpreter tool call that a streaming run step was involved in.
     RunStepDeltaStepDetailsToolCallsCodeOutput:
       oneOf:
@@ -5908,7 +5943,6 @@ components:
       type: object
       required:
         - index
-        - id
         - type
         - function
       properties:
@@ -5952,7 +5986,6 @@ components:
       type: object
       required:
         - index
-        - id
         - type
       properties:
         index:
@@ -6000,7 +6033,6 @@ components:
       type: object
       required:
         - type
-        - message_creation
       properties:
         type:
           type: string
@@ -6430,6 +6462,7 @@ components:
           description: A list of tools for which the outputs are being submitted.
         stream:
           type: boolean
+          nullable: true
           description: |-
             If `true`, returns a stream of events that happen during the Run as server-sent events,
             terminating when the Run enters a terminal state with a `data: [DONE]` message.

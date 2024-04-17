@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Internal.Models
 {
@@ -43,24 +44,30 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateMessageRequest"/>. </summary>
+        /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        public CreateMessageRequest(string content)
+        /// <param name="fileIds">
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
+        /// </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> or <paramref name="fileIds"/> is null. </exception>
+        public CreateMessageRequest(CreateMessageRequestRole role, string content, IEnumerable<string> fileIds)
         {
             Argument.AssertNotNull(content, nameof(content));
+            Argument.AssertNotNull(fileIds, nameof(fileIds));
 
+            Role = role;
             Content = content;
-            FileIds = new ChangeTrackingList<string>();
+            FileIds = fileIds.ToList();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateMessageRequest"/>. </summary>
-        /// <param name="role"> The role of the entity that is creating the message. Currently only `user` is supported. </param>
+        /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message. </param>
         /// <param name="fileIds">
-        /// A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-        /// maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-        /// `code_interpreter` that can access and use files.
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -82,15 +89,13 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> The role of the entity that is creating the message. Currently only `user` is supported. </summary>
-        public CreateMessageRequestRole Role { get; } = CreateMessageRequestRole.User;
-
+        /// <summary> The entity that produced the message. One of `user` or `assistant`. </summary>
+        public CreateMessageRequestRole Role { get; }
         /// <summary> The content of the message. </summary>
         public string Content { get; }
         /// <summary>
-        /// A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-        /// maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-        /// `code_interpreter` that can access and use files.
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </summary>
         public IList<string> FileIds { get; }
         /// <summary>

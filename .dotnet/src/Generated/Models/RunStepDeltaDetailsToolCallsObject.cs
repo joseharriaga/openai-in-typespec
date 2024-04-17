@@ -49,26 +49,23 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaDetailsToolCallsObject"/>. </summary>
+        /// <param name="type"> The object type, which is always `tool_calls`. </param>
         /// <param name="toolCalls">
-        /// The object type, which is always `tool_calls`.
-        ///   type: "tool_calls";
-        ///
-        ///   /**
         /// An array of tool calls the run step was involved in. These can be associated with one of three
         /// types of tools: `code_interpreter`, `retrieval`, or `function`.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepDeltaDetailsToolCallsObject(IReadOnlyList<BinaryData> toolCalls, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepDeltaDetailsToolCallsObject(string type, IReadOnlyList<BinaryData> toolCalls, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
+            Type = type;
             ToolCalls = toolCalls;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
+        /// <summary> The object type, which is always `tool_calls`. </summary>
+        public string Type { get; } = "tool_calls";
+
         /// <summary>
-        /// The object type, which is always `tool_calls`.
-        ///   type: "tool_calls";
-        ///
-        ///   /**
         /// An array of tool calls the run step was involved in. These can be associated with one of three
         /// types of tools: `code_interpreter`, `retrieval`, or `function`.
         /// <para>

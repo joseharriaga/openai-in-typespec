@@ -6,8 +6,8 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateMessageRequest {
-  /** The role of the entity that is creating the message. Currently only `user` is supported. */
-  role: "user"; // TODO: The generated spec add "assistants" to this enum.
+  /** The entity that produced the message. One of `user` or `assistant`. */
+  role: "user" | "assistant"; 
 
   /** The content of the message. */
   @minLength(1)
@@ -15,13 +15,12 @@ model CreateMessageRequest {
   content: string;
 
   /**
-   * A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-   * maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-   * `code_interpreter` that can access and use files.
+   * A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+   * Useful for tools like retrieval and code_interpreter that can access files.
    */
   @minItems(1)
   @maxItems(10)
-  file_ids?: string[] = [];
+  file_ids: string[] = [];
 
   /**
   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -72,14 +71,14 @@ model MessageObject {
   /** The [thread](/docs/api-reference/threads) ID that this message belongs to. */
   thread_id: string;
 
-  /** The status of the message. */
+  /** The status of the message, which can be either `in_progress`, `incomplete`, or `completed`. */
   status: "in_progress" | "incomplete" | "completed";
 
   /** On an incomplete message, details about why the message is incomplete. */
   incomplete_details: {
     /** The reason the message is incomplete. */
-    reason: "content_filter" | "max_tokens" | "run_cancelled" | "run_failed";
-  };
+    reason: "content_filter" | "max_tokens" | "run_cancelled" | "run_expired" | "run_failed";
+  } | null;
 
   /** The Unix timestamp (in seconds) for when the message was completed. */
   @encode("unixTimestamp", int32)
@@ -102,16 +101,17 @@ model MessageObject {
   assistant_id: string | null;
 
   /**
-   * If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-   * this message.
+   * The ID of the [run](/docs/api-reference/runs) associated with the creation of this message.
+   * Value is `null` when messages are created manually using the create message or create thread
+   * endpoints.
    */
   run_id: string | null;
 
   /**
-    * A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-    * tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-    * attached to a message.
-    */
+   * A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+   * Useful for tools like retrieval and code_interpreter that can access files.
+   */
+  @minItems(1)
   @maxItems(10)
   file_ids: string[] = [];
 
@@ -238,14 +238,19 @@ model MessageDeltaObject {
 
   /** The delta containing the fields that have changed on the Message. */
   delta: {
-    /** The entity that produced the message.
+    /** The entity that produced the message. */
     role: "user" | "assistant";
 
     /** The content of the message as an array of text and/or images. */
     content: MessageDeltaContent[];
 
-    /** A list of file IDs that the assistant can use. */
-    file_ids?: string[] = [];
+    /**
+     * A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+     * Useful for tools like retrieval and code_interpreter that can access files.
+     */
+    @minItems(1)
+    @maxItems(10)
+    file_ids: string[] = [];
   };
 }
 
@@ -261,7 +266,7 @@ model MessageDeltaContentImageFileObject {
   /** The index of the content part of the message. */
   index: safeint;
 
-  /** The type of the content, which is always `image_file`.
+  /** The type of the content, which is always `image_file`. */
   type: "image_file";
 
   /** The information about the image_file. */
@@ -283,11 +288,11 @@ model MessageDeltaContentTextObject {
   /** The index of the content part of the message. */
   index: safeint;
 
-  /** The type of the content, which is always `text`.
+  /** The type of the content, which is always `text`. */
   type: "text";
 
   /** The text data for the message. */
-  text: {
+  text?: {
     /** The data that makes up the text. */
     value?: string;
 
@@ -312,7 +317,7 @@ model MessageDeltaContentTextAnnotationsFileCitationObject {
   text?: string;
 
   /** */
-  file_citation: {
+  file_citation?: {
     /** The ID of the specific file the citation is from. */
     file_id?: string;
 
@@ -339,6 +344,9 @@ model MessageDeltaContentTextAnnotationsFilePathObject {
 
   /** The type of the citation, which is always `file_path`. */
   type: "file_path";
+
+  /** The text in the message content that needs to be replaced. */
+  text?: string;
 
   /** The file ID data for the message. */  
   file_path?: {

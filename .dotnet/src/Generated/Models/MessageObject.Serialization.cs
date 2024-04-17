@@ -31,8 +31,15 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(ThreadId);
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
-            writer.WritePropertyName("incomplete_details"u8);
-            writer.WriteObjectValue<MessageObjectIncompleteDetails>(IncompleteDetails, options);
+            if (IncompleteDetails != null)
+            {
+                writer.WritePropertyName("incomplete_details"u8);
+                writer.WriteObjectValue<MessageObjectIncompleteDetails>(IncompleteDetails, options);
+            }
+            else
+            {
+                writer.WriteNull("incomplete_details");
+            }
             if (CompletedAt != null)
             {
                 writer.WritePropertyName("completed_at"u8);
@@ -195,6 +202,11 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("incomplete_details"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        incompleteDetails = null;
+                        continue;
+                    }
                     incompleteDetails = MessageObjectIncompleteDetails.DeserializeMessageObjectIncompleteDetails(property.Value, options);
                     continue;
                 }

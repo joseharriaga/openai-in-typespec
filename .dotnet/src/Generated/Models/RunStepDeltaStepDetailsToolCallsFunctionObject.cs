@@ -44,16 +44,13 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsFunctionObject"/>. </summary>
         /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="id"> The ID of the tool call. </param>
         /// <param name="function"> The definition of the function that was called. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="function"/> is null. </exception>
-        internal RunStepDeltaStepDetailsToolCallsFunctionObject(long index, string id, RunStepDeltaStepDetailsToolCallsFunctionObjectFunction function)
+        /// <exception cref="ArgumentNullException"> <paramref name="function"/> is null. </exception>
+        internal RunStepDeltaStepDetailsToolCallsFunctionObject(long index, RunStepDeltaStepDetailsToolCallsFunctionObjectFunction function)
         {
-            Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(function, nameof(function));
 
             Index = index;
-            Id = id;
             Function = function;
         }
 

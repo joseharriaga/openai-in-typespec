@@ -51,16 +51,13 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentImageFileObject"/>. </summary>
         /// <param name="index"> The index of the content part of the message. </param>
-        /// <param name="imageFile">
-        /// The type of the content, which is always `image_file`.
-        ///   type: "image_file";
-        ///
-        ///   /** The information about the image_file.
-        /// </param>
+        /// <param name="type"> The type of the content, which is always `image_file`. </param>
+        /// <param name="imageFile"> The information about the image_file. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentImageFileObject(long index, MessageDeltaContentImageFileObjectImageFile imageFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaContentImageFileObject(long index, MessageDeltaContentImageFileObjectType type, MessageDeltaContentImageFileObjectImageFile imageFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Index = index;
+            Type = type;
             ImageFile = imageFile;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -72,12 +69,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The index of the content part of the message. </summary>
         public long Index { get; }
-        /// <summary>
-        /// The type of the content, which is always `image_file`.
-        ///   type: "image_file";
-        ///
-        ///   /** The information about the image_file.
-        /// </summary>
+        /// <summary> The type of the content, which is always `image_file`. </summary>
+        public MessageDeltaContentImageFileObjectType Type { get; } = MessageDeltaContentImageFileObjectType.ImageFile;
+
+        /// <summary> The information about the image_file. </summary>
         public MessageDeltaContentImageFileObjectImageFile ImageFile { get; }
     }
 }

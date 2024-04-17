@@ -1458,12 +1458,11 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateMessageRequest"/>. </summary>
-        /// <param name="role"> The role of the entity that is creating the message. Currently only `user` is supported. </param>
+        /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message. </param>
         /// <param name="fileIds">
-        /// A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-        /// maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-        /// `code_interpreter` that can access and use files.
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -1484,7 +1483,7 @@ namespace OpenAI.Internal.Models
         /// <param name="object"> The object type, which is always `thread.message`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
-        /// <param name="status"> The status of the message. </param>
+        /// <param name="status"> The status of the message, which can be either `in_progress`, `incomplete`, or `completed`. </param>
         /// <param name="incompleteDetails"> On an incomplete message, details about why the message is incomplete. </param>
         /// <param name="completedAt"> The Unix timestamp (in seconds) for when the message was completed. </param>
         /// <param name="incompleteAt"> The Unix timestamp (in seconds) for when the message was marked as incomplete. </param>
@@ -1495,13 +1494,13 @@ namespace OpenAI.Internal.Models
         /// message.
         /// </param>
         /// <param name="runId">
-        /// If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-        /// this message.
+        /// The ID of the [run](/docs/api-reference/runs) associated with the creation of this message.
+        /// Value is `null` when messages are created manually using the create message or create thread
+        /// endpoints.
         /// </param>
         /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-        /// tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-        /// attached to a message.
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -1847,17 +1846,18 @@ namespace OpenAI.Internal.Models
         /// Override the tools the assistant can use for this run. This is useful for modifying the
         /// behavior on a per-run basis.
         /// </param>
-        /// <param name="stream">
-        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
-        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
-        /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
+        /// <param name="temperature"> The sampling temperature used for this run. </param>
+        /// <param name="stream">
+        /// If `true`, returns a stream of events that happen during the Run as server-sent events,
+        /// terminating when the Run enters a terminal state with a `data: [DONE]` message.
+        /// </param>
         /// <returns> A new <see cref="Models.CreateThreadAndRunRequest"/> instance for mocking. </returns>
-        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, bool? stream = null, IDictionary<string, string> metadata = null)
+        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null, double? temperature = null, bool? stream = null)
         {
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
@@ -1868,8 +1868,9 @@ namespace OpenAI.Internal.Models
                 model,
                 instructions,
                 tools?.ToList(),
-                stream,
                 metadata,
+                temperature,
+                stream,
                 serializedAdditionalRawData: null);
         }
 
@@ -2355,34 +2356,29 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaObjectDelta"/>. </summary>
-        /// <param name="content">
-        /// The entity that produced the message.
-        ///     role: "user" | "assistant";
-        ///
-        ///     /** The content of the message as an array of text and/or images.
+        /// <param name="role"> The entity that produced the message. </param>
+        /// <param name="content"> The content of the message as an array of text and/or images. </param>
+        /// <param name="fileIds">
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
-        /// <param name="fileIds"> A list of file IDs that the assistant can use. </param>
         /// <returns> A new <see cref="Models.MessageDeltaObjectDelta"/> instance for mocking. </returns>
-        public static MessageDeltaObjectDelta MessageDeltaObjectDelta(IEnumerable<BinaryData> content = null, IEnumerable<string> fileIds = null)
+        public static MessageDeltaObjectDelta MessageDeltaObjectDelta(MessageDeltaObjectDeltaRole role = default, IEnumerable<BinaryData> content = null, IEnumerable<string> fileIds = null)
         {
             content ??= new List<BinaryData>();
             fileIds ??= new List<string>();
 
-            return new MessageDeltaObjectDelta(content?.ToList(), fileIds?.ToList(), serializedAdditionalRawData: null);
+            return new MessageDeltaObjectDelta(role, content?.ToList(), fileIds?.ToList(), serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentImageFileObject"/>. </summary>
         /// <param name="index"> The index of the content part of the message. </param>
-        /// <param name="imageFile">
-        /// The type of the content, which is always `image_file`.
-        ///   type: "image_file";
-        ///
-        ///   /** The information about the image_file.
-        /// </param>
+        /// <param name="type"> The type of the content, which is always `image_file`. </param>
+        /// <param name="imageFile"> The information about the image_file. </param>
         /// <returns> A new <see cref="Models.MessageDeltaContentImageFileObject"/> instance for mocking. </returns>
-        public static MessageDeltaContentImageFileObject MessageDeltaContentImageFileObject(long index = default, MessageDeltaContentImageFileObjectImageFile imageFile = null)
+        public static MessageDeltaContentImageFileObject MessageDeltaContentImageFileObject(long index = default, MessageDeltaContentImageFileObjectType type = default, MessageDeltaContentImageFileObjectImageFile imageFile = null)
         {
-            return new MessageDeltaContentImageFileObject(index, imageFile, serializedAdditionalRawData: null);
+            return new MessageDeltaContentImageFileObject(index, type, imageFile, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentImageFileObjectImageFile"/>. </summary>
@@ -2395,16 +2391,12 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextObject"/>. </summary>
         /// <param name="index"> The index of the content part of the message. </param>
-        /// <param name="text">
-        /// The type of the content, which is always `text`.
-        ///   type: "text";
-        ///
-        ///   /** The text data for the message.
-        /// </param>
+        /// <param name="type"> The type of the content, which is always `text`. </param>
+        /// <param name="text"> The text data for the message. </param>
         /// <returns> A new <see cref="Models.MessageDeltaContentTextObject"/> instance for mocking. </returns>
-        public static MessageDeltaContentTextObject MessageDeltaContentTextObject(long index = default, MessageDeltaContentTextObjectText text = null)
+        public static MessageDeltaContentTextObject MessageDeltaContentTextObject(long index = default, MessageDeltaContentTextObjectType type = default, MessageDeltaContentTextObjectText text = null)
         {
-            return new MessageDeltaContentTextObject(index, text, serializedAdditionalRawData: null);
+            return new MessageDeltaContentTextObject(index, type, text, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextObjectText"/>. </summary>
@@ -2453,15 +2445,17 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObject"/>. </summary>
         /// <param name="index"> The index of the annotation in a text content part. </param>
         /// <param name="type"> The type of the citation, which is always `file_path`. </param>
+        /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="filePath"> The file ID data for the message. </param>
         /// <param name="startIndex"> The start index of the citation. </param>
         /// <param name="endIndex"> The end index of the citation. </param>
         /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObject"/> instance for mocking. </returns>
-        public static MessageDeltaContentTextAnnotationsFilePathObject MessageDeltaContentTextAnnotationsFilePathObject(long index = default, MessageDeltaContentTextAnnotationsFilePathObjectType type = default, MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath = null, long? startIndex = null, long? endIndex = null)
+        public static MessageDeltaContentTextAnnotationsFilePathObject MessageDeltaContentTextAnnotationsFilePathObject(long index = default, MessageDeltaContentTextAnnotationsFilePathObjectType type = default, string text = null, MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath = null, long? startIndex = null, long? endIndex = null)
         {
             return new MessageDeltaContentTextAnnotationsFilePathObject(
                 index,
                 type,
+                text,
                 filePath,
                 startIndex,
                 endIndex,
@@ -2641,16 +2635,12 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObject"/>. </summary>
         /// <param name="index"> The index of the tool call in the tool calls array. </param>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="codeInterpreter">
-        /// The type of the tool call, which is always `code_interpreter`.
-        ///   type: "code_interpreter";
-        ///
-        ///   /** The Code Interpreter tool call definition.
-        /// </param>
+        /// <param name="type"> The type of the tool call, which is always `code_interpreter`. </param>
+        /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
         /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsCodeObject RunStepDeltaStepDetailsToolCallsCodeObject(long index = default, string id = null, RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = null)
+        public static RunStepDeltaStepDetailsToolCallsCodeObject RunStepDeltaStepDetailsToolCallsCodeObject(long index = default, string id = null, RunStepDeltaStepDetailsToolCallsCodeObjectType type = default, RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = null)
         {
-            return new RunStepDeltaStepDetailsToolCallsCodeObject(index, id, codeInterpreter, serializedAdditionalRawData: null);
+            return new RunStepDeltaStepDetailsToolCallsCodeObject(index, id, type, codeInterpreter, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
@@ -2834,20 +2824,17 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaDetailsToolCallsObject"/>. </summary>
+        /// <param name="type"> The object type, which is always `tool_calls`. </param>
         /// <param name="toolCalls">
-        /// The object type, which is always `tool_calls`.
-        ///   type: "tool_calls";
-        ///
-        ///   /**
         /// An array of tool calls the run step was involved in. These can be associated with one of three
         /// types of tools: `code_interpreter`, `retrieval`, or `function`.
         /// </param>
         /// <returns> A new <see cref="Models.RunStepDeltaDetailsToolCallsObject"/> instance for mocking. </returns>
-        public static RunStepDeltaDetailsToolCallsObject RunStepDeltaDetailsToolCallsObject(IEnumerable<BinaryData> toolCalls = null)
+        public static RunStepDeltaDetailsToolCallsObject RunStepDeltaDetailsToolCallsObject(string type = null, IEnumerable<BinaryData> toolCalls = null)
         {
             toolCalls ??= new List<BinaryData>();
 
-            return new RunStepDeltaDetailsToolCallsObject(toolCalls?.ToList(), serializedAdditionalRawData: null);
+            return new RunStepDeltaDetailsToolCallsObject(type, toolCalls?.ToList(), serializedAdditionalRawData: null);
         }
     }
 }

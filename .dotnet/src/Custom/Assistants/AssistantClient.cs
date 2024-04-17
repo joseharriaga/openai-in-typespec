@@ -651,11 +651,12 @@ public partial class AssistantClient
         return new Internal.Models.CreateThreadAndRunRequest(
             assistantId,
             internalThreadOptions,
-            runOptions?.ModelOverride,
+            runOptions.ModelOverride,
             runOptions.InstructionsOverride,
             ToInternalBinaryDataList(runOptions?.ToolsOverride),
+            runOptions.Metadata,
+            runOptions.Temperature,
             stream: null,
-            runOptions?.Metadata,
             serializedAdditionalRawData: null);
     }
 

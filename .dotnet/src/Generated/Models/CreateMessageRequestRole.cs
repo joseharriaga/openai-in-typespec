@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The CreateMessageRequest_role. </summary>
+    /// <summary> Enum for role in CreateMessageRequest. </summary>
     internal readonly partial struct CreateMessageRequestRole : IEquatable<CreateMessageRequestRole>
     {
         private readonly string _value;
@@ -20,9 +20,12 @@ namespace OpenAI.Internal.Models
         }
 
         private const string UserValue = "user";
+        private const string AssistantValue = "assistant";
 
         /// <summary> user. </summary>
         public static CreateMessageRequestRole User { get; } = new CreateMessageRequestRole(UserValue);
+        /// <summary> assistant. </summary>
+        public static CreateMessageRequestRole Assistant { get; } = new CreateMessageRequestRole(AssistantValue);
         /// <summary> Determines if two <see cref="CreateMessageRequestRole"/> values are the same. </summary>
         public static bool operator ==(CreateMessageRequestRole left, CreateMessageRequestRole right) => left.Equals(right);
         /// <summary> Determines if two <see cref="CreateMessageRequestRole"/> values are not the same. </summary>

@@ -23,10 +23,18 @@ namespace OpenAI.Internal.Models
             writer.WriteStartObject();
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("code_interpreter"u8);
-            writer.WriteObjectValue<RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter>(CodeInterpreter, options);
+            if (Optional.IsDefined(Id))
+            {
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
+            }
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type.ToString());
+            if (Optional.IsDefined(CodeInterpreter))
+            {
+                writer.WritePropertyName("code_interpreter"u8);
+                writer.WriteObjectValue<RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter>(CodeInterpreter, options);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -67,6 +75,7 @@ namespace OpenAI.Internal.Models
             }
             long index = default;
             string id = default;
+            RunStepDeltaStepDetailsToolCallsCodeObjectType type = default;
             RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -82,8 +91,17 @@ namespace OpenAI.Internal.Models
                     id = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("type"u8))
+                {
+                    type = new RunStepDeltaStepDetailsToolCallsCodeObjectType(property.Value.GetString());
+                    continue;
+                }
                 if (property.NameEquals("code_interpreter"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     codeInterpreter = RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter.DeserializeRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(property.Value, options);
                     continue;
                 }
@@ -93,7 +111,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new RunStepDeltaStepDetailsToolCallsCodeObject(index, id, codeInterpreter, serializedAdditionalRawData);
+            return new RunStepDeltaStepDetailsToolCallsCodeObject(index, id, type, codeInterpreter, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<RunStepDeltaStepDetailsToolCallsCodeObject>.Write(ModelReaderWriterOptions options)

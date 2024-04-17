@@ -55,14 +55,16 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFilePathObject"/>. </summary>
         /// <param name="index"> The index of the annotation in a text content part. </param>
         /// <param name="type"> The type of the citation, which is always `file_path`. </param>
+        /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="filePath"> The file ID data for the message. </param>
         /// <param name="startIndex"> The start index of the citation. </param>
         /// <param name="endIndex"> The end index of the citation. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentTextAnnotationsFilePathObject(long index, MessageDeltaContentTextAnnotationsFilePathObjectType type, MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath, long? startIndex, long? endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaContentTextAnnotationsFilePathObject(long index, MessageDeltaContentTextAnnotationsFilePathObjectType type, string text, MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath, long? startIndex, long? endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Index = index;
             Type = type;
+            Text = text;
             FilePath = filePath;
             StartIndex = startIndex;
             EndIndex = endIndex;
@@ -79,6 +81,8 @@ namespace OpenAI.Internal.Models
         /// <summary> The type of the citation, which is always `file_path`. </summary>
         public MessageDeltaContentTextAnnotationsFilePathObjectType Type { get; } = MessageDeltaContentTextAnnotationsFilePathObjectType.FilePath;
 
+        /// <summary> The text in the message content that needs to be replaced. </summary>
+        public string Text { get; }
         /// <summary> The file ID data for the message. </summary>
         public MessageDeltaContentTextAnnotationsFilePathObjectFilePath FilePath { get; }
         /// <summary> The start index of the citation. </summary>

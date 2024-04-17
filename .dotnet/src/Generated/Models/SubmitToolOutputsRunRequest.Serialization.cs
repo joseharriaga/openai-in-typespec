@@ -30,8 +30,15 @@ namespace OpenAI.Internal.Models
             writer.WriteEndArray();
             if (Optional.IsDefined(Stream))
             {
-                writer.WritePropertyName("stream"u8);
-                writer.WriteBooleanValue(Stream.Value);
+                if (Stream != null)
+                {
+                    writer.WritePropertyName("stream"u8);
+                    writer.WriteBooleanValue(Stream.Value);
+                }
+                else
+                {
+                    writer.WriteNull("stream");
+                }
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -91,6 +98,7 @@ namespace OpenAI.Internal.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        stream = null;
                         continue;
                     }
                     stream = property.Value.GetBoolean();

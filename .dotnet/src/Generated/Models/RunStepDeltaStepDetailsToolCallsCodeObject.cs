@@ -44,38 +44,22 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsCodeObject"/>. </summary>
         /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="codeInterpreter">
-        /// The type of the tool call, which is always `code_interpreter`.
-        ///   type: "code_interpreter";
-        ///
-        ///   /** The Code Interpreter tool call definition.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="codeInterpreter"/> is null. </exception>
-        internal RunStepDeltaStepDetailsToolCallsCodeObject(long index, string id, RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter)
+        internal RunStepDeltaStepDetailsToolCallsCodeObject(long index)
         {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(codeInterpreter, nameof(codeInterpreter));
-
             Index = index;
-            Id = id;
-            CodeInterpreter = codeInterpreter;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsCodeObject"/>. </summary>
         /// <param name="index"> The index of the tool call in the tool calls array. </param>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="codeInterpreter">
-        /// The type of the tool call, which is always `code_interpreter`.
-        ///   type: "code_interpreter";
-        ///
-        ///   /** The Code Interpreter tool call definition.
-        /// </param>
+        /// <param name="type"> The type of the tool call, which is always `code_interpreter`. </param>
+        /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepDeltaStepDetailsToolCallsCodeObject(long index, string id, RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepDeltaStepDetailsToolCallsCodeObject(long index, string id, RunStepDeltaStepDetailsToolCallsCodeObjectType type, RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Index = index;
             Id = id;
+            Type = type;
             CodeInterpreter = codeInterpreter;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -89,12 +73,10 @@ namespace OpenAI.Internal.Models
         public long Index { get; }
         /// <summary> The ID of the tool call. </summary>
         public string Id { get; }
-        /// <summary>
-        /// The type of the tool call, which is always `code_interpreter`.
-        ///   type: "code_interpreter";
-        ///
-        ///   /** The Code Interpreter tool call definition.
-        /// </summary>
+        /// <summary> The type of the tool call, which is always `code_interpreter`. </summary>
+        public RunStepDeltaStepDetailsToolCallsCodeObjectType Type { get; } = RunStepDeltaStepDetailsToolCallsCodeObjectType.CodeInterpreter;
+
+        /// <summary> The Code Interpreter tool call definition. </summary>
         public RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter CodeInterpreter { get; }
     }
 }

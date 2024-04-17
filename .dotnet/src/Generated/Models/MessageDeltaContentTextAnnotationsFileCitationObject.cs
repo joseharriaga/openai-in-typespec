@@ -48,19 +48,9 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFileCitationObject"/>. </summary>
         /// <param name="index"> The index of the annotation in a text content part. </param>
-        /// <param name="fileCitation">
-        /// The text in the message content that needs to be replaced.
-        ///   text?: string;
-        ///
-        ///   /**
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="fileCitation"/> is null. </exception>
-        internal MessageDeltaContentTextAnnotationsFileCitationObject(long index, MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation fileCitation)
+        internal MessageDeltaContentTextAnnotationsFileCitationObject(long index)
         {
-            Argument.AssertNotNull(fileCitation, nameof(fileCitation));
-
             Index = index;
-            FileCitation = fileCitation;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFileCitationObject"/>. </summary>

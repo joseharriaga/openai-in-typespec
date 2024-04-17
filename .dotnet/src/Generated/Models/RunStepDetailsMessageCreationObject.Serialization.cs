@@ -23,8 +23,11 @@ namespace OpenAI.Internal.Models
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type.ToString());
-            writer.WritePropertyName("message_creation"u8);
-            writer.WriteObjectValue<RunStepDetailsMessageCreationObjectMessageCreation>(MessageCreation, options);
+            if (Optional.IsDefined(MessageCreation))
+            {
+                writer.WritePropertyName("message_creation"u8);
+                writer.WriteObjectValue<RunStepDetailsMessageCreationObjectMessageCreation>(MessageCreation, options);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -76,6 +79,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("message_creation"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     messageCreation = RunStepDetailsMessageCreationObjectMessageCreation.DeserializeRunStepDetailsMessageCreationObjectMessageCreation(property.Value, options);
                     continue;
                 }

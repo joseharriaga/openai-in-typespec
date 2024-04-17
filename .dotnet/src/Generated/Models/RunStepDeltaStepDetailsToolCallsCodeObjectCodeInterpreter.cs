@@ -43,13 +43,8 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
-        /// <param name="input"> The input to the Code Interpreter tool call. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="input"/> is null. </exception>
-        internal RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(string input)
+        internal RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter()
         {
-            Argument.AssertNotNull(input, nameof(input));
-
-            Input = input;
             Outputs = new ChangeTrackingList<BinaryData>();
         }
 
@@ -66,11 +61,6 @@ namespace OpenAI.Internal.Models
             Input = input;
             Outputs = outputs;
             _serializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter"/> for deserialization. </summary>
-        internal RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter()
-        {
         }
 
         /// <summary> The input to the Code Interpreter tool call. </summary>

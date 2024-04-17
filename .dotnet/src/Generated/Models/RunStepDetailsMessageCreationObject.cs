@@ -43,13 +43,8 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsMessageCreationObject"/>. </summary>
-        /// <param name="messageCreation"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="messageCreation"/> is null. </exception>
-        internal RunStepDetailsMessageCreationObject(RunStepDetailsMessageCreationObjectMessageCreation messageCreation)
+        internal RunStepDetailsMessageCreationObject()
         {
-            Argument.AssertNotNull(messageCreation, nameof(messageCreation));
-
-            MessageCreation = messageCreation;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsMessageCreationObject"/>. </summary>
@@ -61,11 +56,6 @@ namespace OpenAI.Internal.Models
             Type = type;
             MessageCreation = messageCreation;
             _serializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="RunStepDetailsMessageCreationObject"/> for deserialization. </summary>
-        internal RunStepDetailsMessageCreationObject()
-        {
         }
 
         /// <summary> Details of the message creation by the run step. </summary>

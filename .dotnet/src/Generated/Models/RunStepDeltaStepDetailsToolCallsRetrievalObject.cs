@@ -44,14 +44,9 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsRetrievalObject"/>. </summary>
         /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="id"> The ID of the tool call. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        internal RunStepDeltaStepDetailsToolCallsRetrievalObject(long index, string id)
+        internal RunStepDeltaStepDetailsToolCallsRetrievalObject(long index)
         {
-            Argument.AssertNotNull(id, nameof(id));
-
             Index = index;
-            Id = id;
             Retrieval = new ChangeTrackingDictionary<string, string>();
         }
 

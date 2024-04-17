@@ -21,6 +21,8 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type);
             if (Optional.IsCollectionDefined(ToolCalls))
             {
                 writer.WritePropertyName("tool_calls"u8);
@@ -81,11 +83,17 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
+            string type = default;
             IReadOnlyList<BinaryData> toolCalls = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("type"u8))
+                {
+                    type = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("tool_calls"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -113,7 +121,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new RunStepDeltaDetailsToolCallsObject(toolCalls ?? new ChangeTrackingList<BinaryData>(), serializedAdditionalRawData);
+            return new RunStepDeltaDetailsToolCallsObject(type, toolCalls ?? new ChangeTrackingList<BinaryData>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<RunStepDeltaDetailsToolCallsObject>.Write(ModelReaderWriterOptions options)

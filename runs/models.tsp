@@ -92,18 +92,25 @@ model CreateThreadAndRunRequest {
   tools?: CreateRunRequestTools | null;
 
   /**
-   * If `true`, returns a stream of events that happen during the Run as server-sent events,
-   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
-   */
-  stream?: boolean;
-
-  /**
    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
    * additional information about the object in a structured format. Keys can be a maximum of 64
    * characters long and values can be a maxium of 512 characters long.
    */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
+
+  /**
+   * The sampling temperature used for this run.
+   */
+  @minValue(0)
+  @maxValue(2)
+  temperature?: float64 | null = 1;
+
+  /**
+   * If `true`, returns a stream of events that happen during the Run as server-sent events,
+   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
+   */
+  stream?: boolean | null;
 }
 
 model SubmitToolOutputsRunRequest {
@@ -122,7 +129,7 @@ model SubmitToolOutputsRunRequest {
    * If `true`, returns a stream of events that happen during the Run as server-sent events,
    * terminating when the Run enters a terminal state with a `data: [DONE]` message.
    */
-  stream?: boolean;
+  stream?: boolean | null;
 }
 
 model ListRunsResponse {
@@ -164,7 +171,7 @@ model RunStepDetailsMessageCreationObject {
   /** Details of the message creation by the run step. */
   type: "message_creation";
 
-  message_creation: {
+  message_creation?: {
     /** The ID of the message that was created by this run step. */
     message_id: string;
   }
@@ -564,7 +571,7 @@ union RunStepDeltaStepDetailsToolCallsObject {
 
 /** Represents details of tool calls within a streaming run step. */
 model RunStepDeltaDetailsToolCallsObject {
-  /** The object type, which is always `tool_calls`.
+  /** The object type, which is always `tool_calls`. */
   type: "tool_calls";
 
   /**
@@ -587,15 +594,15 @@ model RunStepDeltaStepDetailsToolCallsCodeObject {
   index: safeint;
 
   /** The ID of the tool call. */
-  id: string;
+  id?: string;
 
-  /** The type of the tool call, which is always `code_interpreter`.
+  /** The type of the tool call, which is always `code_interpreter`. */
   type: "code_interpreter";
 
   /** The Code Interpreter tool call definition. */
-  code_interpreter: {
+  code_interpreter?: {
     /** The input to the Code Interpreter tool call. */
-    input: string;
+    input?: string;
 
     /**
      * The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
@@ -643,7 +650,7 @@ model RunStepDeltaStepDetailsToolCallsRetrievalObject {
   index: safeint;
 
   /** The ID of the tool call. */
-  id: string;
+  id?: string;
 
   /** The type of the tool call, which is always `retrieval`. */
   type: "retrieval";
@@ -659,7 +666,7 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
   index: safeint;
 
   /** The ID of the tool call. */
-  id: string;
+  id?: string;
 
   /** The type of the tool call, which is always `retrieval`. */
   type: "function";

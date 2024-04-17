@@ -81,11 +81,6 @@ namespace OpenAI.Internal.Models
                     writer.WriteNull("tools");
                 }
             }
-            if (Optional.IsDefined(Stream))
-            {
-                writer.WritePropertyName("stream"u8);
-                writer.WriteBooleanValue(Stream.Value);
-            }
             if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
@@ -102,6 +97,30 @@ namespace OpenAI.Internal.Models
                 else
                 {
                     writer.WriteNull("metadata");
+                }
+            }
+            if (Optional.IsDefined(Temperature))
+            {
+                if (Temperature != null)
+                {
+                    writer.WritePropertyName("temperature"u8);
+                    writer.WriteNumberValue(Temperature.Value);
+                }
+                else
+                {
+                    writer.WriteNull("temperature");
+                }
+            }
+            if (Optional.IsDefined(Stream))
+            {
+                if (Stream != null)
+                {
+                    writer.WritePropertyName("stream"u8);
+                    writer.WriteBooleanValue(Stream.Value);
+                }
+                else
+                {
+                    writer.WriteNull("stream");
                 }
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -147,8 +166,9 @@ namespace OpenAI.Internal.Models
             string model = default;
             string instructions = default;
             IList<BinaryData> tools = default;
-            bool? stream = default;
             IDictionary<string, string> metadata = default;
+            double? temperature = default;
+            bool? stream = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -208,15 +228,6 @@ namespace OpenAI.Internal.Models
                     tools = array;
                     continue;
                 }
-                if (property.NameEquals("stream"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    stream = property.Value.GetBoolean();
-                    continue;
-                }
                 if (property.NameEquals("metadata"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -231,6 +242,26 @@ namespace OpenAI.Internal.Models
                     metadata = dictionary;
                     continue;
                 }
+                if (property.NameEquals("temperature"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        temperature = null;
+                        continue;
+                    }
+                    temperature = property.Value.GetDouble();
+                    continue;
+                }
+                if (property.NameEquals("stream"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        stream = null;
+                        continue;
+                    }
+                    stream = property.Value.GetBoolean();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
@@ -243,8 +274,9 @@ namespace OpenAI.Internal.Models
                 model,
                 instructions,
                 tools ?? new ChangeTrackingList<BinaryData>(),
-                stream,
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
+                temperature,
+                stream,
                 serializedAdditionalRawData);
         }
 

@@ -54,6 +54,11 @@ public partial class RunCreationOptions
     public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
 
     /// <summary>
+    /// The temperature value that should be applied to the run.
+    /// </summary>
+    public double? Temperature { get; init; }
+
+    /// <summary>
     /// An optional key/value mapping of additional, supplemental data items to attach to the <see cref="ThreadRun"/>.
     /// This information may be useful for storing custom details in a structured format.
     /// </summary>

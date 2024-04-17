@@ -47,7 +47,7 @@ namespace OpenAI.Internal.Models
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
-        /// <param name="status"> The status of the message. </param>
+        /// <param name="status"> The status of the message, which can be either `in_progress`, `incomplete`, or `completed`. </param>
         /// <param name="incompleteDetails"> On an incomplete message, details about why the message is incomplete. </param>
         /// <param name="completedAt"> The Unix timestamp (in seconds) for when the message was completed. </param>
         /// <param name="incompleteAt"> The Unix timestamp (in seconds) for when the message was marked as incomplete. </param>
@@ -58,25 +58,24 @@ namespace OpenAI.Internal.Models
         /// message.
         /// </param>
         /// <param name="runId">
-        /// If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-        /// this message.
+        /// The ID of the [run](/docs/api-reference/runs) associated with the creation of this message.
+        /// Value is `null` when messages are created manually using the create message or create thread
+        /// endpoints.
         /// </param>
         /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-        /// tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-        /// attached to a message.
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="threadId"/>, <paramref name="incompleteDetails"/>, <paramref name="content"/> or <paramref name="fileIds"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="threadId"/>, <paramref name="content"/> or <paramref name="fileIds"/> is null. </exception>
         internal MessageObject(string id, DateTimeOffset createdAt, string threadId, MessageObjectStatus status, MessageObjectIncompleteDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageObjectRole role, IEnumerable<BinaryData> content, string assistantId, string runId, IEnumerable<string> fileIds, IReadOnlyDictionary<string, string> metadata)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(threadId, nameof(threadId));
-            Argument.AssertNotNull(incompleteDetails, nameof(incompleteDetails));
             Argument.AssertNotNull(content, nameof(content));
             Argument.AssertNotNull(fileIds, nameof(fileIds));
 
@@ -100,7 +99,7 @@ namespace OpenAI.Internal.Models
         /// <param name="object"> The object type, which is always `thread.message`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
-        /// <param name="status"> The status of the message. </param>
+        /// <param name="status"> The status of the message, which can be either `in_progress`, `incomplete`, or `completed`. </param>
         /// <param name="incompleteDetails"> On an incomplete message, details about why the message is incomplete. </param>
         /// <param name="completedAt"> The Unix timestamp (in seconds) for when the message was completed. </param>
         /// <param name="incompleteAt"> The Unix timestamp (in seconds) for when the message was marked as incomplete. </param>
@@ -111,13 +110,13 @@ namespace OpenAI.Internal.Models
         /// message.
         /// </param>
         /// <param name="runId">
-        /// If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-        /// this message.
+        /// The ID of the [run](/docs/api-reference/runs) associated with the creation of this message.
+        /// Value is `null` when messages are created manually using the create message or create thread
+        /// endpoints.
         /// </param>
         /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-        /// tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-        /// attached to a message.
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -158,7 +157,7 @@ namespace OpenAI.Internal.Models
         public DateTimeOffset CreatedAt { get; }
         /// <summary> The [thread](/docs/api-reference/threads) ID that this message belongs to. </summary>
         public string ThreadId { get; }
-        /// <summary> The status of the message. </summary>
+        /// <summary> The status of the message, which can be either `in_progress`, `incomplete`, or `completed`. </summary>
         public MessageObjectStatus Status { get; }
         /// <summary> On an incomplete message, details about why the message is incomplete. </summary>
         public MessageObjectIncompleteDetails IncompleteDetails { get; }
@@ -205,14 +204,14 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public string AssistantId { get; }
         /// <summary>
-        /// If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-        /// this message.
+        /// The ID of the [run](/docs/api-reference/runs) associated with the creation of this message.
+        /// Value is `null` when messages are created manually using the create message or create thread
+        /// endpoints.
         /// </summary>
         public string RunId { get; }
         /// <summary>
-        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-        /// tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-        /// attached to a message.
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </summary>
         public IReadOnlyList<string> FileIds { get; }
         /// <summary>

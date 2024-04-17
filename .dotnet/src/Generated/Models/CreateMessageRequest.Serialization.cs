@@ -25,16 +25,13 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(Role.ToString());
             writer.WritePropertyName("content"u8);
             writer.WriteStringValue(Content);
-            if (Optional.IsCollectionDefined(FileIds))
+            writer.WritePropertyName("file_ids"u8);
+            writer.WriteStartArray();
+            foreach (var item in FileIds)
             {
-                writer.WritePropertyName("file_ids"u8);
-                writer.WriteStartArray();
-                foreach (var item in FileIds)
-                {
-                    writer.WriteStringValue(item);
-                }
-                writer.WriteEndArray();
+                writer.WriteStringValue(item);
             }
+            writer.WriteEndArray();
             if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
@@ -111,10 +108,6 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("file_ids"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -143,7 +136,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateMessageRequest(role, content, fileIds ?? new ChangeTrackingList<string>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new CreateMessageRequest(role, content, fileIds, metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateMessageRequest>.Write(ModelReaderWriterOptions options)

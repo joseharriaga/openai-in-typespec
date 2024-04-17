@@ -44,33 +44,20 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextObject"/>. </summary>
         /// <param name="index"> The index of the content part of the message. </param>
-        /// <param name="text">
-        /// The type of the content, which is always `text`.
-        ///   type: "text";
-        ///
-        ///   /** The text data for the message.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="text"/> is null. </exception>
-        internal MessageDeltaContentTextObject(long index, MessageDeltaContentTextObjectText text)
+        internal MessageDeltaContentTextObject(long index)
         {
-            Argument.AssertNotNull(text, nameof(text));
-
             Index = index;
-            Text = text;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextObject"/>. </summary>
         /// <param name="index"> The index of the content part of the message. </param>
-        /// <param name="text">
-        /// The type of the content, which is always `text`.
-        ///   type: "text";
-        ///
-        ///   /** The text data for the message.
-        /// </param>
+        /// <param name="type"> The type of the content, which is always `text`. </param>
+        /// <param name="text"> The text data for the message. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentTextObject(long index, MessageDeltaContentTextObjectText text, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaContentTextObject(long index, MessageDeltaContentTextObjectType type, MessageDeltaContentTextObjectText text, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Index = index;
+            Type = type;
             Text = text;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -82,12 +69,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The index of the content part of the message. </summary>
         public long Index { get; }
-        /// <summary>
-        /// The type of the content, which is always `text`.
-        ///   type: "text";
-        ///
-        ///   /** The text data for the message.
-        /// </summary>
+        /// <summary> The type of the content, which is always `text`. </summary>
+        public MessageDeltaContentTextObjectType Type { get; } = MessageDeltaContentTextObjectType.Text;
+
+        /// <summary> The text data for the message. </summary>
         public MessageDeltaContentTextObjectText Text { get; }
     }
 }

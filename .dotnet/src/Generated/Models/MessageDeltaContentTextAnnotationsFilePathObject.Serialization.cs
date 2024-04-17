@@ -25,6 +25,11 @@ namespace OpenAI.Internal.Models
             writer.WriteNumberValue(Index);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type.ToString());
+            if (Optional.IsDefined(Text))
+            {
+                writer.WritePropertyName("text"u8);
+                writer.WriteStringValue(Text);
+            }
             if (Optional.IsDefined(FilePath))
             {
                 writer.WritePropertyName("file_path"u8);
@@ -80,6 +85,7 @@ namespace OpenAI.Internal.Models
             }
             long index = default;
             MessageDeltaContentTextAnnotationsFilePathObjectType type = default;
+            string text = default;
             MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath = default;
             long? startIndex = default;
             long? endIndex = default;
@@ -95,6 +101,11 @@ namespace OpenAI.Internal.Models
                 if (property.NameEquals("type"u8))
                 {
                     type = new MessageDeltaContentTextAnnotationsFilePathObjectType(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("text"u8))
+                {
+                    text = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("file_path"u8))
@@ -133,6 +144,7 @@ namespace OpenAI.Internal.Models
             return new MessageDeltaContentTextAnnotationsFilePathObject(
                 index,
                 type,
+                text,
                 filePath,
                 startIndex,
                 endIndex,

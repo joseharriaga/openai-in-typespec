@@ -22,6 +22,7 @@ namespace OpenAI.Internal.Models
         private const string ContentFilterValue = "content_filter";
         private const string MaxTokensValue = "max_tokens";
         private const string RunCancelledValue = "run_cancelled";
+        private const string RunExpiredValue = "run_expired";
         private const string RunFailedValue = "run_failed";
 
         /// <summary> content_filter. </summary>
@@ -30,6 +31,8 @@ namespace OpenAI.Internal.Models
         public static MessageObjectIncompleteDetailsReason MaxTokens { get; } = new MessageObjectIncompleteDetailsReason(MaxTokensValue);
         /// <summary> run_cancelled. </summary>
         public static MessageObjectIncompleteDetailsReason RunCancelled { get; } = new MessageObjectIncompleteDetailsReason(RunCancelledValue);
+        /// <summary> run_expired. </summary>
+        public static MessageObjectIncompleteDetailsReason RunExpired { get; } = new MessageObjectIncompleteDetailsReason(RunExpiredValue);
         /// <summary> run_failed. </summary>
         public static MessageObjectIncompleteDetailsReason RunFailed { get; } = new MessageObjectIncompleteDetailsReason(RunFailedValue);
         /// <summary> Determines if two <see cref="MessageObjectIncompleteDetailsReason"/> values are the same. </summary>

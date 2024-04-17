@@ -44,32 +44,34 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaObjectDelta"/>. </summary>
-        /// <param name="content">
-        /// The entity that produced the message.
-        ///     role: "user" | "assistant";
-        ///
-        ///     /** The content of the message as an array of text and/or images.
+        /// <param name="role"> The entity that produced the message. </param>
+        /// <param name="content"> The content of the message as an array of text and/or images. </param>
+        /// <param name="fileIds">
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        internal MessageDeltaObjectDelta(IEnumerable<BinaryData> content)
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> or <paramref name="fileIds"/> is null. </exception>
+        internal MessageDeltaObjectDelta(MessageDeltaObjectDeltaRole role, IEnumerable<BinaryData> content, IEnumerable<string> fileIds)
         {
             Argument.AssertNotNull(content, nameof(content));
+            Argument.AssertNotNull(fileIds, nameof(fileIds));
 
+            Role = role;
             Content = content.ToList();
-            FileIds = new ChangeTrackingList<string>();
+            FileIds = fileIds.ToList();
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaObjectDelta"/>. </summary>
-        /// <param name="content">
-        /// The entity that produced the message.
-        ///     role: "user" | "assistant";
-        ///
-        ///     /** The content of the message as an array of text and/or images.
+        /// <param name="role"> The entity that produced the message. </param>
+        /// <param name="content"> The content of the message as an array of text and/or images. </param>
+        /// <param name="fileIds">
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
-        /// <param name="fileIds"> A list of file IDs that the assistant can use. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaObjectDelta(IReadOnlyList<BinaryData> content, IReadOnlyList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaObjectDelta(MessageDeltaObjectDeltaRole role, IReadOnlyList<BinaryData> content, IReadOnlyList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
+            Role = role;
             Content = content;
             FileIds = fileIds;
             _serializedAdditionalRawData = serializedAdditionalRawData;
@@ -80,11 +82,10 @@ namespace OpenAI.Internal.Models
         {
         }
 
+        /// <summary> The entity that produced the message. </summary>
+        public MessageDeltaObjectDeltaRole Role { get; }
         /// <summary>
-        /// The entity that produced the message.
-        ///     role: "user" | "assistant";
-        ///
-        ///     /** The content of the message as an array of text and/or images.
+        /// The content of the message as an array of text and/or images.
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -114,7 +115,10 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public IReadOnlyList<BinaryData> Content { get; }
-        /// <summary> A list of file IDs that the assistant can use. </summary>
+        /// <summary>
+        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
+        /// Useful for tools like retrieval and code_interpreter that can access files.
+        /// </summary>
         public IReadOnlyList<string> FileIds { get; }
     }
 }

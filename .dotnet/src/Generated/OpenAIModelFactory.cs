@@ -2723,7 +2723,11 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/>. </summary>
         /// <param name="name"> The name of the function. </param>
         /// <param name="arguments"> The arguments passed to the function. </param>
-        /// <param name="output"> The output of the function. This will be `null` if the outputs have not yet been submitted. </param>
+        /// <param name="output">
+        /// The output of the function.
+        /// This will be `null` if the outputs have not been
+        /// [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+        /// </param>
         /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/> instance for mocking. </returns>
         public static RunStepDeltaStepDetailsToolCallsFunctionObjectFunction RunStepDeltaStepDetailsToolCallsFunctionObjectFunction(string name = null, string arguments = null, string output = null)
         {

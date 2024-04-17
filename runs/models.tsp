@@ -673,7 +673,9 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
     arguments?: string;
 
     /**
-     * The output of the function. This will be `null` if the outputs have not yet been submitted.
+     * The output of the function.
+     * This will be `null` if the outputs have not been
+     * [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
      */
     output?: string | null;
   };

@@ -5936,7 +5936,10 @@ components:
             output:
               type: string
               nullable: true
-              description: The output of the function. This will be `null` if the outputs have not yet been submitted.
+              description: |-
+                The output of the function.
+                This will be `null` if the outputs have not been
+                [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
           description: The definition of the function that was called.
       description: Details of a function tool call that a streaming run step was involved in.
     RunStepDeltaStepDetailsToolCallsObject:

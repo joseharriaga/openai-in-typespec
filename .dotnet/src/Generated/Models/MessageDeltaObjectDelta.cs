@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenAI.Internal.Models
 {
@@ -44,21 +43,10 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaObjectDelta"/>. </summary>
-        /// <param name="role"> The entity that produced the message. </param>
-        /// <param name="content"> The content of the message as an array of text and/or images. </param>
-        /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use.
-        /// Useful for tools like retrieval and code_interpreter that can access files.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> or <paramref name="fileIds"/> is null. </exception>
-        internal MessageDeltaObjectDelta(MessageDeltaObjectDeltaRole role, IEnumerable<BinaryData> content, IEnumerable<string> fileIds)
+        internal MessageDeltaObjectDelta()
         {
-            Argument.AssertNotNull(content, nameof(content));
-            Argument.AssertNotNull(fileIds, nameof(fileIds));
-
-            Role = role;
-            Content = content.ToList();
-            FileIds = fileIds.ToList();
+            Content = new ChangeTrackingList<BinaryData>();
+            FileIds = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaObjectDelta"/>. </summary>
@@ -69,7 +57,7 @@ namespace OpenAI.Internal.Models
         /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaObjectDelta(MessageDeltaObjectDeltaRole role, IReadOnlyList<BinaryData> content, IReadOnlyList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaObjectDelta(MessageDeltaObjectDeltaRole? role, IReadOnlyList<BinaryData> content, IReadOnlyList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Role = role;
             Content = content;
@@ -77,13 +65,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageDeltaObjectDelta"/> for deserialization. </summary>
-        internal MessageDeltaObjectDelta()
-        {
-        }
-
         /// <summary> The entity that produced the message. </summary>
-        public MessageDeltaObjectDeltaRole Role { get; }
+        public MessageDeltaObjectDeltaRole? Role { get; }
         /// <summary>
         /// The content of the message as an array of text and/or images.
         /// <para>

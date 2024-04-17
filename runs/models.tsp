@@ -52,7 +52,7 @@ model CreateRunRequest {
    * If `true`, returns a stream of events that happen during the Run as server-sent events,
    * terminating when the Run enters a terminal state with a `data: [DONE]` message.
    */
-  stream?: boolean | null;
+  stream?: boolean | null = false;
 }
 
 model ModifyRunRequest {
@@ -110,7 +110,7 @@ model CreateThreadAndRunRequest {
    * If `true`, returns a stream of events that happen during the Run as server-sent events,
    * terminating when the Run enters a terminal state with a `data: [DONE]` message.
    */
-  stream?: boolean | null;
+  stream?: boolean | null = false;
 }
 
 model SubmitToolOutputsRunRequest {
@@ -129,7 +129,7 @@ model SubmitToolOutputsRunRequest {
    * If `true`, returns a stream of events that happen during the Run as server-sent events,
    * terminating when the Run enters a terminal state with a `data: [DONE]` message.
    */
-  stream?: boolean | null;
+  stream?: boolean | null = false;
 }
 
 model ListRunsResponse {
@@ -657,7 +657,7 @@ model RunStepDeltaStepDetailsToolCallsRetrievalObject {
 
   /** Reserved for future use. */
   @extension("x-oaiTypeLabel", "map")
-  retrieval?: Record<string> | null;
+  retrieval?: { }; // TODO: Is this the appropriate way to represent an empty object?
 }
 
 /** Details of a function tool call that a streaming run step was involved in. */
@@ -672,7 +672,7 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
   type: "function";
 
   /** The definition of the function that was called. */
-  function: {
+  function?: {
     /** The name of the function. */
     name?: string;
 

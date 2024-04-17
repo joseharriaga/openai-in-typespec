@@ -21,34 +21,43 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role.ToString());
-            writer.WritePropertyName("content"u8);
-            writer.WriteStartArray();
-            foreach (var item in Content)
+            if (Optional.IsDefined(Role))
             {
-                if (item == null)
+                writer.WritePropertyName("role"u8);
+                writer.WriteStringValue(Role.Value.ToString());
+            }
+            if (Optional.IsCollectionDefined(Content))
+            {
+                writer.WritePropertyName("content"u8);
+                writer.WriteStartArray();
+                foreach (var item in Content)
                 {
-                    writer.WriteNullValue();
-                    continue;
-                }
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item);
 #else
-                using (JsonDocument document = JsonDocument.Parse(item))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
+                    using (JsonDocument document = JsonDocument.Parse(item))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
 #endif
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
-            writer.WritePropertyName("file_ids"u8);
-            writer.WriteStartArray();
-            foreach (var item in FileIds)
+            if (Optional.IsCollectionDefined(FileIds))
             {
-                writer.WriteStringValue(item);
+                writer.WritePropertyName("file_ids"u8);
+                writer.WriteStartArray();
+                foreach (var item in FileIds)
+                {
+                    writer.WriteStringValue(item);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -87,7 +96,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            MessageDeltaObjectDeltaRole role = default;
+            MessageDeltaObjectDeltaRole? role = default;
             IReadOnlyList<BinaryData> content = default;
             IReadOnlyList<string> fileIds = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -96,11 +105,19 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("role"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     role = new MessageDeltaObjectDeltaRole(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("content"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     List<BinaryData> array = new List<BinaryData>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -118,6 +135,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("file_ids"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -132,7 +153,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageDeltaObjectDelta(role, content, fileIds, serializedAdditionalRawData);
+            return new MessageDeltaObjectDelta(role, content ?? new ChangeTrackingList<BinaryData>(), fileIds ?? new ChangeTrackingList<string>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<MessageDeltaObjectDelta>.Write(ModelReaderWriterOptions options)

@@ -30,23 +30,10 @@ namespace OpenAI.Internal.Models
             }
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type.ToString());
-            if (Optional.IsCollectionDefined(Retrieval))
+            if (Optional.IsDefined(Retrieval))
             {
-                if (Retrieval != null)
-                {
-                    writer.WritePropertyName("retrieval"u8);
-                    writer.WriteStartObject();
-                    foreach (var item in Retrieval)
-                    {
-                        writer.WritePropertyName(item.Key);
-                        writer.WriteStringValue(item.Value);
-                    }
-                    writer.WriteEndObject();
-                }
-                else
-                {
-                    writer.WriteNull("retrieval");
-                }
+                writer.WritePropertyName("retrieval"u8);
+                writer.WriteObjectValue<RunStepDeltaStepDetailsToolCallsRetrievalObjectRetrieval>(Retrieval, options);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -89,7 +76,7 @@ namespace OpenAI.Internal.Models
             long index = default;
             string id = default;
             RunStepDeltaStepDetailsToolCallsRetrievalObjectType type = default;
-            IReadOnlyDictionary<string, string> retrieval = default;
+            RunStepDeltaStepDetailsToolCallsRetrievalObjectRetrieval retrieval = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -115,12 +102,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    Dictionary<string, string> dictionary = new Dictionary<string, string>();
-                    foreach (var property0 in property.Value.EnumerateObject())
-                    {
-                        dictionary.Add(property0.Name, property0.Value.GetString());
-                    }
-                    retrieval = dictionary;
+                    retrieval = RunStepDeltaStepDetailsToolCallsRetrievalObjectRetrieval.DeserializeRunStepDeltaStepDetailsToolCallsRetrievalObjectRetrieval(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -129,7 +111,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new RunStepDeltaStepDetailsToolCallsRetrievalObject(index, id, type, retrieval ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new RunStepDeltaStepDetailsToolCallsRetrievalObject(index, id, type, retrieval, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<RunStepDeltaStepDetailsToolCallsRetrievalObject>.Write(ModelReaderWriterOptions options)

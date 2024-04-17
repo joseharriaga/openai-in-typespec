@@ -30,8 +30,11 @@ namespace OpenAI.Internal.Models
             }
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type.ToString());
-            writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue<RunStepDeltaStepDetailsToolCallsFunctionObjectFunction>(Function, options);
+            if (Optional.IsDefined(Function))
+            {
+                writer.WritePropertyName("function"u8);
+                writer.WriteObjectValue<RunStepDeltaStepDetailsToolCallsFunctionObjectFunction>(Function, options);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -95,6 +98,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("function"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     function = RunStepDeltaStepDetailsToolCallsFunctionObjectFunction.DeserializeRunStepDeltaStepDetailsToolCallsFunctionObjectFunction(property.Value, options);
                     continue;
                 }

@@ -47,7 +47,6 @@ namespace OpenAI.Internal.Models
         internal RunStepDeltaStepDetailsToolCallsRetrievalObject(long index)
         {
             Index = index;
-            Retrieval = new ChangeTrackingDictionary<string, string>();
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDeltaStepDetailsToolCallsRetrievalObject"/>. </summary>
@@ -56,7 +55,7 @@ namespace OpenAI.Internal.Models
         /// <param name="type"> The type of the tool call, which is always `retrieval`. </param>
         /// <param name="retrieval"> Reserved for future use. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepDeltaStepDetailsToolCallsRetrievalObject(long index, string id, RunStepDeltaStepDetailsToolCallsRetrievalObjectType type, IReadOnlyDictionary<string, string> retrieval, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepDeltaStepDetailsToolCallsRetrievalObject(long index, string id, RunStepDeltaStepDetailsToolCallsRetrievalObjectType type, RunStepDeltaStepDetailsToolCallsRetrievalObjectRetrieval retrieval, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Index = index;
             Id = id;
@@ -78,6 +77,6 @@ namespace OpenAI.Internal.Models
         public RunStepDeltaStepDetailsToolCallsRetrievalObjectType Type { get; } = RunStepDeltaStepDetailsToolCallsRetrievalObjectType.Retrieval;
 
         /// <summary> Reserved for future use. </summary>
-        public IReadOnlyDictionary<string, string> Retrieval { get; }
+        public RunStepDeltaStepDetailsToolCallsRetrievalObjectRetrieval Retrieval { get; }
     }
 }

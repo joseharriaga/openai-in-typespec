@@ -239,10 +239,10 @@ model MessageDeltaObject {
   /** The delta containing the fields that have changed on the Message. */
   delta: {
     /** The entity that produced the message. */
-    role: "user" | "assistant";
+    role?: "user" | "assistant";
 
     /** The content of the message as an array of text and/or images. */
-    content: MessageDeltaContent[];
+    content?: MessageDeltaContent[];
 
     /**
      * A list of [file](/docs/api-reference/files) IDs that the assistant should use.
@@ -250,7 +250,7 @@ model MessageDeltaObject {
      */
     @minItems(1)
     @maxItems(10)
-    file_ids: string[] = [];
+    file_ids?: string[] = [];
   };
 }
 

@@ -2363,7 +2363,7 @@ namespace OpenAI.Internal.Models
         /// Useful for tools like retrieval and code_interpreter that can access files.
         /// </param>
         /// <returns> A new <see cref="Models.MessageDeltaObjectDelta"/> instance for mocking. </returns>
-        public static MessageDeltaObjectDelta MessageDeltaObjectDelta(MessageDeltaObjectDeltaRole role = default, IEnumerable<BinaryData> content = null, IEnumerable<string> fileIds = null)
+        public static MessageDeltaObjectDelta MessageDeltaObjectDelta(MessageDeltaObjectDeltaRole? role = null, IEnumerable<BinaryData> content = null, IEnumerable<string> fileIds = null)
         {
             content ??= new List<BinaryData>();
             fileIds ??= new List<string>();
@@ -2692,10 +2692,8 @@ namespace OpenAI.Internal.Models
         /// <param name="type"> The type of the tool call, which is always `retrieval`. </param>
         /// <param name="retrieval"> Reserved for future use. </param>
         /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsRetrievalObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsRetrievalObject RunStepDeltaStepDetailsToolCallsRetrievalObject(long index = default, string id = null, RunStepDeltaStepDetailsToolCallsRetrievalObjectType type = default, IReadOnlyDictionary<string, string> retrieval = null)
+        public static RunStepDeltaStepDetailsToolCallsRetrievalObject RunStepDeltaStepDetailsToolCallsRetrievalObject(long index = default, string id = null, RunStepDeltaStepDetailsToolCallsRetrievalObjectType type = default, RunStepDeltaStepDetailsToolCallsRetrievalObjectRetrieval retrieval = null)
         {
-            retrieval ??= new Dictionary<string, string>();
-
             return new RunStepDeltaStepDetailsToolCallsRetrievalObject(index, id, type, retrieval, serializedAdditionalRawData: null);
         }
 

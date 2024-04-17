@@ -3704,6 +3704,7 @@ components:
           description: |-
             If `true`, returns a stream of events that happen during the Run as server-sent events,
             terminating when the Run enters a terminal state with a `data: [DONE]` message.
+          default: false
     CreateRunRequestTool:
       oneOf:
         - $ref: '#/components/schemas/AssistantToolsCode'
@@ -3823,6 +3824,7 @@ components:
           description: |-
             If `true`, returns a stream of events that happen during the Run as server-sent events,
             terminating when the Run enters a terminal state with a `data: [DONE]` message.
+          default: false
     CreateThreadRequest:
       type: object
       properties:
@@ -4996,10 +4998,6 @@ components:
                 A list of [file](/docs/api-reference/files) IDs that the assistant should use.
                 Useful for tools like retrieval and code_interpreter that can access files.
               default: []
-          required:
-            - role
-            - content
-            - file_ids
           description: The delta containing the fields that have changed on the Message.
       description: Represents a message delta i.e. any changed fields on a message during streaming.
     MessageDeltaStreamEvent:
@@ -5944,7 +5942,6 @@ components:
       required:
         - index
         - type
-        - function
       properties:
         index:
           type: integer
@@ -6002,9 +5999,6 @@ components:
           description: The type of the tool call, which is always `retrieval`.
         retrieval:
           type: object
-          additionalProperties:
-            type: string
-          nullable: true
           description: Reserved for future use.
           x-oaiTypeLabel: map
       description: Details of a retrieval tool call that a streaming run step was involved in.
@@ -6466,6 +6460,7 @@ components:
           description: |-
             If `true`, returns a stream of events that happen during the Run as server-sent events,
             terminating when the Run enters a terminal state with a `data: [DONE]` message.
+          default: false
     SuffixString:
       type: string
       minLength: 1

@@ -8,21 +8,21 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Embeddings
 {
-    internal partial class EmbeddingUsage : IJsonModel<EmbeddingUsage>
+    public partial class EmbeddingTokenUsage : IJsonModel<EmbeddingTokenUsage>
     {
-        void IJsonModel<EmbeddingUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<EmbeddingTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingUsage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(EmbeddingUsage)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(EmbeddingTokenUsage)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("prompt_tokens"u8);
-            writer.WriteNumberValue(PromptTokens);
+            writer.WriteNumberValue(InputTokens);
             writer.WritePropertyName("total_tokens"u8);
             writer.WriteNumberValue(TotalTokens);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -43,19 +43,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        EmbeddingUsage IJsonModel<EmbeddingUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        EmbeddingTokenUsage IJsonModel<EmbeddingTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingUsage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(EmbeddingUsage)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(EmbeddingTokenUsage)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeEmbeddingUsage(document.RootElement, options);
+            return DeserializeEmbeddingTokenUsage(document.RootElement, options);
         }
 
-        internal static EmbeddingUsage DeserializeEmbeddingUsage(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static EmbeddingTokenUsage DeserializeEmbeddingTokenUsage(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -85,46 +85,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new EmbeddingUsage(promptTokens, totalTokens, serializedAdditionalRawData);
+            return new EmbeddingTokenUsage(promptTokens, totalTokens, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<EmbeddingUsage>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<EmbeddingTokenUsage>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingUsage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(EmbeddingUsage)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(EmbeddingTokenUsage)} does not support writing '{options.Format}' format.");
             }
         }
 
-        EmbeddingUsage IPersistableModel<EmbeddingUsage>.Create(BinaryData data, ModelReaderWriterOptions options)
+        EmbeddingTokenUsage IPersistableModel<EmbeddingTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingUsage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeEmbeddingUsage(document.RootElement, options);
+                        return DeserializeEmbeddingTokenUsage(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(EmbeddingUsage)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(EmbeddingTokenUsage)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<EmbeddingUsage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<EmbeddingTokenUsage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static EmbeddingUsage FromResponse(PipelineResponse response)
+        internal static EmbeddingTokenUsage FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeEmbeddingUsage(document.RootElement);
+            return DeserializeEmbeddingTokenUsage(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

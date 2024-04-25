@@ -6,12 +6,13 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
+using OpenAI.Embeddings;
 
-namespace OpenAI.Internal
+namespace OpenAI
 {
     // Data plane generated client.
     /// <summary> The OpenAI service client. </summary>
-    internal partial class OpenAIClient
+    public partial class OpenAIClient
     {
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
@@ -27,34 +28,10 @@ namespace OpenAI.Internal
         {
         }
 
-        /// <summary> Initializes a new instance of OpenAIClient. </summary>
-        /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
-        public OpenAIClient(ApiKeyCredential credential) : this(new Uri("https://api.openai.com/v1"), credential, new OpenAIClientOptions())
-        {
-        }
-
-        /// <summary> Initializes a new instance of OpenAIClient. </summary>
-        /// <param name="endpoint"> OpenAI Endpoint. </param>
-        /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
-        /// <param name="options"> The options for configuring the client. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/> or <paramref name="credential"/> is null. </exception>
-        public OpenAIClient(Uri endpoint, ApiKeyCredential credential, OpenAIClientOptions options)
-        {
-            Argument.AssertNotNull(endpoint, nameof(endpoint));
-            Argument.AssertNotNull(credential, nameof(credential));
-            options ??= new OpenAIClientOptions();
-
-            _keyCredential = credential;
-            _pipeline = ClientPipeline.Create(options, Array.Empty<PipelinePolicy>(), new PipelinePolicy[] { ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(_keyCredential, AuthorizationHeader, AuthorizationApiKeyPrefix) }, Array.Empty<PipelinePolicy>());
-            _endpoint = endpoint;
-        }
-
         private OpenAI.Internal.Audio _cachedAudio;
         private OpenAI.Internal.Assistants _cachedAssistants;
         private OpenAI.Internal.Chat _cachedChat;
         private OpenAI.Internal.Completions _cachedCompletions;
-        private OpenAI.Internal.Embeddings _cachedEmbeddings;
         private OpenAI.Internal.Files _cachedFiles;
         private OpenAI.Internal.FineTuning _cachedFineTuning;
         private OpenAI.Internal.Images _cachedImages;
@@ -65,79 +42,73 @@ namespace OpenAI.Internal
         private OpenAI.Internal.Threads _cachedThreads;
 
         /// <summary> Initializes a new instance of Audio. </summary>
-        public virtual OpenAI.Internal.Audio GetAudioClient()
+        internal OpenAI.Internal.Audio GetAudioClient()
         {
             return Volatile.Read(ref _cachedAudio) ?? Interlocked.CompareExchange(ref _cachedAudio, new OpenAI.Internal.Audio(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAudio;
         }
 
         /// <summary> Initializes a new instance of Assistants. </summary>
-        public virtual OpenAI.Internal.Assistants GetAssistantsClient()
+        internal OpenAI.Internal.Assistants GetAssistantsClient()
         {
             return Volatile.Read(ref _cachedAssistants) ?? Interlocked.CompareExchange(ref _cachedAssistants, new OpenAI.Internal.Assistants(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAssistants;
         }
 
         /// <summary> Initializes a new instance of Chat. </summary>
-        public virtual OpenAI.Internal.Chat GetChatClient()
+        internal OpenAI.Internal.Chat GetChatClient()
         {
             return Volatile.Read(ref _cachedChat) ?? Interlocked.CompareExchange(ref _cachedChat, new OpenAI.Internal.Chat(_pipeline, _keyCredential, _endpoint), null) ?? _cachedChat;
         }
 
         /// <summary> Initializes a new instance of Completions. </summary>
-        public virtual OpenAI.Internal.Completions GetCompletionsClient()
+        internal OpenAI.Internal.Completions GetCompletionsClient()
         {
             return Volatile.Read(ref _cachedCompletions) ?? Interlocked.CompareExchange(ref _cachedCompletions, new OpenAI.Internal.Completions(_pipeline, _keyCredential, _endpoint), null) ?? _cachedCompletions;
         }
 
-        /// <summary> Initializes a new instance of Embeddings. </summary>
-        public virtual OpenAI.Internal.Embeddings GetEmbeddingsClient()
-        {
-            return Volatile.Read(ref _cachedEmbeddings) ?? Interlocked.CompareExchange(ref _cachedEmbeddings, new OpenAI.Internal.Embeddings(_pipeline, _keyCredential, _endpoint), null) ?? _cachedEmbeddings;
-        }
-
         /// <summary> Initializes a new instance of Files. </summary>
-        public virtual OpenAI.Internal.Files GetFilesClient()
+        internal OpenAI.Internal.Files GetFilesClient()
         {
             return Volatile.Read(ref _cachedFiles) ?? Interlocked.CompareExchange(ref _cachedFiles, new OpenAI.Internal.Files(_pipeline, _keyCredential, _endpoint), null) ?? _cachedFiles;
         }
 
         /// <summary> Initializes a new instance of FineTuning. </summary>
-        public virtual OpenAI.Internal.FineTuning GetFineTuningClient()
+        internal OpenAI.Internal.FineTuning GetFineTuningClient()
         {
             return Volatile.Read(ref _cachedFineTuning) ?? Interlocked.CompareExchange(ref _cachedFineTuning, new OpenAI.Internal.FineTuning(_pipeline, _keyCredential, _endpoint), null) ?? _cachedFineTuning;
         }
 
         /// <summary> Initializes a new instance of Images. </summary>
-        public virtual OpenAI.Internal.Images GetImagesClient()
+        internal OpenAI.Internal.Images GetImagesClient()
         {
             return Volatile.Read(ref _cachedImages) ?? Interlocked.CompareExchange(ref _cachedImages, new OpenAI.Internal.Images(_pipeline, _keyCredential, _endpoint), null) ?? _cachedImages;
         }
 
         /// <summary> Initializes a new instance of Messages. </summary>
-        public virtual OpenAI.Internal.Messages GetMessagesClient()
+        internal OpenAI.Internal.Messages GetMessagesClient()
         {
             return Volatile.Read(ref _cachedMessages) ?? Interlocked.CompareExchange(ref _cachedMessages, new OpenAI.Internal.Messages(_pipeline, _keyCredential, _endpoint), null) ?? _cachedMessages;
         }
 
         /// <summary> Initializes a new instance of ModelsOps. </summary>
-        public virtual OpenAI.Internal.ModelsOps GetModelsOpsClient()
+        internal OpenAI.Internal.ModelsOps GetModelsOpsClient()
         {
             return Volatile.Read(ref _cachedModelsOps) ?? Interlocked.CompareExchange(ref _cachedModelsOps, new OpenAI.Internal.ModelsOps(_pipeline, _keyCredential, _endpoint), null) ?? _cachedModelsOps;
         }
 
         /// <summary> Initializes a new instance of Moderations. </summary>
-        public virtual OpenAI.Internal.Moderations GetModerationsClient()
+        internal OpenAI.Internal.Moderations GetModerationsClient()
         {
             return Volatile.Read(ref _cachedModerations) ?? Interlocked.CompareExchange(ref _cachedModerations, new OpenAI.Internal.Moderations(_pipeline, _keyCredential, _endpoint), null) ?? _cachedModerations;
         }
 
         /// <summary> Initializes a new instance of Runs. </summary>
-        public virtual OpenAI.Internal.Runs GetRunsClient()
+        internal OpenAI.Internal.Runs GetRunsClient()
         {
             return Volatile.Read(ref _cachedRuns) ?? Interlocked.CompareExchange(ref _cachedRuns, new OpenAI.Internal.Runs(_pipeline, _keyCredential, _endpoint), null) ?? _cachedRuns;
         }
 
         /// <summary> Initializes a new instance of Threads. </summary>
-        public virtual OpenAI.Internal.Threads GetThreadsClient()
+        internal OpenAI.Internal.Threads GetThreadsClient()
         {
             return Volatile.Read(ref _cachedThreads) ?? Interlocked.CompareExchange(ref _cachedThreads, new OpenAI.Internal.Threads(_pipeline, _keyCredential, _endpoint), null) ?? _cachedThreads;
         }

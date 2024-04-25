@@ -8,9 +8,9 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Embeddings
 {
-    internal partial class Embedding : IJsonModel<Embedding>
+    public partial class Embedding : IJsonModel<Embedding>
     {
         void IJsonModel<Embedding>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {

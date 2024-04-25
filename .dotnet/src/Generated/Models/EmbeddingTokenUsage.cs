@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Embeddings
 {
     /// <summary> The EmbeddingUsage. </summary>
-    internal partial class EmbeddingUsage
+    public partial class EmbeddingTokenUsage
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,33 +42,30 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="EmbeddingUsage"/>. </summary>
-        /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
+        /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/>. </summary>
+        /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
-        internal EmbeddingUsage(long promptTokens, long totalTokens)
+        internal EmbeddingTokenUsage(long inputTokens, long totalTokens)
         {
-            PromptTokens = promptTokens;
+            InputTokens = inputTokens;
             TotalTokens = totalTokens;
         }
 
-        /// <summary> Initializes a new instance of <see cref="EmbeddingUsage"/>. </summary>
-        /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
+        /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/>. </summary>
+        /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal EmbeddingUsage(long promptTokens, long totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal EmbeddingTokenUsage(long inputTokens, long totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            PromptTokens = promptTokens;
+            InputTokens = inputTokens;
             TotalTokens = totalTokens;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="EmbeddingUsage"/> for deserialization. </summary>
-        internal EmbeddingUsage()
+        /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/> for deserialization. </summary>
+        internal EmbeddingTokenUsage()
         {
         }
-
-        /// <summary> The number of tokens used by the prompt. </summary>
-        public long PromptTokens { get; }
         /// <summary> The total number of tokens used by the request. </summary>
         public long TotalTokens { get; }
     }

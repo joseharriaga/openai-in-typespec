@@ -5,10 +5,12 @@ using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuningManagement;
 using OpenAI.Images;
-using OpenAI.LegacyCompletions;
+using OpenAI.Internal.Models;
 using OpenAI.ModelManagement;
 using OpenAI.Moderations;
+using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI;
@@ -17,10 +19,23 @@ namespace OpenAI;
 /// A top-level client factory that enables convenient creation of scenario-specific sub-clients while reusing shared
 /// configuration details like endpoint, authentication, and pipeline customization.
 /// </summary>
+[CodeGenModel("OpenAIClient")]
+[CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
+[CodeGenSuppress("GetEmbeddingClientClient")]
 public partial class OpenAIClient
 {
-    private readonly ApiKeyCredential _cachedCredential = null;
+    internal static readonly string s_OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
+    internal static readonly string s_OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
+    internal static readonly string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
+
     private readonly OpenAIClientOptions _cachedOptions = null;
+
+    /// <summary> Initializes a new instance of OpenAIClient. </summary>
+    /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
+    public OpenAIClient(ApiKeyCredential credential = default) : this(credential, new OpenAIClientOptions())
+    {
+    }
 
     /// <summary>
     /// Creates a new instance of <see cref="OpenAIClient"/> will store common client configuration details to permit
@@ -34,7 +49,12 @@ public partial class OpenAIClient
     /// <param name="options"> A common client options definition that all clients created by this <see cref="OpenAIClient"/> should use. </param>
     public OpenAIClient(ApiKeyCredential credential = default, OpenAIClientOptions options = default)
     {
-        _cachedCredential = credential;
+        options ??= new OpenAIClientOptions();
+
+        _keyCredential = credential ?? new(Environment.GetEnvironmentVariable(s_OpenAIApiKeyEnvironmentVariable) ?? string.Empty);
+        _pipeline = ClientPipeline.Create(options, Array.Empty<PipelinePolicy>(), new PipelinePolicy[] { ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(_keyCredential, AuthorizationHeader, AuthorizationApiKeyPrefix) }, Array.Empty<PipelinePolicy>());
+        _endpoint = options.Endpoint ?? new(Environment.GetEnvironmentVariable(s_OpenAIEndpointEnvironmentVariable) ?? s_defaultOpenAIV1Endpoint);
+
         _cachedOptions = options;
     }
 
@@ -48,7 +68,7 @@ public partial class OpenAIClient
     /// </remarks>
     /// <returns> A new <see cref="AssistantClient"/>. </returns>
     [Experimental("OPENAI001")]
-    public AssistantClient GetAssistantClient() => new(_cachedCredential, _cachedOptions);
+    public virtual AssistantClient GetAssistantClient() => new(_keyCredential, _cachedOptions);
 
     /// <summary>
     /// Gets a new instance of <see cref="AudioClient"/> that reuses the client configuration details provided to
@@ -59,7 +79,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="AudioClient"/>. </returns>
-    public AudioClient GetAudioClient(string model) => new(model, _cachedCredential, _cachedOptions);
+    public virtual AudioClient GetAudioClient(string model) => new(model, _keyCredential, _cachedOptions);
 
     /// <summary>
     /// Gets a new instance of <see cref="ChatClient"/> that reuses the client configuration details provided to
@@ -70,7 +90,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ChatClient"/>. </returns>
-    public ChatClient GetChatClient(string model) => new(model, _cachedCredential, _cachedOptions);
+    public virtual ChatClient GetChatClient(string model) => new(model, _keyCredential, _cachedOptions);
 
     /// <summary>
     /// Gets a new instance of <see cref="EmbeddingClient"/> that reuses the client configuration details provided to
@@ -81,7 +101,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="EmbeddingClient"/>. </returns>
-    public EmbeddingClient GetEmbeddingClient(string model) => new(model, _cachedCredential, _cachedOptions);
+    public virtual EmbeddingClient GetEmbeddingClient(string model) => new(_pipeline, model, _keyCredential, _endpoint);
 
     /// <summary>
     /// Gets a new instance of <see cref="FileClient"/> that reuses the client configuration details provided to
@@ -92,7 +112,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="FileClient"/>. </returns>
-    public FileClient GetFileClient() => new(_cachedCredential, _cachedOptions);
+    public virtual FileClient GetFileClient() => new(_keyCredential, _cachedOptions);
 
     /// <summary>
     /// Gets a new instance of <see cref="FineTuningManagementClient"/> that reuses the client configuration details provided to
@@ -103,7 +123,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="FineTuningManagementClient"/>. </returns>
-    public FineTuningManagementClient GetFineTuningManagementClient() => new(_cachedCredential, _cachedOptions);
+    public virtual FineTuningManagementClient GetFineTuningManagementClient() => new(_keyCredential, _cachedOptions);
 
     /// <summary>
     /// Gets a new instance of <see cref="ImageClient"/> that reuses the client configuration details provided to
@@ -114,7 +134,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ImageClient"/>. </returns>
-    public ImageClient GetImageClient(string model) => new(model, _cachedCredential, _cachedOptions);
+    public virtual ImageClient GetImageClient(string model) => new(model, _keyCredential, _cachedOptions);
 
     /// <summary>
     /// Gets a new instance of <see cref="ModelManagementClient"/> that reuses the client configuration details provided to
@@ -125,7 +145,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ModelManagementClient"/>. </returns>
-    public ModelManagementClient GetModelManagementClient() => new(_cachedCredential, _cachedOptions);
+    public virtual ModelManagementClient GetModelManagementClient() => new(_keyCredential, _cachedOptions);
 
     /// <summary>
     /// Gets a new instance of <see cref="ModerationClient"/> that reuses the client configuration details provided to
@@ -136,5 +156,5 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ModerationClient"/>. </returns>
-    public ModerationClient GetModerationClient() => new(_cachedCredential, _cachedOptions);
+    public virtual ModerationClient GetModerationClient() => new(_keyCredential, _cachedOptions);
 }

@@ -52,9 +52,9 @@ public partial class ChatCompletionOptions
         return BinaryData.FromObjectAsJson(StopSequences);
     }
 
-    internal IDictionary<string, long> GetInternalLogitBias()
+    internal IDictionary<string, int> GetInternalLogitBias()
     {
-        ChangeTrackingDictionary<string, long> packedLogitBias = [];
+        ChangeTrackingDictionary<string, int> packedLogitBias = [];
         foreach (KeyValuePair<int, int> pair in TokenSelectionBiases)
         {
             packedLogitBias[$"{pair.Key}"] = pair.Value;

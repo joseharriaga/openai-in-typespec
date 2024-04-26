@@ -11,8 +11,8 @@ namespace OpenAI.Embeddings;
 /// <summary> The service client for the OpenAI Embeddings endpoint. </summary>
 [CodeGenClient("Embeddings")]
 [CodeGenSuppress("EmbeddingClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingOptions), typeof(CancellationToken))]
+[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions), typeof(CancellationToken))]
 public partial class EmbeddingClient
 {
     private readonly string _model;
@@ -160,7 +160,6 @@ public partial class EmbeddingClient
 
     private void CreateEmbeddingOptions(BinaryData input, ref EmbeddingOptions options)
     {
-        options ??= new();
         options.Input = input;
         options.Model = _model;
         options.EncodingFormat = EmbeddingOptionsEncodingFormat.Base64;

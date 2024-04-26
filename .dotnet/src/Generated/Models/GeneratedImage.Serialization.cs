@@ -8,28 +8,28 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Images
 {
-    internal partial class Image : IJsonModel<Image>
+    public partial class GeneratedImage : IJsonModel<GeneratedImage>
     {
-        void IJsonModel<Image>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<GeneratedImage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Image>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<GeneratedImage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(Image)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(GeneratedImage)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(B64Json))
+            if (Optional.IsDefined(ImageBytes))
             {
                 writer.WritePropertyName("b64_json"u8);
-                writer.WriteBase64StringValue(B64Json.ToArray(), "D");
+                writer.WriteBase64StringValue(ImageBytes.ToArray(), "D");
             }
-            if (Optional.IsDefined(Url))
+            if (Optional.IsDefined(ImageUri))
             {
                 writer.WritePropertyName("url"u8);
-                writer.WriteStringValue(Url.AbsoluteUri);
+                writer.WriteStringValue(ImageUri.AbsoluteUri);
             }
             if (Optional.IsDefined(RevisedPrompt))
             {
@@ -54,19 +54,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        Image IJsonModel<Image>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        GeneratedImage IJsonModel<GeneratedImage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Image>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<GeneratedImage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(Image)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(GeneratedImage)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeImage(document.RootElement, options);
+            return DeserializeGeneratedImage(document.RootElement, options);
         }
 
-        internal static Image DeserializeImage(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static GeneratedImage DeserializeGeneratedImage(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -110,46 +110,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new Image(b64Json, url, revisedPrompt, serializedAdditionalRawData);
+            return new GeneratedImage(b64Json, url, revisedPrompt, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<Image>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<GeneratedImage>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Image>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<GeneratedImage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(Image)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(GeneratedImage)} does not support writing '{options.Format}' format.");
             }
         }
 
-        Image IPersistableModel<Image>.Create(BinaryData data, ModelReaderWriterOptions options)
+        GeneratedImage IPersistableModel<GeneratedImage>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Image>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<GeneratedImage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeImage(document.RootElement, options);
+                        return DeserializeGeneratedImage(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(Image)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(GeneratedImage)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<Image>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<GeneratedImage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static Image FromResponse(PipelineResponse response)
+        internal static GeneratedImage FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeImage(document.RootElement);
+            return DeserializeGeneratedImage(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

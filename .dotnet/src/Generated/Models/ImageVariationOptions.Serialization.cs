@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Images
 {
-    internal partial class CreateImageVariationRequest : IJsonModel<CreateImageVariationRequest>
+    public partial class ImageVariationOptions : IJsonModel<ImageVariationOptions>
     {
-        void IJsonModel<CreateImageVariationRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ImageVariationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateImageVariationRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateImageVariationRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -43,7 +43,7 @@ namespace OpenAI.Internal.Models
             if (Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
-                writer.WriteStringValue(ResponseFormat.Value.ToString());
+                writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
             }
             if (Optional.IsDefined(Size))
             {
@@ -73,19 +73,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateImageVariationRequest IJsonModel<CreateImageVariationRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ImageVariationOptions IJsonModel<ImageVariationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateImageVariationRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateImageVariationRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateImageVariationRequest(document.RootElement, options);
+            return DeserializeImageVariationOptions(document.RootElement, options);
         }
 
-        internal static CreateImageVariationRequest DeserializeCreateImageVariationRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ImageVariationOptions DeserializeImageVariationOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -96,8 +96,8 @@ namespace OpenAI.Internal.Models
             BinaryData image = default;
             CreateImageVariationRequestModel? model = default;
             long? n = default;
-            CreateImageVariationRequestResponseFormat? responseFormat = default;
-            CreateImageVariationRequestSize? size = default;
+            GeneratedImageFormat? responseFormat = default;
+            GeneratedImageSize? size = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -133,7 +133,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    responseFormat = new CreateImageVariationRequestResponseFormat(property.Value.GetString());
+                    responseFormat = property.Value.GetString().ToGeneratedImageFormat();
                     continue;
                 }
                 if (property.NameEquals("size"u8))
@@ -142,7 +142,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    size = new CreateImageVariationRequestSize(property.Value.GetString());
+                    size = new GeneratedImageSize(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("user"u8))
@@ -156,7 +156,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateImageVariationRequest(
+            return new ImageVariationOptions(
                 image,
                 model,
                 n,
@@ -166,43 +166,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateImageVariationRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ImageVariationOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateImageVariationRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateImageVariationRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateImageVariationRequest IPersistableModel<CreateImageVariationRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ImageVariationOptions IPersistableModel<ImageVariationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateImageVariationRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateImageVariationRequest(document.RootElement, options);
+                        return DeserializeImageVariationOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateImageVariationRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateImageVariationRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ImageVariationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateImageVariationRequest FromResponse(PipelineResponse response)
+        internal static ImageVariationOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateImageVariationRequest(document.RootElement);
+            return DeserializeImageVariationOptions(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

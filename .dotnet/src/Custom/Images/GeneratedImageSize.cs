@@ -1,19 +1,24 @@
+using System;
+
 namespace OpenAI.Images;
 
+// CUSTOM: Added custom struct in favor of the generated extensible enum.
 /// <summary>
 /// Represents the available output dimensions for generated images.
 /// </summary>
-public readonly partial struct GeneratedImageSize
+[CodeGenModel("ImageGenerationOptionsSize")]
+[CodeGenSuppress("GeneratedImageSize", typeof(string))]
+[CodeGenSuppress("op_Implicit", typeof(string))]
+public readonly partial struct GeneratedImageSize : IEquatable<GeneratedImageSize>
 {
-    /// <summary>
-    /// Gets the desired width, in pixels, for an image.
-    /// </summary>
-    public int Width { get; }
+    private readonly string _value;
 
-    /// <summary>
-    /// Gets the desired height, in pixels, for an image.
-    /// </summary>
-    public int Height { get; }
+    /// <summary> Initializes a new instance of <see cref="GeneratedImageSize"/>. </summary>
+    /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
+    internal GeneratedImageSize(string value)
+    {
+        _value = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
     /// <summary>
     /// Creates a new instance of <see cref="GeneratedImageSize"/>.
@@ -26,8 +31,7 @@ public readonly partial struct GeneratedImageSize
     /// <param name="height"> The desired height, in pixels, for an image. </param>
     public GeneratedImageSize(int width, int height)
     {
-        Width = width;
-        Height = height;
+        _value = $"{width}x{height}";
     }
 
     /// <summary>
@@ -36,6 +40,7 @@ public readonly partial struct GeneratedImageSize
     /// Supported <b>only</b> for the older <c>dall-e-2</c> model.
     /// </para>
     /// </summary>
+    [CodeGenMember("_256x256")]
     public static readonly GeneratedImageSize W256xH256 = new(256, 256);
 
     /// <summary>
@@ -44,6 +49,7 @@ public readonly partial struct GeneratedImageSize
     /// Supported <b>only</b> for the older <c>dall-e-2</c> model.
     /// </para>
     /// </summary>
+    [CodeGenMember("_512x512")]
     public static readonly GeneratedImageSize W512xH512 = new(512, 512);
 
     /// <summary>
@@ -52,6 +58,7 @@ public readonly partial struct GeneratedImageSize
     /// <b>Supported</b> and <b>default</b> for both <c>dall-e-2</c> and <c>dall-e-3</c> models.
     /// </para>
     /// </summary>
+    [CodeGenMember("_1024x1024")]
     public static readonly GeneratedImageSize W1024xH1024 = new(1024, 1024);
 
     /// <summary>
@@ -60,6 +67,7 @@ public readonly partial struct GeneratedImageSize
     /// Supported <b>only</b> for the <c>dall-e-3</c> model.
     /// </para>
     /// </summary>
+    [CodeGenMember("_1792x1024")]
     public static readonly GeneratedImageSize W1024xH1792 = new(1024, 1792);
 
     /// <summary>
@@ -68,20 +76,6 @@ public readonly partial struct GeneratedImageSize
     /// Supported <b>only</b> for the <c>dall-e-3</c> model.
     /// </para>
     /// </summary>
+    [CodeGenMember("_1024x1792")]
     public static readonly GeneratedImageSize W1792xH1024 = new(1792, 1024);
-
-    /// <inheritdoc/>
-    public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right) => left.Equals(right);
-
-    /// <inheritdoc/>
-    public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right) => !left.Equals(right);
-
-    /// <inheritdoc/>
-    public bool Equals(GeneratedImageSize other) => other.Width == Width && other.Height == Height;
-
-    /// <inheritdoc/>
-    public override bool Equals(object obj) => obj is GeneratedImageSize other && Equals(other);
-
-    /// <inheritdoc/>
-    public override string ToString() => $"{Width}x{Height}";
 }

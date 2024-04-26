@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenAI.Embeddings;
+using OpenAI.Images;
 using OpenAI.Internal.Models;
 
 namespace OpenAI
@@ -1263,131 +1264,25 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateImageRequest"/>. </summary>
-        /// <param name="prompt">
-        /// A text description of the desired image(s). The maximum length is 1000 characters for
-        /// `dall-e-2` and 4000 characters for `dall-e-3`.
-        /// </param>
-        /// <param name="model"> The model to use for image generation. </param>
-        /// <param name="n">
-        /// The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is
-        /// supported.
-        /// </param>
-        /// <param name="quality">
-        /// The quality of the image that will be generated. `hd` creates images with finer details and
-        /// greater consistency across the image. This param is only supported for `dall-e-3`.
-        /// </param>
-        /// <param name="responseFormat">
-        /// The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs
-        /// are only valid for 60 minutes after the image has been generated.
-        /// </param>
-        /// <param name="size">
-        /// The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024` for
-        /// `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or `1024x1792` for `dall-e-3` models.
-        /// </param>
-        /// <param name="style">
-        /// The style of the generated images. Must be one of `vivid` or `natural`. Vivid causes the model
-        /// to lean towards generating hyper-real and dramatic images. Natural causes the model to produce
-        /// more natural, less hyper-real looking images. This param is only supported for `dall-e-3`.
-        /// </param>
-        /// <param name="user">
-        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-        /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateImageRequest"/> instance for mocking. </returns>
-        public static CreateImageRequest CreateImageRequest(string prompt = null, CreateImageRequestModel? model = null, long? n = null, CreateImageRequestQuality? quality = null, CreateImageRequestResponseFormat? responseFormat = null, CreateImageRequestSize? size = null, CreateImageRequestStyle? style = null, string user = null)
-        {
-            return new CreateImageRequest(
-                prompt,
-                model,
-                n,
-                quality,
-                responseFormat,
-                size,
-                style,
-                user,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ImagesResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Images.GeneratedImageCollection"/>. </summary>
         /// <param name="created"></param>
         /// <param name="data"></param>
-        /// <returns> A new <see cref="Models.ImagesResponse"/> instance for mocking. </returns>
-        public static ImagesResponse ImagesResponse(DateTimeOffset created = default, IEnumerable<Image> data = null)
+        /// <returns> A new <see cref="Images.GeneratedImageCollection"/> instance for mocking. </returns>
+        public static GeneratedImageCollection GeneratedImageCollection(DateTimeOffset created = default, IEnumerable<GeneratedImage> data = null)
         {
-            data ??= new List<Image>();
+            data ??= new List<GeneratedImage>();
 
-            return new ImagesResponse(created, data?.ToList(), serializedAdditionalRawData: null);
+            return new GeneratedImageCollection(created, data?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.Image"/>. </summary>
-        /// <param name="b64Json"> The base64-encoded JSON of the generated image, if `response_format` is `b64_json`. </param>
-        /// <param name="url"> The URL of the generated image, if `response_format` is `url` (default). </param>
+        /// <summary> Initializes a new instance of <see cref="Images.GeneratedImage"/>. </summary>
+        /// <param name="imageBytes"> The base64-encoded JSON of the generated image, if `response_format` is `b64_json`. </param>
+        /// <param name="imageUri"> The URL of the generated image, if `response_format` is `url` (default). </param>
         /// <param name="revisedPrompt"> The prompt that was used to generate the image, if there was any revision to the prompt. </param>
-        /// <returns> A new <see cref="Models.Image"/> instance for mocking. </returns>
-        public static Image Image(BinaryData b64Json = null, Uri url = null, string revisedPrompt = null)
+        /// <returns> A new <see cref="Images.GeneratedImage"/> instance for mocking. </returns>
+        public static GeneratedImage GeneratedImage(BinaryData imageBytes = null, Uri imageUri = null, string revisedPrompt = null)
         {
-            return new Image(b64Json, url, revisedPrompt, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateImageEditRequest"/>. </summary>
-        /// <param name="image">
-        /// The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not
-        /// provided, image must have transparency, which will be used as the mask.
-        /// </param>
-        /// <param name="prompt"> A text description of the desired image(s). The maximum length is 1000 characters. </param>
-        /// <param name="mask">
-        /// An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where
-        /// `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions
-        /// as `image`.
-        /// </param>
-        /// <param name="model"> The model to use for image generation. Only `dall-e-2` is supported at this time. </param>
-        /// <param name="n"> The number of images to generate. Must be between 1 and 10. </param>
-        /// <param name="size"> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </param>
-        /// <param name="responseFormat"> The format in which the generated images are returned. Must be one of `url` or `b64_json`. </param>
-        /// <param name="user">
-        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-        /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateImageEditRequest"/> instance for mocking. </returns>
-        public static CreateImageEditRequest CreateImageEditRequest(BinaryData image = null, string prompt = null, BinaryData mask = null, CreateImageEditRequestModel? model = null, long? n = null, CreateImageEditRequestSize? size = null, CreateImageEditRequestResponseFormat? responseFormat = null, string user = null)
-        {
-            return new CreateImageEditRequest(
-                image,
-                prompt,
-                mask,
-                model,
-                n,
-                size,
-                responseFormat,
-                user,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateImageVariationRequest"/>. </summary>
-        /// <param name="image">
-        /// The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB,
-        /// and square.
-        /// </param>
-        /// <param name="model"> The model to use for image generation. Only `dall-e-2` is supported at this time. </param>
-        /// <param name="n"> The number of images to generate. Must be between 1 and 10. </param>
-        /// <param name="responseFormat"> The format in which the generated images are returned. Must be one of `url` or `b64_json`. </param>
-        /// <param name="size"> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </param>
-        /// <param name="user">
-        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-        /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateImageVariationRequest"/> instance for mocking. </returns>
-        public static CreateImageVariationRequest CreateImageVariationRequest(BinaryData image = null, CreateImageVariationRequestModel? model = null, long? n = null, CreateImageVariationRequestResponseFormat? responseFormat = null, CreateImageVariationRequestSize? size = null, string user = null)
-        {
-            return new CreateImageVariationRequest(
-                image,
-                model,
-                n,
-                responseFormat,
-                size,
-                user,
-                serializedAdditionalRawData: null);
+            return new GeneratedImage(imageBytes, imageUri, revisedPrompt, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateMessageRequest"/>. </summary>

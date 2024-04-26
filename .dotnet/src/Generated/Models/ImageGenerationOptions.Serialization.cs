@@ -8,28 +8,21 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Images
 {
-    internal partial class CreateImageEditRequest : IJsonModel<CreateImageEditRequest>
+    public partial class ImageGenerationOptions : IJsonModel<ImageGenerationOptions>
     {
-        void IJsonModel<CreateImageEditRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ImageGenerationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateImageEditRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageGenerationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateImageEditRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ImageGenerationOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("image"u8);
-            writer.WriteBase64StringValue(Image.ToArray(), "D");
             writer.WritePropertyName("prompt"u8);
             writer.WriteStringValue(Prompt);
-            if (Optional.IsDefined(Mask))
-            {
-                writer.WritePropertyName("mask"u8);
-                writer.WriteBase64StringValue(Mask.ToArray(), "D");
-            }
             if (Optional.IsDefined(Model))
             {
                 writer.WritePropertyName("model"u8);
@@ -47,15 +40,25 @@ namespace OpenAI.Internal.Models
                     writer.WriteNull("n");
                 }
             }
+            if (Optional.IsDefined(Quality))
+            {
+                writer.WritePropertyName("quality"u8);
+                writer.WriteStringValue(Quality.Value.ToSerialString());
+            }
+            if (Optional.IsDefined(ResponseFormat))
+            {
+                writer.WritePropertyName("response_format"u8);
+                writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
+            }
             if (Optional.IsDefined(Size))
             {
                 writer.WritePropertyName("size"u8);
                 writer.WriteStringValue(Size.Value.ToString());
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(Style))
             {
-                writer.WritePropertyName("response_format"u8);
-                writer.WriteStringValue(ResponseFormat.Value.ToString());
+                writer.WritePropertyName("style"u8);
+                writer.WriteStringValue(Style.Value.ToSerialString());
             }
             if (Optional.IsDefined(User))
             {
@@ -80,19 +83,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateImageEditRequest IJsonModel<CreateImageEditRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ImageGenerationOptions IJsonModel<ImageGenerationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateImageEditRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageGenerationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateImageEditRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ImageGenerationOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateImageEditRequest(document.RootElement, options);
+            return DeserializeImageGenerationOptions(document.RootElement, options);
         }
 
-        internal static CreateImageEditRequest DeserializeCreateImageEditRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ImageGenerationOptions DeserializeImageGenerationOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -100,35 +103,21 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            BinaryData image = default;
             string prompt = default;
-            BinaryData mask = default;
-            CreateImageEditRequestModel? model = default;
+            CreateImageRequestModel? model = default;
             long? n = default;
-            CreateImageEditRequestSize? size = default;
-            CreateImageEditRequestResponseFormat? responseFormat = default;
+            GeneratedImageQuality? quality = default;
+            GeneratedImageFormat? responseFormat = default;
+            GeneratedImageSize? size = default;
+            GeneratedImageStyle? style = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("image"u8))
-                {
-                    image = BinaryData.FromBytes(property.Value.GetBytesFromBase64("D"));
-                    continue;
-                }
                 if (property.NameEquals("prompt"u8))
                 {
                     prompt = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("mask"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    mask = BinaryData.FromBytes(property.Value.GetBytesFromBase64("D"));
                     continue;
                 }
                 if (property.NameEquals("model"u8))
@@ -137,7 +126,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    model = new CreateImageEditRequestModel(property.Value.GetString());
+                    model = new CreateImageRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("n"u8))
@@ -150,13 +139,13 @@ namespace OpenAI.Internal.Models
                     n = property.Value.GetInt64();
                     continue;
                 }
-                if (property.NameEquals("size"u8))
+                if (property.NameEquals("quality"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    size = new CreateImageEditRequestSize(property.Value.GetString());
+                    quality = property.Value.GetString().ToGeneratedImageQuality();
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))
@@ -165,7 +154,25 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    responseFormat = new CreateImageEditRequestResponseFormat(property.Value.GetString());
+                    responseFormat = property.Value.GetString().ToGeneratedImageFormat();
+                    continue;
+                }
+                if (property.NameEquals("size"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    size = new GeneratedImageSize(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("style"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    style = property.Value.GetString().ToGeneratedImageStyle();
                     continue;
                 }
                 if (property.NameEquals("user"u8))
@@ -179,55 +186,55 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateImageEditRequest(
-                image,
+            return new ImageGenerationOptions(
                 prompt,
-                mask,
                 model,
                 n,
-                size,
+                quality,
                 responseFormat,
+                size,
+                style,
                 user,
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateImageEditRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ImageGenerationOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateImageEditRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageGenerationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateImageEditRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ImageGenerationOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateImageEditRequest IPersistableModel<CreateImageEditRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ImageGenerationOptions IPersistableModel<ImageGenerationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateImageEditRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageGenerationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateImageEditRequest(document.RootElement, options);
+                        return DeserializeImageGenerationOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateImageEditRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ImageGenerationOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateImageEditRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ImageGenerationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateImageEditRequest FromResponse(PipelineResponse response)
+        internal static ImageGenerationOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateImageEditRequest(document.RootElement);
+            return DeserializeImageGenerationOptions(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

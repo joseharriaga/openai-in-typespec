@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Images
 {
     /// <summary> The CreateImageRequestModel. </summary>
     internal readonly partial struct CreateImageRequestModel : IEquatable<CreateImageRequestModel>

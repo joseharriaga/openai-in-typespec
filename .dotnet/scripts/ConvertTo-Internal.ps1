@@ -15,6 +15,7 @@ function Edit-GeneratedOpenAIClient {
     # $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
     $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
 
@@ -28,7 +29,8 @@ function Edit-GeneratedSubclients {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Exclude "OpenAIClient.cs", "OpenAIClientOptions.cs", "OpenAIModelFactory.cs"
 
     $exclusions = @(
-        "EmbeddingClient.cs"
+        "EmbeddingClient.cs",
+        "ImageClient.cs"
     )
 
     foreach ($file in $files) {
@@ -59,12 +61,38 @@ function Edit-GeneratedModels {
     $exclusions = @(
         "CreateEmbeddingRequestModel.cs",
         "CreateEmbeddingResponseObject.cs",
-        "Embedding.cs", "Embedding.Serialization.cs",
-        "EmbeddingCollection.cs", "EmbeddingCollection.Serialization.cs",
+        "Embedding.cs",
+        "Embedding.Serialization.cs",
+        "EmbeddingCollection.cs",
+        "EmbeddingCollection.Serialization.cs",
         "EmbeddingObject.cs",
-        "EmbeddingOptions.cs", "EmbeddingOptions.Serialization.cs",
+        "EmbeddingOptions.cs",
+        "EmbeddingOptions.Serialization.cs",
         "EmbeddingOptionsEncodingFormat.cs",
-        "EmbeddingTokenUsage.cs", "EmbeddingTokenUsage.Serialization.cs"
+        "EmbeddingTokenUsage.cs",
+        "EmbeddingTokenUsage.Serialization.cs",
+
+        "CreateImageEditRequestModel.cs",
+        "CreateImageRequestModel.cs",
+        "CreateImageVariationRequestModel.cs",
+        "GeneratedImage.cs",
+        "GeneratedImage.Serialization.cs",
+        "GeneratedImageCollection.cs",
+        "GeneratedImageCollection.Serialization.cs",
+        "GeneratedImageFormat.Serialization.cs",
+        "GeneratedImageQuality.Serialization.cs",
+        "GeneratedImageSize.cs",
+        "GeneratedImageStyle.Serialization.cs",
+        "ImageEditOptions.cs",
+        "ImageEditOptions.Serialization.cs",
+        "ImageEditOptionsResponseFormat.cs",
+        "ImageEditOptionsSize.cs",
+        "ImageGenerationOptions.cs",
+        "ImageGenerationOptions.Serialization.cs",
+        "ImageVariationOptions.cs",
+        "ImageVariationOptions.Serialization.cs",
+        "ImageVariationOptionsResponseFormat.cs",
+        "ImageVariationOptionsSize.cs"
     )
 
     foreach ($file in $files) {

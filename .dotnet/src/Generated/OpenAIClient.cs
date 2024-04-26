@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
 using OpenAI.Embeddings;
+using OpenAI.Images;
 
 namespace OpenAI
 {
@@ -34,7 +35,6 @@ namespace OpenAI
         private OpenAI.Internal.Completions _cachedCompletions;
         private OpenAI.Internal.Files _cachedFiles;
         private OpenAI.Internal.FineTuning _cachedFineTuning;
-        private OpenAI.Internal.Images _cachedImages;
         private OpenAI.Internal.Messages _cachedMessages;
         private OpenAI.Internal.ModelsOps _cachedModelsOps;
         private OpenAI.Internal.Moderations _cachedModerations;
@@ -75,12 +75,6 @@ namespace OpenAI
         internal OpenAI.Internal.FineTuning GetFineTuningClient()
         {
             return Volatile.Read(ref _cachedFineTuning) ?? Interlocked.CompareExchange(ref _cachedFineTuning, new OpenAI.Internal.FineTuning(_pipeline, _keyCredential, _endpoint), null) ?? _cachedFineTuning;
-        }
-
-        /// <summary> Initializes a new instance of Images. </summary>
-        internal OpenAI.Internal.Images GetImagesClient()
-        {
-            return Volatile.Read(ref _cachedImages) ?? Interlocked.CompareExchange(ref _cachedImages, new OpenAI.Internal.Images(_pipeline, _keyCredential, _endpoint), null) ?? _cachedImages;
         }
 
         /// <summary> Initializes a new instance of Messages. </summary>

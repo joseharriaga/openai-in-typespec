@@ -22,6 +22,7 @@ namespace OpenAI;
 [CodeGenModel("OpenAIClient")]
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
 [CodeGenSuppress("GetEmbeddingClientClient")]
+[CodeGenSuppress("GetImageClientClient")]
 public partial class OpenAIClient
 {
     internal static readonly string s_OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
@@ -134,7 +135,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ImageClient"/>. </returns>
-    public virtual ImageClient GetImageClient(string model) => new(model, _keyCredential, _cachedOptions);
+    public virtual ImageClient GetImageClient(string model) => new(_pipeline, model, _keyCredential, _endpoint);
 
     /// <summary>
     /// Gets a new instance of <see cref="ModelManagementClient"/> that reuses the client configuration details provided to

@@ -46,7 +46,7 @@ namespace OpenAI.Internal.Models
         /// <param name="promptTokens"> Number of tokens in the prompt. </param>
         /// <param name="completionTokens"> Number of tokens in the generated completion. </param>
         /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
-        internal CompletionUsage(long promptTokens, long completionTokens, long totalTokens)
+        internal CompletionUsage(int promptTokens, int completionTokens, int totalTokens)
         {
             PromptTokens = promptTokens;
             CompletionTokens = completionTokens;
@@ -58,7 +58,7 @@ namespace OpenAI.Internal.Models
         /// <param name="completionTokens"> Number of tokens in the generated completion. </param>
         /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CompletionUsage(long promptTokens, long completionTokens, long totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CompletionUsage(int promptTokens, int completionTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             PromptTokens = promptTokens;
             CompletionTokens = completionTokens;
@@ -72,10 +72,10 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Number of tokens in the prompt. </summary>
-        public long PromptTokens { get; }
+        public int PromptTokens { get; }
         /// <summary> Number of tokens in the generated completion. </summary>
-        public long CompletionTokens { get; }
+        public int CompletionTokens { get; }
         /// <summary> Total number of tokens used in the request (prompt + completion). </summary>
-        public long TotalTokens { get; }
+        public int TotalTokens { get; }
     }
 }

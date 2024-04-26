@@ -84,11 +84,11 @@ model ListFineTuningJobEventsResponse {
 
 @minValue(1)
 @maxValue(50)
-scalar NEpochs extends safeint;
+scalar NEpochs extends int32;
 
 @minValue(1)
 @maxValue(256)
-scalar BatchSize extends safeint;
+scalar BatchSize extends int32;
 
 @minValueExclusive(0)
 scalar LearningRateMultiplier extends float64;
@@ -183,7 +183,7 @@ model FineTuningJob {
    * The total number of billable tokens processed by this fine-tuning job. The value will be null
    * if the fine-tuning job is still running.
    */
-  trained_tokens: safeint | null;
+  trained_tokens: int32 | null;
 
   /**
    * The file ID used for training. You can retrieve the training data with the

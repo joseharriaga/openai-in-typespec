@@ -5,7 +5,7 @@ namespace OpenAI;
 scalar User extends string;
 
 @minItems(1)
-model TokenArray is safeint[];
+model TokenArray is int32[];
 
 @minItems(1)
 model TokenArrayArray is TokenArray[];

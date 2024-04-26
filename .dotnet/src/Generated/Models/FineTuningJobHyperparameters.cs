@@ -98,7 +98,7 @@ namespace OpenAI.Internal.Models
         /// <description>"auto"</description>
         /// </item>
         /// <item>
-        /// <description><see cref="long"/></description>
+        /// <description><see cref="int"/></description>
         /// </item>
         /// </list>
         /// </remarks>

@@ -86,7 +86,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string id = default;
-            long? bytes = default;
+            int? bytes = default;
             DateTimeOffset createdAt = default;
             string filename = default;
             OpenAIFileObject @object = default;
@@ -109,7 +109,7 @@ namespace OpenAI.Internal.Models
                         bytes = null;
                         continue;
                     }
-                    bytes = property.Value.GetInt64();
+                    bytes = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("created_at"u8))

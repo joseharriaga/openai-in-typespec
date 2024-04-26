@@ -134,9 +134,9 @@ namespace OpenAI.Internal.Models
         /// is below -1, consider this segment silent.
         /// </param>
         /// <returns> A new <see cref="Models.TranscriptionSegment"/> instance for mocking. </returns>
-        public static TranscriptionSegment TranscriptionSegment(long id = default, long seek = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokens = null, double temperature = default, double avgLogprob = default, double compressionRatio = default, double noSpeechProb = default)
+        public static TranscriptionSegment TranscriptionSegment(int id = default, int seek = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<int> tokens = null, double temperature = default, double avgLogprob = default, double compressionRatio = default, double noSpeechProb = default)
         {
-            tokens ??= new List<long>();
+            tokens ??= new List<int>();
 
             return new TranscriptionSegment(
                 id,
@@ -514,10 +514,10 @@ namespace OpenAI.Internal.Models
         /// A list of functions the model may generate JSON inputs for.
         /// </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionRequest"/> instance for mocking. </returns>
-        public static CreateChatCompletionRequest CreateChatCompletionRequest(IEnumerable<BinaryData> messages = null, CreateChatCompletionRequestModel model = default, double? frequencyPenalty = null, IDictionary<string, long> logitBias = null, bool? logprobs = null, long? topLogprobs = null, long? maxTokens = null, long? n = null, double? presencePenalty = null, CreateChatCompletionRequestResponseFormat responseFormat = null, long? seed = null, BinaryData stop = null, bool? stream = null, double? temperature = null, double? topP = null, IEnumerable<ChatCompletionTool> tools = null, BinaryData toolChoice = null, string user = null, BinaryData functionCall = null, IEnumerable<ChatCompletionFunctions> functions = null)
+        public static CreateChatCompletionRequest CreateChatCompletionRequest(IEnumerable<BinaryData> messages = null, CreateChatCompletionRequestModel model = default, double? frequencyPenalty = null, IDictionary<string, int> logitBias = null, bool? logprobs = null, int? topLogprobs = null, int? maxTokens = null, int? n = null, double? presencePenalty = null, CreateChatCompletionRequestResponseFormat responseFormat = null, long? seed = null, BinaryData stop = null, bool? stream = null, double? temperature = null, double? topP = null, IEnumerable<ChatCompletionTool> tools = null, BinaryData toolChoice = null, string user = null, BinaryData functionCall = null, IEnumerable<ChatCompletionFunctions> functions = null)
         {
             messages ??= new List<BinaryData>();
-            logitBias ??= new Dictionary<string, long>();
+            logitBias ??= new Dictionary<string, int>();
             tools ??= new List<ChatCompletionTool>();
             functions ??= new List<ChatCompletionFunctions>();
 
@@ -735,7 +735,7 @@ namespace OpenAI.Internal.Models
         /// <param name="message"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionResponseChoice"/> instance for mocking. </returns>
-        public static CreateChatCompletionResponseChoice CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason = default, long index = default, ChatCompletionResponseMessage message = null, CreateChatCompletionResponseChoiceLogprobs logprobs = null)
+        public static CreateChatCompletionResponseChoice CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason = default, int index = default, ChatCompletionResponseMessage message = null, CreateChatCompletionResponseChoiceLogprobs logprobs = null)
         {
             return new CreateChatCompletionResponseChoice(finishReason, index, message, logprobs, serializedAdditionalRawData: null);
         }
@@ -793,9 +793,9 @@ namespace OpenAI.Internal.Models
         /// cases, there may be fewer than the number of requested `top_logprobs` returned.
         /// </param>
         /// <returns> A new <see cref="Models.ChatCompletionTokenLogprob"/> instance for mocking. </returns>
-        public static ChatCompletionTokenLogprob ChatCompletionTokenLogprob(string token = null, double logprob = default, IEnumerable<long> bytes = null, IEnumerable<ChatCompletionTokenLogprobTopLogprob> topLogprobs = null)
+        public static ChatCompletionTokenLogprob ChatCompletionTokenLogprob(string token = null, double logprob = default, IEnumerable<int> bytes = null, IEnumerable<ChatCompletionTokenLogprobTopLogprob> topLogprobs = null)
         {
-            bytes ??= new List<long>();
+            bytes ??= new List<int>();
             topLogprobs ??= new List<ChatCompletionTokenLogprobTopLogprob>();
 
             return new ChatCompletionTokenLogprob(token, logprob, bytes?.ToList(), topLogprobs?.ToList(), serializedAdditionalRawData: null);
@@ -811,9 +811,9 @@ namespace OpenAI.Internal.Models
         /// bytes representation for the token.
         /// </param>
         /// <returns> A new <see cref="Models.ChatCompletionTokenLogprobTopLogprob"/> instance for mocking. </returns>
-        public static ChatCompletionTokenLogprobTopLogprob ChatCompletionTokenLogprobTopLogprob(string token = null, double logprob = default, IEnumerable<long> bytes = null)
+        public static ChatCompletionTokenLogprobTopLogprob ChatCompletionTokenLogprobTopLogprob(string token = null, double logprob = default, IEnumerable<int> bytes = null)
         {
-            bytes ??= new List<long>();
+            bytes ??= new List<int>();
 
             return new ChatCompletionTokenLogprobTopLogprob(token, logprob, bytes?.ToList(), serializedAdditionalRawData: null);
         }
@@ -823,7 +823,7 @@ namespace OpenAI.Internal.Models
         /// <param name="completionTokens"> Number of tokens in the generated completion. </param>
         /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
         /// <returns> A new <see cref="Models.CompletionUsage"/> instance for mocking. </returns>
-        public static CompletionUsage CompletionUsage(long promptTokens = default, long completionTokens = default, long totalTokens = default)
+        public static CompletionUsage CompletionUsage(int promptTokens = default, int completionTokens = default, int totalTokens = default)
         {
             return new CompletionUsage(promptTokens, completionTokens, totalTokens, serializedAdditionalRawData: null);
         }
@@ -932,9 +932,9 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <returns> A new <see cref="Models.CreateCompletionRequest"/> instance for mocking. </returns>
-        public static CreateCompletionRequest CreateCompletionRequest(CreateCompletionRequestModel model = default, BinaryData prompt = null, long? bestOf = null, bool? echo = null, double? frequencyPenalty = null, IDictionary<string, long> logitBias = null, long? logprobs = null, long? maxTokens = null, long? n = null, double? presencePenalty = null, long? seed = null, BinaryData stop = null, bool? stream = null, string suffix = null, double? temperature = null, double? topP = null, string user = null)
+        public static CreateCompletionRequest CreateCompletionRequest(CreateCompletionRequestModel model = default, BinaryData prompt = null, int? bestOf = null, bool? echo = null, double? frequencyPenalty = null, IDictionary<string, int> logitBias = null, int? logprobs = null, int? maxTokens = null, int? n = null, double? presencePenalty = null, long? seed = null, BinaryData stop = null, bool? stream = null, string suffix = null, double? temperature = null, double? topP = null, string user = null)
         {
-            logitBias ??= new Dictionary<string, long>();
+            logitBias ??= new Dictionary<string, int>();
 
             return new CreateCompletionRequest(
                 model,
@@ -998,7 +998,7 @@ namespace OpenAI.Internal.Models
         /// content filters.
         /// </param>
         /// <returns> A new <see cref="Models.CreateCompletionResponseChoice"/> instance for mocking. </returns>
-        public static CreateCompletionResponseChoice CreateCompletionResponseChoice(long index = default, string text = null, CreateCompletionResponseChoiceLogprobs logprobs = null, CreateCompletionResponseChoiceFinishReason finishReason = default)
+        public static CreateCompletionResponseChoice CreateCompletionResponseChoice(int index = default, string text = null, CreateCompletionResponseChoiceLogprobs logprobs = null, CreateCompletionResponseChoiceFinishReason finishReason = default)
         {
             return new CreateCompletionResponseChoice(index, text, logprobs, finishReason, serializedAdditionalRawData: null);
         }
@@ -1009,12 +1009,12 @@ namespace OpenAI.Internal.Models
         /// <param name="topLogprobs"></param>
         /// <param name="textOffset"></param>
         /// <returns> A new <see cref="Models.CreateCompletionResponseChoiceLogprobs"/> instance for mocking. </returns>
-        public static CreateCompletionResponseChoiceLogprobs CreateCompletionResponseChoiceLogprobs(IEnumerable<string> tokens = null, IEnumerable<double> tokenLogprobs = null, IEnumerable<IDictionary<string, long>> topLogprobs = null, IEnumerable<long> textOffset = null)
+        public static CreateCompletionResponseChoiceLogprobs CreateCompletionResponseChoiceLogprobs(IEnumerable<string> tokens = null, IEnumerable<double> tokenLogprobs = null, IEnumerable<IDictionary<string, int>> topLogprobs = null, IEnumerable<int> textOffset = null)
         {
             tokens ??= new List<string>();
             tokenLogprobs ??= new List<double>();
-            topLogprobs ??= new List<IDictionary<string, long>>();
-            textOffset ??= new List<long>();
+            topLogprobs ??= new List<IDictionary<string, int>>();
+            textOffset ??= new List<int>();
 
             return new CreateCompletionResponseChoiceLogprobs(tokens?.ToList(), tokenLogprobs?.ToList(), topLogprobs?.ToList(), textOffset?.ToList(), serializedAdditionalRawData: null);
         }
@@ -1046,7 +1046,7 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <returns> A new <see cref="Models.CreateEmbeddingRequest"/> instance for mocking. </returns>
-        public static CreateEmbeddingRequest CreateEmbeddingRequest(BinaryData input = null, CreateEmbeddingRequestModel model = default, CreateEmbeddingRequestEncodingFormat? encodingFormat = null, long? dimensions = null, string user = null)
+        public static CreateEmbeddingRequest CreateEmbeddingRequest(BinaryData input = null, CreateEmbeddingRequestModel model = default, CreateEmbeddingRequestEncodingFormat? encodingFormat = null, int? dimensions = null, string user = null)
         {
             return new CreateEmbeddingRequest(
                 input,
@@ -1078,7 +1078,7 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="object"> The object type, which is always "embedding". </param>
         /// <returns> A new <see cref="Models.Embedding"/> instance for mocking. </returns>
-        public static Embedding Embedding(long index = default, BinaryData embeddingProperty = null, EmbeddingObject @object = default)
+        public static Embedding Embedding(int index = default, BinaryData embeddingProperty = null, EmbeddingObject @object = default)
         {
             return new Embedding(index, embeddingProperty, @object, serializedAdditionalRawData: null);
         }
@@ -1087,7 +1087,7 @@ namespace OpenAI.Internal.Models
         /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         /// <returns> A new <see cref="Models.EmbeddingUsage"/> instance for mocking. </returns>
-        public static EmbeddingUsage EmbeddingUsage(long promptTokens = default, long totalTokens = default)
+        public static EmbeddingUsage EmbeddingUsage(int promptTokens = default, int totalTokens = default)
         {
             return new EmbeddingUsage(promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
@@ -1111,7 +1111,7 @@ namespace OpenAI.Internal.Models
         /// field on `fine_tuning.job`.
         /// </param>
         /// <returns> A new <see cref="Models.OpenAIFile"/> instance for mocking. </returns>
-        public static OpenAIFile OpenAIFile(string id = null, long? bytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFileObject @object = default, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null)
+        public static OpenAIFile OpenAIFile(string id = null, int? bytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFileObject @object = default, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null)
         {
             return new OpenAIFile(
                 id,
@@ -1235,7 +1235,7 @@ namespace OpenAI.Internal.Models
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </param>
         /// <returns> A new <see cref="Models.FineTuningJob"/> instance for mocking. </returns>
-        public static FineTuningJob FineTuningJob(string id = null, DateTimeOffset createdAt = default, FineTuningJobError error = null, string fineTunedModel = null, DateTimeOffset? finishedAt = null, FineTuningJobHyperparameters hyperparameters = null, string model = null, FineTuningJobObject @object = default, string organizationId = null, IEnumerable<string> resultFiles = null, FineTuningJobStatus status = default, long? trainedTokens = null, string trainingFile = null, string validationFile = null)
+        public static FineTuningJob FineTuningJob(string id = null, DateTimeOffset createdAt = default, FineTuningJobError error = null, string fineTunedModel = null, DateTimeOffset? finishedAt = null, FineTuningJobHyperparameters hyperparameters = null, string model = null, FineTuningJobObject @object = default, string organizationId = null, IEnumerable<string> resultFiles = null, FineTuningJobStatus status = default, int? trainedTokens = null, string trainingFile = null, string validationFile = null)
         {
             resultFiles ??= new List<string>();
 
@@ -1357,7 +1357,7 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <returns> A new <see cref="Models.CreateImageRequest"/> instance for mocking. </returns>
-        public static CreateImageRequest CreateImageRequest(string prompt = null, CreateImageRequestModel? model = null, long? n = null, CreateImageRequestQuality? quality = null, CreateImageRequestResponseFormat? responseFormat = null, CreateImageRequestSize? size = null, CreateImageRequestStyle? style = null, string user = null)
+        public static CreateImageRequest CreateImageRequest(string prompt = null, CreateImageRequestModel? model = null, int? n = null, CreateImageRequestQuality? quality = null, CreateImageRequestResponseFormat? responseFormat = null, CreateImageRequestSize? size = null, CreateImageRequestStyle? style = null, string user = null)
         {
             return new CreateImageRequest(
                 prompt,
@@ -1412,7 +1412,7 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <returns> A new <see cref="Models.CreateImageEditRequest"/> instance for mocking. </returns>
-        public static CreateImageEditRequest CreateImageEditRequest(BinaryData image = null, string prompt = null, BinaryData mask = null, CreateImageEditRequestModel? model = null, long? n = null, CreateImageEditRequestSize? size = null, CreateImageEditRequestResponseFormat? responseFormat = null, string user = null)
+        public static CreateImageEditRequest CreateImageEditRequest(BinaryData image = null, string prompt = null, BinaryData mask = null, CreateImageEditRequestModel? model = null, int? n = null, CreateImageEditRequestSize? size = null, CreateImageEditRequestResponseFormat? responseFormat = null, string user = null)
         {
             return new CreateImageEditRequest(
                 image,
@@ -1440,7 +1440,7 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <returns> A new <see cref="Models.CreateImageVariationRequest"/> instance for mocking. </returns>
-        public static CreateImageVariationRequest CreateImageVariationRequest(BinaryData image = null, CreateImageVariationRequestModel? model = null, long? n = null, CreateImageVariationRequestResponseFormat? responseFormat = null, CreateImageVariationRequestSize? size = null, string user = null)
+        public static CreateImageVariationRequest CreateImageVariationRequest(BinaryData image = null, CreateImageVariationRequestModel? model = null, int? n = null, CreateImageVariationRequestResponseFormat? responseFormat = null, CreateImageVariationRequestSize? size = null, string user = null)
         {
             return new CreateImageVariationRequest(
                 image,
@@ -1564,7 +1564,7 @@ namespace OpenAI.Internal.Models
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <returns> A new <see cref="Models.MessageContentTextAnnotationsFileCitationObject"/> instance for mocking. </returns>
-        public static MessageContentTextAnnotationsFileCitationObject MessageContentTextAnnotationsFileCitationObject(MessageContentTextAnnotationsFileCitationObjectType type = default, string text = null, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation = null, long startIndex = default, long endIndex = default)
+        public static MessageContentTextAnnotationsFileCitationObject MessageContentTextAnnotationsFileCitationObject(MessageContentTextAnnotationsFileCitationObjectType type = default, string text = null, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation = null, int startIndex = default, int endIndex = default)
         {
             return new MessageContentTextAnnotationsFileCitationObject(
                 type,
@@ -1591,7 +1591,7 @@ namespace OpenAI.Internal.Models
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <returns> A new <see cref="Models.MessageContentTextAnnotationsFilePathObject"/> instance for mocking. </returns>
-        public static MessageContentTextAnnotationsFilePathObject MessageContentTextAnnotationsFilePathObject(MessageContentTextAnnotationsFilePathObjectType type = default, string text = null, MessageContentTextAnnotationsFilePathObjectFilePath filePath = null, long startIndex = default, long endIndex = default)
+        public static MessageContentTextAnnotationsFilePathObject MessageContentTextAnnotationsFilePathObject(MessageContentTextAnnotationsFilePathObjectType type = default, string text = null, MessageContentTextAnnotationsFilePathObjectFilePath filePath = null, int startIndex = default, int endIndex = default)
         {
             return new MessageContentTextAnnotationsFilePathObject(
                 type,
@@ -1968,7 +1968,7 @@ namespace OpenAI.Internal.Models
         /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
         /// <returns> A new <see cref="Models.RunCompletionUsage"/> instance for mocking. </returns>
-        public static RunCompletionUsage RunCompletionUsage(long completionTokens = default, long promptTokens = default, long totalTokens = default)
+        public static RunCompletionUsage RunCompletionUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
             return new RunCompletionUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
@@ -2237,7 +2237,7 @@ namespace OpenAI.Internal.Models
         /// <param name="promptTokens"> Number of prompt tokens used over the course of the run step. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
         /// <returns> A new <see cref="Models.RunStepCompletionUsage"/> instance for mocking. </returns>
-        public static RunStepCompletionUsage RunStepCompletionUsage(long completionTokens = default, long promptTokens = default, long totalTokens = default)
+        public static RunStepCompletionUsage RunStepCompletionUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
             return new RunStepCompletionUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }

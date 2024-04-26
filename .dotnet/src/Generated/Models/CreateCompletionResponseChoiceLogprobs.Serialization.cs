@@ -100,8 +100,8 @@ namespace OpenAI.Internal.Models
             }
             IReadOnlyList<string> tokens = default;
             IReadOnlyList<double> tokenLogprobs = default;
-            IReadOnlyList<IDictionary<string, long>> topLogprobs = default;
-            IReadOnlyList<long> textOffset = default;
+            IReadOnlyList<IDictionary<string, int>> topLogprobs = default;
+            IReadOnlyList<int> textOffset = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -128,7 +128,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("top_logprobs"u8))
                 {
-                    List<IDictionary<string, long>> array = new List<IDictionary<string, long>>();
+                    List<IDictionary<string, int>> array = new List<IDictionary<string, int>>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
                         if (item.ValueKind == JsonValueKind.Null)
@@ -137,10 +137,10 @@ namespace OpenAI.Internal.Models
                         }
                         else
                         {
-                            Dictionary<string, long> dictionary = new Dictionary<string, long>();
+                            Dictionary<string, int> dictionary = new Dictionary<string, int>();
                             foreach (var property0 in item.EnumerateObject())
                             {
-                                dictionary.Add(property0.Name, property0.Value.GetInt64());
+                                dictionary.Add(property0.Name, property0.Value.GetInt32());
                             }
                             array.Add(dictionary);
                         }
@@ -150,10 +150,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("text_offset"u8))
                 {
-                    List<long> array = new List<long>();
+                    List<int> array = new List<int>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetInt64());
+                        array.Add(item.GetInt32());
                     }
                     textOffset = array;
                     continue;

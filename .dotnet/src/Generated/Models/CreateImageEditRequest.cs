@@ -78,7 +78,7 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateImageEditRequest(BinaryData image, string prompt, BinaryData mask, CreateImageEditRequestModel? model, long? n, CreateImageEditRequestSize? size, CreateImageEditRequestResponseFormat? responseFormat, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateImageEditRequest(BinaryData image, string prompt, BinaryData mask, CreateImageEditRequestModel? model, int? n, CreateImageEditRequestSize? size, CreateImageEditRequestResponseFormat? responseFormat, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Image = image;
             Prompt = prompt;
@@ -138,7 +138,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The model to use for image generation. Only `dall-e-2` is supported at this time. </summary>
         public CreateImageEditRequestModel? Model { get; set; }
         /// <summary> The number of images to generate. Must be between 1 and 10. </summary>
-        public long? N { get; set; }
+        public int? N { get; set; }
         /// <summary> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </summary>
         public CreateImageEditRequestSize? Size { get; set; }
         /// <summary> The format in which the generated images are returned. Must be one of `url` or `b64_json`. </summary>

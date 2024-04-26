@@ -49,7 +49,7 @@ namespace OpenAI.Internal.Models
         /// listed in the [embedding guide](/docs/guides/embeddings).
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="embeddingProperty"/> is null. </exception>
-        internal Embedding(long index, BinaryData embeddingProperty)
+        internal Embedding(int index, BinaryData embeddingProperty)
         {
             Argument.AssertNotNull(embeddingProperty, nameof(embeddingProperty));
 
@@ -65,7 +65,7 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="object"> The object type, which is always "embedding". </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal Embedding(long index, BinaryData embeddingProperty, EmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal Embedding(int index, BinaryData embeddingProperty, EmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Index = index;
             EmbeddingProperty = embeddingProperty;
@@ -79,7 +79,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> The index of the embedding in the list of embeddings. </summary>
-        public long Index { get; }
+        public int Index { get; }
         /// <summary>
         /// The embedding vector, which is a list of floats. The length of vector depends on the model as
         /// listed in the [embedding guide](/docs/guides/embeddings).

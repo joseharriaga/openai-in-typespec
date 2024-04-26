@@ -36,7 +36,7 @@ model CreateCompletionRequest {
    */
   @minValue(0)
   @maxValue(20)
-  best_of?: safeint | null = 1;
+  best_of?: int32 | null = 1;
 
   /** Echo back the prompt in addition to the completion */
   echo?: boolean | null = false;
@@ -66,7 +66,7 @@ model CreateCompletionRequest {
    * generated.
    */
   @extension("x-oaiTypeLabel", "map")
-  logit_bias?: Record<safeint> | null = null;
+  logit_bias?: Record<int32> | null = null;
 
   /**
    * Include the log probabilities on the `logprobs` most likely tokens, as well the chosen tokens.
@@ -78,7 +78,7 @@ model CreateCompletionRequest {
    */
   @minValue(0)
   @maxValue(5)
-  logprobs?: safeint | null = null;
+  logprobs?: int32 | null = null;
 
   /**
    * The maximum number of [tokens](/tokenizer) to generate in the completion.
@@ -88,7 +88,7 @@ model CreateCompletionRequest {
    * for counting tokens.
    */
   @minValue(0)
-  max_tokens?: safeint | null = 16;
+  max_tokens?: int32 | null = 16;
 
   /**
    * How many completions to generate for each prompt.
@@ -98,7 +98,7 @@ model CreateCompletionRequest {
    */
   @minValue(1)
   @maxValue(128)
-  n?: safeint | null = 1;
+  n?: int32 | null = 1;
 
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
@@ -123,9 +123,9 @@ model CreateCompletionRequest {
       beta: true
     }
   )
-  @minValue(-9223372036854775808) // TODO: Min and max exceed the limits of safeint.
+  @minValue(-9223372036854775808) // TODO: Min and max exceed the limits of int32.
   @maxValue(9223372036854775807)
-  seed?: safeint | null;
+  seed?: int64 | null;
 
   // TODO: Consider inlining when https://github.com/microsoft/typespec/issues/2356 is resolved
   // https://github.com/microsoft/typespec/issues/2355
@@ -181,13 +181,13 @@ model CreateCompletionResponse {
 
   /** The list of completion choices the model generated for the input. */
   choices: {
-    index: safeint;
+    index: int32;
     text: string;
     logprobs: null | {
       tokens: string[];
       token_logprobs: float64[];
-      top_logprobs: Record<safeint>[];
-      text_offset: safeint[];
+      top_logprobs: Record<int32>[];
+      text_offset: int32[];
     };
 
     /**

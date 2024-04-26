@@ -201,10 +201,10 @@ alias TimestampGranularities =
 
 model TranscriptionSegment {
   /** Unique identifier of the segment. */
-  id: safeint;
+  id: int32;
 
   /** Seek offset of the segment. */
-  seek: safeint;
+  seek: int32;
 
   /** Start time of the segment in seconds. */
   @encode("seconds", float64)

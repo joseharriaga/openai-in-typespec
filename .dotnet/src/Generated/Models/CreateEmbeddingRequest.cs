@@ -92,7 +92,7 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateEmbeddingRequest(BinaryData input, CreateEmbeddingRequestModel model, CreateEmbeddingRequestEncodingFormat? encodingFormat, long? dimensions, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateEmbeddingRequest(BinaryData input, CreateEmbeddingRequestModel model, CreateEmbeddingRequestEncodingFormat? encodingFormat, int? dimensions, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Input = input;
             Model = model;
@@ -131,10 +131,10 @@ namespace OpenAI.Internal.Models
         /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="string"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="long"/></description>
+        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="int"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <c>IList{long}</c></description>
+        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <c>IList{int}</c></description>
         /// </item>
         /// </list>
         /// </remarks>
@@ -175,7 +175,7 @@ namespace OpenAI.Internal.Models
         /// The number of dimensions the resulting output embeddings should have. Only supported in
         /// `text-embedding-3` and later models.
         /// </summary>
-        public long? Dimensions { get; set; }
+        public int? Dimensions { get; set; }
         /// <summary>
         /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).

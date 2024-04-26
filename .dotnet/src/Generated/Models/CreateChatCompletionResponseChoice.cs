@@ -54,7 +54,7 @@ namespace OpenAI.Internal.Models
         /// <param name="message"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
-        internal CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason, long index, ChatCompletionResponseMessage message, CreateChatCompletionResponseChoiceLogprobs logprobs)
+        internal CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason, int index, ChatCompletionResponseMessage message, CreateChatCompletionResponseChoiceLogprobs logprobs)
         {
             Argument.AssertNotNull(message, nameof(message));
 
@@ -76,7 +76,7 @@ namespace OpenAI.Internal.Models
         /// <param name="message"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason, long index, ChatCompletionResponseMessage message, CreateChatCompletionResponseChoiceLogprobs logprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason, int index, ChatCompletionResponseMessage message, CreateChatCompletionResponseChoiceLogprobs logprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FinishReason = finishReason;
             Index = index;
@@ -99,7 +99,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public CreateChatCompletionResponseChoiceFinishReason FinishReason { get; }
         /// <summary> The index of the choice in the list of choices. </summary>
-        public long Index { get; }
+        public int Index { get; }
         /// <summary> Gets the message. </summary>
         public ChatCompletionResponseMessage Message { get; }
         /// <summary> Log probability information for the choice. </summary>

@@ -87,7 +87,7 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateImageRequest(string prompt, CreateImageRequestModel? model, long? n, CreateImageRequestQuality? quality, CreateImageRequestResponseFormat? responseFormat, CreateImageRequestSize? size, CreateImageRequestStyle? style, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateImageRequest(string prompt, CreateImageRequestModel? model, int? n, CreateImageRequestQuality? quality, CreateImageRequestResponseFormat? responseFormat, CreateImageRequestSize? size, CreateImageRequestStyle? style, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Prompt = prompt;
             Model = model;
@@ -116,7 +116,7 @@ namespace OpenAI.Internal.Models
         /// The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is
         /// supported.
         /// </summary>
-        public long? N { get; set; }
+        public int? N { get; set; }
         /// <summary>
         /// The quality of the image that will be generated. `hd` creates images with finer details and
         /// greater consistency across the image. This param is only supported for `dall-e-3`.

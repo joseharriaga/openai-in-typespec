@@ -105,7 +105,7 @@ namespace OpenAI.Internal.Models
             }
             string prompt = default;
             CreateImageRequestModel? model = default;
-            long? n = default;
+            int? n = default;
             CreateImageRequestQuality? quality = default;
             CreateImageRequestResponseFormat? responseFormat = default;
             CreateImageRequestSize? size = default;
@@ -136,7 +136,7 @@ namespace OpenAI.Internal.Models
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("quality"u8))

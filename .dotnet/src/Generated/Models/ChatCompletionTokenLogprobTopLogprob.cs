@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         /// bytes representation for the token.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="token"/> is null. </exception>
-        internal ChatCompletionTokenLogprobTopLogprob(string token, double logprob, IEnumerable<long> bytes)
+        internal ChatCompletionTokenLogprobTopLogprob(string token, double logprob, IEnumerable<int> bytes)
         {
             Argument.AssertNotNull(token, nameof(token));
 
@@ -72,7 +72,7 @@ namespace OpenAI.Internal.Models
         /// bytes representation for the token.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ChatCompletionTokenLogprobTopLogprob(string token, double logprob, IReadOnlyList<long> bytes, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatCompletionTokenLogprobTopLogprob(string token, double logprob, IReadOnlyList<int> bytes, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Token = token;
             Logprob = logprob;
@@ -95,6 +95,6 @@ namespace OpenAI.Internal.Models
         /// must be combined to generate the correct text representation. Can be `null` if there is no
         /// bytes representation for the token.
         /// </summary>
-        public IReadOnlyList<long> Bytes { get; }
+        public IReadOnlyList<int> Bytes { get; }
     }
 }

@@ -104,7 +104,7 @@ namespace OpenAI.Internal.Models
             string prompt = default;
             BinaryData mask = default;
             CreateImageEditRequestModel? model = default;
-            long? n = default;
+            int? n = default;
             CreateImageEditRequestSize? size = default;
             CreateImageEditRequestResponseFormat? responseFormat = default;
             string user = default;
@@ -147,7 +147,7 @@ namespace OpenAI.Internal.Models
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("size"u8))

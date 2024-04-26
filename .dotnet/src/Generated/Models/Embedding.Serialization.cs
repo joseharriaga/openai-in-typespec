@@ -72,7 +72,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            long index = default;
+            int index = default;
             BinaryData embedding = default;
             EmbeddingObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -81,7 +81,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("index"u8))
                 {
-                    index = property.Value.GetInt64();
+                    index = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("embedding"u8))

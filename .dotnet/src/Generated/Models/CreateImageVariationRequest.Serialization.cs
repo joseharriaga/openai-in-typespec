@@ -95,7 +95,7 @@ namespace OpenAI.Internal.Models
             }
             BinaryData image = default;
             CreateImageVariationRequestModel? model = default;
-            long? n = default;
+            int? n = default;
             CreateImageVariationRequestResponseFormat? responseFormat = default;
             CreateImageVariationRequestSize? size = default;
             string user = default;
@@ -124,7 +124,7 @@ namespace OpenAI.Internal.Models
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))

@@ -35,7 +35,7 @@ model CreateEmbeddingRequest {
    * `text-embedding-3` and later models. 
    */
   @minValue(1)
-  dimensions?: safeint;
+  dimensions?: int32;
 
   /**
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
@@ -81,7 +81,7 @@ union CreateEmbeddingRequestInput {
 /** Represents an embedding vector returned by embedding endpoint. */
 model Embedding {
   /** The index of the embedding in the list of embeddings. */
-  index: safeint;
+  index: int32;
 
   /**
    * The embedding vector, which is a list of floats. The length of vector depends on the model as
@@ -95,8 +95,8 @@ model Embedding {
 
 model EmbeddingUsage {
   /** The number of tokens used by the prompt. */
-  prompt_tokens: safeint;
+  prompt_tokens: int32;
 
   /** The total number of tokens used by the request. */
-  total_tokens: safeint;
+  total_tokens: int32;
 };

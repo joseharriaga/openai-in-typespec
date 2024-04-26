@@ -263,13 +263,13 @@ model RunStepDetailsToolCallsFunctionObject {
  */
 model RunCompletionUsage {
   /** Number of completion tokens used over the course of the run. */
-  completion_tokens: safeint;
+  completion_tokens: int32;
 
   /** Number of prompt tokens used over the course of the run. */
-  prompt_tokens: safeint;
+  prompt_tokens: int32;
 
   /** Total number of tokens used (prompt + completion). */
-  total_tokens: safeint;
+  total_tokens: int32;
 }
 
 /**
@@ -278,13 +278,13 @@ model RunCompletionUsage {
  */
 model RunStepCompletionUsage {
   /** Number of completion tokens used over the course of the run step. */
-  completion_tokens: safeint;
+  completion_tokens: int32;
 
   /** Number of prompt tokens used over the course of the run step. */
-  prompt_tokens: safeint;
+  prompt_tokens: int32;
 
   /** Total number of tokens used (prompt + completion). */
-  total_tokens: safeint;
+  total_tokens: int32;
 }
 
 /** Represents an execution run on a [thread](/docs/api-reference/threads). */

@@ -65,26 +65,26 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            long completionTokens = default;
-            long promptTokens = default;
-            long totalTokens = default;
+            int completionTokens = default;
+            int promptTokens = default;
+            int totalTokens = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("completion_tokens"u8))
                 {
-                    completionTokens = property.Value.GetInt64();
+                    completionTokens = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("prompt_tokens"u8))
                 {
-                    promptTokens = property.Value.GetInt64();
+                    promptTokens = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("total_tokens"u8))
                 {
-                    totalTokens = property.Value.GetInt64();
+                    totalTokens = property.Value.GetInt32();
                     continue;
                 }
                 if (options.Format != "W")

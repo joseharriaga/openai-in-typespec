@@ -74,7 +74,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            long index = default;
+            int index = default;
             string text = default;
             CreateCompletionResponseChoiceLogprobs logprobs = default;
             CreateCompletionResponseChoiceFinishReason finishReason = default;
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("index"u8))
                 {
-                    index = property.Value.GetInt64();
+                    index = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("text"u8))

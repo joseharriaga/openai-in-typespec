@@ -59,7 +59,7 @@ namespace OpenAI.Internal.Models
         {
             Model = model;
             Prompt = prompt;
-            LogitBias = new ChangeTrackingDictionary<string, long>();
+            LogitBias = new ChangeTrackingDictionary<string, int>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionRequest"/>. </summary>
@@ -166,7 +166,7 @@ namespace OpenAI.Internal.Models
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt, long? bestOf, bool? echo, double? frequencyPenalty, IDictionary<string, long> logitBias, long? logprobs, long? maxTokens, long? n, double? presencePenalty, long? seed, BinaryData stop, bool? stream, string suffix, double? temperature, double? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, double? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, double? presencePenalty, long? seed, BinaryData stop, bool? stream, string suffix, double? temperature, double? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Prompt = prompt;
@@ -222,10 +222,10 @@ namespace OpenAI.Internal.Models
         /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="string"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="long"/></description>
+        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="int"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <c>IList{long}</c></description>
+        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <c>IList{int}</c></description>
         /// </item>
         /// </list>
         /// </remarks>
@@ -261,7 +261,7 @@ namespace OpenAI.Internal.Models
         /// **Note:** Because this parameter generates many completions, it can quickly consume your token
         /// quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
         /// </summary>
-        public long? BestOf { get; set; }
+        public int? BestOf { get; set; }
         /// <summary> Echo back the prompt in addition to the completion. </summary>
         public bool? Echo { get; set; }
         /// <summary>
@@ -285,7 +285,7 @@ namespace OpenAI.Internal.Models
         /// As an example, you can pass `{"50256": -100}` to prevent the &lt;|endoftext|&gt; token from being
         /// generated.
         /// </summary>
-        public IDictionary<string, long> LogitBias { get; set; }
+        public IDictionary<string, int> LogitBias { get; set; }
         /// <summary>
         /// Include the log probabilities on the `logprobs` most likely tokens, as well the chosen tokens.
         /// For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The
@@ -294,7 +294,7 @@ namespace OpenAI.Internal.Models
         ///
         /// The maximum value for `logprobs` is 5.
         /// </summary>
-        public long? Logprobs { get; set; }
+        public int? Logprobs { get; set; }
         /// <summary>
         /// The maximum number of [tokens](/tokenizer) to generate in the completion.
         ///
@@ -302,14 +302,14 @@ namespace OpenAI.Internal.Models
         /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb)
         /// for counting tokens.
         /// </summary>
-        public long? MaxTokens { get; set; }
+        public int? MaxTokens { get; set; }
         /// <summary>
         /// How many completions to generate for each prompt.
         ///
         /// **Note:** Because this parameter generates many completions, it can quickly consume your token
         /// quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
         /// </summary>
-        public long? N { get; set; }
+        public int? N { get; set; }
         /// <summary>
         /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
         /// in the text so far, increasing the model's likelihood to talk about new topics.

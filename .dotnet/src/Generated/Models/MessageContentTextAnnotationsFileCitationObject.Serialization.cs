@@ -72,8 +72,8 @@ namespace OpenAI.Internal.Models
             MessageContentTextAnnotationsFileCitationObjectType type = default;
             string text = default;
             MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation = default;
-            long startIndex = default;
-            long endIndex = default;
+            int startIndex = default;
+            int endIndex = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -95,12 +95,12 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("start_index"u8))
                 {
-                    startIndex = property.Value.GetInt64();
+                    startIndex = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("end_index"u8))
                 {
-                    endIndex = property.Value.GetInt64();
+                    endIndex = property.Value.GetInt32();
                     continue;
                 }
                 if (options.Format != "W")

@@ -40,7 +40,7 @@ model CreateChatCompletionRequest {
    * should result in a ban or exclusive selection of the relevant token.
    */
   @extension("x-oaiTypeLabel", "map")
-  logit_bias?: Record<safeint> | null = null;
+  logit_bias?: Record<int32> | null = null;
 
   /**
    * Whether to return log probabilities of the output tokens or not. If true, returns the log
@@ -56,7 +56,7 @@ model CreateChatCompletionRequest {
    */
   @minValue(0)
   @maxValue(20)
-  top_logprobs?: safeint | null;
+  top_logprobs?: int32 | null;
 
   /**
    * The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
@@ -66,7 +66,7 @@ model CreateChatCompletionRequest {
    * for counting tokens.
    */
   @minValue(0)
-  max_tokens?: safeint | null = 16;
+  max_tokens?: int32 | null = 16;
 
   /**
    * How many chat completion choices to generate for each input message. Note that you will be
@@ -75,7 +75,7 @@ model CreateChatCompletionRequest {
    */
   @minValue(1)
   @maxValue(128)
-  n?: safeint | null = 1;
+  n?: int32 | null = 1;
 
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
@@ -124,7 +124,7 @@ model CreateChatCompletionRequest {
   )
   @minValue(-9223372036854775808) // TODO: Min and max exceed the limits of safeint.
   @maxValue(9223372036854775807)
-  seed?: safeint | null;
+  seed?: int64 | null;
 
   // TODO: Consider inlining when https://github.com/microsoft/typespec/issues/2356 is resolved
   // https://github.com/microsoft/typespec/issues/2355
@@ -216,7 +216,7 @@ model CreateChatCompletionResponse {
     finish_reason: "stop" | "length" | "tool_calls" | "content_filter" | "function_call";
 
     /** The index of the choice in the list of choices. */
-    index: safeint;
+    index: int32;
 
     message: ChatCompletionResponseMessage;
 
@@ -279,13 +279,13 @@ model StopSequences is string[];
 /** Usage statistics for the completion request. */
 model CompletionUsage {
   /** Number of tokens in the prompt. */
-  prompt_tokens: safeint;
+  prompt_tokens: int32;
 
   /** Number of tokens in the generated completion */
-  completion_tokens: safeint;
+  completion_tokens: int32;
 
   /** Total number of tokens used in the request (prompt + completion). */
-  total_tokens: safeint;
+  total_tokens: int32;
 }
 
 model ChatCompletionTool {
@@ -535,7 +535,7 @@ model ChatCompletionTokenLogprob {
    * must be combined to generate the correct text representation. Can be `null` if there is no
    * bytes representation for the token.
    */
-  bytes: safeint[] | null;
+  bytes: int32[] | null;
 
   /**
    * List of the most likely tokens and their log probability, at this token position. In rare
@@ -554,7 +554,7 @@ model ChatCompletionTokenLogprob {
      * must be combined to generate the correct text representation. Can be `null` if there is no
      * bytes representation for the token.
      */
-    bytes: safeint[] | null;
+    bytes: int32[] | null;
   }[];
 }
 

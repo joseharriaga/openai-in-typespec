@@ -54,7 +54,7 @@ namespace OpenAI.Internal.Models
         /// content filters.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> is null. </exception>
-        internal CreateCompletionResponseChoice(long index, string text, CreateCompletionResponseChoiceLogprobs logprobs, CreateCompletionResponseChoiceFinishReason finishReason)
+        internal CreateCompletionResponseChoice(int index, string text, CreateCompletionResponseChoiceLogprobs logprobs, CreateCompletionResponseChoiceFinishReason finishReason)
         {
             Argument.AssertNotNull(text, nameof(text));
 
@@ -76,7 +76,7 @@ namespace OpenAI.Internal.Models
         /// content filters.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionResponseChoice(long index, string text, CreateCompletionResponseChoiceLogprobs logprobs, CreateCompletionResponseChoiceFinishReason finishReason, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateCompletionResponseChoice(int index, string text, CreateCompletionResponseChoiceLogprobs logprobs, CreateCompletionResponseChoiceFinishReason finishReason, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Index = index;
             Text = text;
@@ -91,7 +91,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Gets the index. </summary>
-        public long Index { get; }
+        public int Index { get; }
         /// <summary> Gets the text. </summary>
         public string Text { get; }
         /// <summary> Gets the logprobs. </summary>

@@ -166,10 +166,10 @@ model MessageContentTextAnnotationsFileCitationObject {
   };
 
   @minValue(0)
-  start_index: safeint;
+  start_index: int32;
 
   @minValue(0)
-  end_index: safeint;
+  end_index: int32;
 }
 
 /** 
@@ -189,10 +189,10 @@ model MessageContentTextAnnotationsFilePathObject {
   };
 
   @minValue(0)
-  start_index: safeint;
+  start_index: int32;
 
   @minValue(0)
-  end_index: safeint;
+  end_index: int32;
 }
 
 /** A list of files attached to a `message`. */

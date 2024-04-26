@@ -84,12 +84,12 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            long id = default;
-            long seek = default;
+            int id = default;
+            int seek = default;
             TimeSpan start = default;
             TimeSpan end = default;
             string text = default;
-            IReadOnlyList<long> tokens = default;
+            IReadOnlyList<int> tokens = default;
             double temperature = default;
             double avgLogprob = default;
             double compressionRatio = default;
@@ -100,12 +100,12 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("id"u8))
                 {
-                    id = property.Value.GetInt64();
+                    id = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("seek"u8))
                 {
-                    seek = property.Value.GetInt64();
+                    seek = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("start"u8))
@@ -125,10 +125,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("tokens"u8))
                 {
-                    List<long> array = new List<long>();
+                    List<int> array = new List<int>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetInt64());
+                        array.Add(item.GetInt32());
                     }
                     tokens = array;
                     continue;

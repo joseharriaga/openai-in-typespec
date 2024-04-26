@@ -59,7 +59,7 @@ namespace OpenAI.Internal.Models
 
             Messages = messages.ToList();
             Model = model;
-            LogitBias = new ChangeTrackingDictionary<string, long>();
+            LogitBias = new ChangeTrackingDictionary<string, int>();
             Tools = new ChangeTrackingList<ChatCompletionTool>();
             Functions = new ChangeTrackingList<ChatCompletionFunctions>();
         }
@@ -187,7 +187,7 @@ namespace OpenAI.Internal.Models
         /// A list of functions the model may generate JSON inputs for.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateChatCompletionRequest(IList<BinaryData> messages, CreateChatCompletionRequestModel model, double? frequencyPenalty, IDictionary<string, long> logitBias, bool? logprobs, long? topLogprobs, long? maxTokens, long? n, double? presencePenalty, CreateChatCompletionRequestResponseFormat responseFormat, long? seed, BinaryData stop, bool? stream, double? temperature, double? topP, IList<ChatCompletionTool> tools, BinaryData toolChoice, string user, BinaryData functionCall, IList<ChatCompletionFunctions> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateChatCompletionRequest(IList<BinaryData> messages, CreateChatCompletionRequestModel model, double? frequencyPenalty, IDictionary<string, int> logitBias, bool? logprobs, int? topLogprobs, int? maxTokens, int? n, double? presencePenalty, CreateChatCompletionRequestResponseFormat responseFormat, long? seed, BinaryData stop, bool? stream, double? temperature, double? topP, IList<ChatCompletionTool> tools, BinaryData toolChoice, string user, BinaryData functionCall, IList<ChatCompletionFunctions> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Messages = messages;
             Model = model;
@@ -271,7 +271,7 @@ namespace OpenAI.Internal.Models
         /// between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100
         /// should result in a ban or exclusive selection of the relevant token.
         /// </summary>
-        public IDictionary<string, long> LogitBias { get; set; }
+        public IDictionary<string, int> LogitBias { get; set; }
         /// <summary>
         /// Whether to return log probabilities of the output tokens or not. If true, returns the log
         /// probabilities of each output token returned in the `content` of `message`. This option is
@@ -283,7 +283,7 @@ namespace OpenAI.Internal.Models
         /// position, each with an associated log probability. `logprobs` must be set to `true` if this
         /// parameter is used.
         /// </summary>
-        public long? TopLogprobs { get; set; }
+        public int? TopLogprobs { get; set; }
         /// <summary>
         /// The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
         ///
@@ -291,13 +291,13 @@ namespace OpenAI.Internal.Models
         /// [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
         /// for counting tokens.
         /// </summary>
-        public long? MaxTokens { get; set; }
+        public int? MaxTokens { get; set; }
         /// <summary>
         /// How many chat completion choices to generate for each input message. Note that you will be
         /// charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to
         /// minimize costs.
         /// </summary>
-        public long? N { get; set; }
+        public int? N { get; set; }
         /// <summary>
         /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
         /// in the text so far, increasing the model's likelihood to talk about new topics.

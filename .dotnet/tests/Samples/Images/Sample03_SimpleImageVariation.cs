@@ -13,8 +13,9 @@ namespace OpenAI.Samples
         {
             ImageClient client = new("dall-e-2", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            string imagePath = Path.Combine("Assets", "variation_sample_image.png");
-            using FileStream inputImage = File.OpenRead(imagePath);
+            string imageFilename = "variation_sample_image.png";
+            string imagePath = Path.Combine("Assets", imageFilename);
+            using Stream image = File.OpenRead(imagePath);
 
             ImageVariationOptions options = new()
             {
@@ -22,8 +23,8 @@ namespace OpenAI.Samples
                 ResponseFormat = GeneratedImageFormat.Bytes
             };
 
-            GeneratedImageCollection images = client.GenerateImageVariations(inputImage, 1, options);
-            BinaryData bytes = images[0].ImageBytes;
+            GeneratedImage variation = client.GenerateImageVariation(image, imageFilename, options);
+            BinaryData bytes = variation.ImageBytes;
 
             using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");
             bytes.ToStream().CopyTo(stream);

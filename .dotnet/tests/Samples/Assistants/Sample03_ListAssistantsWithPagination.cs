@@ -8,7 +8,7 @@ namespace OpenAI.Samples
     {
         [Test]
         [Ignore("Compilation validation only")]
-        public void Sample02_ListAssistantsWithPagination()
+        public void Sample03_ListAssistantsWithPagination()
         {
             // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
 #pragma warning disable OPENAI001

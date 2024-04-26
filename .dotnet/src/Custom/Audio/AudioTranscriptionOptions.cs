@@ -1,8 +1,6 @@
 using OpenAI.Internal;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 
 namespace OpenAI.Audio;
 
@@ -12,8 +10,7 @@ public partial class AudioTranscriptionOptions
     public string Prompt { get; init; }
     public AudioTranscriptionFormat? ResponseFormat { get; init; }
     public float? Temperature { get; init; }
-    public bool? EnableWordTimestamps { get; init; }
-    public bool? EnableSegmentTimestamps { get; init; }
+    public AudioTimestampGranularity TimestampGranularityFlags { get; init; }
 
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream file, string fileName, string model)
     {
@@ -51,20 +48,14 @@ public partial class AudioTranscriptionOptions
             content.Add(Temperature.Value, "temperature");
         }
 
-        if (EnableWordTimestamps is not null || EnableSegmentTimestamps is not null)
+        if (TimestampGranularityFlags.HasFlag(AudioTimestampGranularity.Word))
         {
-            List<string> granularities = [];
-            if (EnableWordTimestamps.Value)
-            {
-                granularities.Add("word");
-            }
-            if (EnableSegmentTimestamps.Value)
-            {
-                granularities.Add("segment");
-            }
+            content.Add("word", "timestamp_granularities[]");
+        }
 
-            byte[] data = JsonSerializer.SerializeToUtf8Bytes(granularities);
-            content.Add(data, "timestamp_granularities");
+        if (TimestampGranularityFlags.HasFlag(AudioTimestampGranularity.Segment))
+        {
+            content.Add("segment", "timestamp_granularities[]");
         }
 
         return content;

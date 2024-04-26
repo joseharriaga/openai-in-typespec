@@ -83,9 +83,6 @@ public partial class AudioClient
         return Shim.CreateSpeechAsync(request);
     }
 
-    public virtual ClientResult<AudioTranscription> TranscribeAudio(FileStream audio, AudioTranscriptionOptions options = null)
-        => TranscribeAudio(audio, Path.GetFileName(audio.Name), options);
-
     public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string fileName, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
@@ -103,9 +100,6 @@ public partial class AudioClient
 
         return ClientResult.FromValue(value, response);
     }
-
-    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(FileStream audio, AudioTranscriptionOptions options = null)
-        => await TranscribeAudioAsync(audio, Path.GetFileName(audio.Name), options).ConfigureAwait(false);
 
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string filename, AudioTranscriptionOptions options = null)
     {

@@ -4470,10 +4470,12 @@ components:
           items:
             $ref: '#/components/schemas/Model'
     ListOrder:
-      type: string
-      enum:
-        - asc
-        - desc
+      anyOf:
+        - type: string
+        - type: string
+          enum:
+            - asc
+            - desc
     ListPaginatedFineTuningJobsResponse:
       type: object
       required:
@@ -5451,7 +5453,7 @@ components:
         usage:
           type: object
           allOf:
-            - $ref: '#/components/schemas/RunCompletionUsage'
+            - $ref: '#/components/schemas/RunStepCompletionUsage'
           nullable: true
       description: Represents a step in execution of a run.
     RunToolCallObject:

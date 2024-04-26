@@ -93,7 +93,6 @@ public partial class ChatClient
     ///     The number of independent, alternative response choices that should be generated.
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A result for a single chat completion. </returns>
     public virtual ClientResult<ChatCompletionCollection> CompleteChat(
         IEnumerable<ChatRequestMessage> messages,

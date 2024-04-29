@@ -24,12 +24,14 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
             writer.WritePropertyName("embedding"u8);
-            writer.WriteStartArray();
-            foreach (var item in EmbeddingProperty)
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(EmbeddingProperty);
+#else
+            using (JsonDocument document = JsonDocument.Parse(EmbeddingProperty))
             {
-                writer.WriteNumberValue(item);
+                JsonSerializer.Serialize(writer, document.RootElement);
             }
-            writer.WriteEndArray();
+#endif
             writer.WritePropertyName("object"u8);
             writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -71,7 +73,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             int index = default;
-            IReadOnlyList<double> embedding = default;
+            BinaryData embedding = default;
             EmbeddingObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -84,12 +86,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("embedding"u8))
                 {
-                    List<double> array = new List<double>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(item.GetDouble());
-                    }
-                    embedding = array;
+                    embedding = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (property.NameEquals("object"u8))

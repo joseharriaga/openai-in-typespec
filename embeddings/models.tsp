@@ -70,7 +70,7 @@ model Embedding {
    * The embedding vector, which is a list of floats. The length of vector depends on the model as
    * listed in the [embedding guide](/docs/guides/embeddings).
    */
-  embedding: float64[];
+  embedding: float64[] | string;
 
   /** The object type, which is always "embedding". */
   object: "embedding";

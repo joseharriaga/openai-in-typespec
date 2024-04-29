@@ -1086,11 +1086,9 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="object"> The object type, which is always "embedding". </param>
         /// <returns> A new <see cref="Models.Embedding"/> instance for mocking. </returns>
-        public static Embedding Embedding(int index = default, IEnumerable<double> embeddingProperty = null, EmbeddingObject @object = default)
+        public static Embedding Embedding(int index = default, BinaryData embeddingProperty = null, EmbeddingObject @object = default)
         {
-            embeddingProperty ??= new List<double>();
-
-            return new Embedding(index, embeddingProperty?.ToList(), @object, serializedAdditionalRawData: null);
+            return new Embedding(index, embeddingProperty, @object, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateEmbeddingResponseUsage"/>. </summary>
@@ -1121,7 +1119,7 @@ namespace OpenAI.Internal.Models
         /// field on 'fine_tuning.job'.
         /// </param>
         /// <returns> A new <see cref="Models.OpenAIFile"/> instance for mocking. </returns>
-        public static OpenAIFile OpenAIFile(string id = null, int bytes = default, DateTimeOffset createdAt = default, string filename = null, OpenAIFileObject @object = default, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null)
+        public static OpenAIFile OpenAIFile(string id = null, int? bytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFileObject @object = default, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null)
         {
             return new OpenAIFile(
                 id,

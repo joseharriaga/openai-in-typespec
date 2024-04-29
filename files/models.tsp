@@ -36,7 +36,7 @@ model OpenAIFile {
   id: string;
 
   /** The size of the file, in bytes. */
-  bytes: int32;
+  bytes: int32 | null;
 
   /** The Unix timestamp (in seconds) for when the file was created. */
   @encode("unixTimestamp", int32)

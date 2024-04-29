@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsMessageCreationObject"/>. </summary>
-        /// <param name="type"> Always 'message_creation'. </param>
+        /// <param name="type"> Always `message_creation`. </param>
         /// <param name="messageCreation"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDetailsMessageCreationObject(RunStepDetailsMessageCreationObjectType type, RunStepDetailsMessageCreationObjectMessageCreation messageCreation, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always 'message_creation'. </summary>
+        /// <summary> Always `message_creation`. </summary>
         public RunStepDetailsMessageCreationObjectType Type { get; } = RunStepDetailsMessageCreationObjectType.MessageCreation;
 
         /// <summary> Gets the message creation. </summary>

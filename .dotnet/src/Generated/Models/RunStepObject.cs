@@ -48,13 +48,13 @@ namespace OpenAI.Internal.Models
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) associated with the run step. </param>
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was run. </param>
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
-        /// <param name="type"> The type of run step, which can be either 'message_creation' or 'tool_calls'. </param>
+        /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
         /// <param name="status">
-        /// The status of the run step, which can be either 'in_progress', 'cancelled', 'failed',
-        /// 'completed', or 'expired'.
+        /// The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
+        /// `completed`, or `expired`.
         /// </param>
         /// <param name="stepDetails"> The details of the run step. </param>
-        /// <param name="lastError"> The last error associated with this run step. Will be 'null' if there are no errors. </param>
+        /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
         /// <param name="expiredAt">
         /// The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
         /// the parent run is expired.
@@ -97,18 +97,18 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepObject"/>. </summary>
         /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always 'thread.run.step'. </param>
+        /// <param name="object"> The object type, which is always `thread.run.step`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the run step was created. </param>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) associated with the run step. </param>
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was run. </param>
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
-        /// <param name="type"> The type of run step, which can be either 'message_creation' or 'tool_calls'. </param>
+        /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
         /// <param name="status">
-        /// The status of the run step, which can be either 'in_progress', 'cancelled', 'failed',
-        /// 'completed', or 'expired'.
+        /// The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
+        /// `completed`, or `expired`.
         /// </param>
         /// <param name="stepDetails"> The details of the run step. </param>
-        /// <param name="lastError"> The last error associated with this run step. Will be 'null' if there are no errors. </param>
+        /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
         /// <param name="expiredAt">
         /// The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
         /// the parent run is expired.
@@ -151,7 +151,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The identifier of the run step, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always 'thread.run.step'. </summary>
+        /// <summary> The object type, which is always `thread.run.step`. </summary>
         public RunStepObjectObject Object { get; } = RunStepObjectObject.ThreadRunStep;
 
         /// <summary> The Unix timestamp (in seconds) for when the run step was created. </summary>
@@ -162,11 +162,11 @@ namespace OpenAI.Internal.Models
         public string ThreadId { get; }
         /// <summary> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </summary>
         public string RunId { get; }
-        /// <summary> The type of run step, which can be either 'message_creation' or 'tool_calls'. </summary>
+        /// <summary> The type of run step, which can be either `message_creation` or `tool_calls`. </summary>
         public RunStepObjectType Type { get; }
         /// <summary>
-        /// The status of the run step, which can be either 'in_progress', 'cancelled', 'failed',
-        /// 'completed', or 'expired'.
+        /// The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
+        /// `completed`, or `expired`.
         /// </summary>
         public RunStepObjectStatus Status { get; }
         /// <summary>
@@ -211,7 +211,7 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public BinaryData StepDetails { get; }
-        /// <summary> The last error associated with this run step. Will be 'null' if there are no errors. </summary>
+        /// <summary> The last error associated with this run step. Will be `null` if there are no errors. </summary>
         public RunStepObjectLastError LastError { get; }
         /// <summary>
         /// The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if

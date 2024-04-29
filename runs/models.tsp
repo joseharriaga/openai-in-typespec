@@ -99,7 +99,7 @@ model SubmitToolOutputsRunRequest {
   /** A list of tools for which the outputs are being submitted. */
   tool_outputs: {
     /**
-     * The ID of the tool call in the 'required_action' object within the run object the output is
+     * The ID of the tool call in the `required_action` object within the run object the output is
      * being submitted for.
      */
     tool_call_id?: string;
@@ -127,7 +127,7 @@ model ListRunStepsResponse {
 
 /** Details of the message creation by the run step. */
 model RunStepDetailsMessageCreationObject {
-  /** Always 'message_creation'. */
+  /** Always `message_creation`. */
   type: "message_creation";
 
   message_creation: {
@@ -138,12 +138,12 @@ model RunStepDetailsMessageCreationObject {
 
 /** Details of the tool call. */
 model RunStepDetailsToolCallsObject {
-  /** Always 'tool_calls'. */
+  /** Always `tool_calls`. */
   type: "tool_calls";
 
   /**
    * An array of tool calls the run step was involved in. These can be associated with one of three
-   * types of tools: 'code_interpreter', 'retrieval', or 'function'.
+   * types of tools: `code_interpreter`, `retrieval`, or `function`.
    */
   tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsRetrievalObject | RunStepDetailsToolCallsFunctionObject)[];
 }
@@ -154,7 +154,7 @@ model RunStepDetailsToolCallsCodeObject {
   id: string;
 
   /**
-   * The type of tool call. This is always going to be 'code_interpreter' for this type of tool
+   * The type of tool call. This is always going to be `code_interpreter` for this type of tool
    * call.
    */
   type: "code_interpreter";
@@ -166,7 +166,7 @@ model RunStepDetailsToolCallsCodeObject {
 
     /**
      * The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-     * items, including text ('logs') or images ('image'). Each of these are represented by a
+     * items, including text (`logs`) or images (`image`). Each of these are represented by a
      * different object type.
      */
     outputs: (RunStepDetailsToolCallsCodeOutputLogsObject | RunStepDetailsToolCallsCodeOutputImageObject)[];
@@ -175,7 +175,7 @@ model RunStepDetailsToolCallsCodeObject {
 
 /** Text output from the Code Interpreter tool call as part of a run step. */
 model RunStepDetailsToolCallsCodeOutputLogsObject {
-  /** Always 'logs'. */
+  /** Always `logs`. */
   type: "logs";
 
   /** The text output from the Code Interpreter tool call. */
@@ -183,7 +183,7 @@ model RunStepDetailsToolCallsCodeOutputLogsObject {
 }
 
 model RunStepDetailsToolCallsCodeOutputImageObject {
-  /** Always 'image'. */
+  /** Always `image`. */
   type: "image";
 
   image: {
@@ -196,7 +196,7 @@ model RunStepDetailsToolCallsRetrievalObject {
   /** The ID of the tool call object. */
   id: string;
 
-  /** The type of tool call. This is always going to be 'retrieval' for this type of tool call. */
+  /** The type of tool call. This is always going to be `retrieval` for this type of tool call. */
   type: "retrieval";
 
   /** For now, this is always going to be an empty object. */
@@ -208,7 +208,7 @@ model RunStepDetailsToolCallsFunctionObject {
   /** The ID of the tool call object. */
   id: string;
 
-  /** The type of tool call. This is always going to be 'function' for this type of tool call. */
+  /** The type of tool call. This is always going to be `function` for this type of tool call. */
   type: "function";
 
   /** The definition of the function that was called. */
@@ -220,7 +220,7 @@ model RunStepDetailsToolCallsFunctionObject {
     arguments: string;
 
     /**
-     * The output of the function. This will be 'null' if the outputs have not been
+     * The output of the function. This will be `null` if the outputs have not been
      * [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
      */
     output: string | null;
@@ -228,8 +228,8 @@ model RunStepDetailsToolCallsFunctionObject {
 }
 
 /**
- * Usage statistics related to the run. This value will be 'null' if the run is not in a terminal
- * state (i.e. 'in_progress', 'queued', etc.).
+ * Usage statistics related to the run. This value will be `null` if the run is not in a terminal
+ * state (i.e. `in_progress`, `queued`, etc.).
  */
 model RunCompletionUsage {
   /** Number of completion tokens used over the course of the run. */
@@ -243,8 +243,8 @@ model RunCompletionUsage {
 }
 
 /**
- * Usage statistics related to the run step. This value will be 'null' while the run step's status
- * is 'in_progress'.
+ * Usage statistics related to the run step. This value will be `null` while the run step's status
+ * is `in_progress`.
  */
 model RunStepCompletionUsage {
   /** Number of completion tokens used over the course of the run step. */
@@ -262,7 +262,7 @@ model RunObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always 'thread.run'. */
+  /** The object type, which is always `thread.run`. */
   object: "thread.run";
 
   /** The Unix timestamp (in seconds) for when the run was created. */
@@ -282,8 +282,8 @@ model RunObject {
   assistant_id: string;
 
   /**
-   * The status of the run, which can be either 'queued', 'in_progress', 'requires_action',
-   * 'cancelling', 'cancelled', 'failed', 'completed', or 'expired'.
+   * The status of the run, which can be either `queued`, `in_progress`, `requires_action`,
+   * `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
    */
   status:
     | "queued"
@@ -295,9 +295,9 @@ model RunObject {
     | "completed"
     | "expired";
 
-  /** Details on the action required to continue the run. Will be 'null' if no action is required. */
+  /** Details on the action required to continue the run. Will be `null` if no action is required. */
   required_action: {
-    /** For now, this is always 'submit_tool_outputs'. */
+    /** For now, this is always `submit_tool_outputs`. */
     type: "submit_tool_outputs";
 
     /** Details on the tool outputs needed for this run to continue. */
@@ -307,9 +307,9 @@ model RunObject {
     };
   } | null;
 
-  /** The last error associated with this run. Will be 'null' if there are no errors. */
+  /** The last error associated with this run. Will be `null` if there are no errors. */
   last_error: {
-    /** One of 'server_error', 'rate_limit_exceeded', or 'invalid_prompt'. */
+    /** One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. */
     code: "server_error" | "rate_limit_exceeded" | "invalid_prompt";
 
     /** A human-readable description of the error. */
@@ -389,7 +389,7 @@ model RunStepObject {
   /** The identifier of the run step, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always 'thread.run.step'. */
+  /** The object type, which is always `thread.run.step`. */
   object: "thread.run.step";
 
   /** The Unix timestamp (in seconds) for when the run step was created. */
@@ -409,21 +409,21 @@ model RunStepObject {
   /** The ID of the [run](/docs/api-reference/runs) that this run step is a part of. */
   run_id: string;
 
-  /** The type of run step, which can be either 'message_creation' or 'tool_calls'. */
+  /** The type of run step, which can be either `message_creation` or `tool_calls`. */
   type: "message_creation" | "tool_calls";
 
   /**
-   * The status of the run step, which can be either 'in_progress', 'cancelled', 'failed',
-   * 'completed', or 'expired'.
+   * The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
+   * `completed`, or `expired`.
    */
   status: "in_progress" | "cancelled" | "failed" | "completed" | "expired";
 
   /** The details of the run step. */
   step_details: RunStepDetailsMessageCreationObject | RunStepDetailsToolCallsObject;
 
-  /** The last error associated with this run step. Will be 'null' if there are no errors. */
+  /** The last error associated with this run step. Will be `null` if there are no errors. */
   last_error: {
-    /** One of 'server_error' or 'rate_limit_exceeded'. */
+    /** One of `server_error` or `rate_limit_exceeded`. */
     code: "server_error" | "rate_limit_exceeded";
 
     /** A human-readable description of the error. */
@@ -484,7 +484,7 @@ model RunToolCallObject {
    */
   id: string;
 
-  /** The type of tool call the output is required for. For now, this is always 'function'. */
+  /** The type of tool call the output is required for. For now, this is always `function`. */
   type: "function";
 
   /** The function definition. */

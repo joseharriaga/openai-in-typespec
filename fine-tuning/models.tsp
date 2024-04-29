@@ -21,7 +21,7 @@ model CreateFineTuningJobRequest {
    * See [upload file](/docs/api-reference/files/upload) for how to upload a file.
    *
    * Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
-   * the purpose 'fine-tune'.
+   * the purpose `fine-tune`.
    *
    * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
    */
@@ -51,8 +51,8 @@ model CreateFineTuningJobRequest {
   /**
    * A string of up to 18 characters that will be added to your fine-tuned model name.
    *
-   * For example, a 'suffix' of "custom-model-name" would produce a model name like
-   * 'ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel'.
+   * For example, a `suffix` of "custom-model-name" would produce a model name like
+   * `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
    */
   @minLength(1)
   @maxLength(40)
@@ -67,7 +67,7 @@ model CreateFineTuningJobRequest {
    * The same data should not be present in both train and validation files.
    *
    * Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
-   * 'fine-tune'.
+   * `fine-tune`.
    *
    * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
    */
@@ -86,7 +86,7 @@ model ListFineTuningJobEventsResponse {
 }
 
 /**
- * The 'fine_tuning.job' object represents a fine-tuning job that has been created through the API.
+ * The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
  */
 model FineTuningJob {
   /** The object identifier, which can be referenced in the API endpoints. */
@@ -101,7 +101,7 @@ model FineTuningJob {
   created_at: utcDateTime;
 
   /**
-   * For fine-tuning jobs that have 'failed', this will contain more information on the cause of
+   * For fine-tuning jobs that have `failed`, this will contain more information on the cause of
    * the failure.
    */
   error: {
@@ -112,7 +112,7 @@ model FineTuningJob {
     message: string;
 
     /**
-     * The parameter that was invalid, usually 'training_file' or 'validation_file'. This field
+     * The parameter that was invalid, usually `training_file` or `validation_file`. This field
      * will be null if the failure was not parameter-specific.
      */
     param: string | null;
@@ -165,8 +165,8 @@ model FineTuningJob {
   result_files: string[];
 
   /**
-   * The current status of the fine-tuning job, which can be either 'validating_files', 'queued',
-   * 'running', 'succeeded', 'failed', or 'cancelled'.
+   * The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
+   * `running`, `succeeded`, `failed`, or `cancelled`.
    */
   status:
     | "validating_files"

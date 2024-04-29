@@ -43,7 +43,7 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateTranslationResponseVerboseJson"/>. </summary>
-        /// <param name="language"> The language of the output translation (always 'english'). </param>
+        /// <param name="language"> The language of the output translation (always `english`). </param>
         /// <param name="duration"> The duration of the input audio. </param>
         /// <param name="text"> The translated text. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="language"/> or <paramref name="text"/> is null. </exception>
@@ -59,7 +59,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateTranslationResponseVerboseJson"/>. </summary>
-        /// <param name="language"> The language of the output translation (always 'english'). </param>
+        /// <param name="language"> The language of the output translation (always `english`). </param>
         /// <param name="duration"> The duration of the input audio. </param>
         /// <param name="text"> The translated text. </param>
         /// <param name="segments"> Segments of the translated text and their corresponding details. </param>
@@ -78,7 +78,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> The language of the output translation (always 'english'). </summary>
+        /// <summary> The language of the output translation (always `english`). </summary>
         public string Language { get; }
         /// <summary> The duration of the input audio. </summary>
         public TimeSpan Duration { get; }

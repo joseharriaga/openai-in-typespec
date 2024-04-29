@@ -48,7 +48,7 @@ namespace OpenAI.Internal.Models
         /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
         /// <param name="model">
-        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
         /// model) is currently available.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
@@ -66,7 +66,7 @@ namespace OpenAI.Internal.Models
         /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
         /// <param name="model">
-        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
         /// model) is currently available.
         /// </param>
         /// <param name="prompt">
@@ -74,8 +74,8 @@ namespace OpenAI.Internal.Models
         /// [prompt](/docs/guides/speech-to-text/prompting) should be in English.
         /// </param>
         /// <param name="responseFormat">
-        /// The format of the transcript output, in one of these options: 'json', 'text', 'srt',
-        /// 'verbose_json', or 'vtt'.
+        /// The format of the transcript output, in one of these options: `json`, `text`, `srt`,
+        /// `verbose_json`, or `vtt`.
         /// </param>
         /// <param name="temperature">
         /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
@@ -105,7 +105,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public string File { get; }
         /// <summary>
-        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
         /// model) is currently available.
         /// </summary>
         public CreateTranslationRequestModel Model { get; }
@@ -115,8 +115,8 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public string Prompt { get; set; }
         /// <summary>
-        /// The format of the transcript output, in one of these options: 'json', 'text', 'srt',
-        /// 'verbose_json', or 'vtt'.
+        /// The format of the transcript output, in one of these options: `json`, `text`, `srt`,
+        /// `verbose_json`, or `vtt`.
         /// </summary>
         public string ResponseFormat { get; set; }
         /// <summary>

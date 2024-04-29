@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageContentTextObject"/>. </summary>
-        /// <param name="type"> Always 'text'. </param>
+        /// <param name="type"> Always `text`. </param>
         /// <param name="text"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal MessageContentTextObject(MessageContentTextObjectType type, MessageContentTextObjectText text, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always 'text'. </summary>
+        /// <summary> Always `text`. </summary>
         public MessageContentTextObjectType Type { get; } = MessageContentTextObjectType.Text;
 
         /// <summary> Gets the text. </summary>

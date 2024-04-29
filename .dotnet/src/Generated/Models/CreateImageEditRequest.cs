@@ -66,14 +66,14 @@ namespace OpenAI.Internal.Models
         /// <param name="prompt"> A text description of the desired image(s). The maximum length is 1000 characters. </param>
         /// <param name="mask">
         /// An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where
-        /// 'image' should be edited. Must be a valid PNG file, less than 4MB, and have the same
-        /// dimensions as 'image'.
+        /// `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same
+        /// dimensions as `image`.
         /// </param>
-        /// <param name="model"> The model to use for image generation. Only 'dall-e-2' is supported at this time. </param>
+        /// <param name="model"> The model to use for image generation. Only `dall-e-2` is supported at this time. </param>
         /// <param name="n"> The number of images to generate. Must be between 1 and 10. </param>
-        /// <param name="size"> The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024'. </param>
+        /// <param name="size"> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </param>
         /// <param name="responseFormat">
-        /// The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+        /// The format in which the generated images are returned. Must be one of `url` or `b64_json`.
         /// URLs are only valid for 60 minutes after the image has been generated.
         /// </param>
         /// <param name="user">
@@ -121,8 +121,8 @@ namespace OpenAI.Internal.Models
         public string Prompt { get; }
         /// <summary>
         /// An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where
-        /// 'image' should be edited. Must be a valid PNG file, less than 4MB, and have the same
-        /// dimensions as 'image'.
+        /// `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same
+        /// dimensions as `image`.
         /// <para>
         /// To assign a byte[] to this property use <see cref="BinaryData.FromBytes(byte[])"/>.
         /// The byte[] will be serialized to a Base64 encoded string.
@@ -138,14 +138,14 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public BinaryData Mask { get; set; }
-        /// <summary> The model to use for image generation. Only 'dall-e-2' is supported at this time. </summary>
+        /// <summary> The model to use for image generation. Only `dall-e-2` is supported at this time. </summary>
         public CreateImageEditRequestModel? Model { get; set; }
         /// <summary> The number of images to generate. Must be between 1 and 10. </summary>
         public int? N { get; set; }
-        /// <summary> The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024'. </summary>
+        /// <summary> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </summary>
         public CreateImageEditRequestSize? Size { get; set; }
         /// <summary>
-        /// The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+        /// The format in which the generated images are returned. Must be one of `url` or `b64_json`.
         /// URLs are only valid for 60 minutes after the image has been generated.
         /// </summary>
         public CreateImageEditRequestResponseFormat? ResponseFormat { get; set; }

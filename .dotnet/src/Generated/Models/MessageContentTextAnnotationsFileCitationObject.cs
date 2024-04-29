@@ -64,7 +64,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFileCitationObject"/>. </summary>
-        /// <param name="type"> Always 'file_citation'. </param>
+        /// <param name="type"> Always `file_citation`. </param>
         /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="fileCitation"></param>
         /// <param name="startIndex"></param>
@@ -85,7 +85,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always 'file_citation'. </summary>
+        /// <summary> Always `file_citation`. </summary>
         public MessageContentTextAnnotationsFileCitationObjectType Type { get; } = MessageContentTextAnnotationsFileCitationObjectType.FileCitation;
 
         /// <summary> The text in the message content that needs to be replaced. </summary>

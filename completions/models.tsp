@@ -28,14 +28,14 @@ model CreateCompletionRequest {
   prompt: string | string[] | int32[] | int32[][] | null = "<|endoftext|>";
 
   /**
-   * Generates 'best_of' completions server-side and returns the "best" (the one with the highest
+   * Generates `best_of` completions server-side and returns the "best" (the one with the highest
    * log probability per token). Results cannot be streamed.
    *
-   * When used with 'n', 'best_of' controls the number of candidate completions and 'n' specifies
-   * how many to return – 'best_of' must be greater than 'n'.
+   * When used with `n`, `best_of` controls the number of candidate completions and `n` specifies
+   * how many to return – `best_of` must be greater than `n`.
    *
    * **Note:** Because this parameter generates many completions, it can quickly consume your token
-   * quota. Use carefully and ensure that you have reasonable settings for 'max_tokens' and 'stop'.
+   * quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
    */
   @minValue(0)
   @maxValue(20)
@@ -66,19 +66,19 @@ model CreateCompletionRequest {
    * values between -1 and 1 should decrease or increase likelihood of selection; values like -100
    * or 100 should result in a ban or exclusive selection of the relevant token.
    *
-   * As an example, you can pass '{"50256": -100}' to prevent the <|endoftext|> token from being
+   * As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|> token from being
    * generated.
    */
   @extension("x-oaiTypeLabel", "map")
   logit_bias?: Record<int32> | null;
 
   /**
-   * Include the log probabilities on the 'logprobs' most likely output tokens, as well the chosen
-   * tokens. For example, if 'logprobs' is 5, the API will return a list of the 5 most likely
-   * tokens. The API will always return the 'logprob' of the sampled token, so there may be up to
-   * 'logprobs+1' elements in the response.
+   * Include the log probabilities on the `logprobs` most likely output tokens, as well the chosen
+   * tokens. For example, if `logprobs` is 5, the API will return a list of the 5 most likely
+   * tokens. The API will always return the `logprob` of the sampled token, so there may be up to
+   * `logprobs+1` elements in the response.
    *
-   * The maximum value for 'logprobs' is 5.
+   * The maximum value for `logprobs` is 5.
    */
   @minValue(0)
   @maxValue(5)
@@ -87,7 +87,7 @@ model CreateCompletionRequest {
   /**
    * The maximum number of [tokens](/tokenizer) that can be generated in the completion.
    *
-   * The token count of your prompt plus 'max_tokens' cannot exceed the model's context length.
+   * The token count of your prompt plus `max_tokens` cannot exceed the model's context length.
    * [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
    * for counting tokens.
    */
@@ -98,7 +98,7 @@ model CreateCompletionRequest {
    * How many completions to generate for each prompt.
    *
    * **Note:** Because this parameter generates many completions, it can quickly consume your token
-   * quota. Use carefully and ensure that you have reasonable settings for 'max_tokens' and 'stop'.
+   * quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
    */
   @minValue(1)
   @maxValue(128)
@@ -117,9 +117,9 @@ model CreateCompletionRequest {
 
   /**
    * If specified, our system will make a best effort to sample deterministically, such that
-   * repeated requests with the same 'seed' and parameters should return the same result.
+   * repeated requests with the same `seed` and parameters should return the same result.
    *
-   * Determinism is not guaranteed, and you should refer to the 'system_fingerprint' response
+   * Determinism is not guaranteed, and you should refer to the `system_fingerprint` response
    * parameter to monitor changes in the backend.
    */
   @minValue(-9223372036854775808)
@@ -135,7 +135,7 @@ model CreateCompletionRequest {
   /**
    * Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent
    * events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-   * as they become available, with the stream terminated by a 'data: [DONE]' message. [Example
+   * as they become available, with the stream terminated by a `data: [DONE]` message. [Example
    * Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
    */
   stream?: boolean | null = false;
@@ -147,7 +147,7 @@ model CreateCompletionRequest {
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
    * more random, while lower values like 0.2 will make it more focused and deterministic.
    *
-   * We generally recommend altering this or 'top_p' but not both.
+   * We generally recommend altering this or `top_p` but not both.
    */
   @minValue(0)
   @maxValue(2)
@@ -158,7 +158,7 @@ model CreateCompletionRequest {
    * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
    * comprising the top 10% probability mass are considered.
    *
-   * We generally recommend altering this or 'temperature' but not both.
+   * We generally recommend altering this or `temperature` but not both.
    */
   @minValue(0)
   @maxValue(1)
@@ -182,10 +182,10 @@ model CreateCompletionResponse {
   /** The list of completion choices the model generated for the input prompt. */
   choices: {
     /**
-     * The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+     * The reason the model stopped generating tokens. This will be `stop` if the model hit a
      * natural stop point or a provided stop sequence,
-     * 'length' if the maximum number of tokens specified in the request was reached,
-     * or 'content_filter' if content was omitted due to a flag from our content filters.
+     * `length` if the maximum number of tokens specified in the request was reached,
+     * or `content_filter` if content was omitted due to a flag from our content filters.
      */
     finish_reason: "stop" | "length" | "content_filter";
 
@@ -213,7 +213,7 @@ model CreateCompletionResponse {
   /**
    * This fingerprint represents the backend configuration that the model runs with.
    *
-   * Can be used in conjunction with the 'seed' request parameter to understand when backend
+   * Can be used in conjunction with the `seed` request parameter to understand when backend
    * changes have been made that might impact determinism.
    */
   system_fingerprint?: string;

@@ -45,7 +45,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionFunctionResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. </param>
-        /// <param name="choices"> A list of chat completion choices. Can be more than one if 'n' is greater than 1. </param>
+        /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. </param>
         /// <param name="model"> The model used for the chat completion. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="choices"/> or <paramref name="model"/> is null. </exception>
@@ -63,16 +63,16 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionFunctionResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. </param>
-        /// <param name="choices"> A list of chat completion choices. Can be more than one if 'n' is greater than 1. </param>
+        /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. </param>
         /// <param name="model"> The model used for the chat completion. </param>
         /// <param name="systemFingerprint">
         /// This fingerprint represents the backend configuration that the model runs with.
         ///
-        /// Can be used in conjunction with the 'seed' request parameter to understand when backend
+        /// Can be used in conjunction with the `seed` request parameter to understand when backend
         /// changes have been made that might impact determinism.
         /// </param>
-        /// <param name="object"> The object type, which is always 'chat.completion'. </param>
+        /// <param name="object"> The object type, which is always `chat.completion`. </param>
         /// <param name="usage"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateChatCompletionFunctionResponse(string id, IReadOnlyList<CreateChatCompletionFunctionResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, string @object, CompletionUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -94,7 +94,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> A unique identifier for the chat completion. </summary>
         public string Id { get; }
-        /// <summary> A list of chat completion choices. Can be more than one if 'n' is greater than 1. </summary>
+        /// <summary> A list of chat completion choices. Can be more than one if `n` is greater than 1. </summary>
         public IReadOnlyList<CreateChatCompletionFunctionResponseChoice> Choices { get; }
         /// <summary> The Unix timestamp (in seconds) of when the chat completion was created. </summary>
         public DateTimeOffset Created { get; }
@@ -103,11 +103,11 @@ namespace OpenAI.Internal.Models
         /// <summary>
         /// This fingerprint represents the backend configuration that the model runs with.
         ///
-        /// Can be used in conjunction with the 'seed' request parameter to understand when backend
+        /// Can be used in conjunction with the `seed` request parameter to understand when backend
         /// changes have been made that might impact determinism.
         /// </summary>
         public string SystemFingerprint { get; }
-        /// <summary> The object type, which is always 'chat.completion'. </summary>
+        /// <summary> The object type, which is always `chat.completion`. </summary>
         public string Object { get; } = "chat.completion";
 
         /// <summary> Gets the usage. </summary>

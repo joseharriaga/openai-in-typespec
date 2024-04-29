@@ -57,7 +57,7 @@ namespace OpenAI.Internal.Models
         /// failed.
         /// </param>
         /// <param name="noSpeechProb">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the 'avg_logprob'
+        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
         /// is below -1, consider this segment silent.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="tokens"/> is null. </exception>
@@ -92,7 +92,7 @@ namespace OpenAI.Internal.Models
         /// failed.
         /// </param>
         /// <param name="noSpeechProb">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the 'avg_logprob'
+        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
         /// is below -1, consider this segment silent.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -138,7 +138,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public double CompressionRatio { get; }
         /// <summary>
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the 'avg_logprob'
+        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
         /// is below -1, consider this segment silent.
         /// </summary>
         public double NoSpeechProb { get; }

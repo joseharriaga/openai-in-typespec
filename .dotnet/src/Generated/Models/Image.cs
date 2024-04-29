@@ -48,8 +48,8 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="Image"/>. </summary>
-        /// <param name="b64Json"> The base64-encoded JSON of the generated image, if 'response_format' is 'b64_json'. </param>
-        /// <param name="url"> The URL of the generated image, if 'response_format' is 'url' (default). </param>
+        /// <param name="b64Json"> The base64-encoded JSON of the generated image, if `response_format` is `b64_json`. </param>
+        /// <param name="url"> The URL of the generated image, if `response_format` is `url` (default). </param>
         /// <param name="revisedPrompt"> The prompt that was used to generate the image, if there was any revision to the prompt. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal Image(BinaryData b64Json, Uri url, string revisedPrompt, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -61,7 +61,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary>
-        /// The base64-encoded JSON of the generated image, if 'response_format' is 'b64_json'.
+        /// The base64-encoded JSON of the generated image, if `response_format` is `b64_json`.
         /// <para>
         /// To assign a byte[] to this property use <see cref="BinaryData.FromBytes(byte[])"/>.
         /// The byte[] will be serialized to a Base64 encoded string.
@@ -77,7 +77,7 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public BinaryData B64Json { get; }
-        /// <summary> The URL of the generated image, if 'response_format' is 'url' (default). </summary>
+        /// <summary> The URL of the generated image, if `response_format` is `url` (default). </summary>
         public Uri Url { get; }
         /// <summary> The prompt that was used to generate the image, if there was any revision to the prompt. </summary>
         public string RevisedPrompt { get; }

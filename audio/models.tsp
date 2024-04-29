@@ -8,7 +8,7 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateSpeechRequest {
-  /** One of the available [TTS models](/docs/models/tts): 'tts-1' or 'tts-1-hd' */
+  /** One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd` */
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "tts-1" | "tts-1-hd";
 
@@ -17,18 +17,18 @@ model CreateSpeechRequest {
   input: string;
 
   /**
-   * The voice to use when generating the audio. Supported voices are 'alloy', 'echo', 'fable',
-   * 'onyx', 'nova', and 'shimmer'. Previews of the voices are available in the [Text to speech
+   * The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`,
+   * `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech
    * guide](/docs/guides/text-to-speech/voice-options).
    */
   voice: "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
 
   /**
-   * The format to audio in. Supported formats are 'mp3', 'opus', 'aac', 'flac', 'wav', and 'pcm'.
+   * The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`.
    */
   response_format?: "mp3" | "opus" | "aac" | "flac" | "wav" | "pcm" = "mp3";
 
-  /** The speed of the generated audio. Select a value from '0.25' to '4.0'. '1.0' is the default. */
+  /** The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. */
   @minValue(0.25)
   @maxValue(4.0)
   speed?: float64 = 1.0;
@@ -43,7 +43,7 @@ model CreateTranscriptionRequest {
   file: string;
 
   /**
-   * ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+   * ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
    * model) is currently available.
    */
   @extension("x-oaiTypeLabel", "string")
@@ -63,8 +63,8 @@ model CreateTranscriptionRequest {
   prompt?: string;
 
   /**
-   * The format of the transcript output, in one of these options: 'json', 'text', 'srt',
-   * 'verbose_json', or 'vtt'.
+   * The format of the transcript output, in one of these options: `json`, `text`, `srt`,
+   * `verbose_json`, or `vtt`.
    */
   response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
 
@@ -77,9 +77,9 @@ model CreateTranscriptionRequest {
   temperature?: float64 = 0;
 
   /**
-   * The timestamp granularities to populate for this transcription. 'response_format' must be set
-   * 'verbose_json' to use timestamp granularities. Either or both of these options are supported:
-   * 'word', or 'segment'. Note: There is no additional latency for segment timestamps, but
+   * The timestamp granularities to populate for this transcription. `response_format` must be set
+   * `verbose_json` to use timestamp granularities. Either or both of these options are supported:
+   * `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
    * generating word timestamps incurs additional latency.
    */
   timestamp_granularities?: ("word" | "segment")[] = ["segment"];
@@ -94,7 +94,7 @@ model CreateTranslationRequest {
   file: string;
 
   /**
-   * ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+   * ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
    * model) is currently available.
    */
   @extension("x-oaiTypeLabel", "string")
@@ -107,8 +107,8 @@ model CreateTranslationRequest {
   prompt?: string;
 
   /**
-   * The format of the transcript output, in one of these options: 'json', 'text', 'srt',
-   * 'verbose_json', or 'vtt'.
+   * The format of the transcript output, in one of these options: `json`, `text`, `srt`,
+   * `verbose_json`, or `vtt`.
    */
   response_format?: string = "json";
 
@@ -154,7 +154,7 @@ model CreateTranslationResponseJson {
 }
 
 model CreateTranslationResponseVerboseJson {
-  /** The language of the output translation (always 'english'). */
+  /** The language of the output translation (always `english`). */
   language: string;
 
   /** The duration of the input audio. */
@@ -205,7 +205,7 @@ model TranscriptionSegment {
   compression_ratio: float64;
 
   /**
-   * Probability of no speech in the segment. If the value is higher than 1.0 and the 'avg_logprob'
+   * Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
    * is below -1, consider this segment silent.
    */
   no_speech_prob: float64;

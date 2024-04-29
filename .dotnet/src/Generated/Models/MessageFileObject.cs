@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> A list of files attached to a 'message'. </summary>
+    /// <summary> A list of files attached to a `message`. </summary>
     internal partial class MessageFileObject
     {
         /// <summary>
@@ -62,7 +62,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="MessageFileObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always 'thread.message.file'. </param>
+        /// <param name="object"> The object type, which is always `thread.message.file`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message file was created. </param>
         /// <param name="messageId">
         /// The ID of the [message](/docs/api-reference/messages) that the
@@ -85,7 +85,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always 'thread.message.file'. </summary>
+        /// <summary> The object type, which is always `thread.message.file`. </summary>
         public MessageFileObjectObject Object { get; } = MessageFileObjectObject.ThreadMessageFile;
 
         /// <summary> The Unix timestamp (in seconds) for when the message file was created. </summary>

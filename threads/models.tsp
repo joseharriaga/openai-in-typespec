@@ -43,7 +43,7 @@ model ThreadObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always 'thread'. */
+  /** The object type, which is always `thread`. */
   object: "thread";
 
   /** The Unix timestamp (in seconds) for when the thread was created. */

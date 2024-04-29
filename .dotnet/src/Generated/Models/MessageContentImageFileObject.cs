@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageContentImageFileObject"/>. </summary>
-        /// <param name="type"> Always 'image_file'. </param>
+        /// <param name="type"> Always `image_file`. </param>
         /// <param name="imageFile"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal MessageContentImageFileObject(MessageContentImageFileObjectType type, MessageContentImageFileObjectImageFile imageFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always 'image_file'. </summary>
+        /// <summary> Always `image_file`. </summary>
         public MessageContentImageFileObjectType Type { get; } = MessageContentImageFileObjectType.ImageFile;
 
         /// <summary> Gets the image file. </summary>

@@ -49,11 +49,11 @@ namespace OpenAI.Internal.Models
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run. </param>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. </param>
         /// <param name="status">
-        /// The status of the run, which can be either 'queued', 'in_progress', 'requires_action',
-        /// 'cancelling', 'cancelled', 'failed', 'completed', or 'expired'.
+        /// The status of the run, which can be either `queued`, `in_progress`, `requires_action`,
+        /// `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
         /// </param>
-        /// <param name="requiredAction"> Details on the action required to continue the run. Will be 'null' if no action is required. </param>
-        /// <param name="lastError"> The last error associated with this run. Will be 'null' if there are no errors. </param>
+        /// <param name="requiredAction"> Details on the action required to continue the run. Will be `null` if no action is required. </param>
+        /// <param name="lastError"> The last error associated with this run. Will be `null` if there are no errors. </param>
         /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the run will expire. </param>
         /// <param name="startedAt"> The Unix timestamp (in seconds) for when the run was started. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run was cancelled. </param>
@@ -106,16 +106,16 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always 'thread.run'. </param>
+        /// <param name="object"> The object type, which is always `thread.run`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the run was created. </param>
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run. </param>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. </param>
         /// <param name="status">
-        /// The status of the run, which can be either 'queued', 'in_progress', 'requires_action',
-        /// 'cancelling', 'cancelled', 'failed', 'completed', or 'expired'.
+        /// The status of the run, which can be either `queued`, `in_progress`, `requires_action`,
+        /// `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
         /// </param>
-        /// <param name="requiredAction"> Details on the action required to continue the run. Will be 'null' if no action is required. </param>
-        /// <param name="lastError"> The last error associated with this run. Will be 'null' if there are no errors. </param>
+        /// <param name="requiredAction"> Details on the action required to continue the run. Will be `null` if no action is required. </param>
+        /// <param name="lastError"> The last error associated with this run. Will be `null` if there are no errors. </param>
         /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the run will expire. </param>
         /// <param name="startedAt"> The Unix timestamp (in seconds) for when the run was started. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run was cancelled. </param>
@@ -166,7 +166,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always 'thread.run'. </summary>
+        /// <summary> The object type, which is always `thread.run`. </summary>
         public RunObjectObject Object { get; } = RunObjectObject.ThreadRun;
 
         /// <summary> The Unix timestamp (in seconds) for when the run was created. </summary>
@@ -176,13 +176,13 @@ namespace OpenAI.Internal.Models
         /// <summary> The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. </summary>
         public string AssistantId { get; }
         /// <summary>
-        /// The status of the run, which can be either 'queued', 'in_progress', 'requires_action',
-        /// 'cancelling', 'cancelled', 'failed', 'completed', or 'expired'.
+        /// The status of the run, which can be either `queued`, `in_progress`, `requires_action`,
+        /// `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
         /// </summary>
         public RunObjectStatus Status { get; }
-        /// <summary> Details on the action required to continue the run. Will be 'null' if no action is required. </summary>
+        /// <summary> Details on the action required to continue the run. Will be `null` if no action is required. </summary>
         public RunObjectRequiredAction RequiredAction { get; }
-        /// <summary> The last error associated with this run. Will be 'null' if there are no errors. </summary>
+        /// <summary> The last error associated with this run. Will be `null` if there are no errors. </summary>
         public RunObjectLastError LastError { get; }
         /// <summary> The Unix timestamp (in seconds) for when the run will expire. </summary>
         public DateTimeOffset ExpiresAt { get; }

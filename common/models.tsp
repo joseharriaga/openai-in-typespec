@@ -24,7 +24,7 @@ model ErrorResponse {
  * reference](https://json-schema.org/understanding-json-schema/) for documentation about the
  * format.
  *
- * Omitting 'parameters' defines a function with an empty parameter list.
+ * Omitting `parameters` defines a function with an empty parameter list.
  */
 alias FunctionParameters = Record<unknown>;
 

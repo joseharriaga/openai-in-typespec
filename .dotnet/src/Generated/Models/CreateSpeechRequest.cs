@@ -43,11 +43,11 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateSpeechRequest"/>. </summary>
-        /// <param name="model"> One of the available [TTS models](/docs/models/tts): 'tts-1' or 'tts-1-hd'. </param>
+        /// <param name="model"> One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`. </param>
         /// <param name="input"> The text to generate audio for. The maximum length is 4096 characters. </param>
         /// <param name="voice">
-        /// The voice to use when generating the audio. Supported voices are 'alloy', 'echo', 'fable',
-        /// 'onyx', 'nova', and 'shimmer'. Previews of the voices are available in the [Text to speech
+        /// The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`,
+        /// `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech
         /// guide](/docs/guides/text-to-speech/voice-options).
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="input"/> is null. </exception>
@@ -61,15 +61,15 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateSpeechRequest"/>. </summary>
-        /// <param name="model"> One of the available [TTS models](/docs/models/tts): 'tts-1' or 'tts-1-hd'. </param>
+        /// <param name="model"> One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`. </param>
         /// <param name="input"> The text to generate audio for. The maximum length is 4096 characters. </param>
         /// <param name="voice">
-        /// The voice to use when generating the audio. Supported voices are 'alloy', 'echo', 'fable',
-        /// 'onyx', 'nova', and 'shimmer'. Previews of the voices are available in the [Text to speech
+        /// The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`,
+        /// `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech
         /// guide](/docs/guides/text-to-speech/voice-options).
         /// </param>
-        /// <param name="responseFormat"> The format to audio in. Supported formats are 'mp3', 'opus', 'aac', 'flac', 'wav', and 'pcm'. </param>
-        /// <param name="speed"> The speed of the generated audio. Select a value from '0.25' to '4.0'. '1.0' is the default. </param>
+        /// <param name="responseFormat"> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`. </param>
+        /// <param name="speed"> The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateSpeechRequest(CreateSpeechRequestModel model, string input, CreateSpeechRequestVoice voice, CreateSpeechRequestResponseFormat? responseFormat, double? speed, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -86,19 +86,19 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> One of the available [TTS models](/docs/models/tts): 'tts-1' or 'tts-1-hd'. </summary>
+        /// <summary> One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`. </summary>
         public CreateSpeechRequestModel Model { get; }
         /// <summary> The text to generate audio for. The maximum length is 4096 characters. </summary>
         public string Input { get; }
         /// <summary>
-        /// The voice to use when generating the audio. Supported voices are 'alloy', 'echo', 'fable',
-        /// 'onyx', 'nova', and 'shimmer'. Previews of the voices are available in the [Text to speech
+        /// The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`,
+        /// `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech
         /// guide](/docs/guides/text-to-speech/voice-options).
         /// </summary>
         public CreateSpeechRequestVoice Voice { get; }
-        /// <summary> The format to audio in. Supported formats are 'mp3', 'opus', 'aac', 'flac', 'wav', and 'pcm'. </summary>
+        /// <summary> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`. </summary>
         public CreateSpeechRequestResponseFormat? ResponseFormat { get; set; }
-        /// <summary> The speed of the generated audio. Select a value from '0.25' to '4.0'. '1.0' is the default. </summary>
+        /// <summary> The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. </summary>
         public double? Speed { get; set; }
     }
 }

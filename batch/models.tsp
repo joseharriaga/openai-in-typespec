@@ -10,14 +10,14 @@ namespace OpenAI;
 model Batch {
   id: string;
 
-  /** The object type, which is always 'batch'. */
+  /** The object type, which is always `batch`. */
   object: "batch";
 
   /** The OpenAI API endpoint used by the batch. */
   endpoint: string;
 
   errors?: {
-    /** The object type, which is always 'list'. */
+    /** The object type, which is always `list`. */
     object?: string;
 
     data?: {
@@ -42,15 +42,7 @@ model Batch {
   completion_window: string;
 
   /** The current status of the batch. */
-  status:
-    | "validating"
-    | "failed"
-    | "in_progress"
-    | "finalizing"
-    | "completed"
-    | "expired"
-    | "cancelling"
-    | "cancelled";
+  status: "validating" | "failed" | "in_progress" | "finalizing" | "completed" | "expired" | "cancelling" | "cancelled";
 
   /** The ID of the file containing the outputs of successfully executed requests. */
   output_file_id?: string;
@@ -60,74 +52,47 @@ model Batch {
 
   /** The Unix timestamp (in seconds) for when the batch was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   created_at: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the batch started processing. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   in_progress_at?: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the batch will expire. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   expires_at?: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the batch started finalizing. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   finalizing_at?: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the batch was completed. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   completed_at?: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the batch failed. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   failed_at?: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the batch expired. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   expired_at?: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the batch started cancelling. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   cancelling_at?: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the batch was cancelled. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
+  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
   cancelled_at?: utcDateTime;
 
   /** The request counts for different statuses within the batch. */
@@ -159,11 +124,11 @@ model BatchRequestInput {
    */
   custom_id?: string;
 
-  /** The HTTP method to be used for the request. Currently only 'POST' is supported. */
+  /** The HTTP method to be used for the request. Currently only `POST` is supported. */
   method?: "POST";
 
   /**
-   * The OpenAI API relative URL to be used for the request. Currently only '/v1/chat/completions'
+   * The OpenAI API relative URL to be used for the request. Currently only `/v1/chat/completions`
    * is supported.
    */
   @extension("x-customTspIngestionRule", "url uses the url type")
@@ -207,8 +172,13 @@ model BatchRequestOutput {
 
 model ListBatchesResponse {
   data: Batch[];
+
   first_id?: string;
+
   last_id?: string;
+
   has_more: boolean;
+
   object: "list";
 }
+

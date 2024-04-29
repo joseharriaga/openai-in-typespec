@@ -140,7 +140,11 @@ model CreateCompletionRequest {
    */
   stream?: boolean | null = false;
 
-  /** The suffix that comes after a completion of inserted text. */
+  /**
+   * The suffix that comes after a completion of inserted text.
+   *
+   * This parameter is only supported for 'gpt-3.5-turbo-instruct'.
+   */
   suffix?: string | null;
 
   /**

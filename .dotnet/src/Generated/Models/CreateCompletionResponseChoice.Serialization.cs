@@ -21,10 +21,10 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
+            writer.WritePropertyName("finish_reason"u8);
+            writer.WriteStringValue(FinishReason.ToString());
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
-            writer.WritePropertyName("text"u8);
-            writer.WriteStringValue(Text);
             if (Logprobs != null)
             {
                 writer.WritePropertyName("logprobs"u8);
@@ -34,8 +34,8 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("logprobs");
             }
-            writer.WritePropertyName("finish_reason"u8);
-            writer.WriteStringValue(FinishReason.ToString());
+            writer.WritePropertyName("text"u8);
+            writer.WriteStringValue(Text);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -74,22 +74,22 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            long index = default;
-            string text = default;
-            CreateCompletionResponseChoiceLogprobs logprobs = default;
             CreateCompletionResponseChoiceFinishReason finishReason = default;
+            int index = default;
+            CreateCompletionResponseChoiceLogprobs logprobs = default;
+            string text = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("index"u8))
+                if (property.NameEquals("finish_reason"u8))
                 {
-                    index = property.Value.GetInt64();
+                    finishReason = new CreateCompletionResponseChoiceFinishReason(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("text"u8))
+                if (property.NameEquals("index"u8))
                 {
-                    text = property.Value.GetString();
+                    index = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("logprobs"u8))
@@ -102,9 +102,9 @@ namespace OpenAI.Internal.Models
                     logprobs = CreateCompletionResponseChoiceLogprobs.DeserializeCreateCompletionResponseChoiceLogprobs(property.Value, options);
                     continue;
                 }
-                if (property.NameEquals("finish_reason"u8))
+                if (property.NameEquals("text"u8))
                 {
-                    finishReason = new CreateCompletionResponseChoiceFinishReason(property.Value.GetString());
+                    text = property.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -113,7 +113,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateCompletionResponseChoice(index, text, logprobs, finishReason, serializedAdditionalRawData);
+            return new CreateCompletionResponseChoice(finishReason, index, logprobs, text, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateCompletionResponseChoice>.Write(ModelReaderWriterOptions options)

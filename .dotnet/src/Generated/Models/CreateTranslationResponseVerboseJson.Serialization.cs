@@ -21,8 +21,6 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("task"u8);
-            writer.WriteStringValue(Task.ToString());
             writer.WritePropertyName("language"u8);
             writer.WriteStringValue(Language);
             writer.WritePropertyName("duration"u8);
@@ -77,7 +75,6 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            CreateTranslationResponseVerboseJsonTask task = default;
             string language = default;
             TimeSpan duration = default;
             string text = default;
@@ -86,11 +83,6 @@ namespace OpenAI.Internal.Models
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("task"u8))
-                {
-                    task = new CreateTranslationResponseVerboseJsonTask(property.Value.GetString());
-                    continue;
-                }
                 if (property.NameEquals("language"u8))
                 {
                     language = property.Value.GetString();
@@ -126,13 +118,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateTranslationResponseVerboseJson(
-                task,
-                language,
-                duration,
-                text,
-                segments ?? new ChangeTrackingList<TranscriptionSegment>(),
-                serializedAdditionalRawData);
+            return new CreateTranslationResponseVerboseJson(language, duration, text, segments ?? new ChangeTrackingList<TranscriptionSegment>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateTranslationResponseVerboseJson>.Write(ModelReaderWriterOptions options)

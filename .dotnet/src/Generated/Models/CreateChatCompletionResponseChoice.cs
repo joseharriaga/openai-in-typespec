@@ -44,17 +44,18 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionResponseChoice"/>. </summary>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
-        /// natural stop point or a provided stop sequence, `length` if the maximum number of tokens
-        /// specified in the request was reached, `content_filter` if content was omitted due to a flag
-        /// from our content filters, `tool_calls` if the model called a tool, or `function_call`
-        /// (deprecated) if the model called a function.
+        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// natural stop point or a provided stop sequence,
+        /// 'length' if the maximum number of tokens specified in the request was reached,
+        /// 'content_filter' if content was omitted due to a flag from our content filters,
+        /// 'tool_calls' if the model called a tool, or 'function_call' (deprecated) if the model called
+        /// a function.
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
-        internal CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason, long index, ChatCompletionResponseMessage message, CreateChatCompletionResponseChoiceLogprobs logprobs)
+        internal CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason, int index, ChatCompletionResponseMessage message, CreateChatCompletionResponseChoiceLogprobs logprobs)
         {
             Argument.AssertNotNull(message, nameof(message));
 
@@ -66,17 +67,18 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionResponseChoice"/>. </summary>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
-        /// natural stop point or a provided stop sequence, `length` if the maximum number of tokens
-        /// specified in the request was reached, `content_filter` if content was omitted due to a flag
-        /// from our content filters, `tool_calls` if the model called a tool, or `function_call`
-        /// (deprecated) if the model called a function.
+        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// natural stop point or a provided stop sequence,
+        /// 'length' if the maximum number of tokens specified in the request was reached,
+        /// 'content_filter' if content was omitted due to a flag from our content filters,
+        /// 'tool_calls' if the model called a tool, or 'function_call' (deprecated) if the model called
+        /// a function.
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason, long index, ChatCompletionResponseMessage message, CreateChatCompletionResponseChoiceLogprobs logprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason, int index, ChatCompletionResponseMessage message, CreateChatCompletionResponseChoiceLogprobs logprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FinishReason = finishReason;
             Index = index;
@@ -91,15 +93,16 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary>
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
-        /// natural stop point or a provided stop sequence, `length` if the maximum number of tokens
-        /// specified in the request was reached, `content_filter` if content was omitted due to a flag
-        /// from our content filters, `tool_calls` if the model called a tool, or `function_call`
-        /// (deprecated) if the model called a function.
+        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// natural stop point or a provided stop sequence,
+        /// 'length' if the maximum number of tokens specified in the request was reached,
+        /// 'content_filter' if content was omitted due to a flag from our content filters,
+        /// 'tool_calls' if the model called a tool, or 'function_call' (deprecated) if the model called
+        /// a function.
         /// </summary>
         public CreateChatCompletionResponseChoiceFinishReason FinishReason { get; }
         /// <summary> The index of the choice in the list of choices. </summary>
-        public long Index { get; }
+        public int Index { get; }
         /// <summary> Gets the message. </summary>
         public ChatCompletionResponseMessage Message { get; }
         /// <summary> Log probability information for the choice. </summary>

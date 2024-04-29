@@ -57,11 +57,11 @@ namespace OpenAI.Internal.Models
         /// failed.
         /// </param>
         /// <param name="noSpeechProb">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
+        /// Probability of no speech in the segment. If the value is higher than 1.0 and the 'avg_logprob'
         /// is below -1, consider this segment silent.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="tokens"/> is null. </exception>
-        internal TranscriptionSegment(long id, long seek, TimeSpan start, TimeSpan end, string text, IEnumerable<long> tokens, double temperature, double avgLogprob, double compressionRatio, double noSpeechProb)
+        internal TranscriptionSegment(int id, int seek, TimeSpan start, TimeSpan end, string text, IEnumerable<int> tokens, double temperature, double avgLogprob, double compressionRatio, double noSpeechProb)
         {
             Argument.AssertNotNull(text, nameof(text));
             Argument.AssertNotNull(tokens, nameof(tokens));
@@ -92,11 +92,11 @@ namespace OpenAI.Internal.Models
         /// failed.
         /// </param>
         /// <param name="noSpeechProb">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
+        /// Probability of no speech in the segment. If the value is higher than 1.0 and the 'avg_logprob'
         /// is below -1, consider this segment silent.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal TranscriptionSegment(long id, long seek, TimeSpan start, TimeSpan end, string text, IReadOnlyList<long> tokens, double temperature, double avgLogprob, double compressionRatio, double noSpeechProb, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal TranscriptionSegment(int id, int seek, TimeSpan start, TimeSpan end, string text, IReadOnlyList<int> tokens, double temperature, double avgLogprob, double compressionRatio, double noSpeechProb, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Seek = seek;
@@ -117,9 +117,9 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Unique identifier of the segment. </summary>
-        public long Id { get; }
+        public int Id { get; }
         /// <summary> Seek offset of the segment. </summary>
-        public long Seek { get; }
+        public int Seek { get; }
         /// <summary> Start time of the segment in seconds. </summary>
         public TimeSpan Start { get; }
         /// <summary> End time of the segment in seconds. </summary>
@@ -127,7 +127,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Text content of the segment. </summary>
         public string Text { get; }
         /// <summary> Array of token IDs for the text content. </summary>
-        public IReadOnlyList<long> Tokens { get; }
+        public IReadOnlyList<int> Tokens { get; }
         /// <summary> Temperature parameter used for generating the segment. </summary>
         public double Temperature { get; }
         /// <summary> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </summary>
@@ -138,7 +138,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public double CompressionRatio { get; }
         /// <summary>
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
+        /// Probability of no speech in the segment. If the value is higher than 1.0 and the 'avg_logprob'
         /// is below -1, consider this segment silent.
         /// </summary>
         public double NoSpeechProb { get; }

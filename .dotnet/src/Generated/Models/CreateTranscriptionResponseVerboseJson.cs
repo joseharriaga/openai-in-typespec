@@ -60,16 +60,14 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateTranscriptionResponseVerboseJson"/>. </summary>
-        /// <param name="task"> The task label. </param>
         /// <param name="language"> The language of the input audio. </param>
         /// <param name="duration"> The duration of the input audio. </param>
         /// <param name="text"> The transcribed text. </param>
         /// <param name="words"> Extracted words and their corresponding timestamps. </param>
         /// <param name="segments"> Segments of the transcribed text and their corresponding details. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateTranscriptionResponseVerboseJson(CreateTranscriptionResponseVerboseJsonTask task, string language, TimeSpan duration, string text, IReadOnlyList<TranscriptionWord> words, IReadOnlyList<TranscriptionSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateTranscriptionResponseVerboseJson(string language, TimeSpan duration, string text, IReadOnlyList<TranscriptionWord> words, IReadOnlyList<TranscriptionSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Task = task;
             Language = language;
             Duration = duration;
             Text = text;
@@ -82,9 +80,6 @@ namespace OpenAI.Internal.Models
         internal CreateTranscriptionResponseVerboseJson()
         {
         }
-
-        /// <summary> The task label. </summary>
-        public CreateTranscriptionResponseVerboseJsonTask Task { get; } = CreateTranscriptionResponseVerboseJsonTask.Transcribe;
 
         /// <summary> The language of the input audio. </summary>
         public string Language { get; }

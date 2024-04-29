@@ -23,15 +23,8 @@ namespace OpenAI.Internal.Models
             writer.WriteStartObject();
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            if (Bytes != null)
-            {
-                writer.WritePropertyName("bytes"u8);
-                writer.WriteNumberValue(Bytes.Value);
-            }
-            else
-            {
-                writer.WriteNull("bytes");
-            }
+            writer.WritePropertyName("bytes"u8);
+            writer.WriteNumberValue(Bytes);
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("filename"u8);
@@ -86,7 +79,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string id = default;
-            long? bytes = default;
+            int bytes = default;
             DateTimeOffset createdAt = default;
             string filename = default;
             OpenAIFileObject @object = default;
@@ -104,12 +97,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("bytes"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        bytes = null;
-                        continue;
-                    }
-                    bytes = property.Value.GetInt64();
+                    bytes = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("created_at"u8))

@@ -48,7 +48,7 @@ namespace OpenAI.Internal.Models
         /// <param name="model"> The name of the model used to generate the embedding. </param>
         /// <param name="usage"> The usage information for the request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="data"/>, <paramref name="model"/> or <paramref name="usage"/> is null. </exception>
-        internal CreateEmbeddingResponse(IEnumerable<Embedding> data, string model, EmbeddingUsage usage)
+        internal CreateEmbeddingResponse(IEnumerable<Embedding> data, string model, CreateEmbeddingResponseUsage usage)
         {
             Argument.AssertNotNull(data, nameof(data));
             Argument.AssertNotNull(model, nameof(model));
@@ -65,7 +65,7 @@ namespace OpenAI.Internal.Models
         /// <param name="object"> The object type, which is always "list". </param>
         /// <param name="usage"> The usage information for the request. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateEmbeddingResponse(IReadOnlyList<Embedding> data, string model, CreateEmbeddingResponseObject @object, EmbeddingUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateEmbeddingResponse(IReadOnlyList<Embedding> data, string model, CreateEmbeddingResponseObject @object, CreateEmbeddingResponseUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Data = data;
             Model = model;
@@ -87,6 +87,6 @@ namespace OpenAI.Internal.Models
         public CreateEmbeddingResponseObject Object { get; } = CreateEmbeddingResponseObject.List;
 
         /// <summary> The usage information for the request. </summary>
-        public EmbeddingUsage Usage { get; }
+        public CreateEmbeddingResponseUsage Usage { get; }
     }
 }

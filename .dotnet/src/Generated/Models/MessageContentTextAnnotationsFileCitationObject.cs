@@ -52,7 +52,7 @@ namespace OpenAI.Internal.Models
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="fileCitation"/> is null. </exception>
-        internal MessageContentTextAnnotationsFileCitationObject(string text, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, long startIndex, long endIndex)
+        internal MessageContentTextAnnotationsFileCitationObject(string text, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, int startIndex, int endIndex)
         {
             Argument.AssertNotNull(text, nameof(text));
             Argument.AssertNotNull(fileCitation, nameof(fileCitation));
@@ -64,13 +64,13 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFileCitationObject"/>. </summary>
-        /// <param name="type"> Always `file_citation`. </param>
+        /// <param name="type"> Always 'file_citation'. </param>
         /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="fileCitation"></param>
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageContentTextAnnotationsFileCitationObject(MessageContentTextAnnotationsFileCitationObjectType type, string text, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, long startIndex, long endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageContentTextAnnotationsFileCitationObject(MessageContentTextAnnotationsFileCitationObjectType type, string text, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, int startIndex, int endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             Text = text;
@@ -85,7 +85,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always `file_citation`. </summary>
+        /// <summary> Always 'file_citation'. </summary>
         public MessageContentTextAnnotationsFileCitationObjectType Type { get; } = MessageContentTextAnnotationsFileCitationObjectType.FileCitation;
 
         /// <summary> The text in the message content that needs to be replaced. </summary>
@@ -93,8 +93,8 @@ namespace OpenAI.Internal.Models
         /// <summary> Gets the file citation. </summary>
         public MessageContentTextAnnotationsFileCitationObjectFileCitation FileCitation { get; }
         /// <summary> Gets the start index. </summary>
-        public long StartIndex { get; }
+        public int StartIndex { get; }
         /// <summary> Gets the end index. </summary>
-        public long EndIndex { get; }
+        public int EndIndex { get; }
     }
 }

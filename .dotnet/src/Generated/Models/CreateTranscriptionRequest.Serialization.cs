@@ -22,7 +22,7 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("file"u8);
-            writer.WriteBase64StringValue(File.ToArray(), "D");
+            writer.WriteStringValue(File);
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(Language))
@@ -105,7 +105,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            BinaryData file = default;
+            string file = default;
             CreateTranscriptionRequestModel model = default;
             string language = default;
             string prompt = default;
@@ -118,7 +118,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("file"u8))
                 {
-                    file = BinaryData.FromBytes(property.Value.GetBytesFromBase64("D"));
+                    file = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("model"u8))

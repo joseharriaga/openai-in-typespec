@@ -28,13 +28,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssistantObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/AssistantObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -90,13 +86,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListAssistantsResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListAssistantsResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /assistants/{assistant_id}:
     get:
       tags:
@@ -116,13 +108,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssistantObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/AssistantObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
         - Assistants
@@ -141,13 +129,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssistantObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/AssistantObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -172,13 +156,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteAssistantResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/DeleteAssistantResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /assistants/{assistant_id}/files:
     post:
       tags:
@@ -200,13 +180,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssistantFileObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/AssistantFileObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -268,13 +244,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListAssistantFilesResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListAssistantFilesResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /assistants/{assistant_id}/files/{file_id}:
     get:
       tags:
@@ -300,13 +272,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssistantFileObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/AssistantFileObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
         - Assistants
@@ -331,13 +299,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteAssistantFileResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/DeleteAssistantFileResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /audio/speech:
     post:
       tags:
@@ -381,15 +345,10 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/CreateTranscriptionResponseVerboseJson'
                   - $ref: '#/components/schemas/CreateTranscriptionResponseJson'
+                  - $ref: '#/components/schemas/ErrorResponse'
             text/plain:
               schema:
                 type: string
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -412,15 +371,10 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/CreateTranslationResponseVerboseJson'
                   - $ref: '#/components/schemas/CreateTranslationResponseJson'
+                  - $ref: '#/components/schemas/ErrorResponse'
             text/plain:
               schema:
                 type: string
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -440,13 +394,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateChatCompletionResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/CreateChatCompletionResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -466,13 +416,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCompletionResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/CreateCompletionResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -492,13 +438,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateEmbeddingResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/CreateEmbeddingResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -526,13 +468,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OpenAIFile'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/OpenAIFile'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -557,13 +495,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListFilesResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListFilesResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /files/{file_id}:
     get:
       tags:
@@ -583,13 +517,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OpenAIFile'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/OpenAIFile'
+                  - $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
         - Files
@@ -608,13 +538,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteFileResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/DeleteFileResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /files/{file_id}/content:
     get:
       tags:
@@ -634,13 +560,9 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - type: string
+                  - $ref: '#/components/schemas/ErrorResponse'
   /fine_tuning/jobs:
     post:
       tags:
@@ -659,13 +581,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FineTuningJob'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/FineTuningJob'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -698,13 +616,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListPaginatedFineTuningJobsResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListPaginatedFineTuningJobsResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /fine_tuning/jobs/{fine_tuning_job_id}:
     get:
       tags:
@@ -727,13 +641,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FineTuningJob'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/FineTuningJob'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /fine_tuning/jobs/{fine_tuning_job_id}/cancel:
     post:
       tags:
@@ -753,13 +663,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FineTuningJob'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/FineTuningJob'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /fine_tuning/jobs/{fine_tuning_job_id}/events:
     get:
       tags:
@@ -793,13 +699,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListFineTuningJobEventsResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListFineTuningJobEventsResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /images/edits:
     post:
       tags:
@@ -813,13 +715,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImagesResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ImagesResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -839,13 +737,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImagesResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ImagesResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -865,13 +759,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImagesResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ImagesResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -893,13 +783,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListModelsResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListModelsResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /models/{model}:
     get:
       tags:
@@ -921,13 +807,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/Model'
+                  - $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
         - Models
@@ -946,13 +828,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteModelResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/DeleteModelResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /moderations:
     post:
       tags:
@@ -966,13 +844,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateModerationResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/CreateModerationResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -992,13 +866,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ThreadObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ThreadObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -1018,13 +888,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -1050,13 +916,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ThreadObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ThreadObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
         - Assistants
@@ -1075,13 +937,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ThreadObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ThreadObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -1106,13 +964,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteThreadResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/DeleteThreadResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/messages:
     post:
       tags:
@@ -1132,13 +986,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/MessageObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -1200,13 +1050,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListMessagesResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListMessagesResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/messages/{message_id}:
     get:
       tags:
@@ -1232,13 +1078,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/MessageObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
         - Assistants
@@ -1263,13 +1105,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/MessageObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -1338,13 +1176,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListMessageFilesResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListMessageFilesResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/messages/{message_id}/files/{file_id}:
     get:
       tags:
@@ -1376,13 +1210,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageFileObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/MessageFileObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/runs:
     post:
       tags:
@@ -1402,13 +1232,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -1470,13 +1296,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListRunsResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListRunsResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/runs/{run_id}:
     get:
       tags:
@@ -1502,13 +1324,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
         - Assistants
@@ -1533,13 +1351,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -1571,13 +1385,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/runs/{run_id}/steps:
     get:
       tags:
@@ -1640,13 +1450,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListRunStepsResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/ListRunStepsResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/runs/{run_id}/steps/{step_id}:
     get:
       tags:
@@ -1678,13 +1484,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunStepObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/RunStepObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
     post:
       tags:
@@ -1713,13 +1515,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunObject'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                anyOf:
+                  - $ref: '#/components/schemas/RunObject'
+                  - $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         required: true
         content:
@@ -1745,7 +1543,7 @@ components:
           type: string
           enum:
             - assistant.file
-          description: The object type, which is always `assistant.file`.
+          description: The object type, which is always 'assistant.file'.
         created_at:
           type: integer
           format: unixtime
@@ -1753,7 +1551,7 @@ components:
         assistant_id:
           type: string
           description: The assistant ID that the file is attached to.
-      description: A list of [Files](/docs/api-reference/files) attached to an `assistant`.
+      description: A list of [Files](/docs/api-reference/files) attached to an 'assistant'.
     AssistantObject:
       type: object
       required:
@@ -1775,7 +1573,7 @@ components:
           type: string
           enum:
             - assistant
-          description: The object type, which is always `assistant`.
+          description: The object type, which is always 'assistant'.
         created_at:
           type: integer
           format: unixtime
@@ -1802,10 +1600,16 @@ components:
           maxLength: 32768
           description: The system instructions that the assistant uses. The maximum length is 32768 characters.
         tools:
-          $ref: '#/components/schemas/CreateAssistantRequestToolsItem'
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/AssistantToolsCode'
+              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFunction'
+          maxItems: 128
           description: |-
             A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-            Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+            Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
           default: []
         file_ids:
           type: array
@@ -1827,7 +1631,7 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
-      description: Represents an `assistant` that can call the model and use tools.
+      description: Represents an 'assistant' that can call the model and use tools.
     AssistantToolsCode:
       type: object
       required:
@@ -1837,7 +1641,7 @@ components:
           type: string
           enum:
             - code_interpreter
-          description: 'The type of tool being defined: `code_interpreter`'
+          description: "The type of tool being defined: 'code_interpreter'"
     AssistantToolsFunction:
       type: object
       required:
@@ -1848,7 +1652,7 @@ components:
           type: string
           enum:
             - function
-          description: 'The type of tool being defined: `function`'
+          description: "The type of tool being defined: 'function'"
         function:
           $ref: '#/components/schemas/FunctionObject'
     AssistantToolsRetrieval:
@@ -1860,12 +1664,7 @@ components:
           type: string
           enum:
             - retrieval
-          description: 'The type of tool being defined: `retrieval`'
-    BatchSize:
-      type: integer
-      format: int64
-      minimum: 1
-      maximum: 256
+          description: "The type of tool being defined: 'retrieval'"
     ChatCompletionFunctionCallOption:
       type: object
       required:
@@ -1875,7 +1674,7 @@ components:
           type: string
           description: The name of the function to call.
       description: |-
-        Specifying a particular function via `{"name": "my_function"}` forces the model to call that
+        Specifying a particular function via '{"name": "my_function"}' forces the model to call that
         function.
     ChatCompletionFunctions:
       type: object
@@ -1893,8 +1692,8 @@ components:
             The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
             dashes, with a maximum length of 64.
         parameters:
-          $ref: '#/components/schemas/FunctionParameters'
-      deprecated: true
+          type: object
+          additionalProperties: {}
     ChatCompletionMessageToolCall:
       type: object
       required:
@@ -1909,7 +1708,7 @@ components:
           type: string
           enum:
             - function
-          description: The type of the tool. Currently, only `function` is supported.
+          description: The type of the tool. Currently, only 'function' is supported.
         function:
           type: object
           properties:
@@ -1926,6 +1725,34 @@ components:
             - name
             - arguments
           description: The function that the model called.
+    ChatCompletionMessageToolCallChunk:
+      type: object
+      required:
+        - index
+      properties:
+        index:
+          type: integer
+          format: int32
+        id:
+          type: string
+          description: The ID of the tool call.
+        type:
+          type: string
+          enum:
+            - function
+          description: The type of the tool. Currently, only 'function' is supported.
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the function to call.
+            arguments:
+              type: string
+              description: |-
+                The arguments to call the function with, as generated by the model in JSON format. Note that
+                the model does not always generate valid JSON, and may hallucinate parameters not defined by
+                your function schema. Validate the arguments in your code before calling your function.
     ChatCompletionMessageToolCallsItem:
       type: array
       items:
@@ -1941,7 +1768,7 @@ components:
           type: string
           enum:
             - function
-          description: The type of the tool. Currently, only `function` is supported.
+          description: The type of the tool. Currently, only 'function' is supported.
         function:
           type: object
           properties:
@@ -1960,13 +1787,13 @@ components:
           type: string
           nullable: true
           description: |-
-            The contents of the assistant message. Required unless `tool_calls` or `function_call` is'
+            The contents of the assistant message. Required unless 'tool_calls' or 'function_call' is
             specified.
         role:
           type: string
           enum:
             - assistant
-          description: The role of the messages author, in this case `assistant`.
+          description: The role of the messages author, in this case 'assistant'.
         name:
           type: string
           description: |-
@@ -1990,9 +1817,8 @@ components:
             - arguments
             - name
           description: |-
-            Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be
+            Deprecated and replaced by 'tool_calls'. The name and arguments of a function that should be
             called, as generated by the model.
-          deprecated: true
     ChatCompletionRequestFunctionMessage:
       type: object
       required:
@@ -2004,7 +1830,7 @@ components:
           type: string
           enum:
             - function
-          description: The role of the messages author, in this case `function`.
+          description: The role of the messages author, in this case 'function'.
         content:
           type: string
           nullable: true
@@ -2012,19 +1838,6 @@ components:
         name:
           type: string
           description: The name of the function to call.
-    ChatCompletionRequestMessage:
-      oneOf:
-        - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
-        - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
-        - $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
-        - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
-        - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
-      x-oaiExpandable: true
-    ChatCompletionRequestMessageContentPart:
-      oneOf:
-        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
-        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartImage'
-      x-oaiExpandable: true
     ChatCompletionRequestMessageContentPartImage:
       type: object
       required:
@@ -2040,10 +1853,8 @@ components:
           type: object
           properties:
             url:
-              anyOf:
-                - type: string
-                  format: uri
-                - type: string
+              type: string
+              format: uri
               description: Either a URL of the image or the base64 encoded image data.
             detail:
               type: string
@@ -2052,8 +1863,8 @@ components:
                 - low
                 - high
               description: |-
-                Specifies the detail level of the image. Learn more in the
-                [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+                Specifies the detail level of the image. Learn more in the [Vision
+                guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
               default: auto
           required:
             - url
@@ -2067,16 +1878,10 @@ components:
           type: string
           enum:
             - text
-            - json_object
           description: The type of the content part.
         text:
           type: string
           description: The text content.
-    ChatCompletionRequestMessageContentParts:
-      type: array
-      items:
-        $ref: '#/components/schemas/ChatCompletionRequestMessageContentPart'
-      minItems: 1
     ChatCompletionRequestSystemMessage:
       type: object
       required:
@@ -2086,12 +1891,11 @@ components:
         content:
           type: string
           description: The contents of the system message.
-          x-oaiExpandable: true
         role:
           type: string
           enum:
             - system
-          description: The role of the messages author, in this case `system`.
+          description: The role of the messages author, in this case 'system'.
         name:
           type: string
           description: |-
@@ -2108,7 +1912,7 @@ components:
           type: string
           enum:
             - tool
-          description: The role of the messages author, in this case `tool`.
+          description: The role of the messages author, in this case 'tool'.
         content:
           type: string
           description: The contents of the tool message.
@@ -2122,25 +1926,24 @@ components:
         - role
       properties:
         content:
-          allOf:
-            - $ref: '#/components/schemas/ChatCompletionRequestUserMessageContent'
-          description: The contents of the system message.
-          x-oaiExpandable: true
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
+                  - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartImage'
+          description: The contents of the user message.
         role:
           type: string
           enum:
             - user
-            - assistant
-          description: The role of the messages author, in this case `user`.
+          description: The role of the messages author, in this case 'user'.
         name:
           type: string
           description: |-
             An optional name for the participant. Provides the model information to differentiate between
             participants of the same role.
-    ChatCompletionRequestUserMessageContent:
-      oneOf:
-        - type: string
-        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentParts'
     ChatCompletionResponseMessage:
       type: object
       required:
@@ -2173,8 +1976,45 @@ components:
           required:
             - arguments
             - name
-          description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
-          deprecated: true
+          description: |-
+            Deprecated and replaced by 'tool_calls'. The name and arguments of a function that should be
+            called, as generated by the model.
+      description: A chat completion message generated by the model.
+    ChatCompletionStreamResponseDelta:
+      type: object
+      properties:
+        content:
+          type: string
+          nullable: true
+          description: The contents of the chunk message.
+        function_call:
+          type: object
+          properties:
+            arguments:
+              type: string
+              description: |-
+                The arguments to call the function with, as generated by the model in JSON format. Note that
+                the model does not always generate valid JSON, and may hallucinate parameters not defined by
+                your function schema. Validate the arguments in your code before calling your function.
+            name:
+              type: string
+              description: The name of the function to call.
+          description: |-
+            Deprecated and replaced by 'tool_calls'. The name and arguments of a function that should be
+            called, as generated by the model.
+        tool_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionMessageToolCallChunk'
+        role:
+          type: string
+          enum:
+            - system
+            - user
+            - assistant
+            - tool
+          description: The role of the author of this message.
+      description: A chat completion delta generated by streamed model responses.
     ChatCompletionTokenLogprob:
       type: object
       required:
@@ -2191,17 +2031,17 @@ components:
           format: double
           description: |-
             The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
-            the value `-9999.0` is used to signify that the token is very unlikely.
+            the value '-9999.0' is used to signify that the token is very unlikely.
         bytes:
           type: array
           items:
             type: integer
-            format: int64
+            format: int32
           nullable: true
           description: |-
             A list of integers representing the UTF-8 bytes representation of the token. Useful in
             instances where characters are represented by multiple tokens and their byte representations
-            must be combined to generate the correct text representation. Can be `null` if there is no
+            must be combined to generate the correct text representation. Can be 'null' if there is no
             bytes representation for the token.
         top_logprobs:
           type: array
@@ -2214,17 +2054,19 @@ components:
               logprob:
                 type: number
                 format: double
-                description: The log probability of this token.
+                description: |-
+                  The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+                  the value '-9999.0' is used to signify that the token is very unlikely.
               bytes:
                 type: array
                 items:
                   type: integer
-                  format: int64
+                  format: int32
                 nullable: true
                 description: |-
                   A list of integers representing the UTF-8 bytes representation of the token. Useful in
                   instances where characters are represented by multiple tokens and their byte representations
-                  must be combined to generate the correct text representation. Can be `null` if there is no
+                  must be combined to generate the correct text representation. Can be 'null' if there is no
                   bytes representation for the token.
             required:
               - token
@@ -2232,7 +2074,7 @@ components:
               - bytes
           description: |-
             List of the most likely tokens and their log probability, at this token position. In rare
-            cases, there may be fewer than the number of requested `top_logprobs` returned.
+            cases, there may be fewer than the number of requested 'top_logprobs' returned.
     ChatCompletionTool:
       type: object
       required:
@@ -2243,45 +2085,27 @@ components:
           type: string
           enum:
             - function
-          description: The type of the tool. Currently, only `function` is supported.
+          description: The type of the tool. Currently, only 'function' is supported.
         function:
           $ref: '#/components/schemas/FunctionObject'
-    ChatCompletionToolChoiceOption:
-      oneOf:
-        - type: string
-          enum:
-            - none
-            - auto
-            - auto
-        - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
-      description: |-
-        Controls which (if any) function is called by the model. `none` means the model will not call a
-        function and instead generates a message. `auto` means the model can pick between generating a
-        message or calling a function. Specifying a particular function via
-        `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that
-        function.
-
-        `none` is the default when no functions are present. `auto` is the default if functions are
-        present.
-      x-oaiExpandable: true
     CompletionUsage:
       type: object
       required:
-        - prompt_tokens
         - completion_tokens
+        - prompt_tokens
         - total_tokens
       properties:
-        prompt_tokens:
-          type: integer
-          format: int64
-          description: Number of tokens in the prompt.
         completion_tokens:
           type: integer
-          format: int64
-          description: Number of tokens in the generated completion
+          format: int32
+          description: Number of tokens in the generated completion.
+        prompt_tokens:
+          type: integer
+          format: int32
+          description: Number of tokens in the prompt.
         total_tokens:
           type: integer
-          format: int64
+          format: int32
           description: Total number of tokens used in the request (prompt + completion).
       description: Usage statistics for the completion request.
     CreateAssistantFileRequest:
@@ -2292,8 +2116,8 @@ components:
         file_id:
           type: string
           description: |-
-            A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should
-            use. Useful for tools like `retrieval` and `code_interpreter` that can access files.
+            A [File](/docs/api-reference/files) ID (with 'purpose="assistants"') that the assistant should
+            use. Useful for tools like 'retrieval' and 'code_interpreter' that can access files.
     CreateAssistantRequest:
       type: object
       required:
@@ -2321,10 +2145,16 @@ components:
           maxLength: 32768
           description: The system instructions that the assistant uses. The maximum length is 32768 characters.
         tools:
-          $ref: '#/components/schemas/CreateAssistantRequestToolsItem'
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/AssistantToolsCode'
+              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFunction'
+          maxItems: 128
           description: |-
             A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-            Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+            Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
           default: []
         file_ids:
           type: array
@@ -2346,17 +2176,78 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
-    CreateAssistantRequestTool:
-      oneOf:
-        - $ref: '#/components/schemas/AssistantToolsCode'
-        - $ref: '#/components/schemas/AssistantToolsRetrieval'
-        - $ref: '#/components/schemas/AssistantToolsFunction'
-      x-oaiExpandable: true
-    CreateAssistantRequestToolsItem:
-      type: array
-      items:
-        $ref: '#/components/schemas/CreateAssistantRequestTool'
-      maxItems: 128
+    CreateChatCompletionFunctionResponse:
+      type: object
+      required:
+        - id
+        - choices
+        - created
+        - model
+        - object
+      properties:
+        id:
+          type: string
+          description: A unique identifier for the chat completion.
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              finish_reason:
+                type: string
+                enum:
+                  - stop
+                  - length
+                  - tool_calls
+                  - content_filter
+                  - function_call
+                  - length
+                  - content_filter
+                  - length
+                  - function_call
+                  - content_filter
+                  - length
+                  - tool_calls
+                  - content_filter
+                  - function_call
+                description: |-
+                  The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+                  natural stop point or a provided stop sequence, 'length' if the maximum number of tokens
+                  specified in the request was reached, 'content_filter' if content was omitted due to a flag
+                  from our content filters, or 'function_call' if the model called a function.
+              index:
+                type: integer
+                format: int32
+                description: The index of the choice in the list of choices.
+              message:
+                $ref: '#/components/schemas/ChatCompletionResponseMessage'
+            required:
+              - finish_reason
+              - index
+              - message
+          description: A list of chat completion choices. Can be more than one if 'n' is greater than 1.
+        created:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the chat completion was created.
+        model:
+          type: string
+          description: The model used for the chat completion.
+        system_fingerprint:
+          type: string
+          description: |-
+            This fingerprint represents the backend configuration that the model runs with.
+
+            Can be used in conjunction with the 'seed' request parameter to understand when backend
+            changes have been made that might impact determinism.
+        object:
+          type: string
+          enum:
+            - chat.completion
+          description: The object type, which is always 'chat.completion'.
+        usage:
+          $ref: '#/components/schemas/CompletionUsage'
+      description: Represents a chat completion response returned by model, based on the provided input.
     CreateChatCompletionRequest:
       type: object
       required:
@@ -2366,11 +2257,16 @@ components:
         messages:
           type: array
           items:
-            $ref: '#/components/schemas/ChatCompletionRequestMessage'
+            anyOf:
+              - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
           minItems: 1
           description: |-
-            A list of messages comprising the conversation so far.
-            [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb).
+            A list of messages comprising the conversation so far. [Example Python
+            code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
         model:
           anyOf:
             - type: string
@@ -2394,8 +2290,9 @@ components:
                 - gpt-3.5-turbo-0125
                 - gpt-3.5-turbo-16k-0613
           description: |-
-            ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility)
-            table for details on which models work with the Chat API.
+            ID of the model to use. See the [model endpoint
+            compatibility](/docs/models/model-endpoint-compatibility) table for details on which models
+            work with the Chat API.
           x-oaiTypeLabel: string
         frequency_penalty:
           type: number
@@ -2408,13 +2305,14 @@ components:
             frequency in the text so far, decreasing the model's likelihood to repeat the same line
             verbatim.
 
-            [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
+            [See more information about frequency and presence
+            penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         logit_bias:
           type: object
           additionalProperties:
             type: integer
-            format: int64
+            format: int32
           nullable: true
           description: |-
             Modify the likelihood of specified tokens appearing in the completion.
@@ -2425,46 +2323,44 @@ components:
             between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100
             should result in a ban or exclusive selection of the relevant token.
           x-oaiTypeLabel: map
-          default: null
         logprobs:
           type: boolean
           nullable: true
           description: |-
             Whether to return log probabilities of the output tokens or not. If true, returns the log
-            probabilities of each output token returned in the `content` of `message`. This option is
-            currently not available on the `gpt-4-vision-preview` model.
+            probabilities of each output token returned in the 'content' of 'message'. This option is
+            currently not available on the 'gpt-4-vision-preview' model.
           default: false
         top_logprobs:
           type: integer
-          format: int64
+          format: int32
           nullable: true
           minimum: 0
           maximum: 20
           description: |-
-            An integer between 0 and 20 specifying the number of most likely tokens to return at each token
-            position, each with an associated log probability. `logprobs` must be set to `true` if this
-            parameter is used.
+            An integer between 0 and 20 specifying the number of most likely tokens to return at each
+            token position, each with an associated log probability. 'logprobs' must be set to 'true' if
+            this parameter is used.
         max_tokens:
           type: integer
-          format: int64
+          format: int32
           nullable: true
-          minimum: 0
           description: |-
             The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
 
-            The total length of input tokens and generated tokens is limited by the model's context length.
-            [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
-            for counting tokens.
-          default: 16
+            The total length of input tokens and generated tokens is limited by the model's context
+            length. [Example Python
+            code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
+            tokens.
         n:
           type: integer
-          format: int64
+          format: int32
           nullable: true
           minimum: 1
           maximum: 128
           description: |-
             How many chat completion choices to generate for each input message. Note that you will be
-            charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to
+            charged based on the number of generated tokens across all of the choices. Keep 'n' as '1' to
             minimize costs.
           default: 1
         presence_penalty:
@@ -2477,7 +2373,8 @@ components:
             Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
             in the text so far, increasing the model's likelihood to talk about new topics.
 
-            [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
+            [See more information about frequency and presence
+            penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         response_format:
           type: object
@@ -2487,21 +2384,21 @@ components:
               enum:
                 - text
                 - json_object
-              description: Must be one of `text` or `json_object`.
+              description: Must be one of 'text' or 'json_object'.
               default: text
           description: |-
-            An object specifying the format that the model must output. Compatible with
-            [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
-            `gpt-3.5-turbo-1106`.
+            An object specifying the format that the model must output. Compatible with [GPT-4
+            Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
+            'gpt-3.5-turbo-1106'.
 
-            Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the
+            Setting to '{ "type": "json_object" }' enables JSON mode, which guarantees the message the
             model generates is valid JSON.
 
             **Important:** when using JSON mode, you **must** also instruct the model to produce JSON
             yourself via a system or user message. Without this, the model may generate an unending stream
             of whitespace until the generation reaches the token limit, resulting in a long-running and
             seemingly "stuck" request. Also note that the message content may be partially cut off if
-            `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the
+            'finish_reason="length"', which indicates the generation exceeded 'max_tokens' or the
             conversation exceeded the max context length.
         seed:
           type: integer
@@ -2511,28 +2408,26 @@ components:
           maximum: 9223372036854776000
           description: |-
             This feature is in Beta.
-
             If specified, our system will make a best effort to sample deterministically, such that
-            repeated requests with the same `seed` and parameters should return the same result.
-
-            Determinism is not guaranteed, and you should refer to the `system_fingerprint` response
+            repeated requests with the same 'seed' and parameters should return the same result.
+            Determinism is not guaranteed, and you should refer to the 'system_fingerprint' response
             parameter to monitor changes in the backend.
-          x-oaiMeta:
-            beta: true
         stop:
-          oneOf:
-            - $ref: '#/components/schemas/Stop'
-          nullable: true
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
           description: Up to 4 sequences where the API will stop generating further tokens.
-          default: null
         stream:
           type: boolean
           nullable: true
           description: |-
             If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only
-            [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-            as they become available, with the stream terminated by a `data: [DONE]` message.
-            [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
+            [server-sent
+            events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
+            as they become available, with the stream terminated by a 'data: [DONE]' message. [Example
+            Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
           default: false
         temperature:
           type: number
@@ -2544,7 +2439,7 @@ components:
             What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
             more random, while lower values like 0.2 will make it more focused and deterministic.
 
-            We generally recommend altering this or `top_p` but not both.
+            We generally recommend altering this or 'top_p' but not both.
           default: 1
         top_p:
           type: number
@@ -2553,24 +2448,29 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model considers
-            the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising
-            the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling, where the model
+            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
+            comprising the top 10% probability mass are considered.
 
-            We generally recommend altering this or `temperature` but not both.
+            We generally recommend altering this or 'temperature' but not both.
           default: 1
         tools:
           type: array
           items:
             $ref: '#/components/schemas/ChatCompletionTool'
           description: |-
-            A list of tools the model may call. Currently, only functions are supported as a tool. Use this
-            to provide a list of functions the model may generate JSON inputs for.
+            A list of tools the model may call. Currently, only functions are supported as a tool. Use
+            this to provide a list of functions the model may generate JSON inputs for.
         tool_choice:
-          $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
+          anyOf:
+            - type: string
+              enum:
+                - none
+                - auto
+                - auto
+            - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
         user:
-          allOf:
-            - $ref: '#/components/schemas/User'
+          type: string
           description: |-
             A unique identifier representing your end-user, which can help OpenAI to monitor and detect
             abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
@@ -2583,17 +2483,16 @@ components:
                 - auto
             - $ref: '#/components/schemas/ChatCompletionFunctionCallOption'
           description: |-
-            Deprecated in favor of `tool_choice`.
+            Deprecated in favor of 'tool_choice'.
 
-            Controls which (if any) function is called by the model. `none` means the model will not call a
-            function and instead generates a message. `auto` means the model can pick between generating a
-            message or calling a function. Specifying a particular function via `{"name": "my_function"}`
-            forces the model to call that function.
+            Controls which (if any) function is called by the model.
+            'none' means the model will not call a function and instead generates a message.
+            'auto' means the model can pick between generating a message or calling a function.
+            Specifying a particular function via '{"name": "my_function"}' forces the model to call that
+            function.
 
-            `none` is the default when no functions are present. `auto` is the default if functions are
+            'none' is the default when no functions are present. 'auto' is the default if functions are
             present.
-          deprecated: true
-          x-oaiExpandable: true
         functions:
           type: array
           items:
@@ -2601,10 +2500,9 @@ components:
           minItems: 1
           maxItems: 128
           description: |-
-            Deprecated in favor of `tools`.
+            Deprecated in favor of 'tools'.
 
             A list of functions the model may generate JSON inputs for.
-          deprecated: true
     CreateChatCompletionResponse:
       type: object
       required:
@@ -2632,15 +2530,23 @@ components:
                   - function_call
                   - length
                   - content_filter
+                  - length
+                  - function_call
+                  - content_filter
+                  - length
+                  - tool_calls
+                  - content_filter
+                  - function_call
                 description: |-
-                  The reason the model stopped generating tokens. This will be `stop` if the model hit a
-                  natural stop point or a provided stop sequence, `length` if the maximum number of tokens
-                  specified in the request was reached, `content_filter` if content was omitted due to a flag
-                  from our content filters, `tool_calls` if the model called a tool, or `function_call`
-                  (deprecated) if the model called a function.
+                  The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+                  natural stop point or a provided stop sequence,
+                  'length' if the maximum number of tokens specified in the request was reached,
+                  'content_filter' if content was omitted due to a flag from our content filters,
+                  'tool_calls' if the model called a tool, or 'function_call' (deprecated) if the model called
+                  a function.
               index:
                 type: integer
-                format: int64
+                format: int32
                 description: The index of the choice in the list of choices.
               message:
                 $ref: '#/components/schemas/ChatCompletionResponseMessage'
@@ -2652,6 +2558,7 @@ components:
                     items:
                       $ref: '#/components/schemas/ChatCompletionTokenLogprob'
                     nullable: true
+                    description: A list of message content tokens with log probability information.
                 required:
                   - content
                 nullable: true
@@ -2661,7 +2568,7 @@ components:
               - index
               - message
               - logprobs
-          description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
+          description: A list of chat completion choices. Can be more than one if 'n' is greater than 1.
         created:
           type: integer
           format: unixtime
@@ -2674,16 +2581,105 @@ components:
           description: |-
             This fingerprint represents the backend configuration that the model runs with.
 
-            Can be used in conjunction with the `seed` request parameter to understand when backend changes
-            have been made that might impact determinism.
+            Can be used in conjunction with the 'seed' request parameter to understand when backend
+            changes have been made that might impact determinism.
         object:
           type: string
           enum:
             - chat.completion
-          description: The object type, which is always `chat.completion`.
+          description: The object type, which is always 'chat.completion'.
         usage:
           $ref: '#/components/schemas/CompletionUsage'
       description: Represents a chat completion response returned by model, based on the provided input.
+    CreateChatCompletionStreamResponse:
+      type: object
+      required:
+        - id
+        - choices
+        - created
+        - model
+        - object
+      properties:
+        id:
+          type: string
+          description: A unique identifier for the chat completion. Each chunk has the same ID.
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              delta:
+                $ref: '#/components/schemas/ChatCompletionStreamResponseDelta'
+              logprobs:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatCompletionTokenLogprob'
+                    nullable: true
+                    description: A list of message content tokens with log probability information.
+                required:
+                  - content
+                nullable: true
+                description: Log probability information for the choice.
+              finish_reason:
+                type: string
+                enum:
+                  - stop
+                  - length
+                  - tool_calls
+                  - content_filter
+                  - function_call
+                  - length
+                  - content_filter
+                  - length
+                  - function_call
+                  - content_filter
+                  - length
+                  - tool_calls
+                  - content_filter
+                  - function_call
+                nullable: true
+                description: |-
+                  The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+                  natural stop point or a provided stop sequence,
+                  'length' if the maximum number of tokens specified in the request was reached,
+                  'content_filter' if content was omitted due to a flag from our content filters,
+                  'tool_calls' if the model called a tool, or 'function_call' (deprecated) if the model called
+                  a function.
+              index:
+                type: integer
+                format: int32
+                description: The index of the choice in the list of choices.
+            required:
+              - delta
+              - finish_reason
+              - index
+          description: A list of chat completion choices. Can be more than one if 'n' is greater than 1.
+        created:
+          type: integer
+          format: unixtime
+          description: |-
+            The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
+            same timestamp.
+        model:
+          type: string
+          description: The model to generate the completion.
+        system_fingerprint:
+          type: string
+          description: |-
+            This fingerprint represents the backend configuration that the model runs with.
+            Can be used in conjunction with the 'seed' request parameter to understand when backend
+            changes have been made that might impact determinism.
+        object:
+          type: string
+          enum:
+            - chat.completion.chunk
+          description: The object type, which is always 'chat.completion.chunk'.
+      description: |-
+        Represents a streamed chunk of a chat completion response returned by model, based on the
+        provided input.
     CreateCompletionRequest:
       type: object
       required:
@@ -2704,8 +2700,21 @@ components:
             descriptions of them.
           x-oaiTypeLabel: string
         prompt:
-          oneOf:
-            - $ref: '#/components/schemas/Prompt'
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+            - type: array
+              items:
+                type: integer
+                format: int32
+            - type: array
+              items:
+                type: array
+                items:
+                  type: integer
+                  format: int32
           nullable: true
           description: |-
             The prompt(s) to generate completions for, encoded as a string, array of strings, array of
@@ -2716,19 +2725,19 @@ components:
           default: <|endoftext|>
         best_of:
           type: integer
-          format: int64
+          format: int32
           nullable: true
           minimum: 0
           maximum: 20
           description: |-
-            Generates `best_of` completions server-side and returns the "best" (the one with the highest
+            Generates 'best_of' completions server-side and returns the "best" (the one with the highest
             log probability per token). Results cannot be streamed.
 
-            When used with `n`, `best_of` controls the number of candidate completions and `n` specifies
-            how many to return – `best_of` must be greater than `n`.
+            When used with 'n', 'best_of' controls the number of candidate completions and 'n' specifies
+            how many to return – 'best_of' must be greater than 'n'.
 
             **Note:** Because this parameter generates many completions, it can quickly consume your token
-            quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
+            quota. Use carefully and ensure that you have reasonable settings for 'max_tokens' and 'stop'.
           default: 1
         echo:
           type: boolean
@@ -2746,57 +2755,56 @@ components:
             frequency in the text so far, decreasing the model's likelihood to repeat the same line
             verbatim.
 
-            [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
+            [See more information about frequency and presence
+            penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         logit_bias:
           type: object
           additionalProperties:
             type: integer
-            format: int64
+            format: int32
           nullable: true
           description: |-
             Modify the likelihood of specified tokens appearing in the completion.
 
-            Accepts a JSON object that maps tokens (specified by their token ID in the GPT tokenizer) to an
-            associated bias value from -100 to 100. You can use this [tokenizer tool](/tokenizer?view=bpe)
-            to convert text to token IDs. Mathematically, the bias is added to the logits generated by the
-            model prior to sampling. The exact effect will vary per model, but values between -1 and 1
-            should decrease or increase likelihood of selection; values like -100 or 100 should result in a
-            ban or exclusive selection of the relevant token.
+            Accepts a JSON object that maps tokens (specified by their token ID in the GPT tokenizer) to
+            an associated bias value from -100 to 100. You can use this [tokenizer
+            tool](/tokenizer?view=bpe) to convert text to token IDs. Mathematically, the bias is added to
+            the logits generated by the model prior to sampling. The exact effect will vary per model, but
+            values between -1 and 1 should decrease or increase likelihood of selection; values like -100
+            or 100 should result in a ban or exclusive selection of the relevant token.
 
-            As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|> token from being
+            As an example, you can pass '{"50256": -100}' to prevent the <|endoftext|> token from being
             generated.
           x-oaiTypeLabel: map
-          default: null
         logprobs:
           type: integer
-          format: int64
+          format: int32
           nullable: true
           minimum: 0
           maximum: 5
           description: |-
-            Include the log probabilities on the `logprobs` most likely tokens, as well the chosen tokens.
-            For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The
-            API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1`
-            elements in the response.
+            Include the log probabilities on the 'logprobs' most likely output tokens, as well the chosen
+            tokens. For example, if 'logprobs' is 5, the API will return a list of the 5 most likely
+            tokens. The API will always return the 'logprob' of the sampled token, so there may be up to
+            'logprobs+1' elements in the response.
 
-            The maximum value for `logprobs` is 5.
-          default: null
+            The maximum value for 'logprobs' is 5.
         max_tokens:
           type: integer
-          format: int64
+          format: int32
           nullable: true
           minimum: 0
           description: |-
-            The maximum number of [tokens](/tokenizer) to generate in the completion.
+            The maximum number of [tokens](/tokenizer) that can be generated in the completion.
 
-            The token count of your prompt plus `max_tokens` cannot exceed the model's context length.
-            [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb)
+            The token count of your prompt plus 'max_tokens' cannot exceed the model's context length.
+            [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
             for counting tokens.
           default: 16
         n:
           type: integer
-          format: int64
+          format: int32
           nullable: true
           minimum: 1
           maximum: 128
@@ -2804,7 +2812,7 @@ components:
             How many completions to generate for each prompt.
 
             **Note:** Because this parameter generates many completions, it can quickly consume your token
-            quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
+            quota. Use carefully and ensure that you have reasonable settings for 'max_tokens' and 'stop'.
           default: 1
         presence_penalty:
           type: number
@@ -2816,7 +2824,8 @@ components:
             Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
             in the text so far, increasing the model's likelihood to talk about new topics.
 
-            [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
+            [See more information about frequency and presence
+            penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         seed:
           type: integer
@@ -2826,32 +2835,33 @@ components:
           maximum: 9223372036854776000
           description: |-
             If specified, our system will make a best effort to sample deterministically, such that
-            repeated requests with the same `seed` and parameters should return the same result.
+            repeated requests with the same 'seed' and parameters should return the same result.
 
-            Determinism is not guaranteed, and you should refer to the `system_fingerprint` response
+            Determinism is not guaranteed, and you should refer to the 'system_fingerprint' response
             parameter to monitor changes in the backend.
-          x-oaiMeta:
-            beta: true
         stop:
-          oneOf:
-            - $ref: '#/components/schemas/Stop'
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
           nullable: true
-          description: Up to 4 sequences where the API will stop generating further tokens.
-          default: null
+          description: |-
+            Up to 4 sequences where the API will stop generating further tokens. The returned text will
+            not contain the stop sequence.
         stream:
           type: boolean
           nullable: true
           description: |-
-            If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only
-            [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-            as they become available, with the stream terminated by a `data: [DONE]` message.
-            [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_stream_completions.ipynb).
+            Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent
+            events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
+            as they become available, with the stream terminated by a 'data: [DONE]' message. [Example
+            Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
           default: false
         suffix:
           type: string
           nullable: true
           description: The suffix that comes after a completion of inserted text.
-          default: null
         temperature:
           type: number
           format: double
@@ -2862,7 +2872,7 @@ components:
             What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
             more random, while lower values like 0.2 will make it more focused and deterministic.
 
-            We generally recommend altering this or `top_p` but not both.
+            We generally recommend altering this or 'top_p' but not both.
           default: 1
         top_p:
           type: number
@@ -2871,15 +2881,14 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model considers
-            the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising
-            the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling, where the model
+            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
+            comprising the top 10% probability mass are considered.
 
-            We generally recommend altering this or `temperature` but not both.
+            We generally recommend altering this or 'temperature' but not both.
           default: 1
         user:
-          allOf:
-            - $ref: '#/components/schemas/User'
+          type: string
           description: |-
             A unique identifier representing your end-user, which can help OpenAI to monitor and detect
             abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
@@ -2900,41 +2909,6 @@ components:
           items:
             type: object
             properties:
-              index:
-                type: integer
-                format: int64
-              text:
-                type: string
-              logprobs:
-                type: object
-                properties:
-                  tokens:
-                    type: array
-                    items:
-                      type: string
-                  token_logprobs:
-                    type: array
-                    items:
-                      type: number
-                      format: double
-                  top_logprobs:
-                    type: array
-                    items:
-                      type: object
-                      additionalProperties:
-                        type: integer
-                        format: int64
-                  text_offset:
-                    type: array
-                    items:
-                      type: integer
-                      format: int64
-                required:
-                  - tokens
-                  - token_logprobs
-                  - top_logprobs
-                  - text_offset
-                nullable: true
               finish_reason:
                 type: string
                 enum:
@@ -2945,41 +2919,75 @@ components:
                   - function_call
                   - length
                   - content_filter
+                  - length
+                  - function_call
+                  - content_filter
+                  - length
+                  - tool_calls
+                  - content_filter
+                  - function_call
                 description: |-
-                  The reason the model stopped generating tokens. This will be `stop` if the model hit a
-                  natural stop point or a provided stop sequence, or `content_filter` if content was omitted
-                  due to a flag from our content filters, `length` if the maximum number of tokens specified
-                  in the request was reached, or `content_filter` if content was omitted due to a flag from our
-                  content filters.
+                  The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+                  natural stop point or a provided stop sequence,
+                  'length' if the maximum number of tokens specified in the request was reached,
+                  or 'content_filter' if content was omitted due to a flag from our content filters.
+              index:
+                type: integer
+                format: int32
+              logprobs:
+                type: object
+                properties:
+                  text_offset:
+                    type: array
+                    items:
+                      type: integer
+                      format: int32
+                  token_logprobs:
+                    type: array
+                    items:
+                      type: number
+                      format: double
+                  tokens:
+                    type: array
+                    items:
+                      type: string
+                  top_logprobs:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties:
+                        type: number
+                        format: double
+                nullable: true
+              text:
+                type: string
             required:
-              - index
-              - text
-              - logprobs
               - finish_reason
-          description: The list of completion choices the model generated for the input.
+              - index
+              - logprobs
+              - text
+          description: The list of completion choices the model generated for the input prompt.
         created:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the completion was created.
         model:
           type: string
-          description: The model used for the completion.
+          description: The model used for completion.
         system_fingerprint:
           type: string
           description: |-
             This fingerprint represents the backend configuration that the model runs with.
 
-            Can be used in conjunction with the `seed` request parameter to understand when backend changes
-            have been made that might impact determinism.
+            Can be used in conjunction with the 'seed' request parameter to understand when backend
+            changes have been made that might impact determinism.
         object:
           type: string
           enum:
             - text_completion
-          description: The object type, which is always `text_completion`.
+          description: The object type, which is always "text_completion"
         usage:
-          allOf:
-            - $ref: '#/components/schemas/CompletionUsage'
-          description: Usage statistics for the completion request.
+          $ref: '#/components/schemas/CompletionUsage'
       description: |-
         Represents a completion response from the API. Note: both the streamed and non-streamed response
         objects share the same shape (unlike the chat endpoint).
@@ -2990,16 +2998,28 @@ components:
         - model
       properties:
         input:
-          allOf:
-            - $ref: '#/components/schemas/CreateEmbeddingRequestInput'
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+            - type: array
+              items:
+                type: integer
+                format: int32
+            - type: array
+              items:
+                type: array
+                items:
+                  type: integer
+                  format: int32
           description: |-
             Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a
-            single request, pass an array of strings or array of token arrays. Each input must not exceed
-            the max input tokens for the model (8191 tokens for `text-embedding-ada-002`) and cannot be an
-            empty string.
-            [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb)
-            for counting tokens.
-          x-oaiExpandable: true
+            single request, pass an array of strings or array of token arrays. The input must not exceed
+            the max input tokens for the model (8192 tokens for 'text-embedding-ada-002'), cannot be an
+            empty string, and any array must be 2048 dimensions or less. [Example Python
+            code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
+            tokens.
         model:
           anyOf:
             - type: string
@@ -3019,30 +3039,21 @@ components:
             - float
             - base64
           description: |-
-            The format to return the embeddings in. Can be either `float` or
-            [`base64`](https://pypi.org/project/pybase64/).
+            The format to return the embeddings in. Can be either 'float' or
+            ['base64'](https://pypi.org/project/pybase64/).
           default: float
         dimensions:
           type: integer
-          format: int64
+          format: int32
           minimum: 1
           description: |-
             The number of dimensions the resulting output embeddings should have. Only supported in
-            `text-embedding-3` and later models.
+            'text-embedding-3' and later models.
         user:
-          allOf:
-            - $ref: '#/components/schemas/User'
+          type: string
           description: |-
             A unique identifier representing your end-user, which can help OpenAI to monitor and detect
             abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-    CreateEmbeddingRequestInput:
-      oneOf:
-        - type: string
-        - type: array
-          items:
-            type: string
-        - $ref: '#/components/schemas/TokenArrayItem'
-        - $ref: '#/components/schemas/TokenArrayArray'
     CreateEmbeddingResponse:
       type: object
       required:
@@ -3065,8 +3076,19 @@ components:
             - list
           description: The object type, which is always "list".
         usage:
-          allOf:
-            - $ref: '#/components/schemas/EmbeddingUsage'
+          type: object
+          properties:
+            prompt_tokens:
+              type: integer
+              format: int32
+              description: The number of tokens used by the prompt.
+            total_tokens:
+              type: integer
+              format: int32
+              description: The total number of tokens used by the request.
+          required:
+            - prompt_tokens
+            - total_tokens
           description: The usage information for the request.
     CreateFileRequestMultiPart:
       type: object
@@ -3076,18 +3098,18 @@ components:
       properties:
         file:
           type: string
-          format: binary
-          description: The file object (not file name) to be uploaded.
+          description: The File object (not file name) to be uploaded.
         purpose:
           type: string
           enum:
             - fine-tune
             - assistants
           description: |-
-            The intended purpose of the uploaded file. Use "fine-tune" for 
-            [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for 
-            [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages). This
-            allows us to validate the format of the uploaded file is correct for fine-tuning.
+            The intended purpose of the uploaded file.
+
+            Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for
+            [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages).
+            This allows us to validate the format of the uploaded file is correct for fine-tuning.
     CreateFineTuningJobRequest:
       type: object
       required:
@@ -3114,7 +3136,7 @@ components:
             See [upload file](/docs/api-reference/files/upload) for how to upload a file.
 
             Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
-            the purpose `fine-tune`.
+            the purpose 'fine-tune'.
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         hyperparameters:
@@ -3125,23 +3147,21 @@ components:
                 - type: string
                   enum:
                     - auto
-                    - low
-                    - high
-                - $ref: '#/components/schemas/BatchSize'
+                - type: integer
+                  format: int32
               description: |-
-                Number of examples in each batch. A larger batch size means that model parameters are
-                updated less frequently, but with lower variance.
+                Number of examples in each batch. A larger batch size means that model parameters
+                are updated less frequently, but with lower variance.
               default: auto
             learning_rate_multiplier:
               anyOf:
                 - type: string
                   enum:
                     - auto
-                    - low
-                    - high
-                - $ref: '#/components/schemas/LearningRateMultiplier'
+                - type: number
+                  format: double
               description: |-
-                Scaling factor for the learning rate. A smaller learning rate may be useful to avoid 
+                Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
                 overfitting.
               default: auto
             n_epochs:
@@ -3149,36 +3169,36 @@ components:
                 - type: string
                   enum:
                     - auto
-                    - low
-                    - high
-                - $ref: '#/components/schemas/NEpochs'
+                - type: integer
+                  format: int32
               description: |-
-                The number of epochs to train the model for. An epoch refers to one full cycle through the
-                training dataset.
+                The number of epochs to train the model for. An epoch refers to one full cycle
+                through the training dataset.
               default: auto
           description: The hyperparameters used for the fine-tuning job.
         suffix:
-          oneOf:
-            - $ref: '#/components/schemas/SuffixString'
+          type: string
           nullable: true
+          minLength: 1
+          maxLength: 40
           description: |-
             A string of up to 18 characters that will be added to your fine-tuned model name.
 
-            For example, a `suffix` of "custom-model-name" would produce a model name like
-            `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
-          default: null
+            For example, a 'suffix' of "custom-model-name" would produce a model name like
+            'ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel'.
         validation_file:
           type: string
           nullable: true
           description: |-
             The ID of an uploaded file that contains validation data.
 
-            If you provide this file, the data is used to generate validation metrics periodically during
-            fine-tuning. These metrics can be viewed in the fine-tuning results file. The same data should
-            not be present in both train and validation files.
+            If you provide this file, the data is used to generate validation
+            metrics periodically during fine-tuning. These metrics can be viewed in
+            the fine-tuning results file.
+            The same data should not be present in both train and validation files.
 
             Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
-            `fine-tune`.
+            'fine-tune'.
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
     CreateImageEditRequestMultiPart:
@@ -3195,28 +3215,30 @@ components:
             provided, image must have transparency, which will be used as the mask.
         prompt:
           type: string
-          maxLength: 1000
           description: A text description of the desired image(s). The maximum length is 1000 characters.
         mask:
           type: string
           format: binary
           description: |-
             An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where
-            `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions
-            as `image`.
+            'image' should be edited. Must be a valid PNG file, less than 4MB, and have the same
+            dimensions as 'image'.
         model:
           anyOf:
             - type: string
             - type: string
               enum:
                 - dall-e-2
-          description: The model to use for image generation. Only `dall-e-2` is supported at this time.
+          nullable: true
+          description: The model to use for image generation. Only 'dall-e-2' is supported at this time.
           x-oaiTypeLabel: string
           default: dall-e-2
         n:
-          oneOf:
-            - $ref: '#/components/schemas/ImagesN'
+          type: integer
+          format: int32
           nullable: true
+          minimum: 1
+          maximum: 10
           description: The number of images to generate. Must be between 1 and 10.
           default: 1
         size:
@@ -3228,7 +3250,7 @@ components:
             - 512x512
             - 1024x1024
           nullable: true
-          description: The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.
+          description: The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024'.
           default: 1024x1024
         response_format:
           type: string
@@ -3237,11 +3259,12 @@ components:
             - b64_json
             - b64_json
           nullable: true
-          description: The format in which the generated images are returned. Must be one of `url` or `b64_json`.
+          description: |-
+            The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+            URLs are only valid for 60 minutes after the image has been generated.
           default: url
         user:
-          allOf:
-            - $ref: '#/components/schemas/User'
+          type: string
           description: |-
             A unique identifier representing your end-user, which can help OpenAI to monitor and detect
             abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
@@ -3254,7 +3277,7 @@ components:
           type: string
           description: |-
             A text description of the desired image(s). The maximum length is 1000 characters for
-            `dall-e-2` and 4000 characters for `dall-e-3`.
+            'dall-e-2' and 4000 characters for 'dall-e-3'.
         model:
           anyOf:
             - type: string
@@ -3262,15 +3285,18 @@ components:
               enum:
                 - dall-e-2
                 - dall-e-3
+          nullable: true
           description: The model to use for image generation.
           x-oaiTypeLabel: string
           default: dall-e-2
         n:
-          oneOf:
-            - $ref: '#/components/schemas/ImagesN'
+          type: integer
+          format: int32
           nullable: true
+          minimum: 1
+          maximum: 10
           description: |-
-            The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is
+            The number of images to generate. Must be between 1 and 10. For 'dall-e-3', only 'n=1' is
             supported.
           default: 1
         quality:
@@ -3278,10 +3304,9 @@ components:
           enum:
             - standard
             - hd
-          nullable: true
           description: |-
-            The quality of the image that will be generated. `hd` creates images with finer details and
-            greater consistency across the image. This param is only supported for `dall-e-3`.
+            The quality of the image that will be generated. 'hd' creates images with finer details and
+            greater consistency across the image. This param is only supported for 'dall-e-3'.
           default: standard
         response_format:
           type: string
@@ -3290,8 +3315,8 @@ components:
             - b64_json
           nullable: true
           description: |-
-            The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs
-            are only valid for 60 minutes after the image has been generated.
+            The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+            URLs are only valid for 60 minutes after the image has been generated.
           default: url
         size:
           type: string
@@ -3303,8 +3328,8 @@ components:
             - 1024x1792
           nullable: true
           description: |-
-            The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024` for
-            `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or `1024x1792` for `dall-e-3` models.
+            The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024' for
+            'dall-e-2'. Must be one of '1024x1024', '1792x1024', or '1024x1792' for 'dall-e-3' models.
           default: 1024x1024
         style:
           type: string
@@ -3313,13 +3338,12 @@ components:
             - natural
           nullable: true
           description: |-
-            The style of the generated images. Must be one of `vivid` or `natural`. Vivid causes the model
+            The style of the generated images. Must be one of 'vivid' or 'natural'. Vivid causes the model
             to lean towards generating hyper-real and dramatic images. Natural causes the model to produce
-            more natural, less hyper-real looking images. This param is only supported for `dall-e-3`.
+            more natural, less hyper-real looking images. This param is only supported for 'dall-e-3'.
           default: vivid
         user:
-          allOf:
-            - $ref: '#/components/schemas/User'
+          type: string
           description: |-
             A unique identifier representing your end-user, which can help OpenAI to monitor and detect
             abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
@@ -3330,7 +3354,6 @@ components:
       properties:
         image:
           type: string
-          format: binary
           description: |-
             The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB,
             and square.
@@ -3340,14 +3363,19 @@ components:
             - type: string
               enum:
                 - dall-e-2
-          description: The model to use for image generation. Only `dall-e-2` is supported at this time.
+          nullable: true
+          description: The model to use for image generation. Only 'dall-e-2' is supported at this time.
           x-oaiTypeLabel: string
           default: dall-e-2
         n:
-          oneOf:
-            - $ref: '#/components/schemas/ImagesN'
+          type: integer
+          format: int32
           nullable: true
-          description: The number of images to generate. Must be between 1 and 10.
+          minimum: 1
+          maximum: 10
+          description: |-
+            The number of images to generate. Must be between 1 and 10. For 'dall-e-3', only 'n=1' is
+            supported.
           default: 1
         response_format:
           type: string
@@ -3356,7 +3384,9 @@ components:
             - b64_json
             - b64_json
           nullable: true
-          description: The format in which the generated images are returned. Must be one of `url` or `b64_json`.
+          description: |-
+            The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+            URLs are only valid for 60 minutes after the image has been generated.
           default: url
         size:
           type: string
@@ -3367,11 +3397,10 @@ components:
             - 512x512
             - 1024x1024
           nullable: true
-          description: The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.
+          description: The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024'.
           default: 1024x1024
         user:
-          allOf:
-            - $ref: '#/components/schemas/User'
+          type: string
           description: |-
             A unique identifier representing your end-user, which can help OpenAI to monitor and detect
             abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
@@ -3386,7 +3415,7 @@ components:
           enum:
             - user
             - assistant
-          description: The role of the entity that is creating the message. Currently only `user` is supported.
+          description: The role of the entity that is creating the message. Currently only 'user' is supported.
         content:
           type: string
           minLength: 1
@@ -3400,8 +3429,8 @@ components:
           maxItems: 10
           description: |-
             A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-            maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-            `code_interpreter` that can access and use files.
+            maximum of 10 files attached to a message. Useful for tools like 'retrieval' and
+            'code_interpreter' that can access and use files.
           default: []
         metadata:
           type: object
@@ -3419,8 +3448,11 @@ components:
         - input
       properties:
         input:
-          allOf:
-            - $ref: '#/components/schemas/CreateModerationRequestInput'
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
           description: The input text to classify
         model:
           anyOf:
@@ -3430,19 +3462,15 @@ components:
                 - text-moderation-latest
                 - text-moderation-stable
           description: |-
-            Two content moderations models are available: `text-moderation-stable` and
-            `text-moderation-latest`. The default is `text-moderation-latest` which will be automatically
-            upgraded over time. This ensures you are always using our most accurate model. If you use
-            `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy
-            of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
+            Two content moderations models are available: 'text-moderation-stable' and
+            'text-moderation-latest'.
+
+            The default is 'text-moderation-latest' which will be automatically upgraded over time. This
+            ensures you are always using our most accurate model. If you use 'text-moderation-stable', we
+            will provide advanced notice before updating the model. Accuracy of 'text-moderation-stable'
+            may be slightly lower than for 'text-moderation-latest'.
           x-oaiTypeLabel: string
           default: text-moderation-latest
-    CreateModerationRequestInput:
-      oneOf:
-        - type: string
-        - type: array
-          items:
-            type: string
     CreateModerationResponse:
       type: object
       required:
@@ -3472,7 +3500,7 @@ components:
                     description: |-
                       Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
                       religion, nationality, sexual orientation, disability status, or caste. Hateful content
-                      aimed at non-protected groups (e.g., chess players) is harrassment.
+                      aimed at non-protected groups (e.g., chess players) is harassment.
                   hate/threatening:
                     type: boolean
                     description: |-
@@ -3557,7 +3585,7 @@ components:
                   self-harm/instructions:
                     type: number
                     format: double
-                    description: The score for the category 'self-harm/instructive'.
+                    description: The score for the category 'self-harm/instructions'.
                   sexual:
                     type: number
                     format: double
@@ -3621,9 +3649,12 @@ components:
             Appends additional instructions at the end of the instructions for the run. This is useful for
             modifying the behavior on a per-run basis without overriding other instructions.
         tools:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateRunRequestToolsItem'
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/AssistantToolsCode'
+              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFunction'
           nullable: true
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
@@ -3638,17 +3669,6 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
-    CreateRunRequestTool:
-      oneOf:
-        - $ref: '#/components/schemas/AssistantToolsCode'
-        - $ref: '#/components/schemas/AssistantToolsRetrieval'
-        - $ref: '#/components/schemas/AssistantToolsFunction'
-      x-oaiExpandable: true
-    CreateRunRequestToolsItem:
-      type: array
-      items:
-        $ref: '#/components/schemas/CreateRunRequestTool'
-      maxItems: 20
     CreateSpeechRequest:
       type: object
       required:
@@ -3663,7 +3683,7 @@ components:
               enum:
                 - tts-1
                 - tts-1-hd
-          description: 'One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`'
+          description: "One of the available [TTS models](/docs/models/tts): 'tts-1' or 'tts-1-hd'"
           x-oaiTypeLabel: string
         input:
           type: string
@@ -3679,9 +3699,9 @@ components:
             - nova
             - shimmer
           description: |-
-            The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`,
-            `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the
-            [Text to speech guide](/docs/guides/text-to-speech/voice-options).
+            The voice to use when generating the audio. Supported voices are 'alloy', 'echo', 'fable',
+            'onyx', 'nova', and 'shimmer'. Previews of the voices are available in the [Text to speech
+            guide](/docs/guides/text-to-speech/voice-options).
         response_format:
           type: string
           enum:
@@ -3691,14 +3711,14 @@ components:
             - flac
             - wav
             - pcm
-          description: The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`.
+          description: The format to audio in. Supported formats are 'mp3', 'opus', 'aac', 'flac', 'wav', and 'pcm'.
           default: mp3
         speed:
           type: number
           format: double
           minimum: 0.25
           maximum: 4
-          description: The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default.
+          description: The speed of the generated audio. Select a value from '0.25' to '4.0'. '1.0' is the default.
           default: 1
     CreateThreadAndRunRequest:
       type: object
@@ -3716,19 +3736,22 @@ components:
           type: string
           nullable: true
           description: |-
-            The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is
-            provided here, it will override the model associated with the assistant. If not, the model
+            The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
+            is provided here, it will override the model associated with the assistant. If not, the model
             associated with the assistant will be used.
         instructions:
           type: string
           nullable: true
           description: |-
-            Override the default system message of the assistant. This is useful for modifying the behavior
-            on a per-run basis.
+            Override the default system message of the assistant. This is useful for modifying the
+            behavior on a per-run basis.
         tools:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateRunRequestToolsItem'
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/AssistantToolsCode'
+              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFunction'
           nullable: true
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
@@ -3760,6 +3783,7 @@ components:
             Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
+          x-oaiTypeLabel: map
     CreateTranscriptionRequestMultiPart:
       type: object
       required:
@@ -3768,10 +3792,9 @@ components:
       properties:
         file:
           type: string
-          format: binary
           description: |-
             The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-            mpeg, mpga, m4a, ogg, pcm, wav, or webm.
+            mpeg, mpga, m4a, ogg, wav, or webm.
           x-oaiTypeLabel: file
         model:
           anyOf:
@@ -3780,15 +3803,15 @@ components:
               enum:
                 - whisper-1
           description: |-
-            ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-            is currently available.
+            ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+            model) is currently available.
           x-oaiTypeLabel: string
         language:
           type: string
           description: |-
             The language of the input audio. Supplying the input language in
-            [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy
-            and latency.
+            [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve
+            accuracy and latency.
         prompt:
           type: string
           description: |-
@@ -3802,19 +3825,13 @@ components:
             - srt
             - verbose_json
             - vtt
-            - text
-            - srt
-            - verbose_json
-            - vtt
           description: |-
-            The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-            vtt.
+            The format of the transcript output, in one of these options: 'json', 'text', 'srt',
+            'verbose_json', or 'vtt'.
           default: json
         temperature:
           type: number
           format: double
-          minimum: 0
-          maximum: 1
           description: |-
             The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
             random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
@@ -3829,9 +3846,9 @@ components:
               - word
               - segment
           description: |-
-            The timestamp granularities to populate for this transcription. `response_format` must be set
-            `verbose_json` to use timestamp granularities. Either or both of these options are supported:
-            `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
+            The timestamp granularities to populate for this transcription. 'response_format' must be set
+            'verbose_json' to use timestamp granularities. Either or both of these options are supported:
+            'word', or 'segment'. Note: There is no additional latency for segment timestamps, but
             generating word timestamps incurs additional latency.
           default:
             - segment
@@ -3847,16 +3864,10 @@ components:
     CreateTranscriptionResponseVerboseJson:
       type: object
       required:
-        - task
         - language
         - duration
         - text
       properties:
-        task:
-          type: string
-          enum:
-            - transcribe
-          description: The task label.
         language:
           type: string
           description: The language of the input audio.
@@ -3886,10 +3897,9 @@ components:
       properties:
         file:
           type: string
-          format: binary
           description: |-
-            The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-            mpeg, mpga, m4a, ogg, pcm, wav, or webm.
+            The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
+            mpeg, mpga, m4a, ogg, wav, or webm.
           x-oaiTypeLabel: file
         model:
           anyOf:
@@ -3898,35 +3908,23 @@ components:
               enum:
                 - whisper-1
           description: |-
-            ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-            is currently available.
+            ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+            model) is currently available.
           x-oaiTypeLabel: string
         prompt:
           type: string
           description: |-
             An optional text to guide the model's style or continue a previous audio segment. The
-            [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
+            [prompt](/docs/guides/speech-to-text/prompting) should be in English.
         response_format:
           type: string
-          enum:
-            - json
-            - text
-            - srt
-            - verbose_json
-            - vtt
-            - text
-            - srt
-            - verbose_json
-            - vtt
           description: |-
-            The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-            vtt.
+            The format of the transcript output, in one of these options: 'json', 'text', 'srt',
+            'verbose_json', or 'vtt'.
           default: json
         temperature:
           type: number
           format: double
-          minimum: 0
-          maximum: 1
           description: |-
             The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
             random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
@@ -3943,19 +3941,13 @@ components:
     CreateTranslationResponseVerboseJson:
       type: object
       required:
-        - task
         - language
         - duration
         - text
       properties:
-        task:
-          type: string
-          enum:
-            - translate
-          description: The task label.
         language:
           type: string
-          description: The language of the output translation (always `english`).
+          description: The language of the output translation (always 'english').
         duration:
           type: number
           format: double
@@ -4016,7 +4008,7 @@ components:
             - file
         deleted:
           type: boolean
-    DeleteModelResponse:
+    DeleteMessageResponse:
       type: object
       required:
         - id
@@ -4030,7 +4022,20 @@ components:
         object:
           type: string
           enum:
-            - model
+            - thread.message.deleted
+    DeleteModelResponse:
+      type: object
+      required:
+        - id
+        - deleted
+        - object
+      properties:
+        id:
+          type: string
+        deleted:
+          type: boolean
+        object:
+          type: string
     DeleteThreadResponse:
       type: object
       required:
@@ -4055,15 +4060,13 @@ components:
       properties:
         index:
           type: integer
-          format: int64
+          format: int32
           description: The index of the embedding in the list of embeddings.
         embedding:
-          anyOf:
-            - type: array
-              items:
-                type: number
-                format: double
-            - type: string
+          type: array
+          items:
+            type: number
+            format: double
           description: |-
             The embedding vector, which is a list of floats. The length of vector depends on the model as
             listed in the [embedding guide](/docs/guides/embeddings).
@@ -4073,38 +4076,24 @@ components:
             - embedding
           description: The object type, which is always "embedding".
       description: Represents an embedding vector returned by embedding endpoint.
-    EmbeddingUsage:
-      type: object
-      required:
-        - prompt_tokens
-        - total_tokens
-      properties:
-        prompt_tokens:
-          type: integer
-          format: int64
-          description: The number of tokens used by the prompt.
-        total_tokens:
-          type: integer
-          format: int64
-          description: The total number of tokens used by the request.
     Error:
       type: object
       required:
-        - type
+        - code
         - message
         - param
-        - code
+        - type
       properties:
-        type:
+        code:
           type: string
+          nullable: true
         message:
           type: string
         param:
           type: string
           nullable: true
-        code:
+        type:
           type: string
-          nullable: true
     ErrorResponse:
       type: object
       required:
@@ -4150,16 +4139,16 @@ components:
               type: string
               nullable: true
               description: |-
-                The parameter that was invalid, usually `training_file` or `validation_file`. This field will
-                be null if the failure was not parameter-specific.
+                The parameter that was invalid, usually 'training_file' or 'validation_file'. This field
+                will be null if the failure was not parameter-specific.
           required:
             - code
             - message
             - param
           nullable: true
           description: |-
-            For fine-tuning jobs that have `failed`, this will contain more information on the cause of the
-            failure.
+            For fine-tuning jobs that have 'failed', this will contain more information on the cause of
+            the failure.
         fine_tuned_model:
           type: string
           nullable: true
@@ -4181,21 +4170,19 @@ components:
                 - type: string
                   enum:
                     - auto
-                    - low
-                    - high
-                - $ref: '#/components/schemas/NEpochs'
+                - type: integer
+                  format: int32
               description: |-
                 The number of epochs to train the model for. An epoch refers to one full cycle through the
                 training dataset.
-
                 "auto" decides the optimal number of epochs based on the size of the dataset. If setting the
                 number manually, we support any number between 1 and 50 epochs.
               default: auto
           required:
             - n_epochs
           description: |-
-            The hyperparameters used for the fine-tuning job. See the
-            [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+            The hyperparameters used for the fine-tuning job. See the [fine-tuning
+            guide](/docs/guides/fine-tuning) for more details.
         model:
           type: string
           description: The base model that is being fine-tuned.
@@ -4224,11 +4211,11 @@ components:
             - failed
             - cancelled
           description: |-
-            The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-            `running`, `succeeded`, `failed`, or `cancelled`.
+            The current status of the fine-tuning job, which can be either 'validating_files', 'queued',
+            'running', 'succeeded', 'failed', or 'cancelled'.
         trained_tokens:
           type: integer
-          format: int64
+          format: int32
           nullable: true
           description: |-
             The total number of billable tokens processed by this fine-tuning job. The value will be null
@@ -4236,14 +4223,15 @@ components:
         training_file:
           type: string
           description: |-
-            The file ID used for training. You can retrieve the training data with the
-            [Files API](/docs/api-reference/files/retrieve-contents).
+            The file ID used for training. You can retrieve the training data with the [Files
+            API](/docs/api-reference/files/retrieve-contents).
         validation_file:
           type: string
           nullable: true
           description: |-
-            The file ID used for validation. You can retrieve the validation results with the
-            [Files API](/docs/api-reference/files/retrieve-contents).
+            The file ID used for validation. You can retrieve the validation results with the [Files
+            API](/docs/api-reference/files/retrieve-contents).
+      description: The 'fine_tuning.job' object represents a fine-tuning job that has been created through the API.
     FineTuningJobEvent:
       type: object
       required:
@@ -4287,36 +4275,23 @@ components:
             The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
             dashes, with a maximum length of 64.
         parameters:
-          $ref: '#/components/schemas/FunctionParameters'
-    FunctionParameters:
-      type: object
-      additionalProperties: {}
-      description: |-
-        The parameters the functions accepts, described as a JSON Schema object. See the
-        [guide](/docs/guides/gpt/function-calling) for examples, and the
-        [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation
-        about the format.\n\nTo describe a function that accepts no parameters, provide the value
-        `{\"type\": \"object\", \"properties\": {}}`.
+          type: object
+          additionalProperties: {}
     Image:
       type: object
       properties:
         b64_json:
           type: string
           format: base64
-          description: The base64-encoded JSON of the generated image, if `response_format` is `b64_json`.
+          description: The base64-encoded JSON of the generated image, if 'response_format' is 'b64_json'.
         url:
           type: string
           format: uri
-          description: The URL of the generated image, if `response_format` is `url` (default).
+          description: The URL of the generated image, if 'response_format' is 'url' (default).
         revised_prompt:
           type: string
           description: The prompt that was used to generate the image, if there was any revision to the prompt.
       description: Represents the url or the content of an image generated by the OpenAI API.
-    ImagesN:
-      type: integer
-      format: int64
-      minimum: 1
-      maximum: 10
     ImagesResponse:
       type: object
       required:
@@ -4330,11 +4305,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Image'
-    LearningRateMultiplier:
-      type: number
-      format: double
-      minimum: 0
-      exclusiveMinimum: true
     ListAssistantFilesResponse:
       type: object
       required:
@@ -4346,8 +4316,6 @@ components:
       properties:
         object:
           type: string
-          enum:
-            - list
         data:
           type: array
           items:
@@ -4369,8 +4337,6 @@ components:
       properties:
         object:
           type: string
-          enum:
-            - list
         data:
           type: array
           items:
@@ -4420,8 +4386,6 @@ components:
       properties:
         object:
           type: string
-          enum:
-            - list
         data:
           type: array
           items:
@@ -4443,8 +4407,6 @@ components:
       properties:
         object:
           type: string
-          enum:
-            - list
         data:
           type: array
           items:
@@ -4504,8 +4466,6 @@ components:
       properties:
         object:
           type: string
-          enum:
-            - list
         data:
           type: array
           items:
@@ -4527,12 +4487,31 @@ components:
       properties:
         object:
           type: string
-          enum:
-            - list
         data:
           type: array
           items:
             $ref: '#/components/schemas/RunObject'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    ListThreadsResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThreadObject'
         first_id:
           type: string
         last_id:
@@ -4549,7 +4528,7 @@ components:
           type: string
           enum:
             - image_file
-          description: Always `image_file`.
+          description: Always 'image_file'.
         image_file:
           type: object
           properties:
@@ -4572,7 +4551,7 @@ components:
           type: string
           enum:
             - file_citation
-          description: Always `file_citation`.
+          description: Always 'file_citation'.
         text:
           type: string
           description: The text in the message content that needs to be replaced.
@@ -4590,11 +4569,11 @@ components:
             - quote
         start_index:
           type: integer
-          format: int64
+          format: int32
           minimum: 0
         end_index:
           type: integer
-          format: int64
+          format: int32
           minimum: 0
       description: |-
         A citation within the message that points to a specific quote from a specific File associated
@@ -4613,7 +4592,7 @@ components:
           type: string
           enum:
             - file_path
-          description: Always `file_path`.
+          description: Always 'file_path'.
         text:
           type: string
           description: The text in the message content that needs to be replaced.
@@ -4627,14 +4606,14 @@ components:
             - file_id
         start_index:
           type: integer
-          format: int64
+          format: int32
           minimum: 0
         end_index:
           type: integer
-          format: int64
+          format: int32
           minimum: 0
       description: |-
-        A URL for the file that's generated when the assistant used the `code_interpreter` tool to
+        A URL for the file that's generated when the assistant used the 'code_interpreter' tool to
         generate a file.
     MessageContentTextObject:
       type: object
@@ -4646,8 +4625,7 @@ components:
           type: string
           enum:
             - text
-            - json_object
-          description: Always `text`.
+          description: Always 'text'.
         text:
           type: object
           properties:
@@ -4657,16 +4635,13 @@ components:
             annotations:
               type: array
               items:
-                $ref: '#/components/schemas/MessageContentTextObjectAnnotations'
+                anyOf:
+                  - $ref: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
+                  - $ref: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
           required:
             - value
             - annotations
       description: The text content that is part of a message.
-    MessageContentTextObjectAnnotations:
-      oneOf:
-        - $ref: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
-        - $ref: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
-      x-oaiExpandable: true
     MessageFileObject:
       type: object
       required:
@@ -4677,20 +4652,22 @@ components:
       properties:
         id:
           type: string
-          description: TThe identifier, which can be referenced in API endpoints.
+          description: The identifier, which can be referenced in API endpoints.
         object:
           type: string
           enum:
             - thread.message.file
-          description: The object type, which is always `thread.message.file`.
+          description: The object type, which is always 'thread.message.file'.
         created_at:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the message file was created.
         message_id:
           type: string
-          description: The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to.
-      description: A list of files attached to a `message`.
+          description: |-
+            The ID of the [message](/docs/api-reference/messages) that the
+            [File](/docs/api-reference/files) is attached to.
+      description: A list of files attached to a 'message'.
     MessageObject:
       type: object
       required:
@@ -4712,7 +4689,7 @@ components:
           type: string
           enum:
             - thread.message
-          description: The object type, which is always `thread.message`.
+          description: The object type, which is always 'thread.message'.
         created_at:
           type: integer
           format: unixtime
@@ -4725,11 +4702,13 @@ components:
           enum:
             - user
             - assistant
-          description: The entity that produced the message. One of `user` or `assistant`.
+          description: The entity that produced the message. One of 'user' or 'assistant'.
         content:
           type: array
           items:
-            $ref: '#/components/schemas/MessageObjectContent'
+            anyOf:
+              - $ref: '#/components/schemas/MessageContentImageFileObject'
+              - $ref: '#/components/schemas/MessageContentTextObject'
           description: The content of the message in array of text and/or images.
         assistant_id:
           type: string
@@ -4763,11 +4742,7 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
-    MessageObjectContent:
-      oneOf:
-        - $ref: '#/components/schemas/MessageContentImageFileObject'
-        - $ref: '#/components/schemas/MessageContentTextObject'
-      x-oaiExpandable: true
+      description: Represents a message within a [thread](/docs/api-reference/threads).
     Model:
       type: object
       required:
@@ -4817,10 +4792,16 @@ components:
           maxLength: 32768
           description: The system instructions that the assistant uses. The maximum length is 32768 characters.
         tools:
-          $ref: '#/components/schemas/CreateAssistantRequestToolsItem'
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/AssistantToolsCode'
+              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFunction'
+          maxItems: 128
           description: |-
             A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-            Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+            Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
           default: []
         file_ids:
           type: array
@@ -4828,9 +4809,10 @@ components:
             type: string
           maxItems: 20
           description: |-
-            A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
+            A list of [File](/docs/api-reference/files) IDs attached to this assistant. There can be a
             maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-            ascending order.
+            ascending order. If a file was previously attached to the list but does not show up in the
+            list, it will be deleted from the assistant.
           default: []
         metadata:
           type: object
@@ -4880,11 +4862,7 @@ components:
             Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
-    NEpochs:
-      type: integer
-      format: int64
-      minimum: 1
-      maximum: 50
+          x-oaiTypeLabel: map
     OpenAIFile:
       type: object
       required:
@@ -4901,8 +4879,7 @@ components:
           description: The file identifier, which can be referenced in the API endpoints.
         bytes:
           type: integer
-          format: int64
-          nullable: true
+          format: int32
           description: The size of the file, in bytes.
         created_at:
           type: integer
@@ -4915,7 +4892,7 @@ components:
           type: string
           enum:
             - file
-          description: The object type, which is always "file".
+          description: The object type, which is always 'file'.
         purpose:
           type: string
           enum:
@@ -4924,8 +4901,8 @@ components:
             - assistants
             - assistants_output
           description: |-
-            The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`,
-            `assistants`, and `assistants_output`.
+            The intended purpose of the file. Supported values are 'fine-tune', 'fine-tune-results',
+            'assistants', and 'assistants_output'.
         status:
           type: string
           enum:
@@ -4933,24 +4910,14 @@ components:
             - processed
             - error
           description: |-
-            Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or
-            `error`.
-          deprecated: true
+            Deprecated. The current status of the file, which can be either 'uploaded', 'processed', or
+            'error'.
         status_details:
           type: string
           description: |-
-            Deprecated. For details on why a fine-tuning training file failed validation, see the `error`
-            field on `fine_tuning.job`.
-          deprecated: true
-      description: The `File` object represents a document that has been uploaded to OpenAI.
-    Prompt:
-      oneOf:
-        - type: string
-        - type: array
-          items:
-            type: string
-        - $ref: '#/components/schemas/TokenArrayItem'
-        - $ref: '#/components/schemas/TokenArrayArray'
+            Deprecated. For details on why a fine-tuning training file failed validation, see the 'error'
+            field on 'fine_tuning.job'.
+      description: The 'File' object represents a document that has been uploaded to OpenAI.
     RunCompletionUsage:
       type: object
       required:
@@ -4960,19 +4927,19 @@ components:
       properties:
         completion_tokens:
           type: integer
-          format: int64
+          format: int32
           description: Number of completion tokens used over the course of the run.
         prompt_tokens:
           type: integer
-          format: int64
+          format: int32
           description: Number of prompt tokens used over the course of the run.
         total_tokens:
           type: integer
-          format: int64
+          format: int32
           description: Total number of tokens used (prompt + completion).
       description: |-
-        Usage statistics related to the run. This value will be `null` if the run is not in a terminal
-        state (i.e. `in_progress`, `queued`, etc.).
+        Usage statistics related to the run. This value will be 'null' if the run is not in a terminal
+        state (i.e. 'in_progress', 'queued', etc.).
     RunObject:
       type: object
       required:
@@ -5003,16 +4970,14 @@ components:
           type: string
           enum:
             - thread.run
-          description: The object type, which is always `thread.run`.
+          description: The object type, which is always 'thread.run'.
         created_at:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the run was created.
         thread_id:
           type: string
-          description: |-
-            The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this
-            run.
+          description: The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
         assistant_id:
           type: string
           description: The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.
@@ -5028,8 +4993,8 @@ components:
             - completed
             - expired
           description: |-
-            The status of the run, which can be either `queued`, `in_progress`, `requires_action`,
-            `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
+            The status of the run, which can be either 'queued', 'in_progress', 'requires_action',
+            'cancelling', 'cancelled', 'failed', 'completed', or 'expired'.
         required_action:
           type: object
           properties:
@@ -5037,7 +5002,7 @@ components:
               type: string
               enum:
                 - submit_tool_outputs
-              description: For now, this is always `submit_tool_outputs`.
+              description: For now, this is always 'submit_tool_outputs'.
             submit_tool_outputs:
               type: object
               properties:
@@ -5053,9 +5018,7 @@ components:
             - type
             - submit_tool_outputs
           nullable: true
-          description: |-
-            Details on the action required to continue the run. Will be `null` if no action is
-            required.
+          description: Details on the action required to continue the run. Will be 'null' if no action is required.
         last_error:
           type: object
           properties:
@@ -5065,7 +5028,7 @@ components:
                 - server_error
                 - rate_limit_exceeded
                 - invalid_prompt
-              description: One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+              description: One of 'server_error', 'rate_limit_exceeded', or 'invalid_prompt'.
             message:
               type: string
               description: A human-readable description of the error.
@@ -5073,11 +5036,10 @@ components:
             - code
             - message
           nullable: true
-          description: The last error associated with this run. Will be `null` if there are no errors.
+          description: The last error associated with this run. Will be 'null' if there are no errors.
         expires_at:
-          type: string
-          format: date-time
-          nullable: true
+          type: integer
+          format: unixtime
           description: The Unix timestamp (in seconds) for when the run will expire.
         started_at:
           type: string
@@ -5106,8 +5068,15 @@ components:
           type: string
           description: The instructions that the [assistant](/docs/api-reference/assistants) used for this run.
         tools:
-          $ref: '#/components/schemas/CreateRunRequestToolsItem'
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/AssistantToolsCode'
+              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFunction'
+          maxItems: 20
           description: The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+          default: []
         file_ids:
           type: array
           items:
@@ -5127,10 +5096,7 @@ components:
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         usage:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/RunCompletionUsage'
-          nullable: true
+          $ref: '#/components/schemas/RunCompletionUsage'
       description: Represents an execution run on a [thread](/docs/api-reference/threads).
     RunStepCompletionUsage:
       type: object
@@ -5141,24 +5107,19 @@ components:
       properties:
         completion_tokens:
           type: integer
-          format: int64
+          format: int32
           description: Number of completion tokens used over the course of the run step.
         prompt_tokens:
           type: integer
-          format: int64
+          format: int32
           description: Number of prompt tokens used over the course of the run step.
         total_tokens:
           type: integer
-          format: int64
+          format: int32
           description: Total number of tokens used (prompt + completion).
       description: |-
-        Usage statistics related to the run step. This value will be `null` while the run step's status
-        is `in_progress`.
-    RunStepDetails:
-      oneOf:
-        - $ref: '#/components/schemas/RunStepDetailsMessageCreationObject'
-        - $ref: '#/components/schemas/RunStepDetailsToolCallsObject'
-      x-oaiExpandable: true
+        Usage statistics related to the run step. This value will be 'null' while the run step's status
+        is 'in_progress'.
     RunStepDetailsMessageCreationObject:
       type: object
       required:
@@ -5169,7 +5130,8 @@ components:
           type: string
           enum:
             - message_creation
-          description: Details of the message creation by the run step.
+            - tool_calls
+          description: Always 'message_creation'.
         message_creation:
           type: object
           properties:
@@ -5194,7 +5156,7 @@ components:
           enum:
             - code_interpreter
           description: |-
-            The type of tool call. This is always going to be `code_interpreter` for this type of tool
+            The type of tool call. This is always going to be 'code_interpreter' for this type of tool
             call.
         code_interpreter:
           type: object
@@ -5203,21 +5165,20 @@ components:
               type: string
               description: The input to the Code Interpreter tool call.
             outputs:
-              $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputs'
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputLogsObject'
+                  - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputImageObject'
               description: |-
                 The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-                items, including text (`logs`) or images (`image`). Each of these are represented by a
+                items, including text ('logs') or images ('image'). Each of these are represented by a
                 different object type.
           required:
             - input
             - outputs
           description: The Code Interpreter tool call definition.
       description: Details of the Code Interpreter tool call the run step was involved in.
-    RunStepDetailsToolCallsCodeOutput:
-      oneOf:
-        - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputLogsObject'
-        - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputImageObject'
-      x-oaiExpandable: true
     RunStepDetailsToolCallsCodeOutputImageObject:
       type: object
       required:
@@ -5228,7 +5189,7 @@ components:
           type: string
           enum:
             - image
-          description: Always `image`.
+          description: Always 'image'.
         image:
           type: object
           properties:
@@ -5247,15 +5208,11 @@ components:
           type: string
           enum:
             - logs
-          description: Always `logs`.
+          description: Always 'logs'.
         logs:
           type: string
           description: The text output from the Code Interpreter tool call.
       description: Text output from the Code Interpreter tool call as part of a run step.
-    RunStepDetailsToolCallsCodeOutputs:
-      type: array
-      items:
-        $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutput'
     RunStepDetailsToolCallsFunctionObject:
       type: object
       required:
@@ -5270,7 +5227,7 @@ components:
           type: string
           enum:
             - function
-          description: The type of tool call. This is always going to be `function` for this type of tool call.
+          description: The type of tool call. This is always going to be 'function' for this type of tool call.
         function:
           type: object
           properties:
@@ -5284,7 +5241,7 @@ components:
               type: string
               nullable: true
               description: |-
-                The output of the function. This will be `null` if the outputs have not been
+                The output of the function. This will be 'null' if the outputs have not been
                 [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
           required:
             - name
@@ -5301,23 +5258,18 @@ components:
           type: string
           enum:
             - tool_calls
-          description: Always `tool_calls`.
+          description: Always 'tool_calls'.
         tool_calls:
-          $ref: '#/components/schemas/RunStepDetailsToolCallsObjectToolCallsItem'
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeObject'
+              - $ref: '#/components/schemas/RunStepDetailsToolCallsRetrievalObject'
+              - $ref: '#/components/schemas/RunStepDetailsToolCallsFunctionObject'
           description: |-
             An array of tool calls the run step was involved in. These can be associated with one of three
-            types of tools: `code_interpreter`, `retrieval`, or `function`.
+            types of tools: 'code_interpreter', 'retrieval', or 'function'.
       description: Details of the tool call.
-    RunStepDetailsToolCallsObjectToolCall:
-      oneOf:
-        - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeObject'
-        - $ref: '#/components/schemas/RunStepDetailsToolCallsRetrievalObject'
-        - $ref: '#/components/schemas/RunStepDetailsToolCallsFunctionObject'
-      x-oaiExpandable: true
-    RunStepDetailsToolCallsObjectToolCallsItem:
-      type: array
-      items:
-        $ref: '#/components/schemas/RunStepDetailsToolCallsObjectToolCall'
     RunStepDetailsToolCallsRetrievalObject:
       type: object
       required:
@@ -5332,9 +5284,11 @@ components:
           type: string
           enum:
             - retrieval
-          description: The type of tool call. This is always going to be `retrieval` for this type of tool call.
+          description: The type of tool call. This is always going to be 'retrieval' for this type of tool call.
         retrieval:
           type: object
+          additionalProperties:
+            type: string
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
     RunStepObject:
@@ -5350,7 +5304,7 @@ components:
         - status
         - step_details
         - last_error
-        - expires_at
+        - expired_at
         - cancelled_at
         - failed_at
         - completed_at
@@ -5364,7 +5318,7 @@ components:
           type: string
           enum:
             - thread.run.step
-          description: The object type, which is always `thread.run.step`.
+          description: The object type, which is always 'thread.run.step'.
         created_at:
           type: integer
           format: unixtime
@@ -5383,7 +5337,7 @@ components:
           enum:
             - message_creation
             - tool_calls
-          description: The type of run step, which can be either `message_creation` or `tool_calls`.
+          description: The type of run step, which can be either 'message_creation' or 'tool_calls'.
         status:
           type: string
           enum:
@@ -5393,11 +5347,12 @@ components:
             - completed
             - expired
           description: |-
-            The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
-            `completed`, or `expired`.
+            The status of the run step, which can be either 'in_progress', 'cancelled', 'failed',
+            'completed', or 'expired'.
         step_details:
-          allOf:
-            - $ref: '#/components/schemas/RunStepDetails'
+          anyOf:
+            - $ref: '#/components/schemas/RunStepDetailsMessageCreationObject'
+            - $ref: '#/components/schemas/RunStepDetailsToolCallsObject'
           description: The details of the run step.
         last_error:
           type: object
@@ -5407,7 +5362,7 @@ components:
               enum:
                 - server_error
                 - rate_limit_exceeded
-              description: One of `server_error` or `rate_limit_exceeded`.
+              description: One of 'server_error' or 'rate_limit_exceeded'.
             message:
               type: string
               description: A human-readable description of the error.
@@ -5415,14 +5370,14 @@ components:
             - code
             - message
           nullable: true
-          description: The last error associated with this run step. Will be `null` if there are no errors.
-        expires_at:
+          description: The last error associated with this run step. Will be 'null' if there are no errors.
+        expired_at:
           type: string
           format: date-time
           nullable: true
           description: |-
-            The Unix timestamp (in seconds) for when the run step expired. A step is considered expired
-            if the parent run is expired.
+            The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
+            the parent run is expired.
         cancelled_at:
           type: string
           format: date-time
@@ -5437,7 +5392,7 @@ components:
           type: string
           format: date-time
           nullable: true
-          description: T The Unix timestamp (in seconds) for when the run step completed..
+          description: The Unix timestamp (in seconds) for when the run step completed.
         metadata:
           type: object
           additionalProperties:
@@ -5449,10 +5404,7 @@ components:
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         usage:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/RunStepCompletionUsage'
-          nullable: true
+          $ref: '#/components/schemas/RunStepCompletionUsage'
       description: Represents a step in execution of a run.
     RunToolCallObject:
       type: object
@@ -5470,7 +5422,7 @@ components:
           type: string
           enum:
             - function
-          description: The type of tool call the output is required for. For now, this is always `function`.
+          description: The type of tool call the output is required for. For now, this is always 'function'.
         function:
           type: object
           properties:
@@ -5485,16 +5437,6 @@ components:
             - arguments
           description: The function definition.
       description: Tool call objects
-    Stop:
-      oneOf:
-        - type: string
-        - $ref: '#/components/schemas/StopSequences'
-    StopSequences:
-      type: array
-      items:
-        type: string
-      minItems: 1
-      maxItems: 4
     SubmitToolOutputsRunRequest:
       type: object
       required:
@@ -5508,16 +5450,12 @@ components:
               tool_call_id:
                 type: string
                 description: |-
-                  The ID of the tool call in the `required_action` object within the run object the output is
+                  The ID of the tool call in the 'required_action' object within the run object the output is
                   being submitted for.
               output:
                 type: string
                 description: The output of the tool call to be submitted to continue the run.
           description: A list of tools for which the outputs are being submitted.
-    SuffixString:
-      type: string
-      minLength: 1
-      maxLength: 40
     ThreadObject:
       type: object
       required:
@@ -5533,7 +5471,7 @@ components:
           type: string
           enum:
             - thread
-          description: The object type, which is always `thread`.
+          description: The object type, which is always 'thread'.
         created_at:
           type: integer
           format: unixtime
@@ -5549,17 +5487,6 @@ components:
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: Represents a thread that contains [messages](/docs/api-reference/messages).
-    TokenArrayArray:
-      type: array
-      items:
-        $ref: '#/components/schemas/TokenArrayItem'
-      minItems: 1
-    TokenArrayItem:
-      type: array
-      items:
-        type: integer
-        format: int64
-      minItems: 1
     TranscriptionSegment:
       type: object
       required:
@@ -5576,11 +5503,11 @@ components:
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
           description: Unique identifier of the segment.
         seek:
           type: integer
-          format: int64
+          format: int32
           description: Seek offset of the segment.
         start:
           type: number
@@ -5594,13 +5521,14 @@ components:
           type: string
           description: Text content of the segment.
         tokens:
-          $ref: '#/components/schemas/TokenArrayItem'
+          type: array
+          items:
+            type: integer
+            format: int32
           description: Array of token IDs for the text content.
         temperature:
           type: number
           format: double
-          minimum: 0
-          maximum: 1
           description: Temperature parameter used for generating the segment.
         avg_logprob:
           type: number
@@ -5616,7 +5544,7 @@ components:
           type: number
           format: double
           description: |-
-            Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
+            Probability of no speech in the segment. If the value is higher than 1.0 and the 'avg_logprob'
             is below -1, consider this segment silent.
     TranscriptionWord:
       type: object
@@ -5636,8 +5564,6 @@ components:
           type: number
           format: double
           description: End time of the word in seconds.
-    User:
-      type: string
   securitySchemes:
     BearerAuth:
       type: http

@@ -22,14 +22,7 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("url"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(Url);
-#else
-            using (JsonDocument document = JsonDocument.Parse(Url))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
+            writer.WriteStringValue(Url.AbsoluteUri);
             if (Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
@@ -73,7 +66,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            BinaryData url = default;
+            Uri url = default;
             ChatCompletionRequestMessageContentPartImageImageUrlDetail? detail = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -81,7 +74,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("url"u8))
                 {
-                    url = BinaryData.FromString(property.Value.GetRawText());
+                    url = new Uri(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("detail"u8))

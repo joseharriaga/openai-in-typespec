@@ -1,5 +1,3 @@
-import "../common/models.tsp";
-
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -7,44 +5,44 @@ namespace OpenAI;
 model CreateImageRequest {
   /**
    * A text description of the desired image(s). The maximum length is 1000 characters for
-   * `dall-e-2` and 4000 characters for `dall-e-3`.
+   * 'dall-e-2' and 4000 characters for 'dall-e-3'.
    */
   prompt: string;
 
   /** The model to use for image generation. */
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | "dall-e-2" | "dall-e-3" = "dall-e-2";
+  `model`?: string | "dall-e-2" | "dall-e-3" | null = "dall-e-2";
 
-  /** 
-   * The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is
+  /**
+   * The number of images to generate. Must be between 1 and 10. For 'dall-e-3', only 'n=1' is
    * supported.
    */
-  // TODO: This is generated as a "oneOf" in the tsp-output?
-  n?: ImagesN | null = 1;
+  @minValue(1)
+  @maxValue(10)
+  n?: int32 | null = 1;
 
-  // TODO: This is not marked as nullable in the OpenAPI spec.
   /**
-   * The quality of the image that will be generated. `hd` creates images with finer details and
-   * greater consistency across the image. This param is only supported for `dall-e-3`.
+   * The quality of the image that will be generated. 'hd' creates images with finer details and
+   * greater consistency across the image. This param is only supported for 'dall-e-3'.
    */
-  quality?: "standard" | "hd" | null = "standard";
+  quality?: "standard" | "hd" = "standard";
 
   /**
-   * The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs
-   * are only valid for 60 minutes after the image has been generated.
+   * The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+   * URLs are only valid for 60 minutes after the image has been generated.
    */
   response_format?: "url" | "b64_json" | null = "url";
 
   /**
-   * The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024` for
-   * `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or `1024x1792` for `dall-e-3` models.
+   * The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024' for
+   * 'dall-e-2'. Must be one of '1024x1024', '1792x1024', or '1024x1792' for 'dall-e-3' models.
    */
   size?: "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792" | null = "1024x1024";
 
   /**
-   * The style of the generated images. Must be one of `vivid` or `natural`. Vivid causes the model
+   * The style of the generated images. Must be one of 'vivid' or 'natural'. Vivid causes the model
    * to lean towards generating hyper-real and dramatic images. Natural causes the model to produce
-   * more natural, less hyper-real looking images. This param is only supported for `dall-e-3`.
+   * more natural, less hyper-real looking images. This param is only supported for 'dall-e-3'.
    */
   style?: "vivid" | "natural" | null = "vivid";
 
@@ -52,7 +50,7 @@ model CreateImageRequest {
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
    * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
    */
-  user?: User;
+  user?: string;
 }
 
 model CreateImageEditRequest {
@@ -63,39 +61,40 @@ model CreateImageEditRequest {
   @encode("binary")
   image: bytes;
 
-  // TODO: Max length is not defined in the OpenAPI spec but mentioned in the description.
   /** A text description of the desired image(s). The maximum length is 1000 characters. */
-  @maxLength(1000)
   prompt: string;
 
   /**
-   *  An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where
-   * `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions
-   * as `image`.
+   * An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where
+   * 'image' should be edited. Must be a valid PNG file, less than 4MB, and have the same
+   * dimensions as 'image'.
    */
   @encode("binary")
   mask?: bytes;
 
-  /** The model to use for image generation. Only `dall-e-2` is supported at this time. */
+  /** The model to use for image generation. Only 'dall-e-2' is supported at this time. */
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | "dall-e-2" = "dall-e-2";
+  `model`?: string | "dall-e-2" | null = "dall-e-2";
 
-  /**
-   * The number of images to generate. Must be between 1 and 10.
-   */
-  n?: ImagesN | null = 1;
+  /** The number of images to generate. Must be between 1 and 10. */
+  @minValue(1)
+  @maxValue(10)
+  n?: int32 | null = 1;
 
-  /** The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. */
+  /** The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024'. */
   size?: "256x256" | "512x512" | "1024x1024" | null = "1024x1024";
 
-  /** The format in which the generated images are returned. Must be one of `url` or `b64_json`. */
+  /**
+   * The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+   * URLs are only valid for 60 minutes after the image has been generated.
+   */
   response_format?: "url" | "b64_json" | null = "url";
 
   /**
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
    * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
    */
-  user?: User;
+  user?: string;
 }
 
 model CreateImageVariationRequest {
@@ -103,29 +102,34 @@ model CreateImageVariationRequest {
    * The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB,
    * and square.
    */
-  @encode("binary")
-  image: bytes;
+  image: string;
 
-  /** The model to use for image generation. Only `dall-e-2` is supported at this time. */
+  /** The model to use for image generation. Only 'dall-e-2' is supported at this time. */
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | "dall-e-2" = "dall-e-2";
+  `model`?: string | "dall-e-2" | null = "dall-e-2";
 
   /**
-   * The number of images to generate. Must be between 1 and 10.
+   * The number of images to generate. Must be between 1 and 10. For 'dall-e-3', only 'n=1' is
+   * supported.
    */
-  n?: ImagesN | null = 1;
-  
-  /** The format in which the generated images are returned. Must be one of `url` or `b64_json`. */
+  @minValue(1)
+  @maxValue(10)
+  n?: int32 | null = 1;
+
+  /**
+   * The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+   * URLs are only valid for 60 minutes after the image has been generated.
+   */
   response_format?: "url" | "b64_json" | null = "url";
 
-  /** The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. */
+  /** The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024'. */
   size?: "256x256" | "512x512" | "1024x1024" | null = "1024x1024";
 
   /**
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
    * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
    */
-  user?: User;
+  user?: string;
 }
 
 model ImagesResponse {
@@ -135,17 +139,13 @@ model ImagesResponse {
   data: Image[];
 }
 
-@minValue(1)
-@maxValue(10)
-scalar ImagesN extends safeint;
-
 /** Represents the url or the content of an image generated by the OpenAI API. */
 model Image {
-  /** The base64-encoded JSON of the generated image, if `response_format` is `b64_json`. */
+  /** The base64-encoded JSON of the generated image, if 'response_format' is 'b64_json'. */
   @encode("base64", string)
   b64_json?: bytes;
 
-  /** The URL of the generated image, if `response_format` is `url` (default). */
+  /** The URL of the generated image, if 'response_format' is 'url' (default). */
   url?: url;
 
   /** The prompt that was used to generate the image, if there was any revision to the prompt. */

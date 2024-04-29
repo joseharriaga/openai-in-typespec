@@ -26,7 +26,13 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("retrieval"u8);
-            writer.WriteObjectValue<RunStepDetailsToolCallsRetrievalObjectRetrieval>(Retrieval, options);
+            writer.WriteStartObject();
+            foreach (var item in Retrieval)
+            {
+                writer.WritePropertyName(item.Key);
+                writer.WriteStringValue(item.Value);
+            }
+            writer.WriteEndObject();
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -67,7 +73,7 @@ namespace OpenAI.Internal.Models
             }
             string id = default;
             RunStepDetailsToolCallsRetrievalObjectType type = default;
-            RunStepDetailsToolCallsRetrievalObjectRetrieval retrieval = default;
+            IReadOnlyDictionary<string, string> retrieval = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -84,7 +90,12 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("retrieval"u8))
                 {
-                    retrieval = RunStepDetailsToolCallsRetrievalObjectRetrieval.DeserializeRunStepDetailsToolCallsRetrievalObjectRetrieval(property.Value, options);
+                    Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                    foreach (var property0 in property.Value.EnumerateObject())
+                    {
+                        dictionary.Add(property0.Name, property0.Value.GetString());
+                    }
+                    retrieval = dictionary;
                     continue;
                 }
                 if (options.Format != "W")

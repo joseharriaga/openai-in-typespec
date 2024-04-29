@@ -48,7 +48,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="AssistantToolsRetrieval"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `retrieval`. </param>
+        /// <param name="type"> The type of tool being defined: 'retrieval'. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AssistantToolsRetrieval(AssistantToolsRetrievalType type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -56,7 +56,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The type of tool being defined: `retrieval`. </summary>
+        /// <summary> The type of tool being defined: 'retrieval'. </summary>
         public AssistantToolsRetrievalType Type { get; } = AssistantToolsRetrievalType.Retrieval;
     }
 }

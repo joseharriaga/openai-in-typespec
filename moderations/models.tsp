@@ -4,17 +4,19 @@ namespace OpenAI;
 
 model CreateModerationRequest {
   /** The input text to classify */
-  input: CreateModerationRequestInput;
+  input: string | string[];
 
   /**
-   * Two content moderations models are available: `text-moderation-stable` and
-   * `text-moderation-latest`. The default is `text-moderation-latest` which will be automatically
-   * upgraded over time. This ensures you are always using our most accurate model. If you use
-   * `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy
-   * of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
+   * Two content moderations models are available: 'text-moderation-stable' and
+   * 'text-moderation-latest'.
+   * 
+   * The default is 'text-moderation-latest' which will be automatically upgraded over time. This
+   * ensures you are always using our most accurate model. If you use 'text-moderation-stable', we
+   * will provide advanced notice before updating the model. Accuracy of 'text-moderation-stable'
+   * may be slightly lower than for 'text-moderation-latest'.
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | MODERATION_MODELS = "text-moderation-latest";
+  `model`?: string | "text-moderation-latest" | "text-moderation-stable" = "text-moderation-latest";
 }
 
 /** Represents if a given text input is potentially harmful. */
@@ -35,7 +37,7 @@ model CreateModerationResponse {
       /**
        * Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
        * religion, nationality, sexual orientation, disability status, or caste. Hateful content
-       * aimed at non-protected groups (e.g., chess players) is harrassment.
+       * aimed at non-protected groups (e.g., chess players) is harassment.
        */
       hate: boolean;
 
@@ -106,7 +108,7 @@ model CreateModerationResponse {
       /** The score for the category 'self-harm/intent'. */
       `self-harm/intent`: float64;
 
-      /** The score for the category 'self-harm/instructive'. */
+      /** The score for the category 'self-harm/instructions'. */
       `self-harm/instructions`: float64;
 
       /** The score for the category 'sexual'. */
@@ -124,12 +126,3 @@ model CreateModerationResponse {
   }[];
 }
 
-alias MODERATION_MODELS =
-  | "text-moderation-latest"
-  | "text-moderation-stable";
-
-@oneOf
-union CreateModerationRequestInput {
-  string,
-  string[]
-}

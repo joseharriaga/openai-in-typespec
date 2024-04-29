@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsCodeOutputLogsObject"/>. </summary>
-        /// <param name="type"> Always `logs`. </param>
+        /// <param name="type"> Always 'logs'. </param>
         /// <param name="logs"> The text output from the Code Interpreter tool call. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDetailsToolCallsCodeOutputLogsObject(RunStepDetailsToolCallsCodeOutputLogsObjectType type, string logs, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always `logs`. </summary>
+        /// <summary> Always 'logs'. </summary>
         public RunStepDetailsToolCallsCodeOutputLogsObjectType Type { get; } = RunStepDetailsToolCallsCodeOutputLogsObjectType.Logs;
 
         /// <summary> The text output from the Code Interpreter tool call. </summary>

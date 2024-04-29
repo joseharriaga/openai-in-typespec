@@ -1,7 +1,7 @@
 import "@typespec/http";
 import "@typespec/openapi";
 
-import "../common/errors.tsp";
+import "../common/models.tsp";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -16,9 +16,7 @@ interface Images {
   @operationId("createImage")
   @tag("Images")
   @summary("Creates an image given a prompt")
-  createImage(
-    @body image: CreateImageRequest
-  ): ImagesResponse | ErrorResponse;
+  createImage(@body image: CreateImageRequest): ImagesResponse | ErrorResponse;
 
   @route("edits")
   @post

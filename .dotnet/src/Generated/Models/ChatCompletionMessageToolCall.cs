@@ -57,7 +57,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionMessageToolCall"/>. </summary>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
+        /// <param name="type"> The type of the tool. Currently, only 'function' is supported. </param>
         /// <param name="function"> The function that the model called. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatCompletionMessageToolCall(string id, ChatCompletionMessageToolCallType type, ChatCompletionMessageToolCallFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -75,7 +75,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The ID of the tool call. </summary>
         public string Id { get; set; }
-        /// <summary> The type of the tool. Currently, only `function` is supported. </summary>
+        /// <summary> The type of the tool. Currently, only 'function' is supported. </summary>
         public ChatCompletionMessageToolCallType Type { get; } = ChatCompletionMessageToolCallType.Function;
 
         /// <summary> The function that the model called. </summary>

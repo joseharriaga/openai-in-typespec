@@ -24,14 +24,12 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
             writer.WritePropertyName("embedding"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(EmbeddingProperty);
-#else
-            using (JsonDocument document = JsonDocument.Parse(EmbeddingProperty))
+            writer.WriteStartArray();
+            foreach (var item in EmbeddingProperty)
             {
-                JsonSerializer.Serialize(writer, document.RootElement);
+                writer.WriteNumberValue(item);
             }
-#endif
+            writer.WriteEndArray();
             writer.WritePropertyName("object"u8);
             writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -72,8 +70,8 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            long index = default;
-            BinaryData embedding = default;
+            int index = default;
+            IReadOnlyList<double> embedding = default;
             EmbeddingObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -81,12 +79,17 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("index"u8))
                 {
-                    index = property.Value.GetInt64();
+                    index = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("embedding"u8))
                 {
-                    embedding = BinaryData.FromString(property.Value.GetRawText());
+                    List<double> array = new List<double>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(item.GetDouble());
+                    }
+                    embedding = array;
                     continue;
                 }
                 if (property.NameEquals("object"u8))

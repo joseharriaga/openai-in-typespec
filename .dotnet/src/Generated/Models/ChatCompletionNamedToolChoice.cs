@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionNamedToolChoice"/>. </summary>
-        /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
+        /// <param name="type"> The type of the tool. Currently, only 'function' is supported. </param>
         /// <param name="function"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatCompletionNamedToolChoice(ChatCompletionNamedToolChoiceType type, ChatCompletionNamedToolChoiceFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> The type of the tool. Currently, only `function` is supported. </summary>
+        /// <summary> The type of the tool. Currently, only 'function' is supported. </summary>
         public ChatCompletionNamedToolChoiceType Type { get; } = ChatCompletionNamedToolChoiceType.Function;
 
         /// <summary> Gets the function. </summary>

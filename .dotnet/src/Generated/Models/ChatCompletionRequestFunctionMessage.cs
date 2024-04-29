@@ -55,7 +55,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionRequestFunctionMessage"/>. </summary>
-        /// <param name="role"> The role of the messages author, in this case `function`. </param>
+        /// <param name="role"> The role of the messages author, in this case 'function'. </param>
         /// <param name="content"> The contents of the function message. </param>
         /// <param name="name"> The name of the function to call. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -72,7 +72,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> The role of the messages author, in this case `function`. </summary>
+        /// <summary> The role of the messages author, in this case 'function'. </summary>
         public ChatCompletionRequestFunctionMessageRole Role { get; } = ChatCompletionRequestFunctionMessageRole.Function;
 
         /// <summary> The contents of the function message. </summary>

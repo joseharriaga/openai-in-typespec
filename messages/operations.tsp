@@ -1,8 +1,7 @@
 import "@typespec/http";
 import "@typespec/openapi";
 
-import "../common/models.tsp";
-import "../common/errors.tsp";
+import "../common";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -31,31 +30,31 @@ interface Messages {
     /** The ID of the [thread](/docs/api-reference/threads) the messages belong to. */
     @path thread_id: string,
 
-    /** 
+    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
      * default is 20.
      */
-    @query limit?: int32 = 20;
+    @query limit?: int32 = 20,
 
     /**
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc;
+    @query order?: ListOrder = ListOrder.desc,
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include after=obj_foo in order to fetch the next page of the list.
      */
-    @query after?: string;
+    @query after?: string,
 
     /**
      * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
      */
-    @query before?: string;
+    @query before?: string,
   ): ListMessagesResponse | ErrorResponse;
 
   @route("{message_id}")
@@ -86,6 +85,7 @@ interface Messages {
     @body message: ModifyMessageRequest,
   ): MessageObject | ErrorResponse;
 
+  
   @route("{message_id}/files")
   @get
   @operationId("listMessageFiles")

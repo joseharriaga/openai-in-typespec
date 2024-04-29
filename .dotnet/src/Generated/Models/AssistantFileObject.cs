@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> A list of [Files](/docs/api-reference/files) attached to an `assistant`. </summary>
+    /// <summary> A list of [Files](/docs/api-reference/files) attached to an 'assistant'. </summary>
     internal partial class AssistantFileObject
     {
         /// <summary>
@@ -59,7 +59,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="AssistantFileObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `assistant.file`. </param>
+        /// <param name="object"> The object type, which is always 'assistant.file'. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the assistant file was created. </param>
         /// <param name="assistantId"> The assistant ID that the file is attached to. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -79,7 +79,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always `assistant.file`. </summary>
+        /// <summary> The object type, which is always 'assistant.file'. </summary>
         public AssistantFileObjectObject Object { get; } = AssistantFileObjectObject.AssistantFile;
 
         /// <summary> The Unix timestamp (in seconds) for when the assistant file was created. </summary>

@@ -21,10 +21,10 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("prompt_tokens"u8);
-            writer.WriteNumberValue(PromptTokens);
             writer.WritePropertyName("completion_tokens"u8);
             writer.WriteNumberValue(CompletionTokens);
+            writer.WritePropertyName("prompt_tokens"u8);
+            writer.WriteNumberValue(PromptTokens);
             writer.WritePropertyName("total_tokens"u8);
             writer.WriteNumberValue(TotalTokens);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -65,26 +65,26 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            long promptTokens = default;
-            long completionTokens = default;
-            long totalTokens = default;
+            int completionTokens = default;
+            int promptTokens = default;
+            int totalTokens = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("prompt_tokens"u8))
-                {
-                    promptTokens = property.Value.GetInt64();
-                    continue;
-                }
                 if (property.NameEquals("completion_tokens"u8))
                 {
-                    completionTokens = property.Value.GetInt64();
+                    completionTokens = property.Value.GetInt32();
+                    continue;
+                }
+                if (property.NameEquals("prompt_tokens"u8))
+                {
+                    promptTokens = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("total_tokens"u8))
                 {
-                    totalTokens = property.Value.GetInt64();
+                    totalTokens = property.Value.GetInt32();
                     continue;
                 }
                 if (options.Format != "W")
@@ -93,7 +93,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CompletionUsage(promptTokens, completionTokens, totalTokens, serializedAdditionalRawData);
+            return new CompletionUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CompletionUsage>.Write(ModelReaderWriterOptions options)

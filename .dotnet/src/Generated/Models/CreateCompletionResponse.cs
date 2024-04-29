@@ -48,9 +48,9 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the completion. </param>
-        /// <param name="choices"> The list of completion choices the model generated for the input. </param>
+        /// <param name="choices"> The list of completion choices the model generated for the input prompt. </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the completion was created. </param>
-        /// <param name="model"> The model used for the completion. </param>
+        /// <param name="model"> The model used for completion. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="choices"/> or <paramref name="model"/> is null. </exception>
         internal CreateCompletionResponse(string id, IEnumerable<CreateCompletionResponseChoice> choices, DateTimeOffset created, string model)
         {
@@ -66,17 +66,17 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the completion. </param>
-        /// <param name="choices"> The list of completion choices the model generated for the input. </param>
+        /// <param name="choices"> The list of completion choices the model generated for the input prompt. </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the completion was created. </param>
-        /// <param name="model"> The model used for the completion. </param>
+        /// <param name="model"> The model used for completion. </param>
         /// <param name="systemFingerprint">
         /// This fingerprint represents the backend configuration that the model runs with.
         ///
-        /// Can be used in conjunction with the `seed` request parameter to understand when backend changes
-        /// have been made that might impact determinism.
+        /// Can be used in conjunction with the 'seed' request parameter to understand when backend
+        /// changes have been made that might impact determinism.
         /// </param>
-        /// <param name="object"> The object type, which is always `text_completion`. </param>
-        /// <param name="usage"> Usage statistics for the completion request. </param>
+        /// <param name="object"> The object type, which is always "text_completion". </param>
+        /// <param name="usage"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateCompletionResponse(string id, IReadOnlyList<CreateCompletionResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, CreateCompletionResponseObject @object, CompletionUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -97,23 +97,23 @@ namespace OpenAI.Internal.Models
 
         /// <summary> A unique identifier for the completion. </summary>
         public string Id { get; }
-        /// <summary> The list of completion choices the model generated for the input. </summary>
+        /// <summary> The list of completion choices the model generated for the input prompt. </summary>
         public IReadOnlyList<CreateCompletionResponseChoice> Choices { get; }
         /// <summary> The Unix timestamp (in seconds) of when the completion was created. </summary>
         public DateTimeOffset Created { get; }
-        /// <summary> The model used for the completion. </summary>
+        /// <summary> The model used for completion. </summary>
         public string Model { get; }
         /// <summary>
         /// This fingerprint represents the backend configuration that the model runs with.
         ///
-        /// Can be used in conjunction with the `seed` request parameter to understand when backend changes
-        /// have been made that might impact determinism.
+        /// Can be used in conjunction with the 'seed' request parameter to understand when backend
+        /// changes have been made that might impact determinism.
         /// </summary>
         public string SystemFingerprint { get; }
-        /// <summary> The object type, which is always `text_completion`. </summary>
+        /// <summary> The object type, which is always "text_completion". </summary>
         public CreateCompletionResponseObject Object { get; } = CreateCompletionResponseObject.TextCompletion;
 
-        /// <summary> Usage statistics for the completion request. </summary>
+        /// <summary> Gets the usage. </summary>
         public CompletionUsage Usage { get; }
     }
 }

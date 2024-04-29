@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -37,7 +42,13 @@ model CreateImageRequest {
    * The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024' for
    * 'dall-e-2'. Must be one of '1024x1024', '1792x1024', or '1024x1792' for 'dall-e-3' models.
    */
-  size?: "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792" | null = "1024x1024";
+  size?:
+    | "256x256"
+    | "512x512"
+    | "1024x1024"
+    | "1792x1024"
+    | "1024x1792"
+    | null = "1024x1024";
 
   /**
    * The style of the generated images. Must be one of 'vivid' or 'natural'. Vivid causes the model
@@ -59,6 +70,7 @@ model CreateImageEditRequest {
    * provided, image must have transparency, which will be used as the mask.
    */
   @encode("binary")
+  @extension("x-customTspIngestionRule", "binary payloads are encoded bytes")
   image: bytes;
 
   /** A text description of the desired image(s). The maximum length is 1000 characters. */
@@ -70,6 +82,7 @@ model CreateImageEditRequest {
    * dimensions as 'image'.
    */
   @encode("binary")
+  @extension("x-customTspIngestionRule", "binary payloads are encoded bytes")
   mask?: bytes;
 
   /** The model to use for image generation. Only 'dall-e-2' is supported at this time. */
@@ -134,6 +147,10 @@ model CreateImageVariationRequest {
 
 model ImagesResponse {
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created: utcDateTime;
 
   data: Image[];
@@ -143,12 +160,16 @@ model ImagesResponse {
 model Image {
   /** The base64-encoded JSON of the generated image, if 'response_format' is 'b64_json'. */
   @encode("base64", string)
+  @extension(
+    "x-customTspIngestionRule",
+    "base64 input uses an encoded bytes type"
+  )
   b64_json?: bytes;
 
   /** The URL of the generated image, if 'response_format' is 'url' (default). */
+  @extension("x-customTspIngestionRule", "url uses the url type")
   url?: url;
 
   /** The prompt that was used to generate the image, if there was any revision to the prompt. */
   revised_prompt?: string;
 }
-

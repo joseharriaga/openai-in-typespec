@@ -1,14 +1,16 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
 model Error {
   code: string | null;
-
   message: string;
-
   param: string | null;
-
   type: string;
 }
 
@@ -20,8 +22,8 @@ model ErrorResponse {
  * The parameters the functions accepts, described as a JSON Schema object. See the
  * [guide](/docs/guides/text-generation/function-calling) for examples, and the [JSON Schema
  * reference](https://json-schema.org/understanding-json-schema/) for documentation about the
- * format. 
- * 
+ * format.
+ *
  * Omitting 'parameters' defines a function with an empty parameter list.
  */
 alias FunctionParameters = Record<unknown>;
@@ -53,4 +55,3 @@ model CompletionUsage {
   /** Total number of tokens used in the request (prompt + completion). */
   total_tokens: int32;
 }
-

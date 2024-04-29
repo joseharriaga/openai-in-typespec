@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -131,6 +136,7 @@ model CreateTranscriptionResponseVerboseJson {
 
   /** The duration of the input audio. */
   @encode("seconds", float64)
+  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   duration: duration;
 
   /** The transcribed text. */
@@ -153,6 +159,7 @@ model CreateTranslationResponseVerboseJson {
 
   /** The duration of the input audio. */
   @encode("seconds", float64)
+  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   duration: duration;
 
   /** The translated text. */
@@ -171,10 +178,12 @@ model TranscriptionSegment {
 
   /** Start time of the segment in seconds. */
   @encode("seconds", float64)
+  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   start: duration;
 
   /** End time of the segment in seconds. */
   @encode("seconds", float64)
+  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   end: duration;
 
   /** Text content of the segment. */
@@ -208,10 +217,11 @@ model TranscriptionWord {
 
   /** Start time of the word in seconds. */
   @encode("seconds", float64)
+  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   start: duration;
 
   /** End time of the word in seconds. */
   @encode("seconds", float64)
+  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   end: duration;
 }
-

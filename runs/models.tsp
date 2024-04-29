@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 import "../assistants";
 import "../threads";
 
@@ -106,25 +111,17 @@ model SubmitToolOutputsRunRequest {
 
 model ListRunsResponse {
   object: string;
-
   data: RunObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model ListRunStepsResponse {
   object: string;
-
   data: RunStepObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
@@ -270,6 +267,10 @@ model RunObject {
 
   /** The Unix timestamp (in seconds) for when the run was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
@@ -284,7 +285,15 @@ model RunObject {
    * The status of the run, which can be either 'queued', 'in_progress', 'requires_action',
    * 'cancelling', 'cancelled', 'failed', 'completed', or 'expired'.
    */
-  status: "queued" | "in_progress" | "requires_action" | "cancelling" | "cancelled" | "failed" | "completed" | "expired";
+  status:
+    | "queued"
+    | "in_progress"
+    | "requires_action"
+    | "cancelling"
+    | "cancelled"
+    | "failed"
+    | "completed"
+    | "expired";
 
   /** Details on the action required to continue the run. Will be 'null' if no action is required. */
   required_action: {
@@ -309,22 +318,42 @@ model RunObject {
 
   /** The Unix timestamp (in seconds) for when the run will expire. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   expires_at: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the run was started. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   started_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run was cancelled. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   cancelled_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run failed. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   failed_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run was completed. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   completed_at: utcDateTime | null;
 
   /** The model that the [assistant](/docs/api-reference/assistants) used for this run. */
@@ -335,7 +364,8 @@ model RunObject {
 
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
   @maxItems(20)
-  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [];
+  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
   /**
    * The list of [File](/docs/api-reference/files) IDs the
@@ -364,6 +394,10 @@ model RunStepObject {
 
   /** The Unix timestamp (in seconds) for when the run step was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The ID of the [assistant](/docs/api-reference/assistants) associated with the run step. */
@@ -401,18 +435,34 @@ model RunStepObject {
    * the parent run is expired.
    */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   expired_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run step was cancelled. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   cancelled_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run step failed. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   failed_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run step completed. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   completed_at: utcDateTime | null;
 
   /**
@@ -446,4 +496,3 @@ model RunToolCallObject {
     arguments: string;
   };
 }
-

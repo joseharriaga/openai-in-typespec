@@ -1548,6 +1548,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the assistant file was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         assistant_id:
           type: string
           description: The assistant ID that the file is attached to.
@@ -1578,6 +1579,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the assistant was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         name:
           type: string
           nullable: true
@@ -1856,6 +1858,7 @@ components:
               type: string
               format: uri
               description: Either a URL of the image or the base64 encoded image data.
+              x-customTspIngestionRule: url uses the url type
             detail:
               type: string
               enum:
@@ -2230,6 +2233,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the chat completion was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         model:
           type: string
           description: The model used for the chat completion.
@@ -2573,6 +2577,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the chat completion was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         model:
           type: string
           description: The model used for the chat completion.
@@ -2663,6 +2668,7 @@ components:
           description: |-
             The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
             same timestamp.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         model:
           type: string
           description: The model to generate the completion.
@@ -2971,6 +2977,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the completion was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         model:
           type: string
           description: The model used for completion.
@@ -3213,6 +3220,7 @@ components:
           description: |-
             The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not
             provided, image must have transparency, which will be used as the mask.
+          x-customTspIngestionRule: binary payloads are encoded bytes
         prompt:
           type: string
           description: A text description of the desired image(s). The maximum length is 1000 characters.
@@ -3223,6 +3231,7 @@ components:
             An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where
             'image' should be edited. Must be a valid PNG file, less than 4MB, and have the same
             dimensions as 'image'.
+          x-customTspIngestionRule: binary payloads are encoded bytes
         model:
           anyOf:
             - type: string
@@ -3875,6 +3884,7 @@ components:
           type: number
           format: double
           description: The duration of the input audio.
+          x-customTspIngestionRule: timespans are encoded durations
         text:
           type: string
           description: The transcribed text.
@@ -3952,6 +3962,7 @@ components:
           type: number
           format: double
           description: The duration of the input audio.
+          x-customTspIngestionRule: timespans are encoded durations
         text:
           type: string
           description: The translated text.
@@ -4072,6 +4083,7 @@ components:
           description: |-
             The embedding vector, which is a list of floats. The length of vector depends on the model as
             listed in the [embedding guide](/docs/guides/embeddings).
+          x-customTspIngestionRule: apply missing string union for embedding response valuese
         object:
           type: string
           enum:
@@ -4128,6 +4140,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the fine-tuning job was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         error:
           type: object
           properties:
@@ -4164,6 +4177,7 @@ components:
           description: |-
             The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
             null if the fine-tuning job is still running.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         hyperparameters:
           type: object
           properties:
@@ -4248,6 +4262,7 @@ components:
         created_at:
           type: integer
           format: unixtime
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         level:
           type: string
           enum:
@@ -4286,10 +4301,12 @@ components:
           type: string
           format: base64
           description: The base64-encoded JSON of the generated image, if 'response_format' is 'b64_json'.
+          x-customTspIngestionRule: base64 input uses an encoded bytes type
         url:
           type: string
           format: uri
           description: The URL of the generated image, if 'response_format' is 'url' (default).
+          x-customTspIngestionRule: url uses the url type
         revised_prompt:
           type: string
           description: The prompt that was used to generate the image, if there was any revision to the prompt.
@@ -4303,6 +4320,7 @@ components:
         created:
           type: integer
           format: unixtime
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         data:
           type: array
           items:
@@ -4664,6 +4682,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the message file was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         message_id:
           type: string
           description: |-
@@ -4696,6 +4715,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the message was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         thread_id:
           type: string
           description: The [thread](/docs/api-reference/threads) ID that this message belongs to.
@@ -4760,6 +4780,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) when the model was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         object:
           type: string
           enum:
@@ -4884,10 +4905,12 @@ components:
           format: int32
           nullable: true
           description: The size of the file, in bytes.
+          x-customTspIngestionRule: file response values can have null byte counts
         created_at:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the file was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         filename:
           type: string
           description: The name of the file.
@@ -4978,6 +5001,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the run was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         thread_id:
           type: string
           description: The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
@@ -5044,26 +5068,31 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the run will expire.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         started_at:
           type: string
           format: date-time
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was started.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         cancelled_at:
           type: string
           format: date-time
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was cancelled.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         failed_at:
           type: string
           format: date-time
           nullable: true
           description: The Unix timestamp (in seconds) for when the run failed.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         completed_at:
           type: string
           format: date-time
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was completed.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         model:
           type: string
           description: The model that the [assistant](/docs/api-reference/assistants) used for this run.
@@ -5326,6 +5355,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the run step was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         assistant_id:
           type: string
           description: The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
@@ -5381,21 +5411,25 @@ components:
           description: |-
             The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
             the parent run is expired.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         cancelled_at:
           type: string
           format: date-time
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step was cancelled.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         failed_at:
           type: string
           format: date-time
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step failed.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         completed_at:
           type: string
           format: date-time
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step completed.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         metadata:
           type: object
           additionalProperties:
@@ -5479,6 +5513,7 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the thread was created.
+          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         metadata:
           type: object
           additionalProperties:
@@ -5516,10 +5551,12 @@ components:
           type: number
           format: double
           description: Start time of the segment in seconds.
+          x-customTspIngestionRule: timespans are encoded durations
         end:
           type: number
           format: double
           description: End time of the segment in seconds.
+          x-customTspIngestionRule: timespans are encoded durations
         text:
           type: string
           description: Text content of the segment.
@@ -5563,10 +5600,12 @@ components:
           type: number
           format: double
           description: Start time of the word in seconds.
+          x-customTspIngestionRule: timespans are encoded durations
         end:
           type: number
           format: double
           description: End time of the word in seconds.
+          x-customTspIngestionRule: timespans are encoded durations
   securitySchemes:
     BearerAuth:
       type: http

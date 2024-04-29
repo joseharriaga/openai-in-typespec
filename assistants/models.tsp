@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 import "../common";
 
 using TypeSpec.OpenAPI;
@@ -29,7 +34,8 @@ model CreateAssistantRequest {
    * Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
    */
   @maxItems(128)
-  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [];
+  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
   /**
    * A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
@@ -73,7 +79,8 @@ model ModifyAssistantRequest {
    * Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
    */
   @maxItems(128)
-  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [];
+  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
   /**
    * A list of [File](/docs/api-reference/files) IDs attached to this assistant. There can be a
@@ -103,33 +110,23 @@ model CreateAssistantFileRequest {
 
 model ListAssistantsResponse {
   object: string;
-
   data: AssistantObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteAssistantResponse {
   id: string;
-
   deleted: boolean;
-
   object: "assistant.deleted";
 }
 
 model ListAssistantFilesResponse {
   object: string;
-
   data: AssistantFileObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
@@ -139,9 +136,7 @@ model ListAssistantFilesResponse {
  */
 model DeleteAssistantFileResponse {
   id: string;
-
   deleted: boolean;
-
   object: "assistant.file.deleted";
 }
 
@@ -172,6 +167,10 @@ model AssistantObject {
 
   /** The Unix timestamp (in seconds) for when the assistant was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The name of the assistant. The maximum length is 256 characters. */
@@ -198,7 +197,8 @@ model AssistantObject {
    * Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
    */
   @maxItems(128)
-  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [];
+  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
   /**
    * A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
@@ -227,9 +227,12 @@ model AssistantFileObject {
 
   /** The Unix timestamp (in seconds) for when the assistant file was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The assistant ID that the file is attached to. */
   assistant_id: string;
 }
-

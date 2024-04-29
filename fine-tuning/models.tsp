@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -12,12 +17,12 @@ model CreateFineTuningJobRequest {
 
   /**
    * The ID of an uploaded file that contains training data.
-   * 
+   *
    * See [upload file](/docs/api-reference/files/upload) for how to upload a file.
-   * 
+   *
    * Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
    * the purpose 'fine-tune'.
-   * 
+   *
    * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
    */
   training_file: string;
@@ -45,7 +50,7 @@ model CreateFineTuningJobRequest {
 
   /**
    * A string of up to 18 characters that will be added to your fine-tuned model name.
-   * 
+   *
    * For example, a 'suffix' of "custom-model-name" would produce a model name like
    * 'ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel'.
    */
@@ -55,15 +60,15 @@ model CreateFineTuningJobRequest {
 
   /**
    * The ID of an uploaded file that contains validation data.
-   * 
+   *
    * If you provide this file, the data is used to generate validation
    * metrics periodically during fine-tuning. These metrics can be viewed in
    * the fine-tuning results file.
    * The same data should not be present in both train and validation files.
-   * 
+   *
    * Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
    * 'fine-tune'.
-   * 
+   *
    * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
    */
   validation_file?: string | null;
@@ -71,15 +76,12 @@ model CreateFineTuningJobRequest {
 
 model ListPaginatedFineTuningJobsResponse {
   data: FineTuningJob[];
-
   has_more: boolean;
-
   object: "list";
 }
 
 model ListFineTuningJobEventsResponse {
   data: FineTuningJobEvent[];
-
   object: "list";
 }
 
@@ -92,6 +94,10 @@ model FineTuningJob {
 
   /** The Unix timestamp (in seconds) for when the fine-tuning job was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
@@ -116,13 +122,17 @@ model FineTuningJob {
    * The name of the fine-tuned model that is being created. The value will be null if the
    * fine-tuning job is still running.
    */
-  `fine_tuned_model`: string | null;
+  fine_tuned_model: string | null;
 
   /**
    * The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
    * null if the fine-tuning job is still running.
    */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   finished_at: utcDateTime | null;
 
   /**
@@ -158,7 +168,13 @@ model FineTuningJob {
    * The current status of the fine-tuning job, which can be either 'validating_files', 'queued',
    * 'running', 'succeeded', 'failed', or 'cancelled'.
    */
-  status: "validating_files" | "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  status:
+    | "validating_files"
+    | "queued"
+    | "running"
+    | "succeeded"
+    | "failed"
+    | "cancelled";
 
   /**
    * The total number of billable tokens processed by this fine-tuning job. The value will be null
@@ -184,12 +200,13 @@ model FineTuningJobEvent {
   id: string;
 
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   level: "info" | "warn" | "error";
-
   message: string;
-
   object: "fine_tuning.job.event";
 }
-

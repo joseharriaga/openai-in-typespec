@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 import "../messages";
 
 using TypeSpec.OpenAPI;
@@ -29,9 +34,7 @@ model ModifyThreadRequest {
 
 model DeleteThreadResponse {
   id: string;
-
   deleted: boolean;
-
   object: "thread.deleted";
 }
 
@@ -45,6 +48,10 @@ model ThreadObject {
 
   /** The Unix timestamp (in seconds) for when the thread was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
@@ -58,13 +65,8 @@ model ThreadObject {
 
 model ListThreadsResponse {
   object: string;
-
   data: ThreadObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
-

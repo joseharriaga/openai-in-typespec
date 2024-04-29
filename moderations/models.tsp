@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -9,7 +14,7 @@ model CreateModerationRequest {
   /**
    * Two content moderations models are available: 'text-moderation-stable' and
    * 'text-moderation-latest'.
-   * 
+   *
    * The default is 'text-moderation-latest' which will be automatically upgraded over time. This
    * ensures you are always using our most accurate model. If you use 'text-moderation-stable', we
    * will provide advanced notice before updating the model. Accuracy of 'text-moderation-stable'
@@ -125,4 +130,3 @@ model CreateModerationResponse {
     };
   }[];
 }
-

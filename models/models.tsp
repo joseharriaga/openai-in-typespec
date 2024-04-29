@@ -1,18 +1,20 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
 model ListModelsResponse {
   object: "list";
-
   data: Model[];
 }
 
 model DeleteModelResponse {
   id: string;
-
   deleted: boolean;
-
   object: string;
 }
 
@@ -23,6 +25,10 @@ model Model {
 
   /** The Unix timestamp (in seconds) when the model was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created: utcDateTime;
 
   /** The object type, which is always "model". */
@@ -31,4 +37,3 @@ model Model {
   /** The organization that owns the model. */
   owned_by: string;
 }
-

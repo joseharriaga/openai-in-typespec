@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -8,7 +13,7 @@ model CreateFileRequest {
 
   /**
    * The intended purpose of the uploaded file.
-   * 
+   *
    * Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for
    * [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages).
    * This allows us to validate the format of the uploaded file is correct for fine-tuning.
@@ -18,15 +23,12 @@ model CreateFileRequest {
 
 model ListFilesResponse {
   data: OpenAIFile[];
-
   object: "list";
 }
 
 model DeleteFileResponse {
   id: string;
-
   object: "file";
-
   deleted: boolean;
 }
 
@@ -36,10 +38,18 @@ model OpenAIFile {
   id: string;
 
   /** The size of the file, in bytes. */
+  @extension(
+    "x-customTspIngestionRule",
+    "file response values can have null byte counts"
+  )
   bytes: int32 | null;
 
   /** The Unix timestamp (in seconds) for when the file was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The name of the file. */
@@ -52,7 +62,11 @@ model OpenAIFile {
    * The intended purpose of the file. Supported values are 'fine-tune', 'fine-tune-results',
    * 'assistants', and 'assistants_output'.
    */
-  purpose: "fine-tune" | "fine-tune-results" | "assistants" | "assistants_output";
+  purpose:
+    | "fine-tune"
+    | "fine-tune-results"
+    | "assistants"
+    | "assistants_output";
 
   /**
    * Deprecated. The current status of the file, which can be either 'uploaded', 'processed', or
@@ -66,4 +80,3 @@ model OpenAIFile {
    */
   status_details?: string;
 }
-

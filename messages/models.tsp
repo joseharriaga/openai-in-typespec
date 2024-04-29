@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -41,33 +46,23 @@ model ModifyMessageRequest {
 
 model ListMessagesResponse {
   object: string;
-
   data: MessageObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model ListMessageFilesResponse {
   object: string;
-
   data: MessageFileObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteMessageResponse {
   id: string;
-
   deleted: boolean;
-
   object: "thread.message.deleted";
 }
 
@@ -81,6 +76,10 @@ model MessageObject {
 
   /** The Unix timestamp (in seconds) for when the message was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The [thread](/docs/api-reference/threads) ID that this message belongs to. */
@@ -205,6 +204,10 @@ model MessageFileObject {
 
   /** The Unix timestamp (in seconds) for when the message file was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
@@ -213,4 +216,3 @@ model MessageFileObject {
    */
   message_id: string;
 }
-

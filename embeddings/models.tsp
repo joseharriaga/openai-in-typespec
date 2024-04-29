@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -19,7 +24,11 @@ model CreateEmbeddingRequest {
    * descriptions of them.
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | "text-embedding-ada-002" | "text-embedding-3-small" | "text-embedding-3-large";
+  `model`:
+    | string
+    | "text-embedding-ada-002"
+    | "text-embedding-3-small"
+    | "text-embedding-3-large";
 
   /**
    * The format to return the embeddings in. Can be either 'float' or
@@ -70,9 +79,12 @@ model Embedding {
    * The embedding vector, which is a list of floats. The length of vector depends on the model as
    * listed in the [embedding guide](/docs/guides/embeddings).
    */
+  @extension(
+    "x-customTspIngestionRule",
+    "apply missing string union for embedding response valuese"
+  )
   embedding: float64[] | string;
 
   /** The object type, which is always "embedding". */
   object: "embedding";
 }
-

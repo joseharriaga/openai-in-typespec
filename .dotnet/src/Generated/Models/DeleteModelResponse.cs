@@ -45,13 +45,16 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="DeleteModelResponse"/>. </summary>
         /// <param name="id"></param>
         /// <param name="deleted"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        internal DeleteModelResponse(string id, bool deleted)
+        /// <param name="object"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="object"/> is null. </exception>
+        internal DeleteModelResponse(string id, bool deleted, string @object)
         {
             Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(@object, nameof(@object));
 
             Id = id;
             Deleted = deleted;
+            Object = @object;
         }
 
         /// <summary> Initializes a new instance of <see cref="DeleteModelResponse"/>. </summary>
@@ -59,7 +62,7 @@ namespace OpenAI.Internal.Models
         /// <param name="deleted"></param>
         /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal DeleteModelResponse(string id, bool deleted, DeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal DeleteModelResponse(string id, bool deleted, string @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -77,6 +80,6 @@ namespace OpenAI.Internal.Models
         /// <summary> Gets the deleted. </summary>
         public bool Deleted { get; }
         /// <summary> Gets the object. </summary>
-        public DeleteModelResponseObject Object { get; } = DeleteModelResponseObject.Model;
+        public string Object { get; }
     }
 }

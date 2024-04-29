@@ -22,7 +22,7 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("file"u8);
-            writer.WriteBase64StringValue(File.ToArray(), "D");
+            writer.WriteStringValue(File);
             writer.WritePropertyName("purpose"u8);
             writer.WriteStringValue(Purpose.ToString());
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -63,7 +63,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            BinaryData file = default;
+            string file = default;
             CreateFileRequestPurpose purpose = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -71,7 +71,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("file"u8))
                 {
-                    file = BinaryData.FromBytes(property.Value.GetBytesFromBase64("D"));
+                    file = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("purpose"u8))

@@ -43,7 +43,7 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="RunStepObjectLastError"/>. </summary>
-        /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
+        /// <param name="code"> One of 'server_error' or 'rate_limit_exceeded'. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
         internal RunStepObjectLastError(RunStepObjectLastErrorCode code, string message)
@@ -55,7 +55,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepObjectLastError"/>. </summary>
-        /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
+        /// <param name="code"> One of 'server_error' or 'rate_limit_exceeded'. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepObjectLastError(RunStepObjectLastErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -70,7 +70,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> One of `server_error` or `rate_limit_exceeded`. </summary>
+        /// <summary> One of 'server_error' or 'rate_limit_exceeded'. </summary>
         public RunStepObjectLastErrorCode Code { get; }
         /// <summary> A human-readable description of the error. </summary>
         public string Message { get; }

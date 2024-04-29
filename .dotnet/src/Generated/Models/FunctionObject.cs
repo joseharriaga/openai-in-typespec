@@ -53,6 +53,7 @@ namespace OpenAI.Internal.Models
             Argument.AssertNotNull(name, nameof(name));
 
             Name = name;
+            Parameters = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="FunctionObject"/>. </summary>
@@ -66,7 +67,7 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="parameters"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal FunctionObject(string description, string name, FunctionParameters parameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FunctionObject(string description, string name, IDictionary<string, BinaryData> parameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Description = description;
             Name = name;
@@ -89,7 +90,36 @@ namespace OpenAI.Internal.Models
         /// dashes, with a maximum length of 64.
         /// </summary>
         public string Name { get; set; }
-        /// <summary> Gets or sets the parameters. </summary>
-        public FunctionParameters Parameters { get; set; }
+        /// <summary>
+        /// Gets the parameters
+        /// <para>
+        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
+        /// </para>
+        /// <para>
+        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
+        /// </para>
+        /// <para>
+        /// Examples:
+        /// <list type="bullet">
+        /// <item>
+        /// <term>BinaryData.FromObjectAsJson("foo")</term>
+        /// <description>Creates a payload of "foo".</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromString("\"foo\"")</term>
+        /// <description>Creates a payload of "foo".</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
+        /// <description>Creates a payload of { "key": "value" }.</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
+        /// <description>Creates a payload of { "key": "value" }.</description>
+        /// </item>
+        /// </list>
+        /// </para>
+        /// </summary>
+        public IDictionary<string, BinaryData> Parameters { get; }
     }
 }

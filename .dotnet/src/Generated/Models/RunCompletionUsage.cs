@@ -8,8 +8,8 @@ using System.Collections.Generic;
 namespace OpenAI.Internal.Models
 {
     /// <summary>
-    /// Usage statistics related to the run. This value will be `null` if the run is not in a terminal
-    /// state (i.e. `in_progress`, `queued`, etc.).
+    /// Usage statistics related to the run. This value will be 'null' if the run is not in a terminal
+    /// state (i.e. 'in_progress', 'queued', etc.).
     /// </summary>
     internal partial class RunCompletionUsage
     {
@@ -49,7 +49,7 @@ namespace OpenAI.Internal.Models
         /// <param name="completionTokens"> Number of completion tokens used over the course of the run. </param>
         /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        internal RunCompletionUsage(long completionTokens, long promptTokens, long totalTokens)
+        internal RunCompletionUsage(int completionTokens, int promptTokens, int totalTokens)
         {
             CompletionTokens = completionTokens;
             PromptTokens = promptTokens;
@@ -61,7 +61,7 @@ namespace OpenAI.Internal.Models
         /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunCompletionUsage(long completionTokens, long promptTokens, long totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunCompletionUsage(int completionTokens, int promptTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             CompletionTokens = completionTokens;
             PromptTokens = promptTokens;
@@ -75,10 +75,10 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Number of completion tokens used over the course of the run. </summary>
-        public long CompletionTokens { get; }
+        public int CompletionTokens { get; }
         /// <summary> Number of prompt tokens used over the course of the run. </summary>
-        public long PromptTokens { get; }
+        public int PromptTokens { get; }
         /// <summary> Total number of tokens used (prompt + completion). </summary>
-        public long TotalTokens { get; }
+        public int TotalTokens { get; }
     }
 }

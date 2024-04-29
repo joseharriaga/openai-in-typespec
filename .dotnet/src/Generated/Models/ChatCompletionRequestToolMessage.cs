@@ -56,7 +56,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionRequestToolMessage"/>. </summary>
-        /// <param name="role"> The role of the messages author, in this case `tool`. </param>
+        /// <param name="role"> The role of the messages author, in this case 'tool'. </param>
         /// <param name="content"> The contents of the tool message. </param>
         /// <param name="toolCallId"> Tool call that this message is responding to. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -73,7 +73,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> The role of the messages author, in this case `tool`. </summary>
+        /// <summary> The role of the messages author, in this case 'tool'. </summary>
         public ChatCompletionRequestToolMessageRole Role { get; } = ChatCompletionRequestToolMessageRole.Tool;
 
         /// <summary> The contents of the tool message. </summary>

@@ -57,7 +57,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsFunctionObject"/>. </summary>
         /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="type"> The type of tool call. This is always going to be `function` for this type of tool call. </param>
+        /// <param name="type"> The type of tool call. This is always going to be 'function' for this type of tool call. </param>
         /// <param name="function"> The definition of the function that was called. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDetailsToolCallsFunctionObject(string id, RunStepDetailsToolCallsFunctionObjectType type, RunStepDetailsToolCallsFunctionObjectFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -75,7 +75,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The ID of the tool call object. </summary>
         public string Id { get; }
-        /// <summary> The type of tool call. This is always going to be `function` for this type of tool call. </summary>
+        /// <summary> The type of tool call. This is always going to be 'function' for this type of tool call. </summary>
         public RunStepDetailsToolCallsFunctionObjectType Type { get; } = RunStepDetailsToolCallsFunctionObjectType.Function;
 
         /// <summary> The definition of the function that was called. </summary>

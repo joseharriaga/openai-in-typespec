@@ -22,11 +22,18 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("image"u8);
-            writer.WriteBase64StringValue(Image.ToArray(), "D");
+            writer.WriteStringValue(Image);
             if (Optional.IsDefined(Model))
             {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.Value.ToString());
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteStringValue(Model.Value.ToString());
+                }
+                else
+                {
+                    writer.WriteNull("model");
+                }
             }
             if (Optional.IsDefined(N))
             {
@@ -93,9 +100,9 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            BinaryData image = default;
+            string image = default;
             CreateImageVariationRequestModel? model = default;
-            long? n = default;
+            int? n = default;
             CreateImageVariationRequestResponseFormat? responseFormat = default;
             CreateImageVariationRequestSize? size = default;
             string user = default;
@@ -105,13 +112,14 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("image"u8))
                 {
-                    image = BinaryData.FromBytes(property.Value.GetBytesFromBase64("D"));
+                    image = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("model"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        model = null;
                         continue;
                     }
                     model = new CreateImageVariationRequestModel(property.Value.GetString());
@@ -124,7 +132,7 @@ namespace OpenAI.Internal.Models
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))

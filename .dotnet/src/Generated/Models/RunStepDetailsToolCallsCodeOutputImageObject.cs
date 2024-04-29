@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsCodeOutputImageObject"/>. </summary>
-        /// <param name="type"> Always `image`. </param>
+        /// <param name="type"> Always 'image'. </param>
         /// <param name="image"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDetailsToolCallsCodeOutputImageObject(RunStepDetailsToolCallsCodeOutputImageObjectType type, RunStepDetailsToolCallsCodeOutputImageObjectImage image, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always `image`. </summary>
+        /// <summary> Always 'image'. </summary>
         public RunStepDetailsToolCallsCodeOutputImageObjectType Type { get; } = RunStepDetailsToolCallsCodeOutputImageObjectType.Image;
 
         /// <summary> Gets the image. </summary>

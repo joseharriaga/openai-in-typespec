@@ -44,14 +44,14 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionResponseChoiceLogprobs"/>. </summary>
-        /// <param name="content"></param>
+        /// <param name="content"> A list of message content tokens with log probability information. </param>
         internal CreateChatCompletionResponseChoiceLogprobs(IEnumerable<ChatCompletionTokenLogprob> content)
         {
             Content = content?.ToList();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionResponseChoiceLogprobs"/>. </summary>
-        /// <param name="content"></param>
+        /// <param name="content"> A list of message content tokens with log probability information. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateChatCompletionResponseChoiceLogprobs(IReadOnlyList<ChatCompletionTokenLogprob> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -64,7 +64,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Gets the content. </summary>
+        /// <summary> A list of message content tokens with log probability information. </summary>
         public IReadOnlyList<ChatCompletionTokenLogprob> Content { get; }
     }
 }

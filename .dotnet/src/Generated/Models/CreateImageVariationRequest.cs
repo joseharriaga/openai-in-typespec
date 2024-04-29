@@ -48,7 +48,7 @@ namespace OpenAI.Internal.Models
         /// and square.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="image"/> is null. </exception>
-        public CreateImageVariationRequest(BinaryData image)
+        public CreateImageVariationRequest(string image)
         {
             Argument.AssertNotNull(image, nameof(image));
 
@@ -60,16 +60,22 @@ namespace OpenAI.Internal.Models
         /// The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB,
         /// and square.
         /// </param>
-        /// <param name="model"> The model to use for image generation. Only `dall-e-2` is supported at this time. </param>
-        /// <param name="n"> The number of images to generate. Must be between 1 and 10. </param>
-        /// <param name="responseFormat"> The format in which the generated images are returned. Must be one of `url` or `b64_json`. </param>
-        /// <param name="size"> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </param>
+        /// <param name="model"> The model to use for image generation. Only 'dall-e-2' is supported at this time. </param>
+        /// <param name="n">
+        /// The number of images to generate. Must be between 1 and 10. For 'dall-e-3', only 'n=1' is
+        /// supported.
+        /// </param>
+        /// <param name="responseFormat">
+        /// The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+        /// URLs are only valid for 60 minutes after the image has been generated.
+        /// </param>
+        /// <param name="size"> The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024'. </param>
         /// <param name="user">
         /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateImageVariationRequest(BinaryData image, CreateImageVariationRequestModel? model, long? n, CreateImageVariationRequestResponseFormat? responseFormat, CreateImageVariationRequestSize? size, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateImageVariationRequest(string image, CreateImageVariationRequestModel? model, int? n, CreateImageVariationRequestResponseFormat? responseFormat, CreateImageVariationRequestSize? size, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Image = image;
             Model = model;
@@ -88,28 +94,21 @@ namespace OpenAI.Internal.Models
         /// <summary>
         /// The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB,
         /// and square.
-        /// <para>
-        /// To assign a byte[] to this property use <see cref="BinaryData.FromBytes(byte[])"/>.
-        /// The byte[] will be serialized to a Base64 encoded string.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromBytes(new byte[] { 1, 2, 3 })</term>
-        /// <description>Creates a payload of "AQID".</description>
-        /// </item>
-        /// </list>
-        /// </para>
         /// </summary>
-        public BinaryData Image { get; }
-        /// <summary> The model to use for image generation. Only `dall-e-2` is supported at this time. </summary>
+        public string Image { get; }
+        /// <summary> The model to use for image generation. Only 'dall-e-2' is supported at this time. </summary>
         public CreateImageVariationRequestModel? Model { get; set; }
-        /// <summary> The number of images to generate. Must be between 1 and 10. </summary>
-        public long? N { get; set; }
-        /// <summary> The format in which the generated images are returned. Must be one of `url` or `b64_json`. </summary>
+        /// <summary>
+        /// The number of images to generate. Must be between 1 and 10. For 'dall-e-3', only 'n=1' is
+        /// supported.
+        /// </summary>
+        public int? N { get; set; }
+        /// <summary>
+        /// The format in which the generated images are returned. Must be one of 'url' or 'b64_json'.
+        /// URLs are only valid for 60 minutes after the image has been generated.
+        /// </summary>
         public CreateImageVariationRequestResponseFormat? ResponseFormat { get; set; }
-        /// <summary> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </summary>
+        /// <summary> The size of the generated images. Must be one of '256x256', '512x512', or '1024x1024'. </summary>
         public CreateImageVariationRequestSize? Size { get; set; }
         /// <summary>
         /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect

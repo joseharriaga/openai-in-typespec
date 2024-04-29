@@ -46,7 +46,7 @@ namespace OpenAI.Internal.Models
         /// <param name="hate">
         /// Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
         /// religion, nationality, sexual orientation, disability status, or caste. Hateful content
-        /// aimed at non-protected groups (e.g., chess players) is harrassment.
+        /// aimed at non-protected groups (e.g., chess players) is harassment.
         /// </param>
         /// <param name="hateThreatening">
         /// Hateful content that also includes violence or serious harm towards the targeted group
@@ -93,7 +93,7 @@ namespace OpenAI.Internal.Models
         /// <param name="hate">
         /// Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
         /// religion, nationality, sexual orientation, disability status, or caste. Hateful content
-        /// aimed at non-protected groups (e.g., chess players) is harrassment.
+        /// aimed at non-protected groups (e.g., chess players) is harassment.
         /// </param>
         /// <param name="hateThreatening">
         /// Hateful content that also includes violence or serious harm towards the targeted group
@@ -146,7 +146,7 @@ namespace OpenAI.Internal.Models
         /// <summary>
         /// Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
         /// religion, nationality, sexual orientation, disability status, or caste. Hateful content
-        /// aimed at non-protected groups (e.g., chess players) is harrassment.
+        /// aimed at non-protected groups (e.g., chess players) is harassment.
         /// </summary>
         public bool Hate { get; }
         /// <summary>

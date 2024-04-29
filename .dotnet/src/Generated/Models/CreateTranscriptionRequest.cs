@@ -45,14 +45,14 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateTranscriptionRequest"/>. </summary>
         /// <param name="file">
         /// The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
+        /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
         /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
+        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// model) is currently available.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-        public CreateTranscriptionRequest(BinaryData file, CreateTranscriptionRequestModel model)
+        public CreateTranscriptionRequest(string file, CreateTranscriptionRequestModel model)
         {
             Argument.AssertNotNull(file, nameof(file));
 
@@ -64,24 +64,24 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateTranscriptionRequest"/>. </summary>
         /// <param name="file">
         /// The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
+        /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
         /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
+        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// model) is currently available.
         /// </param>
         /// <param name="language">
         /// The language of the input audio. Supplying the input language in
-        /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy
-        /// and latency.
+        /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve
+        /// accuracy and latency.
         /// </param>
         /// <param name="prompt">
         /// An optional text to guide the model's style or continue a previous audio segment. The
         /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
         /// </param>
         /// <param name="responseFormat">
-        /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-        /// vtt.
+        /// The format of the transcript output, in one of these options: 'json', 'text', 'srt',
+        /// 'verbose_json', or 'vtt'.
         /// </param>
         /// <param name="temperature">
         /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
@@ -90,13 +90,13 @@ namespace OpenAI.Internal.Models
         /// automatically increase the temperature until certain thresholds are hit.
         /// </param>
         /// <param name="timestampGranularities">
-        /// The timestamp granularities to populate for this transcription. `response_format` must be set
-        /// `verbose_json` to use timestamp granularities. Either or both of these options are supported:
-        /// `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
+        /// The timestamp granularities to populate for this transcription. 'response_format' must be set
+        /// 'verbose_json' to use timestamp granularities. Either or both of these options are supported:
+        /// 'word', or 'segment'. Note: There is no additional latency for segment timestamps, but
         /// generating word timestamps incurs additional latency.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateTranscriptionRequest(BinaryData file, CreateTranscriptionRequestModel model, string language, string prompt, CreateTranscriptionRequestResponseFormat? responseFormat, double? temperature, IList<BinaryData> timestampGranularities, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateTranscriptionRequest(string file, CreateTranscriptionRequestModel model, string language, string prompt, CreateTranscriptionRequestResponseFormat? responseFormat, double? temperature, IList<BinaryData> timestampGranularities, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             File = file;
             Model = model;
@@ -115,31 +115,18 @@ namespace OpenAI.Internal.Models
 
         /// <summary>
         /// The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
-        /// <para>
-        /// To assign a byte[] to this property use <see cref="BinaryData.FromBytes(byte[])"/>.
-        /// The byte[] will be serialized to a Base64 encoded string.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromBytes(new byte[] { 1, 2, 3 })</term>
-        /// <description>Creates a payload of "AQID".</description>
-        /// </item>
-        /// </list>
-        /// </para>
+        /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </summary>
-        public BinaryData File { get; }
+        public string File { get; }
         /// <summary>
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
+        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// model) is currently available.
         /// </summary>
         public CreateTranscriptionRequestModel Model { get; }
         /// <summary>
         /// The language of the input audio. Supplying the input language in
-        /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy
-        /// and latency.
+        /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve
+        /// accuracy and latency.
         /// </summary>
         public string Language { get; set; }
         /// <summary>
@@ -148,8 +135,8 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public string Prompt { get; set; }
         /// <summary>
-        /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-        /// vtt.
+        /// The format of the transcript output, in one of these options: 'json', 'text', 'srt',
+        /// 'verbose_json', or 'vtt'.
         /// </summary>
         public CreateTranscriptionRequestResponseFormat? ResponseFormat { get; set; }
         /// <summary>
@@ -160,9 +147,9 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public double? Temperature { get; set; }
         /// <summary>
-        /// The timestamp granularities to populate for this transcription. `response_format` must be set
-        /// `verbose_json` to use timestamp granularities. Either or both of these options are supported:
-        /// `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
+        /// The timestamp granularities to populate for this transcription. 'response_format' must be set
+        /// 'verbose_json' to use timestamp granularities. Either or both of these options are supported:
+        /// 'word', or 'segment'. Note: There is no additional latency for segment timestamps, but
         /// generating word timestamps incurs additional latency.
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.

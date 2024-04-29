@@ -48,7 +48,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="AssistantToolsCode"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `code_interpreter`. </param>
+        /// <param name="type"> The type of tool being defined: 'code_interpreter'. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AssistantToolsCode(AssistantToolsCodeType type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -56,7 +56,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The type of tool being defined: `code_interpreter`. </summary>
+        /// <summary> The type of tool being defined: 'code_interpreter'. </summary>
         public AssistantToolsCodeType Type { get; } = AssistantToolsCodeType.CodeInterpreter;
     }
 }

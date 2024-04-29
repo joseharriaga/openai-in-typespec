@@ -47,7 +47,7 @@ namespace OpenAI.Internal.Models
         /// <param name="input"> The input to the Code Interpreter tool call. </param>
         /// <param name="outputs">
         /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
+        /// items, including text ('logs') or images ('image'). Each of these are represented by a
         /// different object type.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="input"/> or <paramref name="outputs"/> is null. </exception>
@@ -64,7 +64,7 @@ namespace OpenAI.Internal.Models
         /// <param name="input"> The input to the Code Interpreter tool call. </param>
         /// <param name="outputs">
         /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
+        /// items, including text ('logs') or images ('image'). Each of these are represented by a
         /// different object type.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
         public string Input { get; }
         /// <summary>
         /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
+        /// items, including text ('logs') or images ('image'). Each of these are represented by a
         /// different object type.
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.

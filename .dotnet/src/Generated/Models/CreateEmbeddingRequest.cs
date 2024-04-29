@@ -45,11 +45,11 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateEmbeddingRequest"/>. </summary>
         /// <param name="input">
         /// Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a
-        /// single request, pass an array of strings or array of token arrays. Each input must not exceed
-        /// the max input tokens for the model (8191 tokens for `text-embedding-ada-002`) and cannot be an
-        /// empty string.
-        /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb)
-        /// for counting tokens.
+        /// single request, pass an array of strings or array of token arrays. The input must not exceed
+        /// the max input tokens for the model (8192 tokens for 'text-embedding-ada-002'), cannot be an
+        /// empty string, and any array must be 2048 dimensions or less. [Example Python
+        /// code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
+        /// tokens.
         /// </param>
         /// <param name="model">
         /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
@@ -68,11 +68,11 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateEmbeddingRequest"/>. </summary>
         /// <param name="input">
         /// Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a
-        /// single request, pass an array of strings or array of token arrays. Each input must not exceed
-        /// the max input tokens for the model (8191 tokens for `text-embedding-ada-002`) and cannot be an
-        /// empty string.
-        /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb)
-        /// for counting tokens.
+        /// single request, pass an array of strings or array of token arrays. The input must not exceed
+        /// the max input tokens for the model (8192 tokens for 'text-embedding-ada-002'), cannot be an
+        /// empty string, and any array must be 2048 dimensions or less. [Example Python
+        /// code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
+        /// tokens.
         /// </param>
         /// <param name="model">
         /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
@@ -80,19 +80,19 @@ namespace OpenAI.Internal.Models
         /// descriptions of them.
         /// </param>
         /// <param name="encodingFormat">
-        /// The format to return the embeddings in. Can be either `float` or
-        /// [`base64`](https://pypi.org/project/pybase64/).
+        /// The format to return the embeddings in. Can be either 'float' or
+        /// ['base64'](https://pypi.org/project/pybase64/).
         /// </param>
         /// <param name="dimensions">
         /// The number of dimensions the resulting output embeddings should have. Only supported in
-        /// `text-embedding-3` and later models.
+        /// 'text-embedding-3' and later models.
         /// </param>
         /// <param name="user">
         /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateEmbeddingRequest(BinaryData input, CreateEmbeddingRequestModel model, CreateEmbeddingRequestEncodingFormat? encodingFormat, long? dimensions, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateEmbeddingRequest(BinaryData input, CreateEmbeddingRequestModel model, CreateEmbeddingRequestEncodingFormat? encodingFormat, int? dimensions, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Input = input;
             Model = model;
@@ -109,11 +109,11 @@ namespace OpenAI.Internal.Models
 
         /// <summary>
         /// Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a
-        /// single request, pass an array of strings or array of token arrays. Each input must not exceed
-        /// the max input tokens for the model (8191 tokens for `text-embedding-ada-002`) and cannot be an
-        /// empty string.
-        /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb)
-        /// for counting tokens.
+        /// single request, pass an array of strings or array of token arrays. The input must not exceed
+        /// the max input tokens for the model (8192 tokens for 'text-embedding-ada-002'), cannot be an
+        /// empty string, and any array must be 2048 dimensions or less. [Example Python
+        /// code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
+        /// tokens.
         /// <para>
         /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -131,10 +131,10 @@ namespace OpenAI.Internal.Models
         /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="string"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="long"/></description>
+        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <see cref="int"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <c>IList{long}</c></description>
+        /// <description><see cref="IList{T}"/> where <c>T</c> is of type <c>IList{int}</c></description>
         /// </item>
         /// </list>
         /// </remarks>
@@ -167,15 +167,15 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public CreateEmbeddingRequestModel Model { get; }
         /// <summary>
-        /// The format to return the embeddings in. Can be either `float` or
-        /// [`base64`](https://pypi.org/project/pybase64/).
+        /// The format to return the embeddings in. Can be either 'float' or
+        /// ['base64'](https://pypi.org/project/pybase64/).
         /// </summary>
         public CreateEmbeddingRequestEncodingFormat? EncodingFormat { get; set; }
         /// <summary>
         /// The number of dimensions the resulting output embeddings should have. Only supported in
-        /// `text-embedding-3` and later models.
+        /// 'text-embedding-3' and later models.
         /// </summary>
-        public long? Dimensions { get; set; }
+        public int? Dimensions { get; set; }
         /// <summary>
         /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).

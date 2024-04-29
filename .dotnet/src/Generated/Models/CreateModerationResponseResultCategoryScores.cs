@@ -49,7 +49,7 @@ namespace OpenAI.Internal.Models
         /// <param name="harassmentThreatening"> The score for the category 'harassment/threatening'. </param>
         /// <param name="selfHarm"> The score for the category 'self-harm'. </param>
         /// <param name="selfHarmIntent"> The score for the category 'self-harm/intent'. </param>
-        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructive'. </param>
+        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructions'. </param>
         /// <param name="sexual"> The score for the category 'sexual'. </param>
         /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
         /// <param name="violence"> The score for the category 'violence'. </param>
@@ -76,7 +76,7 @@ namespace OpenAI.Internal.Models
         /// <param name="harassmentThreatening"> The score for the category 'harassment/threatening'. </param>
         /// <param name="selfHarm"> The score for the category 'self-harm'. </param>
         /// <param name="selfHarmIntent"> The score for the category 'self-harm/intent'. </param>
-        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructive'. </param>
+        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructions'. </param>
         /// <param name="sexual"> The score for the category 'sexual'. </param>
         /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
         /// <param name="violence"> The score for the category 'violence'. </param>
@@ -115,7 +115,7 @@ namespace OpenAI.Internal.Models
         public double SelfHarm { get; }
         /// <summary> The score for the category 'self-harm/intent'. </summary>
         public double SelfHarmIntent { get; }
-        /// <summary> The score for the category 'self-harm/instructive'. </summary>
+        /// <summary> The score for the category 'self-harm/instructions'. </summary>
         public double SelfHarmInstructions { get; }
         /// <summary> The score for the category 'sexual'. </summary>
         public double Sexual { get; }

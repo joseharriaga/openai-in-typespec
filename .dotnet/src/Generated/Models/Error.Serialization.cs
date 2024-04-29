@@ -21,8 +21,15 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
+            if (Code != null)
+            {
+                writer.WritePropertyName("code"u8);
+                writer.WriteStringValue(Code);
+            }
+            else
+            {
+                writer.WriteNull("code");
+            }
             writer.WritePropertyName("message"u8);
             writer.WriteStringValue(Message);
             if (Param != null)
@@ -34,15 +41,8 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("param");
             }
-            if (Code != null)
-            {
-                writer.WritePropertyName("code"u8);
-                writer.WriteStringValue(Code);
-            }
-            else
-            {
-                writer.WriteNull("code");
-            }
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -81,17 +81,22 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            string type = default;
+            string code = default;
             string message = default;
             string param = default;
-            string code = default;
+            string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
+                if (property.NameEquals("code"u8))
                 {
-                    type = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        code = null;
+                        continue;
+                    }
+                    code = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("message"u8))
@@ -109,14 +114,9 @@ namespace OpenAI.Internal.Models
                     param = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("code"u8))
+                if (property.NameEquals("type"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        code = null;
-                        continue;
-                    }
-                    code = property.Value.GetString();
+                    type = property.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -125,7 +125,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new Error(type, message, param, code, serializedAdditionalRawData);
+            return new Error(code, message, param, type, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<Error>.Write(ModelReaderWriterOptions options)

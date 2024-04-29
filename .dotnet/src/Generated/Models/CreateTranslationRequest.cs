@@ -44,15 +44,15 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/>. </summary>
         /// <param name="file">
-        /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
+        /// The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
+        /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
         /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
+        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// model) is currently available.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-        public CreateTranslationRequest(BinaryData file, CreateTranslationRequestModel model)
+        public CreateTranslationRequest(string file, CreateTranslationRequestModel model)
         {
             Argument.AssertNotNull(file, nameof(file));
 
@@ -62,20 +62,20 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/>. </summary>
         /// <param name="file">
-        /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
+        /// The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
+        /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
         /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
+        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// model) is currently available.
         /// </param>
         /// <param name="prompt">
         /// An optional text to guide the model's style or continue a previous audio segment. The
-        /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
+        /// [prompt](/docs/guides/speech-to-text/prompting) should be in English.
         /// </param>
         /// <param name="responseFormat">
-        /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-        /// vtt.
+        /// The format of the transcript output, in one of these options: 'json', 'text', 'srt',
+        /// 'verbose_json', or 'vtt'.
         /// </param>
         /// <param name="temperature">
         /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
         /// automatically increase the temperature until certain thresholds are hit.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateTranslationRequest(BinaryData file, CreateTranslationRequestModel model, string prompt, CreateTranslationRequestResponseFormat? responseFormat, double? temperature, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateTranslationRequest(string file, CreateTranslationRequestModel model, string prompt, string responseFormat, double? temperature, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             File = file;
             Model = model;
@@ -100,38 +100,25 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary>
-        /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
-        /// <para>
-        /// To assign a byte[] to this property use <see cref="BinaryData.FromBytes(byte[])"/>.
-        /// The byte[] will be serialized to a Base64 encoded string.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromBytes(new byte[] { 1, 2, 3 })</term>
-        /// <description>Creates a payload of "AQID".</description>
-        /// </item>
-        /// </list>
-        /// </para>
+        /// The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
+        /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </summary>
-        public BinaryData File { get; }
+        public string File { get; }
         /// <summary>
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
+        /// ID of the model to use. Only 'whisper-1' (which is powered by our open source Whisper V2
+        /// model) is currently available.
         /// </summary>
         public CreateTranslationRequestModel Model { get; }
         /// <summary>
         /// An optional text to guide the model's style or continue a previous audio segment. The
-        /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
+        /// [prompt](/docs/guides/speech-to-text/prompting) should be in English.
         /// </summary>
         public string Prompt { get; set; }
         /// <summary>
-        /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-        /// vtt.
+        /// The format of the transcript output, in one of these options: 'json', 'text', 'srt',
+        /// 'verbose_json', or 'vtt'.
         /// </summary>
-        public CreateTranslationRequestResponseFormat? ResponseFormat { get; set; }
+        public string ResponseFormat { get; set; }
         /// <summary>
         /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
         /// random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,

@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="AssistantToolsFunction"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `function`. </param>
+        /// <param name="type"> The type of tool being defined: 'function'. </param>
         /// <param name="function"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AssistantToolsFunction(AssistantToolsFunctionType type, FunctionObject function, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> The type of tool being defined: `function`. </summary>
+        /// <summary> The type of tool being defined: 'function'. </summary>
         public AssistantToolsFunctionType Type { get; } = AssistantToolsFunctionType.Function;
 
         /// <summary> Gets or sets the function. </summary>

@@ -25,8 +25,15 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(Prompt);
             if (Optional.IsDefined(Model))
             {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.Value.ToString());
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteStringValue(Model.Value.ToString());
+                }
+                else
+                {
+                    writer.WriteNull("model");
+                }
             }
             if (Optional.IsDefined(N))
             {
@@ -105,7 +112,7 @@ namespace OpenAI.Internal.Models
             }
             string prompt = default;
             CreateImageRequestModel? model = default;
-            long? n = default;
+            int? n = default;
             CreateImageRequestQuality? quality = default;
             CreateImageRequestResponseFormat? responseFormat = default;
             CreateImageRequestSize? size = default;
@@ -124,6 +131,7 @@ namespace OpenAI.Internal.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        model = null;
                         continue;
                     }
                     model = new CreateImageRequestModel(property.Value.GetString());
@@ -136,7 +144,7 @@ namespace OpenAI.Internal.Models
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("quality"u8))

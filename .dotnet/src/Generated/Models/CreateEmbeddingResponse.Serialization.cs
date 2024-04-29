@@ -33,7 +33,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("object"u8);
             writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("usage"u8);
-            writer.WriteObjectValue<EmbeddingUsage>(Usage, options);
+            writer.WriteObjectValue<CreateEmbeddingResponseUsage>(Usage, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -75,7 +75,7 @@ namespace OpenAI.Internal.Models
             IReadOnlyList<Embedding> data = default;
             string model = default;
             CreateEmbeddingResponseObject @object = default;
-            EmbeddingUsage usage = default;
+            CreateEmbeddingResponseUsage usage = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -102,7 +102,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("usage"u8))
                 {
-                    usage = EmbeddingUsage.DeserializeEmbeddingUsage(property.Value, options);
+                    usage = CreateEmbeddingResponseUsage.DeserializeCreateEmbeddingResponseUsage(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

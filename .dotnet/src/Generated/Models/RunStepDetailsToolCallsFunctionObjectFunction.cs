@@ -46,7 +46,7 @@ namespace OpenAI.Internal.Models
         /// <param name="name"> The name of the function. </param>
         /// <param name="arguments"> The arguments passed to the function. </param>
         /// <param name="output">
-        /// The output of the function. This will be 'null' if the outputs have not been
+        /// The output of the function. This will be `null` if the outputs have not been
         /// [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="arguments"/> is null. </exception>
@@ -64,7 +64,7 @@ namespace OpenAI.Internal.Models
         /// <param name="name"> The name of the function. </param>
         /// <param name="arguments"> The arguments passed to the function. </param>
         /// <param name="output">
-        /// The output of the function. This will be 'null' if the outputs have not been
+        /// The output of the function. This will be `null` if the outputs have not been
         /// [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -86,7 +86,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The arguments passed to the function. </summary>
         public string Arguments { get; }
         /// <summary>
-        /// The output of the function. This will be 'null' if the outputs have not been
+        /// The output of the function. This will be `null` if the outputs have not been
         /// [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
         /// </summary>
         public string Output { get; }

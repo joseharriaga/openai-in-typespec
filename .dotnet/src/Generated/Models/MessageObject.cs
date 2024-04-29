@@ -47,7 +47,7 @@ namespace OpenAI.Internal.Models
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
-        /// <param name="role"> The entity that produced the message. One of 'user' or 'assistant'. </param>
+        /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
         /// <param name="assistantId">
         /// If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
@@ -88,10 +88,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="MessageObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always 'thread.message'. </param>
+        /// <param name="object"> The object type, which is always `thread.message`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
-        /// <param name="role"> The entity that produced the message. One of 'user' or 'assistant'. </param>
+        /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
         /// <param name="assistantId">
         /// If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
@@ -134,14 +134,14 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always 'thread.message'. </summary>
+        /// <summary> The object type, which is always `thread.message`. </summary>
         public MessageObjectObject Object { get; } = MessageObjectObject.ThreadMessage;
 
         /// <summary> The Unix timestamp (in seconds) for when the message was created. </summary>
         public DateTimeOffset CreatedAt { get; }
         /// <summary> The [thread](/docs/api-reference/threads) ID that this message belongs to. </summary>
         public string ThreadId { get; }
-        /// <summary> The entity that produced the message. One of 'user' or 'assistant'. </summary>
+        /// <summary> The entity that produced the message. One of `user` or `assistant`. </summary>
         public MessageObjectRole Role { get; }
         /// <summary>
         /// The content of the message in array of text and/or images.

@@ -62,7 +62,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="ThreadObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always 'thread'. </param>
+        /// <param name="object"> The object type, which is always `thread`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the thread was created. </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -86,7 +86,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always 'thread'. </summary>
+        /// <summary> The object type, which is always `thread`. </summary>
         public ThreadObjectObject Object { get; } = ThreadObjectObject.Thread;
 
         /// <summary> The Unix timestamp (in seconds) for when the thread was created. </summary>

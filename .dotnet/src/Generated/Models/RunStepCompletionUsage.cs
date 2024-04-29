@@ -8,8 +8,8 @@ using System.Collections.Generic;
 namespace OpenAI.Internal.Models
 {
     /// <summary>
-    /// Usage statistics related to the run step. This value will be 'null' while the run step's status
-    /// is 'in_progress'.
+    /// Usage statistics related to the run step. This value will be `null` while the run step's status
+    /// is `in_progress`.
     /// </summary>
     internal partial class RunStepCompletionUsage
     {

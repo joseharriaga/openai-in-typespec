@@ -45,11 +45,11 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionStreamResponseChoice"/>. </summary>
         /// <param name="delta"></param>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
         /// natural stop point or a provided stop sequence,
-        /// 'length' if the maximum number of tokens specified in the request was reached,
-        /// 'content_filter' if content was omitted due to a flag from our content filters,
-        /// 'tool_calls' if the model called a tool, or 'function_call' (deprecated) if the model called
+        /// `length` if the maximum number of tokens specified in the request was reached,
+        /// `content_filter` if content was omitted due to a flag from our content filters,
+        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called
         /// a function.
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
@@ -68,11 +68,11 @@ namespace OpenAI.Internal.Models
         /// <param name="delta"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
         /// natural stop point or a provided stop sequence,
-        /// 'length' if the maximum number of tokens specified in the request was reached,
-        /// 'content_filter' if content was omitted due to a flag from our content filters,
-        /// 'tool_calls' if the model called a tool, or 'function_call' (deprecated) if the model called
+        /// `length` if the maximum number of tokens specified in the request was reached,
+        /// `content_filter` if content was omitted due to a flag from our content filters,
+        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called
         /// a function.
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
@@ -96,11 +96,11 @@ namespace OpenAI.Internal.Models
         /// <summary> Log probability information for the choice. </summary>
         public CreateChatCompletionStreamResponseChoiceLogprobs Logprobs { get; }
         /// <summary>
-        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
         /// natural stop point or a provided stop sequence,
-        /// 'length' if the maximum number of tokens specified in the request was reached,
-        /// 'content_filter' if content was omitted due to a flag from our content filters,
-        /// 'tool_calls' if the model called a tool, or 'function_call' (deprecated) if the model called
+        /// `length` if the maximum number of tokens specified in the request was reached,
+        /// `content_filter` if content was omitted due to a flag from our content filters,
+        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called
         /// a function.
         /// </summary>
         public string FinishReason { get; }

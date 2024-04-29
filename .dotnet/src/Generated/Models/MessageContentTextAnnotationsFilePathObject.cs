@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI.Internal.Models
 {
     /// <summary>
-    /// A URL for the file that's generated when the assistant used the 'code_interpreter' tool to
+    /// A URL for the file that's generated when the assistant used the `code_interpreter` tool to
     /// generate a file.
     /// </summary>
     internal partial class MessageContentTextAnnotationsFilePathObject
@@ -63,7 +63,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFilePathObject"/>. </summary>
-        /// <param name="type"> Always 'file_path'. </param>
+        /// <param name="type"> Always `file_path`. </param>
         /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="filePath"></param>
         /// <param name="startIndex"></param>
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always 'file_path'. </summary>
+        /// <summary> Always `file_path`. </summary>
         public MessageContentTextAnnotationsFilePathObjectType Type { get; } = MessageContentTextAnnotationsFilePathObjectType.FilePath;
 
         /// <summary> The text in the message content that needs to be replaced. </summary>

@@ -48,7 +48,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionRequestResponseFormat"/>. </summary>
-        /// <param name="type"> Must be one of 'text' or 'json_object'. </param>
+        /// <param name="type"> Must be one of `text` or `json_object`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateChatCompletionRequestResponseFormat(CreateChatCompletionRequestResponseFormatType? type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -56,7 +56,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Must be one of 'text' or 'json_object'. </summary>
+        /// <summary> Must be one of `text` or `json_object`. </summary>
         public CreateChatCompletionRequestResponseFormatType? Type { get; set; }
     }
 }

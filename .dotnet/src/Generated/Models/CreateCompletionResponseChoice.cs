@@ -44,10 +44,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionResponseChoice"/>. </summary>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
         /// natural stop point or a provided stop sequence,
-        /// 'length' if the maximum number of tokens specified in the request was reached,
-        /// or 'content_filter' if content was omitted due to a flag from our content filters.
+        /// `length` if the maximum number of tokens specified in the request was reached,
+        /// or `content_filter` if content was omitted due to a flag from our content filters.
         /// </param>
         /// <param name="index"></param>
         /// <param name="logprobs"></param>
@@ -65,10 +65,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionResponseChoice"/>. </summary>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
         /// natural stop point or a provided stop sequence,
-        /// 'length' if the maximum number of tokens specified in the request was reached,
-        /// or 'content_filter' if content was omitted due to a flag from our content filters.
+        /// `length` if the maximum number of tokens specified in the request was reached,
+        /// or `content_filter` if content was omitted due to a flag from our content filters.
         /// </param>
         /// <param name="index"></param>
         /// <param name="logprobs"></param>
@@ -89,10 +89,10 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary>
-        /// The reason the model stopped generating tokens. This will be 'stop' if the model hit a
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
         /// natural stop point or a provided stop sequence,
-        /// 'length' if the maximum number of tokens specified in the request was reached,
-        /// or 'content_filter' if content was omitted due to a flag from our content filters.
+        /// `length` if the maximum number of tokens specified in the request was reached,
+        /// or `content_filter` if content was omitted due to a flag from our content filters.
         /// </summary>
         public CreateCompletionResponseChoiceFinishReason FinishReason { get; }
         /// <summary> Gets the index. </summary>

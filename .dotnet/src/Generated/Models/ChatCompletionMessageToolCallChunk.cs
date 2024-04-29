@@ -52,7 +52,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="ChatCompletionMessageToolCallChunk"/>. </summary>
         /// <param name="index"></param>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="type"> The type of the tool. Currently, only 'function' is supported. </param>
+        /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
         /// <param name="function"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatCompletionMessageToolCallChunk(int index, string id, string type, ChatCompletionMessageToolCallChunkFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -73,7 +73,7 @@ namespace OpenAI.Internal.Models
         public int Index { get; }
         /// <summary> The ID of the tool call. </summary>
         public string Id { get; }
-        /// <summary> The type of the tool. Currently, only 'function' is supported. </summary>
+        /// <summary> The type of the tool. Currently, only `function` is supported. </summary>
         public string Type { get; }
         /// <summary> Gets the function. </summary>
         public ChatCompletionMessageToolCallChunkFunction Function { get; }

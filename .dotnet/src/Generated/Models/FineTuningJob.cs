@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The 'fine_tuning.job' object represents a fine-tuning job that has been created through the API. </summary>
+    /// <summary> The `fine_tuning.job` object represents a fine-tuning job that has been created through the API. </summary>
     internal partial class FineTuningJob
     {
         /// <summary>
@@ -47,7 +47,7 @@ namespace OpenAI.Internal.Models
         /// <param name="id"> The object identifier, which can be referenced in the API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the fine-tuning job was created. </param>
         /// <param name="error">
-        /// For fine-tuning jobs that have 'failed', this will contain more information on the cause of
+        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of
         /// the failure.
         /// </param>
         /// <param name="fineTunedModel">
@@ -69,8 +69,8 @@ namespace OpenAI.Internal.Models
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </param>
         /// <param name="status">
-        /// The current status of the fine-tuning job, which can be either 'validating_files', 'queued',
-        /// 'running', 'succeeded', 'failed', or 'cancelled'.
+        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
+        /// `running`, `succeeded`, `failed`, or `cancelled`.
         /// </param>
         /// <param name="trainedTokens">
         /// The total number of billable tokens processed by this fine-tuning job. The value will be null
@@ -113,7 +113,7 @@ namespace OpenAI.Internal.Models
         /// <param name="id"> The object identifier, which can be referenced in the API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the fine-tuning job was created. </param>
         /// <param name="error">
-        /// For fine-tuning jobs that have 'failed', this will contain more information on the cause of
+        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of
         /// the failure.
         /// </param>
         /// <param name="fineTunedModel">
@@ -136,8 +136,8 @@ namespace OpenAI.Internal.Models
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </param>
         /// <param name="status">
-        /// The current status of the fine-tuning job, which can be either 'validating_files', 'queued',
-        /// 'running', 'succeeded', 'failed', or 'cancelled'.
+        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
+        /// `running`, `succeeded`, `failed`, or `cancelled`.
         /// </param>
         /// <param name="trainedTokens">
         /// The total number of billable tokens processed by this fine-tuning job. The value will be null
@@ -181,7 +181,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The Unix timestamp (in seconds) for when the fine-tuning job was created. </summary>
         public DateTimeOffset CreatedAt { get; }
         /// <summary>
-        /// For fine-tuning jobs that have 'failed', this will contain more information on the cause of
+        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of
         /// the failure.
         /// </summary>
         public FineTuningJobError Error { get; }
@@ -213,8 +213,8 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public IReadOnlyList<string> ResultFiles { get; }
         /// <summary>
-        /// The current status of the fine-tuning job, which can be either 'validating_files', 'queued',
-        /// 'running', 'succeeded', 'failed', or 'cancelled'.
+        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
+        /// `running`, `succeeded`, `failed`, or `cancelled`.
         /// </summary>
         public FineTuningJobStatus Status { get; }
         /// <summary>

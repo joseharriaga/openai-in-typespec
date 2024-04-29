@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> Represents an 'assistant' that can call the model and use tools. </summary>
+    /// <summary> Represents an `assistant` that can call the model and use tools. </summary>
     internal partial class AssistantObject
     {
         /// <summary>
@@ -56,7 +56,7 @@ namespace OpenAI.Internal.Models
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
         /// <param name="tools">
         /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
+        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
         /// </param>
         /// <param name="fileIds">
         /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
@@ -89,7 +89,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="AssistantObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always 'assistant'. </param>
+        /// <param name="object"> The object type, which is always `assistant`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the assistant was created. </param>
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
@@ -101,7 +101,7 @@ namespace OpenAI.Internal.Models
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
         /// <param name="tools">
         /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
+        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
         /// </param>
         /// <param name="fileIds">
         /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
@@ -136,7 +136,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always 'assistant'. </summary>
+        /// <summary> The object type, which is always `assistant`. </summary>
         public AssistantObjectObject Object { get; } = AssistantObjectObject.Assistant;
 
         /// <summary> The Unix timestamp (in seconds) for when the assistant was created. </summary>
@@ -155,7 +155,7 @@ namespace OpenAI.Internal.Models
         public string Instructions { get; }
         /// <summary>
         /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types 'code_interpreter', 'retrieval', or 'function'.
+        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>

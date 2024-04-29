@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="RunObjectRequiredAction"/>. </summary>
-        /// <param name="type"> For now, this is always 'submit_tool_outputs'. </param>
+        /// <param name="type"> For now, this is always `submit_tool_outputs`. </param>
         /// <param name="submitToolOutputs"> Details on the tool outputs needed for this run to continue. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunObjectRequiredAction(RunObjectRequiredActionType type, RunObjectRequiredActionSubmitToolOutputs submitToolOutputs, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> For now, this is always 'submit_tool_outputs'. </summary>
+        /// <summary> For now, this is always `submit_tool_outputs`. </summary>
         public RunObjectRequiredActionType Type { get; } = RunObjectRequiredActionType.SubmitToolOutputs;
 
         /// <summary> Details on the tool outputs needed for this run to continue. </summary>

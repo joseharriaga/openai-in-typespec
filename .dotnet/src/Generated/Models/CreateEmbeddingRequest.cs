@@ -46,7 +46,7 @@ namespace OpenAI.Internal.Models
         /// <param name="input">
         /// Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a
         /// single request, pass an array of strings or array of token arrays. The input must not exceed
-        /// the max input tokens for the model (8192 tokens for 'text-embedding-ada-002'), cannot be an
+        /// the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an
         /// empty string, and any array must be 2048 dimensions or less. [Example Python
         /// code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
         /// tokens.
@@ -69,7 +69,7 @@ namespace OpenAI.Internal.Models
         /// <param name="input">
         /// Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a
         /// single request, pass an array of strings or array of token arrays. The input must not exceed
-        /// the max input tokens for the model (8192 tokens for 'text-embedding-ada-002'), cannot be an
+        /// the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an
         /// empty string, and any array must be 2048 dimensions or less. [Example Python
         /// code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
         /// tokens.
@@ -80,12 +80,12 @@ namespace OpenAI.Internal.Models
         /// descriptions of them.
         /// </param>
         /// <param name="encodingFormat">
-        /// The format to return the embeddings in. Can be either 'float' or
-        /// ['base64'](https://pypi.org/project/pybase64/).
+        /// The format to return the embeddings in. Can be either `float` or
+        /// [`base64`](https://pypi.org/project/pybase64/).
         /// </param>
         /// <param name="dimensions">
         /// The number of dimensions the resulting output embeddings should have. Only supported in
-        /// 'text-embedding-3' and later models.
+        /// `text-embedding-3` and later models.
         /// </param>
         /// <param name="user">
         /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
@@ -110,7 +110,7 @@ namespace OpenAI.Internal.Models
         /// <summary>
         /// Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a
         /// single request, pass an array of strings or array of token arrays. The input must not exceed
-        /// the max input tokens for the model (8192 tokens for 'text-embedding-ada-002'), cannot be an
+        /// the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an
         /// empty string, and any array must be 2048 dimensions or less. [Example Python
         /// code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
         /// tokens.
@@ -167,13 +167,13 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public CreateEmbeddingRequestModel Model { get; }
         /// <summary>
-        /// The format to return the embeddings in. Can be either 'float' or
-        /// ['base64'](https://pypi.org/project/pybase64/).
+        /// The format to return the embeddings in. Can be either `float` or
+        /// [`base64`](https://pypi.org/project/pybase64/).
         /// </summary>
         public CreateEmbeddingRequestEncodingFormat? EncodingFormat { get; set; }
         /// <summary>
         /// The number of dimensions the resulting output embeddings should have. Only supported in
-        /// 'text-embedding-3' and later models.
+        /// `text-embedding-3` and later models.
         /// </summary>
         public int? Dimensions { get; set; }
         /// <summary>

@@ -63,7 +63,7 @@ namespace OpenAI.Internal.Models
         /// The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
         /// the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
         /// </param>
-        /// <param name="type"> The type of tool call the output is required for. For now, this is always 'function'. </param>
+        /// <param name="type"> The type of tool call the output is required for. For now, this is always `function`. </param>
         /// <param name="function"> The function definition. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunToolCallObject(string id, RunToolCallObjectType type, RunToolCallObjectFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
         /// the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
         /// </summary>
         public string Id { get; }
-        /// <summary> The type of tool call the output is required for. For now, this is always 'function'. </summary>
+        /// <summary> The type of tool call the output is required for. For now, this is always `function`. </summary>
         public RunToolCallObjectType Type { get; } = RunToolCallObjectType.Function;
 
         /// <summary> The function definition. </summary>

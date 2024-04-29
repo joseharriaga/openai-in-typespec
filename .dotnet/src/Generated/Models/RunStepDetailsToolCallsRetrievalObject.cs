@@ -57,7 +57,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsRetrievalObject"/>. </summary>
         /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="type"> The type of tool call. This is always going to be 'retrieval' for this type of tool call. </param>
+        /// <param name="type"> The type of tool call. This is always going to be `retrieval` for this type of tool call. </param>
         /// <param name="retrieval"> For now, this is always going to be an empty object. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDetailsToolCallsRetrievalObject(string id, RunStepDetailsToolCallsRetrievalObjectType type, IReadOnlyDictionary<string, string> retrieval, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -75,7 +75,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The ID of the tool call object. </summary>
         public string Id { get; }
-        /// <summary> The type of tool call. This is always going to be 'retrieval' for this type of tool call. </summary>
+        /// <summary> The type of tool call. This is always going to be `retrieval` for this type of tool call. </summary>
         public RunStepDetailsToolCallsRetrievalObjectType Type { get; } = RunStepDetailsToolCallsRetrievalObjectType.Retrieval;
 
         /// <summary> For now, this is always going to be an empty object. </summary>

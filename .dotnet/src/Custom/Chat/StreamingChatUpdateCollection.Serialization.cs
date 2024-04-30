@@ -5,30 +5,30 @@ using System.Text.Json;
 
 namespace OpenAI.Chat;
 
-public partial class StreamingChatUpdate : IJsonModel<IEnumerable<StreamingChatUpdate>>
+internal partial class StreamingChatUpdateCollection : IJsonModel<StreamingChatUpdateCollection>
 {
-    IEnumerable<StreamingChatUpdate> IJsonModel<IEnumerable<StreamingChatUpdate>>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeStreamingChatUpdates, ref reader, options);
+    StreamingChatUpdateCollection IJsonModel<StreamingChatUpdateCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeStreamingChatUpdateCollection, ref reader, options);
 
-    IEnumerable<StreamingChatUpdate> IPersistableModel<IEnumerable<StreamingChatUpdate>>.Create(BinaryData data, ModelReaderWriterOptions options)
-        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeStreamingChatUpdates, data, options);
+    StreamingChatUpdateCollection IPersistableModel<StreamingChatUpdateCollection>.Create(BinaryData data, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.DeserializeNewInstance(this, DeserializeStreamingChatUpdateCollection, data, options);
 
-    void IJsonModel<IEnumerable<StreamingChatUpdate>>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => ModelSerializationHelpers.SerializeInstance<IEnumerable<StreamingChatUpdate>, StreamingChatUpdate>(this, SerializeStreamingChatUpdates, writer, options);
+    void IJsonModel<StreamingChatUpdateCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance<StreamingChatUpdateCollection, StreamingChatUpdateCollection>(this, SerializeStreamingChatUpdateCollections, writer, options);
 
-    BinaryData IPersistableModel<IEnumerable<StreamingChatUpdate>>.Write(ModelReaderWriterOptions options)
-        => ModelSerializationHelpers.SerializeInstance<IEnumerable<StreamingChatUpdate>, StreamingChatUpdate>(this, options);
+    BinaryData IPersistableModel<StreamingChatUpdateCollection>.Write(ModelReaderWriterOptions options)
+        => ModelSerializationHelpers.SerializeInstance<StreamingChatUpdateCollection, StreamingChatUpdateCollection>(this, options);
 
-    string IPersistableModel<IEnumerable<StreamingChatUpdate>>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+    string IPersistableModel<StreamingChatUpdateCollection>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-    internal static IEnumerable<StreamingChatUpdate> DeserializeStreamingChatUpdates(
+    internal static StreamingChatUpdateCollection DeserializeStreamingChatUpdateCollection(
         JsonElement sseDataJson,
         ModelReaderWriterOptions options = default)
     {
         List<StreamingChatUpdate> results = [];
         if (sseDataJson.ValueKind == JsonValueKind.Null)
         {
-            return results;
+            return new(results);
         }
         string id = default;
         DateTimeOffset created = default;
@@ -151,7 +151,7 @@ public partial class StreamingChatUpdate : IJsonModel<IEnumerable<StreamingChatU
                     }
                     foreach (StreamingToolCallUpdate toolCallUpdate in toolCallUpdates)
                     {
-                        results.Add(new StreamingChatUpdate(
+                        results.Add(new(
                             id,
                             created,
                             systemFingerprint,
@@ -169,13 +169,13 @@ public partial class StreamingChatUpdate : IJsonModel<IEnumerable<StreamingChatU
         }
         if (results.Count == 0)
         {
-            results.Add(new StreamingChatUpdate(id, created, systemFingerprint));
+            results.Add(new(id, created, systemFingerprint));
         }
-        return results;
+        return new(results);
     }
 
-    internal static void SerializeStreamingChatUpdates(StreamingChatUpdate StreamingChatUpdate, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal static void SerializeStreamingChatUpdateCollections(StreamingChatUpdateCollection StreamingChatUpdateCollection, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        throw new NotSupportedException(nameof(StreamingChatUpdate));
+        throw new NotSupportedException(nameof(StreamingChatUpdateCollection));
     }
 }

@@ -204,23 +204,8 @@ public partial class ChatClient
         {
             throw new ClientResultException(requestMessage.Response);
         }
-
-        PipelineResponse response = null;
-        try
-        {
-            response = requestMessage.ExtractResponse();
-            ClientResult genericResult = ClientResult.FromResponse(response);
-            StreamingClientResult<StreamingChatUpdate> streamingResult
-                = StreamingClientResult<StreamingChatUpdate>.Create(
-                    response,
-                    (sseJson) => StreamingChatUpdate.DeserializeStreamingChatUpdates(sseJson, options: default));
-            response = null;
-            return streamingResult;
-        }
-        finally
-        {
-            response?.Dispose();
-        }
+        return StreamingClientResult<StreamingChatUpdate>
+            .Create<StreamingChatUpdate, StreamingChatUpdateCollection>(requestMessage.Response);
     }
 
     /// <summary>
@@ -250,23 +235,8 @@ public partial class ChatClient
         {
             throw new ClientResultException(requestMessage.Response);
         }
-
-        PipelineResponse response = null;
-        try
-        {
-            response = requestMessage.ExtractResponse();
-            ClientResult genericResult = ClientResult.FromResponse(response);
-            StreamingClientResult<StreamingChatUpdate> streamingResult
-                = StreamingClientResult<StreamingChatUpdate>.Create(
-                    response,
-                    (sseJson) => StreamingChatUpdate.DeserializeStreamingChatUpdates(sseJson, options: default));
-            response = null;
-            return streamingResult;
-        }
-        finally
-        {
-            response?.Dispose();
-        }
+        return StreamingClientResult<StreamingChatUpdate>
+            .Create<StreamingChatUpdate, StreamingChatUpdateCollection>(requestMessage.Response);
     }
 
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(

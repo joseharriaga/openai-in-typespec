@@ -200,19 +200,27 @@ public partial class ChatClient
         PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
         requestMessage.BufferResponse = false;
         Shim.Pipeline.Send(requestMessage);
-        PipelineResponse response = requestMessage.ExtractResponse();
-
-        if (response.IsError)
+        if (requestMessage.Response.IsError)
         {
-            throw new ClientResultException(response);
+            throw new ClientResultException(requestMessage.Response);
         }
 
-        ClientResult genericResult = ClientResult.FromResponse(response);
-        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            genericResult,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
-                responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
+        PipelineResponse response = null;
+        try
+        {
+            response = requestMessage.ExtractResponse();
+            ClientResult genericResult = ClientResult.FromResponse(response);
+            StreamingClientResult<StreamingChatUpdate> streamingResult
+                = StreamingClientResult<StreamingChatUpdate>.Create(
+                    response,
+                    (sseJson) => StreamingChatUpdate.DeserializeStreamingChatUpdates(sseJson, options: default));
+            response = null;
+            return streamingResult;
+        }
+        finally
+        {
+            response?.Dispose();
+        }
     }
 
     /// <summary>
@@ -238,19 +246,27 @@ public partial class ChatClient
         PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
         requestMessage.BufferResponse = false;
         await Shim.Pipeline.SendAsync(requestMessage).ConfigureAwait(false);
-        PipelineResponse response = requestMessage.ExtractResponse();
-
-        if (response.IsError)
+        if (requestMessage.Response.IsError)
         {
-            throw new ClientResultException(response);
+            throw new ClientResultException(requestMessage.Response);
         }
 
-        ClientResult genericResult = ClientResult.FromResponse(response);
-        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            genericResult,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
-                responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));   
+        PipelineResponse response = null;
+        try
+        {
+            response = requestMessage.ExtractResponse();
+            ClientResult genericResult = ClientResult.FromResponse(response);
+            StreamingClientResult<StreamingChatUpdate> streamingResult
+                = StreamingClientResult<StreamingChatUpdate>.Create(
+                    response,
+                    (sseJson) => StreamingChatUpdate.DeserializeStreamingChatUpdates(sseJson, options: default));
+            response = null;
+            return streamingResult;
+        }
+        finally
+        {
+            response?.Dispose();
+        }
     }
 
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(

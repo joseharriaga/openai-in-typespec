@@ -40,21 +40,47 @@ public class StreamingClientResult<T>
         _asyncEnumerable = asyncEnumerableProcessor.Invoke(_baseResponse.ContentStream);
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="StreamingClientResult{T}"/> that will yield items of the specified type
+    /// <typeparamref name="T"/> as they become available via server-sent event JSON data on the available
+    /// <see cref="PipelineResponse.ContentStream"/>. This overload supports deserializing multiple instaces of
+    /// <typeparamref name="T"/> per server-sent event using the provided multi-element deserialization delegate.
+    /// </summary>
+    /// <param name="response"> The base <see cref="PipelineResponse"/> for this result instance. </param>
+    /// <param name="multiElementJsonDeserializerFunc">
+    /// The delegate that will be used to extract a collection of elements from each incoming JSON data payload.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// The optional cancellation token used to control the enumeration.
+    /// </param>
+    /// <returns> A new instance of <see cref="StreamingClientResult{T}"/>. </returns>
     public static StreamingClientResult<T> Create(
         PipelineResponse response,
         Func<JsonElement, IEnumerable<T>> multiElementJsonDeserializerFunc,
         CancellationToken cancellationToken = default)
     {
         return new(response, (stream)
-            => EnumerateFromJsonStream(stream, multiElementJsonDeserializerFunc, cancellationToken));
+            => EnumerateFromSseJsonStream(stream, multiElementJsonDeserializerFunc, cancellationToken));
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="StreamingClientResult{T}"/> that will yield items of the specified type
+    /// <typeparamref name="T"/> as they become available via server-sent event JSON data on the available
+    /// <see cref="PipelineResponse.ContentStream"/>. This overload uses <see cref="ModelReaderWriter"/> via the
+    /// <see cref="IJsonModel{T}"/> interface and only supports single-item deserialization per server-sent event data
+    /// payload.
+    /// </summary>
+    /// <param name="response"> The base <see cref="PipelineResponse"/> for this result instance. </param>
+    /// <param name="cancellationToken">
+    /// The optional cancellation token used to control the enumeration.
+    /// </param>
+    /// <returns> A new instance of <see cref="StreamingClientResult{T}"/>. </returns>
     public static StreamingClientResult<U> Create<U>(
         PipelineResponse response,
         CancellationToken cancellationToken = default)
             where U : IJsonModel<U>
     {
-        return new(response, (stream) => EnumerateFromJsonStream<U>(
+        return new(response, (stream) => EnumerateFromSseJsonStream<U>(
             stream,
             (sseChunkElement) =>
             {
@@ -64,7 +90,7 @@ public class StreamingClientResult<T>
             cancellationToken));
     }
 
-    private static async IAsyncEnumerable<U> EnumerateFromJsonStream<U>(
+    private static async IAsyncEnumerable<U> EnumerateFromSseJsonStream<U>(
         Stream contentStream,
         Func<JsonElement, IEnumerable<U>> multiElementJsonDeserializerFunc,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)

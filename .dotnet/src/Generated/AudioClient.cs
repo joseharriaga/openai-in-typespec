@@ -8,11 +8,11 @@ using System.ClientModel.Primitives;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenAI.Images
+namespace OpenAI.Audio
 {
     // Data plane generated sub-client.
-    /// <summary> The Image sub-client. </summary>
-    public partial class ImageClient
+    /// <summary> The Audio sub-client. </summary>
+    public partial class AudioClient
     {
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
@@ -23,12 +23,12 @@ namespace OpenAI.Images
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of ImageClient for mocking. </summary>
-        protected ImageClient()
+        /// <summary> Initializes a new instance of AudioClient for mocking. </summary>
+        protected AudioClient()
         {
         }
 
-        internal PipelineMessage CreateCreateImageRequest(BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateCreateSpeechRequest(BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -36,9 +36,9 @@ namespace OpenAI.Images
             request.Method = "POST";
             var uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
-            uri.AppendPath("/images/generations", false);
+            uri.AppendPath("/audio/speech", false);
             request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Accept", "application/octet-stream");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
             if (options != null)

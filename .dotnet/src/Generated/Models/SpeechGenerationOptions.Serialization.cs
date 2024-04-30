@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
-    internal partial class CreateSpeechRequest : IJsonModel<CreateSpeechRequest>
+    public partial class SpeechGenerationOptions : IJsonModel<SpeechGenerationOptions>
     {
-        void IJsonModel<CreateSpeechRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<SpeechGenerationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateSpeechRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<SpeechGenerationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateSpeechRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(SpeechGenerationOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -26,11 +26,11 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("input"u8);
             writer.WriteStringValue(Input);
             writer.WritePropertyName("voice"u8);
-            writer.WriteStringValue(Voice.ToString());
+            writer.WriteStringValue(Voice.ToSerialString());
             if (Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
-                writer.WriteStringValue(ResponseFormat.Value.ToString());
+                writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
             }
             if (Optional.IsDefined(Speed))
             {
@@ -55,19 +55,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateSpeechRequest IJsonModel<CreateSpeechRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        SpeechGenerationOptions IJsonModel<SpeechGenerationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateSpeechRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<SpeechGenerationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateSpeechRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(SpeechGenerationOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateSpeechRequest(document.RootElement, options);
+            return DeserializeSpeechGenerationOptions(document.RootElement, options);
         }
 
-        internal static CreateSpeechRequest DeserializeCreateSpeechRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static SpeechGenerationOptions DeserializeSpeechGenerationOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -77,8 +77,8 @@ namespace OpenAI.Internal.Models
             }
             CreateSpeechRequestModel model = default;
             string input = default;
-            CreateSpeechRequestVoice voice = default;
-            CreateSpeechRequestResponseFormat? responseFormat = default;
+            GeneratedSpeechVoice voice = default;
+            GeneratedSpeechFormat? responseFormat = default;
             double? speed = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -96,7 +96,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("voice"u8))
                 {
-                    voice = new CreateSpeechRequestVoice(property.Value.GetString());
+                    voice = property.Value.GetString().ToGeneratedSpeechVoice();
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))
@@ -105,7 +105,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    responseFormat = new CreateSpeechRequestResponseFormat(property.Value.GetString());
+                    responseFormat = property.Value.GetString().ToGeneratedSpeechFormat();
                     continue;
                 }
                 if (property.NameEquals("speed"u8))
@@ -123,7 +123,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateSpeechRequest(
+            return new SpeechGenerationOptions(
                 model,
                 input,
                 voice,
@@ -132,43 +132,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateSpeechRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<SpeechGenerationOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateSpeechRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<SpeechGenerationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateSpeechRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(SpeechGenerationOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateSpeechRequest IPersistableModel<CreateSpeechRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        SpeechGenerationOptions IPersistableModel<SpeechGenerationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateSpeechRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<SpeechGenerationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateSpeechRequest(document.RootElement, options);
+                        return DeserializeSpeechGenerationOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateSpeechRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(SpeechGenerationOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateSpeechRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<SpeechGenerationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateSpeechRequest FromResponse(PipelineResponse response)
+        internal static SpeechGenerationOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateSpeechRequest(document.RootElement);
+            return DeserializeSpeechGenerationOptions(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

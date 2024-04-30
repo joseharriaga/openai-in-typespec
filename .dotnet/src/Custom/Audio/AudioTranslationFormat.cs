@@ -1,12 +1,12 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace OpenAI.Audio;
 
 /// <summary>
-/// Specifies the format of the audio transcription.
+/// Specifies the format of the audio translation.
 /// </summary>
-[CodeGenModel("AudioTranscriptionOptionsResponseFormat")]
-public enum AudioTranscriptionFormat
+[CodeGenModel("AudioTranslationOptionsResponseFormat")]
+public enum AudioTranslationFormat
 {
     /// <summary> Text. </summary>
     [CodeGenMember("Text")]

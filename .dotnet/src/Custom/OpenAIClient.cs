@@ -21,6 +21,7 @@ namespace OpenAI;
 /// </summary>
 [CodeGenModel("OpenAIClient")]
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
+[CodeGenSuppress("GetAudioClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
 public partial class OpenAIClient
@@ -80,7 +81,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="AudioClient"/>. </returns>
-    public virtual AudioClient GetAudioClient(string model) => new(model, _keyCredential, _cachedOptions);
+    public virtual AudioClient GetAudioClient(string model) => new(_pipeline, model, _keyCredential, _endpoint);
 
     /// <summary>
     /// Gets a new instance of <see cref="ChatClient"/> that reuses the client configuration details provided to

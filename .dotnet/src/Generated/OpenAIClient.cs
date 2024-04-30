@@ -6,6 +6,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
+using OpenAI.Audio;
 using OpenAI.Embeddings;
 using OpenAI.Images;
 
@@ -28,8 +29,6 @@ namespace OpenAI
         protected OpenAIClient()
         {
         }
-
-        private OpenAI.Internal.Audio _cachedAudio;
         private OpenAI.Internal.Assistants _cachedAssistants;
         private OpenAI.Internal.Chat _cachedChat;
         private OpenAI.Internal.Completions _cachedCompletions;
@@ -40,12 +39,6 @@ namespace OpenAI
         private OpenAI.Internal.Moderations _cachedModerations;
         private OpenAI.Internal.Runs _cachedRuns;
         private OpenAI.Internal.Threads _cachedThreads;
-
-        /// <summary> Initializes a new instance of Audio. </summary>
-        internal OpenAI.Internal.Audio GetAudioClient()
-        {
-            return Volatile.Read(ref _cachedAudio) ?? Interlocked.CompareExchange(ref _cachedAudio, new OpenAI.Internal.Audio(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAudio;
-        }
 
         /// <summary> Initializes a new instance of Assistants. </summary>
         internal OpenAI.Internal.Assistants GetAssistantsClient()

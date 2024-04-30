@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
     /// <summary> The CreateTranslationResponseVerboseJson. </summary>
-    internal partial class CreateTranslationResponseVerboseJson
+    public partial class AudioTranslation
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,12 +42,12 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationResponseVerboseJson"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AudioTranslation"/>. </summary>
         /// <param name="language"> The language of the output translation (always `english`). </param>
         /// <param name="duration"> The duration of the input audio. </param>
         /// <param name="text"> The translated text. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="language"/> or <paramref name="text"/> is null. </exception>
-        internal CreateTranslationResponseVerboseJson(string language, TimeSpan duration, string text)
+        internal AudioTranslation(string language, TimeSpan? duration, string text)
         {
             Argument.AssertNotNull(language, nameof(language));
             Argument.AssertNotNull(text, nameof(text));
@@ -55,17 +55,17 @@ namespace OpenAI.Internal.Models
             Language = language;
             Duration = duration;
             Text = text;
-            Segments = new ChangeTrackingList<TranscriptionSegment>();
+            Segments = new ChangeTrackingList<TranscribedSegment>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationResponseVerboseJson"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AudioTranslation"/>. </summary>
         /// <param name="task"> The task label. </param>
         /// <param name="language"> The language of the output translation (always `english`). </param>
         /// <param name="duration"> The duration of the input audio. </param>
         /// <param name="text"> The translated text. </param>
         /// <param name="segments"> Segments of the translated text and their corresponding details. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateTranslationResponseVerboseJson(CreateTranslationResponseVerboseJsonTask task, string language, TimeSpan duration, string text, IReadOnlyList<TranscriptionSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranslation(CreateTranslationResponseVerboseJsonTask task, string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Task = task;
             Language = language;
@@ -75,21 +75,16 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationResponseVerboseJson"/> for deserialization. </summary>
-        internal CreateTranslationResponseVerboseJson()
+        /// <summary> Initializes a new instance of <see cref="AudioTranslation"/> for deserialization. </summary>
+        internal AudioTranslation()
         {
         }
 
-        /// <summary> The task label. </summary>
-        public CreateTranslationResponseVerboseJsonTask Task { get; } = CreateTranslationResponseVerboseJsonTask.Translate;
-
         /// <summary> The language of the output translation (always `english`). </summary>
         public string Language { get; }
-        /// <summary> The duration of the input audio. </summary>
-        public TimeSpan Duration { get; }
         /// <summary> The translated text. </summary>
         public string Text { get; }
         /// <summary> Segments of the translated text and their corresponding details. </summary>
-        public IReadOnlyList<TranscriptionSegment> Segments { get; }
+        public IReadOnlyList<TranscribedSegment> Segments { get; }
     }
 }

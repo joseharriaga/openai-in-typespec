@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
     /// <summary> Represents a verbose json transcription response returned by model, based on the provided input. </summary>
-    internal partial class CreateTranscriptionResponseVerboseJson
+    public partial class AudioTranscription
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,12 +42,12 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranscriptionResponseVerboseJson"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AudioTranscription"/>. </summary>
         /// <param name="language"> The language of the input audio. </param>
         /// <param name="duration"> The duration of the input audio. </param>
         /// <param name="text"> The transcribed text. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="language"/> or <paramref name="text"/> is null. </exception>
-        internal CreateTranscriptionResponseVerboseJson(string language, TimeSpan duration, string text)
+        internal AudioTranscription(string language, TimeSpan? duration, string text)
         {
             Argument.AssertNotNull(language, nameof(language));
             Argument.AssertNotNull(text, nameof(text));
@@ -55,11 +55,11 @@ namespace OpenAI.Internal.Models
             Language = language;
             Duration = duration;
             Text = text;
-            Words = new ChangeTrackingList<TranscriptionWord>();
-            Segments = new ChangeTrackingList<TranscriptionSegment>();
+            Words = new ChangeTrackingList<TranscribedWord>();
+            Segments = new ChangeTrackingList<TranscribedSegment>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranscriptionResponseVerboseJson"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AudioTranscription"/>. </summary>
         /// <param name="task"> The task label. </param>
         /// <param name="language"> The language of the input audio. </param>
         /// <param name="duration"> The duration of the input audio. </param>
@@ -67,7 +67,7 @@ namespace OpenAI.Internal.Models
         /// <param name="words"> Extracted words and their corresponding timestamps. </param>
         /// <param name="segments"> Segments of the transcribed text and their corresponding details. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateTranscriptionResponseVerboseJson(CreateTranscriptionResponseVerboseJsonTask task, string language, TimeSpan duration, string text, IReadOnlyList<TranscriptionWord> words, IReadOnlyList<TranscriptionSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranscription(CreateTranscriptionResponseVerboseJsonTask task, string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedWord> words, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Task = task;
             Language = language;
@@ -78,23 +78,18 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranscriptionResponseVerboseJson"/> for deserialization. </summary>
-        internal CreateTranscriptionResponseVerboseJson()
+        /// <summary> Initializes a new instance of <see cref="AudioTranscription"/> for deserialization. </summary>
+        internal AudioTranscription()
         {
         }
 
-        /// <summary> The task label. </summary>
-        public CreateTranscriptionResponseVerboseJsonTask Task { get; } = CreateTranscriptionResponseVerboseJsonTask.Transcribe;
-
         /// <summary> The language of the input audio. </summary>
         public string Language { get; }
-        /// <summary> The duration of the input audio. </summary>
-        public TimeSpan Duration { get; }
         /// <summary> The transcribed text. </summary>
         public string Text { get; }
         /// <summary> Extracted words and their corresponding timestamps. </summary>
-        public IReadOnlyList<TranscriptionWord> Words { get; }
+        public IReadOnlyList<TranscribedWord> Words { get; }
         /// <summary> Segments of the transcribed text and their corresponding details. </summary>
-        public IReadOnlyList<TranscriptionSegment> Segments { get; }
+        public IReadOnlyList<TranscribedSegment> Segments { get; }
     }
 }

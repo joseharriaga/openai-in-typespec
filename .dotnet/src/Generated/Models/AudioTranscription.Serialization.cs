@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
-    internal partial class CreateTranslationResponseVerboseJson : IJsonModel<CreateTranslationResponseVerboseJson>
+    public partial class AudioTranscription : IJsonModel<AudioTranscription>
     {
-        void IJsonModel<CreateTranslationResponseVerboseJson>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AudioTranscription>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationResponseVerboseJson>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateTranslationResponseVerboseJson)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AudioTranscription)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -26,16 +26,26 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("language"u8);
             writer.WriteStringValue(Language);
             writer.WritePropertyName("duration"u8);
-            writer.WriteNumberValue(Convert.ToInt32(Duration.ToString("%s")));
+            writer.WriteNumberValue(Convert.ToInt32(Duration.Value.ToString("%s")));
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
+            if (Optional.IsCollectionDefined(Words))
+            {
+                writer.WritePropertyName("words"u8);
+                writer.WriteStartArray();
+                foreach (var item in Words)
+                {
+                    writer.WriteObjectValue<TranscribedWord>(item, options);
+                }
+                writer.WriteEndArray();
+            }
             if (Optional.IsCollectionDefined(Segments))
             {
                 writer.WritePropertyName("segments"u8);
                 writer.WriteStartArray();
                 foreach (var item in Segments)
                 {
-                    writer.WriteObjectValue<TranscriptionSegment>(item, options);
+                    writer.WriteObjectValue<TranscribedSegment>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -57,19 +67,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateTranslationResponseVerboseJson IJsonModel<CreateTranslationResponseVerboseJson>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AudioTranscription IJsonModel<AudioTranscription>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationResponseVerboseJson>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateTranslationResponseVerboseJson)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AudioTranscription)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateTranslationResponseVerboseJson(document.RootElement, options);
+            return DeserializeAudioTranscription(document.RootElement, options);
         }
 
-        internal static CreateTranslationResponseVerboseJson DeserializeCreateTranslationResponseVerboseJson(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AudioTranscription DeserializeAudioTranscription(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -77,18 +87,19 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            CreateTranslationResponseVerboseJsonTask task = default;
+            CreateTranscriptionResponseVerboseJsonTask task = default;
             string language = default;
-            TimeSpan duration = default;
+            TimeSpan? duration = default;
             string text = default;
-            IReadOnlyList<TranscriptionSegment> segments = default;
+            IReadOnlyList<TranscribedWord> words = default;
+            IReadOnlyList<TranscribedSegment> segments = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("task"u8))
                 {
-                    task = new CreateTranslationResponseVerboseJsonTask(property.Value.GetString());
+                    task = new CreateTranscriptionResponseVerboseJsonTask(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("language"u8))
@@ -106,16 +117,30 @@ namespace OpenAI.Internal.Models
                     text = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("words"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<TranscribedWord> array = new List<TranscribedWord>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(TranscribedWord.DeserializeTranscribedWord(item, options));
+                    }
+                    words = array;
+                    continue;
+                }
                 if (property.NameEquals("segments"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    List<TranscriptionSegment> array = new List<TranscriptionSegment>();
+                    List<TranscribedSegment> array = new List<TranscribedSegment>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(TranscriptionSegment.DeserializeTranscriptionSegment(item, options));
+                        array.Add(TranscribedSegment.DeserializeTranscribedSegment(item, options));
                     }
                     segments = array;
                     continue;
@@ -126,52 +151,53 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateTranslationResponseVerboseJson(
+            return new AudioTranscription(
                 task,
                 language,
                 duration,
                 text,
-                segments ?? new ChangeTrackingList<TranscriptionSegment>(),
+                words ?? new ChangeTrackingList<TranscribedWord>(),
+                segments ?? new ChangeTrackingList<TranscribedSegment>(),
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateTranslationResponseVerboseJson>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AudioTranscription>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationResponseVerboseJson>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateTranslationResponseVerboseJson)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AudioTranscription)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateTranslationResponseVerboseJson IPersistableModel<CreateTranslationResponseVerboseJson>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AudioTranscription IPersistableModel<AudioTranscription>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationResponseVerboseJson>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateTranslationResponseVerboseJson(document.RootElement, options);
+                        return DeserializeAudioTranscription(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateTranslationResponseVerboseJson)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AudioTranscription)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateTranslationResponseVerboseJson>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AudioTranscription>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateTranslationResponseVerboseJson FromResponse(PipelineResponse response)
+        internal static AudioTranscription FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateTranslationResponseVerboseJson(document.RootElement);
+            return DeserializeAudioTranscription(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

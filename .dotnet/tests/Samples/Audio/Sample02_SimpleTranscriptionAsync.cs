@@ -14,10 +14,11 @@ namespace OpenAI.Samples
         {
             AudioClient client = new("whisper-1", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            string filePath = Path.Combine("Assets", "speed-talking.wav");
-            using FileStream fileStream = File.OpenRead(filePath);
+            string audioFilename = "speed-talking.wav";
+            string audioPath = Path.Combine("Assets", audioFilename);
+            using Stream audio = File.OpenRead(audioPath);
 
-            AudioTranscription transcription = await client.TranscribeAudioAsync(fileStream, "speed-talking.wav");
+            AudioTranscription transcription = await client.TranscribeAudioAsync(audio, audioFilename);
 
             Console.WriteLine($"{transcription.Text}");
         }

@@ -8,23 +8,23 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
-    internal partial class TranscriptionSegment : IJsonModel<TranscriptionSegment>
+    public partial struct TranscribedSegment : IJsonModel<TranscribedSegment>, IJsonModel<object>
     {
-        void IJsonModel<TranscriptionSegment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<TranscribedSegment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionSegment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(TranscriptionSegment)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(TranscribedSegment)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("id"u8);
             writer.WriteNumberValue(Id);
             writer.WritePropertyName("seek"u8);
-            writer.WriteNumberValue(Seek);
+            writer.WriteNumberValue(SeekOffset);
             writer.WritePropertyName("start"u8);
             writer.WriteNumberValue(Convert.ToInt32(Start.ToString("%s")));
             writer.WritePropertyName("end"u8);
@@ -33,7 +33,7 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(Text);
             writer.WritePropertyName("tokens"u8);
             writer.WriteStartArray();
-            foreach (var item in Tokens)
+            foreach (var item in TokenIds)
             {
                 writer.WriteNumberValue(item);
             }
@@ -41,11 +41,11 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("temperature"u8);
             writer.WriteNumberValue(Temperature);
             writer.WritePropertyName("avg_logprob"u8);
-            writer.WriteNumberValue(AvgLogprob);
+            writer.WriteNumberValue(AverageLogProbability);
             writer.WritePropertyName("compression_ratio"u8);
             writer.WriteNumberValue(CompressionRatio);
             writer.WritePropertyName("no_speech_prob"u8);
-            writer.WriteNumberValue(NoSpeechProb);
+            writer.WriteNumberValue(NoSpeechProbability);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -64,26 +64,26 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        TranscriptionSegment IJsonModel<TranscriptionSegment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        TranscribedSegment IJsonModel<TranscribedSegment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionSegment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(TranscriptionSegment)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(TranscribedSegment)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeTranscriptionSegment(document.RootElement, options);
+            return DeserializeTranscribedSegment(document.RootElement, options);
         }
 
-        internal static TranscriptionSegment DeserializeTranscriptionSegment(JsonElement element, ModelReaderWriterOptions options = null)
+        void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options) => ((IJsonModel<TranscribedSegment>)this).Write(writer, options);
+
+        object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => ((IJsonModel<TranscribedSegment>)this).Create(ref reader, options);
+
+        internal static TranscribedSegment DeserializeTranscribedSegment(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             long id = default;
             long seek = default;
             TimeSpan start = default;
@@ -159,7 +159,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new TranscriptionSegment(
+            return new TranscribedSegment(
                 id,
                 seek,
                 start,
@@ -173,47 +173,53 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<TranscriptionSegment>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<TranscribedSegment>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionSegment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(TranscriptionSegment)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(TranscribedSegment)} does not support writing '{options.Format}' format.");
             }
         }
 
-        TranscriptionSegment IPersistableModel<TranscriptionSegment>.Create(BinaryData data, ModelReaderWriterOptions options)
+        TranscribedSegment IPersistableModel<TranscribedSegment>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionSegment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeTranscriptionSegment(document.RootElement, options);
+                        return DeserializeTranscribedSegment(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(TranscriptionSegment)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(TranscribedSegment)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<TranscriptionSegment>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<TranscribedSegment>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+
+        BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options) => ((IPersistableModel<TranscribedSegment>)this).Write(options);
+
+        object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options) => ((IPersistableModel<TranscribedSegment>)this).Create(data, options);
+
+        string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options) => ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options);
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static TranscriptionSegment FromResponse(PipelineResponse response)
+        internal static TranscribedSegment FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeTranscriptionSegment(document.RootElement);
+            return DeserializeTranscribedSegment(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        internal BinaryContent ToBinaryBody()
         {
             return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
         }

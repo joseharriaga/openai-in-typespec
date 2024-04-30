@@ -16,6 +16,7 @@ function Edit-GeneratedOpenAIClient {
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
+        $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
     $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
 
@@ -29,6 +30,7 @@ function Edit-GeneratedSubclients {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Exclude "OpenAIClient.cs", "OpenAIClientOptions.cs", "OpenAIModelFactory.cs"
 
     $exclusions = @(
+        "AudioClient.cs",
         "EmbeddingClient.cs",
         "ImageClient.cs"
     )
@@ -59,6 +61,30 @@ function Edit-GeneratedModels {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs"
     
     $exclusions = @(
+        "AudioTranscription.cs",
+        "AudioTranscription.Serialization.cs",
+        "AudioTranscriptionFormat.Serialization.cs",
+        "AudioTranscriptionOptions.cs",
+        "AudioTranscriptionOptions.Serialization.cs",
+        "AudioTranslation.cs",
+        "AudioTranslation.Serialization.cs",
+        "AudioTranslationFormat.Serialization.cs",
+        "AudioTranslationOptions.cs",
+        "AudioTranslationOptions.Serialization.cs",
+        "CreateTranscriptionResponseVerboseJsonTask.cs",
+        "CreateTranslationResponseVerboseJsonTask.cs",
+        "CreateSpeechRequestModel.cs",
+        "CreateTranscriptionRequestModel.cs",
+        "CreateTranslationRequestModel.cs"
+        "GeneratedSpeechFormat.Serialization.cs",
+        "GeneratedSpeechVoice.Serialization.cs",
+        "SpeechGenerationOptions.cs",
+        "SpeechGenerationOptions.Serialization.cs",
+        "TranscribedSegment.cs",
+        "TranscribedSegment.Serialization.cs",
+        "TranscribedWord.cs",
+        "TranscribedWord.Serialization.cs",
+
         "CreateEmbeddingRequestModel.cs",
         "CreateEmbeddingResponseObject.cs",
         "Embedding.cs",

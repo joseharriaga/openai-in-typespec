@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Audio;
 using OpenAI.Embeddings;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
@@ -14,199 +15,49 @@ namespace OpenAI
     /// <summary> Model factory for models. </summary>
     internal static partial class OpenAIModelFactory
     {
-        /// <summary> Initializes a new instance of <see cref="Models.CreateSpeechRequest"/>. </summary>
-        /// <param name="model"> One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`. </param>
-        /// <param name="input"> The text to generate audio for. The maximum length is 4096 characters. </param>
-        /// <param name="voice">
-        /// The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`,
-        /// `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the
-        /// [Text to speech guide](/docs/guides/text-to-speech/voice-options).
-        /// </param>
-        /// <param name="responseFormat"> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`. </param>
-        /// <param name="speed"> The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. </param>
-        /// <returns> A new <see cref="Models.CreateSpeechRequest"/> instance for mocking. </returns>
-        public static CreateSpeechRequest CreateSpeechRequest(CreateSpeechRequestModel model = default, string input = null, CreateSpeechRequestVoice voice = default, CreateSpeechRequestResponseFormat? responseFormat = null, double? speed = null)
-        {
-            return new CreateSpeechRequest(
-                model,
-                input,
-                voice,
-                responseFormat,
-                speed,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranscriptionRequest"/>. </summary>
-        /// <param name="file">
-        /// The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
-        /// </param>
-        /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
-        /// </param>
-        /// <param name="language">
-        /// The language of the input audio. Supplying the input language in
-        /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy
-        /// and latency.
-        /// </param>
-        /// <param name="prompt">
-        /// An optional text to guide the model's style or continue a previous audio segment. The
-        /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
-        /// </param>
-        /// <param name="responseFormat">
-        /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-        /// vtt.
-        /// </param>
-        /// <param name="temperature">
-        /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
-        /// random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
-        /// the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
-        /// automatically increase the temperature until certain thresholds are hit.
-        /// </param>
-        /// <param name="timestampGranularities">
-        /// The timestamp granularities to populate for this transcription. `response_format` must be set
-        /// `verbose_json` to use timestamp granularities. Either or both of these options are supported:
-        /// `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
-        /// generating word timestamps incurs additional latency.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateTranscriptionRequest"/> instance for mocking. </returns>
-        public static CreateTranscriptionRequest CreateTranscriptionRequest(BinaryData file = null, CreateTranscriptionRequestModel model = default, string language = null, string prompt = null, CreateTranscriptionRequestResponseFormat? responseFormat = null, double? temperature = null, IEnumerable<BinaryData> timestampGranularities = null)
-        {
-            timestampGranularities ??= new List<BinaryData>();
-
-            return new CreateTranscriptionRequest(
-                file,
-                model,
-                language,
-                prompt,
-                responseFormat,
-                temperature,
-                timestampGranularities?.ToList(),
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranscriptionResponseVerboseJson"/>. </summary>
-        /// <param name="task"> The task label. </param>
-        /// <param name="language"> The language of the input audio. </param>
-        /// <param name="duration"> The duration of the input audio. </param>
-        /// <param name="text"> The transcribed text. </param>
-        /// <param name="words"> Extracted words and their corresponding timestamps. </param>
-        /// <param name="segments"> Segments of the transcribed text and their corresponding details. </param>
-        /// <returns> A new <see cref="Models.CreateTranscriptionResponseVerboseJson"/> instance for mocking. </returns>
-        public static CreateTranscriptionResponseVerboseJson CreateTranscriptionResponseVerboseJson(CreateTranscriptionResponseVerboseJsonTask task = default, string language = null, TimeSpan duration = default, string text = null, IEnumerable<TranscriptionWord> words = null, IEnumerable<TranscriptionSegment> segments = null)
-        {
-            words ??= new List<TranscriptionWord>();
-            segments ??= new List<TranscriptionSegment>();
-
-            return new CreateTranscriptionResponseVerboseJson(
-                task,
-                language,
-                duration,
-                text,
-                words?.ToList(),
-                segments?.ToList(),
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.TranscriptionWord"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Audio.TranscribedWord"/>. </summary>
         /// <param name="word"> The text content of the word. </param>
         /// <param name="start"> Start time of the word in seconds. </param>
         /// <param name="end"> End time of the word in seconds. </param>
-        /// <returns> A new <see cref="Models.TranscriptionWord"/> instance for mocking. </returns>
-        public static TranscriptionWord TranscriptionWord(string word = null, TimeSpan start = default, TimeSpan end = default)
+        /// <returns> A new <see cref="Audio.TranscribedWord"/> instance for mocking. </returns>
+        public static TranscribedWord TranscribedWord(string word = null, TimeSpan start = default, TimeSpan end = default)
         {
-            return new TranscriptionWord(word, start, end, serializedAdditionalRawData: null);
+            return new TranscribedWord(word, start, end, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.TranscriptionSegment"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Audio.TranscribedSegment"/>. </summary>
         /// <param name="id"> Unique identifier of the segment. </param>
-        /// <param name="seek"> Seek offset of the segment. </param>
+        /// <param name="seekOffset"> Seek offset of the segment. </param>
         /// <param name="start"> Start time of the segment in seconds. </param>
         /// <param name="end"> End time of the segment in seconds. </param>
         /// <param name="text"> Text content of the segment. </param>
-        /// <param name="tokens"> Array of token IDs for the text content. </param>
+        /// <param name="tokenIds"> Array of token IDs for the text content. </param>
         /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
-        /// <param name="avgLogprob"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
+        /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
         /// <param name="compressionRatio">
         /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
         /// failed.
         /// </param>
-        /// <param name="noSpeechProb">
+        /// <param name="noSpeechProbability">
         /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
         /// is below -1, consider this segment silent.
         /// </param>
-        /// <returns> A new <see cref="Models.TranscriptionSegment"/> instance for mocking. </returns>
-        public static TranscriptionSegment TranscriptionSegment(long id = default, long seek = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokens = null, double temperature = default, double avgLogprob = default, double compressionRatio = default, double noSpeechProb = default)
+        /// <returns> A new <see cref="Audio.TranscribedSegment"/> instance for mocking. </returns>
+        public static TranscribedSegment TranscribedSegment(long id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, double temperature = default, double averageLogProbability = default, double compressionRatio = default, double noSpeechProbability = default)
         {
-            tokens ??= new List<long>();
+            tokenIds ??= new List<long>();
 
-            return new TranscriptionSegment(
+            return new TranscribedSegment(
                 id,
-                seek,
+                seekOffset,
                 start,
                 end,
                 text,
-                tokens?.ToList(),
+                tokenIds?.ToList(),
                 temperature,
-                avgLogprob,
+                averageLogProbability,
                 compressionRatio,
-                noSpeechProb,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranslationRequest"/>. </summary>
-        /// <param name="file">
-        /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
-        /// </param>
-        /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
-        /// </param>
-        /// <param name="prompt">
-        /// An optional text to guide the model's style or continue a previous audio segment. The
-        /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
-        /// </param>
-        /// <param name="responseFormat">
-        /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-        /// vtt.
-        /// </param>
-        /// <param name="temperature">
-        /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
-        /// random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
-        /// the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
-        /// automatically increase the temperature until certain thresholds are hit.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateTranslationRequest"/> instance for mocking. </returns>
-        public static CreateTranslationRequest CreateTranslationRequest(BinaryData file = null, CreateTranslationRequestModel model = default, string prompt = null, CreateTranslationRequestResponseFormat? responseFormat = null, double? temperature = null)
-        {
-            return new CreateTranslationRequest(
-                file,
-                model,
-                prompt,
-                responseFormat,
-                temperature,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranslationResponseVerboseJson"/>. </summary>
-        /// <param name="task"> The task label. </param>
-        /// <param name="language"> The language of the output translation (always `english`). </param>
-        /// <param name="duration"> The duration of the input audio. </param>
-        /// <param name="text"> The translated text. </param>
-        /// <param name="segments"> Segments of the translated text and their corresponding details. </param>
-        /// <returns> A new <see cref="Models.CreateTranslationResponseVerboseJson"/> instance for mocking. </returns>
-        public static CreateTranslationResponseVerboseJson CreateTranslationResponseVerboseJson(CreateTranslationResponseVerboseJsonTask task = default, string language = null, TimeSpan duration = default, string text = null, IEnumerable<TranscriptionSegment> segments = null)
-        {
-            segments ??= new List<TranscriptionSegment>();
-
-            return new CreateTranslationResponseVerboseJson(
-                task,
-                language,
-                duration,
-                text,
-                segments?.ToList(),
+                noSpeechProbability,
                 serializedAdditionalRawData: null);
         }
 

@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
-    /// <summary> The CreateTranslationRequest. </summary>
-    internal partial class CreateTranslationRequest
+    /// <summary> The CreateTranscriptionRequest. </summary>
+    public partial class AudioTranscriptionOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,32 +42,19 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AudioTranscriptionOptions"/>. </summary>
         /// <param name="file">
-        /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
+        /// The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
         /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
         /// </param>
         /// <param name="model">
         /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
         /// is currently available.
         /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-        public CreateTranslationRequest(BinaryData file, CreateTranslationRequestModel model)
-        {
-            Argument.AssertNotNull(file, nameof(file));
-
-            File = file;
-            Model = model;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/>. </summary>
-        /// <param name="file">
-        /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
-        /// </param>
-        /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
+        /// <param name="language">
+        /// The language of the input audio. Supplying the input language in
+        /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy
+        /// and latency.
         /// </param>
         /// <param name="prompt">
         /// An optional text to guide the model's style or continue a previous audio segment. The
@@ -83,45 +70,30 @@ namespace OpenAI.Internal.Models
         /// the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
         /// automatically increase the temperature until certain thresholds are hit.
         /// </param>
+        /// <param name="timestampGranularities">
+        /// The timestamp granularities to populate for this transcription. `response_format` must be set
+        /// `verbose_json` to use timestamp granularities. Either or both of these options are supported:
+        /// `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
+        /// generating word timestamps incurs additional latency.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateTranslationRequest(BinaryData file, CreateTranslationRequestModel model, string prompt, CreateTranslationRequestResponseFormat? responseFormat, double? temperature, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranscriptionOptions(BinaryData file, CreateTranscriptionRequestModel model, string language, string prompt, AudioTranscriptionFormat? responseFormat, double? temperature, IList<BinaryData> timestampGranularities, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             File = file;
             Model = model;
+            Language = language;
             Prompt = prompt;
             ResponseFormat = responseFormat;
             Temperature = temperature;
+            TimestampGranularities = timestampGranularities;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/> for deserialization. </summary>
-        internal CreateTranslationRequest()
-        {
-        }
-
         /// <summary>
-        /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
-        /// <para>
-        /// To assign a byte[] to this property use <see cref="BinaryData.FromBytes(byte[])"/>.
-        /// The byte[] will be serialized to a Base64 encoded string.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromBytes(new byte[] { 1, 2, 3 })</term>
-        /// <description>Creates a payload of "AQID".</description>
-        /// </item>
-        /// </list>
-        /// </para>
+        /// The language of the input audio. Supplying the input language in
+        /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy
+        /// and latency.
         /// </summary>
-        public BinaryData File { get; }
-        /// <summary>
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
-        /// </summary>
-        public CreateTranslationRequestModel Model { get; }
+        public string Language { get; set; }
         /// <summary>
         /// An optional text to guide the model's style or continue a previous audio segment. The
         /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
@@ -131,7 +103,7 @@ namespace OpenAI.Internal.Models
         /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
         /// vtt.
         /// </summary>
-        public CreateTranslationRequestResponseFormat? ResponseFormat { get; set; }
+        public AudioTranscriptionFormat? ResponseFormat { get; set; }
         /// <summary>
         /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
         /// random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,

@@ -21,11 +21,11 @@ public partial class TranscriptionTests
     }
 
     [Test]
-    [TestCase(AudioTimestampGranularity.Default)]
-    [TestCase(AudioTimestampGranularity.Word)]
-    [TestCase(AudioTimestampGranularity.Segment)]
-    [TestCase(AudioTimestampGranularity.Word | AudioTimestampGranularity.Segment)]
-    public void TimestampsWork(AudioTimestampGranularity granularityFlags)
+    [TestCase(AudioTimestampGranularities.Default)]
+    [TestCase(AudioTimestampGranularities.Word)]
+    [TestCase(AudioTimestampGranularities.Segment)]
+    [TestCase(AudioTimestampGranularities.Word | AudioTimestampGranularities.Segment)]
+    public void TimestampsWork(AudioTimestampGranularities granularityFlags)
     {
         AudioClient client = GetTestClient();
         using FileStream inputStream = File.OpenRead(Path.Combine("Assets", "hello_world.m4a"));
@@ -33,7 +33,7 @@ public partial class TranscriptionTests
         {
              ResponseFormat = AudioTranscriptionFormat.Verbose,
              Temperature = 0.4f,
-             TimestampGranularityFlags = granularityFlags,
+             Granularities = granularityFlags,
         });
         Assert.That(transcriptionResult.Value, Is.Not.Null);
 
@@ -45,9 +45,9 @@ public partial class TranscriptionTests
         bool wordTimestampsPresent = words?.Count > 0;
         bool segmentTimestampsPresent = segments?.Count > 0;
 
-        bool wordTimestampsExpected = granularityFlags.HasFlag(AudioTimestampGranularity.Word);
-        bool segmentTimestampsExpected = granularityFlags.HasFlag(AudioTimestampGranularity.Segment)
-            || granularityFlags == AudioTimestampGranularity.Default;
+        bool wordTimestampsExpected = granularityFlags.HasFlag(AudioTimestampGranularities.Word);
+        bool segmentTimestampsExpected = granularityFlags.HasFlag(AudioTimestampGranularities.Segment)
+            || granularityFlags == AudioTimestampGranularities.Default;
 
         Assert.That(wordTimestampsPresent, Is.EqualTo(wordTimestampsExpected));
         Assert.That(segmentTimestampsPresent, Is.EqualTo(segmentTimestampsExpected));

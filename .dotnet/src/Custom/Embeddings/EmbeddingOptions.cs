@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace OpenAI.Embeddings;
 
 [CodeGenModel("CreateEmbeddingRequest")]
-[CodeGenSuppress("EmbeddingOptions")]
 [CodeGenSuppress("EmbeddingOptions", typeof(BinaryData), typeof(CreateEmbeddingRequestModel))]
 public partial class EmbeddingOptions
 {

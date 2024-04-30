@@ -13,10 +13,11 @@ namespace OpenAI.Samples
         {
             AudioClient client = new("whisper-1", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            string filePath = Path.Combine("Assets", "french.wav");
-            using FileStream fileStream = File.OpenRead(filePath);
+            string audioFilename = "french.wav";
+            string audioPath = Path.Combine("Assets", audioFilename);
+            using Stream audio = File.OpenRead(audioPath);
 
-            AudioTranslation translation = client.TranslateAudio(fileStream);
+            AudioTranslation translation = client.TranslateAudio(audio, audioFilename);
 
             Console.WriteLine($"{translation.Text}");
         }

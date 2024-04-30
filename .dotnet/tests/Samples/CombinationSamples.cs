@@ -49,11 +49,11 @@ namespace OpenAI.Samples.Miscellaneous
             AudioClient audioClient = new("tts-1-hd");
             ClientResult<BinaryData> ttsResult = audioClient.GenerateSpeechFromText(
                 text: chatResponseText,
-                TextToSpeechVoice.Fable,
-                new TextToSpeechOptions()
+                GeneratedSpeechVoice.Fable,
+                new SpeechGenerationOptions()
                 {
-                    SpeedMultiplier = 0.9f,
-                    ResponseFormat = AudioDataFormat.Opus,
+                    Speed = 0.9f,
+                    ResponseFormat = GeneratedSpeechFormat.Opus,
                 });
             FileInfo ttsFileInfo = new($"{chatResult.Value.Id}.opus");
             using (FileStream ttsFileStream = ttsFileInfo.Create())
@@ -86,11 +86,11 @@ namespace OpenAI.Samples.Miscellaneous
             AudioClient ttsClient = new("tts-1-hd");
             Task<ClientResult<BinaryData>> imageDescriptionAudioTask = ttsClient.GenerateSpeechFromTextAsync(
                 description,
-                TextToSpeechVoice.Onyx,
-                new TextToSpeechOptions()
+                GeneratedSpeechVoice.Onyx,
+                new SpeechGenerationOptions()
                 {
-                    SpeedMultiplier = 1.1f,
-                    ResponseFormat = AudioDataFormat.Opus,
+                    Speed = 1.1f,
+                    ResponseFormat = GeneratedSpeechFormat.Opus,
                 });
             _ = Task.Run(async () =>
             {
@@ -133,11 +133,11 @@ namespace OpenAI.Samples.Miscellaneous
             // Finally, we'll get that art expert's laudations in the voice of Fable
             ClientResult<BinaryData> appraisalAudioResult = await ttsClient.GenerateSpeechFromTextAsync(
                 appraisal,
-                TextToSpeechVoice.Fable,
-                new TextToSpeechOptions()
+                GeneratedSpeechVoice.Fable,
+                new SpeechGenerationOptions()
                 {
-                    ResponseFormat = AudioDataFormat.Opus,
-                    SpeedMultiplier = 0.9f,
+                    Speed = 0.9f,
+                    ResponseFormat = GeneratedSpeechFormat.Opus,
                 });
             FileInfo criticAudioFileInfo = new($"{criticalAppraisalResult.Value.Id}-appraisal.opus");
             using (FileStream criticStream = criticAudioFileInfo.Create())

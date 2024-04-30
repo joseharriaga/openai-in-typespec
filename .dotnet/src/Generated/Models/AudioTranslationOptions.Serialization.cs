@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
-    internal partial class CreateTranslationRequest : IJsonModel<CreateTranslationRequest>
+    public partial class AudioTranslationOptions : IJsonModel<AudioTranslationOptions>
     {
-        void IJsonModel<CreateTranslationRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AudioTranslationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AudioTranslationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateTranslationRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AudioTranslationOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -33,7 +33,7 @@ namespace OpenAI.Internal.Models
             if (Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
-                writer.WriteStringValue(ResponseFormat.Value.ToString());
+                writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
             }
             if (Optional.IsDefined(Temperature))
             {
@@ -58,19 +58,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateTranslationRequest IJsonModel<CreateTranslationRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AudioTranslationOptions IJsonModel<AudioTranslationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AudioTranslationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateTranslationRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AudioTranslationOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateTranslationRequest(document.RootElement, options);
+            return DeserializeAudioTranslationOptions(document.RootElement, options);
         }
 
-        internal static CreateTranslationRequest DeserializeCreateTranslationRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AudioTranslationOptions DeserializeAudioTranslationOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
@@ -81,7 +81,7 @@ namespace OpenAI.Internal.Models
             BinaryData file = default;
             CreateTranslationRequestModel model = default;
             string prompt = default;
-            CreateTranslationRequestResponseFormat? responseFormat = default;
+            AudioTranslationFormat? responseFormat = default;
             double? temperature = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -108,7 +108,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    responseFormat = new CreateTranslationRequestResponseFormat(property.Value.GetString());
+                    responseFormat = property.Value.GetString().ToAudioTranslationFormat();
                     continue;
                 }
                 if (property.NameEquals("temperature"u8))
@@ -126,7 +126,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateTranslationRequest(
+            return new AudioTranslationOptions(
                 file,
                 model,
                 prompt,
@@ -135,43 +135,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateTranslationRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AudioTranslationOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AudioTranslationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateTranslationRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AudioTranslationOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateTranslationRequest IPersistableModel<CreateTranslationRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AudioTranslationOptions IPersistableModel<AudioTranslationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateTranslationRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AudioTranslationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateTranslationRequest(document.RootElement, options);
+                        return DeserializeAudioTranslationOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateTranslationRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AudioTranslationOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateTranslationRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AudioTranslationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateTranslationRequest FromResponse(PipelineResponse response)
+        internal static AudioTranslationOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateTranslationRequest(document.RootElement);
+            return DeserializeAudioTranslationOptions(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>

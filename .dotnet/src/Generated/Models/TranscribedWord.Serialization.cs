@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
-    internal partial class TranscriptionWord : IJsonModel<TranscriptionWord>
+    public partial struct TranscribedWord : IJsonModel<TranscribedWord>, IJsonModel<object>
     {
-        void IJsonModel<TranscriptionWord>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<TranscribedWord>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionWord>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(TranscriptionWord)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(TranscribedWord)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -45,26 +45,26 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        TranscriptionWord IJsonModel<TranscriptionWord>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        TranscribedWord IJsonModel<TranscribedWord>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionWord>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(TranscriptionWord)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(TranscribedWord)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeTranscriptionWord(document.RootElement, options);
+            return DeserializeTranscribedWord(document.RootElement, options);
         }
 
-        internal static TranscriptionWord DeserializeTranscriptionWord(JsonElement element, ModelReaderWriterOptions options = null)
+        void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options) => ((IJsonModel<TranscribedWord>)this).Write(writer, options);
+
+        object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => ((IJsonModel<TranscribedWord>)this).Create(ref reader, options);
+
+        internal static TranscribedWord DeserializeTranscribedWord(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= new ModelReaderWriterOptions("W");
 
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             string word = default;
             TimeSpan start = default;
             TimeSpan end = default;
@@ -93,50 +93,56 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new TranscriptionWord(word, start, end, serializedAdditionalRawData);
+            return new TranscribedWord(word, start, end, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<TranscriptionWord>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<TranscribedWord>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionWord>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(TranscriptionWord)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(TranscribedWord)} does not support writing '{options.Format}' format.");
             }
         }
 
-        TranscriptionWord IPersistableModel<TranscriptionWord>.Create(BinaryData data, ModelReaderWriterOptions options)
+        TranscribedWord IPersistableModel<TranscribedWord>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<TranscriptionWord>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeTranscriptionWord(document.RootElement, options);
+                        return DeserializeTranscribedWord(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(TranscriptionWord)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(TranscribedWord)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<TranscriptionWord>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<TranscribedWord>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+
+        BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options) => ((IPersistableModel<TranscribedWord>)this).Write(options);
+
+        object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options) => ((IPersistableModel<TranscribedWord>)this).Create(data, options);
+
+        string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options) => ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options);
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static TranscriptionWord FromResponse(PipelineResponse response)
+        internal static TranscribedWord FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeTranscriptionWord(document.RootElement);
+            return DeserializeTranscribedWord(document.RootElement);
         }
 
         /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        internal BinaryContent ToBinaryBody()
         {
             return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
         }

@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
     /// <summary> The TranscriptionWord. </summary>
-    internal partial class TranscriptionWord
+    public readonly partial struct TranscribedWord
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,14 +40,14 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="TranscriptionWord"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="TranscribedWord"/>. </summary>
         /// <param name="word"> The text content of the word. </param>
         /// <param name="start"> Start time of the word in seconds. </param>
         /// <param name="end"> End time of the word in seconds. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="word"/> is null. </exception>
-        internal TranscriptionWord(string word, TimeSpan start, TimeSpan end)
+        internal TranscribedWord(string word, TimeSpan start, TimeSpan end)
         {
             Argument.AssertNotNull(word, nameof(word));
 
@@ -56,12 +56,12 @@ namespace OpenAI.Internal.Models
             End = end;
         }
 
-        /// <summary> Initializes a new instance of <see cref="TranscriptionWord"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="TranscribedWord"/>. </summary>
         /// <param name="word"> The text content of the word. </param>
         /// <param name="start"> Start time of the word in seconds. </param>
         /// <param name="end"> End time of the word in seconds. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal TranscriptionWord(string word, TimeSpan start, TimeSpan end, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal TranscribedWord(string word, TimeSpan start, TimeSpan end, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Word = word;
             Start = start;
@@ -69,8 +69,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="TranscriptionWord"/> for deserialization. </summary>
-        internal TranscriptionWord()
+        /// <summary> Initializes a new instance of <see cref="TranscribedWord"/> for deserialization. </summary>
+        public TranscribedWord()
         {
         }
 

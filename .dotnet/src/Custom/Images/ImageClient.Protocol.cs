@@ -86,6 +86,7 @@ public partial class ImageClient
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     // - Parametrized the Content-Type header.
+    // - Added "contentType" parameter.
     /// <summary>
     /// [Protocol Method] Creates an edited or extended image given an original image and a prompt.
     /// <list type="bullet">
@@ -123,6 +124,7 @@ public partial class ImageClient
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     // - Parametrized the Content-Type header.
+    // - Added "contentType" parameter.
     /// <summary>
     /// [Protocol Method] Creates an edited or extended image given an original image and a prompt.
     /// <list type="bullet">
@@ -160,6 +162,7 @@ public partial class ImageClient
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     // - Parametrized the Content-Type header.
+    // - Added "contentType" parameter.
     /// <summary>
     /// [Protocol Method] Creates an edited or extended image given an original image and a prompt.
     /// <list type="bullet">
@@ -197,6 +200,7 @@ public partial class ImageClient
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     // - Parametrized the Content-Type header.
+    // - Added "contentType" parameter.
     /// <summary>
     /// [Protocol Method] Creates an edited or extended image given an original image and a prompt.
     /// <list type="bullet">

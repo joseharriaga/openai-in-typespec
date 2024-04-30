@@ -17,7 +17,7 @@ namespace OpenAI.Samples
             string input = "The sun rises in the east and sets in the west. This simple fact has been"
                 + " observed by humans for thousands of years.";
 
-            BinaryData speech = await client.GenerateSpeechFromTextAsync(input, TextToSpeechVoice.Alloy);
+            BinaryData speech = await client.GenerateSpeechFromTextAsync(input, GeneratedSpeechVoice.Alloy);
 
             using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.mp3");
             speech.ToStream().CopyTo(stream);

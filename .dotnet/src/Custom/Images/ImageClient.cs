@@ -11,6 +11,7 @@ namespace OpenAI.Images;
 
 /// <summary> The service client for OpenAI image operations. </summary>
 [CodeGenClient("Images")]
+[CodeGenSuppress("ImageClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateImage", typeof(ImageGenerationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateImageEditAsync", typeof(ImageEditOptions), typeof(CancellationToken))]
@@ -401,7 +402,7 @@ public partial class ImageClient
     #endregion
 
     // CUSTOM: Parametrized the Content-Type header.
-    private PipelineMessage CreateCreateImageEditRequest(BinaryContent content, string contentType, RequestOptions options)
+    internal PipelineMessage CreateCreateImageEditRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -422,7 +423,7 @@ public partial class ImageClient
     }
 
     // CUSTOM: Parametrized the Content-Type header.
-    private PipelineMessage CreateCreateImageVariationRequest(BinaryContent content, string contentType, RequestOptions options)
+    internal PipelineMessage CreateCreateImageVariationRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

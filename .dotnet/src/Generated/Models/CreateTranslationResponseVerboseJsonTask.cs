@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Audio
 {
     /// <summary> The CreateTranslationResponseVerboseJson_task. </summary>
     internal readonly partial struct CreateTranslationResponseVerboseJsonTask : IEquatable<CreateTranslationResponseVerboseJsonTask>

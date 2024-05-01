@@ -15,6 +15,7 @@ function Edit-GeneratedOpenAIClient {
     # $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
+     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
@@ -34,7 +35,8 @@ function Edit-GeneratedSubclients {
         "AudioClient.cs",
         "EmbeddingClient.cs",
         "FineTuningClient.cs",
-        "ImageClient.cs"
+        "ImageClient.cs",
+        "LegacyCompletionClient.cs"
     )
 
     foreach ($file in $files) {
@@ -138,7 +140,21 @@ function Edit-GeneratedModels {
         "ImageVariationOptions.cs",
         "ImageVariationOptions.Serialization.cs",
         "ImageVariationOptionsResponseFormat.cs",
-        "ImageVariationOptionsSize.cs"
+        "ImageVariationOptionsSize.cs",
+
+        "CreateCompletionRequest.cs",
+        "CreateCompletionRequest.Serialization.cs",
+        "CreateCompletionRequestModel.cs",
+        "CreateCompletionResponse.cs",
+        "CreateCompletionResponse.Serialization.cs",
+        "CreateCompletionResponseChoice.cs",
+        "CreateCompletionResponseChoice.Serialization.cs",
+        "CreateCompletionResponseChoiceFinishReason.cs",
+        "CreateCompletionResponseChoiceLogprobs.cs",
+        "CreateCompletionResponseChoiceLogprobs.Serialization.cs",
+        "CreateCompletionResponseObject.cs",
+        "CompletionUsage.cs",
+        "CompletionUsage.Serialization.cs"
     )
 
     foreach ($file in $files) {

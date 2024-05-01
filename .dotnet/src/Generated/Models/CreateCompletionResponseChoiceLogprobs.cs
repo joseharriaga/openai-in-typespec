@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.LegacyCompletions
 {
     /// <summary> The CreateCompletionResponseChoiceLogprobs. </summary>
     internal partial class CreateCompletionResponseChoiceLogprobs

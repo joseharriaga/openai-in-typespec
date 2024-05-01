@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.LegacyCompletions
 {
     /// <summary>
     /// Represents a completion response from the API. Note: both the streamed and non-streamed response

@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.LegacyCompletions
 {
     /// <summary> The CreateCompletionResponseChoice. </summary>
     internal partial class CreateCompletionResponseChoice

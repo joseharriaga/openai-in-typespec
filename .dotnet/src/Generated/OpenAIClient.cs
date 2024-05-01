@@ -8,6 +8,7 @@ using System.ClientModel.Primitives;
 using System.Threading;
 using OpenAI.Audio;
 using OpenAI.Embeddings;
+using OpenAI.FineTuning;
 using OpenAI.Images;
 
 namespace OpenAI
@@ -33,7 +34,6 @@ namespace OpenAI
         private OpenAI.Internal.Chat _cachedChat;
         private OpenAI.Internal.Completions _cachedCompletions;
         private OpenAI.Internal.Files _cachedFiles;
-        private OpenAI.Internal.FineTuning _cachedFineTuning;
         private OpenAI.Internal.Messages _cachedMessages;
         private OpenAI.Internal.ModelsOps _cachedModelsOps;
         private OpenAI.Internal.Moderations _cachedModerations;
@@ -62,12 +62,6 @@ namespace OpenAI
         internal OpenAI.Internal.Files GetFilesClient()
         {
             return Volatile.Read(ref _cachedFiles) ?? Interlocked.CompareExchange(ref _cachedFiles, new OpenAI.Internal.Files(_pipeline, _keyCredential, _endpoint), null) ?? _cachedFiles;
-        }
-
-        /// <summary> Initializes a new instance of FineTuning. </summary>
-        internal OpenAI.Internal.FineTuning GetFineTuningClient()
-        {
-            return Volatile.Read(ref _cachedFineTuning) ?? Interlocked.CompareExchange(ref _cachedFineTuning, new OpenAI.Internal.FineTuning(_pipeline, _keyCredential, _endpoint), null) ?? _cachedFineTuning;
         }
 
         /// <summary> Initializes a new instance of Messages. </summary>

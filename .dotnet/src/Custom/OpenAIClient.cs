@@ -3,7 +3,7 @@ using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Files;
-using OpenAI.FineTuningManagement;
+using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
 using OpenAI.ModelManagement;
@@ -23,6 +23,7 @@ namespace OpenAI;
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
 [CodeGenSuppress("GetAudioClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
+[CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
 public partial class OpenAIClient
 {
@@ -117,15 +118,15 @@ public partial class OpenAIClient
     public virtual FileClient GetFileClient() => new(_keyCredential, _cachedOptions);
 
     /// <summary>
-    /// Gets a new instance of <see cref="FineTuningManagementClient"/> that reuses the client configuration details provided to
+    /// Gets a new instance of <see cref="FineTuningClient"/> that reuses the client configuration details provided to
     /// the <see cref="OpenAIClient"/> instance.
     /// </summary>
     /// <remarks>
-    /// This method is functionally equivalent to using the <see cref="FineTuningManagementClient"/> constructor directly with
+    /// This method is functionally equivalent to using the <see cref="FineTuningClient"/> constructor directly with
     /// the same configuration details.
     /// </remarks>
-    /// <returns> A new <see cref="FineTuningManagementClient"/>. </returns>
-    public virtual FineTuningManagementClient GetFineTuningManagementClient() => new(_keyCredential, _cachedOptions);
+    /// <returns> A new <see cref="FineTuningClient"/>. </returns>
+    public virtual FineTuningClient GetFineTuningClient() => new(_pipeline, _keyCredential, _endpoint);
 
     /// <summary>
     /// Gets a new instance of <see cref="ImageClient"/> that reuses the client configuration details provided to

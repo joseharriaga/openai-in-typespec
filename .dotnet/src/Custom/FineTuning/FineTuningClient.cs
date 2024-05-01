@@ -1,5 +1,4 @@
-﻿using OpenAI.Models;
-using System.Threading;
+﻿using System.Threading;
 
 namespace OpenAI.FineTuning;
 

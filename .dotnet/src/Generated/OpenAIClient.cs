@@ -10,6 +10,7 @@ using OpenAI.Audio;
 using OpenAI.Embeddings;
 using OpenAI.FineTuning;
 using OpenAI.Images;
+using OpenAI.LegacyCompletions;
 
 namespace OpenAI
 {
@@ -32,7 +33,6 @@ namespace OpenAI
         }
         private OpenAI.Internal.Assistants _cachedAssistants;
         private OpenAI.Internal.Chat _cachedChat;
-        private OpenAI.Internal.Completions _cachedCompletions;
         private OpenAI.Internal.Files _cachedFiles;
         private OpenAI.Internal.Messages _cachedMessages;
         private OpenAI.Internal.ModelsOps _cachedModelsOps;
@@ -50,12 +50,6 @@ namespace OpenAI
         internal OpenAI.Internal.Chat GetChatClient()
         {
             return Volatile.Read(ref _cachedChat) ?? Interlocked.CompareExchange(ref _cachedChat, new OpenAI.Internal.Chat(_pipeline, _keyCredential, _endpoint), null) ?? _cachedChat;
-        }
-
-        /// <summary> Initializes a new instance of Completions. </summary>
-        internal OpenAI.Internal.Completions GetCompletionsClient()
-        {
-            return Volatile.Read(ref _cachedCompletions) ?? Interlocked.CompareExchange(ref _cachedCompletions, new OpenAI.Internal.Completions(_pipeline, _keyCredential, _endpoint), null) ?? _cachedCompletions;
         }
 
         /// <summary> Initializes a new instance of Files. </summary>

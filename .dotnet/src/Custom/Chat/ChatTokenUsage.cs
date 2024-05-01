@@ -12,7 +12,7 @@ public class ChatTokenUsage
     /// <inheritdoc cref="Internal.Models.CompletionUsage.TotalTokens"/>
     public int TotalTokens { get; }
 
-    internal ChatTokenUsage(Internal.Models.CompletionUsage internalUsage)
+    internal ChatTokenUsage(OpenAI.LegacyCompletions.CompletionUsage internalUsage)
     {
         InputTokens = (int)internalUsage.PromptTokens;
         OutputTokens = (int)internalUsage.CompletionTokens;

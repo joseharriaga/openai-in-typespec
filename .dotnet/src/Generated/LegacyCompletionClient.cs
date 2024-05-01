@@ -7,13 +7,12 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
 using System.Threading.Tasks;
-using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal
+namespace OpenAI.LegacyCompletions
 {
     // Data plane generated sub-client.
-    /// <summary> The Completions sub-client. </summary>
-    internal partial class Completions
+    /// <summary> The LegacyCompletion sub-client. </summary>
+    internal partial class LegacyCompletionClient
     {
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
@@ -24,16 +23,16 @@ namespace OpenAI.Internal
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of Completions for mocking. </summary>
-        protected Completions()
+        /// <summary> Initializes a new instance of LegacyCompletionClient for mocking. </summary>
+        protected LegacyCompletionClient()
         {
         }
 
-        /// <summary> Initializes a new instance of Completions. </summary>
+        /// <summary> Initializes a new instance of LegacyCompletionClient. </summary>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="keyCredential"> The key credential to copy. </param>
         /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Completions(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
+        internal LegacyCompletionClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
         {
             _pipeline = pipeline;
             _keyCredential = keyCredential;

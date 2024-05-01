@@ -25,6 +25,7 @@ namespace OpenAI;
 [CodeGenSuppress("GetEmbeddingClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
+[CodeGenSuppress("GetLegacyCompletionClientClient")]
 public partial class OpenAIClient
 {
     internal static readonly string s_OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";

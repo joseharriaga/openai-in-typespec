@@ -1,11 +1,9 @@
-﻿using Azure.Core;
-using OpenAI;
-using OpenAI.Chat;
-using System.ClientModel;
-using System.ClientModel.Primitives;
-using System.Net;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 
-namespace Azure.AI.OpenAI.Staging.Chat;
+using OpenAI;
+
+namespace Azure.AI.OpenAI.Staging;
 
 public partial class AzureOpenAIClientOptions : OpenAIClientOptions
 {

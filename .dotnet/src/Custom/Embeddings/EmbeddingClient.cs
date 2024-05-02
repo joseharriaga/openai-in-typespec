@@ -15,7 +15,8 @@ namespace OpenAI.Embeddings;
 [CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions), typeof(CancellationToken))]
 public partial class EmbeddingClient
 {
-    private readonly string _model;
+    protected readonly string _model;
+    protected readonly Uri _endpoint;
 
     // CUSTOM:
     // - Added `model` parameter.
@@ -42,7 +43,7 @@ public partial class EmbeddingClient
     /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="credential"> The key credential to copy. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>
-    internal EmbeddingClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
+    protected internal EmbeddingClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
     {
         _pipeline = pipeline;
         _model = model;

@@ -2,9 +2,11 @@
 // Licensed under the MIT License.
 
 using Azure.AI.OpenAI.Staging.Chat;
+using Azure.AI.OpenAI.Staging.Embeddings;
 using Azure.Core;
 using OpenAI;
 using OpenAI.Chat;
+using OpenAI.Embeddings;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
@@ -19,6 +21,15 @@ public partial class AzureOpenAIClient : OpenAIClient
     public override ChatClient GetChatClient(string deploymentName)
     {
         return new AzureChatClient(
+            deploymentName,
+            Pipeline,
+            _cachedOptions?.Endpoint ?? GetConfiguredEndpoint(),
+            _cachedOptions as AzureOpenAIClientOptions);
+    }
+
+    public override EmbeddingClient GetEmbeddingClient(string deploymentName)
+    {
+        return new AzureEmbeddingClient(
             deploymentName,
             Pipeline,
             _cachedOptions?.Endpoint ?? GetConfiguredEndpoint(),

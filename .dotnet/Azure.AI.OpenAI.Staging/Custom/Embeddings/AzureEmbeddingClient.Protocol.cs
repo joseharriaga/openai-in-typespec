@@ -2,41 +2,40 @@
 // Licensed under the MIT License.
 
 using OpenAI;
-using OpenAI.Chat;
+using OpenAI.Embeddings;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
 using System.Text;
 
-namespace Azure.AI.OpenAI.Staging.Chat;
+namespace Azure.AI.OpenAI.Staging.Embeddings;
 
-public partial class AzureChatClient : ChatClient
+public partial class AzureEmbeddingClient : EmbeddingClient
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override ClientResult CompleteChat(BinaryContent content, RequestOptions options = null)
+    public override ClientResult GenerateEmbedding(BinaryContent content, RequestOptions options = null)
     {
-        using PipelineMessage message = CreateChatCompletionPipelineMessage(content, options);
+        using PipelineMessage message = CreateEmbeddingPipelineMessage(content, options);
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null)
     {
-        using PipelineMessage message = CreateChatCompletionPipelineMessage(content, options);
+        using PipelineMessage message = CreateEmbeddingPipelineMessage(content, options);
         PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         return ClientResult.FromResponse(response);
     }
 
-    private PipelineMessage CreateChatCompletionPipelineMessage(BinaryContent content, RequestOptions options = null, bool bufferResponse = true)
+    private PipelineMessage CreateEmbeddingPipelineMessage(BinaryContent content, RequestOptions options = null)
     {
         PipelineMessage message = Pipeline.CreateMessage();
         message.ResponseClassifier = PipelineClassifiers.PipelineMessageClassifier200;
-        message.BufferResponse = bufferResponse;
         PipelineRequest request = message.Request;
         request.Method = "POST";
         UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
         StringBuilder path = new();
-        path.Append($"openai/deployments/{_model}/chat/completions");
+        path.Append($"openai/deployments/{_model}/embeddings");
         uriBuilder.Path += path.ToString();
         uriBuilder.Query += $"?api-version={_apiVersion}";
         request.Uri = uriBuilder.Uri;

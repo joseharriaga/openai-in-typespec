@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenAI.Internal.Models;
 
@@ -52,12 +51,13 @@ namespace OpenAI.Internal
         /// </summary>
         /// <param name="file"> The <see cref="CreateFileRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+        /// <remarks> Create file. </remarks>
         public virtual async Task<ClientResult<OpenAIFile>> CreateFileAsync(CreateFileRequest file)
         {
             Argument.AssertNotNull(file, nameof(file));
 
-            using BinaryContent content = file.ToBinaryBody();
-            ClientResult result = await CreateFileAsync(content, DefaultRequestContext).ConfigureAwait(false);
+            using MultipartFormDataBinaryContent content = file.ToMultipartBinaryBody();
+            ClientResult result = await CreateFileAsync(content, content.ContentType, null).ConfigureAwait(false);
             return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -73,12 +73,13 @@ namespace OpenAI.Internal
         /// </summary>
         /// <param name="file"> The <see cref="CreateFileRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+        /// <remarks> Create file. </remarks>
         public virtual ClientResult<OpenAIFile> CreateFile(CreateFileRequest file)
         {
             Argument.AssertNotNull(file, nameof(file));
 
-            using BinaryContent content = file.ToBinaryBody();
-            ClientResult result = CreateFile(content, DefaultRequestContext);
+            using MultipartFormDataBinaryContent content = file.ToMultipartBinaryBody();
+            ClientResult result = CreateFile(content, content.ContentType, null);
             return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -105,15 +106,16 @@ namespace OpenAI.Internal
         /// </list>
         /// </summary>
         /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="contentType"> The <see cref="string"/> to use. Allowed values: "multipart/form-data". </param>
         /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
         /// <returns> The response returned from the service. </returns>
-        public virtual async Task<ClientResult> CreateFileAsync(BinaryContent content, RequestOptions options = null)
+        public virtual async Task<ClientResult> CreateFileAsync(BinaryContent content, string contentType, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateCreateFileRequest(content, options);
+            using PipelineMessage message = CreateCreateFileRequest(content, contentType, options);
             return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
@@ -140,31 +142,34 @@ namespace OpenAI.Internal
         /// </list>
         /// </summary>
         /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="contentType"> The <see cref="string"/> to use. Allowed values: "multipart/form-data". </param>
         /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
         /// <returns> The response returned from the service. </returns>
-        public virtual ClientResult CreateFile(BinaryContent content, RequestOptions options = null)
+        public virtual ClientResult CreateFile(BinaryContent content, string contentType, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateCreateFileRequest(content, options);
+            using PipelineMessage message = CreateCreateFileRequest(content, contentType, options);
             return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
         /// <summary> Returns a list of files that belong to the user's organization. </summary>
         /// <param name="purpose"> Only return files with the given purpose. </param>
+        /// <remarks> List files. </remarks>
         public virtual async Task<ClientResult<ListFilesResponse>> GetFilesAsync(string purpose = null)
         {
-            ClientResult result = await GetFilesAsync(purpose, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetFilesAsync(purpose, null).ConfigureAwait(false);
             return ClientResult.FromValue(ListFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Returns a list of files that belong to the user's organization. </summary>
         /// <param name="purpose"> Only return files with the given purpose. </param>
+        /// <remarks> List files. </remarks>
         public virtual ClientResult<ListFilesResponse> GetFiles(string purpose = null)
         {
-            ClientResult result = GetFiles(purpose, DefaultRequestContext);
+            ClientResult result = GetFiles(purpose, null);
             return ClientResult.FromValue(ListFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -222,11 +227,12 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file to use for this request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Retrieve file. </remarks>
         public virtual async Task<ClientResult<OpenAIFile>> RetrieveFileAsync(string fileId)
         {
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = await RetrieveFileAsync(fileId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await RetrieveFileAsync(fileId, null).ConfigureAwait(false);
             return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -234,11 +240,12 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file to use for this request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Retrieve file. </remarks>
         public virtual ClientResult<OpenAIFile> RetrieveFile(string fileId)
         {
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = RetrieveFile(fileId, DefaultRequestContext);
+            ClientResult result = RetrieveFile(fileId, null);
             return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -304,11 +311,12 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file to use for this request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete file. </remarks>
         public virtual async Task<ClientResult<DeleteFileResponse>> DeleteFileAsync(string fileId)
         {
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = await DeleteFileAsync(fileId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await DeleteFileAsync(fileId, null).ConfigureAwait(false);
             return ClientResult.FromValue(DeleteFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -316,11 +324,12 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file to use for this request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete file. </remarks>
         public virtual ClientResult<DeleteFileResponse> DeleteFile(string fileId)
         {
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = DeleteFile(fileId, DefaultRequestContext);
+            ClientResult result = DeleteFile(fileId, null);
             return ClientResult.FromValue(DeleteFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -386,11 +395,12 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file to use for this request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Download file. </remarks>
         public virtual async Task<ClientResult<string>> DownloadFileAsync(string fileId)
         {
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = await DownloadFileAsync(fileId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await DownloadFileAsync(fileId, null).ConfigureAwait(false);
             return ClientResult.FromValue(result.GetRawResponse().Content.ToObjectFromJson<string>(), result.GetRawResponse());
         }
 
@@ -398,11 +408,12 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file to use for this request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Download file. </remarks>
         public virtual ClientResult<string> DownloadFile(string fileId)
         {
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = DownloadFile(fileId, DefaultRequestContext);
+            ClientResult result = DownloadFile(fileId, null);
             return ClientResult.FromValue(result.GetRawResponse().Content.ToObjectFromJson<string>(), result.GetRawResponse());
         }
 
@@ -464,7 +475,7 @@ namespace OpenAI.Internal
             return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateCreateFileRequest(BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateCreateFileRequest(BinaryContent content, string contentType, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -475,12 +486,9 @@ namespace OpenAI.Internal
             uri.AppendPath("/files", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("content-type", "multipart/form-data");
+            request.Headers.Set("content-type", contentType);
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -499,10 +507,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -518,10 +523,7 @@ namespace OpenAI.Internal
             uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -537,10 +539,7 @@ namespace OpenAI.Internal
             uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -557,14 +556,9 @@ namespace OpenAI.Internal
             uri.AppendPath("/content", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
-
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });

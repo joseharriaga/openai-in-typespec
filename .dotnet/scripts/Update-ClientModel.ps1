@@ -8,44 +8,15 @@ function Update-Subclients {
 
         Write-Output "Editing $($file.FullName)"
 
-        # Delete FromCancellationToken
-        $content = $content -creplace "(?s)\s+internal static RequestOptions FromCancellationToken\(CancellationToken cancellationToken = default\).*?return new RequestOptions\(\) \{ CancellationToken = cancellationToken \};.*?\}", ""
-
-        # # Modify convenience methods
-        $content = $content -creplace "\s+\/\/\/ <param name=`"cancellationToken`"> The cancellation token to use. </param>", ""
-        $content = $content -creplace "\(CancellationToken cancellationToken = default\)", "()"
-        $content = $content -creplace ", CancellationToken cancellationToken = default\)", ")"
-        $content = $content -creplace "RequestOptions options = FromCancellationToken\(cancellationToken\);\s+", ""
-        $content = $content -creplace "ClientResult result = await (?<method>\w+)\(options\)\.ConfigureAwait\(false\);", "ClientResult result = await `${method}(DefaultRequestContext).ConfigureAwait(false);"
-        $content = $content -creplace "ClientResult result = (?<method>\w+)\(options\);", "ClientResult result = `${method}(DefaultRequestContext);"
-        $content = $content -creplace "ClientResult result = await (?<method>\w+)\((?<params>[(\w+)(\?.ToString\(\)*)(,\s\w+)]*), options\)\.ConfigureAwait\(false\);", "ClientResult result = await `${method}(`${params}, DefaultRequestContext).ConfigureAwait(false);"
-        $content = $content -creplace "ClientResult result = (?<method>\w+)\((?<params>[(\w+)(\?.ToString\(\)*)(,\s\w+)]*), options\);", "ClientResult result = `${method}(`${params}, DefaultRequestContext);"
-
-        # Modify protocol methods
-        $content = $content -creplace "\/\/\/ Please try the simpler <see cref=`"(?<method>\w+)\(CancellationToken\)`"/> convenience overload with strongly typed models first.", "/// Please try the simpler <see cref=`"`${method}()`"/> convenience overload with strongly typed models first."
-        $content = $content -creplace "\/\/\/ Please try the simpler <see cref=`"(?<method>\w+)\((?<params>[(\w+)(\?*)(,\s\w+)]*),CancellationToken\)`"/> convenience overload with strongly typed models first.", "/// Please try the simpler <see cref=`"`${method}(`${params})`"/> convenience overload with strongly typed models first."
-        $content = $content -creplace "\/\/\/ <exception cref=`"MessageFailedException`">", "/// <exception cref=`"ClientResultException`">"
+        $content = $content -creplace "message\.Apply\(options\);", "if (options != null) { message.Apply(options); }"
 
         $content | Set-Content -Path $file.FullName -NoNewline
     }
 }
 
-function Update-InternalClientUriBuilder {
+function Remove-Utf8JsonBinaryContent {
     $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath "src\Generated\Internal"
-    $file = Get-ChildItem -Path $directory -Filter "ClientUriBuilder.cs"
-    $content = Get-Content -Path $file -Raw
-
-    Write-Output "Editing $($file.FullName)"
-
-    $content = $content -creplace "value = value\.Substring\(1\);", "// value = value.Substring(1);"
-
-    $content | Set-Content -Path $file.FullName -NoNewline
-}
-
-function Remove-Utf8JsonRequestBody {
-    $root = Split-Path $PSScriptRoot -Parent
-    $filePath = Join-Path -Path $root -ChildPath "src\Generated\Internal\Utf8JsonRequestBody.cs"
+    $filePath = Join-Path -Path $root -ChildPath "src\Generated\Internal\Utf8JsonBinaryContent.cs"
     $file = Get-ChildItem -Path $filePath
 
     Write-Output "Removing $($file.FullName)"
@@ -53,9 +24,9 @@ function Remove-Utf8JsonRequestBody {
     Remove-Item $file
 }
 
-function Remove-RequestContentHelper {
+function Remove-BinaryContentHelper {
     $root = Split-Path $PSScriptRoot -Parent
-    $filePath = Join-Path -Path $root -ChildPath "src\Generated\Internal\RequestContentHelper.cs"
+    $filePath = Join-Path -Path $root -ChildPath "src\Generated\Internal\BinaryContentHelper.cs"
     $file = Get-ChildItem -Path $filePath
 
     Write-Output "Removing $($file.FullName)"
@@ -64,6 +35,5 @@ function Remove-RequestContentHelper {
 }
 
 Update-Subclients
-Update-InternalClientUriBuilder
-Remove-Utf8JsonRequestBody
-Remove-RequestContentHelper
+Remove-Utf8JsonBinaryContent
+Remove-BinaryContentHelper

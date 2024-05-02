@@ -9,10 +9,10 @@ namespace OpenAI.Images;
 
 [CodeGenSuppress("CreateImageAsync", typeof(BinaryContent), typeof(RequestOptions))]
 [CodeGenSuppress("CreateImage", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateImageEditAsync", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateImageEdit", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateImageVariationAsync", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateImageVariation", typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("CreateImageEditAsync", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CreateImageEdit", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CreateImageVariationAsync", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CreateImageVariation", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
 public partial class ImageClient
 {
     // CUSTOM:

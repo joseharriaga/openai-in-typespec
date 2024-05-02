@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenAI.Internal.Models;
 
@@ -43,24 +42,26 @@ namespace OpenAI.Internal
         /// <summary> Creates a model response for the given chat conversation. </summary>
         /// <param name="createChatCompletionRequest"> The <see cref="CreateChatCompletionRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="createChatCompletionRequest"/> is null. </exception>
+        /// <remarks> Create chat completion. </remarks>
         public virtual async Task<ClientResult<CreateChatCompletionResponse>> CreateChatCompletionAsync(CreateChatCompletionRequest createChatCompletionRequest)
         {
             Argument.AssertNotNull(createChatCompletionRequest, nameof(createChatCompletionRequest));
 
-            using BinaryContent content = createChatCompletionRequest.ToBinaryBody();
-            ClientResult result = await CreateChatCompletionAsync(content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = createChatCompletionRequest.ToBinaryContent();
+            ClientResult result = await CreateChatCompletionAsync(content, null).ConfigureAwait(false);
             return ClientResult.FromValue(CreateChatCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Creates a model response for the given chat conversation. </summary>
         /// <param name="createChatCompletionRequest"> The <see cref="CreateChatCompletionRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="createChatCompletionRequest"/> is null. </exception>
+        /// <remarks> Create chat completion. </remarks>
         public virtual ClientResult<CreateChatCompletionResponse> CreateChatCompletion(CreateChatCompletionRequest createChatCompletionRequest)
         {
             Argument.AssertNotNull(createChatCompletionRequest, nameof(createChatCompletionRequest));
 
-            using BinaryContent content = createChatCompletionRequest.ToBinaryBody();
-            ClientResult result = CreateChatCompletion(content, DefaultRequestContext);
+            using BinaryContent content = createChatCompletionRequest.ToBinaryContent();
+            ClientResult result = CreateChatCompletion(content, null);
             return ClientResult.FromValue(CreateChatCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -133,14 +134,9 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
-
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });

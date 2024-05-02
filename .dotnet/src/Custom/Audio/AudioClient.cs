@@ -1,9 +1,7 @@
-using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.Audio;
@@ -11,14 +9,12 @@ namespace OpenAI.Audio;
 /// <summary> The service client for OpenAI audio operations. </summary>
 [CodeGenClient("Audio")]
 [CodeGenSuppress("AudioClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranscriptionAsync", typeof(AudioTranscriptionOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranscription", typeof(AudioTranscriptionOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranslationAsync", typeof(AudioTranslationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranslation", typeof(AudioTranslationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateCreateTranscriptionRequest", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateCreateTranslationRequest", typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions))]
+[CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions))]
+[CodeGenSuppress("CreateTranscriptionAsync", typeof(AudioTranscriptionOptions))]
+[CodeGenSuppress("CreateTranscription", typeof(AudioTranscriptionOptions))]
+[CodeGenSuppress("CreateTranslationAsync", typeof(AudioTranslationOptions))]
+[CodeGenSuppress("CreateTranslation", typeof(AudioTranslationOptions))]
 public partial class AudioClient
 {
     private readonly string _model;
@@ -80,8 +76,8 @@ public partial class AudioClient
         options ??= new();
         CreateSpeechGenerationOptions(text, voice, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateSpeechFromTextAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateSpeechFromTextAsync(content, null).ConfigureAwait(false);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
@@ -107,8 +103,8 @@ public partial class AudioClient
         options ??= new();
         CreateSpeechGenerationOptions(text, voice, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateSpeechFromText(content, DefaultRequestContext);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateSpeechFromText(content, (RequestOptions)null);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
@@ -197,49 +193,7 @@ public partial class AudioClient
     }
 
     #endregion
-
-    // CUSTOM: Parametrized the Content-Type header.
-    internal PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, string contentType, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/audio/transcriptions", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("content-type", contentType);
-        request.Content = content;
-        if (options != null)
-        {
-            message.Apply(options);
-        }
-        return message;
-    }
-
-    // CUSTOM: Parametrized the Content-Type header.
-    internal PipelineMessage CreateCreateTranslationRequest(BinaryContent content, string contentType, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/audio/translations", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("content-type", contentType);
-        request.Content = content;
-        if (options != null)
-        {
-            message.Apply(options);
-        }
-        return message;
-    }
-
+    
     private void CreateSpeechGenerationOptions(string text, GeneratedSpeechVoice voice, ref SpeechGenerationOptions options)
     {
         options.Input = text;

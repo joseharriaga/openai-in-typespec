@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenAI.Internal.Models;
 
@@ -45,13 +44,14 @@ namespace OpenAI.Internal
         /// <param name="message"> The <see cref="CreateMessageRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="message"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Create message. </remarks>
         public virtual async Task<ClientResult<MessageObject>> CreateMessageAsync(string threadId, CreateMessageRequest message)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNull(message, nameof(message));
 
-            using BinaryContent content = message.ToBinaryBody();
-            ClientResult result = await CreateMessageAsync(threadId, content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = message.ToBinaryContent();
+            ClientResult result = await CreateMessageAsync(threadId, content, null).ConfigureAwait(false);
             return ClientResult.FromValue(MessageObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -60,13 +60,14 @@ namespace OpenAI.Internal
         /// <param name="message"> The <see cref="CreateMessageRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="message"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Create message. </remarks>
         public virtual ClientResult<MessageObject> CreateMessage(string threadId, CreateMessageRequest message)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNull(message, nameof(message));
 
-            using BinaryContent content = message.ToBinaryBody();
-            ClientResult result = CreateMessage(threadId, content, DefaultRequestContext);
+            using BinaryContent content = message.ToBinaryContent();
+            ClientResult result = CreateMessage(threadId, content, null);
             return ClientResult.FromValue(MessageObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -154,11 +155,12 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List messages. </remarks>
         public virtual async Task<ClientResult<ListMessagesResponse>> GetMessagesAsync(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-            ClientResult result = await GetMessagesAsync(threadId, limit, order?.ToString(), after, before, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetMessagesAsync(threadId, limit, order?.ToString(), after, before, null).ConfigureAwait(false);
             return ClientResult.FromValue(ListMessagesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -184,11 +186,12 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List messages. </remarks>
         public virtual ClientResult<ListMessagesResponse> GetMessages(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-            ClientResult result = GetMessages(threadId, limit, order?.ToString(), after, before, DefaultRequestContext);
+            ClientResult result = GetMessages(threadId, limit, order?.ToString(), after, before, null);
             return ClientResult.FromValue(ListMessagesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -202,7 +205,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessagesAsync(string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetMessagesAsync(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -249,7 +252,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessages(string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetMessages(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -291,12 +294,13 @@ namespace OpenAI.Internal
         /// <param name="messageId"> The ID of the message to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get message. </remarks>
         public virtual async Task<ClientResult<MessageObject>> GetMessageAsync(string threadId, string messageId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
-            ClientResult result = await GetMessageAsync(threadId, messageId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetMessageAsync(threadId, messageId, null).ConfigureAwait(false);
             return ClientResult.FromValue(MessageObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -305,12 +309,13 @@ namespace OpenAI.Internal
         /// <param name="messageId"> The ID of the message to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get message. </remarks>
         public virtual ClientResult<MessageObject> GetMessage(string threadId, string messageId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
-            ClientResult result = GetMessage(threadId, messageId, DefaultRequestContext);
+            ClientResult result = GetMessage(threadId, messageId, null);
             return ClientResult.FromValue(MessageObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -382,14 +387,15 @@ namespace OpenAI.Internal
         /// <param name="message"> The <see cref="ModifyMessageRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="message"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Modify message. </remarks>
         public virtual async Task<ClientResult<MessageObject>> ModifyMessageAsync(string threadId, string messageId, ModifyMessageRequest message)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
             Argument.AssertNotNull(message, nameof(message));
 
-            using BinaryContent content = message.ToBinaryBody();
-            ClientResult result = await ModifyMessageAsync(threadId, messageId, content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = message.ToBinaryContent();
+            ClientResult result = await ModifyMessageAsync(threadId, messageId, content, null).ConfigureAwait(false);
             return ClientResult.FromValue(MessageObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -399,14 +405,15 @@ namespace OpenAI.Internal
         /// <param name="message"> The <see cref="ModifyMessageRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="message"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Modify message. </remarks>
         public virtual ClientResult<MessageObject> ModifyMessage(string threadId, string messageId, ModifyMessageRequest message)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
             Argument.AssertNotNull(message, nameof(message));
 
-            using BinaryContent content = message.ToBinaryBody();
-            ClientResult result = ModifyMessage(threadId, messageId, content, DefaultRequestContext);
+            using BinaryContent content = message.ToBinaryContent();
+            ClientResult result = ModifyMessage(threadId, messageId, content, null);
             return ClientResult.FromValue(MessageObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -499,12 +506,13 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List message files. </remarks>
         public virtual async Task<ClientResult<ListMessageFilesResponse>> GetMessageFilesAsync(string threadId, string messageId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
-            ClientResult result = await GetMessageFilesAsync(threadId, messageId, limit, order?.ToString(), after, before, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetMessageFilesAsync(threadId, messageId, limit, order?.ToString(), after, before, null).ConfigureAwait(false);
             return ClientResult.FromValue(ListMessageFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -531,12 +539,13 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List message files. </remarks>
         public virtual ClientResult<ListMessageFilesResponse> GetMessageFiles(string threadId, string messageId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
-            ClientResult result = GetMessageFiles(threadId, messageId, limit, order?.ToString(), after, before, DefaultRequestContext);
+            ClientResult result = GetMessageFiles(threadId, messageId, limit, order?.ToString(), after, before, null);
             return ClientResult.FromValue(ListMessageFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -550,7 +559,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessageFilesAsync(string,string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetMessageFilesAsync(string,string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -599,7 +608,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessageFiles(string,string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetMessageFiles(string,string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -644,13 +653,14 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file being retrieved. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get message file. </remarks>
         public virtual async Task<ClientResult<MessageFileObject>> GetMessageFileAsync(string threadId, string messageId, string fileId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = await GetMessageFileAsync(threadId, messageId, fileId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetMessageFileAsync(threadId, messageId, fileId, null).ConfigureAwait(false);
             return ClientResult.FromValue(MessageFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -660,13 +670,14 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file being retrieved. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get message file. </remarks>
         public virtual ClientResult<MessageFileObject> GetMessageFile(string threadId, string messageId, string fileId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = GetMessageFile(threadId, messageId, fileId, DefaultRequestContext);
+            ClientResult result = GetMessageFile(threadId, messageId, fileId, null);
             return ClientResult.FromValue(MessageFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -751,10 +762,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -787,10 +795,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -808,10 +813,7 @@ namespace OpenAI.Internal
             uri.AppendPath(messageId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -831,10 +833,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -869,10 +868,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -892,14 +888,9 @@ namespace OpenAI.Internal
             uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
-
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });

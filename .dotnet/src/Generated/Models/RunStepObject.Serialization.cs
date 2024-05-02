@@ -49,7 +49,7 @@ namespace OpenAI.Internal.Models
             if (LastError != null)
             {
                 writer.WritePropertyName("last_error"u8);
-                writer.WriteObjectValue<RunStepObjectLastError>(LastError, options);
+                writer.WriteObjectValue(LastError, options);
             }
             else
             {
@@ -109,7 +109,7 @@ namespace OpenAI.Internal.Models
             if (Usage != null)
             {
                 writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue<RunStepCompletionUsage>(Usage, options);
+                writer.WriteObjectValue(Usage, options);
             }
             else
             {
@@ -147,7 +147,7 @@ namespace OpenAI.Internal.Models
 
         internal static RunStepObject DeserializeRunStepObject(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -358,10 +358,10 @@ namespace OpenAI.Internal.Models
             return DeserializeRunStepObject(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

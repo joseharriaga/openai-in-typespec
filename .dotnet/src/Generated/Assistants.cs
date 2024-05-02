@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenAI.Internal.Models;
 
@@ -43,24 +42,26 @@ namespace OpenAI.Internal
         /// <summary> Create an assistant with a model and instructions. </summary>
         /// <param name="assistant"> The <see cref="CreateAssistantRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistant"/> is null. </exception>
+        /// <remarks> Create assistant. </remarks>
         public virtual async Task<ClientResult<AssistantObject>> CreateAssistantAsync(CreateAssistantRequest assistant)
         {
             Argument.AssertNotNull(assistant, nameof(assistant));
 
-            using BinaryContent content = assistant.ToBinaryBody();
-            ClientResult result = await CreateAssistantAsync(content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = assistant.ToBinaryContent();
+            ClientResult result = await CreateAssistantAsync(content, null).ConfigureAwait(false);
             return ClientResult.FromValue(AssistantObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Create an assistant with a model and instructions. </summary>
         /// <param name="assistant"> The <see cref="CreateAssistantRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistant"/> is null. </exception>
+        /// <remarks> Create assistant. </remarks>
         public virtual ClientResult<AssistantObject> CreateAssistant(CreateAssistantRequest assistant)
         {
             Argument.AssertNotNull(assistant, nameof(assistant));
 
-            using BinaryContent content = assistant.ToBinaryBody();
-            ClientResult result = CreateAssistant(content, DefaultRequestContext);
+            using BinaryContent content = assistant.ToBinaryContent();
+            ClientResult result = CreateAssistant(content, null);
             return ClientResult.FromValue(AssistantObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -139,9 +140,10 @@ namespace OpenAI.Internal
         /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
         /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
         /// </param>
+        /// <remarks> List assistants. </remarks>
         public virtual async Task<ClientResult<ListAssistantsResponse>> GetAssistantsAsync(int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
-            ClientResult result = await GetAssistantsAsync(limit, order?.ToString(), after, before, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetAssistantsAsync(limit, order?.ToString(), after, before, null).ConfigureAwait(false);
             return ClientResult.FromValue(ListAssistantsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -164,9 +166,10 @@ namespace OpenAI.Internal
         /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
         /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
         /// </param>
+        /// <remarks> List assistants. </remarks>
         public virtual ClientResult<ListAssistantsResponse> GetAssistants(int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
-            ClientResult result = GetAssistants(limit, order?.ToString(), after, before, DefaultRequestContext);
+            ClientResult result = GetAssistants(limit, order?.ToString(), after, before, null);
             return ClientResult.FromValue(ListAssistantsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -180,7 +183,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetAssistantsAsync(int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetAssistantsAsync(int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -222,7 +225,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetAssistants(int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetAssistants(int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -258,11 +261,12 @@ namespace OpenAI.Internal
         /// <param name="assistantId"> The ID of the assistant to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get assistant. </remarks>
         public virtual async Task<ClientResult<AssistantObject>> GetAssistantAsync(string assistantId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-            ClientResult result = await GetAssistantAsync(assistantId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetAssistantAsync(assistantId, null).ConfigureAwait(false);
             return ClientResult.FromValue(AssistantObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -270,11 +274,12 @@ namespace OpenAI.Internal
         /// <param name="assistantId"> The ID of the assistant to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get assistant. </remarks>
         public virtual ClientResult<AssistantObject> GetAssistant(string assistantId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-            ClientResult result = GetAssistant(assistantId, DefaultRequestContext);
+            ClientResult result = GetAssistant(assistantId, null);
             return ClientResult.FromValue(AssistantObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -341,13 +346,14 @@ namespace OpenAI.Internal
         /// <param name="assistant"> The <see cref="ModifyAssistantRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="assistant"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Modify assistant. </remarks>
         public virtual async Task<ClientResult<AssistantObject>> ModifyAssistantAsync(string assistantId, ModifyAssistantRequest assistant)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             Argument.AssertNotNull(assistant, nameof(assistant));
 
-            using BinaryContent content = assistant.ToBinaryBody();
-            ClientResult result = await ModifyAssistantAsync(assistantId, content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = assistant.ToBinaryContent();
+            ClientResult result = await ModifyAssistantAsync(assistantId, content, null).ConfigureAwait(false);
             return ClientResult.FromValue(AssistantObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -356,13 +362,14 @@ namespace OpenAI.Internal
         /// <param name="assistant"> The <see cref="ModifyAssistantRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="assistant"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Modify assistant. </remarks>
         public virtual ClientResult<AssistantObject> ModifyAssistant(string assistantId, ModifyAssistantRequest assistant)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             Argument.AssertNotNull(assistant, nameof(assistant));
 
-            using BinaryContent content = assistant.ToBinaryBody();
-            ClientResult result = ModifyAssistant(assistantId, content, DefaultRequestContext);
+            using BinaryContent content = assistant.ToBinaryContent();
+            ClientResult result = ModifyAssistant(assistantId, content, null);
             return ClientResult.FromValue(AssistantObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -432,11 +439,12 @@ namespace OpenAI.Internal
         /// <param name="assistantId"> The ID of the assistant to delete. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete assistant. </remarks>
         public virtual async Task<ClientResult<DeleteAssistantResponse>> DeleteAssistantAsync(string assistantId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-            ClientResult result = await DeleteAssistantAsync(assistantId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await DeleteAssistantAsync(assistantId, null).ConfigureAwait(false);
             return ClientResult.FromValue(DeleteAssistantResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -444,11 +452,12 @@ namespace OpenAI.Internal
         /// <param name="assistantId"> The ID of the assistant to delete. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete assistant. </remarks>
         public virtual ClientResult<DeleteAssistantResponse> DeleteAssistant(string assistantId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-            ClientResult result = DeleteAssistant(assistantId, DefaultRequestContext);
+            ClientResult result = DeleteAssistant(assistantId, null);
             return ClientResult.FromValue(DeleteAssistantResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -518,13 +527,14 @@ namespace OpenAI.Internal
         /// <param name="file"> The <see cref="CreateAssistantFileRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="file"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Create assistant file. </remarks>
         public virtual async Task<ClientResult<AssistantFileObject>> CreateAssistantFileAsync(string assistantId, CreateAssistantFileRequest file)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             Argument.AssertNotNull(file, nameof(file));
 
-            using BinaryContent content = file.ToBinaryBody();
-            ClientResult result = await CreateAssistantFileAsync(assistantId, content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = file.ToBinaryContent();
+            ClientResult result = await CreateAssistantFileAsync(assistantId, content, null).ConfigureAwait(false);
             return ClientResult.FromValue(AssistantFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -536,13 +546,14 @@ namespace OpenAI.Internal
         /// <param name="file"> The <see cref="CreateAssistantFileRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="file"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Create assistant file. </remarks>
         public virtual ClientResult<AssistantFileObject> CreateAssistantFile(string assistantId, CreateAssistantFileRequest file)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             Argument.AssertNotNull(file, nameof(file));
 
-            using BinaryContent content = file.ToBinaryBody();
-            ClientResult result = CreateAssistantFile(assistantId, content, DefaultRequestContext);
+            using BinaryContent content = file.ToBinaryContent();
+            ClientResult result = CreateAssistantFile(assistantId, content, null);
             return ClientResult.FromValue(AssistantFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -632,11 +643,12 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List assistant files. </remarks>
         public virtual async Task<ClientResult<ListAssistantFilesResponse>> GetAssistantFilesAsync(string assistantId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-            ClientResult result = await GetAssistantFilesAsync(assistantId, limit, order?.ToString(), after, before, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetAssistantFilesAsync(assistantId, limit, order?.ToString(), after, before, null).ConfigureAwait(false);
             return ClientResult.FromValue(ListAssistantFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -662,11 +674,12 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List assistant files. </remarks>
         public virtual ClientResult<ListAssistantFilesResponse> GetAssistantFiles(string assistantId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-            ClientResult result = GetAssistantFiles(assistantId, limit, order?.ToString(), after, before, DefaultRequestContext);
+            ClientResult result = GetAssistantFiles(assistantId, limit, order?.ToString(), after, before, null);
             return ClientResult.FromValue(ListAssistantFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -680,7 +693,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetAssistantFilesAsync(string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetAssistantFilesAsync(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -727,7 +740,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetAssistantFiles(string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetAssistantFiles(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -769,12 +782,13 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file we're getting. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get assistant file. </remarks>
         public virtual async Task<ClientResult<AssistantFileObject>> GetAssistantFileAsync(string assistantId, string fileId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = await GetAssistantFileAsync(assistantId, fileId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetAssistantFileAsync(assistantId, fileId, null).ConfigureAwait(false);
             return ClientResult.FromValue(AssistantFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -783,12 +797,13 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file we're getting. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get assistant file. </remarks>
         public virtual ClientResult<AssistantFileObject> GetAssistantFile(string assistantId, string fileId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = GetAssistantFile(assistantId, fileId, DefaultRequestContext);
+            ClientResult result = GetAssistantFile(assistantId, fileId, null);
             return ClientResult.FromValue(AssistantFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -859,12 +874,13 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file to delete. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete assistant file. </remarks>
         public virtual async Task<ClientResult<DeleteAssistantFileResponse>> DeleteAssistantFileAsync(string assistantId, string fileId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = await DeleteAssistantFileAsync(assistantId, fileId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await DeleteAssistantFileAsync(assistantId, fileId, null).ConfigureAwait(false);
             return ClientResult.FromValue(DeleteAssistantFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -873,12 +889,13 @@ namespace OpenAI.Internal
         /// <param name="fileId"> The ID of the file to delete. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete assistant file. </remarks>
         public virtual ClientResult<DeleteAssistantFileResponse> DeleteAssistantFile(string assistantId, string fileId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-            ClientResult result = DeleteAssistantFile(assistantId, fileId, DefaultRequestContext);
+            ClientResult result = DeleteAssistantFile(assistantId, fileId, null);
             return ClientResult.FromValue(DeleteAssistantFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -957,10 +974,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -991,10 +1005,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1010,10 +1021,7 @@ namespace OpenAI.Internal
             uri.AppendPath(assistantId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1031,10 +1039,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1050,10 +1055,7 @@ namespace OpenAI.Internal
             uri.AppendPath(assistantId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1072,10 +1074,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1108,10 +1107,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1129,10 +1125,7 @@ namespace OpenAI.Internal
             uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1150,14 +1143,9 @@ namespace OpenAI.Internal
             uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
-
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });

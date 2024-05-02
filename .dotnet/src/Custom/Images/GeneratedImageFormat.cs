@@ -1,7 +1,9 @@
-using System;
-
 namespace OpenAI.Images;
 
+// CUSTOM:
+// - Renamed enum and its members.
+// - Converted extensible enum into an enum.
+// - Edited doc comment.
 /// <summary>
 /// Represents the available output methods for generated images.
 /// <list type="bullet">
@@ -16,6 +18,7 @@ namespace OpenAI.Images;
 /// </item>
 /// </list>
 /// </summary>
+[CodeGenModel("ImageGenerationOptionsResponseFormat")]
 public enum GeneratedImageFormat
 {
     /// <summary>
@@ -23,10 +26,12 @@ public enum GeneratedImageFormat
     /// JSON. This minimizes availability time but drastically increases the size of responses, required bandwidth, and
     /// immediate memory needs. This is equivalent to <c>b64_json</c> in the REST API.
     /// </summary>
+    [CodeGenMember("B64Json")]
     Bytes,
     /// <summary>
     /// The default setting that instructs the request to return a temporary internet location from which the image can
     /// be retrieved.
     /// </summary>
+    [CodeGenMember("Url")]
     Uri,
 }

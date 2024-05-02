@@ -30,19 +30,6 @@ function Update-Subclients {
     }
 }
 
-function Update-AssemblyInfo {
-    $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath "src\Properties"
-    $file = Get-ChildItem -Path $directory -Filter "AssemblyInfo.cs"
-    $content = Get-Content -Path $file -Raw
-
-    Write-Output "Editing $($file.FullName)"
-
-    $content = $content -creplace "\[assembly: InternalsVisibleTo\(`"OpenAI\.Tests`"\)\]", "// [assembly: InternalsVisibleTo(`"OpenAI.Tests`")]"
-
-    $content | Set-Content -Path $file.FullName -NoNewline
-}
-
 function Update-InternalClientUriBuilder {
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Internal"
@@ -77,7 +64,6 @@ function Remove-RequestContentHelper {
 }
 
 Update-Subclients
-Update-AssemblyInfo
 Update-InternalClientUriBuilder
 Remove-Utf8JsonRequestBody
 Remove-RequestContentHelper

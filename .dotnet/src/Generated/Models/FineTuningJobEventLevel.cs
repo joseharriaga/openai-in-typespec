@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> Enum for level in FineTuningJobEvent. </summary>
     internal readonly partial struct FineTuningJobEventLevel : IEquatable<FineTuningJobEventLevel>

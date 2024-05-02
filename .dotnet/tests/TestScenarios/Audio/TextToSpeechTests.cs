@@ -11,7 +11,7 @@ public partial class TextToSpeechTests
     public void BasicTextToSpeechWorks()
     {
         AudioClient client = new("tts-1");
-        ClientResult<BinaryData> result = client.GenerateSpeechFromText("Hello, world! This is a test.", TextToSpeechVoice.Shimmer);
+        ClientResult<BinaryData> result = client.GenerateSpeechFromText("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer);
         BinaryData audio = result.Value;
         
         Assert.NotNull(audio);
@@ -19,18 +19,18 @@ public partial class TextToSpeechTests
 
     [Test]
     [TestCase(null)]
-    [TestCase(AudioDataFormat.Mp3)]
-    [TestCase(AudioDataFormat.Aac)]
-    [TestCase(AudioDataFormat.Opus)]
-    [TestCase(AudioDataFormat.Flac)]
-    public void OutputFormatWorks(AudioDataFormat? responseFormat)
+    [TestCase(GeneratedSpeechFormat.Mp3)]
+    [TestCase(GeneratedSpeechFormat.Aac)]
+    [TestCase(GeneratedSpeechFormat.Opus)]
+    [TestCase(GeneratedSpeechFormat.Flac)]
+    public void OutputFormatWorks(GeneratedSpeechFormat? responseFormat)
     {
         AudioClient client = new("tts-1");
-        TextToSpeechOptions options = responseFormat == null
+        SpeechGenerationOptions options = responseFormat == null
             ? new()
             : new() { ResponseFormat = responseFormat };
 
-        ClientResult<BinaryData> result = client.GenerateSpeechFromText("Hello, world!", TextToSpeechVoice.Alloy, options);
+        ClientResult<BinaryData> result = client.GenerateSpeechFromText("Hello, world!", GeneratedSpeechVoice.Alloy, options);
         BinaryData audio = result.Value;
 
         Assert.NotNull(audio);

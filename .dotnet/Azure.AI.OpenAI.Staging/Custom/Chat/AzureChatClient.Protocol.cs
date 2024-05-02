@@ -1,24 +1,24 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using OpenAI;
+using OpenAI.Chat;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenAI.Chat;
+namespace Azure.AI.OpenAI.Staging.Chat;
 
-/// <summary> The service client for the OpenAI Chat Completions endpoint. </summary>
-public partial class ChatClient
+public partial class AzureChatClient : ChatClient
 {
-    /// <inheritdoc cref="Internal.Chat.CreateChatCompletion(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult CompleteChat(BinaryContent content, RequestOptions options = null)
+    public override ClientResult CompleteChat(BinaryContent content, RequestOptions options = null)
     {
         using PipelineMessage message = CreateChatCompletionPipelineMessage(content, options);
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    /// <inheritdoc cref="Internal.Chat.CreateChatCompletionAsync(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null)
     {
@@ -36,16 +36,14 @@ public partial class ChatClient
         request.Method = "POST";
         UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
         StringBuilder path = new();
-        path.Append("/chat/completions");
+        path.Append($"openai/deployments/{_model}/chat/completions");
         uriBuilder.Path += path.ToString();
+        uriBuilder.Query += $"?api-version={_apiVersion}";
         request.Uri = uriBuilder.Uri;
         request.Headers.Set("Accept", "application/json");
         request.Headers.Set("Content-Type", "application/json");
         request.Content = content;
-        if (options is not null)
-        {
-            message.Apply(options);
-        }
+        message.Apply(options ?? DefaultRequestContext);
         return message;
     }
 }

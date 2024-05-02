@@ -1,17 +1,21 @@
+using OpenAI.Internal.Models;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Text;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace OpenAI.Chat;
 
-/// <summary> The service client for the OpenAI Chat Completions endpoint. </summary>
 public partial class ChatClient
 {
-    private readonly OpenAIClientConnector _clientConnector;
-    private Internal.Chat Shim => _clientConnector.InternalClient.GetChatClient();
+    protected readonly string _model;
+    protected readonly ClientPipeline _pipeline;
+    protected readonly Uri _endpoint;
+
+    /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
+    public virtual ClientPipeline Pipeline => _pipeline;
 
     /// <summary>
     /// Initializes a new instance of <see cref="ChatClient"/>, used for Chat Completion requests. 
@@ -29,9 +33,22 @@ public partial class ChatClient
     /// <param name="model">The model name for chat completions that the client should use.</param>
     /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
     /// <param name="options">Additional options to customize the client.</param>
+    
     public ChatClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = null)
+        : this(model, OpenAIClient.CreatePipeline(credential, options), OpenAIClient.GetEndpoint(options))
+    { }
+
+    // internal Chat(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
+    protected internal ChatClient(string model, ClientPipeline pipeline, Uri endpoint)
     {
-        _clientConnector = new(model, credential, options);
+        _model = model;
+        _pipeline = pipeline;
+        _endpoint = endpoint;
+    }
+
+    /// <summary> Initializes a new instance of ChatClient for mocking. </summary>
+    protected ChatClient()
+    {
     }
 
     /// <summary>
@@ -40,8 +57,8 @@ public partial class ChatClient
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A result for a single chat completion. </returns>
-     public virtual ClientResult<ChatCompletion> CompleteChat(string message, ChatCompletionOptions options = null)
-         => CompleteChat(new List<ChatRequestMessage>() { new ChatRequestUserMessage(message) }, options);
+    public virtual ClientResult<ChatCompletion> CompleteChat(string message, ChatCompletionOptions options = null)
+        => CompleteChat(new List<ChatRequestMessage>() { new ChatRequestUserMessage(message) }, options);
 
     /// <summary>
     /// Generates a single chat completion result for a single, simple user message.
@@ -49,9 +66,9 @@ public partial class ChatClient
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A result for a single chat completion. </returns>
-     public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(string message, ChatCompletionOptions options = null)
-        => CompleteChatAsync(
-             new List<ChatRequestMessage>() { new ChatRequestUserMessage(message) }, options);
+    public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(string message, ChatCompletionOptions options = null)
+       => CompleteChatAsync(
+            new List<ChatRequestMessage>() { new ChatRequestUserMessage(message) }, options);
 
     /// <summary>
     /// Generates a single chat completion result for a provided set of input chat messages.
@@ -63,10 +80,14 @@ public partial class ChatClient
         IEnumerable<ChatRequestMessage> messages,
         ChatCompletionOptions options = null)
     {
-        Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options); 
-        ClientResult<Internal.Models.CreateChatCompletionResponse> response = Shim.CreateChatCompletion(request);
-        ChatCompletion chatCompletion = new(response.Value, internalChoiceIndex: 0);
-        return ClientResult.FromValue(chatCompletion, response.GetRawResponse());
+        Argument.AssertNotNull(messages, nameof(messages));
+        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options);
+        using BinaryContent content = internalRequest.ToBinaryBody();
+        ClientResult protocolResult = CompleteChat(content, DefaultRequestContext);
+        Internal.Models.CreateChatCompletionResponse internalResponse
+            = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
+        ChatCompletion chatCompletion = new(internalResponse, internalChoiceIndex: 0);
+        return ClientResult.FromValue(chatCompletion, protocolResult.GetRawResponse());
     }
 
     /// <summary>
@@ -79,10 +100,14 @@ public partial class ChatClient
         IEnumerable<ChatRequestMessage> messages,
         ChatCompletionOptions options = null)
     {
-        Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options);
-        ClientResult<Internal.Models.CreateChatCompletionResponse> response = await Shim.CreateChatCompletionAsync(request).ConfigureAwait(false);
-        ChatCompletion chatCompletion = new(response.Value, internalChoiceIndex: 0);
-        return ClientResult.FromValue(chatCompletion, response.GetRawResponse());
+        Argument.AssertNotNull(messages, nameof(messages));
+        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options);
+        using BinaryContent content = internalRequest.ToBinaryBody();
+        ClientResult protocolResult = await CompleteChatAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        Internal.Models.CreateChatCompletionResponse internalResponse
+            = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
+        ChatCompletion chatCompletion = new(internalResponse, internalChoiceIndex: 0);
+        return ClientResult.FromValue(chatCompletion, protocolResult.GetRawResponse());
     }
 
     /// <summary>
@@ -99,14 +124,18 @@ public partial class ChatClient
         int choiceCount,
         ChatCompletionOptions options = null)
     {
-        Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options, choiceCount);
-        ClientResult<Internal.Models.CreateChatCompletionResponse> response = Shim.CreateChatCompletion(request);
+        Argument.AssertNotNull(messages, nameof(messages));
+        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
+        using BinaryContent content = internalRequest.ToBinaryBody();
+        ClientResult protocolResult = CompleteChat(content, DefaultRequestContext);
+        Internal.Models.CreateChatCompletionResponse internalResponse
+            = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         List<ChatCompletion> chatCompletions = [];
-        for (int i = 0; i < response.Value.Choices.Count; i++)
+        for (int i = 0; i < internalResponse.Choices.Count; i++)
         {
-            chatCompletions.Add(new(response.Value, (int)response.Value.Choices[i].Index));
+            chatCompletions.Add(new(internalResponse, (int)internalResponse.Choices[i].Index));
         }
-        return ClientResult.FromValue(new ChatCompletionCollection(chatCompletions), response.GetRawResponse());
+        return ClientResult.FromValue(new ChatCompletionCollection(chatCompletions), protocolResult.GetRawResponse());
     }
 
     /// <summary>
@@ -123,14 +152,18 @@ public partial class ChatClient
         int choiceCount,
         ChatCompletionOptions options = null)
     {
-        Internal.Models.CreateChatCompletionRequest request = CreateInternalRequest(messages, options, choiceCount);
-        ClientResult<Internal.Models.CreateChatCompletionResponse> response = await Shim.CreateChatCompletionAsync(request).ConfigureAwait(false);
+        Argument.AssertNotNull(messages, nameof(messages));
+        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
+        using BinaryContent content = internalRequest.ToBinaryBody();
+        ClientResult protocolResult = CompleteChat(content, DefaultRequestContext);
+        Internal.Models.CreateChatCompletionResponse internalResponse
+            = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         List<ChatCompletion> chatCompletions = [];
-        for (int i = 0; i < response.Value.Choices.Count; i++)
+        for (int i = 0; i < internalResponse.Choices.Count; i++)
         {
-            chatCompletions.Add(new(response.Value, (int)response.Value.Choices[i].Index));
+            chatCompletions.Add(new(internalResponse, (int)internalResponse.Choices[i].Index));
         }
-        return ClientResult.FromValue(new ChatCompletionCollection(chatCompletions), response.GetRawResponse());
+        return ClientResult.FromValue(new ChatCompletionCollection(chatCompletions), protocolResult.GetRawResponse());
     }
 
     /// <summary>
@@ -146,14 +179,14 @@ public partial class ChatClient
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-   public virtual StreamingClientResult<StreamingChatUpdate> CompleteChatStreaming(
-        string message,
-        int? choiceCount = null,
-        ChatCompletionOptions options = null)
-        => CompleteChatStreaming(
-            new List<ChatRequestMessage> { new ChatRequestUserMessage(message) },
-            choiceCount,
-            options);
+    public virtual StreamingClientResult<StreamingChatUpdate> CompleteChatStreaming(
+         string message,
+         int? choiceCount = null,
+         ChatCompletionOptions options = null)
+         => CompleteChatStreaming(
+             new List<ChatRequestMessage> { new ChatRequestUserMessage(message) },
+             choiceCount,
+             options);
 
     /// <summary>
     /// Begins a streaming response for a chat completion request using a single, simple user message as input.
@@ -197,19 +230,14 @@ public partial class ChatClient
         int? choiceCount = null,
         ChatCompletionOptions options = null)
     {
-        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
-        requestMessage.BufferResponse = false;
-        Shim.Pipeline.Send(requestMessage);
-        PipelineResponse response = requestMessage.ExtractResponse();
-
-        if (response.IsError)
-        {
-            throw new ClientResultException(response);
-        }
-
-        ClientResult genericResult = ClientResult.FromResponse(response);
+        Argument.AssertNotNull(messages, nameof(messages));
+        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
+        using BinaryContent content = internalRequest.ToBinaryBody();
+        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, DefaultRequestContext, bufferResponse: false);
+        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, DefaultRequestContext);
+        ClientResult protocolResult = ClientResult.FromResponse(response);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            genericResult,
+            protocolResult,
             (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
                 responseForEnumeration.GetRawResponse().ContentStream,
                 e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
@@ -235,22 +263,17 @@ public partial class ChatClient
         int? choiceCount = null,
         ChatCompletionOptions options = null)
     {
-        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
-        requestMessage.BufferResponse = false;
-        await Shim.Pipeline.SendAsync(requestMessage).ConfigureAwait(false);
-        PipelineResponse response = requestMessage.ExtractResponse();
-
-        if (response.IsError)
-        {
-            throw new ClientResultException(response);
-        }
-
-        ClientResult genericResult = ClientResult.FromResponse(response);
+        Argument.AssertNotNull(messages, nameof(messages));
+        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
+        using BinaryContent content = internalRequest.ToBinaryBody();
+        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, DefaultRequestContext, bufferResponse: false);
+        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, DefaultRequestContext);
+        ClientResult protocolResult = ClientResult.FromResponse(response);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            genericResult,
+            protocolResult,
             (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
                 responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));   
+                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
     }
 
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(
@@ -278,7 +301,7 @@ public partial class ChatClient
         Dictionary<string, BinaryData> additionalData = [];
         return new Internal.Models.CreateChatCompletionRequest(
             messageDataItems,
-            _clientConnector.Model,
+            _model,
             options?.FrequencyPenalty,
             options?.GetInternalLogitBias(),
             options?.IncludeLogProbabilities,
@@ -301,28 +324,7 @@ public partial class ChatClient
         );
     }
 
-    private PipelineMessage CreateCustomRequestMessage(IEnumerable<ChatRequestMessage> messages, int? choiceCount, ChatCompletionOptions options)
-    {
-        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
-        BinaryContent content = BinaryContent.Create(internalRequest);
-
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
-        message.BufferResponse = false;
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append("/chat/completions");
-        uriBuilder.Path += path.ToString();
-        request.Uri = uriBuilder.Uri;
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", "application/json");
-        request.Content = content;
-
-        return message;
-    }
-
-    private static PipelineMessageClassifier _responseErrorClassifier200;
-    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+    protected static RequestOptions DefaultRequestContext = new RequestOptions();
+    private static PipelineMessageClassifier _pipelineMessageClassifier200;
+    protected static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

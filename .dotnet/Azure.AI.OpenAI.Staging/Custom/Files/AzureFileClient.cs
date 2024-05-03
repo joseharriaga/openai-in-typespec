@@ -17,7 +17,7 @@ internal partial class AzureFileClient : FileClient
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    protected internal AzureFileClient(
+    internal AzureFileClient(
         ClientPipeline pipeline,
         Uri endpoint,
         AzureOpenAIClientOptions options)

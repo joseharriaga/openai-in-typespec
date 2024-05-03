@@ -18,7 +18,7 @@ internal partial class AzureImageClient : ImageClient
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    protected internal AzureImageClient(
+    internal AzureImageClient(
         ClientPipeline pipeline,
         string deploymentName,
         Uri endpoint,

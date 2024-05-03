@@ -18,7 +18,7 @@ internal partial class AzureChatClient : ChatClient
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    protected internal AzureChatClient(
+    internal AzureChatClient(
         ClientPipeline pipeline,
         string deploymentName,
         Uri endpoint,

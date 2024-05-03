@@ -18,7 +18,7 @@ internal partial class AzureAudioClient : AudioClient
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    protected internal AzureAudioClient(
+    internal AzureAudioClient(
         ClientPipeline pipeline,
         string deploymentName,
         Uri endpoint,

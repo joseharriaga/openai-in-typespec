@@ -18,7 +18,7 @@ internal partial class AzureEmbeddingClient : EmbeddingClient
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    protected internal AzureEmbeddingClient(
+    internal AzureEmbeddingClient(
         ClientPipeline pipeline,
         string deploymentName,
         Uri endpoint,

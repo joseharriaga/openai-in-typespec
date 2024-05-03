@@ -19,7 +19,7 @@ internal partial class AzureAssistantClient : AssistantClient
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    protected internal AzureAssistantClient(
+    internal AzureAssistantClient(
         ClientPipeline pipeline,
         Uri endpoint,
         AzureOpenAIClientOptions options)

@@ -17,7 +17,7 @@ internal partial class AzureFineTuningClient : FineTuningClient
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    protected internal AzureFineTuningClient(
+    internal AzureFineTuningClient(
         ClientPipeline pipeline,
         Uri endpoint,
         AzureOpenAIClientOptions options)

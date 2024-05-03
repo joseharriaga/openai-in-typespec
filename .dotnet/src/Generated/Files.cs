@@ -57,7 +57,7 @@ namespace OpenAI.Internal
             Argument.AssertNotNull(file, nameof(file));
 
             using MultipartFormDataBinaryContent content = file.ToMultipartBinaryBody();
-            ClientResult result = await CreateFileAsync(content, content.ContentType, null).ConfigureAwait(false);
+            ClientResult result = await CreateFileAsync(content, content.ContentType, (RequestOptions)null).ConfigureAwait(false);
             return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -79,7 +79,7 @@ namespace OpenAI.Internal
             Argument.AssertNotNull(file, nameof(file));
 
             using MultipartFormDataBinaryContent content = file.ToMultipartBinaryBody();
-            ClientResult result = CreateFile(content, content.ContentType, null);
+            ClientResult result = CreateFile(content, content.ContentType, (RequestOptions)null);
             return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 

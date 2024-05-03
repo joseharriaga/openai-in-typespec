@@ -1,4 +1,7 @@
-﻿using System.Threading;
+﻿using System.ClientModel.Primitives;
+using System.ClientModel;
+using System;
+using System.Threading;
 
 namespace OpenAI.FineTuning;
 
@@ -18,4 +21,18 @@ namespace OpenAI.FineTuning;
 [CodeGenSuppress("GetFineTuningEvents", typeof(string), typeof(string), typeof(int?))]
 public partial class FineTuningClient
 {
+    // Customization: apply protected(/+internal) visibility
+
+    protected readonly Uri _endpoint;
+
+    /// <summary> Initializes a new instance of FineTuningClient. </summary>
+    /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
+    /// <param name="credential"> The key credential to copy. </param>
+    /// <param name="endpoint"> OpenAI Endpoint. </param>
+    protected internal FineTuningClient(ClientPipeline pipeline, ApiKeyCredential credential, Uri endpoint)
+    {
+        _pipeline = pipeline;
+        _keyCredential = credential;
+        _endpoint = endpoint;
+    }
 }

@@ -28,11 +28,15 @@ namespace OpenAI;
 [CodeGenSuppress("GetLegacyCompletionClientClient")]
 public partial class OpenAIClient
 {
+    protected readonly ApiKeyCredential _cachedCredential = null;
+    protected readonly OpenAIClientOptions _cachedOptions = null;
+
+    protected internal static RequestOptions DefaultRequestOptions = new();
+    protected internal static PipelineMessageClassifier PipelineMessageClassifier200
+        = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
     internal static readonly string s_OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
     internal static readonly string s_OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
     internal static readonly string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
-
-    private readonly OpenAIClientOptions _cachedOptions = null;
 
     /// <summary> Initializes a new instance of OpenAIClient. </summary>
     /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
@@ -52,14 +56,16 @@ public partial class OpenAIClient
     /// <param name="credential"> An explicitly defined credential that all clients created by this <see cref="OpenAIClient"/> should use. </param>
     /// <param name="options"> A common client options definition that all clients created by this <see cref="OpenAIClient"/> should use. </param>
     public OpenAIClient(ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+        : this(CreatePipeline(credential, options), options)
     {
-        options ??= new OpenAIClientOptions();
+        _cachedCredential = credential;
+    }
 
-        _keyCredential = credential ?? new(Environment.GetEnvironmentVariable(s_OpenAIApiKeyEnvironmentVariable) ?? string.Empty);
-        _pipeline = ClientPipeline.Create(options, Array.Empty<PipelinePolicy>(), new PipelinePolicy[] { ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(_keyCredential, AuthorizationHeader, AuthorizationApiKeyPrefix) }, Array.Empty<PipelinePolicy>());
-        _endpoint = options.Endpoint ?? new(Environment.GetEnvironmentVariable(s_OpenAIEndpointEnvironmentVariable) ?? s_defaultOpenAIV1Endpoint);
-
+    protected OpenAIClient(ClientPipeline pipeline, OpenAIClientOptions options)
+    {
+        _pipeline = pipeline;
         _cachedOptions = options;
+        _endpoint = GetEndpoint(options);
     }
 
     /// <summary>
@@ -94,7 +100,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ChatClient"/>. </returns>
-    public virtual ChatClient GetChatClient(string model) => new(model, _keyCredential, _cachedOptions);
+    public virtual ChatClient GetChatClient(string model) => new(Pipeline, model, credential: null, GetEndpoint(_cachedOptions));
 
     /// <summary>
     /// Gets a new instance of <see cref="EmbeddingClient"/> that reuses the client configuration details provided to
@@ -161,4 +167,22 @@ public partial class OpenAIClient
     /// </remarks>
     /// <returns> A new <see cref="ModerationClient"/>. </returns>
     public virtual ModerationClient GetModerationClient() => new(_keyCredential, _cachedOptions);
+
+    internal static ClientPipeline CreatePipeline(ApiKeyCredential credential, OpenAIClientOptions options = null)
+    {
+        credential ??= new(Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? string.Empty);
+        return ClientPipeline.Create(
+            options ?? new(),
+            perCallPolicies: [],
+            perTryPolicies:
+            [
+                ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, "Authorization", "Bearer"),
+            ],
+            beforeTransportPolicies: []);
+    }
+
+    internal static Uri GetEndpoint(OpenAIClientOptions options)
+    {
+        return options?.Endpoint ?? new(Environment.GetEnvironmentVariable("OPENAI_ENDPOINT") ?? "https://api.openai.com/v1");
+    }
 }

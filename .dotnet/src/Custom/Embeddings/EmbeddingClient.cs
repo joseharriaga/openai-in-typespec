@@ -14,8 +14,7 @@ namespace OpenAI.Embeddings;
 [CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions))]
 public partial class EmbeddingClient
 {
-    protected readonly string _model;
-    protected readonly Uri _endpoint;
+    private readonly string _model;
 
     // CUSTOM:
     // - Added `model` parameter.

@@ -18,8 +18,7 @@ namespace OpenAI.Images;
 [CodeGenSuppress("CreateImageVariation", typeof(ImageVariationOptions))]
 public partial class ImageClient
 {
-    protected readonly string _model;
-    protected readonly Uri _endpoint;
+    private readonly string _model;
 
     // CUSTOM:
     // - Added `model` parameter.

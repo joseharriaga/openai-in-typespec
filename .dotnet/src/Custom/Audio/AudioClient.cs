@@ -17,8 +17,7 @@ namespace OpenAI.Audio;
 [CodeGenSuppress("CreateTranslation", typeof(AudioTranslationOptions))]
 public partial class AudioClient
 {
-    protected readonly string _model;
-    protected readonly Uri _endpoint;
+    private readonly string _model;
 
     // CUSTOM:
     // - Added `model` parameter.

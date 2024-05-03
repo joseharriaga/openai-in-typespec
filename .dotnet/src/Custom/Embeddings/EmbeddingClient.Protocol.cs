@@ -41,7 +41,7 @@ public partial class EmbeddingClient
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateEmbeddingRequest(content, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        return ClientResult.FromResponse(await _pipeline.ProcessMessageExAsync(message, options).ConfigureAwait(false));
     }
 
     // CUSTOM:
@@ -74,6 +74,6 @@ public partial class EmbeddingClient
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateEmbeddingRequest(content, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return ClientResult.FromResponse(_pipeline.ProcessMessageEx(message, options));
     }
 }

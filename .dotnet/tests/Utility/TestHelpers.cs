@@ -1,12 +1,11 @@
 ﻿using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Chat;
+using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.Images;
 using System;
-using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.IO;
 
 namespace OpenAI.Tests;
@@ -37,6 +36,7 @@ internal static class TestHelpers
         {
             TestScenario.Chat => new ChatClient(overrideModel ?? "gpt-3.5-turbo", credential: null, options),
             TestScenario.VisionChat => new ChatClient(overrideModel ?? "gpt-4-vision-preview", credential: null, options),
+            TestScenario.Embeddings => new EmbeddingClient(overrideModel ?? "text-embedding-3-small", credential: null, options),
 #pragma warning disable OPENAI001
             TestScenario.Assistants => new AssistantClient(credential: null, options),
 #pragma warning restore OPENAI001

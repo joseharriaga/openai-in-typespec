@@ -15,9 +15,4 @@
     <ProjectReference Include="..\src\OpenAI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Custom\Files\" />
-    <Folder Include="Custom\Assistants\" />
-  </ItemGroup>
-
 </Project>

@@ -146,9 +146,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <returns> A new <see cref="AssistantClient"/> instance. </returns>
     [Experimental("OPENAI001")]
     public override AssistantClient GetAssistantClient()
-    {
-        throw new NotImplementedException();
-    }
+        => new AzureAssistantClient(Pipeline, Endpoint, _options);
 
     /// <summary>
     /// Gets a new <see cref="AudioClient"/> instance configured for audio operation use with the Azure OpenAI service.
@@ -179,7 +177,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// </summary>
     /// <returns> A new <see cref="FileClient"/> instance. </returns>
     public override FileClient GetFileClient()
-        => throw new NotImplementedException();
+        => new AzureFileClient(Pipeline, Endpoint, _options);
 
     /// <summary>
     /// Gets a new <see cref="FineTuningClient"/> instance configured for fine-tuning operation use with the Azure OpenAI service.

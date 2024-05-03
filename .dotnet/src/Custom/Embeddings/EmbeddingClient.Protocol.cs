@@ -11,8 +11,6 @@ namespace OpenAI.Embeddings;
 [CodeGenSuppress("CreateEmbedding", typeof(BinaryContent), typeof(RequestOptions))]
 public partial class EmbeddingClient
 {
-    protected internal static RequestOptions DefaultRequestContext = new RequestOptions();
-
     // CUSTOM:
     // - Renamed.
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.

@@ -20,7 +20,7 @@ public partial class AzureEmbeddingClient : EmbeddingClient
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null)
+    public override async Task<ClientResult> GenerateEmbeddingAsync(BinaryContent content, RequestOptions options = null)
     {
         using PipelineMessage message = CreateEmbeddingPipelineMessage(content, options);
         PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);

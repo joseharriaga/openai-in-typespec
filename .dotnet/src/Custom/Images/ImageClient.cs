@@ -75,7 +75,7 @@ public partial class ImageClient
         CreateImageGenerationOptions(prompt, null, ref options);
 
         using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateImagesAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        ClientResult result = await GenerateImagesAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
@@ -94,7 +94,7 @@ public partial class ImageClient
         CreateImageGenerationOptions(prompt, null, ref options);
 
         using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateImages(content, DefaultRequestContext);
+        ClientResult result = GenerateImages(content, OpenAIClient.DefaultRequestOptions);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
@@ -112,7 +112,7 @@ public partial class ImageClient
         CreateImageGenerationOptions(prompt, imageCount, ref options);
 
         using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateImagesAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        ClientResult result = await GenerateImagesAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -130,7 +130,7 @@ public partial class ImageClient
         CreateImageGenerationOptions(prompt, imageCount, ref options);
 
         using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateImages(content, DefaultRequestContext);
+        ClientResult result = GenerateImages(content, OpenAIClient.DefaultRequestOptions);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -406,7 +406,7 @@ public partial class ImageClient
     internal PipelineMessage CreateCreateImageEditRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
+        message.ResponseClassifier = OpenAIClient.PipelineMessageClassifier200;
         var request = message.Request;
         request.Method = "POST";
         var uri = new ClientUriBuilder();
@@ -427,7 +427,7 @@ public partial class ImageClient
     internal PipelineMessage CreateCreateImageVariationRequest(BinaryContent content, string contentType, RequestOptions options)
     {
         var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
+        message.ResponseClassifier = OpenAIClient.PipelineMessageClassifier200;
         var request = message.Request;
         request.Method = "POST";
         var uri = new ClientUriBuilder();

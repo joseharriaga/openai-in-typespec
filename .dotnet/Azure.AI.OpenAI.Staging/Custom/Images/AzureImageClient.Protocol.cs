@@ -58,8 +58,8 @@ public partial class AzureImageClient : ImageClient
     }
 
     private PipelineMessage CreateImagesRequestMessage(
-        BinaryContent content,
         string operation,
+        BinaryContent content,
         string contentType,
         RequestOptions options = null)
     {
@@ -81,11 +81,11 @@ public partial class AzureImageClient : ImageClient
     }
 
     private PipelineMessage CreateGenerateImagesRequestMessage(BinaryContent content, RequestOptions options = null)
-        => CreateImagesRequestMessage(content, "generations", "application/json", options);
+        => CreateImagesRequestMessage("generations", content, "application/json", options);
 
     private PipelineMessage CreateGenerateImageEditsRequestMessage(BinaryContent content, string contentType, RequestOptions options = null)
-        => CreateImagesRequestMessage(content, "edits", contentType, options);
+        => CreateImagesRequestMessage("edits", content, contentType, options);
 
     private PipelineMessage CreateGenerateImageVariationsRequestMessage(BinaryContent content, string contentType, RequestOptions options = null)
-        => CreateImagesRequestMessage(content, "variations", contentType, options);
+        => CreateImagesRequestMessage("variations", content, contentType, options);
 }

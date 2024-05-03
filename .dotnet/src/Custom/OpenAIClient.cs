@@ -65,6 +65,7 @@ public partial class OpenAIClient
     {
         _pipeline = pipeline;
         _cachedOptions = options;
+        _endpoint = GetEndpoint(options);
     }
 
     /// <summary>

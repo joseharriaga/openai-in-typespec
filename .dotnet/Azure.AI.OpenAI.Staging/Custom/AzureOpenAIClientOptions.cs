@@ -5,23 +5,33 @@ using OpenAI;
 
 namespace Azure.AI.OpenAI.Staging;
 
+/// <summary>
+/// Defines the scenario-independent, client-level options for the Azure-specific OpenAI client.
+/// </summary>
 public partial class AzureOpenAIClientOptions : OpenAIClientOptions
 {
-    public string ApiVersion { get; }
+    private const ServiceVersion LatestVersion = ServiceVersion.V2024_04_01_Preview;
+    internal string Version { get; }
 
-    public AzureOpenAIClientOptions()
-        : this(AzureOpenAIServiceApiVersion.Latest)
-    { }
-
-    public AzureOpenAIClientOptions(string apiVersion)
+    /// <summary>
+    /// Initializes a new instance of <see cref="AzureOpenAIClientOptions"/>
+    /// </summary>
+    /// <param name="version"> The service API version to use with the client. </param>
+    /// <exception cref="NotSupportedException"> The provided service API version is not supported. </exception>
+    public AzureOpenAIClientOptions(ServiceVersion version = LatestVersion)
         : base()
     {
-        ApiVersion = apiVersion;
+        Version = version switch
+        {
+            ServiceVersion.V2024_04_01_Preview => "2024-04-01-preview",
+            _ => throw new NotSupportedException()
+        };
     }
 
-    public partial class AzureOpenAIServiceApiVersion
+    /// <summary> The version of the service to use. </summary>
+    public enum ServiceVersion
     {
-        public static string Latest => v2024_04_01_Preview;
-        public static string v2024_04_01_Preview => "2024-04-01-preview";
+        /// <summary> Service version "2024-04-01-preview". </summary>
+        V2024_04_01_Preview = 7,
     }
 }

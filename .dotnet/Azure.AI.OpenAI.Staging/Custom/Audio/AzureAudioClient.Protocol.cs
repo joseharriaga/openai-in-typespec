@@ -70,14 +70,14 @@ public partial class AzureAudioClient : AudioClient
         request.Method = "POST";
         UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
         StringBuilder path = new();
-        path.Append($"openai/deployments/{_model}/audio/{operation}");
+        path.Append($"openai/deployments/{_deploymentName}/audio/{operation}");
         uriBuilder.Path += path.ToString();
         uriBuilder.Query += $"?api-version={_apiVersion}";
         request.Uri = uriBuilder.Uri;
         request.Headers.Set("Accept", acceptHeaderValue);
         request.Headers.Set("Content-Type", contentTypeHeaderValue);
         request.Content = content;
-        message.Apply(options ?? AzureOpenAIClient.DefaultRequestOptions);
+        message.Apply(options ?? null);
         return message;
     }
 

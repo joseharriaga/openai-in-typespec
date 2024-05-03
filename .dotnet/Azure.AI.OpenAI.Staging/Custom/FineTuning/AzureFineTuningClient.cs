@@ -1,36 +1,33 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using OpenAI.Audio;
+using OpenAI.FineTuning;
 using System.ClientModel.Primitives;
 
-namespace Azure.AI.OpenAI.Staging.Audio;
+namespace Azure.AI.OpenAI.Staging.FineTuning;
 
 /// <summary>
-/// The scenario client used for audio operations with the Azure OpenAI service.
+/// The scenario client used for fine-tuning operations with the Azure OpenAI service.
 /// </summary>
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-public partial class AzureAudioClient : AudioClient
+public partial class AzureFineTuningClient : FineTuningClient
 {
-    private readonly string _deploymentName;
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    protected internal AzureAudioClient(
+    protected internal AzureFineTuningClient(
         ClientPipeline pipeline,
-        string deploymentName,
         Uri endpoint,
         AzureOpenAIClientOptions options)
-            : base(pipeline, model: deploymentName, endpoint, options)
+            : base(pipeline, endpoint, options)
     {
         options ??= new();
-        _deploymentName = deploymentName;
         _endpoint = endpoint;
         _apiVersion = options.Version;
     }
 
-    protected AzureAudioClient()
+    protected AzureFineTuningClient()
     { }
 }

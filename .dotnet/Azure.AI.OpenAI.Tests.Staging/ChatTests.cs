@@ -8,21 +8,8 @@ using System.ClientModel;
 
 namespace Azure.AI.OpenAI.Tests.Staging;
 
-public class Tests
+public class ChatTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
-    [Test]
-    public void HelloWorldChat()
-    {
-        AzureChatClient client = new("gpt-35-turbo");
-        ClientResult<ChatCompletion> chatCompletion = client.CompleteChat("hello, world!");
-        Assert.That(chatCompletion?.Value, Is.Not.Null);
-    }
-
     [Test]
     public void HelloWorldChatWithTopLevelClient()
     {
@@ -32,4 +19,15 @@ public class Tests
         Assert.That(chatCompletion?.Value, Is.Not.Null);
     }
 
+    [Test]
+    public void HelloWorldChatWithTopLevelClientNoImplicitEnvironment()
+    {
+        string endpointFromEnvironment = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+        string keyFromEnvironment = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY");
+
+        AzureOpenAIClient topLevelClient = new(new Uri(endpointFromEnvironment), new ApiKeyCredential(keyFromEnvironment));
+        ChatClient chatClient = topLevelClient.GetChatClient("gpt-35-turbo");
+        ChatCompletion chatCompletion = chatClient.CompleteChat("hello, world!");
+        Assert.That(chatCompletion?.Content, Is.Not.Null);
+    }
 }

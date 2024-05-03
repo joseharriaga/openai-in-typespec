@@ -35,14 +35,14 @@ public partial class AzureEmbeddingClient : EmbeddingClient
         request.Method = "POST";
         UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
         StringBuilder path = new();
-        path.Append($"openai/deployments/{_model}/embeddings");
+        path.Append($"openai/deployments/{_deploymentName}/embeddings");
         uriBuilder.Path += path.ToString();
         uriBuilder.Query += $"?api-version={_apiVersion}";
         request.Uri = uriBuilder.Uri;
         request.Headers.Set("Accept", "application/json");
         request.Headers.Set("Content-Type", "application/json");
         request.Content = content;
-        message.Apply(options ?? AzureOpenAIClient.DefaultRequestOptions);
+        message.Apply(options ?? null);
         return message;
     }
 }

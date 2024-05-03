@@ -1,49 +1,34 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.Core;
 using OpenAI.Chat;
-using System.ClientModel;
 using System.ClientModel.Primitives;
 
 namespace Azure.AI.OpenAI.Staging.Chat;
 
+/// <summary>
+/// The scenario client used for chat completion operations with the Azure OpenAI service.
+/// </summary>
+/// <remarks>
+/// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
+/// </remarks>
 public partial class AzureChatClient : ChatClient
 {
+    private readonly string _deploymentName;
+    private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    public AzureChatClient(
-        string deploymentName,
-        Uri endpoint = null,
-        ApiKeyCredential credential = null,
-        AzureOpenAIClientOptions options = null)
-            : this(
-                  deploymentName,
-                  AzureOpenAIClient.CreatePipeline(credential),
-                  endpoint ?? AzureOpenAIClient.GetConfiguredEndpoint(options),
-                  options)
-    {}
-
-    public AzureChatClient(
-        string deploymentName,
-        Uri endpoint,
-        TokenCredential credential,
-        AzureOpenAIClientOptions options = null)
-            : this(
-                  deploymentName,
-                  AzureOpenAIClient.CreatePipeline(credential),
-                  endpoint ?? AzureOpenAIClient.GetConfiguredEndpoint(options),
-                  options)
-    {}
-
     protected internal AzureChatClient(
-        string deploymentName,
         ClientPipeline pipeline,
+        string deploymentName,
         Uri endpoint,
         AzureOpenAIClientOptions options)
-            : base(pipeline, model: deploymentName, credential: null, endpoint)
+            : base(pipeline, model: deploymentName, endpoint, options)
     {
-        _apiVersion = options?.ApiVersion ?? AzureOpenAIClientOptions.AzureOpenAIServiceApiVersion.Latest;
+        options ??= new();
+        _deploymentName = deploymentName;
+        _endpoint = endpoint;
+        _apiVersion = options.Version;
     }
 
     protected AzureChatClient()

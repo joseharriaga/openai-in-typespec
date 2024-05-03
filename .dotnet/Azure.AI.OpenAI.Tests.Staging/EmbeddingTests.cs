@@ -11,19 +11,6 @@ namespace Azure.AI.OpenAI.Tests.Staging;
 
 public class EmbeddingTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
-    [Test]
-    public void SimpleEmbedding()
-    {
-        AzureEmbeddingClient client = new("text-embedding-3-small");
-        ClientResult<Embedding> embeddingResult = client.GenerateEmbedding("sample text to embed");
-        Assert.That(embeddingResult?.Value?.Vector.Length, Is.GreaterThan(0));
-    }
-
     [Test]
     public void SimpleEmbeddingWithTopLevelClient()
     {

@@ -119,7 +119,7 @@ public partial class AzureFineTuningClient : FineTuningClient
             request.Headers.Set("Content-Type", "application/json");
         }
         request.Content = content;
-        message.Apply(options ?? AzureOpenAIClient.DefaultRequestOptions);
+        message.Apply(options ?? null);
         return message;
     }
 

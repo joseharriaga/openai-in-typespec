@@ -10,35 +10,54 @@ namespace OpenAI.Chat;
 
 public partial class ChatClient
 {
-    protected readonly string _model;
-    protected readonly ClientPipeline _pipeline;
-    protected readonly Uri _endpoint;
+    private readonly string _model;
+    private readonly ClientPipeline _pipeline;
+    private readonly Uri _endpoint;
 
     /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
-    public virtual ClientPipeline Pipeline => _pipeline;
+    public ClientPipeline Pipeline => _pipeline;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ChatClient"/>, used for Chat Completion requests. 
+    /// Initializes a new instance of <see cref="ChatClient"/> that will use an API key when authenticating.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
-    /// </remarks>
-    /// <param name="model">The model name for chat completions that the client should use.</param>
-    /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    
-    public ChatClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = null)
-        : this(OpenAIClient.CreatePipeline(credential, options), model, credential: null, OpenAIClient.GetEndpoint(options))
+    /// <param name="model"> The model name for chat completions that the client should use. </param>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public ChatClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              model,
+              OpenAIClient.GetEndpoint(options),
+              options)
     { }
 
-    protected internal ChatClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
+    /// <summary>
+    /// Initializes a new instance of <see cref="ChatClient"/> that will use an API key from the OPENAI_API_KEY
+    /// environment variable when authenticating.
+    /// </summary>
+    /// <remarks>
+    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
+    /// <see cref="ChatClient(string,ApiKeyCredential,OpenAIClientOptions)"/>.
+    /// </remarks>
+    /// <param name="model"> The model name for chat completions that the client should use. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
+    public ChatClient(string model, OpenAIClientOptions options = null)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
+              model,
+              OpenAIClient.GetEndpoint(options),
+              options)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="ChatClient"/>.
+    /// </summary>
+    /// <param name="pipeline"> The <see cref="ClientPipeline"/> instance to use. </param>
+    /// <param name="model"> The model name to use. </param>
+    /// <param name="endpoint"> The endpoint to use. </param>
+    protected internal ChatClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options)
     {
         _model = model;
         _pipeline = pipeline;
@@ -82,7 +101,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
+        ClientResult protocolResult = CompleteChat(content, null);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         ChatCompletion chatCompletion = new(internalResponse, internalChoiceIndex: 0);
@@ -102,7 +121,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        ClientResult protocolResult = await CompleteChatAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
+        ClientResult protocolResult = await CompleteChatAsync(content, null).ConfigureAwait(false);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         ChatCompletion chatCompletion = new(internalResponse, internalChoiceIndex: 0);
@@ -126,7 +145,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
+        ClientResult protocolResult = CompleteChat(content, null);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         List<ChatCompletion> chatCompletions = [];
@@ -154,7 +173,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
+        ClientResult protocolResult = CompleteChat(content, null);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         List<ChatCompletion> chatCompletions = [];
@@ -232,8 +251,8 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, OpenAIClient.DefaultRequestOptions, bufferResponse: false);
-        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, OpenAIClient.DefaultRequestOptions);
+        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, null, bufferResponse: false);
+        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, null);
         ClientResult protocolResult = ClientResult.FromResponse(response);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
             protocolResult,
@@ -265,8 +284,8 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, OpenAIClient.DefaultRequestOptions, bufferResponse: false);
-        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, OpenAIClient.DefaultRequestOptions);
+        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, null, bufferResponse: false);
+        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, null);
         ClientResult protocolResult = ClientResult.FromResponse(response);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
             protocolResult,

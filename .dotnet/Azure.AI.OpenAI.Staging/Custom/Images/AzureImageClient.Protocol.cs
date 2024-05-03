@@ -69,14 +69,14 @@ public partial class AzureImageClient : ImageClient
         request.Method = "POST";
         UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
         StringBuilder path = new();
-        path.Append($"openai/deployments/{_model}/images/{operation}");
+        path.Append($"openai/deployments/{_deploymentName}/images/{operation}");
         uriBuilder.Path += path.ToString();
         uriBuilder.Query += $"?api-version={_apiVersion}";
         request.Uri = uriBuilder.Uri;
         request.Headers.Set("Accept", "application/json");
         request.Headers.Set("Content-Type", contentType);
         request.Content = content;
-        message.Apply(options ?? AzureOpenAIClient.DefaultRequestOptions);
+        message.Apply(options ?? null);
         return message;
     }
 

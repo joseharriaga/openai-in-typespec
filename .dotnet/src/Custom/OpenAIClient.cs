@@ -22,11 +22,19 @@ namespace OpenAI;
 /// </summary>
 [CodeGenModel("OpenAIClient")]
 [CodeGenSuppress("OpenAIClient", typeof(ApiKeyCredential))]
+[CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
 [CodeGenSuppress("GetAudioClientClient")]
+// [CodeGenSuppress("GetAssistantsClient")]
+[CodeGenSuppress("GetChatClient")]
+[CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
-[CodeGenSuppress("GetLegacyCompletionClientClient")]
+// [CodeGenSuppress("GetMessagesClient")]
+// [CodeGenSuppress("GetModelsOpsClient")]
+// [CodeGenSuppress("GetModerationsClient")]
+// [CodeGenSuppress("GetRunsClient")]
+// [CodeGenSuppress("GetThreadsClient")]
 public partial class OpenAIClient
 {
     internal static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200.Value;
@@ -85,10 +93,6 @@ public partial class OpenAIClient
         _endpoint = endpoint;
         _options = options;
     }
-
-    // Customization: supression
-    private OpenAIClient(Uri _, ApiKeyCredential __, OpenAIClientOptions ___)
-        => throw new NotImplementedException();
 
     /// <summary>
     /// Gets a new instance of <see cref="AssistantClient"/> that reuses the client configuration details provided to

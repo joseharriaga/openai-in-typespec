@@ -31,7 +31,6 @@ namespace OpenAI
         protected OpenAIClient()
         {
         }
-
         private OpenAI.Internal.Assistants _cachedAssistants;
         private OpenAI.Internal.Chat _cachedChat;
         private OpenAI.Internal.Files _cachedFiles;
@@ -45,12 +44,6 @@ namespace OpenAI
         internal OpenAI.Internal.Assistants GetAssistantsClient()
         {
             return Volatile.Read(ref _cachedAssistants) ?? Interlocked.CompareExchange(ref _cachedAssistants, new OpenAI.Internal.Assistants(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAssistants;
-        }
-
-        /// <summary> Initializes a new instance of Chat. </summary>
-        internal OpenAI.Internal.Chat GetChatClient()
-        {
-            return Volatile.Read(ref _cachedChat) ?? Interlocked.CompareExchange(ref _cachedChat, new OpenAI.Internal.Chat(_pipeline, _keyCredential, _endpoint), null) ?? _cachedChat;
         }
 
         /// <summary> Initializes a new instance of Files. </summary>

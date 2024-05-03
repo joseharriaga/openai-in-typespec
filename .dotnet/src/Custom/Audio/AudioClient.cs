@@ -23,33 +23,54 @@ public partial class AudioClient
     // CUSTOM:
     // - Added `model` parameter.
     // - Added support for retrieving credential and endpoint from environment variables.
-    /// <summary> Initializes a new instance of AudioClient. </summary>
-    /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-    /// <param name="credential"> The key credential to copy. </param>
-    /// <param name="options"> OpenAI Endpoint. </param>
-    public AudioClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = default)
-    {
-        Argument.AssertNotNullOrEmpty(model, nameof(model));
-        options ??= new OpenAIClientOptions();
 
-        _model = model;
-        _keyCredential = credential ?? new(Environment.GetEnvironmentVariable(OpenAIClient.s_OpenAIApiKeyEnvironmentVariable) ?? string.Empty);
-        _pipeline = ClientPipeline.Create(options, Array.Empty<PipelinePolicy>(), new PipelinePolicy[] { ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(_keyCredential, AuthorizationHeader, AuthorizationApiKeyPrefix) }, Array.Empty<PipelinePolicy>());
-        _endpoint = options.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIClient.s_OpenAIEndpointEnvironmentVariable) ?? OpenAIClient.s_defaultOpenAIV1Endpoint);
-    }
+    /// <summary>
+    /// Initializes a new instance of <see cref="AudioClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="model"> The model name to use for audio operations. </param>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public AudioClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              model,
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {}
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="AudioClient"/> that will use an API key from the OPENAI_API_KEY
+    /// environment variable when authenticating.
+    /// </summary>
+    /// <remarks>
+    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
+    /// <see cref="AudioClient(string,ApiKeyCredential,OpenAIClientOptions)"/>.
+    /// </remarks>
+    /// <param name="model"> The model name to use for audio operations. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
+    public AudioClient(string model, OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
+              model,
+              OpenAIClient.GetEndpoint(options),
+              options)
+    { }
 
     // CUSTOM:
     // - Added `model` parameter.
+
     /// <summary> Initializes a new instance of EmbeddingClient. </summary>
     /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-    /// <param name="credential"> The key credential to copy. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>
-    protected internal AudioClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
+    protected internal AudioClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options)
     {
+        Argument.AssertNotNullOrEmpty(model, nameof(model));
+
         _pipeline = pipeline;
         _model = model;
-        _keyCredential = credential;
         _endpoint = endpoint;
     }
 

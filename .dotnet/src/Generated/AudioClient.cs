@@ -14,7 +14,7 @@ namespace OpenAI.Audio
     public partial class AudioClient
     {
         private const string AuthorizationHeader = "Authorization";
-        private readonly ApiKeyCredential _keyCredential;
+        private readonly ApiKeyCredential _credential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
         private readonly ClientPipeline _pipeline;
 

@@ -45,6 +45,7 @@ public partial class ChatClientTests
         Assert.That(new string[] { "aye", "arr", "hearty" }.Any(pirateWord => result.Value.Content.ToString().ToLowerInvariant().Contains(pirateWord)));
     }
 
+    // TODO: Add back convenience APIs
     //[Test]
     //public async Task StreamingChat()
     //{
@@ -80,17 +81,14 @@ public partial class ChatClientTests
         Stopwatch stopwatch = Stopwatch.StartNew();
 
         string message = "What are the best pizza toppings? Give me a breakdown on the reasons.";
-        ChatCompletionOptions options = new ChatCompletionOptions()
-        {
-            
-        }
+        ChatCompletionOptions options = new ChatCompletionOptions().WithStreaming();
 
-        StreamingClientResult<StreamingChatUpdate> streamingResult
-            = client.CompleteChatStreaming();
-        Assert.That(streamingResult, Is.InstanceOf<StreamingClientResult<StreamingChatUpdate>>());
+        ClientResult result = client.CompleteChat(options.ToContent());
+
         int updateCount = 0;
 
-        await foreach (StreamingChatUpdate chatUpdate in streamingResult)
+        var sseReader = AsyncClientResultCollection<BinaryData>.Create<BinaryData>(result.GetRawResponse());
+        await foreach (BinaryData eventData in sseReader)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;

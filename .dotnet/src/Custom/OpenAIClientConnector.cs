@@ -24,6 +24,6 @@ internal partial class OpenAIClientConnector
         Endpoint ??= options?.Endpoint ?? new(Environment.GetEnvironmentVariable(s_OpenAIEndpointEnvironmentVariable) ?? s_defaultOpenAIV1Endpoint);
         credential ??= new(Environment.GetEnvironmentVariable(s_OpenAIApiKeyEnvironmentVariable) ?? string.Empty);
         options ??= new();
-        InternalClient = new(credential, options.InternalOptions);
+        InternalClient = new(credential, options);
     }
 }

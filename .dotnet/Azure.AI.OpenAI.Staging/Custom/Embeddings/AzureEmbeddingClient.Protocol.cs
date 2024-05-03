@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Azure.AI.OpenAI.Staging.Embeddings;
 
-public partial class AzureEmbeddingClient : EmbeddingClient
+internal partial class AzureEmbeddingClient : EmbeddingClient
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ClientResult GenerateEmbeddings(BinaryContent content, RequestOptions options = null)

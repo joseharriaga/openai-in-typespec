@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Azure.AI.OpenAI.Staging.Audio;
 
-public partial class AzureAudioClient : AudioClient
+internal partial class AzureAudioClient : AudioClient
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ClientResult TranscribeAudio(BinaryContent content, string contentType, RequestOptions options = null)

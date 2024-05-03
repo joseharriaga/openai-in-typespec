@@ -12,7 +12,7 @@ namespace Azure.AI.OpenAI.Staging.Chat;
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-public partial class AzureChatClient : ChatClient
+internal partial class AzureChatClient : ChatClient
 {
     private readonly string _deploymentName;
     private readonly Uri _endpoint;

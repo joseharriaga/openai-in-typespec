@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Azure.AI.OpenAI.Staging.FineTuning;
 
-public partial class AzureFineTuningClient : FineTuningClient
+internal partial class AzureFineTuningClient : FineTuningClient
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ClientResult CreateJob(BinaryContent content, RequestOptions options = null)

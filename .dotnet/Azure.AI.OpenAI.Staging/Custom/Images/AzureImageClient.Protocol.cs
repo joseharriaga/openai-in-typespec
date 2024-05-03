@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Azure.AI.OpenAI.Staging.Images;
 
-public partial class AzureImageClient : ImageClient
+internal partial class AzureImageClient : ImageClient
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ClientResult GenerateImages(BinaryContent content, RequestOptions options = null)

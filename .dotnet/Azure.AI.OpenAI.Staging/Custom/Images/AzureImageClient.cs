@@ -12,7 +12,7 @@ namespace Azure.AI.OpenAI.Staging.Images;
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-public partial class AzureImageClient : ImageClient
+internal partial class AzureImageClient : ImageClient
 {
     private readonly string _deploymentName;
     private readonly Uri _endpoint;

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Azure.AI.OpenAI.Staging.Chat;
 
-public partial class AzureChatClient : ChatClient
+internal partial class AzureChatClient : ChatClient
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ClientResult CompleteChat(BinaryContent content, RequestOptions options = null)

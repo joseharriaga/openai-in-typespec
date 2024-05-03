@@ -12,7 +12,7 @@ namespace Azure.AI.OpenAI.Staging.Embeddings;
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-public partial class AzureEmbeddingClient : EmbeddingClient
+internal partial class AzureEmbeddingClient : EmbeddingClient
 {
     private readonly string _deploymentName;
     private readonly Uri _endpoint;

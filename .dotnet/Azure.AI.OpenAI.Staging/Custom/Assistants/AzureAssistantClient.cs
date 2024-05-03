@@ -14,7 +14,7 @@ namespace Azure.AI.OpenAI.Staging.FineTuning;
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
 [Experimental("OPENAI001")]
-public partial class AzureAssistantClient : AssistantClient
+internal partial class AzureAssistantClient : AssistantClient
 {
     private readonly Uri _endpoint;
     private readonly string _apiVersion;

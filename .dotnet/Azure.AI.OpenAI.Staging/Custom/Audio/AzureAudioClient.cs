@@ -12,7 +12,7 @@ namespace Azure.AI.OpenAI.Staging.Audio;
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-public partial class AzureAudioClient : AudioClient
+internal partial class AzureAudioClient : AudioClient
 {
     private readonly string _deploymentName;
     private readonly Uri _endpoint;

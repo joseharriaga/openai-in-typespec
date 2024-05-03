@@ -3,7 +3,7 @@
 
 namespace Azure.AI.OpenAI.Staging.Assistant;
 
-public partial class AzureFileClient
+internal partial class AzureFileClient
 {
 
 }

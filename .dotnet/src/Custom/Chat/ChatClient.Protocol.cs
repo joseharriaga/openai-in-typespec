@@ -30,7 +30,7 @@ public partial class ChatClient
     private PipelineMessage CreateChatCompletionPipelineMessage(BinaryContent content, RequestOptions options = null, bool bufferResponse = true)
     {
         PipelineMessage message = Pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
+        message.ResponseClassifier = OpenAIClient.PipelineMessageClassifier200;
         message.BufferResponse = bufferResponse;
         PipelineRequest request = message.Request;
         request.Method = "POST";

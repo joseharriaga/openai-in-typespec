@@ -35,11 +35,10 @@ public partial class ChatClient
     /// <param name="options">Additional options to customize the client.</param>
     
     public ChatClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = null)
-        : this(model, OpenAIClient.CreatePipeline(credential, options), OpenAIClient.GetEndpoint(options))
+        : this(OpenAIClient.CreatePipeline(credential, options), model, credential: null, OpenAIClient.GetEndpoint(options))
     { }
 
-    // internal Chat(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
-    protected internal ChatClient(string model, ClientPipeline pipeline, Uri endpoint)
+    protected internal ChatClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
     {
         _model = model;
         _pipeline = pipeline;
@@ -83,7 +82,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options);
         using BinaryContent content = internalRequest.ToBinaryBody();
-        ClientResult protocolResult = CompleteChat(content, DefaultRequestContext);
+        ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         ChatCompletion chatCompletion = new(internalResponse, internalChoiceIndex: 0);
@@ -103,7 +102,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options);
         using BinaryContent content = internalRequest.ToBinaryBody();
-        ClientResult protocolResult = await CompleteChatAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        ClientResult protocolResult = await CompleteChatAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         ChatCompletion chatCompletion = new(internalResponse, internalChoiceIndex: 0);
@@ -127,7 +126,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
         using BinaryContent content = internalRequest.ToBinaryBody();
-        ClientResult protocolResult = CompleteChat(content, DefaultRequestContext);
+        ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         List<ChatCompletion> chatCompletions = [];
@@ -155,7 +154,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
         using BinaryContent content = internalRequest.ToBinaryBody();
-        ClientResult protocolResult = CompleteChat(content, DefaultRequestContext);
+        ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         List<ChatCompletion> chatCompletions = [];
@@ -233,8 +232,8 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
         using BinaryContent content = internalRequest.ToBinaryBody();
-        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, DefaultRequestContext, bufferResponse: false);
-        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, DefaultRequestContext);
+        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, OpenAIClient.DefaultRequestOptions, bufferResponse: false);
+        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, OpenAIClient.DefaultRequestOptions);
         ClientResult protocolResult = ClientResult.FromResponse(response);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
             protocolResult,
@@ -266,8 +265,8 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
         using BinaryContent content = internalRequest.ToBinaryBody();
-        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, DefaultRequestContext, bufferResponse: false);
-        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, DefaultRequestContext);
+        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, OpenAIClient.DefaultRequestOptions, bufferResponse: false);
+        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, OpenAIClient.DefaultRequestOptions);
         ClientResult protocolResult = ClientResult.FromResponse(response);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
             protocolResult,
@@ -323,8 +322,4 @@ public partial class ChatClient
             additionalData
         );
     }
-
-    protected static RequestOptions DefaultRequestContext = new RequestOptions();
-    private static PipelineMessageClassifier _pipelineMessageClassifier200;
-    protected static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

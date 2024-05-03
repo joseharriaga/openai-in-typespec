@@ -30,7 +30,7 @@ public partial class AzureChatClient : ChatClient
     private PipelineMessage CreateChatCompletionPipelineMessage(BinaryContent content, RequestOptions options = null, bool bufferResponse = true)
     {
         PipelineMessage message = Pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineClassifiers.PipelineMessageClassifier200;
+        message.ResponseClassifier = AzureOpenAIClient.PipelineMessageClassifier200;
         message.BufferResponse = bufferResponse;
         PipelineRequest request = message.Request;
         request.Method = "POST";
@@ -43,7 +43,7 @@ public partial class AzureChatClient : ChatClient
         request.Headers.Set("Accept", "application/json");
         request.Headers.Set("Content-Type", "application/json");
         request.Content = content;
-        message.Apply(options ?? DefaultRequestContext);
+        message.Apply(options ?? AzureOpenAIClient.DefaultRequestOptions);
         return message;
     }
 }

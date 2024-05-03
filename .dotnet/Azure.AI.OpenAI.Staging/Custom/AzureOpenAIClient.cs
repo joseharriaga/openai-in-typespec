@@ -3,10 +3,12 @@
 
 using Azure.AI.OpenAI.Staging.Chat;
 using Azure.AI.OpenAI.Staging.Embeddings;
+using Azure.AI.OpenAI.Staging.Images;
 using Azure.Core;
 using OpenAI;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
+using OpenAI.Images;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
@@ -14,6 +16,9 @@ namespace Azure.AI.OpenAI.Staging;
 
 public partial class AzureOpenAIClient : OpenAIClient
 {
+    protected static new internal RequestOptions DefaultRequestOptions => OpenAIClient.DefaultRequestOptions;
+    protected static new internal PipelineMessageClassifier PipelineMessageClassifier200 => OpenAIClient.PipelineMessageClassifier200;
+
     public AzureOpenAIClient(ApiKeyCredential credential = null, AzureOpenAIClientOptions options = null)
         : base(CreatePipeline(credential, options), options)
     { }
@@ -30,6 +35,15 @@ public partial class AzureOpenAIClient : OpenAIClient
     public override EmbeddingClient GetEmbeddingClient(string deploymentName)
     {
         return new AzureEmbeddingClient(
+            deploymentName,
+            Pipeline,
+            _cachedOptions?.Endpoint ?? GetConfiguredEndpoint(),
+            _cachedOptions as AzureOpenAIClientOptions);
+    }
+
+    public override ImageClient GetImageClient(string deploymentName)
+    {
+        return new AzureImageClient(
             deploymentName,
             Pipeline,
             _cachedOptions?.Endpoint ?? GetConfiguredEndpoint(),

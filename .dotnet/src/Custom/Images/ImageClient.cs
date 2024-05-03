@@ -22,7 +22,8 @@ namespace OpenAI.Images;
 [CodeGenSuppress("CreateCreateImageVariationRequest", typeof(BinaryContent), typeof(RequestOptions))]
 public partial class ImageClient
 {
-    private readonly string _model;
+    protected readonly string _model;
+    protected readonly Uri _endpoint;
 
     // CUSTOM:
     // - Added `model` parameter.
@@ -49,7 +50,7 @@ public partial class ImageClient
     /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="credential"> The key credential to copy. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>
-    internal ImageClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
+    protected internal ImageClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
     {
         _pipeline = pipeline;
         _model = model;

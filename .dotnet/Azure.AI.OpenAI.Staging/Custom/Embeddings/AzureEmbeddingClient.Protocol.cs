@@ -30,7 +30,7 @@ public partial class AzureEmbeddingClient : EmbeddingClient
     private PipelineMessage CreateEmbeddingPipelineMessage(BinaryContent content, RequestOptions options = null)
     {
         PipelineMessage message = Pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineClassifiers.PipelineMessageClassifier200;
+        message.ResponseClassifier = AzureOpenAIClient.PipelineMessageClassifier200;
         PipelineRequest request = message.Request;
         request.Method = "POST";
         UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
@@ -42,7 +42,7 @@ public partial class AzureEmbeddingClient : EmbeddingClient
         request.Headers.Set("Accept", "application/json");
         request.Headers.Set("Content-Type", "application/json");
         request.Content = content;
-        message.Apply(options ?? DefaultRequestContext);
+        message.Apply(options ?? AzureOpenAIClient.DefaultRequestOptions);
         return message;
     }
 }

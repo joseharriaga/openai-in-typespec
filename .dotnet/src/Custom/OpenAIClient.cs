@@ -30,6 +30,10 @@ public partial class OpenAIClient
 {
     protected readonly ApiKeyCredential _cachedCredential = null;
     protected readonly OpenAIClientOptions _cachedOptions = null;
+
+    protected internal static RequestOptions DefaultRequestOptions = new();
+    protected internal static PipelineMessageClassifier PipelineMessageClassifier200
+        = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
     internal static readonly string s_OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
     internal static readonly string s_OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
     internal static readonly string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
@@ -95,7 +99,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ChatClient"/>. </returns>
-    public virtual ChatClient GetChatClient(string model) => new(model, Pipeline, GetEndpoint(_cachedOptions));
+    public virtual ChatClient GetChatClient(string model) => new(Pipeline, model, credential: null, GetEndpoint(_cachedOptions));
 
     /// <summary>
     /// Gets a new instance of <see cref="EmbeddingClient"/> that reuses the client configuration details provided to

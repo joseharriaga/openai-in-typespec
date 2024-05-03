@@ -298,7 +298,7 @@ namespace OpenAI.Internal
             uri.AppendPath("/models", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 
@@ -314,7 +314,7 @@ namespace OpenAI.Internal
             uri.AppendPath(model, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 
@@ -330,7 +330,7 @@ namespace OpenAI.Internal
             uri.AppendPath(model, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 

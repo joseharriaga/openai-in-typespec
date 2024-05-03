@@ -762,7 +762,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 
@@ -795,7 +795,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 
@@ -813,7 +813,7 @@ namespace OpenAI.Internal
             uri.AppendPath(messageId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 
@@ -833,7 +833,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 
@@ -868,7 +868,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 
@@ -888,7 +888,7 @@ namespace OpenAI.Internal
             uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            if (options != null) { if (options != null) { if (options != null) { if (options != null) { if (options != null) { message.Apply(options); } } } } }
             return message;
         }
 

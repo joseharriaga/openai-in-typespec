@@ -32,12 +32,6 @@ namespace OpenAI
         {
         }
 
-        /// <summary> Initializes a new instance of OpenAIClient. </summary>
-        /// <param name="credential"> A credential used to authenticate to the service. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
-        public OpenAIClient(ApiKeyCredential credential) : this(new Uri("https://api.openai.com/v1"), credential, new OpenAIClientOptions())
-        {
-        }
         private OpenAI.Internal.Assistants _cachedAssistants;
         private OpenAI.Internal.Chat _cachedChat;
         private OpenAI.Internal.Files _cachedFiles;

@@ -3,7 +3,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -34,13 +33,10 @@ public partial class AssistantClient
     /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
     public AssistantClient(ApiKeyCredential credential, OpenAIClientOptions options = default)
         : this(
-              CreateAssistantsPipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
               OpenAIClient.GetEndpoint(options),
               options)
-    {
-        // Temporary pending codegen integration
-        _clientConnector = new(model: "none", credential, options);
-    }
+    {}
 
     /// <summary>
     /// Initializes a new instance of <see cref="AssistantClient"/> that will use an API key from the OPENAI_API_KEY
@@ -54,13 +50,10 @@ public partial class AssistantClient
     /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
     public AssistantClient(OpenAIClientOptions options = default)
         : this(
-              CreateAssistantsPipeline(OpenAIClient.GetApiKey(), options),
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
               OpenAIClient.GetEndpoint(options),
               options)
-    {
-        // Temporary pending codegen integration
-        _clientConnector = new (model: "none", OpenAIClient.GetApiKey(), options);
-    }
+    {}
 
     /// <summary>
     /// Initializes a new instance of <see cref="AssistantClient"/>.
@@ -71,6 +64,16 @@ public partial class AssistantClient
     {
         _pipeline = pipeline;
         _endpoint = endpoint;
+
+        // Temporary pending codegen integration
+        if (options is null)
+        {
+            options = new();
+            options.AddPolicy(
+                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
+                PipelinePosition.PerCall);
+        }
+        _clientConnector = new(model: "none", OpenAIClient.GetApiKey(), options);
     }
 
     public virtual ClientResult<Assistant> CreateAssistant(
@@ -746,14 +749,5 @@ public partial class AssistantClient
         ClientResult<U> internalResult = await internalAsyncFunc.Invoke().ConfigureAwait(false);
         ListQueryPage<T> convertedValue = ListQueryPage.Create(internalResult.Value) as ListQueryPage<T>;
         return ClientResult.FromValue(convertedValue, internalResult.GetRawResponse());
-    }
-
-    private static ClientPipeline CreateAssistantsPipeline(ApiKeyCredential credential, OpenAIClientOptions options)
-    {
-        options ??= new();
-        options.AddPolicy(
-            new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
-            PipelinePosition.PerCall);
-        return OpenAIClient.CreatePipeline(credential, options);
     }
 }

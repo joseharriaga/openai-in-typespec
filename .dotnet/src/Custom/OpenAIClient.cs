@@ -21,7 +21,7 @@ namespace OpenAI;
 /// configuration details like endpoint, authentication, and pipeline customization.
 /// </summary>
 [CodeGenModel("OpenAIClient")]
-[CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
+[CodeGenSuppress("OpenAIClient", typeof(ApiKeyCredential))]
 [CodeGenSuppress("GetAudioClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
@@ -85,6 +85,10 @@ public partial class OpenAIClient
         _endpoint = endpoint;
         _options = options;
     }
+
+    // Customization: supression
+    private OpenAIClient(Uri _, ApiKeyCredential __, OpenAIClientOptions ___)
+        => throw new NotImplementedException();
 
     /// <summary>
     /// Gets a new instance of <see cref="AssistantClient"/> that reuses the client configuration details provided to
@@ -194,6 +198,7 @@ public partial class OpenAIClient
             perTryPolicies:
             [
                 ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, "Authorization", "Bearer"),
+                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
             ],
             beforeTransportPolicies: []);
     }

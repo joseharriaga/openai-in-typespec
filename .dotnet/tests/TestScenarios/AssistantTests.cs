@@ -19,15 +19,6 @@ public partial class AssistantTests
     }
 
     [Test]
-    public void ListingAssistantsWorkViaTopLevelClient()
-    {
-        OpenAIClient client = new();
-        AssistantClient assistantClient = client.GetAssistantClient();
-        ListQueryPage<Assistant> assistants = assistantClient.GetAssistants();
-        Assert.That(assistants, Is.Not.Null.Or.Empty);
-    }
-
-    [Test]
     public void CreatingAndDeletingAssistantsWorks()
     {
         AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);

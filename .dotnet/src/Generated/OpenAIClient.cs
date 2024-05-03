@@ -31,6 +31,13 @@ namespace OpenAI
         protected OpenAIClient()
         {
         }
+
+        /// <summary> Initializes a new instance of OpenAIClient. </summary>
+        /// <param name="credential"> A credential used to authenticate to the service. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
+        public OpenAIClient(ApiKeyCredential credential) : this(new Uri("https://api.openai.com/v1"), credential, new OpenAIClientOptions())
+        {
+        }
         private OpenAI.Internal.Assistants _cachedAssistants;
         private OpenAI.Internal.Chat _cachedChat;
         private OpenAI.Internal.Files _cachedFiles;
@@ -44,6 +51,12 @@ namespace OpenAI
         internal OpenAI.Internal.Assistants GetAssistantsClient()
         {
             return Volatile.Read(ref _cachedAssistants) ?? Interlocked.CompareExchange(ref _cachedAssistants, new OpenAI.Internal.Assistants(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAssistants;
+        }
+
+        /// <summary> Initializes a new instance of Chat. </summary>
+        internal OpenAI.Internal.Chat GetChatClient()
+        {
+            return Volatile.Read(ref _cachedChat) ?? Interlocked.CompareExchange(ref _cachedChat, new OpenAI.Internal.Chat(_pipeline, _keyCredential, _endpoint), null) ?? _cachedChat;
         }
 
         /// <summary> Initializes a new instance of Files. </summary>

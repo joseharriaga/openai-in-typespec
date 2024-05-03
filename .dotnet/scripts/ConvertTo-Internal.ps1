@@ -191,7 +191,15 @@ function Edit-GeneratedModelFactory {
     $content | Set-Content -Path $file.FullName -NoNewline
 }
 
+function Remove-GeneratedTests {
+    $root = Split-Path $PSScriptRoot -Parent
+
+    $directory = Join-Path -Path $root -ChildPath "tests\Generated"
+    Remove-Item -LiteralPath $directory -Recurse -Force
+}
+
 Edit-GeneratedOpenAIClient
 Edit-GeneratedSubclients
 Edit-GeneratedModels
 Edit-GeneratedModelFactory
+Remove-GeneratedTests

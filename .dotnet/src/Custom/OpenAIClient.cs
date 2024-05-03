@@ -21,20 +21,12 @@ namespace OpenAI;
 /// configuration details like endpoint, authentication, and pipeline customization.
 /// </summary>
 [CodeGenModel("OpenAIClient")]
-[CodeGenSuppress("OpenAIClient", typeof(ApiKeyCredential))]
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
 [CodeGenSuppress("GetAudioClientClient")]
-// [CodeGenSuppress("GetAssistantsClient")]
-[CodeGenSuppress("GetChatClient")]
-[CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
-// [CodeGenSuppress("GetMessagesClient")]
-// [CodeGenSuppress("GetModelsOpsClient")]
-// [CodeGenSuppress("GetModerationsClient")]
-// [CodeGenSuppress("GetRunsClient")]
-// [CodeGenSuppress("GetThreadsClient")]
+[CodeGenSuppress("GetLegacyCompletionClientClient")]
 public partial class OpenAIClient
 {
     internal static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200.Value;
@@ -202,7 +194,6 @@ public partial class OpenAIClient
             perTryPolicies:
             [
                 ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, "Authorization", "Bearer"),
-                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
             ],
             beforeTransportPolicies: []);
     }

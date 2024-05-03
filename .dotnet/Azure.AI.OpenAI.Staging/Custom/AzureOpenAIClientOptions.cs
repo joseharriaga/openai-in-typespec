@@ -10,8 +10,15 @@ namespace Azure.AI.OpenAI.Staging;
 /// </summary>
 public partial class AzureOpenAIClientOptions : OpenAIClientOptions
 {
-    private const ServiceVersion LatestVersion = ServiceVersion.V2024_04_01_Preview;
-    internal string Version { get; }
+    internal string Version
+    {
+        get
+        {
+            AssertNotFrozen();
+            return _version;
+        }
+    }
+    private readonly string _version;
 
     /// <summary>
     /// Initializes a new instance of <see cref="AzureOpenAIClientOptions"/>
@@ -21,7 +28,7 @@ public partial class AzureOpenAIClientOptions : OpenAIClientOptions
     public AzureOpenAIClientOptions(ServiceVersion version = LatestVersion)
         : base()
     {
-        Version = version switch
+        _version = version switch
         {
             ServiceVersion.V2024_04_01_Preview => "2024-04-01-preview",
             _ => throw new NotSupportedException()
@@ -34,4 +41,6 @@ public partial class AzureOpenAIClientOptions : OpenAIClientOptions
         /// <summary> Service version "2024-04-01-preview". </summary>
         V2024_04_01_Preview = 7,
     }
+
+    private const ServiceVersion LatestVersion = ServiceVersion.V2024_04_01_Preview;
 }

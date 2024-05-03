@@ -37,14 +37,6 @@ namespace OpenAI;
 // [CodeGenSuppress("GetThreadsClient")]
 public partial class OpenAIClient
 {
-    internal static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200.Value;
-    internal static Lazy<PipelineMessageClassifier> _pipelineMessageClassifier200
-        = new(() => PipelineMessageClassifier.Create(stackalloc ushort[] { 200 }));
-
-    internal static readonly string s_OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
-    internal static readonly string s_OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
-    internal static readonly string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
-
     private readonly OpenAIClientOptions _options;
 
     /// <summary>
@@ -202,7 +194,7 @@ public partial class OpenAIClient
             perTryPolicies:
             [
                 ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, "Authorization", "Bearer"),
-                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
+                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set(s_OpenAIBetaFeatureHeader, s_OpenAIBetaAssistantsV1HeaderValue)),
             ],
             beforeTransportPolicies: []);
     }
@@ -235,4 +227,13 @@ public partial class OpenAIClient
             return new(environmentApiKey);
         }
     }
+
+    private static readonly string s_OpenAIBetaFeatureHeader = "OpenAI-Beta";
+    private static readonly string s_OpenAIBetaAssistantsV1HeaderValue = "assistants=v1";
+    private static readonly string s_OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
+    private static readonly string s_OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
+    private static readonly string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
+    private static PipelineMessageClassifier s_pipelineMessageClassifier200;
+    internal static PipelineMessageClassifier PipelineMessageClassifier200
+        => s_pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

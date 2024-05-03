@@ -1,9 +1,6 @@
-using System;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace OpenAI;
+namespace Azure.AI.OpenAI;
 
 internal partial class GenericActionPipelinePolicy : PipelinePolicy
 {

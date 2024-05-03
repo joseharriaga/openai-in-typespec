@@ -32,14 +32,7 @@ namespace Azure.AI.OpenAI.Staging;
 /// </remarks>
 public partial class AzureOpenAIClient : OpenAIClient
 {
-    private const string azureOpenAIEndpointEnvironmentVariable = "AZURE_OPENAI_ENDPOINT";
-    private const string azureOpenAIApiKeyEnvironmentVariable = "AZURE_OPENAI_API_KEY";
-
     private readonly AzureOpenAIClientOptions _options;
-
-    internal static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200.Value;
-    internal static Lazy<PipelineMessageClassifier> _pipelineMessageClassifier200
-        = new(() => PipelineMessageClassifier.Create(stackalloc ushort[] { 200 }));
 
     /// <summary>
     /// Creates a new instance of <see cref="AzureOpenAIClient"/> that will connect to a specified Azure OpenAI
@@ -209,7 +202,11 @@ public partial class AzureOpenAIClient : OpenAIClient
         => ClientPipeline.Create(
             options ?? new(),
             perCallPolicies: [],
-            perTryPolicies: [authenticationPolicy],
+            perTryPolicies:
+            [
+                authenticationPolicy,
+                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set(s_OpenAIBetaFeatureHeader, s_OpenAIBetaAssistantsV1HeaderValue)),
+            ],
             beforeTransportPolicies: []);
 
     internal static ClientPipeline CreatePipeline(ApiKeyCredential credential, OpenAIClientOptions options = null)
@@ -278,4 +275,13 @@ public partial class AzureOpenAIClient : OpenAIClient
             return new(environmentApiKey);
         }
     }
+
+    private static readonly string s_OpenAIBetaFeatureHeader = "OpenAI-Beta";
+    private static readonly string s_OpenAIBetaAssistantsV1HeaderValue = "assistants=v1";
+    private static readonly string s_aoaiEndpointEnvironmentVariable = "AZURE_OPENAI_ENDPOINT";
+    private static readonly string s_aoaiApiKeyEnvironmentVariable = "AZURE_OPENAI_API_KEY";
+    private static PipelineMessageClassifier _pipelineMessageClassifier200;
+    internal static PipelineMessageClassifier PipelineMessageClassifier200
+        => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+
 }

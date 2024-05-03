@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenAI.Internal.Models;
 
@@ -43,24 +42,26 @@ namespace OpenAI.Internal
         /// <summary> Create a thread and run it in one request. </summary>
         /// <param name="threadAndRun"> The <see cref="CreateThreadAndRunRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadAndRun"/> is null. </exception>
+        /// <remarks> Create thread and run. </remarks>
         public virtual async Task<ClientResult<RunObject>> CreateThreadAndRunAsync(CreateThreadAndRunRequest threadAndRun)
         {
             Argument.AssertNotNull(threadAndRun, nameof(threadAndRun));
 
-            using BinaryContent content = threadAndRun.ToBinaryBody();
-            ClientResult result = await CreateThreadAndRunAsync(content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = threadAndRun.ToBinaryContent();
+            ClientResult result = await CreateThreadAndRunAsync(content, null).ConfigureAwait(false);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Create a thread and run it in one request. </summary>
         /// <param name="threadAndRun"> The <see cref="CreateThreadAndRunRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadAndRun"/> is null. </exception>
+        /// <remarks> Create thread and run. </remarks>
         public virtual ClientResult<RunObject> CreateThreadAndRun(CreateThreadAndRunRequest threadAndRun)
         {
             Argument.AssertNotNull(threadAndRun, nameof(threadAndRun));
 
-            using BinaryContent content = threadAndRun.ToBinaryBody();
-            ClientResult result = CreateThreadAndRun(content, DefaultRequestContext);
+            using BinaryContent content = threadAndRun.ToBinaryContent();
+            ClientResult result = CreateThreadAndRun(content, null);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -125,13 +126,14 @@ namespace OpenAI.Internal
         /// <param name="run"> The <see cref="CreateRunRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="run"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Create run. </remarks>
         public virtual async Task<ClientResult<RunObject>> CreateRunAsync(string threadId, CreateRunRequest run)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNull(run, nameof(run));
 
-            using BinaryContent content = run.ToBinaryBody();
-            ClientResult result = await CreateRunAsync(threadId, content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = run.ToBinaryContent();
+            ClientResult result = await CreateRunAsync(threadId, content, null).ConfigureAwait(false);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -140,13 +142,14 @@ namespace OpenAI.Internal
         /// <param name="run"> The <see cref="CreateRunRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="run"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Create run. </remarks>
         public virtual ClientResult<RunObject> CreateRun(string threadId, CreateRunRequest run)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNull(run, nameof(run));
 
-            using BinaryContent content = run.ToBinaryBody();
-            ClientResult result = CreateRun(threadId, content, DefaultRequestContext);
+            using BinaryContent content = run.ToBinaryContent();
+            ClientResult result = CreateRun(threadId, content, null);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -234,11 +237,12 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List runs. </remarks>
         public virtual async Task<ClientResult<ListRunsResponse>> GetRunsAsync(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-            ClientResult result = await GetRunsAsync(threadId, limit, order?.ToString(), after, before, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetRunsAsync(threadId, limit, order?.ToString(), after, before, null).ConfigureAwait(false);
             return ClientResult.FromValue(ListRunsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -264,11 +268,12 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List runs. </remarks>
         public virtual ClientResult<ListRunsResponse> GetRuns(string threadId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-            ClientResult result = GetRuns(threadId, limit, order?.ToString(), after, before, DefaultRequestContext);
+            ClientResult result = GetRuns(threadId, limit, order?.ToString(), after, before, null);
             return ClientResult.FromValue(ListRunsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -282,7 +287,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetRunsAsync(string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetRunsAsync(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -329,7 +334,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetRuns(string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetRuns(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -371,12 +376,13 @@ namespace OpenAI.Internal
         /// <param name="runId"> The ID of the run to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get run. </remarks>
         public virtual async Task<ClientResult<RunObject>> GetRunAsync(string threadId, string runId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-            ClientResult result = await GetRunAsync(threadId, runId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetRunAsync(threadId, runId, null).ConfigureAwait(false);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -385,12 +391,13 @@ namespace OpenAI.Internal
         /// <param name="runId"> The ID of the run to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get run. </remarks>
         public virtual ClientResult<RunObject> GetRun(string threadId, string runId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-            ClientResult result = GetRun(threadId, runId, DefaultRequestContext);
+            ClientResult result = GetRun(threadId, runId, null);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -462,14 +469,15 @@ namespace OpenAI.Internal
         /// <param name="run"> The <see cref="ModifyRunRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="run"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Modify run. </remarks>
         public virtual async Task<ClientResult<RunObject>> ModifyRunAsync(string threadId, string runId, ModifyRunRequest run)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
             Argument.AssertNotNull(run, nameof(run));
 
-            using BinaryContent content = run.ToBinaryBody();
-            ClientResult result = await ModifyRunAsync(threadId, runId, content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = run.ToBinaryContent();
+            ClientResult result = await ModifyRunAsync(threadId, runId, content, null).ConfigureAwait(false);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -479,14 +487,15 @@ namespace OpenAI.Internal
         /// <param name="run"> The <see cref="ModifyRunRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="run"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Modify run. </remarks>
         public virtual ClientResult<RunObject> ModifyRun(string threadId, string runId, ModifyRunRequest run)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
             Argument.AssertNotNull(run, nameof(run));
 
-            using BinaryContent content = run.ToBinaryBody();
-            ClientResult result = ModifyRun(threadId, runId, content, DefaultRequestContext);
+            using BinaryContent content = run.ToBinaryContent();
+            ClientResult result = ModifyRun(threadId, runId, content, null);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -561,12 +570,13 @@ namespace OpenAI.Internal
         /// <param name="runId"> The ID of the run to cancel. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Cancel run. </remarks>
         public virtual async Task<ClientResult<RunObject>> CancelRunAsync(string threadId, string runId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-            ClientResult result = await CancelRunAsync(threadId, runId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await CancelRunAsync(threadId, runId, null).ConfigureAwait(false);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -575,12 +585,13 @@ namespace OpenAI.Internal
         /// <param name="runId"> The ID of the run to cancel. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Cancel run. </remarks>
         public virtual ClientResult<RunObject> CancelRun(string threadId, string runId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-            ClientResult result = CancelRun(threadId, runId, DefaultRequestContext);
+            ClientResult result = CancelRun(threadId, runId, null);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -656,14 +667,15 @@ namespace OpenAI.Internal
         /// <param name="submitToolOutputsRun"> The <see cref="SubmitToolOutputsRunRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="submitToolOutputsRun"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Submit tool ouputs to run. </remarks>
         public virtual async Task<ClientResult<RunObject>> SubmitToolOuputsToRunAsync(string threadId, string runId, SubmitToolOutputsRunRequest submitToolOutputsRun)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
             Argument.AssertNotNull(submitToolOutputsRun, nameof(submitToolOutputsRun));
 
-            using BinaryContent content = submitToolOutputsRun.ToBinaryBody();
-            ClientResult result = await SubmitToolOuputsToRunAsync(threadId, runId, content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = submitToolOutputsRun.ToBinaryContent();
+            ClientResult result = await SubmitToolOuputsToRunAsync(threadId, runId, content, null).ConfigureAwait(false);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -677,14 +689,15 @@ namespace OpenAI.Internal
         /// <param name="submitToolOutputsRun"> The <see cref="SubmitToolOutputsRunRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="submitToolOutputsRun"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Submit tool ouputs to run. </remarks>
         public virtual ClientResult<RunObject> SubmitToolOuputsToRun(string threadId, string runId, SubmitToolOutputsRunRequest submitToolOutputsRun)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
             Argument.AssertNotNull(submitToolOutputsRun, nameof(submitToolOutputsRun));
 
-            using BinaryContent content = submitToolOutputsRun.ToBinaryBody();
-            ClientResult result = SubmitToolOuputsToRun(threadId, runId, content, DefaultRequestContext);
+            using BinaryContent content = submitToolOutputsRun.ToBinaryContent();
+            ClientResult result = SubmitToolOuputsToRun(threadId, runId, content, null);
             return ClientResult.FromValue(RunObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -781,12 +794,13 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List run steps. </remarks>
         public virtual async Task<ClientResult<ListRunStepsResponse>> GetRunStepsAsync(string threadId, string runId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-            ClientResult result = await GetRunStepsAsync(threadId, runId, limit, order?.ToString(), after, before, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetRunStepsAsync(threadId, runId, limit, order?.ToString(), after, before, null).ConfigureAwait(false);
             return ClientResult.FromValue(ListRunStepsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -813,12 +827,13 @@ namespace OpenAI.Internal
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="runId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> List run steps. </remarks>
         public virtual ClientResult<ListRunStepsResponse> GetRunSteps(string threadId, string runId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-            ClientResult result = GetRunSteps(threadId, runId, limit, order?.ToString(), after, before, DefaultRequestContext);
+            ClientResult result = GetRunSteps(threadId, runId, limit, order?.ToString(), after, before, null);
             return ClientResult.FromValue(ListRunStepsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -832,7 +847,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetRunStepsAsync(string,string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetRunStepsAsync(string,string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -881,7 +896,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetRunSteps(string,string,int?,ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetRunSteps(string,string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -926,13 +941,14 @@ namespace OpenAI.Internal
         /// <param name="stepId"> The ID of the run step to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get run step. </remarks>
         public virtual async Task<ClientResult<RunStepObject>> GetRunStepAsync(string threadId, string runId, string stepId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
             Argument.AssertNotNullOrEmpty(stepId, nameof(stepId));
 
-            ClientResult result = await GetRunStepAsync(threadId, runId, stepId, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetRunStepAsync(threadId, runId, stepId, null).ConfigureAwait(false);
             return ClientResult.FromValue(RunStepObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -942,13 +958,14 @@ namespace OpenAI.Internal
         /// <param name="stepId"> The ID of the run step to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get run step. </remarks>
         public virtual ClientResult<RunStepObject> GetRunStep(string threadId, string runId, string stepId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(runId, nameof(runId));
             Argument.AssertNotNullOrEmpty(stepId, nameof(stepId));
 
-            ClientResult result = GetRunStep(threadId, runId, stepId, DefaultRequestContext);
+            ClientResult result = GetRunStep(threadId, runId, stepId, null);
             return ClientResult.FromValue(RunStepObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -1031,10 +1048,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1053,10 +1067,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1089,10 +1100,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1110,10 +1118,7 @@ namespace OpenAI.Internal
             uri.AppendPath(runId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1133,10 +1138,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1155,10 +1157,7 @@ namespace OpenAI.Internal
             uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1179,10 +1178,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1217,10 +1213,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -1240,14 +1233,9 @@ namespace OpenAI.Internal
             uri.AppendPath(stepId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
-
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });

@@ -81,7 +81,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options);
-        using BinaryContent content = internalRequest.ToBinaryBody();
+        using BinaryContent content = BinaryContent.Create(internalRequest);
         ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
@@ -101,7 +101,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options);
-        using BinaryContent content = internalRequest.ToBinaryBody();
+        using BinaryContent content = BinaryContent.Create(internalRequest);
         ClientResult protocolResult = await CompleteChatAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
@@ -125,7 +125,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
-        using BinaryContent content = internalRequest.ToBinaryBody();
+        using BinaryContent content = BinaryContent.Create(internalRequest);
         ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
@@ -153,7 +153,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
-        using BinaryContent content = internalRequest.ToBinaryBody();
+        using BinaryContent content = BinaryContent.Create(internalRequest);
         ClientResult protocolResult = CompleteChat(content, OpenAIClient.DefaultRequestOptions);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
@@ -231,7 +231,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
-        using BinaryContent content = internalRequest.ToBinaryBody();
+        using BinaryContent content = BinaryContent.Create(internalRequest);
         PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, OpenAIClient.DefaultRequestOptions, bufferResponse: false);
         PipelineResponse response = Pipeline.ProcessMessage(requestMessage, OpenAIClient.DefaultRequestOptions);
         ClientResult protocolResult = ClientResult.FromResponse(response);
@@ -264,7 +264,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
-        using BinaryContent content = internalRequest.ToBinaryBody();
+        using BinaryContent content = BinaryContent.Create(internalRequest);
         PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, OpenAIClient.DefaultRequestOptions, bufferResponse: false);
         PipelineResponse response = Pipeline.ProcessMessage(requestMessage, OpenAIClient.DefaultRequestOptions);
         ClientResult protocolResult = ClientResult.FromResponse(response);

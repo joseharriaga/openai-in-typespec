@@ -1,9 +1,7 @@
-using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.Audio;
@@ -11,14 +9,12 @@ namespace OpenAI.Audio;
 /// <summary> The service client for OpenAI audio operations. </summary>
 [CodeGenClient("Audio")]
 [CodeGenSuppress("AudioClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranscriptionAsync", typeof(AudioTranscriptionOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranscription", typeof(AudioTranscriptionOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranslationAsync", typeof(AudioTranslationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranslation", typeof(AudioTranslationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateCreateTranscriptionRequest", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateCreateTranslationRequest", typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions))]
+[CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions))]
+[CodeGenSuppress("CreateTranscriptionAsync", typeof(AudioTranscriptionOptions))]
+[CodeGenSuppress("CreateTranscription", typeof(AudioTranscriptionOptions))]
+[CodeGenSuppress("CreateTranslationAsync", typeof(AudioTranslationOptions))]
+[CodeGenSuppress("CreateTranslation", typeof(AudioTranslationOptions))]
 public partial class AudioClient
 {
     protected readonly string _model;
@@ -81,8 +77,8 @@ public partial class AudioClient
         options ??= new();
         CreateSpeechGenerationOptions(text, voice, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateSpeechFromTextAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateSpeechFromTextAsync(content, null).ConfigureAwait(false);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
@@ -108,8 +104,8 @@ public partial class AudioClient
         options ??= new();
         CreateSpeechGenerationOptions(text, voice, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateSpeechFromText(content, OpenAIClient.DefaultRequestOptions);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateSpeechFromText(content, (RequestOptions)null);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
@@ -155,6 +151,44 @@ public partial class AudioClient
         return ClientResult.FromValue(AudioTranscription.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
+    /// <summary>
+    /// Transcribes audio from a file with a known path.
+    /// </summary>
+    /// <remarks>
+    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
+    /// operation may fail if the file extension and input audio format do not match.
+    /// </remarks>
+    /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
+    /// <param name="options"> Options for the transcription. </param>
+    /// <returns> Audio transcription data for the provided file. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null)
+    {
+        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+
+        using FileStream audioStream = File.OpenRead(audioFilePath);
+        return await TranscribeAudioAsync(audioStream, audioFilePath, options);
+    }
+
+    /// <summary>
+    /// Transcribes audio from a file with a known path.
+    /// </summary>
+    /// <remarks>
+    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
+    /// operation may fail if the file extension and input audio format do not match.
+    /// </remarks>
+    /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
+    /// <param name="options"> Options for the transcription. </param>
+    /// <returns> Audio transcription data for the provided file. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null)
+    {
+        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+
+        using FileStream audioStream = File.OpenRead(audioFilePath);
+        return TranscribeAudio(audioStream, audioFilePath, options);
+    }
+
     #endregion
 
     #region TranslateAudio
@@ -197,50 +231,46 @@ public partial class AudioClient
         return ClientResult.FromValue(AudioTranslation.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
+    /// <summary>
+    /// Translates audio into English from a file with a known path.
+    /// </summary>
+    /// <remarks>
+    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
+    /// operation may fail if the file extension and input audio format do not match.
+    /// </remarks>
+    /// <param name="audioFilePath"> The path of the audio file to translate. </param>
+    /// <param name="options"> Options for the translation. </param>
+    /// <returns> Audio translation data for the provided file. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null)
+    {
+        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+
+        using FileStream audioStream = File.OpenRead(audioFilePath);
+        return TranslateAudio(audioStream, audioFilePath, options);
+    }
+
+    /// <summary>
+    /// Translates audio into English from a file with a known path.
+    /// </summary>
+    /// <remarks>
+    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
+    /// operation may fail if the file extension and input audio format do not match.
+    /// </remarks>
+    /// <param name="audioFilePath"> The path of the audio file to translate. </param>
+    /// <param name="options"> Options for the translation. </param>
+    /// <returns> Audio translation data for the provided file. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null)
+    {
+        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+
+        using FileStream audioStream = File.OpenRead(audioFilePath);
+        return await TranslateAudioAsync(audioStream, audioFilePath, options);
+    }
+
     #endregion
-
-    // CUSTOM: Parametrized the Content-Type header.
-    internal PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, string contentType, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = OpenAIClient.PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/audio/transcriptions", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("content-type", contentType);
-        request.Content = content;
-        if (options != null)
-        {
-            message.Apply(options);
-        }
-        return message;
-    }
-
-    // CUSTOM: Parametrized the Content-Type header.
-    internal PipelineMessage CreateCreateTranslationRequest(BinaryContent content, string contentType, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = OpenAIClient.PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/audio/translations", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("content-type", contentType);
-        request.Content = content;
-        if (options != null)
-        {
-            message.Apply(options);
-        }
-        return message;
-    }
-
+    
     private void CreateSpeechGenerationOptions(string text, GeneratedSpeechVoice voice, ref SpeechGenerationOptions options)
     {
         options.Input = text;

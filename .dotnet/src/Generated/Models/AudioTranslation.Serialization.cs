@@ -35,7 +35,7 @@ namespace OpenAI.Audio
                 writer.WriteStartArray();
                 foreach (var item in Segments)
                 {
-                    writer.WriteObjectValue<TranscribedSegment>(item, options);
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -71,7 +71,7 @@ namespace OpenAI.Audio
 
         internal static AudioTranslation DeserializeAudioTranslation(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -98,7 +98,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("duration"u8))
                 {
-                    duration = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    DeserializeNullableTimespan(property, ref duration);
                     continue;
                 }
                 if (property.NameEquals("text"u8))
@@ -174,10 +174,10 @@ namespace OpenAI.Audio
             return DeserializeAudioTranslation(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

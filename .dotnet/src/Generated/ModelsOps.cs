@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenAI.Internal.Models;
 
@@ -44,9 +43,10 @@ namespace OpenAI.Internal
         /// Lists the currently available models, and provides basic information about each one such as the
         /// owner and availability.
         /// </summary>
+        /// <remarks> List models. </remarks>
         public virtual async Task<ClientResult<ListModelsResponse>> GetModelsAsync()
         {
-            ClientResult result = await GetModelsAsync(DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await GetModelsAsync(null).ConfigureAwait(false);
             return ClientResult.FromValue(ListModelsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -54,9 +54,10 @@ namespace OpenAI.Internal
         /// Lists the currently available models, and provides basic information about each one such as the
         /// owner and availability.
         /// </summary>
+        /// <remarks> List models. </remarks>
         public virtual ClientResult<ListModelsResponse> GetModels()
         {
-            ClientResult result = GetModels(DefaultRequestContext);
+            ClientResult result = GetModels(null);
             return ClientResult.FromValue(ListModelsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -117,11 +118,12 @@ namespace OpenAI.Internal
         /// <param name="model"> The ID of the model to use for this request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Retrieve. </remarks>
         public virtual async Task<ClientResult<Model>> RetrieveAsync(string model)
         {
             Argument.AssertNotNullOrEmpty(model, nameof(model));
 
-            ClientResult result = await RetrieveAsync(model, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await RetrieveAsync(model, null).ConfigureAwait(false);
             return ClientResult.FromValue(Model.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -132,11 +134,12 @@ namespace OpenAI.Internal
         /// <param name="model"> The ID of the model to use for this request. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Retrieve. </remarks>
         public virtual ClientResult<Model> Retrieve(string model)
         {
             Argument.AssertNotNullOrEmpty(model, nameof(model));
 
-            ClientResult result = Retrieve(model, DefaultRequestContext);
+            ClientResult result = Retrieve(model, null);
             return ClientResult.FromValue(Model.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -204,11 +207,12 @@ namespace OpenAI.Internal
         /// <param name="model"> The model to delete. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete. </remarks>
         public virtual async Task<ClientResult<DeleteModelResponse>> DeleteAsync(string model)
         {
             Argument.AssertNotNullOrEmpty(model, nameof(model));
 
-            ClientResult result = await DeleteAsync(model, DefaultRequestContext).ConfigureAwait(false);
+            ClientResult result = await DeleteAsync(model, null).ConfigureAwait(false);
             return ClientResult.FromValue(DeleteModelResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -216,11 +220,12 @@ namespace OpenAI.Internal
         /// <param name="model"> The model to delete. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete. </remarks>
         public virtual ClientResult<DeleteModelResponse> Delete(string model)
         {
             Argument.AssertNotNullOrEmpty(model, nameof(model));
 
-            ClientResult result = Delete(model, DefaultRequestContext);
+            ClientResult result = Delete(model, null);
             return ClientResult.FromValue(DeleteModelResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -293,10 +298,7 @@ namespace OpenAI.Internal
             uri.AppendPath("/models", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -312,10 +314,7 @@ namespace OpenAI.Internal
             uri.AppendPath(model, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 
@@ -331,14 +330,9 @@ namespace OpenAI.Internal
             uri.AppendPath(model, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
-
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });

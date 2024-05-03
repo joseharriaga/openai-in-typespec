@@ -26,7 +26,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
             writer.WritePropertyName("file_path"u8);
-            writer.WriteObjectValue<MessageContentTextAnnotationsFilePathObjectFilePath>(FilePath, options);
+            writer.WriteObjectValue(FilePath, options);
             writer.WritePropertyName("start_index"u8);
             writer.WriteNumberValue(StartIndex);
             writer.WritePropertyName("end_index"u8);
@@ -63,7 +63,7 @@ namespace OpenAI.Internal.Models
 
         internal static MessageContentTextAnnotationsFilePathObject DeserializeMessageContentTextAnnotationsFilePathObject(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -157,10 +157,10 @@ namespace OpenAI.Internal.Models
             return DeserializeMessageContentTextAnnotationsFilePathObject(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

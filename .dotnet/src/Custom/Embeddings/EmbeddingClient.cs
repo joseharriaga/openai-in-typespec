@@ -3,7 +3,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.Embeddings;
@@ -11,8 +10,8 @@ namespace OpenAI.Embeddings;
 /// <summary> The service client for the OpenAI Embeddings endpoint. </summary>
 [CodeGenClient("Embeddings")]
 [CodeGenSuppress("EmbeddingClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions), typeof(CancellationToken))]
+[CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingOptions))]
+[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions))]
 public partial class EmbeddingClient
 {
     protected readonly string _model;
@@ -62,10 +61,10 @@ public partial class EmbeddingClient
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
         options ??= new();
-        CreateEmbeddingOptions(BinaryData.FromString(input), ref options);
+        CreateEmbeddingOptions(BinaryData.FromObjectAsJson(input), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateEmbeddingAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
@@ -82,8 +81,8 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(input), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateEmbedding(content, OpenAIClient.DefaultRequestOptions);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
@@ -100,9 +99,10 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateEmbeddingAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+
     }
 
     // CUSTOM: Added to simplify passing the input as a collection of strings instead of BinaryData.
@@ -118,8 +118,8 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateEmbedding(content, OpenAIClient.DefaultRequestOptions);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -136,8 +136,8 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateEmbeddingAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -154,8 +154,8 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateEmbedding(content, OpenAIClient.DefaultRequestOptions);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 

@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "@azure-tools/typespec-csharp": "0.2.0-beta.20240410.1",
-    "@azure-tools/typespec-azure-core": "0.40.0",
-    "@azure-tools/typespec-client-generator-core": "0.40.0",
-    "@typespec/compiler": "^0.54.0",
-    "@typespec/http": "^0.54.0",
-    "@typespec/openapi": "^0.54.0",
-    "@typespec/openapi3": "^0.54.0",
-    "@typespec/rest": "^0.54.0",
-    "@typespec/versioning": "^0.54.0"
+    "@autorest/csharp": "3.0.0-beta.20240429.3",
+    "@azure-tools/typespec-csharp": "0.2.0-beta.20240429.1",
+    "@azure-tools/typespec-azure-core": "^0.41.0",
+    "@azure-tools/typespec-client-generator-core": "^0.41.0",
+    "@typespec/compiler": "^0.55.0",
+    "@typespec/http": "^0.55.0",
+    "@typespec/openapi": "^0.55.0",
+    "@typespec/openapi3": "^0.55.0",
+    "@typespec/rest": "^0.55.0",
+    "@typespec/versioning": "^0.55.0"
   },
   "private": true
 }

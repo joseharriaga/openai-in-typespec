@@ -6,20 +6,19 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OpenAI.Images;
 
 /// <summary> The service client for OpenAI image operations. </summary>
 [CodeGenClient("Images")]
 [CodeGenSuppress("ImageClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateImage", typeof(ImageGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateImageEditAsync", typeof(ImageEditOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateImageEdit", typeof(ImageEditOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateImageVariationAsync", typeof(ImageVariationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateImageVariation", typeof(ImageVariationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateCreateImageEditRequest", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateCreateImageVariationRequest", typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions))]
+[CodeGenSuppress("CreateImage", typeof(ImageGenerationOptions))]
+[CodeGenSuppress("CreateImageEditAsync", typeof(ImageEditOptions))]
+[CodeGenSuppress("CreateImageEdit", typeof(ImageEditOptions))]
+[CodeGenSuppress("CreateImageVariationAsync", typeof(ImageVariationOptions))]
+[CodeGenSuppress("CreateImageVariation", typeof(ImageVariationOptions))]
 public partial class ImageClient
 {
     protected readonly string _model;
@@ -74,8 +73,8 @@ public partial class ImageClient
         options ??= new();
         CreateImageGenerationOptions(prompt, null, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateImagesAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateImagesAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
@@ -93,8 +92,8 @@ public partial class ImageClient
         options ??= new();
         CreateImageGenerationOptions(prompt, null, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateImages(content, OpenAIClient.DefaultRequestOptions);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateImages(content, (RequestOptions)null);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
@@ -111,8 +110,8 @@ public partial class ImageClient
         options ??= new();
         CreateImageGenerationOptions(prompt, imageCount, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateImagesAsync(content, OpenAIClient.DefaultRequestOptions).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateImagesAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -129,8 +128,8 @@ public partial class ImageClient
         options ??= new();
         CreateImageGenerationOptions(prompt, imageCount, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateImages(content, OpenAIClient.DefaultRequestOptions);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateImages(content, (RequestOptions)null);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -401,48 +400,6 @@ public partial class ImageClient
     }
 
     #endregion
-
-    // CUSTOM: Parametrized the Content-Type header.
-    internal PipelineMessage CreateCreateImageEditRequest(BinaryContent content, string contentType, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = OpenAIClient.PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/images/edits", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", contentType);
-        request.Content = content;
-        if (options != null)
-        {
-            message.Apply(options);
-        }
-        return message;
-    }
-
-    // CUSTOM: Parametrized the Content-Type header.
-    internal PipelineMessage CreateCreateImageVariationRequest(BinaryContent content, string contentType, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = OpenAIClient.PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/images/variations", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", contentType);
-        request.Content = content;
-        if (options != null)
-        {
-            message.Apply(options);
-        }
-        return message;
-    }
 
     private void CreateImageGenerationOptions(string prompt, int? imageCount, ref ImageGenerationOptions options)
     {

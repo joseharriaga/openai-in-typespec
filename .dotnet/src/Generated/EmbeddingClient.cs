@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.Embeddings
@@ -40,10 +39,7 @@ namespace OpenAI.Embeddings
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
 

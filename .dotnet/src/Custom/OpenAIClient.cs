@@ -77,7 +77,7 @@ public partial class OpenAIClient
     /// </remarks>
     /// <returns> A new <see cref="AssistantClient"/>. </returns>
     [Experimental("OPENAI001")]
-    public virtual AssistantClient GetAssistantClient() => new(_keyCredential, _cachedOptions);
+    public virtual AssistantClient GetAssistantClient() => new(_keyCredential, new OpenAIClientOptions()); // TODO: The parent OpenAIClient needs to set the OpenAI-Beta header.
 
     /// <summary>
     /// Gets a new instance of <see cref="AudioClient"/> that reuses the client configuration details provided to

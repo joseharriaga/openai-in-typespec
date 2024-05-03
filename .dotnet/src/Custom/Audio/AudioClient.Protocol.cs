@@ -8,10 +8,10 @@ namespace OpenAI.Audio;
 
 [CodeGenSuppress("CreateSpeechAsync", typeof(BinaryContent), typeof(RequestOptions))]
 [CodeGenSuppress("CreateSpeech", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateTranscriptionAsync", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateTranscription", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateTranslationAsync", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateTranslation", typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("CreateTranscriptionAsync", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CreateTranscription", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CreateTranslationAsync", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CreateTranslation", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
 public partial class AudioClient
 {
     // CUSTOM:

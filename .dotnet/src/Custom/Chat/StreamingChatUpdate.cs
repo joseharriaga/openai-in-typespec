@@ -12,12 +12,12 @@ using System.Threading;
 /// </summary>
 public partial class StreamingChatUpdate
 {
-    // Note: this is the convenience method approach, maybe we don't need this here 
-    // in the protocol story.
-    internal AsyncClientResultCollection<StreamingChatUpdate> Create(PipelineResponse response, CancellationToken cancellationToken = default)
-    {
-        return new AsyncStreamingChatUpdateCollection(response, cancellationToken);
-    }
+    //// Note: this is the convenience method approach, maybe we don't need this here 
+    //// in the protocol story.
+    //internal AsyncResultCollection<StreamingChatUpdate> Create(PipelineResponse response, CancellationToken cancellationToken = default)
+    //{
+    //    return new AsyncChatUpdateCollection(response, cancellationToken);
+    //}
 
     /// <summary>
     /// Gets a unique identifier associated with this streamed Chat Completions response.

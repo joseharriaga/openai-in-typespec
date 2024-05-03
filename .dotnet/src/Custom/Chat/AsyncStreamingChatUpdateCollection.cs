@@ -1,22 +1,22 @@
-﻿using System;
-using System.ClientModel;
-using System.ClientModel.Primitives;
-using System.Collections.Generic;
-using System.Threading;
+﻿//using System;
+//using System.ClientModel;
+//using System.ClientModel.Primitives;
+//using System.Collections.Generic;
+//using System.Threading;
 
-namespace OpenAI.Chat;
+//namespace OpenAI.Chat;
 
-// TODO: implement
+//// TODO: implement
 
-internal class AsyncStreamingChatUpdateCollection : AsyncClientResultCollection<StreamingChatUpdate>
-{
-    // TODO: pass 
-    public AsyncStreamingChatUpdateCollection(PipelineResponse response, CancellationToken cancellationToken) : base(response)
-    {
-    }
+//internal class AsyncStreamingChatUpdateCollection : AsyncClientResultCollection<StreamingChatUpdate>
+//{
+//    // TODO: pass 
+//    public AsyncStreamingChatUpdateCollection(PipelineResponse response, CancellationToken cancellationToken) : base(response)
+//    {
+//    }
 
-    public override IAsyncEnumerator<StreamingChatUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-}
+//    public override IAsyncEnumerator<StreamingChatUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}

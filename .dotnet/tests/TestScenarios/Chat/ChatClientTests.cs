@@ -87,7 +87,7 @@ public partial class ChatClientTests
 
         int updateCount = 0;
 
-        var sseReader = AsyncClientResultCollection<BinaryData>.Create<BinaryData>(result.GetRawResponse());
+        var sseReader = AsyncResultCollection<BinaryData>.Create(result.GetRawResponse());
         await foreach (BinaryData eventData in sseReader)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;

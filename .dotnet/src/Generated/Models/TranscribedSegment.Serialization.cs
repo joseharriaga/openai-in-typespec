@@ -110,12 +110,12 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("start"u8))
                 {
-                    start = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    DeserializeTimeSpan(property, ref start);
                     continue;
                 }
                 if (property.NameEquals("end"u8))
                 {
-                    end = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    DeserializeTimeSpan(property, ref end);
                     continue;
                 }
                 if (property.NameEquals("text"u8))

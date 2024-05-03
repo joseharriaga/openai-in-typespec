@@ -2067,7 +2067,6 @@ components:
           type: string
           enum:
             - text
-            - json_object
           description: The type of the content part.
         text:
           type: string
@@ -2130,7 +2129,6 @@ components:
           type: string
           enum:
             - user
-            - assistant
           description: The role of the messages author, in this case `user`.
         name:
           type: string
@@ -2251,7 +2249,6 @@ components:
         - type: string
           enum:
             - none
-            - auto
             - auto
         - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
       description: |-
@@ -2580,7 +2577,6 @@ components:
               enum:
                 - none
                 - auto
-                - auto
             - $ref: '#/components/schemas/ChatCompletionFunctionCallOption'
           description: |-
             Deprecated in favor of `tool_choice`.
@@ -2630,8 +2626,6 @@ components:
                   - tool_calls
                   - content_filter
                   - function_call
-                  - length
-                  - content_filter
                 description: |-
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a
                   natural stop point or a provided stop sequence, `length` if the maximum number of tokens
@@ -2940,10 +2934,6 @@ components:
                 enum:
                   - stop
                   - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
-                  - length
                   - content_filter
                 description: |-
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a
@@ -3125,8 +3115,6 @@ components:
                 - type: string
                   enum:
                     - auto
-                    - low
-                    - high
                 - $ref: '#/components/schemas/BatchSize'
               description: |-
                 Number of examples in each batch. A larger batch size means that model parameters are
@@ -3137,8 +3125,6 @@ components:
                 - type: string
                   enum:
                     - auto
-                    - low
-                    - high
                 - $ref: '#/components/schemas/LearningRateMultiplier'
               description: |-
                 Scaling factor for the learning rate. A smaller learning rate may be useful to avoid 
@@ -3149,8 +3135,6 @@ components:
                 - type: string
                   enum:
                     - auto
-                    - low
-                    - high
                 - $ref: '#/components/schemas/NEpochs'
               description: |-
                 The number of epochs to train the model for. An epoch refers to one full cycle through the
@@ -3225,8 +3209,6 @@ components:
             - 256x256
             - 512x512
             - 1024x1024
-            - 512x512
-            - 1024x1024
           nullable: true
           description: The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.
           default: 1024x1024
@@ -3234,7 +3216,6 @@ components:
           type: string
           enum:
             - url
-            - b64_json
             - b64_json
           nullable: true
           description: The format in which the generated images are returned. Must be one of `url` or `b64_json`.
@@ -3354,7 +3335,6 @@ components:
           enum:
             - url
             - b64_json
-            - b64_json
           nullable: true
           description: The format in which the generated images are returned. Must be one of `url` or `b64_json`.
           default: url
@@ -3362,8 +3342,6 @@ components:
           type: string
           enum:
             - 256x256
-            - 512x512
-            - 1024x1024
             - 512x512
             - 1024x1024
           nullable: true
@@ -3385,7 +3363,6 @@ components:
           type: string
           enum:
             - user
-            - assistant
           description: The role of the entity that is creating the message. Currently only `user` is supported.
         content:
           type: string
@@ -3802,10 +3779,6 @@ components:
             - srt
             - verbose_json
             - vtt
-            - text
-            - srt
-            - verbose_json
-            - vtt
           description: |-
             The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
             vtt.
@@ -3910,10 +3883,6 @@ components:
           type: string
           enum:
             - json
-            - text
-            - srt
-            - verbose_json
-            - vtt
             - text
             - srt
             - verbose_json
@@ -4167,8 +4136,8 @@ components:
             The name of the fine-tuned model that is being created. The value will be null if the
             fine-tuning job is still running.
         finished_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: |-
             The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
@@ -4181,8 +4150,6 @@ components:
                 - type: string
                   enum:
                     - auto
-                    - low
-                    - high
                 - $ref: '#/components/schemas/NEpochs'
               description: |-
                 The number of epochs to train the model for. An epoch refers to one full cycle through the
@@ -4646,7 +4613,6 @@ components:
           type: string
           enum:
             - text
-            - json_object
           description: Always `text`.
         text:
           type: object
@@ -5075,28 +5041,28 @@ components:
           nullable: true
           description: The last error associated with this run. Will be `null` if there are no errors.
         expires_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run will expire.
         started_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was started.
         cancelled_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was cancelled.
         failed_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run failed.
         completed_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was completed.
         model:
@@ -5417,25 +5383,25 @@ components:
           nullable: true
           description: The last error associated with this run step. Will be `null` if there are no errors.
         expires_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: |-
             The Unix timestamp (in seconds) for when the run step expired. A step is considered expired
             if the parent run is expired.
         cancelled_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step was cancelled.
         failed_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step failed.
         completed_at:
-          type: string
-          format: date-time
+          type: integer
+          format: unixtime
           nullable: true
           description: T The Unix timestamp (in seconds) for when the run step completed..
         metadata:

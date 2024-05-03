@@ -98,7 +98,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("duration"u8))
                 {
-                    duration = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    DeserializeNullableTimespan(property, ref duration);
                     continue;
                 }
                 if (property.NameEquals("text"u8))

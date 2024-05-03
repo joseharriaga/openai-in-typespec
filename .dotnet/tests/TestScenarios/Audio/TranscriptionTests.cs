@@ -4,6 +4,7 @@ using System;
 using System.ClientModel;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Audio;
@@ -18,6 +19,14 @@ public partial class TranscriptionTests
         ClientResult<AudioTranscription> transcriptionResult = client.TranscribeAudio(inputStream, "hello_world.m4a");
         Assert.That(transcriptionResult.Value, Is.Not.Null);
         Assert.That(transcriptionResult.Value.Text.ToLowerInvariant(), Contains.Substring("hello"));
+    }
+
+    [Test]
+    public async Task AsyncTranscriptionWorks()
+    {
+        AudioClient client = GetTestClient();
+        AudioTranscription transcription = await client.TranscribeAudioAsync(Path.Combine("Assets", "hello_world.m4a"));
+        Assert.That(transcription.Text.ToLowerInvariant(), Contains.Substring("hello"));
     }
 
     [Test]

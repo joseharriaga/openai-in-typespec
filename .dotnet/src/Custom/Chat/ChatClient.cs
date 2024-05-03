@@ -190,29 +190,25 @@ public partial class ChatClient
     ///     The number of independent, alternative choices that the chat completion request should generate.
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
     public virtual StreamingClientResult<StreamingChatUpdate> CompleteChatStreaming(
         IEnumerable<ChatRequestMessage> messages,
         int? choiceCount = null,
         ChatCompletionOptions options = null)
     {
-        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
-        requestMessage.BufferResponse = false;
-        Shim.Pipeline.Send(requestMessage);
-        PipelineResponse response = requestMessage.ExtractResponse();
+        PipelineMessage message = CreateCustomRequestMessage(messages, choiceCount, options);
+        message.BufferResponse = false;
+
+        Shim.Pipeline.Send(message);
+
+        PipelineResponse response = message.Response;
 
         if (response.IsError)
         {
             throw new ClientResultException(response);
         }
 
-        ClientResult genericResult = ClientResult.FromResponse(response);
-        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            genericResult,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
-                responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
+        return new StreamingChatResult(response);
     }
 
     /// <summary>
@@ -228,29 +224,25 @@ public partial class ChatClient
     ///     The number of independent, alternative choices that the chat completion request should generate.
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
-    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
     public virtual async Task<StreamingClientResult<StreamingChatUpdate>> CompleteChatStreamingAsync(
         IEnumerable<ChatRequestMessage> messages,
         int? choiceCount = null,
         ChatCompletionOptions options = null)
     {
-        PipelineMessage requestMessage = CreateCustomRequestMessage(messages, choiceCount, options);
-        requestMessage.BufferResponse = false;
-        await Shim.Pipeline.SendAsync(requestMessage).ConfigureAwait(false);
-        PipelineResponse response = requestMessage.ExtractResponse();
+        PipelineMessage message = CreateCustomRequestMessage(messages, choiceCount, options);
+        message.BufferResponse = false;
+
+        await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
+
+        PipelineResponse response = message.Response;
 
         if (response.IsError)
         {
             throw new ClientResultException(response);
         }
 
-        ClientResult genericResult = ClientResult.FromResponse(response);
-        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            genericResult,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
-                responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));   
+        return new StreamingChatResult(response);
     }
 
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(

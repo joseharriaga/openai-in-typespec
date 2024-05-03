@@ -1,12 +1,10 @@
 using System;
-using System.ClientModel;
-using System.ClientModel.Internal;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace OpenAI;
 
-internal sealed class SseReader : IDisposable
+internal sealed class SseReader : IDisposable, IAsyncDisposable
     {
         private readonly Stream _stream;
         private readonly StreamReader _reader;
@@ -115,4 +113,10 @@ internal sealed class SseReader : IDisposable
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+    ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        // TODO: revisit per platforms where async dispose is available.
+        return new ValueTask();
     }
+}

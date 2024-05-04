@@ -4,10 +4,11 @@
     <AssemblyTitle>SDK Code Generation OpenAI</AssemblyTitle>
     <Version>1.0.0-beta.1</Version>
     <PackageTags>OpenAI</PackageTags>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="System.ClientModel" Version="1.1.0-beta.2" />
     <PackageReference Include="System.Text.Json" Version="8.0.2" />

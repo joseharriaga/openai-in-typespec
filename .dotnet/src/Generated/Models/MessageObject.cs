@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The MessageObject. </summary>
+    /// <summary> Represents a message within a [thread](/docs/api-reference/threads). </summary>
     internal partial class MessageObject
     {
         /// <summary>

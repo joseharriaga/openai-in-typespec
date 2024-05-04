@@ -8,7 +8,6 @@ using System.Collections.Generic;
 namespace OpenAI.Internal.Models
 {
     /// <summary> The ChatCompletionFunctions. </summary>
-    [Obsolete("deprecated")]
     internal partial class ChatCompletionFunctions
     {
         /// <summary>

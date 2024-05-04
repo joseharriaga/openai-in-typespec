@@ -43,7 +43,7 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionRequestUserMessage"/>. </summary>
-        /// <param name="content"> The contents of the system message. </param>
+        /// <param name="content"> The contents of the user message. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         public ChatCompletionRequestUserMessage(BinaryData content)
         {
@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionRequestUserMessage"/>. </summary>
-        /// <param name="content"> The contents of the system message. </param>
+        /// <param name="content"> The contents of the user message. </param>
         /// <param name="role"> The role of the messages author, in this case `user`. </param>
         /// <param name="name">
         /// An optional name for the participant. Provides the model information to differentiate between
@@ -74,7 +74,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary>
-        /// The contents of the system message.
+        /// The contents of the user message.
         /// <para>
         /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>

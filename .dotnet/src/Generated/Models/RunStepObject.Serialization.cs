@@ -55,14 +55,14 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("last_error");
             }
-            if (ExpiresAt != null)
+            if (ExpiredAt != null)
             {
-                writer.WritePropertyName("expires_at"u8);
-                writer.WriteStringValue(ExpiresAt.Value, "O");
+                writer.WritePropertyName("expired_at"u8);
+                writer.WriteStringValue(ExpiredAt.Value, "O");
             }
             else
             {
-                writer.WriteNull("expires_at");
+                writer.WriteNull("expired_at");
             }
             if (CancelledAt != null)
             {
@@ -106,15 +106,8 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("metadata");
             }
-            if (Usage != null)
-            {
-                writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue(Usage, options);
-            }
-            else
-            {
-                writer.WriteNull("usage");
-            }
+            writer.WritePropertyName("usage"u8);
+            writer.WriteObjectValue(Usage, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -163,7 +156,7 @@ namespace OpenAI.Internal.Models
             RunStepObjectStatus status = default;
             BinaryData stepDetails = default;
             RunStepObjectLastError lastError = default;
-            DateTimeOffset? expiresAt = default;
+            DateTimeOffset? expiredAt = default;
             DateTimeOffset? cancelledAt = default;
             DateTimeOffset? failedAt = default;
             DateTimeOffset? completedAt = default;
@@ -228,14 +221,14 @@ namespace OpenAI.Internal.Models
                     lastError = RunStepObjectLastError.DeserializeRunStepObjectLastError(property.Value, options);
                     continue;
                 }
-                if (property.NameEquals("expires_at"u8))
+                if (property.NameEquals("expired_at"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        expiresAt = null;
+                        expiredAt = null;
                         continue;
                     }
-                    expiresAt = property.Value.GetDateTimeOffset("O");
+                    expiredAt = property.Value.GetDateTimeOffset("O");
                     continue;
                 }
                 if (property.NameEquals("cancelled_at"u8))
@@ -285,11 +278,6 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("usage"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        usage = null;
-                        continue;
-                    }
                     usage = RunStepCompletionUsage.DeserializeRunStepCompletionUsage(property.Value, options);
                     continue;
                 }
@@ -310,7 +298,7 @@ namespace OpenAI.Internal.Models
                 status,
                 stepDetails,
                 lastError,
-                expiresAt,
+                expiredAt,
                 cancelledAt,
                 failedAt,
                 completedAt,

@@ -1,20 +1,23 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
 model CreateModerationRequest {
   /** The input text to classify */
-  input: CreateModerationRequestInput;
+  input: string | string[];
 
-  /**
-   * Two content moderations models are available: `text-moderation-stable` and
-   * `text-moderation-latest`. The default is `text-moderation-latest` which will be automatically
-   * upgraded over time. This ensures you are always using our most accurate model. If you use
-   * `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy
-   * of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
-   */
+  @doc("""
+  Two content moderations models are available: `text-moderation-stable` and `text-moderation-latest`.
+  
+  The default is `text-moderation-latest` which will be automatically upgraded over time. This ensures you are always using our most accurate model. If you use `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
+  """)
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | MODERATION_MODELS = "text-moderation-latest";
+  `model`?: string | "text-moderation-latest" | "text-moderation-stable" = "text-moderation-latest";
 }
 
 /** Represents if a given text input is potentially harmful. */
@@ -35,7 +38,7 @@ model CreateModerationResponse {
       /**
        * Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
        * religion, nationality, sexual orientation, disability status, or caste. Hateful content
-       * aimed at non-protected groups (e.g., chess players) is harrassment.
+       * aimed at non-protected groups (e.g., chess players) is harassment.
        */
       hate: boolean;
 
@@ -89,47 +92,38 @@ model CreateModerationResponse {
     /** A list of the categories along with their scores as predicted by model. */
     category_scores: {
       /** The score for the category 'hate'. */
-      hate: float64;
+      hate: float32;
 
       /** The score for the category 'hate/threatening'. */
-      `hate/threatening`: float64;
+      `hate/threatening`: float32;
 
       /** The score for the category 'harassment'. */
-      harassment: float64;
+      harassment: float32;
 
       /** The score for the category 'harassment/threatening'. */
-      `harassment/threatening`: float64;
+      `harassment/threatening`: float32;
 
       /** The score for the category 'self-harm'. */
-      `self-harm`: float64;
+      `self-harm`: float32;
 
       /** The score for the category 'self-harm/intent'. */
-      `self-harm/intent`: float64;
+      `self-harm/intent`: float32;
 
-      /** The score for the category 'self-harm/instructive'. */
-      `self-harm/instructions`: float64;
+      /** The score for the category 'self-harm/instructions'. */
+      `self-harm/instructions`: float32;
 
       /** The score for the category 'sexual'. */
-      sexual: float64;
+      sexual: float32;
 
       /** The score for the category 'sexual/minors'. */
-      `sexual/minors`: float64;
+      `sexual/minors`: float32;
 
       /** The score for the category 'violence'. */
-      violence: float64;
+      violence: float32;
 
       /** The score for the category 'violence/graphic'. */
-      `violence/graphic`: float64;
+      `violence/graphic`: float32;
     };
   }[];
 }
 
-alias MODERATION_MODELS =
-  | "text-moderation-latest"
-  | "text-moderation-stable";
-
-@oneOf
-union CreateModerationRequestInput {
-  string,
-  string[]
-}

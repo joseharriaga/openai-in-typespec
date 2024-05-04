@@ -59,14 +59,12 @@ namespace OpenAI.Internal.Models
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
-        /// <param name="tools">
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-        /// </param>
+        /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`. </param>
         /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
+        /// A list of [File](/docs/api-reference/files) IDs attached to this assistant. There can be a
         /// maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-        /// ascending order.
+        /// ascending order. If a file was previously attached to the list but does not show up in the
+        /// list, it will be deleted from the assistant.
         /// </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -99,8 +97,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The system instructions that the assistant uses. The maximum length is 32768 characters. </summary>
         public string Instructions { get; set; }
         /// <summary>
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -145,9 +142,10 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public IList<BinaryData> Tools { get; }
         /// <summary>
-        /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
+        /// A list of [File](/docs/api-reference/files) IDs attached to this assistant. There can be a
         /// maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-        /// ascending order.
+        /// ascending order. If a file was previously attached to the list but does not show up in the
+        /// list, it will be deleted from the assistant.
         /// </summary>
         public IList<string> FileIds { get; }
         /// <summary>

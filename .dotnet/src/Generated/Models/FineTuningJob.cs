@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace OpenAI.FineTuning
 {
-    /// <summary> The FineTuningJob. </summary>
+    /// <summary> The `fine_tuning.job` object represents a fine-tuning job that has been created through the API. </summary>
     internal partial class FineTuningJob
     {
         /// <summary>
@@ -46,10 +46,7 @@ namespace OpenAI.FineTuning
         /// <summary> Initializes a new instance of <see cref="FineTuningJob"/>. </summary>
         /// <param name="id"> The object identifier, which can be referenced in the API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the fine-tuning job was created. </param>
-        /// <param name="error">
-        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of the
-        /// failure.
-        /// </param>
+        /// <param name="error"> For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure. </param>
         /// <param name="fineTunedModel">
         /// The name of the fine-tuned model that is being created. The value will be null if the
         /// fine-tuning job is still running.
@@ -59,8 +56,8 @@ namespace OpenAI.FineTuning
         /// null if the fine-tuning job is still running.
         /// </param>
         /// <param name="hyperparameters">
-        /// The hyperparameters used for the fine-tuning job. See the
-        /// [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+        /// The hyperparameters used for the fine-tuning job. See the [fine-tuning
+        /// guide](/docs/guides/fine-tuning) for more details.
         /// </param>
         /// <param name="model"> The base model that is being fine-tuned. </param>
         /// <param name="organizationId"> The organization that owns the fine-tuning job. </param>
@@ -68,24 +65,21 @@ namespace OpenAI.FineTuning
         /// The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </param>
-        /// <param name="status">
-        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-        /// `running`, `succeeded`, `failed`, or `cancelled`.
-        /// </param>
+        /// <param name="status"> The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`. </param>
         /// <param name="trainedTokens">
         /// The total number of billable tokens processed by this fine-tuning job. The value will be null
         /// if the fine-tuning job is still running.
         /// </param>
         /// <param name="trainingFile">
-        /// The file ID used for training. You can retrieve the training data with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
+        /// The file ID used for training. You can retrieve the training data with the [Files
+        /// API](/docs/api-reference/files/retrieve-contents).
         /// </param>
         /// <param name="validationFile">
-        /// The file ID used for validation. You can retrieve the validation results with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
+        /// The file ID used for validation. You can retrieve the validation results with the [Files
+        /// API](/docs/api-reference/files/retrieve-contents).
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="hyperparameters"/>, <paramref name="model"/>, <paramref name="organizationId"/>, <paramref name="resultFiles"/> or <paramref name="trainingFile"/> is null. </exception>
-        internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, string organizationId, IEnumerable<string> resultFiles, FineTuningJobStatus status, long? trainedTokens, string trainingFile, string validationFile)
+        internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, string organizationId, IEnumerable<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(hyperparameters, nameof(hyperparameters));
@@ -112,10 +106,7 @@ namespace OpenAI.FineTuning
         /// <summary> Initializes a new instance of <see cref="FineTuningJob"/>. </summary>
         /// <param name="id"> The object identifier, which can be referenced in the API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the fine-tuning job was created. </param>
-        /// <param name="error">
-        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of the
-        /// failure.
-        /// </param>
+        /// <param name="error"> For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure. </param>
         /// <param name="fineTunedModel">
         /// The name of the fine-tuned model that is being created. The value will be null if the
         /// fine-tuning job is still running.
@@ -125,8 +116,8 @@ namespace OpenAI.FineTuning
         /// null if the fine-tuning job is still running.
         /// </param>
         /// <param name="hyperparameters">
-        /// The hyperparameters used for the fine-tuning job. See the
-        /// [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+        /// The hyperparameters used for the fine-tuning job. See the [fine-tuning
+        /// guide](/docs/guides/fine-tuning) for more details.
         /// </param>
         /// <param name="model"> The base model that is being fine-tuned. </param>
         /// <param name="object"> The object type, which is always "fine_tuning.job". </param>
@@ -135,24 +126,21 @@ namespace OpenAI.FineTuning
         /// The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </param>
-        /// <param name="status">
-        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-        /// `running`, `succeeded`, `failed`, or `cancelled`.
-        /// </param>
+        /// <param name="status"> The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`. </param>
         /// <param name="trainedTokens">
         /// The total number of billable tokens processed by this fine-tuning job. The value will be null
         /// if the fine-tuning job is still running.
         /// </param>
         /// <param name="trainingFile">
-        /// The file ID used for training. You can retrieve the training data with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
+        /// The file ID used for training. You can retrieve the training data with the [Files
+        /// API](/docs/api-reference/files/retrieve-contents).
         /// </param>
         /// <param name="validationFile">
-        /// The file ID used for validation. You can retrieve the validation results with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
+        /// The file ID used for validation. You can retrieve the validation results with the [Files
+        /// API](/docs/api-reference/files/retrieve-contents).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, FineTuningJobObject @object, string organizationId, IReadOnlyList<string> resultFiles, FineTuningJobStatus status, long? trainedTokens, string trainingFile, string validationFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, FineTuningJobObject @object, string organizationId, IReadOnlyList<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -180,10 +168,7 @@ namespace OpenAI.FineTuning
         public string Id { get; }
         /// <summary> The Unix timestamp (in seconds) for when the fine-tuning job was created. </summary>
         public DateTimeOffset CreatedAt { get; }
-        /// <summary>
-        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of the
-        /// failure.
-        /// </summary>
+        /// <summary> For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure. </summary>
         public FineTuningJobError Error { get; }
         /// <summary>
         /// The name of the fine-tuned model that is being created. The value will be null if the
@@ -196,8 +181,8 @@ namespace OpenAI.FineTuning
         /// </summary>
         public DateTimeOffset? FinishedAt { get; }
         /// <summary>
-        /// The hyperparameters used for the fine-tuning job. See the
-        /// [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+        /// The hyperparameters used for the fine-tuning job. See the [fine-tuning
+        /// guide](/docs/guides/fine-tuning) for more details.
         /// </summary>
         public FineTuningJobHyperparameters Hyperparameters { get; }
         /// <summary> The base model that is being fine-tuned. </summary>
@@ -212,24 +197,21 @@ namespace OpenAI.FineTuning
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </summary>
         public IReadOnlyList<string> ResultFiles { get; }
-        /// <summary>
-        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-        /// `running`, `succeeded`, `failed`, or `cancelled`.
-        /// </summary>
+        /// <summary> The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`. </summary>
         public FineTuningJobStatus Status { get; }
         /// <summary>
         /// The total number of billable tokens processed by this fine-tuning job. The value will be null
         /// if the fine-tuning job is still running.
         /// </summary>
-        public long? TrainedTokens { get; }
+        public int? TrainedTokens { get; }
         /// <summary>
-        /// The file ID used for training. You can retrieve the training data with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
+        /// The file ID used for training. You can retrieve the training data with the [Files
+        /// API](/docs/api-reference/files/retrieve-contents).
         /// </summary>
         public string TrainingFile { get; }
         /// <summary>
-        /// The file ID used for validation. You can retrieve the validation results with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
+        /// The file ID used for validation. You can retrieve the validation results with the [Files
+        /// API](/docs/api-reference/files/retrieve-contents).
         /// </summary>
         public string ValidationFile { get; }
     }

@@ -151,22 +151,15 @@ namespace OpenAI.Internal.Models
             }
             if (Optional.IsDefined(Stop))
             {
-                if (Stop != null)
-                {
-                    writer.WritePropertyName("stop"u8);
+                writer.WritePropertyName("stop"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(Stop);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(Stop))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-                else
+                using (JsonDocument document = JsonDocument.Parse(Stop))
                 {
-                    writer.WriteNull("stop");
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             if (Optional.IsDefined(Stream))
             {
@@ -293,19 +286,19 @@ namespace OpenAI.Internal.Models
             }
             IList<BinaryData> messages = default;
             CreateChatCompletionRequestModel model = default;
-            double? frequencyPenalty = default;
-            IDictionary<string, long> logitBias = default;
+            float? frequencyPenalty = default;
+            IDictionary<string, int> logitBias = default;
             bool? logprobs = default;
-            long? topLogprobs = default;
-            long? maxTokens = default;
-            long? n = default;
-            double? presencePenalty = default;
+            int? topLogprobs = default;
+            int? maxTokens = default;
+            int? n = default;
+            float? presencePenalty = default;
             CreateChatCompletionRequestResponseFormat responseFormat = default;
             long? seed = default;
             BinaryData stop = default;
             bool? stream = default;
-            double? temperature = default;
-            double? topP = default;
+            float? temperature = default;
+            float? topP = default;
             IList<ChatCompletionTool> tools = default;
             BinaryData toolChoice = default;
             string user = default;
@@ -344,7 +337,7 @@ namespace OpenAI.Internal.Models
                         frequencyPenalty = null;
                         continue;
                     }
-                    frequencyPenalty = property.Value.GetDouble();
+                    frequencyPenalty = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("logit_bias"u8))
@@ -353,10 +346,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    Dictionary<string, long> dictionary = new Dictionary<string, long>();
+                    Dictionary<string, int> dictionary = new Dictionary<string, int>();
                     foreach (var property0 in property.Value.EnumerateObject())
                     {
-                        dictionary.Add(property0.Name, property0.Value.GetInt64());
+                        dictionary.Add(property0.Name, property0.Value.GetInt32());
                     }
                     logitBias = dictionary;
                     continue;
@@ -378,7 +371,7 @@ namespace OpenAI.Internal.Models
                         topLogprobs = null;
                         continue;
                     }
-                    topLogprobs = property.Value.GetInt64();
+                    topLogprobs = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("max_tokens"u8))
@@ -388,7 +381,7 @@ namespace OpenAI.Internal.Models
                         maxTokens = null;
                         continue;
                     }
-                    maxTokens = property.Value.GetInt64();
+                    maxTokens = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("n"u8))
@@ -398,7 +391,7 @@ namespace OpenAI.Internal.Models
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("presence_penalty"u8))
@@ -408,7 +401,7 @@ namespace OpenAI.Internal.Models
                         presencePenalty = null;
                         continue;
                     }
-                    presencePenalty = property.Value.GetDouble();
+                    presencePenalty = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))
@@ -434,7 +427,6 @@ namespace OpenAI.Internal.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        stop = null;
                         continue;
                     }
                     stop = BinaryData.FromString(property.Value.GetRawText());
@@ -457,7 +449,7 @@ namespace OpenAI.Internal.Models
                         temperature = null;
                         continue;
                     }
-                    temperature = property.Value.GetDouble();
+                    temperature = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("top_p"u8))
@@ -467,7 +459,7 @@ namespace OpenAI.Internal.Models
                         topP = null;
                         continue;
                     }
-                    topP = property.Value.GetDouble();
+                    topP = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("tools"u8))
@@ -531,7 +523,7 @@ namespace OpenAI.Internal.Models
                 messages,
                 model,
                 frequencyPenalty,
-                logitBias ?? new ChangeTrackingDictionary<string, long>(),
+                logitBias ?? new ChangeTrackingDictionary<string, int>(),
                 logprobs,
                 topLogprobs,
                 maxTokens,

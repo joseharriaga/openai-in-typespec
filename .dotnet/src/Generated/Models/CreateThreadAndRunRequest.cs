@@ -58,13 +58,13 @@ namespace OpenAI.Internal.Models
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
         /// <param name="thread"> If no thread is provided, an empty thread will be created. </param>
         /// <param name="model">
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is
-        /// provided here, it will override the model associated with the assistant. If not, the model
+        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
+        /// is provided here, it will override the model associated with the assistant. If not, the model
         /// associated with the assistant will be used.
         /// </param>
         /// <param name="instructions">
-        /// Override the default system message of the assistant. This is useful for modifying the behavior
-        /// on a per-run basis.
+        /// Override the default system message of the assistant. This is useful for modifying the
+        /// behavior on a per-run basis.
         /// </param>
         /// <param name="tools">
         /// Override the tools the assistant can use for this run. This is useful for modifying the
@@ -97,14 +97,14 @@ namespace OpenAI.Internal.Models
         /// <summary> If no thread is provided, an empty thread will be created. </summary>
         public CreateThreadRequest Thread { get; set; }
         /// <summary>
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is
-        /// provided here, it will override the model associated with the assistant. If not, the model
+        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
+        /// is provided here, it will override the model associated with the assistant. If not, the model
         /// associated with the assistant will be used.
         /// </summary>
         public string Model { get; set; }
         /// <summary>
-        /// Override the default system message of the assistant. This is useful for modifying the behavior
-        /// on a per-run basis.
+        /// Override the default system message of the assistant. This is useful for modifying the
+        /// behavior on a per-run basis.
         /// </summary>
         public string Instructions { get; set; }
         /// <summary>

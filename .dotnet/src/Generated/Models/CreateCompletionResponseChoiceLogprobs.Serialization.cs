@@ -21,45 +21,57 @@ namespace OpenAI.LegacyCompletions
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("tokens"u8);
-            writer.WriteStartArray();
-            foreach (var item in Tokens)
+            if (Optional.IsCollectionDefined(TextOffset))
             {
-                writer.WriteStringValue(item);
-            }
-            writer.WriteEndArray();
-            writer.WritePropertyName("token_logprobs"u8);
-            writer.WriteStartArray();
-            foreach (var item in TokenLogprobs)
-            {
-                writer.WriteNumberValue(item);
-            }
-            writer.WriteEndArray();
-            writer.WritePropertyName("top_logprobs"u8);
-            writer.WriteStartArray();
-            foreach (var item in TopLogprobs)
-            {
-                if (item == null)
+                writer.WritePropertyName("text_offset"u8);
+                writer.WriteStartArray();
+                foreach (var item in TextOffset)
                 {
-                    writer.WriteNullValue();
-                    continue;
+                    writer.WriteNumberValue(item);
                 }
-                writer.WriteStartObject();
-                foreach (var item0 in item)
-                {
-                    writer.WritePropertyName(item0.Key);
-                    writer.WriteNumberValue(item0.Value);
-                }
-                writer.WriteEndObject();
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
-            writer.WritePropertyName("text_offset"u8);
-            writer.WriteStartArray();
-            foreach (var item in TextOffset)
+            if (Optional.IsCollectionDefined(TokenLogprobs))
             {
-                writer.WriteNumberValue(item);
+                writer.WritePropertyName("token_logprobs"u8);
+                writer.WriteStartArray();
+                foreach (var item in TokenLogprobs)
+                {
+                    writer.WriteNumberValue(item);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
+            if (Optional.IsCollectionDefined(Tokens))
+            {
+                writer.WritePropertyName("tokens"u8);
+                writer.WriteStartArray();
+                foreach (var item in Tokens)
+                {
+                    writer.WriteStringValue(item);
+                }
+                writer.WriteEndArray();
+            }
+            if (Optional.IsCollectionDefined(TopLogprobs))
+            {
+                writer.WritePropertyName("top_logprobs"u8);
+                writer.WriteStartArray();
+                foreach (var item in TopLogprobs)
+                {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
+                    writer.WriteStartObject();
+                    foreach (var item0 in item)
+                    {
+                        writer.WritePropertyName(item0.Key);
+                        writer.WriteNumberValue(item0.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndArray();
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -98,16 +110,48 @@ namespace OpenAI.LegacyCompletions
             {
                 return null;
             }
+            IReadOnlyList<int> textOffset = default;
+            IReadOnlyList<float> tokenLogprobs = default;
             IReadOnlyList<string> tokens = default;
-            IReadOnlyList<double> tokenLogprobs = default;
-            IReadOnlyList<IDictionary<string, long>> topLogprobs = default;
-            IReadOnlyList<long> textOffset = default;
+            IReadOnlyList<IDictionary<string, float>> topLogprobs = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("text_offset"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<int> array = new List<int>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(item.GetInt32());
+                    }
+                    textOffset = array;
+                    continue;
+                }
+                if (property.NameEquals("token_logprobs"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<float> array = new List<float>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(item.GetSingle());
+                    }
+                    tokenLogprobs = array;
+                    continue;
+                }
                 if (property.NameEquals("tokens"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -116,19 +160,13 @@ namespace OpenAI.LegacyCompletions
                     tokens = array;
                     continue;
                 }
-                if (property.NameEquals("token_logprobs"u8))
-                {
-                    List<double> array = new List<double>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(item.GetDouble());
-                    }
-                    tokenLogprobs = array;
-                    continue;
-                }
                 if (property.NameEquals("top_logprobs"u8))
                 {
-                    List<IDictionary<string, long>> array = new List<IDictionary<string, long>>();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<IDictionary<string, float>> array = new List<IDictionary<string, float>>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
                         if (item.ValueKind == JsonValueKind.Null)
@@ -137,25 +175,15 @@ namespace OpenAI.LegacyCompletions
                         }
                         else
                         {
-                            Dictionary<string, long> dictionary = new Dictionary<string, long>();
+                            Dictionary<string, float> dictionary = new Dictionary<string, float>();
                             foreach (var property0 in item.EnumerateObject())
                             {
-                                dictionary.Add(property0.Name, property0.Value.GetInt64());
+                                dictionary.Add(property0.Name, property0.Value.GetSingle());
                             }
                             array.Add(dictionary);
                         }
                     }
                     topLogprobs = array;
-                    continue;
-                }
-                if (property.NameEquals("text_offset"u8))
-                {
-                    List<long> array = new List<long>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(item.GetInt64());
-                    }
-                    textOffset = array;
                     continue;
                 }
                 if (options.Format != "W")
@@ -164,7 +192,7 @@ namespace OpenAI.LegacyCompletions
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateCompletionResponseChoiceLogprobs(tokens, tokenLogprobs, topLogprobs, textOffset, serializedAdditionalRawData);
+            return new CreateCompletionResponseChoiceLogprobs(textOffset ?? new ChangeTrackingList<int>(), tokenLogprobs ?? new ChangeTrackingList<float>(), tokens ?? new ChangeTrackingList<string>(), topLogprobs ?? new ChangeTrackingList<IDictionary<string, float>>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateCompletionResponseChoiceLogprobs>.Write(ModelReaderWriterOptions options)

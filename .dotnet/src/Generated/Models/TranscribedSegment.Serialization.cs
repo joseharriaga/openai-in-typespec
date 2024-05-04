@@ -26,9 +26,9 @@ namespace OpenAI.Audio
             writer.WritePropertyName("seek"u8);
             writer.WriteNumberValue(SeekOffset);
             writer.WritePropertyName("start"u8);
-            writer.WriteNumberValue(Convert.ToInt32(Start.ToString("%s")));
+            writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.fff")));
             writer.WritePropertyName("end"u8);
-            writer.WriteNumberValue(Convert.ToInt32(End.ToString("%s")));
+            writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.fff")));
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
             writer.WritePropertyName("tokens"u8);
@@ -84,15 +84,15 @@ namespace OpenAI.Audio
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
-            long id = default;
+            int id = default;
             long seek = default;
             TimeSpan start = default;
             TimeSpan end = default;
             string text = default;
             IReadOnlyList<long> tokens = default;
-            double temperature = default;
+            float temperature = default;
             double avgLogprob = default;
-            double compressionRatio = default;
+            float compressionRatio = default;
             double noSpeechProb = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -100,7 +100,7 @@ namespace OpenAI.Audio
             {
                 if (property.NameEquals("id"u8))
                 {
-                    id = property.Value.GetInt64();
+                    id = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("seek"u8))
@@ -135,7 +135,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("temperature"u8))
                 {
-                    temperature = property.Value.GetDouble();
+                    temperature = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("avg_logprob"u8))
@@ -145,7 +145,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("compression_ratio"u8))
                 {
-                    compressionRatio = property.Value.GetDouble();
+                    compressionRatio = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("no_speech_prob"u8))

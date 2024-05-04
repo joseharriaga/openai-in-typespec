@@ -21,12 +21,10 @@ namespace OpenAI.Audio
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("task"u8);
-            writer.WriteStringValue(Task.ToString());
             writer.WritePropertyName("language"u8);
             writer.WriteStringValue(Language);
             writer.WritePropertyName("duration"u8);
-            writer.WriteNumberValue(Convert.ToInt32(Duration.Value.ToString("%s")));
+            writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.fff")));
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
             if (Optional.IsCollectionDefined(Words))
@@ -87,7 +85,6 @@ namespace OpenAI.Audio
             {
                 return null;
             }
-            CreateTranscriptionResponseVerboseJsonTask task = default;
             string language = default;
             TimeSpan? duration = default;
             string text = default;
@@ -97,11 +94,6 @@ namespace OpenAI.Audio
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("task"u8))
-                {
-                    task = new CreateTranscriptionResponseVerboseJsonTask(property.Value.GetString());
-                    continue;
-                }
                 if (property.NameEquals("language"u8))
                 {
                     language = property.Value.GetString();
@@ -152,7 +144,6 @@ namespace OpenAI.Audio
             }
             serializedAdditionalRawData = rawDataDictionary;
             return new AudioTranscription(
-                task,
                 language,
                 duration,
                 text,

@@ -43,10 +43,7 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateAssistantFileRequest"/>. </summary>
-        /// <param name="fileId">
-        /// A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should
-        /// use. Useful for tools like `retrieval` and `code_interpreter` that can access files.
-        /// </param>
+        /// <param name="fileId"> A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should use. Useful for tools like `retrieval` and `code_interpreter` that can access files. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         public CreateAssistantFileRequest(string fileId)
         {
@@ -56,10 +53,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateAssistantFileRequest"/>. </summary>
-        /// <param name="fileId">
-        /// A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should
-        /// use. Useful for tools like `retrieval` and `code_interpreter` that can access files.
-        /// </param>
+        /// <param name="fileId"> A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should use. Useful for tools like `retrieval` and `code_interpreter` that can access files. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateAssistantFileRequest(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -72,10 +66,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary>
-        /// A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should
-        /// use. Useful for tools like `retrieval` and `code_interpreter` that can access files.
-        /// </summary>
+        /// <summary> A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should use. Useful for tools like `retrieval` and `code_interpreter` that can access files. </summary>
         public string FileId { get; }
     }
 }

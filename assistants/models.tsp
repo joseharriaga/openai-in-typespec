@@ -9,30 +9,28 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-/**
- * Specifies the format that the model must output. Compatible with [GPT-4
- * Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models since
- * `gpt-3.5-turbo-1106`.
- * 
- * Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model
- * generates is valid JSON.
- * 
- * **Important:** when using JSON mode, you **must** also instruct the model to produce JSON
- * yourself via a system or user message. Without this, the model may generate an unending stream
- * of whitespace until the generation reaches the token limit, resulting in a long-running and
- * seemingly "stuck" request. Also note that the message content may be partially cut off if
- * `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the
- * conversation exceeded the max context length.
- */
-alias AssistantsApiResponseFormatOption = "none" | "auto" | AssistantsApiResponseFormat;
+@doc("""
+Specifies the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
-/**
- * An object describing the expected output of the model. If `json_object` only `function` type
- * `tools` are allowed to be passed to the Run. If `text` the model can return text or any value
- * needed.
- */
+Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+
+**Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+
+""")
+@extension("x-oaiExpandable", true)
+union AssistantsApiResponseFormatOption {
+  "none" | "auto",
+  AssistantsApiResponseFormat,
+}
+
+@doc("""
+An object describing the expected output of the model. If `json_object` only `function` type `tools` are allowed to be passed to the Run. If `text` the model can return text or any value needed.
+
+""")
 model AssistantsApiResponseFormat {
-  /** Must be one of `text` or `json_object`. */
+  @doc("""
+  Must be one of `text` or `json_object`.
+""")
   type?: "text" | "json_object" = "text";
 }
 
@@ -43,7 +41,26 @@ model CreateAssistantRequest {
    * descriptions of them.
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | "gpt-4-turbo" | "gpt-4-turbo-2024-04-09" | "gpt-4-0125-preview" | "gpt-4-turbo-preview" | "gpt-4-1106-preview" | "gpt-4-vision-preview" | "gpt-4" | "gpt-4-0314" | "gpt-4-0613" | "gpt-4-32k" | "gpt-4-32k-0314" | "gpt-4-32k-0613" | "gpt-3.5-turbo" | "gpt-3.5-turbo-16k" | "gpt-3.5-turbo-0613" | "gpt-3.5-turbo-1106" | "gpt-3.5-turbo-0125" | "gpt-3.5-turbo-16k-0613";
+  `model`:
+    | string
+    | "gpt-4-turbo"
+    | "gpt-4-turbo-2024-04-09"
+    | "gpt-4-0125-preview"
+    | "gpt-4-turbo-preview"
+    | "gpt-4-1106-preview"
+    | "gpt-4-vision-preview"
+    | "gpt-4"
+    | "gpt-4-0314"
+    | "gpt-4-0613"
+    | "gpt-4-32k"
+    | "gpt-4-32k-0314"
+    | "gpt-4-32k-0613"
+    | "gpt-3.5-turbo"
+    | "gpt-3.5-turbo-16k"
+    | "gpt-3.5-turbo-0613"
+    | "gpt-3.5-turbo-1106"
+    | "gpt-3.5-turbo-0125"
+    | "gpt-3.5-turbo-16k-0613";
 
   /** The name of the assistant. The maximum length is 256 characters. */
   @maxLength(256)
@@ -57,28 +74,27 @@ model CreateAssistantRequest {
   @maxLength(256000)
   instructions?: string | null;
 
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-   * Tools can be of types `code_interpreter`, `file_search`, or `function`.
-   */
-  @maxItems(128)
-  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [];
+  @doc("""
+  A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
 
-  /**
-   * A set of resources that are used by the assistant's tools. The resources are specific to the
-   * type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the
-   * `file_search` tool requires a list of vector store IDs.
-   */
+""")
+  @maxItems(128)
+  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
+  ];
+
+  @doc("""
+  A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+
+""")
   tool_resources?: {
     code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`
-       * tool. There can be a maximum of 20 files associated with the tool.
-       */
+      @doc("""
+      A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+
+""")
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /**
        * The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
@@ -126,18 +142,18 @@ model CreateAssistantRequest {
    */
   @minValue(0)
   @maxValue(2)
-  temperature?: float64 | null = 1;
+  temperature?: float32 | null = 1;
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model
    * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
    * comprising the top 10% probability mass are considered.
-   * 
+   *
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
   @maxValue(1)
-  top_p?: float64 | null = 1;
+  top_p?: float32 | null = 1;
 
   response_format?: AssistantsApiResponseFormatOption | null;
 }
@@ -162,28 +178,27 @@ model ModifyAssistantRequest {
   @maxLength(256000)
   instructions?: string | null;
 
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-   * Tools can be of types `code_interpreter`, `file_search`, or `function`.
-   */
-  @maxItems(128)
-  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [];
+  @doc("""
+  A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
 
-  /**
-   * A set of resources that are used by the assistant's tools. The resources are specific to the
-   * type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the
-   * `file_search` tool requires a list of vector store IDs.
-   */
+""")
+  @maxItems(128)
+  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
+  ];
+
+  @doc("""
+  A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+
+""")
   tool_resources?: {
     code_interpreter?: {
-      /**
-       * Overrides the list of [file](/docs/api-reference/files) IDs made available to the
-       * `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-       */
+      @doc("""
+      Overrides the list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+
+""")
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /**
        * Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this
@@ -208,70 +223,77 @@ model ModifyAssistantRequest {
    */
   @minValue(0)
   @maxValue(2)
-  temperature?: float64 | null = 1;
+  temperature?: float32 | null = 1;
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model
    * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
    * comprising the top 10% probability mass are considered.
-   * 
+   *
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
   @maxValue(1)
-  top_p?: float64 | null = 1;
+  top_p?: float32 | null = 1;
 
   response_format?: AssistantsApiResponseFormatOption | null;
 }
 
 model ListAssistantsResponse {
   object: string;
-
   data: AssistantObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteAssistantResponse {
   id: string;
-
   deleted: boolean;
-
   object: "assistant.deleted";
 }
 
 model AssistantToolsCode {
-  /** The type of tool being defined: `code_interpreter` */
+  @doc("""
+  The type of tool being defined: `code_interpreter`
+""")
   type: "code_interpreter";
 }
 
 model AssistantToolsFileSearch {
-  /** The type of tool being defined: `file_search` */
+  @doc("""
+  The type of tool being defined: `file_search`
+""")
   type: "file_search";
 }
 
 model AssistantToolsFunction {
-  /** The type of tool being defined: `function` */
+  @doc("""
+  The type of tool being defined: `function`
+""")
   type: "function";
 
   function: FunctionObject;
 }
 
-/** Represents an `assistant` that can call the model and use tools. */
+@doc("""
+Represents an `assistant` that can call the model and use tools.
+""")
 model AssistantObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `assistant`. */
+  @doc("""
+  The object type, which is always `assistant`.
+""")
   object: "assistant";
 
   /** The Unix timestamp (in seconds) for when the assistant was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The name of the assistant. The maximum length is 256 characters. */
@@ -293,28 +315,27 @@ model AssistantObject {
   @maxLength(256000)
   instructions: string | null;
 
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-   * Tools can be of types `code_interpreter`, `file_search`, or `function`.
-   */
-  @maxItems(128)
-  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [];
+  @doc("""
+  A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
 
-  /**
-   * A set of resources that are used by the assistant's tools. The resources are specific to the
-   * type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the
-   * `file_search` tool requires a list of vector store IDs.
-   */
+""")
+  @maxItems(128)
+  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
+  ];
+
+  @doc("""
+  A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+
+""")
   tool_resources?: {
     code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter``
-       * tool. There can be a maximum of 20 files associated with the tool.
-       */
+      @doc("""
+      A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool.
+
+""")
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /**
        * The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
@@ -339,18 +360,18 @@ model AssistantObject {
    */
   @minValue(0)
   @maxValue(2)
-  temperature?: float64 | null = 1;
+  temperature?: float32 | null = 1;
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model
    * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
    * comprising the top 10% probability mass are considered.
-   * 
+   *
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
   @maxValue(1)
-  top_p?: float64 | null = 1;
+  top_p?: float32 | null = 1;
 
   response_format?: AssistantsApiResponseFormatOption | null;
 }
@@ -360,12 +381,9 @@ model AssistantObject {
  * context window of the run.
  */
 model TruncationObject {
-  /**
-   * The truncation strategy to use for the thread. The default is `auto`. If set to
-   * `last_messages`, the thread will be truncated to the n most recent messages in the thread.
-   * When set to `auto`, messages in the middle of the thread will be dropped to fit the context
-   * length of the model, `max_prompt_tokens`.
-   */
+  @doc("""
+  The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+""")
   type: "auto" | "last_messages";
 
   /**
@@ -375,20 +393,25 @@ model TruncationObject {
   last_messages?: int32 | null;
 }
 
-/**
- * Controls which (if any) tool is called by the model.
- * `none` means the model will not call any tools and instead generates a message.
- * `auto` is the default value and means the model can pick between generating a message or calling
- * one or more tools.
- * `required` means the model must call one or more tools before responding to the user.
- * Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function":
- * {"name": "my_function"}}` forces the model to call that tool.
- */
-alias AssistantsApiToolChoiceOption = "none" | "auto" | "required" | AssistantsNamedToolChoice;
+@doc("""
+Controls which (if any) tool is called by the model.
+`none` means the model will not call any tools and instead generates a message.
+`auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+`required` means the model must call one or more tools before responding to the user.
+Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+""")
+@extension("x-oaiExpandable", true)
+union AssistantsApiToolChoiceOption {
+  "none" | "auto" | "required",
+  AssistantsNamedToolChoice,
+}
 
 /** Specifies a tool the model should use. Use to force the model to call a specific tool. */
 model AssistantsNamedToolChoice {
-  /** The type of the tool. If type is `function`, the function name must be set */
+  @doc("""
+  The type of the tool. If type is `function`, the function name must be set
+""")
   type: "function" | "code_interpreter" | "file_search";
 
   function?: {
@@ -396,4 +419,3 @@ model AssistantsNamedToolChoice {
     name: string;
   };
 }
-

@@ -15,16 +15,16 @@ model CreateFineTuningJobRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "babbage-002" | "davinci-002" | "gpt-3.5-turbo";
 
-  /**
-   * The ID of an uploaded file that contains training data.
-   * 
-   * See [upload file](/docs/api-reference/files/create) for how to upload a file.
-   * 
-   * Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
-   * the purpose `fine-tune`.
-   * 
-   * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-   */
+  @doc("""
+  The ID of an uploaded file that contains training data.
+
+See [upload file](/docs/api-reference/files/create) for how to upload a file.
+
+Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
+
+See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+
+""")
   training_file: string;
 
   /** The hyperparameters used for the fine-tuning job. */
@@ -48,29 +48,29 @@ model CreateFineTuningJobRequest {
     n_epochs?: "auto" | int32 = "auto";
   };
 
-  /**
-   * A string of up to 18 characters that will be added to your fine-tuned model name.
-   * 
-   * For example, a `suffix` of "custom-model-name" would produce a model name like
-   * `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
-   */
+  @doc("""
+  A string of up to 18 characters that will be added to your fine-tuned model name.
+
+For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+
+""")
   @minLength(1)
   @maxLength(40)
   suffix?: string | null;
 
-  /**
-   * The ID of an uploaded file that contains validation data.
-   * 
-   * If you provide this file, the data is used to generate validation
-   * metrics periodically during fine-tuning. These metrics can be viewed in
-   * the fine-tuning results file.
-   * The same data should not be present in both train and validation files.
-   * 
-   * Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
-   * `fine-tune`.
-   * 
-   * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-   */
+  @doc("""
+  The ID of an uploaded file that contains validation data.
+
+If you provide this file, the data is used to generate validation
+metrics periodically during fine-tuning. These metrics can be viewed in
+the fine-tuning results file.
+The same data should not be present in both train and validation files.
+
+Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
+
+See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+
+""")
   validation_file?: string | null;
 
   /** A list of integrations to enable for your fine-tuning job. */
@@ -124,46 +124,42 @@ model CreateFineTuningJobRequest {
 
 model ListPaginatedFineTuningJobsResponse {
   data: FineTuningJob[];
-
   has_more: boolean;
-
   object: "list";
 }
 
 model ListFineTuningJobEventsResponse {
   data: FineTuningJobEvent[];
-
   object: "list";
 }
 
 model ListFineTuningJobCheckpointsResponse {
   data: FineTuningJobCheckpoint[];
-
   object: "list";
-
   first_id?: string | null;
-
   last_id?: string | null;
-
   has_more: boolean;
 }
 
-/**
- * The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
- */
+@doc("""
+The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
+
+""")
 model FineTuningJob {
   /** The object identifier, which can be referenced in the API endpoints. */
   id: string;
 
   /** The Unix timestamp (in seconds) for when the fine-tuning job was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
-  /**
-   * For fine-tuning jobs that have `failed`, this will contain more information on the cause of
-   * the failure.
-   */
+  @doc("""
+  For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure.
+""")
   error: {
     /** A machine-readable error code. */
     code: string;
@@ -171,10 +167,9 @@ model FineTuningJob {
     /** A human-readable error message. */
     message: string;
 
-    /**
-     * The parameter that was invalid, usually `training_file` or `validation_file`. This field
-     * will be null if the failure was not parameter-specific.
-     */
+    @doc("""
+    The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific.
+""")
     param: string | null;
   } | null;
 
@@ -182,14 +177,17 @@ model FineTuningJob {
    * The name of the fine-tuned model that is being created. The value will be null if the
    * fine-tuning job is still running.
    */
-  `fine_tuned_model`: string | null;
+  fine_tuned_model: string | null;
 
   /**
    * The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
    * null if the fine-tuning job is still running.
    */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   finished_at: utcDateTime | null;
 
   /**
@@ -221,11 +219,16 @@ model FineTuningJob {
    */
   result_files: string[];
 
-  /**
-   * The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-   * `running`, `succeeded`, `failed`, or `cancelled`.
-   */
-  status: "validating_files" | "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  @doc("""
+  The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`.
+""")
+  status:
+    | "validating_files"
+    | "queued"
+    | "running"
+    | "succeeded"
+    | "failed"
+    | "cancelled";
 
   /**
    * The total number of billable tokens processed by this fine-tuning job. The value will be null
@@ -251,6 +254,12 @@ model FineTuningJob {
 
   /** The seed used for the fine-tuning job. */
   seed: int32;
+
+  /**
+   * The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value
+   * will be null if the fine-tuning job is not running.
+   */
+  estimated_finish?: int32 | null;
 }
 
 model FineTuningIntegration {
@@ -294,50 +303,48 @@ model FineTuningJobEvent {
   id: string;
 
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   level: "info" | "warn" | "error";
-
   message: string;
-
   object: "fine_tuning.job.event";
 }
 
-/**
- * The `fine_tuning.job.checkpoint` object represents a model checkpoint for a fine-tuning job that
- * is ready to use.
- */
+@doc("""
+The `fine_tuning.job.checkpoint` object represents a model checkpoint for a fine-tuning job that is ready to use.
+
+""")
 model FineTuningJobCheckpoint {
   /** The checkpoint identifier, which can be referenced in the API endpoints. */
   id: string;
 
   /** The Unix timestamp (in seconds) for when the checkpoint was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The name of the fine-tuned checkpoint model that is created. */
-  `fine_tuned_model_checkpoint`: string;
+  fine_tuned_model_checkpoint: string;
 
   /** The step number that the checkpoint was created at. */
   step_number: int32;
 
   /** Metrics at the step number during the fine-tuning job. */
   metrics: {
-    step?: float64;
-
-    train_loss?: float64;
-
-    train_mean_token_accuracy?: float64;
-
-    valid_loss?: float64;
-
-    valid_mean_token_accuracy?: float64;
-
-    full_valid_loss?: float64;
-
-    full_valid_mean_token_accuracy?: float64;
+    step?: float32;
+    train_loss?: float32;
+    train_mean_token_accuracy?: float32;
+    valid_loss?: float32;
+    valid_mean_token_accuracy?: float32;
+    full_valid_loss?: float32;
+    full_valid_mean_token_accuracy?: float32;
   };
 
   /** The name of the fine-tuning job that this checkpoint was created from. */
@@ -346,4 +353,3 @@ model FineTuningJobCheckpoint {
   /** The object type, which is always "fine_tuning.job.checkpoint". */
   object: "fine_tuning.job.checkpoint";
 }
-

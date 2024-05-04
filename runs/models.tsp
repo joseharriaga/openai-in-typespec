@@ -21,7 +21,27 @@ model CreateRunRequest {
    * associated with the assistant will be used.
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | "gpt-4-turbo" | "gpt-4-turbo-2024-04-09" | "gpt-4-0125-preview" | "gpt-4-turbo-preview" | "gpt-4-1106-preview" | "gpt-4-vision-preview" | "gpt-4" | "gpt-4-0314" | "gpt-4-0613" | "gpt-4-32k" | "gpt-4-32k-0314" | "gpt-4-32k-0613" | "gpt-3.5-turbo" | "gpt-3.5-turbo-16k" | "gpt-3.5-turbo-0613" | "gpt-3.5-turbo-1106" | "gpt-3.5-turbo-0125" | "gpt-3.5-turbo-16k-0613" | null;
+  `model`?:
+    | string
+    | "gpt-4-turbo"
+    | "gpt-4-turbo-2024-04-09"
+    | "gpt-4-0125-preview"
+    | "gpt-4-turbo-preview"
+    | "gpt-4-1106-preview"
+    | "gpt-4-vision-preview"
+    | "gpt-4"
+    | "gpt-4-0314"
+    | "gpt-4-0613"
+    | "gpt-4-32k"
+    | "gpt-4-32k-0314"
+    | "gpt-4-32k-0613"
+    | "gpt-3.5-turbo"
+    | "gpt-3.5-turbo-16k"
+    | "gpt-3.5-turbo-0613"
+    | "gpt-3.5-turbo-1106"
+    | "gpt-3.5-turbo-0125"
+    | "gpt-3.5-turbo-16k-0613"
+    | null;
 
   /**
    * Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant.
@@ -59,47 +79,41 @@ model CreateRunRequest {
    */
   @minValue(0)
   @maxValue(2)
-  temperature?: float64 | null = 1;
+  temperature?: float32 | null = 1;
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model
    * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
    * comprising the top 10% probability mass are considered.
-   * 
+   *
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
   @maxValue(1)
-  top_p?: float64 | null = 1;
+  top_p?: float32 | null = 1;
 
-  /**
-   * If `true`, returns a stream of events that happen during the Run as server-sent events,
-   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
-   */
+  @doc("""
+  If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
+
+""")
   stream?: boolean | null;
 
-  /**
-   * The maximum number of prompt tokens that may be used over the course of the run. The run will
-   * make a best effort to use only the number of prompt tokens specified, across multiple turns of
-   * the run. If the run exceeds the number of prompt tokens specified, the run will end with
-   * status `incomplete`. See `incomplete_details` for more info.
-   */
+  @doc("""
+  The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+
+""")
   @minValue(256)
   max_prompt_tokens?: int32 | null;
 
-  /**
-   * The maximum number of completion tokens that may be used over the course of the run. The run
-   * will make a best effort to use only the number of completion tokens specified, across multiple
-   * turns of the run. If the run exceeds the number of completion tokens specified, the run will
-   * end with status `incomplete`. See `incomplete_details` for more info.
-   */
+  @doc("""
+  The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+
+""")
   @minValue(256)
   max_completion_tokens?: int32 | null;
 
   truncation_strategy?: TruncationObject | null;
-
   tool_choice?: AssistantsApiToolChoiceOption | null;
-
   response_format?: AssistantsApiResponseFormatOption | null;
 }
 
@@ -126,7 +140,27 @@ model CreateThreadAndRunRequest {
    * associated with the assistant will be used.
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | "gpt-4-turbo" | "gpt-4-turbo-2024-04-09" | "gpt-4-0125-preview" | "gpt-4-turbo-preview" | "gpt-4-1106-preview" | "gpt-4-vision-preview" | "gpt-4" | "gpt-4-0314" | "gpt-4-0613" | "gpt-4-32k" | "gpt-4-32k-0314" | "gpt-4-32k-0613" | "gpt-3.5-turbo" | "gpt-3.5-turbo-16k" | "gpt-3.5-turbo-0613" | "gpt-3.5-turbo-1106" | "gpt-3.5-turbo-0125" | "gpt-3.5-turbo-16k-0613" | null;
+  `model`?:
+    | string
+    | "gpt-4-turbo"
+    | "gpt-4-turbo-2024-04-09"
+    | "gpt-4-0125-preview"
+    | "gpt-4-turbo-preview"
+    | "gpt-4-1106-preview"
+    | "gpt-4-vision-preview"
+    | "gpt-4"
+    | "gpt-4-0314"
+    | "gpt-4-0613"
+    | "gpt-4-32k"
+    | "gpt-4-32k-0314"
+    | "gpt-4-32k-0613"
+    | "gpt-3.5-turbo"
+    | "gpt-3.5-turbo-16k"
+    | "gpt-3.5-turbo-0613"
+    | "gpt-3.5-turbo-1106"
+    | "gpt-3.5-turbo-0125"
+    | "gpt-3.5-turbo-16k-0613"
+    | null;
 
   /**
    * Override the default system message of the assistant. This is useful for modifying the
@@ -141,21 +175,19 @@ model CreateThreadAndRunRequest {
   // !no_nullable! @maxItems(20)
   tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] | null;
 
-  /**
-   * A set of resources that are used by the assistant's tools. The resources are specific to the
-   * type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the
-   * `file_search` tool requires a list of vector store IDs.
-   */
+  @doc("""
+  A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+
+""")
   tool_resources?: {
     code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`
-       * tool. There can be a maximum of 20 files associated with the tool.
-       */
+      @doc("""
+      A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+
+""")
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /**
        * The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
@@ -180,97 +212,84 @@ model CreateThreadAndRunRequest {
    */
   @minValue(0)
   @maxValue(2)
-  temperature?: float64 | null = 1;
+  temperature?: float32 | null = 1;
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model
    * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
    * comprising the top 10% probability mass are considered.
-   * 
+   *
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
   @maxValue(1)
-  top_p?: float64 | null = 1;
+  top_p?: float32 | null = 1;
 
-  /**
-   * If `true`, returns a stream of events that happen during the Run as server-sent events,
-   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
-   */
+  @doc("""
+  If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
+
+""")
   stream?: boolean | null;
 
-  /**
-   * The maximum number of prompt tokens that may be used over the course of the run. The run will
-   * make a best effort to use only the number of prompt tokens specified, across multiple turns of
-   * the run. If the run exceeds the number of prompt tokens specified, the run will end with
-   * status `incomplete`. See `incomplete_details` for more info.
-   */
+  @doc("""
+  The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+
+""")
   @minValue(256)
   max_prompt_tokens?: int32 | null;
 
-  /**
-   * The maximum number of completion tokens that may be used over the course of the run. The run
-   * will make a best effort to use only the number of completion tokens specified, across multiple
-   * turns of the run. If the run exceeds the number of completion tokens specified, the run will
-   * end with status `incomplete`. See `incomplete_details` for more info.
-   */
+  @doc("""
+  The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+
+""")
   @minValue(256)
   max_completion_tokens?: int32 | null;
 
   truncation_strategy?: TruncationObject | null;
-
   tool_choice?: AssistantsApiToolChoiceOption | null;
-
   response_format?: AssistantsApiResponseFormatOption | null;
 }
 
 model SubmitToolOutputsRunRequest {
   /** A list of tools for which the outputs are being submitted. */
   tool_outputs: {
-    /**
-     * The ID of the tool call in the `required_action` object within the run object the output is
-     * being submitted for.
-     */
+    @doc("""
+    The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
+""")
     tool_call_id?: string;
 
     /** The output of the tool call to be submitted to continue the run. */
     output?: string;
   }[];
 
-  /**
-   * If `true`, returns a stream of events that happen during the Run as server-sent events,
-   * terminating when the Run enters a terminal state with a `data: [DONE]` message.
-   */
+  @doc("""
+  If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
+
+""")
   stream?: boolean | null;
 }
 
 model ListRunsResponse {
   object: string;
-
   data: RunObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model ListRunStepsResponse {
   object: string;
-
   data: RunStepObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 /** Details of the message creation by the run step. */
 model RunStepDetailsMessageCreationObject {
-  /** Always `message_creation`. */
+  @doc("""
+  Always `message_creation`.
+""")
   type: "message_creation";
 
   message_creation: {
@@ -281,13 +300,15 @@ model RunStepDetailsMessageCreationObject {
 
 /** Details of the tool call. */
 model RunStepDetailsToolCallsObject {
-  /** Always `tool_calls`. */
+  @doc("""
+  Always `tool_calls`.
+""")
   type: "tool_calls";
 
-  /**
-   * An array of tool calls the run step was involved in. These can be associated with one of three
-   * types of tools: `code_interpreter`, `file_search`, or `function`.
-   */
+  @doc("""
+  An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
+
+""")
   tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsFileSearchObject | RunStepDetailsToolCallsFunctionObject)[];
 }
 
@@ -296,10 +317,9 @@ model RunStepDetailsToolCallsCodeObject {
   /** The ID of the tool call. */
   id: string;
 
-  /**
-   * The type of tool call. This is always going to be `code_interpreter` for this type of tool
-   * call.
-   */
+  @doc("""
+  The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+""")
   type: "code_interpreter";
 
   /** The Code Interpreter tool call definition. */
@@ -307,18 +327,18 @@ model RunStepDetailsToolCallsCodeObject {
     /** The input to the Code Interpreter tool call. */
     input: string;
 
-    /**
-     * The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-     * items, including text (`logs`) or images (`image`). Each of these are represented by a
-     * different object type.
-     */
+    @doc("""
+    The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+""")
     outputs: (RunStepDetailsToolCallsCodeOutputLogsObject | RunStepDetailsToolCallsCodeOutputImageObject)[];
   };
 }
 
 /** Text output from the Code Interpreter tool call as part of a run step. */
 model RunStepDetailsToolCallsCodeOutputLogsObject {
-  /** Always `logs`. */
+  @doc("""
+  Always `logs`.
+""")
   type: "logs";
 
   /** The text output from the Code Interpreter tool call. */
@@ -326,7 +346,9 @@ model RunStepDetailsToolCallsCodeOutputLogsObject {
 }
 
 model RunStepDetailsToolCallsCodeOutputImageObject {
-  /** Always `image`. */
+  @doc("""
+  Always `image`.
+""")
   type: "image";
 
   image: {
@@ -339,7 +361,9 @@ model RunStepDetailsToolCallsFileSearchObject {
   /** The ID of the tool call object. */
   id: string;
 
-  /** The type of tool call. This is always going to be `file_search` for this type of tool call. */
+  @doc("""
+  The type of tool call. This is always going to be `file_search` for this type of tool call.
+""")
   type: "file_search";
 
   /** For now, this is always going to be an empty object. */
@@ -351,7 +375,9 @@ model RunStepDetailsToolCallsFunctionObject {
   /** The ID of the tool call object. */
   id: string;
 
-  /** The type of tool call. This is always going to be `function` for this type of tool call. */
+  @doc("""
+  The type of tool call. This is always going to be `function` for this type of tool call.
+""")
   type: "function";
 
   /** The definition of the function that was called. */
@@ -362,18 +388,16 @@ model RunStepDetailsToolCallsFunctionObject {
     /** The arguments passed to the function. */
     arguments: string;
 
-    /**
-     * The output of the function. This will be `null` if the outputs have not been
-     * [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-     */
+    @doc("""
+    The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+""")
     output: string | null;
   };
 }
 
-/**
- * Usage statistics related to the run. This value will be `null` if the run is not in a terminal
- * state (i.e. `in_progress`, `queued`, etc.).
- */
+@doc("""
+Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+""")
 model RunCompletionUsage {
   /** Number of completion tokens used over the course of the run. */
   completion_tokens: int32;
@@ -385,10 +409,9 @@ model RunCompletionUsage {
   total_tokens: int32;
 }
 
-/**
- * Usage statistics related to the run step. This value will be `null` while the run step's status
- * is `in_progress`.
- */
+@doc("""
+Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
+""")
 model RunStepCompletionUsage {
   /** Number of completion tokens used over the course of the run step. */
   completion_tokens: int32;
@@ -405,12 +428,17 @@ model RunObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `thread.run`. */
+  @doc("""
+  The object type, which is always `thread.run`.
+""")
   object: "thread.run";
 
   /** The Unix timestamp (in seconds) for when the run was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
@@ -421,15 +449,26 @@ model RunObject {
   /** The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. */
   assistant_id: string;
 
-  /**
-   * The status of the run, which can be either `queued`, `in_progress`, `requires_action`,
-   * `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
-   */
-  status: "queued" | "in_progress" | "requires_action" | "cancelling" | "cancelled" | "failed" | "completed" | "expired";
+  @doc("""
+  The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
+""")
+  status:
+    | "queued"
+    | "in_progress"
+    | "requires_action"
+    | "cancelling"
+    | "cancelled"
+    | "failed"
+    | "completed"
+    | "expired";
 
-  /** Details on the action required to continue the run. Will be `null` if no action is required. */
+  @doc("""
+  Details on the action required to continue the run. Will be `null` if no action is required.
+""")
   required_action: {
-    /** For now, this is always `submit_tool_outputs`. */
+    @doc("""
+    For now, this is always `submit_tool_outputs`.
+""")
     type: "submit_tool_outputs";
 
     /** Details on the tool outputs needed for this run to continue. */
@@ -439,9 +478,13 @@ model RunObject {
     };
   } | null;
 
-  /** The last error associated with this run. Will be `null` if there are no errors. */
+  @doc("""
+  The last error associated with this run. Will be `null` if there are no errors.
+""")
   last_error: {
-    /** One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. */
+    @doc("""
+    One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+""")
     code: "server_error" | "rate_limit_exceeded" | "invalid_prompt";
 
     /** A human-readable description of the error. */
@@ -450,30 +493,47 @@ model RunObject {
 
   /** The Unix timestamp (in seconds) for when the run will expire. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   expires_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run was started. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   started_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run was cancelled. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   cancelled_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run failed. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   failed_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run was completed. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   completed_at: utcDateTime | null;
 
-  /** Details on why the run is incomplete. Will be `null` if the run is not incomplete. */
+  @doc("""
+  Details on why the run is incomplete. Will be `null` if the run is not incomplete.
+""")
   incomplete_details: {
     /**
      * The reason why the run is incomplete. This will point to which specific token limit was
@@ -490,7 +550,8 @@ model RunObject {
 
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
   @maxItems(20)
-  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [];
+  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
+  ];
 
   /**
    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -503,10 +564,10 @@ model RunObject {
   usage: RunCompletionUsage;
 
   /** The sampling temperature used for this run. If not set, defaults to 1. */
-  temperature?: float64 | null;
+  temperature?: float32 | null;
 
   /** The nucleus sampling value used for this run. If not set, defaults to 1. */
-  top_p?: float64 | null;
+  top_p?: float32 | null;
 
   /** The maximum number of prompt tokens specified to have been used over the course of the run. */
   @minValue(256)
@@ -519,9 +580,7 @@ model RunObject {
   max_completion_tokens: int32 | null;
 
   truncation_strategy: TruncationObject | null;
-
   tool_choice: AssistantsApiToolChoiceOption | null;
-
   response_format: AssistantsApiResponseFormatOption | null;
 }
 
@@ -530,12 +589,17 @@ model RunStepObject {
   /** The identifier of the run step, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `thread.run.step`. */
+  @doc("""
+  The object type, which is always `thread.run.step`.
+""")
   object: "thread.run.step";
 
   /** The Unix timestamp (in seconds) for when the run step was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The ID of the [assistant](/docs/api-reference/assistants) associated with the run step. */
@@ -547,22 +611,27 @@ model RunStepObject {
   /** The ID of the [run](/docs/api-reference/runs) that this run step is a part of. */
   run_id: string;
 
-  /** The type of run step, which can be either `message_creation` or `tool_calls`. */
+  @doc("""
+  The type of run step, which can be either `message_creation` or `tool_calls`.
+""")
   type: "message_creation" | "tool_calls";
 
-  /**
-   * The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
-   * `completed`, or `expired`.
-   */
+  @doc("""
+  The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
+""")
   status: "in_progress" | "cancelled" | "failed" | "completed" | "expired";
 
   /** The details of the run step. */
   @extension("x-oaiExpandable", true)
   step_details: RunStepDetailsMessageCreationObject | RunStepDetailsToolCallsObject;
 
-  /** The last error associated with this run step. Will be `null` if there are no errors. */
+  @doc("""
+  The last error associated with this run step. Will be `null` if there are no errors.
+""")
   last_error: {
-    /** One of `server_error` or `rate_limit_exceeded`. */
+    @doc("""
+    One of `server_error` or `rate_limit_exceeded`.
+""")
     code: "server_error" | "rate_limit_exceeded";
 
     /** A human-readable description of the error. */
@@ -574,22 +643,34 @@ model RunStepObject {
    * the parent run is expired.
    */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   expired_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run step was cancelled. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   cancelled_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run step failed. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   failed_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run step completed. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   completed_at: utcDateTime | null;
 
   /**
@@ -611,7 +692,9 @@ model RunToolCallObject {
    */
   id: string;
 
-  /** The type of tool call the output is required for. For now, this is always `function`. */
+  @doc("""
+  The type of tool call the output is required for. For now, this is always `function`.
+""")
   type: "function";
 
   /** The function definition. */
@@ -629,19 +712,24 @@ model RunStepDeltaObject {
   /** The identifier of the run step, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `thread.run.step.delta`. */
+  @doc("""
+  The object type, which is always `thread.run.step.delta`.
+""")
   object: "thread.run.step.delta";
 
   /** The delta containing the fields that have changed on the run step. */
   delta: {
     /** The details of the run step. */
+    @extension("x-oaiExpandable", true)
     step_details?: RunStepDeltaStepDetailsMessageCreationObject | RunStepDeltaStepDetailsToolCallsObject;
   };
 }
 
 /** Details of the message creation by the run step. */
 model RunStepDeltaStepDetailsMessageCreationObject {
-  /** Always `message_creation`. */
+  @doc("""
+  Always `message_creation`.
+""")
   type: "message_creation";
 
   message_creation?: {
@@ -652,13 +740,15 @@ model RunStepDeltaStepDetailsMessageCreationObject {
 
 /** Details of the tool call. */
 model RunStepDeltaStepDetailsToolCallsObject {
-  /** Always `tool_calls`. */
+  @doc("""
+  Always `tool_calls`.
+""")
   type: "tool_calls";
 
-  /**
-   * An array of tool calls the run step was involved in. These can be associated with one of three
-   * types of tools: `code_interpreter`, `file_search`, or `function`.
-   */
+  @doc("""
+  An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
+
+""")
   tool_calls?: (RunStepDeltaStepDetailsToolCallsCodeObject | RunStepDeltaStepDetailsToolCallsFileSearchObject | RunStepDeltaStepDetailsToolCallsFunctionObject)[];
 }
 
@@ -670,10 +760,9 @@ model RunStepDeltaStepDetailsToolCallsCodeObject {
   /** The ID of the tool call. */
   id?: string;
 
-  /**
-   * The type of tool call. This is always going to be `code_interpreter` for this type of tool
-   * call.
-   */
+  @doc("""
+  The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+""")
   type: "code_interpreter";
 
   /** The Code Interpreter tool call definition. */
@@ -681,11 +770,9 @@ model RunStepDeltaStepDetailsToolCallsCodeObject {
     /** The input to the Code Interpreter tool call. */
     input?: string;
 
-    /**
-     * The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-     * items, including text (`logs`) or images (`image`). Each of these are represented by a
-     * different object type.
-     */
+    @doc("""
+    The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+""")
     outputs?: (RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject | RunStepDeltaStepDetailsToolCallsCodeOutputImageObject)[];
   };
 }
@@ -695,7 +782,9 @@ model RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject {
   /** The index of the output in the outputs array. */
   index: int32;
 
-  /** Always `logs`. */
+  @doc("""
+  Always `logs`.
+""")
   type: "logs";
 
   /** The text output from the Code Interpreter tool call. */
@@ -706,7 +795,9 @@ model RunStepDeltaStepDetailsToolCallsCodeOutputImageObject {
   /** The index of the output in the outputs array. */
   index: int32;
 
-  /** Always `image`. */
+  @doc("""
+  Always `image`.
+""")
   type: "image";
 
   image?: {
@@ -722,7 +813,9 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject {
   /** The ID of the tool call object. */
   id?: string;
 
-  /** The type of tool call. This is always going to be `file_search` for this type of tool call. */
+  @doc("""
+  The type of tool call. This is always going to be `file_search` for this type of tool call.
+""")
   type: "file_search";
 
   /** For now, this is always going to be an empty object. */
@@ -737,7 +830,9 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
   /** The ID of the tool call object. */
   id?: string;
 
-  /** The type of tool call. This is always going to be `function` for this type of tool call. */
+  @doc("""
+  The type of tool call. This is always going to be `function` for this type of tool call.
+""")
   type: "function";
 
   /** The definition of the function that was called. */
@@ -748,11 +843,9 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
     /** The arguments passed to the function. */
     arguments?: string;
 
-    /**
-     * The output of the function. This will be `null` if the outputs have not been
-     * [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-     */
+    @doc("""
+    The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+""")
     output?: string | null;
   };
 }
-

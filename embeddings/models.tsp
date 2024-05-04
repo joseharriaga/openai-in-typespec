@@ -8,14 +8,10 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateEmbeddingRequest {
-  /**
-   * Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a
-   * single request, pass an array of strings or array of token arrays. The input must not exceed
-   * the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an
-   * empty string, and any array must be 2048 dimensions or less. [Example Python
-   * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
-   * tokens.
-   */
+  @doc("""
+  Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
+
+""")
   @extension("x-oaiExpandable", true)
   input: string | string[] | int32[] | int32[][];
 
@@ -25,18 +21,21 @@ model CreateEmbeddingRequest {
    * descriptions of them.
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | "text-embedding-ada-002" | "text-embedding-3-small" | "text-embedding-3-large";
+  `model`:
+    | string
+    | "text-embedding-ada-002"
+    | "text-embedding-3-small"
+    | "text-embedding-3-large";
 
-  /**
-   * The format to return the embeddings in. Can be either `float` or
-   * [`base64`](https://pypi.org/project/pybase64/).
-   */
+  @doc("""
+  The format to return the embeddings in. Can be either `float` or [`base64`](https://pypi.org/project/pybase64/).
+""")
   encoding_format?: "float" | "base64" = "float";
 
-  /**
-   * The number of dimensions the resulting output embeddings should have. Only supported in
-   * `text-embedding-3` and later models.
-   */
+  @doc("""
+  The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
+
+""")
   @minValue(1)
   dimensions?: int32;
 
@@ -76,18 +75,12 @@ model Embedding {
    * The embedding vector, which is a list of floats. The length of vector depends on the model as
    * listed in the [embedding guide](/docs/guides/embeddings).
    */
-<<<<<<< HEAD
-  @extension("x-customTspIngestionRule", "apply missing string union for embedding response valuese")
-  embedding: float64[] | string;
-=======
   @extension(
     "x-customTspIngestionRule",
     "apply missing string union for embedding response valuese"
   )
   embedding: float[] | string;
->>>>>>> user/travisw/tool-ingested-tsp
 
   /** The object type, which is always "embedding". */
   object: "embedding";
 }
-

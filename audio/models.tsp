@@ -8,7 +8,10 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateSpeechRequest {
-  /** One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd` */
+  @doc("""
+  One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`
+
+""")
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "tts-1" | "tts-1-hd";
 
@@ -16,19 +19,19 @@ model CreateSpeechRequest {
   @maxLength(4096)
   input: string;
 
-  /**
-   * The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`,
-   * `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech
-   * guide](/docs/guides/text-to-speech/voice-options).
-   */
+  @doc("""
+  The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech/voice-options).
+""")
   voice: "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
 
-  /**
-   * The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`.
-   */
+  @doc("""
+  The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`.
+""")
   response_format?: "mp3" | "opus" | "aac" | "flac" | "wav" | "pcm" = "mp3";
 
-  /** The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. */
+  @doc("""
+  The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default.
+""")
   @minValue(0.25)
   @maxValue(4.0)
   speed?: float32 = 1.0;
@@ -42,10 +45,10 @@ model CreateTranscriptionRequest {
   @extension("x-oaiTypeLabel", "file")
   file: string;
 
-  /**
-   * ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
-   * model) is currently available.
-   */
+  @doc("""
+  ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
+
+""")
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "whisper-1";
 
@@ -62,10 +65,10 @@ model CreateTranscriptionRequest {
    */
   prompt?: string;
 
-  /**
-   * The format of the transcript output, in one of these options: `json`, `text`, `srt`,
-   * `verbose_json`, or `vtt`.
-   */
+  @doc("""
+  The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
+
+""")
   response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
 
   /**
@@ -76,12 +79,10 @@ model CreateTranscriptionRequest {
    */
   temperature?: float32 = 0;
 
-  /**
-   * The timestamp granularities to populate for this transcription. `response_format` must be set
-   * `verbose_json` to use timestamp granularities. Either or both of these options are supported:
-   * `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
-   * generating word timestamps incurs additional latency.
-   */
+  @doc("""
+  The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.
+
+""")
   timestamp_granularities?: ("word" | "segment")[] = ["segment"];
 }
 
@@ -93,10 +94,10 @@ model CreateTranslationRequest {
   @extension("x-oaiTypeLabel", "file")
   file: string;
 
-  /**
-   * ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
-   * model) is currently available.
-   */
+  @doc("""
+  ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
+
+""")
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "whisper-1";
 
@@ -106,10 +107,10 @@ model CreateTranslationRequest {
    */
   prompt?: string;
 
-  /**
-   * The format of the transcript output, in one of these options: `json`, `text`, `srt`,
-   * `verbose_json`, or `vtt`.
-   */
+  @doc("""
+  The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
+
+""")
   @extension("x-customTspIngestionRule", "add enum types")
   response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
 
@@ -155,7 +156,9 @@ model CreateTranslationResponseJson {
 }
 
 model CreateTranslationResponseVerboseJson {
-  /** The language of the output translation (always `english`). */
+  @doc("""
+  The language of the output translation (always `english`).
+""")
   language: string;
 
   /** The duration of the input audio. */
@@ -205,10 +208,9 @@ model TranscriptionSegment {
    */
   compression_ratio: float32;
 
-  /**
-   * Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
-   * is below -1, consider this segment silent.
-   */
+  @doc("""
+  Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent.
+""")
   no_speech_prob: float32;
 }
 
@@ -226,4 +228,3 @@ model TranscriptionWord {
   @extension("x-customTspIngestionRule", "timespans are encoded durations")
   end: duration;
 }
-

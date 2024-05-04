@@ -13,21 +13,19 @@ model CreateThreadRequest {
   /** A list of [messages](/docs/api-reference/messages) to start the thread with. */
   messages?: CreateMessageRequest[];
 
-  /**
-   * A set of resources that are made available to the assistant's tools in this thread. The
-   * resources are specific to the type of tool. For example, the `code_interpreter` tool requires
-   * a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-   */
+  @doc("""
+  A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+
+""")
   tool_resources?: {
     code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`
-       * tool. There can be a maximum of 20 files associated with the tool.
-       */
+      @doc("""
+      A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+
+""")
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /**
        * The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
@@ -71,21 +69,19 @@ model CreateThreadRequest {
 }
 
 model ModifyThreadRequest {
-  /**
-   * A set of resources that are made available to the assistant's tools in this thread. The
-   * resources are specific to the type of tool. For example, the `code_interpreter` tool requires
-   * a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-   */
+  @doc("""
+  A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+
+""")
   tool_resources?: {
     code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`
-       * tool. There can be a maximum of 20 files associated with the tool.
-       */
+      @doc("""
+      A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+
+""")
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /**
        * The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
@@ -107,9 +103,7 @@ model ModifyThreadRequest {
 
 model DeleteThreadResponse {
   id: string;
-
   deleted: boolean;
-
   object: "thread.deleted";
 }
 
@@ -118,29 +112,32 @@ model ThreadObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `thread`. */
+  @doc("""
+  The object type, which is always `thread`.
+""")
   object: "thread";
 
   /** The Unix timestamp (in seconds) for when the thread was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
-  /**
-   * A set of resources that are made available to the assistant's tools in this thread. The
-   * resources are specific to the type of tool. For example, the `code_interpreter` tool requires
-   * a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-   */
+  @doc("""
+  A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+
+""")
   tool_resources: {
     code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`
-       * tool. There can be a maximum of 20 files associated with the tool.
-       */
+      @doc("""
+      A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+
+""")
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /**
        * The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
@@ -162,13 +159,8 @@ model ThreadObject {
 
 model ListThreadsResponse {
   object: string;
-
   data: ThreadObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
-

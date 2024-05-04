@@ -9,10 +9,9 @@ namespace OpenAI;
 
 /** The expiration policy for a vector store. */
 model VectorStoreExpirationAfter {
-  /**
-   * Anchor timestamp after which the expiration policy applies. Supported anchors:
-   * `last_active_at`.
-   */
+  @doc("""
+  Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`.
+""")
   anchor: "last_active_at";
 
   /** The number of days after the anchor time that the vector store will expire. */
@@ -21,17 +20,24 @@ model VectorStoreExpirationAfter {
   days: int32;
 }
 
-/** A vector store is a collection of processed files can be used by the `file_search` tool. */
+@doc("""
+A vector store is a collection of processed files can be used by the `file_search` tool.
+""")
 model VectorStoreObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `vector_store`. */
+  @doc("""
+  The object type, which is always `vector_store`.
+""")
   object: "vector_store";
 
   /** The Unix timestamp (in seconds) for when the vector store was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The name of the vector store. */
@@ -57,22 +63,27 @@ model VectorStoreObject {
     total: int32;
   };
 
-  /**
-   * The status of the vector store, which can be either `expired`, `in_progress`, or `completed`.
-   * A status of `completed` indicates that the vector store is ready for use.
-   */
+  @doc("""
+  The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use.
+""")
   status: "expired" | "in_progress" | "completed";
 
   expires_after?: VectorStoreExpirationAfter;
 
   /** The Unix timestamp (in seconds) for when the vector store will expire. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   expires_at?: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the vector store was last active. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   last_active_at: utcDateTime | null;
 
   /**
@@ -85,10 +96,9 @@ model VectorStoreObject {
 }
 
 model CreateVectorStoreRequest {
-  /**
-   * A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for
-   * tools like `file_search` that can access files.
-   */
+  @doc("""
+  A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
+""")
   @maxItems(500)
   file_ids?: string[];
 
@@ -123,21 +133,15 @@ model UpdateVectorStoreRequest {
 
 model ListVectorStoresResponse {
   object: string;
-
   data: VectorStoreObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteVectorStoreResponse {
   id: string;
-
   deleted: boolean;
-
   object: "vector_store.deleted";
 }
 
@@ -146,7 +150,9 @@ model VectorStoreFileObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `vector_store.file`. */
+  @doc("""
+  The object type, which is always `vector_store.file`.
+""")
   object: "vector_store.file";
 
   /**
@@ -157,7 +163,10 @@ model VectorStoreFileObject {
 
   /** The Unix timestamp (in seconds) for when the vector store file was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
@@ -166,19 +175,23 @@ model VectorStoreFileObject {
    */
   vector_store_id: string;
 
-  /**
-   * The status of the vector store file, which can be either `in_progress`, `completed`,
-   * `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready
-   * for use.
-   */
+  @doc("""
+  The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use.
+""")
   status: "in_progress" | "completed" | "cancelled" | "failed";
 
-  /**
-   * The last error associated with this vector store file. Will be `null` if there are no errors.
-   */
+  @doc("""
+  The last error associated with this vector store file. Will be `null` if there are no errors.
+""")
   last_error: {
-    /** One of `server_error` or `rate_limit_exceeded`. */
-    code: "internal_error" | "file_not_found" | "parsing_error" | "unhandled_mime_type";
+    @doc("""
+    One of `server_error` or `rate_limit_exceeded`.
+""")
+    code:
+      | "internal_error"
+      | "file_not_found"
+      | "parsing_error"
+      | "unhandled_mime_type";
 
     /** A human-readable description of the error. */
     message: string;
@@ -186,30 +199,23 @@ model VectorStoreFileObject {
 }
 
 model CreateVectorStoreFileRequest {
-  /**
-   * A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like
-   * `file_search` that can access files.
-   */
+  @doc("""
+  A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files.
+""")
   file_id: string;
 }
 
 model ListVectorStoreFilesResponse {
   object: string;
-
   data: VectorStoreFileObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteVectorStoreFileResponse {
   id: string;
-
   deleted: boolean;
-
   object: "vector_store.file.deleted";
 }
 
@@ -218,12 +224,17 @@ model VectorStoreFileBatchObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `vector_store.file_batch`. */
+  @doc("""
+  The object type, which is always `vector_store.file_batch`.
+""")
   object: "vector_store.files_batch";
 
   /** The Unix timestamp (in seconds) for when the vector store files batch was created. */
   @encode("unixTimestamp", int32)
-  @extension("x-customTspIngestionRule", "_at and created are Unix encoded utcDateTime")
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
@@ -232,10 +243,9 @@ model VectorStoreFileBatchObject {
    */
   vector_store_id: string;
 
-  /**
-   * The status of the vector store files batch, which can be either `in_progress`, `completed`,
-   * `cancelled` or `failed`.
-   */
+  @doc("""
+  The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`.
+""")
   status: "in_progress" | "completed" | "cancelled" | "failed";
 
   file_counts: {
@@ -257,12 +267,10 @@ model VectorStoreFileBatchObject {
 }
 
 model CreateVectorStoreFileBatchRequest {
-  /**
-   * A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for
-   * tools like `file_search` that can access files.
-   */
+  @doc("""
+  A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
+""")
   @minItems(1)
   @maxItems(500)
   file_ids: string[];
 }
-

@@ -57,22 +57,6 @@ namespace OpenAI.Embeddings
             EmbeddingProperty = embeddingProperty;
         }
 
-        /// <summary> Initializes a new instance of <see cref="Embedding"/>. </summary>
-        /// <param name="index"> The index of the embedding in the list of embeddings. </param>
-        /// <param name="embeddingProperty">
-        /// The embedding vector, which is a list of floats. The length of vector depends on the model as
-        /// listed in the [embedding guide](/docs/guides/embeddings).
-        /// </param>
-        /// <param name="object"> The object type, which is always "embedding". </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal Embedding(int index, BinaryData embeddingProperty, EmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
-        {
-            Index = index;
-            EmbeddingProperty = embeddingProperty;
-            Object = @object;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
         /// <summary> Initializes a new instance of <see cref="Embedding"/> for deserialization. </summary>
         internal Embedding()
         {

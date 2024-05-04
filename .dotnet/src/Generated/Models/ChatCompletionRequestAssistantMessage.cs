@@ -49,10 +49,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionRequestAssistantMessage"/>. </summary>
-        /// <param name="content">
-        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
-        ///
-        /// </param>
+        /// <param name="content"> The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified. </param>
         /// <param name="role"> The role of the messages author, in this case `assistant`. </param>
         /// <param name="name">
         /// An optional name for the participant. Provides the model information to differentiate between
@@ -71,10 +68,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary>
-        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
-        ///
-        /// </summary>
+        /// <summary> The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified. </summary>
         public string Content { get; set; }
         /// <summary> The role of the messages author, in this case `assistant`. </summary>
         public ChatCompletionRequestAssistantMessageRole Role { get; } = ChatCompletionRequestAssistantMessageRole.Assistant;

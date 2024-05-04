@@ -47,10 +47,7 @@ namespace OpenAI.Audio
         /// The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
         /// mpeg, mpga, m4a, ogg, wav, or webm.
         /// </param>
-        /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
-        ///
-        /// </param>
+        /// <param name="model"> ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available. </param>
         /// <param name="language">
         /// The language of the input audio. Supplying the input language in
         /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve
@@ -60,20 +57,14 @@ namespace OpenAI.Audio
         /// An optional text to guide the model's style or continue a previous audio segment. The
         /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
         /// </param>
-        /// <param name="responseFormat">
-        /// The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
-        ///
-        /// </param>
+        /// <param name="responseFormat"> The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`. </param>
         /// <param name="temperature">
         /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
         /// random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
         /// the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
         /// automatically increase the temperature until certain thresholds are hit.
         /// </param>
-        /// <param name="timestampGranularities">
-        /// The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.
-        ///
-        /// </param>
+        /// <param name="timestampGranularities"> The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AudioTranscriptionOptions(BinaryData file, CreateTranscriptionRequestModel model, string language, string prompt, AudioTranscriptionFormat? responseFormat, float? temperature, IList<BinaryData> timestampGranularities, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -97,10 +88,7 @@ namespace OpenAI.Audio
         /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
         /// </summary>
         public string Prompt { get; set; }
-        /// <summary>
-        /// The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
-        ///
-        /// </summary>
+        /// <summary> The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`. </summary>
         public AudioTranscriptionFormat? ResponseFormat { get; set; }
         /// <summary>
         /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more

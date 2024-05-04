@@ -86,7 +86,6 @@ namespace OpenAI.FineTuning
         /// A string of up to 18 characters that will be added to your fine-tuned model name.
         ///
         /// For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
-        ///
         /// </param>
         /// <param name="validationFile">
         /// The ID of an uploaded file that contains validation data.
@@ -139,7 +138,6 @@ namespace OpenAI.FineTuning
         /// A string of up to 18 characters that will be added to your fine-tuned model name.
         ///
         /// For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
-        ///
         /// </summary>
         public string Suffix { get; set; }
         /// <summary>

@@ -1609,8 +1609,12 @@ components:
               - $ref: '#/components/schemas/AssistantToolsRetrieval'
               - $ref: '#/components/schemas/AssistantToolsFunction'
           maxItems: 128
+<<<<<<< HEAD
           description: |
             A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+=======
+          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+>>>>>>> user/travisw/tool-ingested-tsp
           default: []
         file_ids:
           type: array
@@ -1674,8 +1678,12 @@ components:
         name:
           type: string
           description: The name of the function to call.
+<<<<<<< HEAD
       description: |
         Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
+=======
+      description: 'Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.'
+>>>>>>> user/travisw/tool-ingested-tsp
     ChatCompletionFunctions:
       type: object
       required:
@@ -1785,8 +1793,12 @@ components:
         content:
           type: string
           nullable: true
+<<<<<<< HEAD
           description: |
             The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
+=======
+          description: The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
+>>>>>>> user/travisw/tool-ingested-tsp
         role:
           type: string
           enum:
@@ -2036,10 +2048,16 @@ components:
           format: float
           description: The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
         bytes:
+<<<<<<< HEAD
           type: array
           items:
             type: integer
             format: int32
+=======
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/ChatCompletionTokenLogprobBytesItem'
+>>>>>>> user/travisw/tool-ingested-tsp
           nullable: true
           description: A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
         top_logprobs:
@@ -2066,6 +2084,14 @@ components:
               - logprob
               - bytes
           description: List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
+<<<<<<< HEAD
+=======
+    ChatCompletionTokenLogprobBytesItem:
+      type: array
+      items:
+        type: integer
+        format: int32
+>>>>>>> user/travisw/tool-ingested-tsp
     ChatCompletionTool:
       type: object
       required:
@@ -2086,7 +2112,11 @@ components:
             - none
             - auto
         - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
+<<<<<<< HEAD
       description: |
+=======
+      description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
         Controls which (if any) function is called by the model.
         `none` means the model will not call a function and instead generates a message.
         `auto` means the model can pick between generating a message or calling a function.
@@ -2156,8 +2186,12 @@ components:
               - $ref: '#/components/schemas/AssistantToolsRetrieval'
               - $ref: '#/components/schemas/AssistantToolsFunction'
           maxItems: 128
+<<<<<<< HEAD
           description: |
             A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+=======
+          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+>>>>>>> user/travisw/tool-ingested-tsp
           default: []
         file_ids:
           type: array
@@ -2203,8 +2237,12 @@ components:
                   - length
                   - function_call
                   - content_filter
+<<<<<<< HEAD
                 description: |
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
+=======
+                description: The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
+>>>>>>> user/travisw/tool-ingested-tsp
               index:
                 type: integer
                 format: int32
@@ -2220,13 +2258,20 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the chat completion was created.
+<<<<<<< HEAD
           x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
+=======
+>>>>>>> user/travisw/tool-ingested-tsp
         model:
           type: string
           description: The model used for the chat completion.
         system_fingerprint:
           type: string
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             This fingerprint represents the backend configuration that the model runs with.
 
             Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
@@ -2362,7 +2407,11 @@ components:
                 - json_object
               description: Must be one of `text` or `json_object`.
               default: text
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
 
             Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
@@ -2388,8 +2437,12 @@ components:
         stream:
           type: boolean
           nullable: true
+<<<<<<< HEAD
           description: |
             If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
+=======
+          description: 'If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).'
+>>>>>>> user/travisw/tool-ingested-tsp
           default: false
         temperature:
           type: number
@@ -2397,7 +2450,11 @@ components:
           nullable: true
           minimum: 0
           maximum: 2
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 
             We generally recommend altering this or `top_p` but not both.
@@ -2408,7 +2465,11 @@ components:
           nullable: true
           minimum: 0
           maximum: 1
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or `temperature` but not both.
@@ -2479,7 +2540,11 @@ components:
                   - tool_calls
                   - content_filter
                   - function_call
+<<<<<<< HEAD
                 description: |
+=======
+                description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
                   `length` if the maximum number of tokens specified in the request was reached,
                   `content_filter` if content was omitted due to a flag from our content filters,
@@ -2572,7 +2637,11 @@ components:
                   - content_filter
                   - function_call
                 nullable: true
+<<<<<<< HEAD
                 description: |
+=======
+                description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
                   `length` if the maximum number of tokens specified in the request was reached,
                   `content_filter` if content was omitted due to a flag from our content filters,
@@ -2592,13 +2661,20 @@ components:
           description: |-
             The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
             same timestamp.
+<<<<<<< HEAD
           x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
+=======
+>>>>>>> user/travisw/tool-ingested-tsp
         model:
           type: string
           description: The model to generate the completion.
         system_fingerprint:
           type: string
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             This fingerprint represents the backend configuration that the model runs with.
             Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
         object:
@@ -2658,7 +2734,11 @@ components:
           nullable: true
           minimum: 0
           maximum: 20
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.
 
             When used with `n`, `best_of` controls the number of candidate completions and `n` specifies how many to return – `best_of` must be greater than `n`.
@@ -2703,7 +2783,11 @@ components:
           nullable: true
           minimum: 0
           maximum: 5
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             Include the log probabilities on the `logprobs` most likely output tokens, as well the chosen tokens. For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1` elements in the response.
 
             The maximum value for `logprobs` is 5.
@@ -2712,7 +2796,11 @@ components:
           format: int32
           nullable: true
           minimum: 0
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             The maximum number of [tokens](/tokenizer) that can be generated in the completion.
 
             The token count of your prompt plus `max_tokens` cannot exceed the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
@@ -2747,7 +2835,11 @@ components:
           nullable: true
           minimum: -9223372036854776000
           maximum: 9223372036854776000
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
 
             Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
@@ -2764,8 +2856,12 @@ components:
         stream:
           type: boolean
           nullable: true
+<<<<<<< HEAD
           description: |
             Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
+=======
+          description: 'Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).'
+>>>>>>> user/travisw/tool-ingested-tsp
           default: false
         suffix:
           type: string
@@ -2777,7 +2873,11 @@ components:
           nullable: true
           minimum: 0
           maximum: 2
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 
             We generally recommend altering this or `top_p` but not both.
@@ -2788,7 +2888,11 @@ components:
           nullable: true
           minimum: 0
           maximum: 1
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or `temperature` but not both.
@@ -2821,7 +2925,11 @@ components:
                   - stop
                   - length
                   - content_filter
+<<<<<<< HEAD
                 description: |
+=======
+                description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
                   `length` if the maximum number of tokens specified in the request was reached,
                   or `content_filter` if content was omitted due to a flag from our content filters.
@@ -2907,8 +3015,12 @@ components:
                 items:
                   type: integer
                   format: int32
+<<<<<<< HEAD
           description: |
             Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
+=======
+          description: Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
+>>>>>>> user/travisw/tool-ingested-tsp
           x-oaiExpandable: true
         model:
           anyOf:
@@ -2934,8 +3046,12 @@ components:
           type: integer
           format: int32
           minimum: 1
+<<<<<<< HEAD
           description: |
             The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
+=======
+          description: The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
+>>>>>>> user/travisw/tool-ingested-tsp
         user:
           type: string
           description: |-
@@ -3067,7 +3183,11 @@ components:
           nullable: true
           minLength: 1
           maxLength: 40
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             A string of up to 18 characters that will be added to your fine-tuned model name.
 
             For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
@@ -3105,7 +3225,10 @@ components:
           type: string
           format: binary
           description: An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions as `image`.
+<<<<<<< HEAD
           x-customTspIngestionRule: binary payloads are encoded bytes
+=======
+>>>>>>> user/travisw/tool-ingested-tsp
         model:
           anyOf:
             - type: string
@@ -3315,7 +3438,11 @@ components:
               enum:
                 - text-moderation-latest
                 - text-moderation-stable
+<<<<<<< HEAD
           description: |
+=======
+          description: |-
+>>>>>>> user/travisw/tool-ingested-tsp
             Two content moderations models are available: `text-moderation-stable` and `text-moderation-latest`.
 
             The default is `text-moderation-latest` which will be automatically upgraded over time. This ensures you are always using our most accurate model. If you use `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
@@ -3499,12 +3626,18 @@ components:
             Appends additional instructions at the end of the instructions for the run. This is useful for
             modifying the behavior on a per-run basis without overriding other instructions.
         tools:
+<<<<<<< HEAD
           type: array
           items:
             anyOf:
               - $ref: '#/components/schemas/AssistantToolsCode'
               - $ref: '#/components/schemas/AssistantToolsRetrieval'
               - $ref: '#/components/schemas/AssistantToolsFunction'
+=======
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CreateRunRequestTools'
+>>>>>>> user/travisw/tool-ingested-tsp
           nullable: true
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
@@ -3519,6 +3652,17 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+<<<<<<< HEAD
+=======
+    CreateRunRequestTools:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/AssistantToolsCode'
+          - $ref: '#/components/schemas/AssistantToolsRetrieval'
+          - $ref: '#/components/schemas/AssistantToolsFunction'
+      maxItems: 20
+>>>>>>> user/travisw/tool-ingested-tsp
     CreateSpeechRequest:
       type: object
       required:
@@ -3594,12 +3738,18 @@ components:
             Override the default system message of the assistant. This is useful for modifying the
             behavior on a per-run basis.
         tools:
+<<<<<<< HEAD
           type: array
           items:
             anyOf:
               - $ref: '#/components/schemas/AssistantToolsCode'
               - $ref: '#/components/schemas/AssistantToolsRetrieval'
               - $ref: '#/components/schemas/AssistantToolsFunction'
+=======
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CreateThreadAndRunRequestTools'
+>>>>>>> user/travisw/tool-ingested-tsp
           nullable: true
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
@@ -3614,6 +3764,14 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+    CreateThreadAndRunRequestTools:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/AssistantToolsCode'
+          - $ref: '#/components/schemas/AssistantToolsRetrieval'
+          - $ref: '#/components/schemas/AssistantToolsFunction'
+      maxItems: 20
     CreateThreadRequest:
       type: object
       properties:
@@ -3650,8 +3808,12 @@ components:
             - type: string
               enum:
                 - whisper-1
+<<<<<<< HEAD
           description: |
             ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
+=======
+          description: ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
+>>>>>>> user/travisw/tool-ingested-tsp
           x-oaiTypeLabel: string
         language:
           type: string
@@ -3672,12 +3834,21 @@ components:
             - srt
             - verbose_json
             - vtt
+<<<<<<< HEAD
           description: |
             The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
+=======
+          description: 'The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.'
+>>>>>>> user/travisw/tool-ingested-tsp
           default: json
         temperature:
           type: number
           format: float
+<<<<<<< HEAD
+=======
+          minimum: 0
+          maximum: 1
+>>>>>>> user/travisw/tool-ingested-tsp
           description: |-
             The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
             random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
@@ -3691,8 +3862,12 @@ components:
             enum:
               - word
               - segment
+<<<<<<< HEAD
           description: |
             The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.
+=======
+          description: 'The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.'
+>>>>>>> user/travisw/tool-ingested-tsp
           default:
             - segment
     CreateTranscriptionResponseJson:
@@ -3751,8 +3926,12 @@ components:
             - type: string
               enum:
                 - whisper-1
+<<<<<<< HEAD
           description: |
             ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
+=======
+          description: ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
+>>>>>>> user/travisw/tool-ingested-tsp
           x-oaiTypeLabel: string
         prompt:
           type: string
@@ -3767,13 +3946,22 @@ components:
             - srt
             - verbose_json
             - vtt
+<<<<<<< HEAD
           description: |
             The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
           x-customTspIngestionRule: add enum types
+=======
+          description: 'The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.'
+>>>>>>> user/travisw/tool-ingested-tsp
           default: json
         temperature:
           type: number
           format: float
+<<<<<<< HEAD
+=======
+          minimum: 0
+          maximum: 1
+>>>>>>> user/travisw/tool-ingested-tsp
           description: |-
             The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
             random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
@@ -4079,8 +4267,12 @@ components:
           description: |-
             The file ID used for validation. You can retrieve the validation results with the [Files
             API](/docs/api-reference/files/retrieve-contents).
+<<<<<<< HEAD
       description: |
         The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
+=======
+      description: The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
+>>>>>>> user/travisw/tool-ingested-tsp
     FineTuningJobEvent:
       type: object
       required:
@@ -4659,8 +4851,12 @@ components:
               - $ref: '#/components/schemas/AssistantToolsRetrieval'
               - $ref: '#/components/schemas/AssistantToolsFunction'
           maxItems: 128
+<<<<<<< HEAD
           description: |
             A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+=======
+          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+>>>>>>> user/travisw/tool-ingested-tsp
           default: []
         file_ids:
           type: array
@@ -5114,8 +5310,12 @@ components:
               - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeObject'
               - $ref: '#/components/schemas/RunStepDetailsToolCallsRetrievalObject'
               - $ref: '#/components/schemas/RunStepDetailsToolCallsFunctionObject'
+<<<<<<< HEAD
           description: |
             An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.
+=======
+          description: 'An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.'
+>>>>>>> user/travisw/tool-ingested-tsp
       description: Details of the tool call.
     RunStepDetailsToolCallsRetrievalObject:
       type: object
@@ -5225,7 +5425,10 @@ components:
           description: |-
             The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
             the parent run is expired.
+<<<<<<< HEAD
           x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
+=======
+>>>>>>> user/travisw/tool-ingested-tsp
         cancelled_at:
           type: integer
           format: unixtime
@@ -5243,7 +5446,10 @@ components:
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step completed.
+<<<<<<< HEAD
           x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
+=======
+>>>>>>> user/travisw/tool-ingested-tsp
         metadata:
           type: object
           additionalProperties:
@@ -5415,7 +5621,10 @@ components:
           type: number
           format: seconds
           description: End time of the word in seconds.
+<<<<<<< HEAD
           x-customTspIngestionRule: timespans are encoded durations
+=======
+>>>>>>> user/travisw/tool-ingested-tsp
   securitySchemes:
     BearerAuth:
       type: http

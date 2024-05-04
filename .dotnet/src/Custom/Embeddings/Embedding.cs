@@ -59,26 +59,7 @@ public partial class Embedding
     private EmbeddingObject Object { get; } = EmbeddingObject.Embedding;
 
     // CUSTOM: Added logic to handle additional custom properties.
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Embeddings.Embedding"/>. </summary>
-    /// <param name="index"> The index of the embedding in the list of embeddings. </param>
-    /// <param name="embeddingProperty">
-    /// The embedding vector, which is a list of floats. The length of vector depends on the model as
-    /// listed in the [embedding guide](/docs/guides/embeddings).
-    /// </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="embeddingProperty"/> is null. </exception>
-    internal Embedding(long index, BinaryData embeddingProperty)
-    {
-        Argument.AssertNotNull(embeddingProperty, nameof(embeddingProperty));
-
-        Index = (int)index;
-        EmbeddingProperty = embeddingProperty;
-
-        // Handle additional custom properties.
-        Vector = ConvertToVectorOfFloats(embeddingProperty);
-    }
-
-    // CUSTOM: Added logic to handle additional custom properties.
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Embeddings.Embedding"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="Embedding"/>. </summary>
     /// <param name="index"> The index of the embedding in the list of embeddings. </param>
     /// <param name="embeddingProperty">
     /// The embedding vector, which is a list of floats. The length of vector depends on the model as
@@ -86,7 +67,7 @@ public partial class Embedding
     /// </param>
     /// <param name="object"> The object type, which is always "embedding". </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-    internal Embedding(long index, BinaryData embeddingProperty, OpenAI.Embeddings.EmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal Embedding(int index, BinaryData embeddingProperty, EmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
         Index = (int)index;
         EmbeddingProperty = embeddingProperty;

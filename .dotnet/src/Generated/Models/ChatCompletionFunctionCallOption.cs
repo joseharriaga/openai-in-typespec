@@ -7,10 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary>
-    /// Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
-    ///
-    /// </summary>
+    /// <summary> Specifying a particular function via `{"name": "my_function"}` forces the model to call that function. </summary>
     internal partial class ChatCompletionFunctionCallOption
     {
         /// <summary>

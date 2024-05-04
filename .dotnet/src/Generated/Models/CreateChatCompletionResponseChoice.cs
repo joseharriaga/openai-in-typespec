@@ -48,7 +48,6 @@ namespace OpenAI.Internal.Models
         /// `length` if the maximum number of tokens specified in the request was reached,
         /// `content_filter` if content was omitted due to a flag from our content filters,
         /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-        ///
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
@@ -70,7 +69,6 @@ namespace OpenAI.Internal.Models
         /// `length` if the maximum number of tokens specified in the request was reached,
         /// `content_filter` if content was omitted due to a flag from our content filters,
         /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-        ///
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
@@ -95,7 +93,6 @@ namespace OpenAI.Internal.Models
         /// `length` if the maximum number of tokens specified in the request was reached,
         /// `content_filter` if content was omitted due to a flag from our content filters,
         /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-        ///
         /// </summary>
         public CreateChatCompletionResponseChoiceFinishReason FinishReason { get; }
         /// <summary> The index of the choice in the list of choices. </summary>

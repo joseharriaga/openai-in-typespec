@@ -101,10 +101,7 @@ namespace OpenAI
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
-        /// <param name="tools">
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-        ///
-        /// </param>
+        /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`. </param>
         /// <param name="fileIds">
         /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
         /// maximum of 20 files attached to the assistant. Files are ordered by their creation date in
@@ -170,10 +167,7 @@ namespace OpenAI
         /// descriptions of them.
         /// </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
-        /// <param name="tools">
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-        ///
-        /// </param>
+        /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`. </param>
         /// <param name="fileIds">
         /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
         /// maximum of 20 files attached to the assistant. Files are ordered by their creation date in
@@ -327,19 +321,14 @@ namespace OpenAI
         /// Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
         ///
         /// **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-        ///
         /// </param>
         /// <param name="seed">
         /// This feature is in Beta.
         /// If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
         /// Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
-        ///
         /// </param>
         /// <param name="stop"> Up to 4 sequences where the API will stop generating further tokens. </param>
-        /// <param name="stream">
-        /// If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
-        ///
-        /// </param>
+        /// <param name="stream"> If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </param>
         /// <param name="temperature">
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
@@ -370,7 +359,6 @@ namespace OpenAI
         /// Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
         ///
         /// `none` is the default when no functions are present. `auto` is the default if functions are present.
-        ///
         /// </param>
         /// <param name="functions">
         /// Deprecated in favor of `tools`.
@@ -467,10 +455,7 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestAssistantMessage"/>. </summary>
-        /// <param name="content">
-        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
-        ///
-        /// </param>
+        /// <param name="content"> The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified. </param>
         /// <param name="role"> The role of the messages author, in this case `assistant`. </param>
         /// <param name="name">
         /// An optional name for the participant. Provides the model information to differentiate between
@@ -562,7 +547,6 @@ namespace OpenAI
         /// `length` if the maximum number of tokens specified in the request was reached,
         /// `content_filter` if content was omitted due to a flag from our content filters,
         /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-        ///
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
@@ -639,7 +623,7 @@ namespace OpenAI
         /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         /// <returns> A new <see cref="Embeddings.EmbeddingTokenUsage"/> instance for mocking. </returns>
-        public static EmbeddingTokenUsage EmbeddingTokenUsage(int promptTokens = default, int totalTokens = default)
+        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
         {
             return new EmbeddingTokenUsage(promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
@@ -956,7 +940,6 @@ namespace OpenAI
         /// Two content moderations models are available: `text-moderation-stable` and `text-moderation-latest`.
         ///
         /// The default is `text-moderation-latest` which will be automatically upgraded over time. This ensures you are always using our most accurate model. If you use `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
-        ///
         /// </param>
         /// <returns> A new <see cref="Models.CreateModerationRequest"/> instance for mocking. </returns>
         public static CreateModerationRequest CreateModerationRequest(BinaryData input = null, CreateModerationRequestModel? model = null)
@@ -1368,10 +1351,7 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsObject"/>. </summary>
         /// <param name="type"> Always `tool_calls`. </param>
-        /// <param name="toolCalls">
-        /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.
-        ///
-        /// </param>
+        /// <param name="toolCalls"> An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`. </param>
         /// <returns> A new <see cref="Models.RunStepDetailsToolCallsObject"/> instance for mocking. </returns>
         public static RunStepDetailsToolCallsObject RunStepDetailsToolCallsObject(RunStepDetailsToolCallsObjectType type = default, IEnumerable<BinaryData> toolCalls = null)
         {
@@ -1541,10 +1521,7 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionFunctionResponseChoice"/>. </summary>
-        /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
-        ///
-        /// </param>
+        /// <param name="finishReason"> The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function. </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
         /// <returns> A new <see cref="Models.CreateChatCompletionFunctionResponseChoice"/> instance for mocking. </returns>
@@ -1614,7 +1591,6 @@ namespace OpenAI
         /// <param name="systemFingerprint">
         /// This fingerprint represents the backend configuration that the model runs with.
         /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-        ///
         /// </param>
         /// <param name="object"> The object type, which is always `chat.completion.chunk`. </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponse"/> instance for mocking. </returns>
@@ -1640,7 +1616,6 @@ namespace OpenAI
         /// `length` if the maximum number of tokens specified in the request was reached,
         /// `content_filter` if content was omitted due to a flag from our content filters,
         /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-        ///
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponseChoice"/> instance for mocking. </returns>

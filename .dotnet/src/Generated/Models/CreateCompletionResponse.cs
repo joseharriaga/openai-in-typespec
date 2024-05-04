@@ -73,7 +73,6 @@ namespace OpenAI.LegacyCompletions
         /// This fingerprint represents the backend configuration that the model runs with.
         ///
         /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-        ///
         /// </param>
         /// <param name="object"> The object type, which is always "text_completion". </param>
         /// <param name="usage"></param>
@@ -107,7 +106,6 @@ namespace OpenAI.LegacyCompletions
         /// This fingerprint represents the backend configuration that the model runs with.
         ///
         /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-        ///
         /// </summary>
         public string SystemFingerprint { get; }
         /// <summary> The object type, which is always "text_completion". </summary>

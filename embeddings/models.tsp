@@ -16,6 +16,7 @@ model CreateEmbeddingRequest {
    * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
    * tokens.
    */
+  @extension("x-oaiExpandable", true)
   input: string | string[] | int32[] | int32[][];
 
   /**
@@ -83,7 +84,7 @@ model Embedding {
     "x-customTspIngestionRule",
     "apply missing string union for embedding response valuese"
   )
-  embedding: float64[] | string;
+  embedding: float[] | string;
 
   /** The object type, which is always "embedding". */
   object: "embedding";

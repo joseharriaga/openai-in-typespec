@@ -419,6 +419,7 @@ model RunStepObject {
   status: "in_progress" | "cancelled" | "failed" | "completed" | "expired";
 
   /** The details of the run step. */
+  @extension("x-oaiExpandable", true)
   step_details: RunStepDetailsMessageCreationObject | RunStepDetailsToolCallsObject;
 
   /** The last error associated with this run step. Will be `null` if there are no errors. */

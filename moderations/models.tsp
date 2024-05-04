@@ -96,37 +96,37 @@ model CreateModerationResponse {
     /** A list of the categories along with their scores as predicted by model. */
     category_scores: {
       /** The score for the category 'hate'. */
-      hate: float64;
+      hate: float;
 
       /** The score for the category 'hate/threatening'. */
-      `hate/threatening`: float64;
+      `hate/threatening`: float;
 
       /** The score for the category 'harassment'. */
-      harassment: float64;
+      harassment: float;
 
       /** The score for the category 'harassment/threatening'. */
-      `harassment/threatening`: float64;
+      `harassment/threatening`: float;
 
       /** The score for the category 'self-harm'. */
-      `self-harm`: float64;
+      `self-harm`: float;
 
       /** The score for the category 'self-harm/intent'. */
-      `self-harm/intent`: float64;
+      `self-harm/intent`: float;
 
       /** The score for the category 'self-harm/instructions'. */
-      `self-harm/instructions`: float64;
+      `self-harm/instructions`: float;
 
       /** The score for the category 'sexual'. */
-      sexual: float64;
+      sexual: float;
 
       /** The score for the category 'sexual/minors'. */
-      `sexual/minors`: float64;
+      `sexual/minors`: float;
 
       /** The score for the category 'violence'. */
-      violence: float64;
+      violence: float;
 
       /** The score for the category 'violence/graphic'. */
-      `violence/graphic`: float64;
+      `violence/graphic`: float;
     };
   }[];
 }

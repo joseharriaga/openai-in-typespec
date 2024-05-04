@@ -138,7 +138,7 @@ namespace OpenAI.FineTuning
             string organizationId = default;
             IReadOnlyList<string> resultFiles = default;
             FineTuningJobStatus status = default;
-            long? trainedTokens = default;
+            int? trainedTokens = default;
             string trainingFile = default;
             string validationFile = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -227,7 +227,7 @@ namespace OpenAI.FineTuning
                         trainedTokens = null;
                         continue;
                     }
-                    trainedTokens = property.Value.GetInt64();
+                    trainedTokens = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("training_file"u8))

@@ -1,7 +1,10 @@
-import "../common/models.tsp";
-import "../messages/models.tsp";
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
 
-using TypeSpec.Http;
+import "../messages";
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -15,6 +18,7 @@ model CreateThreadRequest {
    * additional information about the object in a structured format. Keys can be a maximum of 64
    * characters long and values can be a maxium of 512 characters long.
    */
+  @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
@@ -24,6 +28,7 @@ model ModifyThreadRequest {
    * additional information about the object in a structured format. Keys can be a maximum of 64
    * characters long and values can be a maxium of 512 characters long.
    */
+  @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
@@ -43,13 +48,25 @@ model ThreadObject {
 
   /** The Unix timestamp (in seconds) for when the thread was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
-    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-    * additional information about the object in a structured format. Keys can be a maximum of 64
-    * characters long and values can be a maxium of 512 characters long.
-    */
+   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
+   * additional information about the object in a structured format. Keys can be a maximum of 64
+   * characters long and values can be a maxium of 512 characters long.
+   */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
+}
+
+model ListThreadsResponse {
+  object: string;
+  data: ThreadObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
 }

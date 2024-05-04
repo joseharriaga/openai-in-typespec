@@ -1,3 +1,8 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -12,12 +17,12 @@ model CreateFineTuningJobRequest {
 
   /**
    * The ID of an uploaded file that contains training data.
-   * 
+   *
    * See [upload file](/docs/api-reference/files/upload) for how to upload a file.
-   * 
+   *
    * Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
    * the purpose `fine-tune`.
-   * 
+   *
    * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
    */
   training_file: string;
@@ -25,22 +30,22 @@ model CreateFineTuningJobRequest {
   /** The hyperparameters used for the fine-tuning job. */
   hyperparameters?: {
     /**
-     * Number of examples in each batch. A larger batch size means that model parameters are
-     * updated less frequently, but with lower variance.
+     * Number of examples in each batch. A larger batch size means that model parameters
+     * are updated less frequently, but with lower variance.
      */
-    batch_size?: "auto" | BatchSize = "auto";
+    batch_size?: "auto" | int32 = "auto";
 
     /**
-     * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid 
+     * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
      * overfitting.
      */
-    learning_rate_multiplier?: "auto" | LearningRateMultiplier = "auto";
+    learning_rate_multiplier?: "auto" | float64 = "auto";
 
     /**
-     * The number of epochs to train the model for. An epoch refers to one full cycle through the
-     * training dataset.
+     * The number of epochs to train the model for. An epoch refers to one full cycle
+     * through the training dataset.
      */
-    n_epochs?: "auto" | NEpochs = "auto";
+    n_epochs?: "auto" | int32 = "auto";
   };
 
   /**
@@ -49,18 +54,21 @@ model CreateFineTuningJobRequest {
    * For example, a `suffix` of "custom-model-name" would produce a model name like
    * `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
    */
-  suffix?: SuffixString | null = null;
+  @minLength(1)
+  @maxLength(40)
+  suffix?: string | null;
 
   /**
    * The ID of an uploaded file that contains validation data.
-   * 
-   * If you provide this file, the data is used to generate validation metrics periodically during
-   * fine-tuning. These metrics can be viewed in the fine-tuning results file. The same data should
-   * not be present in both train and validation files.
-   * 
+   *
+   * If you provide this file, the data is used to generate validation
+   * metrics periodically during fine-tuning. These metrics can be viewed in
+   * the fine-tuning results file.
+   * The same data should not be present in both train and validation files.
+   *
    * Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
    * `fine-tune`.
-   * 
+   *
    * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
    */
   validation_file?: string | null;
@@ -68,47 +76,33 @@ model CreateFineTuningJobRequest {
 
 model ListPaginatedFineTuningJobsResponse {
   data: FineTuningJob[];
-
   has_more: boolean;
-
   object: "list";
 }
 
 model ListFineTuningJobEventsResponse {
   data: FineTuningJobEvent[];
-
   object: "list";
-
-  // TODO: The sample in the OpenAPI spec includes a `has_more` property that is not included here.
 }
 
-@minValue(1)
-@maxValue(50)
-scalar NEpochs extends safeint;
-
-@minValue(1)
-@maxValue(256)
-scalar BatchSize extends safeint;
-
-@minValueExclusive(0)
-scalar LearningRateMultiplier extends float64;
-
-@minLength(1)
-@maxLength(40)
-scalar SuffixString extends string;
-
-/* The `fine_tuning.job` object represents a fine-tuning job that has been created through the API. */
+/**
+ * The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
+ */
 model FineTuningJob {
   /** The object identifier, which can be referenced in the API endpoints. */
   id: string;
 
   /** The Unix timestamp (in seconds) for when the fine-tuning job was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
-   * For fine-tuning jobs that have `failed`, this will contain more information on the cause of the
-   * failure.
+   * For fine-tuning jobs that have `failed`, this will contain more information on the cause of
+   * the failure.
    */
   error: {
     /** A machine-readable error code. */
@@ -118,8 +112,8 @@ model FineTuningJob {
     message: string;
 
     /**
-     * The parameter that was invalid, usually `training_file` or `validation_file`. This field will
-     * be null if the failure was not parameter-specific.
+     * The parameter that was invalid, usually `training_file` or `validation_file`. This field
+     * will be null if the failure was not parameter-specific.
      */
     param: string | null;
   } | null;
@@ -135,21 +129,24 @@ model FineTuningJob {
    * null if the fine-tuning job is still running.
    */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   finished_at: utcDateTime | null;
 
   /**
-   * The hyperparameters used for the fine-tuning job. See the
-   * [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+   * The hyperparameters used for the fine-tuning job. See the [fine-tuning
+   * guide](/docs/guides/fine-tuning) for more details.
    */
   hyperparameters: {
     /**
      * The number of epochs to train the model for. An epoch refers to one full cycle through the
      * training dataset.
-     *
      * "auto" decides the optimal number of epochs based on the size of the dataset. If setting the
      * number manually, we support any number between 1 and 50 epochs.
      */
-    n_epochs: "auto" | NEpochs = "auto";
+    n_epochs: "auto" | int32 = "auto";
   };
 
   /** The base model that is being fine-tuned. */
@@ -172,7 +169,7 @@ model FineTuningJob {
    * `running`, `succeeded`, `failed`, or `cancelled`.
    */
   status:
-    |  "validating_files"
+    | "validating_files"
     | "queued"
     | "running"
     | "succeeded"
@@ -183,17 +180,17 @@ model FineTuningJob {
    * The total number of billable tokens processed by this fine-tuning job. The value will be null
    * if the fine-tuning job is still running.
    */
-  trained_tokens: safeint | null;
+  trained_tokens: int32 | null;
 
   /**
-   * The file ID used for training. You can retrieve the training data with the
-   * [Files API](/docs/api-reference/files/retrieve-contents).
+   * The file ID used for training. You can retrieve the training data with the [Files
+   * API](/docs/api-reference/files/retrieve-contents).
    */
   training_file: string;
 
   /**
-   * The file ID used for validation. You can retrieve the validation results with the
-   * [Files API](/docs/api-reference/files/retrieve-contents).
+   * The file ID used for validation. You can retrieve the validation results with the [Files
+   * API](/docs/api-reference/files/retrieve-contents).
    */
   validation_file: string | null;
 }
@@ -203,11 +200,13 @@ model FineTuningJobEvent {
   id: string;
 
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   level: "info" | "warn" | "error";
-
   message: string;
-
   object: "fine_tuning.job.event";
 }

@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The RunStepDetailsToolCallsRetrievalObjectRetrieval. </summary>
-    internal partial class RunStepDetailsToolCallsRetrievalObjectRetrieval
+    /// <summary> The ChatCompletionMessageToolCallChunk. </summary>
+    internal partial class ChatCompletionMessageToolCallChunk
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,16 +42,40 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsRetrievalObjectRetrieval"/>. </summary>
-        internal RunStepDetailsToolCallsRetrievalObjectRetrieval()
+        /// <summary> Initializes a new instance of <see cref="ChatCompletionMessageToolCallChunk"/>. </summary>
+        /// <param name="index"></param>
+        internal ChatCompletionMessageToolCallChunk(int index)
+        {
+            Index = index;
+        }
+
+        /// <summary> Initializes a new instance of <see cref="ChatCompletionMessageToolCallChunk"/>. </summary>
+        /// <param name="index"></param>
+        /// <param name="id"> The ID of the tool call. </param>
+        /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
+        /// <param name="function"></param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal ChatCompletionMessageToolCallChunk(int index, string id, string type, ChatCompletionMessageToolCallChunkFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            Index = index;
+            Id = id;
+            Type = type;
+            Function = function;
+            _serializedAdditionalRawData = serializedAdditionalRawData;
+        }
+
+        /// <summary> Initializes a new instance of <see cref="ChatCompletionMessageToolCallChunk"/> for deserialization. </summary>
+        internal ChatCompletionMessageToolCallChunk()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsRetrievalObjectRetrieval"/>. </summary>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepDetailsToolCallsRetrievalObjectRetrieval(IDictionary<string, BinaryData> serializedAdditionalRawData)
-        {
-            _serializedAdditionalRawData = serializedAdditionalRawData;
-        }
+        /// <summary> Gets the index. </summary>
+        public int Index { get; }
+        /// <summary> The ID of the tool call. </summary>
+        public string Id { get; }
+        /// <summary> The type of the tool. Currently, only `function` is supported. </summary>
+        public string Type { get; }
+        /// <summary> Gets the function. </summary>
+        public ChatCompletionMessageToolCallChunkFunction Function { get; }
     }
 }

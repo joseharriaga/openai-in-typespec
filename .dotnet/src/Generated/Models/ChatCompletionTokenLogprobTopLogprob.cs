@@ -45,7 +45,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionTokenLogprobTopLogprob"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob"> The log probability of this token. </param>
+        /// <param name="logprob">
+        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+        /// the value `-9999.0` is used to signify that the token is very unlikely.
+        /// </param>
         /// <param name="bytes">
         /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
         /// instances where characters are represented by multiple tokens and their byte representations
@@ -53,7 +56,7 @@ namespace OpenAI.Internal.Models
         /// bytes representation for the token.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="token"/> is null. </exception>
-        internal ChatCompletionTokenLogprobTopLogprob(string token, double logprob, IEnumerable<long> bytes)
+        internal ChatCompletionTokenLogprobTopLogprob(string token, double logprob, IEnumerable<int> bytes)
         {
             Argument.AssertNotNull(token, nameof(token));
 
@@ -64,7 +67,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionTokenLogprobTopLogprob"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob"> The log probability of this token. </param>
+        /// <param name="logprob">
+        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+        /// the value `-9999.0` is used to signify that the token is very unlikely.
+        /// </param>
         /// <param name="bytes">
         /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
         /// instances where characters are represented by multiple tokens and their byte representations
@@ -72,7 +78,7 @@ namespace OpenAI.Internal.Models
         /// bytes representation for the token.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ChatCompletionTokenLogprobTopLogprob(string token, double logprob, IReadOnlyList<long> bytes, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatCompletionTokenLogprobTopLogprob(string token, double logprob, IReadOnlyList<int> bytes, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Token = token;
             Logprob = logprob;
@@ -87,7 +93,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The token. </summary>
         public string Token { get; }
-        /// <summary> The log probability of this token. </summary>
+        /// <summary>
+        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+        /// the value `-9999.0` is used to signify that the token is very unlikely.
+        /// </summary>
         public double Logprob { get; }
         /// <summary>
         /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
@@ -95,6 +104,6 @@ namespace OpenAI.Internal.Models
         /// must be combined to generate the correct text representation. Can be `null` if there is no
         /// bytes representation for the token.
         /// </summary>
-        public IReadOnlyList<long> Bytes { get; }
+        public IReadOnlyList<int> Bytes { get; }
     }
 }

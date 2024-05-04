@@ -52,9 +52,9 @@ public partial class ChatCompletionOptions
         return BinaryData.FromObjectAsJson(StopSequences);
     }
 
-    internal IDictionary<string, long> GetInternalLogitBias()
+    internal IDictionary<string, int> GetInternalLogitBias()
     {
-        ChangeTrackingDictionary<string, long> packedLogitBias = [];
+        ChangeTrackingDictionary<string, int> packedLogitBias = [];
         foreach (KeyValuePair<int, int> pair in TokenSelectionBiases)
         {
             packedLogitBias[$"{pair.Key}"] = pair.Value;
@@ -95,19 +95,19 @@ public partial class ChatCompletionOptions
         return internalFunctions;
     }
 
-    internal static Internal.Models.FunctionParameters CreateInternalFunctionParameters(BinaryData parameters)
+    internal static IDictionary<string, BinaryData> CreateInternalFunctionParameters(BinaryData parameters)
     {
+        ChangeTrackingDictionary<string, BinaryData> parametersMap = [];
         if (parameters == null)
         {
-            return null;
+            return parametersMap;
         }
         JsonElement parametersElement = JsonDocument.Parse(parameters.ToString()).RootElement;
-        Internal.Models.FunctionParameters internalParameters = new();
         foreach (JsonProperty property in parametersElement.EnumerateObject())
         {
             BinaryData propertyData = BinaryData.FromString(property.Value.GetRawText());
-            internalParameters.AdditionalProperties.Add(property.Name, propertyData);
+            parametersMap[property.Name] = propertyData;
         }
-        return internalParameters;
+        return parametersMap;
     }
 }

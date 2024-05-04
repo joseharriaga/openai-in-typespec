@@ -22,7 +22,7 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteStringValue(Object);
             writer.WritePropertyName("data"u8);
             writer.WriteStartArray();
             foreach (var item in Data)
@@ -74,7 +74,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            ListMessageFilesResponseObject @object = default;
+            string @object = default;
             IReadOnlyList<MessageFileObject> data = default;
             string firstId = default;
             string lastId = default;
@@ -85,7 +85,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new ListMessageFilesResponseObject(property.Value.GetString());
+                    @object = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("data"u8))

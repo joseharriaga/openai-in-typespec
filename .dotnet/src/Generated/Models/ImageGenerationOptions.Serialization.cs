@@ -25,8 +25,15 @@ namespace OpenAI.Images
             writer.WriteStringValue(Prompt);
             if (Optional.IsDefined(Model))
             {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.Value.ToString());
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteStringValue(Model.Value.ToString());
+                }
+                else
+                {
+                    writer.WriteNull("model");
+                }
             }
             if (Optional.IsDefined(N))
             {
@@ -105,11 +112,11 @@ namespace OpenAI.Images
             }
             string prompt = default;
             CreateImageRequestModel? model = default;
-            long? n = default;
-            GeneratedImageQuality? quality = default;
-            GeneratedImageFormat? responseFormat = default;
-            GeneratedImageSize? size = default;
-            GeneratedImageStyle? style = default;
+            int? n = default;
+            CreateImageRequestQuality? quality = default;
+            CreateImageRequestResponseFormat? responseFormat = default;
+            CreateImageRequestSize? size = default;
+            CreateImageRequestStyle? style = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -124,6 +131,7 @@ namespace OpenAI.Images
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        model = null;
                         continue;
                     }
                     model = new CreateImageRequestModel(property.Value.GetString());
@@ -136,7 +144,7 @@ namespace OpenAI.Images
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("quality"u8))

@@ -23,18 +23,18 @@ namespace OpenAI.Images
 
             writer.WriteStartObject();
             writer.WritePropertyName("image"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(Image);
-#else
-            using (JsonDocument document = JsonDocument.Parse(Image))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
+            writer.WriteStringValue(Image);
             if (Optional.IsDefined(Model))
             {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.Value.ToString());
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteStringValue(Model.Value.ToString());
+                }
+                else
+                {
+                    writer.WriteNull("model");
+                }
             }
             if (Optional.IsDefined(N))
             {
@@ -101,11 +101,11 @@ namespace OpenAI.Images
             {
                 return null;
             }
-            BinaryData image = default;
+            string image = default;
             CreateImageVariationRequestModel? model = default;
-            long? n = default;
-            GeneratedImageFormat? responseFormat = default;
-            GeneratedImageSize? size = default;
+            int? n = default;
+            CreateImageVariationRequestResponseFormat? responseFormat = default;
+            CreateImageVariationRequestSize? size = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -113,13 +113,14 @@ namespace OpenAI.Images
             {
                 if (property.NameEquals("image"u8))
                 {
-                    image = BinaryData.FromString(property.Value.GetRawText());
+                    image = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("model"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        model = null;
                         continue;
                     }
                     model = new CreateImageVariationRequestModel(property.Value.GetString());
@@ -132,7 +133,7 @@ namespace OpenAI.Images
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))

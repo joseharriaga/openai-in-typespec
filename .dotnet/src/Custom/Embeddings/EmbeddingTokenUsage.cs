@@ -3,8 +3,15 @@ namespace OpenAI.Embeddings;
 [CodeGenModel("EmbeddingUsage")]
 public partial class EmbeddingTokenUsage
 {
-    // CUSTOM: Renamed.
-    /// <summary> The number of tokens used by the input prompts. </summary>
-    [CodeGenMember("PromptTokens")]
-    public long InputTokens { get; }
+    private Internal.Models.CreateEmbeddingResponseUsage _internalUsage;
+
+    /// <inheritdoc cref="Internal.Models.EmbeddingUsage.PromptTokens"/>
+    public int InputTokens => (int)_internalUsage.PromptTokens;
+    /// <inheritdoc cref="Internal.Models.EmbeddingUsage.TotalTokens"/>
+    public int TotalTokens => (int)_internalUsage.TotalTokens;
+
+    internal EmbeddingTokenUsage(Internal.Models.CreateEmbeddingResponseUsage internalUsage)
+    {
+        _internalUsage = internalUsage;
+    }
 }

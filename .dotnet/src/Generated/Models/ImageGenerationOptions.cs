@@ -57,8 +57,8 @@ namespace OpenAI.Images
         /// greater consistency across the image. This param is only supported for `dall-e-3`.
         /// </param>
         /// <param name="responseFormat">
-        /// The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs
-        /// are only valid for 60 minutes after the image has been generated.
+        /// The format in which the generated images are returned. Must be one of `url` or `b64_json`.
+        /// URLs are only valid for 60 minutes after the image has been generated.
         /// </param>
         /// <param name="size">
         /// The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024` for
@@ -74,7 +74,7 @@ namespace OpenAI.Images
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ImageGenerationOptions(string prompt, CreateImageRequestModel? model, long? n, GeneratedImageQuality? quality, GeneratedImageFormat? responseFormat, GeneratedImageSize? size, GeneratedImageStyle? style, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateImageRequest(string prompt, CreateImageRequestModel? model, int? n, CreateImageRequestQuality? quality, CreateImageRequestResponseFormat? responseFormat, CreateImageRequestSize? size, CreateImageRequestStyle? style, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Prompt = prompt;
             Model = model;
@@ -86,14 +86,32 @@ namespace OpenAI.Images
             User = user;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
+
+        /// <summary> Initializes a new instance of <see cref="CreateImageRequest"/> for deserialization. </summary>
+        internal CreateImageRequest()
+        {
+        }
+
+        /// <summary>
+        /// A text description of the desired image(s). The maximum length is 1000 characters for
+        /// `dall-e-2` and 4000 characters for `dall-e-3`.
+        /// </summary>
+        public string Prompt { get; }
+        /// <summary> The model to use for image generation. </summary>
+        public CreateImageRequestModel? Model { get; set; }
+        /// <summary>
+        /// The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is
+        /// supported.
+        /// </summary>
+        public int? N { get; set; }
         /// <summary>
         /// The quality of the image that will be generated. `hd` creates images with finer details and
         /// greater consistency across the image. This param is only supported for `dall-e-3`.
         /// </summary>
         public GeneratedImageQuality? Quality { get; set; }
         /// <summary>
-        /// The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs
-        /// are only valid for 60 minutes after the image has been generated.
+        /// The format in which the generated images are returned. Must be one of `url` or `b64_json`.
+        /// URLs are only valid for 60 minutes after the image has been generated.
         /// </summary>
         public GeneratedImageFormat? ResponseFormat { get; set; }
         /// <summary>

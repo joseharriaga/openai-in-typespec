@@ -1,8 +1,11 @@
-import "../common/models.tsp";
-import "../assistants/models.tsp";
-import "../threads/models.tsp";
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
 
-using TypeSpec.Http;
+import "../assistants";
+import "../threads";
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -11,10 +14,11 @@ model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
   assistant_id: string;
 
-  /** 
+  /**
    * The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
    * is provided here, it will override the model associated with the assistant. If not, the model
-   * associated with the assistant will be used. */
+   * associated with the assistant will be used.
+   */
   `model`?: string | null;
 
   /**
@@ -33,7 +37,8 @@ model CreateRunRequest {
    * Override the tools the assistant can use for this run. This is useful for modifying the
    * behavior on a per-run basis.
    */
-  tools?: CreateRunRequestTools | null;
+  // !no_nullable! @maxItems(20)
+  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] | null;
 
   /**
    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -62,15 +67,15 @@ model CreateThreadAndRunRequest {
   thread?: CreateThreadRequest;
 
   /**
-   * The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is
-   * provided here, it will override the model associated with the assistant. If not, the model
+   * The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
+   * is provided here, it will override the model associated with the assistant. If not, the model
    * associated with the assistant will be used.
    */
   `model`?: string | null;
 
   /**
-   * Override the default system message of the assistant. This is useful for modifying the behavior
-   * on a per-run basis.
+   * Override the default system message of the assistant. This is useful for modifying the
+   * behavior on a per-run basis.
    */
   instructions?: string | null;
 
@@ -78,7 +83,8 @@ model CreateThreadAndRunRequest {
    * Override the tools the assistant can use for this run. This is useful for modifying the
    * behavior on a per-run basis.
    */
-  tools?: CreateRunRequestTools | null;
+  // !no_nullable! @maxItems(20)
+  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] | null;
 
   /**
    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -94,7 +100,8 @@ model SubmitToolOutputsRunRequest {
   tool_outputs: {
     /**
      * The ID of the tool call in the `required_action` object within the run object the output is
-     * being submitted for. */
+     * being submitted for.
+     */
     tool_call_id?: string;
 
     /** The output of the tool call to be submitted to continue the run. */
@@ -103,7 +110,7 @@ model SubmitToolOutputsRunRequest {
 }
 
 model ListRunsResponse {
-  object: "list";
+  object: string;
   data: RunObject[];
   first_id: string;
   last_id: string;
@@ -111,40 +118,22 @@ model ListRunsResponse {
 }
 
 model ListRunStepsResponse {
-  object: "list";
+  object: string;
   data: RunStepObject[];
   first_id: string;
   last_id: string;
   has_more: boolean;
 }
 
-@maxItems(20)
-model CreateRunRequestTools is CreateRunRequestTool[];
-
-@oneOf
-@extension("x-oaiExpandable", true)
-union CreateRunRequestTool {
-  AssistantToolsCode,
-  AssistantToolsRetrieval,
-  AssistantToolsFunction
-}
-
-@oneOf
-@extension("x-oaiExpandable", true)
-union RunStepDetails {
-  RunStepDetailsMessageCreationObject,
-  RunStepDetailsToolCallsObject,
-}
-
 /** Details of the message creation by the run step. */
 model RunStepDetailsMessageCreationObject {
-  /** Details of the message creation by the run step. */
+  /** Always `message_creation`. */
   type: "message_creation";
 
   message_creation: {
     /** The ID of the message that was created by this run step. */
     message_id: string;
-  }
+  };
 }
 
 /** Details of the tool call. */
@@ -156,17 +145,7 @@ model RunStepDetailsToolCallsObject {
    * An array of tool calls the run step was involved in. These can be associated with one of three
    * types of tools: `code_interpreter`, `retrieval`, or `function`.
    */
-  tool_calls: RunStepDetailsToolCallsObjectToolCalls;
-}
-
-model RunStepDetailsToolCallsObjectToolCalls is RunStepDetailsToolCallsObjectToolCall[];
-
-@oneOf
-@extension("x-oaiExpandable", true)
-union RunStepDetailsToolCallsObjectToolCall {
-  RunStepDetailsToolCallsCodeObject,
-  RunStepDetailsToolCallsRetrievalObject,
-  RunStepDetailsToolCallsFunctionObject,
+  tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsRetrievalObject | RunStepDetailsToolCallsFunctionObject)[];
 }
 
 /** Details of the Code Interpreter tool call the run step was involved in. */
@@ -190,17 +169,8 @@ model RunStepDetailsToolCallsCodeObject {
      * items, including text (`logs`) or images (`image`). Each of these are represented by a
      * different object type.
      */
-    outputs: RunStepDetailsToolCallsCodeOutputs;
-  }
-}
-
-model RunStepDetailsToolCallsCodeOutputs is RunStepDetailsToolCallsCodeOutput[];
-
-@oneOf
-@extension("x-oaiExpandable", true)
-union RunStepDetailsToolCallsCodeOutput {
-  RunStepDetailsToolCallsCodeOutputLogsObject,
-  RunStepDetailsToolCallsCodeOutputImageObject,
+    outputs: (RunStepDetailsToolCallsCodeOutputLogsObject | RunStepDetailsToolCallsCodeOutputImageObject)[];
+  };
 }
 
 /** Text output from the Code Interpreter tool call as part of a run step. */
@@ -219,7 +189,7 @@ model RunStepDetailsToolCallsCodeOutputImageObject {
   image: {
     /** The [file](/docs/api-reference/files) ID of the image. */
     file_id: string;
-  }
+  };
 }
 
 model RunStepDetailsToolCallsRetrievalObject {
@@ -231,10 +201,10 @@ model RunStepDetailsToolCallsRetrievalObject {
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  retrieval: { }; // TODO: Is this the appropriate way to represent an empty object?
+  retrieval: Record<string>;
 }
 
-model RunStepDetailsToolCallsFunctionObject { 
+model RunStepDetailsToolCallsFunctionObject {
   /** The ID of the tool call object. */
   id: string;
 
@@ -254,7 +224,7 @@ model RunStepDetailsToolCallsFunctionObject {
      * [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
      */
     output: string | null;
-  }
+  };
 }
 
 /**
@@ -263,13 +233,13 @@ model RunStepDetailsToolCallsFunctionObject {
  */
 model RunCompletionUsage {
   /** Number of completion tokens used over the course of the run. */
-  completion_tokens: safeint;
+  completion_tokens: int32;
 
   /** Number of prompt tokens used over the course of the run. */
-  prompt_tokens: safeint;
+  prompt_tokens: int32;
 
   /** Total number of tokens used (prompt + completion). */
-  total_tokens: safeint;
+  total_tokens: int32;
 }
 
 /**
@@ -278,13 +248,13 @@ model RunCompletionUsage {
  */
 model RunStepCompletionUsage {
   /** Number of completion tokens used over the course of the run step. */
-  completion_tokens: safeint;
+  completion_tokens: int32;
 
   /** Number of prompt tokens used over the course of the run step. */
-  prompt_tokens: safeint;
+  prompt_tokens: int32;
 
   /** Total number of tokens used (prompt + completion). */
-  total_tokens: safeint;
+  total_tokens: int32;
 }
 
 /** Represents an execution run on a [thread](/docs/api-reference/threads). */
@@ -297,11 +267,14 @@ model RunObject {
 
   /** The Unix timestamp (in seconds) for when the run was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /**
-   * The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this
-   * run.
+   * The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
    */
   thread_id: string;
 
@@ -322,10 +295,7 @@ model RunObject {
     | "completed"
     | "expired";
 
-  /**
-   * Details on the action required to continue the run. Will be `null` if no action is
-   * required.
-   */
+  /** Details on the action required to continue the run. Will be `null` if no action is required. */
   required_action: {
     /** For now, this is always `submit_tool_outputs`. */
     type: "submit_tool_outputs";
@@ -334,7 +304,7 @@ model RunObject {
     submit_tool_outputs: {
       /** A list of the relevant tool calls. */
       tool_calls: RunToolCallObject[];
-    }
+    };
   } | null;
 
   /** The last error associated with this run. Will be `null` if there are no errors. */
@@ -348,22 +318,42 @@ model RunObject {
 
   /** The Unix timestamp (in seconds) for when the run will expire. */
   @encode("unixTimestamp", int32)
-  expires_at: utcDateTime | null; // TODO: This is not nullable in the OpenAPI spec, but it is in practice.
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
+  expires_at: utcDateTime;
 
   /** The Unix timestamp (in seconds) for when the run was started. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   started_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run was cancelled. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   cancelled_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run failed. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   failed_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run was completed. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   completed_at: utcDateTime | null;
 
   /** The model that the [assistant](/docs/api-reference/assistants) used for this run. */
@@ -373,7 +363,9 @@ model RunObject {
   instructions: string;
 
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
-  tools: CreateRunRequestTools;
+  @maxItems(20)
+  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
   /**
    * The list of [File](/docs/api-reference/files) IDs the
@@ -389,7 +381,7 @@ model RunObject {
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
-  usage: RunCompletionUsage | null;
+  usage: RunCompletionUsage;
 }
 
 /** Represents a step in execution of a run. */
@@ -402,6 +394,10 @@ model RunStepObject {
 
   /** The Unix timestamp (in seconds) for when the run step was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The ID of the [assistant](/docs/api-reference/assistants) associated with the run step. */
@@ -423,7 +419,7 @@ model RunStepObject {
   status: "in_progress" | "cancelled" | "failed" | "completed" | "expired";
 
   /** The details of the run step. */
-  step_details: RunStepDetails;
+  step_details: RunStepDetailsMessageCreationObject | RunStepDetailsToolCallsObject;
 
   /** The last error associated with this run step. Will be `null` if there are no errors. */
   last_error: {
@@ -435,22 +431,38 @@ model RunStepObject {
   } | null;
 
   /**
-   * The Unix timestamp (in seconds) for when the run step expired. A step is considered expired
-   * if the parent run is expired.
+   * The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
+   * the parent run is expired.
    */
   @encode("unixTimestamp", int32)
-  expires_at: utcDateTime | null;
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
+  expired_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run step was cancelled. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   cancelled_at: utcDateTime | null;
 
   /** The Unix timestamp (in seconds) for when the run step failed. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   failed_at: utcDateTime | null;
 
-  /** T The Unix timestamp (in seconds) for when the run step completed.. */
+  /** The Unix timestamp (in seconds) for when the run step completed. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   completed_at: utcDateTime | null;
 
   /**
@@ -461,7 +473,7 @@ model RunStepObject {
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
-  usage: RunStepCompletionUsage | null;
+  usage: RunStepCompletionUsage;
 }
 
 /** Tool call objects */
@@ -482,5 +494,5 @@ model RunToolCallObject {
 
     /** The arguments that the model expects you to pass to the function. */
     arguments: string;
-  }
+  };
 }

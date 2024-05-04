@@ -50,7 +50,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionRequestAssistantMessage"/>. </summary>
         /// <param name="content">
-        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is'
+        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is
         /// specified.
         /// </param>
         /// <param name="role"> The role of the messages author, in this case `assistant`. </param>
@@ -75,7 +75,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary>
-        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is'
+        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is
         /// specified.
         /// </summary>
         public string Content { get; set; }

@@ -49,16 +49,16 @@ namespace OpenAI.FineTuning
 
         /// <summary> Initializes a new instance of <see cref="CreateFineTuningJobRequestHyperparameters"/>. </summary>
         /// <param name="batchSize">
-        /// Number of examples in each batch. A larger batch size means that model parameters are
-        /// updated less frequently, but with lower variance.
+        /// Number of examples in each batch. A larger batch size means that model parameters
+        /// are updated less frequently, but with lower variance.
         /// </param>
         /// <param name="learningRateMultiplier">
         /// Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
         /// overfitting.
         /// </param>
         /// <param name="nEpochs">
-        /// The number of epochs to train the model for. An epoch refers to one full cycle through the
-        /// training dataset.
+        /// The number of epochs to train the model for. An epoch refers to one full cycle
+        /// through the training dataset.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateFineTuningJobRequestHyperparameters(BinaryData batchSize, BinaryData learningRateMultiplier, BinaryData nEpochs, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -70,8 +70,8 @@ namespace OpenAI.FineTuning
         }
 
         /// <summary>
-        /// Number of examples in each batch. A larger batch size means that model parameters are
-        /// updated less frequently, but with lower variance.
+        /// Number of examples in each batch. A larger batch size means that model parameters
+        /// are updated less frequently, but with lower variance.
         /// <para>
         /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -86,7 +86,7 @@ namespace OpenAI.FineTuning
         /// <description>"auto"</description>
         /// </item>
         /// <item>
-        /// <description><see cref="long"/></description>
+        /// <description><see cref="int"/></description>
         /// </item>
         /// </list>
         /// </remarks>
@@ -156,8 +156,8 @@ namespace OpenAI.FineTuning
         /// </summary>
         public BinaryData LearningRateMultiplier { get; set; }
         /// <summary>
-        /// The number of epochs to train the model for. An epoch refers to one full cycle through the
-        /// training dataset.
+        /// The number of epochs to train the model for. An epoch refers to one full cycle
+        /// through the training dataset.
         /// <para>
         /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -172,7 +172,7 @@ namespace OpenAI.FineTuning
         /// <description>"auto"</description>
         /// </item>
         /// <item>
-        /// <description><see cref="long"/></description>
+        /// <description><see cref="int"/></description>
         /// </item>
         /// </list>
         /// </remarks>

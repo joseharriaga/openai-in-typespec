@@ -1,13 +1,15 @@
-import "../common/models.tsp";
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
 
-using TypeSpec.Http;
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
 model CreateMessageRequest {
   /** The role of the entity that is creating the message. Currently only `user` is supported. */
-  role: "user"; // TODO: The generated spec add "assistants" to this enum.
+  role: "user";
 
   /** The content of the message. */
   @minLength(1)
@@ -24,26 +26,26 @@ model CreateMessageRequest {
   file_ids?: string[] = [];
 
   /**
-  * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-  * additional information about the object in a structured format. Keys can be a maximum of 64
-  * characters long and values can be a maxium of 512 characters long.
-  */
+   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
+   * additional information about the object in a structured format. Keys can be a maximum of 64
+   * characters long and values can be a maxium of 512 characters long.
+   */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ModifyMessageRequest {
   /**
-  * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-  * additional information about the object in a structured format. Keys can be a maximum of 64
-  * characters long and values can be a maxium of 512 characters long.
-  */
+   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
+   * additional information about the object in a structured format. Keys can be a maximum of 64
+   * characters long and values can be a maxium of 512 characters long.
+   */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ListMessagesResponse {
-  object: "list";
+  object: string;
   data: MessageObject[];
   first_id: string;
   last_id: string;
@@ -51,13 +53,20 @@ model ListMessagesResponse {
 }
 
 model ListMessageFilesResponse {
-    object: "list";
-    data: MessageFileObject[];
-    first_id: string;
-    last_id: string;
-    has_more: boolean;
+  object: string;
+  data: MessageFileObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
 }
 
+model DeleteMessageResponse {
+  id: string;
+  deleted: boolean;
+  object: "thread.message.deleted";
+}
+
+/** Represents a message within a [thread](/docs/api-reference/threads). */
 model MessageObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
@@ -67,6 +76,10 @@ model MessageObject {
 
   /** The Unix timestamp (in seconds) for when the message was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
   /** The [thread](/docs/api-reference/threads) ID that this message belongs to. */
@@ -76,7 +89,7 @@ model MessageObject {
   role: "user" | "assistant";
 
   /** The content of the message in array of text and/or images. */
-  content: MessageObjectContent[];
+  content: (MessageContentImageFileObject | MessageContentTextObject)[];
 
   /**
    * If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
@@ -91,27 +104,20 @@ model MessageObject {
   run_id: string | null;
 
   /**
-    * A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-    * tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-    * attached to a message.
-    */
+   * A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
+   * tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
+   * attached to a message.
+   */
   @maxItems(10)
   file_ids: string[] = [];
 
   /**
-  * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-  * additional information about the object in a structured format. Keys can be a maximum of 64
-  * characters long and values can be a maxium of 512 characters long.
-  */
+   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
+   * additional information about the object in a structured format. Keys can be a maximum of 64
+   * characters long and values can be a maxium of 512 characters long.
+   */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
-}
-
-@oneOf
-@extension("x-oaiExpandable", true)
-union MessageObjectContent {
-  MessageContentImageFileObject,
-  MessageContentTextObject,
 }
 
 /** References an image [File](/docs/api-reference/files) in the content of a message. */
@@ -122,30 +128,23 @@ model MessageContentImageFileObject {
   image_file: {
     /** The [File](/docs/api-reference/files) ID of the image in the message content. */
     file_id: string;
-  }
+  };
 }
 
 /** The text content that is part of a message. */
 model MessageContentTextObject {
   /** Always `text`. */
-  type: "text"; // TODO: The generated spec adds "json_object" to this enum.
+  type: "text";
 
   text: {
     /** The data that makes up the text. */
     value: string;
 
-    annotations: MessageContentTextObjectAnnotations[];
-  }
+    annotations: (MessageContentTextAnnotationsFileCitationObject | MessageContentTextAnnotationsFilePathObject)[];
+  };
 }
 
-@oneOf
-@extension("x-oaiExpandable", true)
-union MessageContentTextObjectAnnotations {
-  MessageContentTextAnnotationsFileCitationObject,
-  MessageContentTextAnnotationsFilePathObject,
-}
-
-/** 
+/**
  * A citation within the message that points to a specific quote from a specific File associated
  * with the assistant or the message. Generated when the assistant uses the "retrieval" tool to
  * search files.
@@ -166,15 +165,15 @@ model MessageContentTextAnnotationsFileCitationObject {
   };
 
   @minValue(0)
-  start_index: safeint;
+  start_index: int32;
 
   @minValue(0)
-  end_index: safeint;
+  end_index: int32;
 }
 
-/** 
+/**
  * A URL for the file that's generated when the assistant used the `code_interpreter` tool to
- * generate a file. 
+ * generate a file.
  */
 model MessageContentTextAnnotationsFilePathObject {
   /** Always `file_path`. */
@@ -189,15 +188,15 @@ model MessageContentTextAnnotationsFilePathObject {
   };
 
   @minValue(0)
-  start_index: safeint;
+  start_index: int32;
 
   @minValue(0)
-  end_index: safeint;
+  end_index: int32;
 }
 
 /** A list of files attached to a `message`. */
 model MessageFileObject {
-  /** TThe identifier, which can be referenced in API endpoints. */
+  /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
   /** The object type, which is always `thread.message.file`. */
@@ -205,8 +204,15 @@ model MessageFileObject {
 
   /** The Unix timestamp (in seconds) for when the message file was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created_at: utcDateTime;
 
-  /** The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to. */
+  /**
+   * The ID of the [message](/docs/api-reference/messages) that the
+   * [File](/docs/api-reference/files) is attached to.
+   */
   message_id: string;
 }

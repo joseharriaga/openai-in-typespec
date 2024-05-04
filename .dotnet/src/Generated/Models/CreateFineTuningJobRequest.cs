@@ -91,9 +91,10 @@ namespace OpenAI.FineTuning
         /// <param name="validationFile">
         /// The ID of an uploaded file that contains validation data.
         ///
-        /// If you provide this file, the data is used to generate validation metrics periodically during
-        /// fine-tuning. These metrics can be viewed in the fine-tuning results file. The same data should
-        /// not be present in both train and validation files.
+        /// If you provide this file, the data is used to generate validation
+        /// metrics periodically during fine-tuning. These metrics can be viewed in
+        /// the fine-tuning results file.
+        /// The same data should not be present in both train and validation files.
         ///
         /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
         /// `fine-tune`.
@@ -144,9 +145,10 @@ namespace OpenAI.FineTuning
         /// <summary>
         /// The ID of an uploaded file that contains validation data.
         ///
-        /// If you provide this file, the data is used to generate validation metrics periodically during
-        /// fine-tuning. These metrics can be viewed in the fine-tuning results file. The same data should
-        /// not be present in both train and validation files.
+        /// If you provide this file, the data is used to generate validation
+        /// metrics periodically during fine-tuning. These metrics can be viewed in
+        /// the fine-tuning results file.
+        /// The same data should not be present in both train and validation files.
         ///
         /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
         /// `fine-tune`.

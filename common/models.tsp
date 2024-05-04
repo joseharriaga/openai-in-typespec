@@ -1,20 +1,32 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-scalar User extends string;
-
-@minItems(1)
-model TokenArray is safeint[];
-
-@minItems(1)
-model TokenArrayArray is TokenArray[];
-
-union ListOrder {
-  string,
-  asc: "asc",
-  desc: "desc",
+model Error {
+  code: string | null;
+  message: string;
+  param: string | null;
+  type: string;
 }
+
+model ErrorResponse {
+  error: Error;
+}
+
+/**
+ * The parameters the functions accepts, described as a JSON Schema object. See the
+ * [guide](/docs/guides/text-generation/function-calling) for examples, and the [JSON Schema
+ * reference](https://json-schema.org/understanding-json-schema/) for documentation about the
+ * format.
+ *
+ * Omitting `parameters` defines a function with an empty parameter list.
+ */
+alias FunctionParameters = Record<unknown>;
 
 model FunctionObject {
   /**
@@ -32,13 +44,14 @@ model FunctionObject {
   parameters?: FunctionParameters;
 }
 
-/**
- * The parameters the functions accepts, described as a JSON Schema object. See the
- * [guide](/docs/guides/gpt/function-calling) for examples, and the
- * [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation
- * about the format.\n\nTo describe a function that accepts no parameters, provide the value
- * `{\"type\": \"object\", \"properties\": {}}`.
- */
-// TODO: The generated spec produces "additionalProperties: {}" for this instead of
-// "additionalProperties: true". Are they equivalent?
-model FunctionParameters is Record<unknown>;
+/** Usage statistics for the completion request. */
+model CompletionUsage {
+  /** Number of tokens in the generated completion. */
+  completion_tokens: int32;
+
+  /** Number of tokens in the prompt. */
+  prompt_tokens: int32;
+
+  /** Total number of tokens used in the request (prompt + completion). */
+  total_tokens: int32;
+}

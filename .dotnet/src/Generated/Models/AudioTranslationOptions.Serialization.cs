@@ -23,14 +23,7 @@ namespace OpenAI.Audio
 
             writer.WriteStartObject();
             writer.WritePropertyName("file"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(File);
-#else
-            using (JsonDocument document = JsonDocument.Parse(File))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
+            writer.WriteStringValue(File);
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(Prompt))
@@ -41,7 +34,7 @@ namespace OpenAI.Audio
             if (Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
-                writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
+                writer.WriteStringValue(ResponseFormat);
             }
             if (Optional.IsDefined(Temperature))
             {
@@ -86,10 +79,10 @@ namespace OpenAI.Audio
             {
                 return null;
             }
-            BinaryData file = default;
+            string file = default;
             CreateTranslationRequestModel model = default;
             string prompt = default;
-            AudioTranslationFormat? responseFormat = default;
+            string responseFormat = default;
             double? temperature = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -97,7 +90,7 @@ namespace OpenAI.Audio
             {
                 if (property.NameEquals("file"u8))
                 {
-                    file = BinaryData.FromString(property.Value.GetRawText());
+                    file = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("model"u8))
@@ -112,11 +105,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("response_format"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    responseFormat = property.Value.GetString().ToAudioTranslationFormat();
+                    responseFormat = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("temperature"u8))

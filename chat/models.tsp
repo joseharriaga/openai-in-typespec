@@ -1,4 +1,9 @@
-import "../common/models.tsp";
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
+import "../common";
 
 using TypeSpec.OpenAPI;
 
@@ -6,25 +11,45 @@ namespace OpenAI;
 
 model CreateChatCompletionRequest {
   /**
-   * A list of messages comprising the conversation so far.
-   * [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb).
+   * A list of messages comprising the conversation so far. [Example Python
+   * code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
    */
   @minItems(1)
   messages: ChatCompletionRequestMessage[];
 
   /**
-   * ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility)
-   * table for details on which models work with the Chat API.
+   * ID of the model to use. See the [model endpoint
+   * compatibility](/docs/models/model-endpoint-compatibility) table for details on which models
+   * work with the Chat API.
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | CHAT_COMPLETION_MODELS;
+  `model`:
+    | string
+    | "gpt-4-0125-preview"
+    | "gpt-4-turbo-preview"
+    | "gpt-4-1106-preview"
+    | "gpt-4-vision-preview"
+    | "gpt-4"
+    | "gpt-4-0314"
+    | "gpt-4-0613"
+    | "gpt-4-32k"
+    | "gpt-4-32k-0314"
+    | "gpt-4-32k-0613"
+    | "gpt-3.5-turbo"
+    | "gpt-3.5-turbo-16k"
+    | "gpt-3.5-turbo-0301"
+    | "gpt-3.5-turbo-0613"
+    | "gpt-3.5-turbo-1106"
+    | "gpt-3.5-turbo-0125"
+    | "gpt-3.5-turbo-16k-0613";
 
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
    * frequency in the text so far, decreasing the model's likelihood to repeat the same line
    * verbatim.
    *
-   * [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
+   * [See more information about frequency and presence
+   * penalties.](/docs/guides/text-generation/parameter-details)
    */
   @minValue(-2)
   @maxValue(2)
@@ -40,7 +65,7 @@ model CreateChatCompletionRequest {
    * should result in a ban or exclusive selection of the relevant token.
    */
   @extension("x-oaiTypeLabel", "map")
-  logit_bias?: Record<safeint> | null = null;
+  logit_bias?: Record<int32> | null;
 
   /**
    * Whether to return log probabilities of the output tokens or not. If true, returns the log
@@ -50,23 +75,23 @@ model CreateChatCompletionRequest {
   logprobs?: boolean | null = false;
 
   /**
-   * An integer between 0 and 20 specifying the number of most likely tokens to return at each token
-   * position, each with an associated log probability. `logprobs` must be set to `true` if this
-   * parameter is used.
+   * An integer between 0 and 20 specifying the number of most likely tokens to return at each
+   * token position, each with an associated log probability. `logprobs` must be set to `true` if
+   * this parameter is used.
    */
   @minValue(0)
   @maxValue(20)
-  top_logprobs?: safeint | null;
+  top_logprobs?: int32 | null;
 
   /**
    * The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
-   * 
-   * The total length of input tokens and generated tokens is limited by the model's context length.
-   * [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
-   * for counting tokens.
+   *
+   * The total length of input tokens and generated tokens is limited by the model's context
+   * length. [Example Python
+   * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
+   * tokens.
    */
-  @minValue(0)
-  max_tokens?: safeint | null = 16;
+  max_tokens?: int32 | null;
 
   /**
    * How many chat completion choices to generate for each input message. Note that you will be
@@ -75,23 +100,24 @@ model CreateChatCompletionRequest {
    */
   @minValue(1)
   @maxValue(128)
-  n?: safeint | null = 1;
+  n?: int32 | null = 1;
 
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
    * in the text so far, increasing the model's likelihood to talk about new topics.
    *
-   * [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
+   * [See more information about frequency and presence
+   * penalties.](/docs/guides/text-generation/parameter-details)
    */
   @minValue(-2)
   @maxValue(2)
   presence_penalty?: float64 | null = 0;
 
   /**
-   * An object specifying the format that the model must output. Compatible with
-   * [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
+   * An object specifying the format that the model must output. Compatible with [GPT-4
+   * Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
    * `gpt-3.5-turbo-1106`.
-   * 
+   *
    * Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the
    * model generates is valid JSON.
    *
@@ -109,33 +135,24 @@ model CreateChatCompletionRequest {
 
   /**
    * This feature is in Beta.
-   * 
    * If specified, our system will make a best effort to sample deterministically, such that
    * repeated requests with the same `seed` and parameters should return the same result.
-   * 
    * Determinism is not guaranteed, and you should refer to the `system_fingerprint` response
    * parameter to monitor changes in the backend.
    */
-  @extension(
-    "x-oaiMeta",
-    { 
-      beta: true
-    }
-  )
-  @minValue(-9223372036854775808) // TODO: Min and max exceed the limits of safeint.
+  @minValue(-9223372036854775808)
   @maxValue(9223372036854775807)
-  seed?: safeint | null;
+  seed?: int64 | null;
 
-  // TODO: Consider inlining when https://github.com/microsoft/typespec/issues/2356 is resolved
-  // https://github.com/microsoft/typespec/issues/2355
   /** Up to 4 sequences where the API will stop generating further tokens. */
-  stop?: Stop | null = null;
+  stop?: string | string[];
 
   /**
    * If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only
-   * [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-   * as they become available, with the stream terminated by a `data: [DONE]` message.
-   * [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
+   * [server-sent
+   * events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
+   * as they become available, with the stream terminated by a `data: [DONE]` message. [Example
+   * Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
    */
   stream?: boolean | null = false;
 
@@ -150,9 +167,9 @@ model CreateChatCompletionRequest {
   temperature?: float64 | null = 1;
 
   /**
-   * An alternative to sampling with temperature, called nucleus sampling, where the model considers
-   * the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising
-   * the top 10% probability mass are considered.
+   * An alternative to sampling with temperature, called nucleus sampling, where the model
+   * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
+   * comprising the top 10% probability mass are considered.
    *
    * We generally recommend altering this or `temperature` but not both.
    */
@@ -161,8 +178,9 @@ model CreateChatCompletionRequest {
   top_p?: float64 | null = 1;
 
   /**
-   * A list of tools the model may call. Currently, only functions are supported as a tool. Use this
-   * to provide a list of functions the model may generate JSON inputs for. */
+   * A list of tools the model may call. Currently, only functions are supported as a tool. Use
+   * this to provide a list of functions the model may generate JSON inputs for.
+   */
   tools?: ChatCompletionTool[];
 
   tool_choice?: ChatCompletionToolChoiceOption;
@@ -171,29 +189,27 @@ model CreateChatCompletionRequest {
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
    * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
    */
-  user?: User;
+  user?: string;
 
   /**
    * Deprecated in favor of `tool_choice`.
-   * 
-   * Controls which (if any) function is called by the model. `none` means the model will not call a
-   * function and instead generates a message. `auto` means the model can pick between generating a
-   * message or calling a function. Specifying a particular function via `{"name": "my_function"}`
-   * forces the model to call that function.
+   *
+   * Controls which (if any) function is called by the model.
+   * `none` means the model will not call a function and instead generates a message.
+   * `auto` means the model can pick between generating a message or calling a function.
+   * Specifying a particular function via `{"name": "my_function"}` forces the model to call that
+   * function.
    *
    * `none` is the default when no functions are present. `auto` is the default if functions are
    * present.
    */
-  #deprecated "deprecated"
-  @extension("x-oaiExpandable", true)
   function_call?: "none" | "auto" | ChatCompletionFunctionCallOption;
 
   /**
    * Deprecated in favor of `tools`.
    *
    * A list of functions the model may generate JSON inputs for.
-  */
-  #deprecated "deprecated"
+   */
   @minItems(1)
   @maxItems(128)
   functions?: ChatCompletionFunctions[];
@@ -208,26 +224,37 @@ model CreateChatCompletionResponse {
   choices: {
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the model hit a
-     * natural stop point or a provided stop sequence, `length` if the maximum number of tokens
-     * specified in the request was reached, `content_filter` if content was omitted due to a flag
-     * from our content filters, `tool_calls` if the model called a tool, or `function_call`
-     * (deprecated) if the model called a function.
+     * natural stop point or a provided stop sequence,
+     * `length` if the maximum number of tokens specified in the request was reached,
+     * `content_filter` if content was omitted due to a flag from our content filters,
+     * `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called
+     * a function.
      */
-    finish_reason: "stop" | "length" | "tool_calls" | "content_filter" | "function_call";
+    finish_reason:
+      | "stop"
+      | "length"
+      | "tool_calls"
+      | "content_filter"
+      | "function_call";
 
     /** The index of the choice in the list of choices. */
-    index: safeint;
+    index: int32;
 
     message: ChatCompletionResponseMessage;
 
     /** Log probability information for the choice. */
     logprobs: {
+      /** A list of message content tokens with log probability information. */
       content: ChatCompletionTokenLogprob[] | null;
     } | null;
   }[];
 
   /** The Unix timestamp (in seconds) of when the chat completion was created. */
   @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
   created: utcDateTime;
 
   /** The model used for the chat completion. */
@@ -235,9 +262,9 @@ model CreateChatCompletionResponse {
 
   /**
    * This fingerprint represents the backend configuration that the model runs with.
-   * 
-   * Can be used in conjunction with the `seed` request parameter to understand when backend changes
-   * have been made that might impact determinism.
+   *
+   * Can be used in conjunction with the `seed` request parameter to understand when backend
+   * changes have been made that might impact determinism.
    */
   system_fingerprint?: string;
 
@@ -247,70 +274,11 @@ model CreateChatCompletionResponse {
   usage?: CompletionUsage;
 }
 
-alias CHAT_COMPLETION_MODELS =
-  | "gpt-4-0125-preview"
-  | "gpt-4-turbo-preview"
-  | "gpt-4-1106-preview"
-  | "gpt-4-vision-preview"
-  | "gpt-4"
-  | "gpt-4-0314"
-  | "gpt-4-0613"
-  | "gpt-4-32k"
-  | "gpt-4-32k-0314"
-  | "gpt-4-32k-0613"
-  | "gpt-3.5-turbo"
-  | "gpt-3.5-turbo-16k"
-  | "gpt-3.5-turbo-0301"
-  | "gpt-3.5-turbo-0613"
-  | "gpt-3.5-turbo-1106"
-  | "gpt-3.5-turbo-0125"
-  | "gpt-3.5-turbo-16k-0613";
-
-@oneOf
-union Stop {
-  string,
-  StopSequences,
-}
-
-@minItems(1)
-@maxItems(4)
-model StopSequences is string[];
-
-/** Usage statistics for the completion request. */
-model CompletionUsage {
-  /** Number of tokens in the prompt. */
-  prompt_tokens: safeint;
-
-  /** Number of tokens in the generated completion */
-  completion_tokens: safeint;
-
-  /** Total number of tokens used in the request (prompt + completion). */
-  total_tokens: safeint;
-}
-
 model ChatCompletionTool {
   /** The type of the tool. Currently, only `function` is supported. */
   type: "function";
 
   function: FunctionObject;
-}
-
-/**
- * Controls which (if any) function is called by the model. `none` means the model will not call a
- * function and instead generates a message. `auto` means the model can pick between generating a
- * message or calling a function. Specifying a particular function via
- * `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that
- * function.
- * 
- * `none` is the default when no functions are present. `auto` is the default if functions are
- * present.
- */
-@oneOf
-@extension("x-oaiExpandable", true)
-union ChatCompletionToolChoiceOption {
-  "none",
-  "auto",
-  ChatCompletionNamedToolChoice,
 }
 
 /** Specifies a tool the model should use. Use to force the model to call a specific function. */
@@ -321,31 +289,22 @@ model ChatCompletionNamedToolChoice {
   function: {
     /** The name of the function to call. */
     name: string;
-  }
+  };
 }
 
-@oneOf
-union ChatCompletionRequestUserMessageContent {
-  /** The text contents of the message. */
-  string,
+/**
+ * Controls which (if any) function is called by the model.
+ * `none` means the model will not call a function and instead generates a message.
+ * `auto` means the model can pick between generating a message or calling a function.
+ * Specifying a particular function via `{"type": "function", "function": {"name": "my_function"}}`
+ * forces the model to call that function.
+ *
+ * `none` is the default when no functions are present. `auto` is the default if functions are
+ * present.
+ */
+alias ChatCompletionToolChoiceOption = "none" | "auto" | ChatCompletionNamedToolChoice;
 
-  /**
-   * An array of content parts with a defined type, each can be of type `text` or `image_url` when
-   * passing in images. You can pass multiple images by adding multiple `image_url` content parts.
-   * Image input is only supported when using the `gpt-4-visual-preview` model.
-   */
-  ChatCompletionRequestMessageContentParts,
-};
-
-@minItems(1)
-model ChatCompletionRequestMessageContentParts is ChatCompletionRequestMessageContentPart[];
-
-@oneOf
-@extension("x-oaiExpandable", true)
-union ChatCompletionRequestMessageContentPart {
-  ChatCompletionRequestMessageContentPartText,
-  ChatCompletionRequestMessageContentPartImage,
-}
+alias ChatCompletionRequestMessageContentPart = ChatCompletionRequestMessageContentPartText | ChatCompletionRequestMessageContentPartImage;
 
 model ChatCompletionRequestMessageContentPartText {
   /** The type of the content part. */
@@ -360,20 +319,17 @@ model ChatCompletionRequestMessageContentPartImage {
   type: "image_url";
 
   image_url: {
-    // TODO: The OpenAPI spec only describes this as a URL.
     /** Either a URL of the image or the base64 encoded image data. */
-    url: url | string;
+    @extension("x-customTspIngestionRule", "url uses the url type")
+    url: url;
 
     /**
-     * Specifies the detail level of the image. Learn more in the
-     * [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+     * Specifies the detail level of the image. Learn more in the [Vision
+     * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
      */
     detail?: "auto" | "low" | "high" = "auto";
-  }
+  };
 }
-
-/** The tool calls generated by the model, such as function calls. */
-model ChatCompletionMessageToolCalls is ChatCompletionMessageToolCall[];
 
 model ChatCompletionMessageToolCall {
   /** The ID of the tool call. */
@@ -387,32 +343,28 @@ model ChatCompletionMessageToolCall {
     /** The name of the function to call. */
     name: string;
 
-    /** 
+    /**
      * The arguments to call the function with, as generated by the model in JSON format. Note that
      * the model does not always generate valid JSON, and may hallucinate parameters not defined by
      * your function schema. Validate the arguments in your code before calling your function.
      */
     arguments: string;
-  }
-};
-
-@oneOf
-@extension("x-oaiExpandable", true)
-union ChatCompletionRequestMessage {
-  ChatCompletionRequestSystemMessage,
-  ChatCompletionRequestUserMessage,
-  ChatCompletionRequestAssistantMessage,
-  ChatCompletionRequestToolMessage,
-  ChatCompletionRequestFunctionMessage,
+  };
 }
+
+alias ChatCompletionRequestMessage =
+  | ChatCompletionRequestSystemMessage
+  | ChatCompletionRequestUserMessage
+  | ChatCompletionRequestAssistantMessage
+  | ChatCompletionRequestToolMessage
+  | ChatCompletionRequestFunctionMessage;
 
 model ChatCompletionRequestSystemMessage {
   /** The contents of the system message. */
-  @extension("x-oaiExpandable", true)
-  content: string ,
+  content: string;
 
   /** The role of the messages author, in this case `system`. */
-  role: "system",
+  role: "system";
 
   /**
    * An optional name for the participant. Provides the model information to differentiate between
@@ -422,12 +374,11 @@ model ChatCompletionRequestSystemMessage {
 }
 
 model ChatCompletionRequestUserMessage {
-  /** The contents of the system message. */
-  @extension("x-oaiExpandable", true)
-  content: ChatCompletionRequestUserMessageContent,
+  /** The contents of the user message. */
+  content: string | ChatCompletionRequestMessageContentPart[];
 
   /** The role of the messages author, in this case `user`. */
-  role: "user",
+  role: "user";
 
   /**
    * An optional name for the participant. Provides the model information to differentiate between
@@ -438,13 +389,13 @@ model ChatCompletionRequestUserMessage {
 
 model ChatCompletionRequestAssistantMessage {
   /**
-   * The contents of the assistant message. Required unless `tool_calls` or `function_call` is'
+   * The contents of the assistant message. Required unless `tool_calls` or `function_call` is
    * specified.
    */
-  content?: string | null,
+  content?: string | null;
 
   /** The role of the messages author, in this case `assistant`. */
-  role: "assistant",
+  role: "assistant";
 
   /**
    * An optional name for the participant. Provides the model information to differentiate between
@@ -458,7 +409,6 @@ model ChatCompletionRequestAssistantMessage {
    * Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be
    * called, as generated by the model.
    */
-  #deprecated "deprecated"
   function_call?: {
     /**
      * The arguments to call the function with, as generated by the model in JSON format. Note that
@@ -469,13 +419,12 @@ model ChatCompletionRequestAssistantMessage {
 
     /** The name of the function to call. */
     name: string;
-
-  }
+  };
 }
 
 model ChatCompletionRequestToolMessage {
   /** The role of the messages author, in this case `tool`. */
-  role: "tool",
+  role: "tool";
 
   /** The contents of the tool message. */
   content: string;
@@ -486,7 +435,7 @@ model ChatCompletionRequestToolMessage {
 
 model ChatCompletionRequestFunctionMessage {
   /** The role of the messages author, in this case `function`. */
-  role: "function",
+  role: "function";
 
   /** The contents of the function message. */
   content: string | null;
@@ -495,6 +444,64 @@ model ChatCompletionRequestFunctionMessage {
   name: string;
 }
 
+/** The tool calls generated by the model, such as function calls. */
+model ChatCompletionMessageToolCalls is ChatCompletionMessageToolCall[];
+
+/** The role of the author of a message */
+alias ChatCompletionRole =
+  | "system"
+  | "user"
+  | "assistant"
+  | "tool"
+  | "function";
+
+/** Represents a chat completion response returned by model, based on the provided input. */
+model CreateChatCompletionFunctionResponse {
+  /** A unique identifier for the chat completion. */
+  id: string;
+
+  /** A list of chat completion choices. Can be more than one if `n` is greater than 1. */
+  choices: {
+    /**
+     * The reason the model stopped generating tokens. This will be `stop` if the model hit a
+     * natural stop point or a provided stop sequence, `length` if the maximum number of tokens
+     * specified in the request was reached, `content_filter` if content was omitted due to a flag
+     * from our content filters, or `function_call` if the model called a function.
+     */
+    finish_reason: "stop" | "length" | "function_call" | "content_filter";
+
+    /** The index of the choice in the list of choices. */
+    index: int32;
+
+    message: ChatCompletionResponseMessage;
+  }[];
+
+  /** The Unix timestamp (in seconds) of when the chat completion was created. */
+  @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
+  created: utcDateTime;
+
+  /** The model used for the chat completion. */
+  `model`: string;
+
+  /**
+   * This fingerprint represents the backend configuration that the model runs with.
+   *
+   * Can be used in conjunction with the `seed` request parameter to understand when backend
+   * changes have been made that might impact determinism.
+   */
+  system_fingerprint?: string;
+
+  /** The object type, which is always `chat.completion`. */
+  object: "chat.completion";
+
+  usage?: CompletionUsage;
+}
+
+/** A chat completion message generated by the model. */
 model ChatCompletionResponseMessage {
   /** The contents of the message. */
   content: string | null;
@@ -504,8 +511,10 @@ model ChatCompletionResponseMessage {
   /** The role of the author of this message. */
   role: "assistant";
 
-  /** Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. */
-  #deprecated "deprecated"
+  /**
+   * Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be
+   * called, as generated by the model.
+   */
   function_call?: {
     /**
      * The arguments to call the function with, as generated by the model in JSON format. Note that
@@ -520,7 +529,7 @@ model ChatCompletionResponseMessage {
 }
 
 model ChatCompletionTokenLogprob {
-  /**  The token. */
+  /** The token. */
   token: string;
 
   /**
@@ -529,23 +538,26 @@ model ChatCompletionTokenLogprob {
    */
   logprob: float64;
 
-  /** 
+  /**
    * A list of integers representing the UTF-8 bytes representation of the token. Useful in
    * instances where characters are represented by multiple tokens and their byte representations
    * must be combined to generate the correct text representation. Can be `null` if there is no
    * bytes representation for the token.
    */
-  bytes: safeint[] | null;
+  bytes: int32[] | null;
 
   /**
    * List of the most likely tokens and their log probability, at this token position. In rare
    * cases, there may be fewer than the number of requested `top_logprobs` returned.
    */
   top_logprobs: {
-    /**  The token. */
+    /** The token. */
     token: string;
 
-    /** The log probability of this token. */
+    /**
+     * The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
+     * the value `-9999.0` is used to signify that the token is very unlikely.
+     */
     logprob: float64;
 
     /**
@@ -554,7 +566,7 @@ model ChatCompletionTokenLogprob {
      * must be combined to generate the correct text representation. Can be `null` if there is no
      * bytes representation for the token.
      */
-    bytes: safeint[] | null;
+    bytes: int32[] | null;
   }[];
 }
 
@@ -567,7 +579,6 @@ model ChatCompletionFunctionCallOption {
   name: string;
 }
 
-#deprecated "deprecated"
 model ChatCompletionFunctions {
   /**
    * A description of what the function does, used by the model to choose when and how to call the
@@ -583,3 +594,121 @@ model ChatCompletionFunctions {
 
   parameters?: FunctionParameters;
 }
+
+/** A chat completion delta generated by streamed model responses. */
+model ChatCompletionStreamResponseDelta {
+  /** The contents of the chunk message. */
+  content?: string | null;
+
+  /**
+   * Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be
+   * called, as generated by the model.
+   */
+  function_call?: {
+    /**
+     * The arguments to call the function with, as generated by the model in JSON format. Note that
+     * the model does not always generate valid JSON, and may hallucinate parameters not defined by
+     * your function schema. Validate the arguments in your code before calling your function.
+     */
+    arguments?: string;
+
+    /** The name of the function to call. */
+    name?: string;
+  };
+
+  tool_calls?: ChatCompletionMessageToolCallChunk[];
+
+  /** The role of the author of this message. */
+  role?: "system" | "user" | "assistant" | "tool";
+}
+
+model ChatCompletionMessageToolCallChunk {
+  index: int32;
+
+  /** The ID of the tool call. */
+  id?: string;
+
+  /** The type of the tool. Currently, only `function` is supported. */
+  type?: "function";
+
+  function?: {
+    /** The name of the function to call. */
+    name?: string;
+
+    /**
+     * The arguments to call the function with, as generated by the model in JSON format. Note that
+     * the model does not always generate valid JSON, and may hallucinate parameters not defined by
+     * your function schema. Validate the arguments in your code before calling your function.
+     */
+    arguments?: string;
+  };
+}
+
+/**
+ * Represents a streamed chunk of a chat completion response returned by model, based on the
+ * provided input.
+ */
+model CreateChatCompletionStreamResponse {
+  /** A unique identifier for the chat completion. Each chunk has the same ID. */
+  id: string;
+
+  /** A list of chat completion choices. Can be more than one if `n` is greater than 1. */
+  choices: {
+    delta: ChatCompletionStreamResponseDelta;
+
+    /** Log probability information for the choice. */
+    logprobs?: {
+      /** A list of message content tokens with log probability information. */
+      content: ChatCompletionTokenLogprob[] | null;
+    } | null;
+
+    /**
+     * The reason the model stopped generating tokens. This will be `stop` if the model hit a
+     * natural stop point or a provided stop sequence,
+     * `length` if the maximum number of tokens specified in the request was reached,
+     * `content_filter` if content was omitted due to a flag from our content filters,
+     * `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called
+     * a function.
+     */
+    finish_reason:
+      | "stop"
+      | "length"
+      | "tool_calls"
+      | "content_filter"
+      | "function_call"
+      | null;
+
+    /** The index of the choice in the list of choices. */
+    index: int32;
+  }[];
+
+  /**
+   * The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
+   * same timestamp.
+   */
+  @encode("unixTimestamp", int32)
+  @extension(
+    "x-customTspIngestionRule",
+    "_at and created are Unix encoded utcDateTime"
+  )
+  created: utcDateTime;
+
+  /** The model to generate the completion. */
+  `model`: string;
+
+  /**
+   * This fingerprint represents the backend configuration that the model runs with.
+   * Can be used in conjunction with the `seed` request parameter to understand when backend
+   * changes have been made that might impact determinism.
+   */
+  system_fingerprint?: string;
+
+  /** The object type, which is always `chat.completion.chunk`. */
+  object: "chat.completion.chunk";
+}
+
+/**
+ * Represents a streamed chunk of a chat completion response returned by model, based on the
+ * provided input.
+ */
+alias CreateChatCompletionImageResponse = unknown;

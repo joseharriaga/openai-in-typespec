@@ -2091,26 +2091,6 @@ components:
           description: The type of the tool. Currently, only `function` is supported.
         function:
           $ref: '#/components/schemas/FunctionObject'
-<<<<<<< HEAD
-    ChatCompletionToolChoiceOption:
-      oneOf:
-        - type: string
-          enum:
-            - none
-            - auto
-        - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
-      description: |-
-        Controls which (if any) function is called by the model. `none` means the model will not call a
-        function and instead generates a message. `auto` means the model can pick between generating a
-        message or calling a function. Specifying a particular function via
-        `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that
-        function.
-
-        `none` is the default when no functions are present. `auto` is the default if functions are
-        present.
-      x-oaiExpandable: true
-=======
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
     CompletionUsage:
       type: object
       required:
@@ -2221,18 +2201,8 @@ components:
                 enum:
                   - stop
                   - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
-                  - length
-                  - content_filter
-                  - length
                   - function_call
                   - content_filter
-                  - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
                 description: |-
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a
                   natural stop point or a provided stop sequence, `length` if the maximum number of tokens
@@ -2491,7 +2461,6 @@ components:
               enum:
                 - none
                 - auto
-                - auto
             - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
         user:
           type: string
@@ -2551,18 +2520,6 @@ components:
                   - tool_calls
                   - content_filter
                   - function_call
-<<<<<<< HEAD
-=======
-                  - length
-                  - content_filter
-                  - length
-                  - function_call
-                  - content_filter
-                  - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
                 description: |-
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a
                   natural stop point or a provided stop sequence,
@@ -2654,15 +2611,6 @@ components:
                 type: string
                 enum:
                   - stop
-                  - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
-                  - length
-                  - content_filter
-                  - length
-                  - function_call
-                  - content_filter
                   - length
                   - tool_calls
                   - content_filter
@@ -2943,13 +2891,6 @@ components:
                   - stop
                   - length
                   - content_filter
-                  - length
-                  - function_call
-                  - content_filter
-                  - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
                 description: |-
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a
                   natural stop point or a provided stop sequence,
@@ -3172,12 +3113,8 @@ components:
                 - type: string
                   enum:
                     - auto
-<<<<<<< HEAD
-                - $ref: '#/components/schemas/BatchSize'
-=======
                 - type: integer
                   format: int32
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
               description: |-
                 Number of examples in each batch. A larger batch size means that model parameters
                 are updated less frequently, but with lower variance.
@@ -3187,12 +3124,8 @@ components:
                 - type: string
                   enum:
                     - auto
-<<<<<<< HEAD
-                - $ref: '#/components/schemas/LearningRateMultiplier'
-=======
                 - type: number
                   format: double
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
               description: |-
                 Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
                 overfitting.
@@ -3202,12 +3135,8 @@ components:
                 - type: string
                   enum:
                     - auto
-<<<<<<< HEAD
-                - $ref: '#/components/schemas/NEpochs'
-=======
                 - type: integer
                   format: int32
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
               description: |-
                 The number of epochs to train the model for. An epoch refers to one full cycle
                 through the training dataset.
@@ -3951,15 +3880,6 @@ components:
             [prompt](/docs/guides/speech-to-text/prompting) should be in English.
         response_format:
           type: string
-<<<<<<< HEAD
-          enum:
-            - json
-            - text
-            - srt
-            - verbose_json
-            - vtt
-=======
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
           description: |-
             The format of the transcript output, in one of these options: `json`, `text`, `srt`,
             `verbose_json`, or `vtt`.
@@ -4218,12 +4138,8 @@ components:
                 - type: string
                   enum:
                     - auto
-<<<<<<< HEAD
-                - $ref: '#/components/schemas/NEpochs'
-=======
                 - type: integer
                   format: int32
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
               description: |-
                 The number of epochs to train the model for. An epoch refers to one full cycle through the
                 training dataset.
@@ -5103,10 +5019,6 @@ components:
         expires_at:
           type: integer
           format: unixtime
-<<<<<<< HEAD
-          nullable: true
-=======
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
           description: The Unix timestamp (in seconds) for when the run will expire.
           x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         started_at:
@@ -5202,7 +5114,6 @@ components:
           type: string
           enum:
             - message_creation
-            - tool_calls
           description: Always `message_creation`.
         message_creation:
           type: object
@@ -5444,15 +5355,9 @@ components:
             - message
           nullable: true
           description: The last error associated with this run step. Will be `null` if there are no errors.
-<<<<<<< HEAD
-        expires_at:
+        expired_at:
           type: integer
           format: unixtime
-=======
-        expired_at:
-          type: string
-          format: date-time
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
           nullable: true
           description: |-
             The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if

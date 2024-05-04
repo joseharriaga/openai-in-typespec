@@ -23,7 +23,14 @@ namespace OpenAI.Audio
 
             writer.WriteStartObject();
             writer.WritePropertyName("file"u8);
-            writer.WriteStringValue(File);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(File);
+#else
+            using (JsonDocument document = JsonDocument.Parse(File))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(Language))
@@ -106,7 +113,7 @@ namespace OpenAI.Audio
             {
                 return null;
             }
-            string file = default;
+            BinaryData file = default;
             CreateTranscriptionRequestModel model = default;
             string language = default;
             string prompt = default;
@@ -119,7 +126,7 @@ namespace OpenAI.Audio
             {
                 if (property.NameEquals("file"u8))
                 {
-                    file = property.Value.GetString();
+                    file = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (property.NameEquals("model"u8))

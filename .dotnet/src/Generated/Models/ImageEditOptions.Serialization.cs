@@ -126,15 +126,9 @@ namespace OpenAI.Images
             string prompt = default;
             BinaryData mask = default;
             CreateImageEditRequestModel? model = default;
-<<<<<<< HEAD:.dotnet/src/Generated/Models/ImageEditOptions.Serialization.cs
             long? n = default;
             GeneratedImageSize? size = default;
             GeneratedImageFormat? responseFormat = default;
-=======
-            int? n = default;
-            CreateImageEditRequestSize? size = default;
-            CreateImageEditRequestResponseFormat? responseFormat = default;
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1:.dotnet/src/Generated/Models/CreateImageEditRequest.Serialization.cs
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -176,7 +170,7 @@ namespace OpenAI.Images
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt32();
+                    n = property.Value.GetInt64();
                     continue;
                 }
                 if (property.NameEquals("size"u8))
@@ -246,7 +240,10 @@ namespace OpenAI.Images
             }
             if (Optional.IsDefined(Model))
             {
-                content.Add(Model.Value.ToString(), "model");
+                if (Model != null)
+                {
+                    content.Add(Model.Value.ToString(), "model");
+                }
             }
             if (Optional.IsDefined(N))
             {

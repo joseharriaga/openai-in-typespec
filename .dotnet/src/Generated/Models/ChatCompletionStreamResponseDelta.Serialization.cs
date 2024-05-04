@@ -36,7 +36,7 @@ namespace OpenAI.Internal.Models
             if (Optional.IsDefined(FunctionCall))
             {
                 writer.WritePropertyName("function_call"u8);
-                writer.WriteObjectValue<ChatCompletionStreamResponseDeltaFunctionCall>(FunctionCall, options);
+                writer.WriteObjectValue(FunctionCall, options);
             }
             if (Optional.IsCollectionDefined(ToolCalls))
             {
@@ -44,7 +44,7 @@ namespace OpenAI.Internal.Models
                 writer.WriteStartArray();
                 foreach (var item in ToolCalls)
                 {
-                    writer.WriteObjectValue<ChatCompletionMessageToolCallChunk>(item, options);
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -85,7 +85,7 @@ namespace OpenAI.Internal.Models
 
         internal static ChatCompletionStreamResponseDelta DeserializeChatCompletionStreamResponseDelta(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -185,10 +185,10 @@ namespace OpenAI.Internal.Models
             return DeserializeChatCompletionStreamResponseDelta(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

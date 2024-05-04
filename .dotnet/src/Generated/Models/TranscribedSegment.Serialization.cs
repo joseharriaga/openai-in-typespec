@@ -84,16 +84,12 @@ namespace OpenAI.Audio
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             int id = default;
-            int seek = default;
+            long seek = default;
             TimeSpan start = default;
             TimeSpan end = default;
             string text = default;
-            IReadOnlyList<int> tokens = default;
+            IReadOnlyList<long> tokens = default;
             double temperature = default;
             double avgLogprob = default;
             double compressionRatio = default;
@@ -109,7 +105,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("seek"u8))
                 {
-                    seek = property.Value.GetInt32();
+                    seek = property.Value.GetInt64();
                     continue;
                 }
                 if (property.NameEquals("start"u8))
@@ -129,10 +125,10 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("tokens"u8))
                 {
-                    List<int> array = new List<int>();
+                    List<long> array = new List<long>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetInt32());
+                        array.Add(item.GetInt64());
                     }
                     tokens = array;
                     continue;

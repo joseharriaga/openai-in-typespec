@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace OpenAI.Internal.Models
 {
@@ -53,11 +52,7 @@ namespace OpenAI.Internal.Models
         /// This allows us to validate the format of the uploaded file is correct for fine-tuning.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-<<<<<<< HEAD
-        public CreateFileRequest(Stream file, CreateFileRequestPurpose purpose)
-=======
         public CreateFileRequest(string file, CreateFileRequestPurpose purpose)
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
         {
             Argument.AssertNotNull(file, nameof(file));
 
@@ -75,11 +70,7 @@ namespace OpenAI.Internal.Models
         /// This allows us to validate the format of the uploaded file is correct for fine-tuning.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-<<<<<<< HEAD
-        internal CreateFileRequest(Stream file, CreateFileRequestPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
-=======
         internal CreateFileRequest(string file, CreateFileRequestPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
         {
             File = file;
             Purpose = purpose;
@@ -91,15 +82,6 @@ namespace OpenAI.Internal.Models
         {
         }
 
-<<<<<<< HEAD
-        /// <summary> The file object (not file name) to be uploaded. </summary>
-        public Stream File { get; }
-        /// <summary>
-        /// The intended purpose of the uploaded file. Use "fine-tune" for
-        /// [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for
-        /// [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages). This
-        /// allows us to validate the format of the uploaded file is correct for fine-tuning.
-=======
         /// <summary> The File object (not file name) to be uploaded. </summary>
         public string File { get; }
         /// <summary>
@@ -108,7 +90,6 @@ namespace OpenAI.Internal.Models
         /// Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for
         /// [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages).
         /// This allows us to validate the format of the uploaded file is correct for fine-tuning.
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
         /// </summary>
         public CreateFileRequestPurpose Purpose { get; }
     }

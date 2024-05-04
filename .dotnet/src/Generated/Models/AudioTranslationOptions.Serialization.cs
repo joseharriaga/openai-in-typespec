@@ -23,7 +23,14 @@ namespace OpenAI.Audio
 
             writer.WriteStartObject();
             writer.WritePropertyName("file"u8);
-            writer.WriteStringValue(File);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(File);
+#else
+            using (JsonDocument document = JsonDocument.Parse(File))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(Prompt))
@@ -79,7 +86,7 @@ namespace OpenAI.Audio
             {
                 return null;
             }
-            string file = default;
+            BinaryData file = default;
             CreateTranslationRequestModel model = default;
             string prompt = default;
             string responseFormat = default;
@@ -90,7 +97,7 @@ namespace OpenAI.Audio
             {
                 if (property.NameEquals("file"u8))
                 {
-                    file = property.Value.GetString();
+                    file = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (property.NameEquals("model"u8))
@@ -158,7 +165,7 @@ namespace OpenAI.Audio
             }
             if (Optional.IsDefined(ResponseFormat))
             {
-                content.Add(ResponseFormat.Value.ToSerialString(), "response_format");
+                content.Add(ResponseFormat, "response_format");
             }
             if (Optional.IsDefined(Temperature))
             {

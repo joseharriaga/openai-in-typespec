@@ -58,13 +58,13 @@ namespace OpenAI.Audio
             Segments = new ChangeTrackingList<TranscribedSegment>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationResponseVerboseJson"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AudioTranslation"/>. </summary>
         /// <param name="language"> The language of the output translation (always `english`). </param>
         /// <param name="duration"> The duration of the input audio. </param>
         /// <param name="text"> The translated text. </param>
         /// <param name="segments"> Segments of the translated text and their corresponding details. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateTranslationResponseVerboseJson(string language, TimeSpan duration, string text, IReadOnlyList<TranscriptionSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranslation(string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Language = language;
             Duration = duration;

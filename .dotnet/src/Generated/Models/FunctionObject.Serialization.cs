@@ -31,9 +31,6 @@ namespace OpenAI.Internal.Models
             if (Optional.IsCollectionDefined(Parameters))
             {
                 writer.WritePropertyName("parameters"u8);
-<<<<<<< HEAD
-                writer.WriteObjectValue(Parameters, options);
-=======
                 writer.WriteStartObject();
                 foreach (var item in Parameters)
                 {
@@ -53,7 +50,6 @@ namespace OpenAI.Internal.Models
 #endif
                 }
                 writer.WriteEndObject();
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {

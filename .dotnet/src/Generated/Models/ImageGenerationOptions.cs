@@ -74,7 +74,7 @@ namespace OpenAI.Images
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateImageRequest(string prompt, CreateImageRequestModel? model, int? n, CreateImageRequestQuality? quality, CreateImageRequestResponseFormat? responseFormat, CreateImageRequestSize? size, CreateImageRequestStyle? style, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ImageGenerationOptions(string prompt, CreateImageRequestModel? model, long? n, GeneratedImageQuality? quality, GeneratedImageFormat? responseFormat, GeneratedImageSize? size, GeneratedImageStyle? style, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Prompt = prompt;
             Model = model;
@@ -86,24 +86,6 @@ namespace OpenAI.Images
             User = user;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> Initializes a new instance of <see cref="CreateImageRequest"/> for deserialization. </summary>
-        internal CreateImageRequest()
-        {
-        }
-
-        /// <summary>
-        /// A text description of the desired image(s). The maximum length is 1000 characters for
-        /// `dall-e-2` and 4000 characters for `dall-e-3`.
-        /// </summary>
-        public string Prompt { get; }
-        /// <summary> The model to use for image generation. </summary>
-        public CreateImageRequestModel? Model { get; set; }
-        /// <summary>
-        /// The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is
-        /// supported.
-        /// </summary>
-        public int? N { get; set; }
         /// <summary>
         /// The quality of the image that will be generated. `hd` creates images with finer details and
         /// greater consistency across the image. This param is only supported for `dall-e-3`.

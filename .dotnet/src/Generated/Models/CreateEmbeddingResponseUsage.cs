@@ -5,15 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Embeddings
+namespace OpenAI.Internal.Models
 {
-<<<<<<<< HEAD:.dotnet/src/Generated/Models/EmbeddingTokenUsage.cs
-    /// <summary> The EmbeddingUsage. </summary>
-    public partial class EmbeddingTokenUsage
-========
     /// <summary> The CreateEmbeddingResponseUsage. </summary>
     internal partial class CreateEmbeddingResponseUsage
->>>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1:.dotnet/src/Generated/Models/CreateEmbeddingResponseUsage.cs
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -47,47 +42,26 @@ namespace OpenAI.Embeddings
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-<<<<<<<< HEAD:.dotnet/src/Generated/Models/EmbeddingTokenUsage.cs
-        /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/>. </summary>
-        /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
-        /// <param name="totalTokens"> The total number of tokens used by the request. </param>
-        internal EmbeddingTokenUsage(long inputTokens, long totalTokens)
-========
         /// <summary> Initializes a new instance of <see cref="CreateEmbeddingResponseUsage"/>. </summary>
         /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         internal CreateEmbeddingResponseUsage(int promptTokens, int totalTokens)
->>>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1:.dotnet/src/Generated/Models/CreateEmbeddingResponseUsage.cs
         {
-            InputTokens = inputTokens;
+            PromptTokens = promptTokens;
             TotalTokens = totalTokens;
         }
 
-<<<<<<<< HEAD:.dotnet/src/Generated/Models/EmbeddingTokenUsage.cs
-        /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/>. </summary>
-        /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
-        /// <param name="totalTokens"> The total number of tokens used by the request. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal EmbeddingTokenUsage(long inputTokens, long totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
-========
         /// <summary> Initializes a new instance of <see cref="CreateEmbeddingResponseUsage"/>. </summary>
         /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateEmbeddingResponseUsage(int promptTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
->>>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1:.dotnet/src/Generated/Models/CreateEmbeddingResponseUsage.cs
         {
-            InputTokens = inputTokens;
+            PromptTokens = promptTokens;
             TotalTokens = totalTokens;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-<<<<<<<< HEAD:.dotnet/src/Generated/Models/EmbeddingTokenUsage.cs
-        /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/> for deserialization. </summary>
-        internal EmbeddingTokenUsage()
-        {
-        }
-========
         /// <summary> Initializes a new instance of <see cref="CreateEmbeddingResponseUsage"/> for deserialization. </summary>
         internal CreateEmbeddingResponseUsage()
         {
@@ -95,7 +69,6 @@ namespace OpenAI.Embeddings
 
         /// <summary> The number of tokens used by the prompt. </summary>
         public int PromptTokens { get; }
->>>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1:.dotnet/src/Generated/Models/CreateEmbeddingResponseUsage.cs
         /// <summary> The total number of tokens used by the request. </summary>
         public int TotalTokens { get; }
     }

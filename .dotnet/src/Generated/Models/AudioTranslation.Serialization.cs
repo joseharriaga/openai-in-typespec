@@ -118,7 +118,7 @@ namespace OpenAI.Audio
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateTranslationResponseVerboseJson(language, duration, text, segments ?? new ChangeTrackingList<TranscriptionSegment>(), serializedAdditionalRawData);
+            return new AudioTranslation(language, duration, text, segments ?? new ChangeTrackingList<TranscribedSegment>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<AudioTranslation>.Write(ModelReaderWriterOptions options)

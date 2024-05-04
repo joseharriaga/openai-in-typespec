@@ -36,7 +36,7 @@ namespace OpenAI.Internal.Models
             if (Optional.IsDefined(Function))
             {
                 writer.WritePropertyName("function"u8);
-                writer.WriteObjectValue<ChatCompletionMessageToolCallChunkFunction>(Function, options);
+                writer.WriteObjectValue(Function, options);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -70,7 +70,7 @@ namespace OpenAI.Internal.Models
 
         internal static ChatCompletionMessageToolCallChunk DeserializeChatCompletionMessageToolCallChunk(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -156,10 +156,10 @@ namespace OpenAI.Internal.Models
             return DeserializeChatCompletionMessageToolCallChunk(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -112,11 +112,11 @@ namespace OpenAI.Images
             }
             string prompt = default;
             CreateImageRequestModel? model = default;
-            int? n = default;
-            CreateImageRequestQuality? quality = default;
-            CreateImageRequestResponseFormat? responseFormat = default;
-            CreateImageRequestSize? size = default;
-            CreateImageRequestStyle? style = default;
+            long? n = default;
+            GeneratedImageQuality? quality = default;
+            GeneratedImageFormat? responseFormat = default;
+            GeneratedImageSize? size = default;
+            GeneratedImageStyle? style = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -144,7 +144,7 @@ namespace OpenAI.Images
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt32();
+                    n = property.Value.GetInt64();
                     continue;
                 }
                 if (property.NameEquals("quality"u8))

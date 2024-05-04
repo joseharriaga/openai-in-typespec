@@ -42,25 +42,7 @@ namespace OpenAI.Audio
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/>. </summary>
-        /// <param name="file">
-        /// The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, wav, or webm.
-        /// </param>
-        /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
-        /// model) is currently available.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-        public CreateTranslationRequest(string file, CreateTranslationRequestModel model)
-        {
-            Argument.AssertNotNull(file, nameof(file));
-
-            File = file;
-            Model = model;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AudioTranslationOptions"/>. </summary>
         /// <param name="file">
         /// The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
         /// mpeg, mpga, m4a, ogg, wav, or webm.
@@ -84,7 +66,7 @@ namespace OpenAI.Audio
         /// automatically increase the temperature until certain thresholds are hit.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateTranslationRequest(string file, CreateTranslationRequestModel model, string prompt, string responseFormat, double? temperature, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranslationOptions(BinaryData file, CreateTranslationRequestModel model, string prompt, string responseFormat, double? temperature, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             File = file;
             Model = model;
@@ -93,22 +75,6 @@ namespace OpenAI.Audio
             Temperature = temperature;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> Initializes a new instance of <see cref="CreateTranslationRequest"/> for deserialization. </summary>
-        internal CreateTranslationRequest()
-        {
-        }
-
-        /// <summary>
-        /// The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, wav, or webm.
-        /// </summary>
-        public string File { get; }
-        /// <summary>
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2
-        /// model) is currently available.
-        /// </summary>
-        public CreateTranslationRequestModel Model { get; }
         /// <summary>
         /// An optional text to guide the model's style or continue a previous audio segment. The
         /// [prompt](/docs/guides/speech-to-text/prompting) should be in English.

@@ -143,7 +143,7 @@ namespace OpenAI.Audio
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateTranscriptionResponseVerboseJson(
+            return new AudioTranscription(
                 language,
                 duration,
                 text,

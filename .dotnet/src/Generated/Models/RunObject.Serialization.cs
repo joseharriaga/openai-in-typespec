@@ -135,7 +135,7 @@ namespace OpenAI.Internal.Models
                 writer.WriteNull("metadata");
             }
             writer.WritePropertyName("usage"u8);
-            writer.WriteObjectValue<RunCompletionUsage>(Usage, options);
+            writer.WriteObjectValue(Usage, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)

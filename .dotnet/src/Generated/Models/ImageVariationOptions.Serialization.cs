@@ -23,7 +23,14 @@ namespace OpenAI.Images
 
             writer.WriteStartObject();
             writer.WritePropertyName("image"u8);
-            writer.WriteStringValue(Image);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(Image);
+#else
+            using (JsonDocument document = JsonDocument.Parse(Image))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
             if (Optional.IsDefined(Model))
             {
                 if (Model != null)
@@ -101,11 +108,11 @@ namespace OpenAI.Images
             {
                 return null;
             }
-            string image = default;
+            BinaryData image = default;
             CreateImageVariationRequestModel? model = default;
-            int? n = default;
-            CreateImageVariationRequestResponseFormat? responseFormat = default;
-            CreateImageVariationRequestSize? size = default;
+            long? n = default;
+            GeneratedImageFormat? responseFormat = default;
+            GeneratedImageSize? size = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -113,7 +120,7 @@ namespace OpenAI.Images
             {
                 if (property.NameEquals("image"u8))
                 {
-                    image = property.Value.GetString();
+                    image = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (property.NameEquals("model"u8))
@@ -133,7 +140,7 @@ namespace OpenAI.Images
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt32();
+                    n = property.Value.GetInt64();
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))
@@ -196,7 +203,10 @@ namespace OpenAI.Images
             content.Add(Image, "image", "image");
             if (Optional.IsDefined(Model))
             {
-                content.Add(Model.Value.ToString(), "model");
+                if (Model != null)
+                {
+                    content.Add(Model.Value.ToString(), "model");
+                }
             }
             if (Optional.IsDefined(N))
             {

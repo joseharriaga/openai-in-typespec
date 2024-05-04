@@ -87,13 +87,8 @@ namespace OpenAI.Embeddings
             }
             BinaryData input = default;
             CreateEmbeddingRequestModel model = default;
-<<<<<<< HEAD:.dotnet/src/Generated/Models/EmbeddingOptions.Serialization.cs
             EmbeddingOptionsEncodingFormat? encodingFormat = default;
-            long? dimensions = default;
-=======
-            CreateEmbeddingRequestEncodingFormat? encodingFormat = default;
             int? dimensions = default;
->>>>>>> e9efc0a66a9c3a8e331b35c1fc5af3dac1e588f1:.dotnet/src/Generated/Models/CreateEmbeddingRequest.Serialization.cs
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();

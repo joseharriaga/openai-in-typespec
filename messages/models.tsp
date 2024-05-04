@@ -16,6 +16,7 @@ model CreateMessageRequestAttachments
     file_id?: string;
 
     /** The tools to add this file to. */
+    @extension("x-oaiExpandable", true)
     tools?: (AssistantToolsCode | AssistantToolsFileSearch)[];
   }[];
 
@@ -26,6 +27,7 @@ model MessageObjectAttachments
     file_id?: string;
 
     /** The tools to add this file to. */
+    @extension("x-oaiExpandable", true)
     tools?: (AssistantToolsCode | AssistantToolsFileSearch)[];
   }[];
 
@@ -128,6 +130,7 @@ model MessageObject {
   role: "user" | "assistant";
 
   /** The content of the message in array of text and/or images. */
+  @extension("x-oaiExpandable", true)
   content: (MessageContentImageFileObject | MessageContentTextObject)[];
 
   /**
@@ -177,6 +180,7 @@ model MessageContentTextObject {
     /** The data that makes up the text. */
     value: string;
 
+    @extension("x-oaiExpandable", true)
     annotations: (MessageContentTextAnnotationsFileCitationObject | MessageContentTextAnnotationsFilePathObject)[];
   };
 }
@@ -268,6 +272,7 @@ model MessageDeltaObject {
     role?: "user" | "assistant";
 
     /** The content of the message in array of text and/or images. */
+    @extension("x-oaiExpandable", true)
     content?: (MessageDeltaContentImageFileObject | MessageDeltaContentTextObject)[];
   };
 }
@@ -286,6 +291,7 @@ model MessageDeltaContentTextObject {
     /** The data that makes up the text. */
     value?: string;
 
+    @extension("x-oaiExpandable", true)
     annotations?: (MessageDeltaContentTextAnnotationsFileCitationObject | MessageDeltaContentTextAnnotationsFilePathObject)[];
   };
 }

@@ -76,6 +76,7 @@ model CreateAssistantRequest {
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
   """)
   @maxItems(128)
+  @extension("x-oaiExpandable", true)
   tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
   ];
 
@@ -177,6 +178,7 @@ model ModifyAssistantRequest {
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
   """)
   @maxItems(128)
+  @extension("x-oaiExpandable", true)
   tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
   ];
 
@@ -308,6 +310,7 @@ model AssistantObject {
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
   """)
   @maxItems(128)
+  @extension("x-oaiExpandable", true)
   tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
   ];
 

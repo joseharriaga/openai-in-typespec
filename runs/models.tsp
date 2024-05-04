@@ -16,6 +16,7 @@ model CreateRunRequestAdditional_messages is CreateMessageRequest[];
 
 // Tool generated type. Extracts CreateRunRequest.tools
 @maxItems(20)
+@extension("x-oaiExpandable", true)
 model CreateRunRequestTools
   is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
 
@@ -310,6 +311,7 @@ model RunStepDetailsToolCallsObject {
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
   """)
+  @extension("x-oaiExpandable", true)
   tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsFileSearchObject | RunStepDetailsToolCallsFunctionObject)[];
 }
 
@@ -331,6 +333,7 @@ model RunStepDetailsToolCallsCodeObject {
     @doc("""
     The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
     """)
+    @extension("x-oaiExpandable", true)
     outputs: (RunStepDetailsToolCallsCodeOutputLogsObject | RunStepDetailsToolCallsCodeOutputImageObject)[];
   };
 }
@@ -533,6 +536,7 @@ model RunObject {
 
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
   @maxItems(20)
+  @extension("x-oaiExpandable", true)
   tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
   ];
 
@@ -716,6 +720,7 @@ model RunStepDeltaStepDetailsToolCallsObject {
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
   """)
+  @extension("x-oaiExpandable", true)
   tool_calls?: (RunStepDeltaStepDetailsToolCallsCodeObject | RunStepDeltaStepDetailsToolCallsFileSearchObject | RunStepDeltaStepDetailsToolCallsFunctionObject)[];
 }
 
@@ -740,6 +745,7 @@ model RunStepDeltaStepDetailsToolCallsCodeObject {
     @doc("""
     The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
     """)
+    @extension("x-oaiExpandable", true)
     outputs?: (RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject | RunStepDeltaStepDetailsToolCallsCodeOutputImageObject)[];
   };
 }

@@ -32,12 +32,9 @@ model VectorStoreObject {
   """)
   object: "vector_store";
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   /** The name of the vector store. */
@@ -70,20 +67,14 @@ model VectorStoreObject {
 
   expires_after?: VectorStoreExpirationAfter;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store will expire. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   expires_at?: utcDateTime | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store was last active. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   last_active_at: utcDateTime | null;
 
   /**
@@ -161,12 +152,9 @@ model VectorStoreFileObject {
    */
   usage_bytes: int32;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store file was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   /**
@@ -229,12 +217,9 @@ model VectorStoreFileBatchObject {
   """)
   object: "vector_store.files_batch";
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store files batch was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   /**

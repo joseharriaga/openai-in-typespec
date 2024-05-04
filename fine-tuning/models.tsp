@@ -7,74 +7,9 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-model CreateFineTuningJobRequest {
-  /**
-   * The name of the model to fine-tune. You can select one of the
-   * [supported models](/docs/guides/fine-tuning/what-models-can-be-fine-tuned).
-   */
-  @extension("x-oaiTypeLabel", "string")
-  `model`: string | "babbage-002" | "davinci-002" | "gpt-3.5-turbo";
-
-  @doc("""
-  The ID of an uploaded file that contains training data.
-  
-  See [upload file](/docs/api-reference/files/create) for how to upload a file.
-  
-  Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
-  
-  See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-  
-  """)
-  training_file: string;
-
-  /** The hyperparameters used for the fine-tuning job. */
-  hyperparameters?: {
-    /**
-     * Number of examples in each batch. A larger batch size means that model parameters
-     * are updated less frequently, but with lower variance.
-     */
-    batch_size?: "auto" | int32 = "auto";
-
-    /**
-     * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-     * overfitting.
-     */
-    learning_rate_multiplier?: "auto" | float32 = "auto";
-
-    /**
-     * The number of epochs to train the model for. An epoch refers to one full cycle
-     * through the training dataset.
-     */
-    n_epochs?: "auto" | int32 = "auto";
-  };
-
-  @doc("""
-  A string of up to 18 characters that will be added to your fine-tuned model name.
-  
-  For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
-  
-  """)
-  @minLength(1)
-  @maxLength(40)
-  suffix?: string | null;
-
-  @doc("""
-  The ID of an uploaded file that contains validation data.
-  
-  If you provide this file, the data is used to generate validation
-  metrics periodically during fine-tuning. These metrics can be viewed in
-  the fine-tuning results file.
-  The same data should not be present in both train and validation files.
-  
-  Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
-  
-  See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-  
-  """)
-  validation_file?: string | null;
-
-  /** A list of integrations to enable for your fine-tuning job. */
-  integrations?: {
+// Tool generated type. Extracts CreateFineTuningJobRequest.integrations
+model CreateFineTuningJobRequestIntegrations
+  is {
     /**
      * The type of integration to enable. Currently, only "wandb" (Weights and Biases) is supported.
      */
@@ -110,7 +45,77 @@ model CreateFineTuningJobRequest {
        */
       tags?: string[];
     };
-  }[] | null;
+  }[];
+
+// Tool generated type. Extracts FineTuningJob.integrations
+@maxItems(5)
+model FineTuningJobIntegrations is FineTuningIntegration[];
+
+model CreateFineTuningJobRequest {
+  /**
+   * The name of the model to fine-tune. You can select one of the
+   * [supported models](/docs/guides/fine-tuning/what-models-can-be-fine-tuned).
+   */
+  @extension("x-oaiTypeLabel", "string")
+  `model`: string | "babbage-002" | "davinci-002" | "gpt-3.5-turbo";
+
+  @doc("""
+  The ID of an uploaded file that contains training data.
+  
+  See [upload file](/docs/api-reference/files/create) for how to upload a file.
+  
+  Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
+  
+  See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+  """)
+  training_file: string;
+
+  /** The hyperparameters used for the fine-tuning job. */
+  hyperparameters?: {
+    /**
+     * Number of examples in each batch. A larger batch size means that model parameters
+     * are updated less frequently, but with lower variance.
+     */
+    batch_size?: "auto" | int32 = "auto";
+
+    /**
+     * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+     * overfitting.
+     */
+    learning_rate_multiplier?: "auto" | float32 = "auto";
+
+    /**
+     * The number of epochs to train the model for. An epoch refers to one full cycle
+     * through the training dataset.
+     */
+    n_epochs?: "auto" | int32 = "auto";
+  };
+
+  @doc("""
+  A string of up to 18 characters that will be added to your fine-tuned model name.
+  
+  For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+  """)
+  @minLength(1)
+  @maxLength(40)
+  suffix?: string | null;
+
+  @doc("""
+  The ID of an uploaded file that contains validation data.
+  
+  If you provide this file, the data is used to generate validation
+  metrics periodically during fine-tuning. These metrics can be viewed in
+  the fine-tuning results file.
+  The same data should not be present in both train and validation files.
+  
+  Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
+  
+  See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+  """)
+  validation_file?: string | null;
+
+  /** A list of integrations to enable for your fine-tuning job. */
+  integrations?: CreateFineTuningJobRequestIntegrations | null;
 
   /**
    * The seed controls the reproducibility of the job. Passing in the same seed and job parameters
@@ -143,18 +148,14 @@ model ListFineTuningJobCheckpointsResponse {
 
 @doc("""
 The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
-
 """)
 model FineTuningJob {
   /** The object identifier, which can be referenced in the API endpoints. */
   id: string;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the fine-tuning job was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   @doc("""
@@ -179,15 +180,12 @@ model FineTuningJob {
    */
   fine_tuned_model: string | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /**
    * The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
    * null if the fine-tuning job is still running.
    */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   finished_at: utcDateTime | null;
 
   /**
@@ -249,8 +247,7 @@ model FineTuningJob {
   validation_file: string | null;
 
   /** A list of integrations to enable for this fine-tuning job. */
-  // !no_nullable! @maxItems(5)
-  integrations?: FineTuningIntegration[] | null;
+  integrations?: FineTuningJobIntegrations | null;
 
   /** The seed used for the fine-tuning job. */
   seed: int32;
@@ -302,11 +299,8 @@ model FineTuningIntegration {
 model FineTuningJobEvent {
   id: string;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   level: "info" | "warn" | "error";
@@ -316,18 +310,14 @@ model FineTuningJobEvent {
 
 @doc("""
 The `fine_tuning.job.checkpoint` object represents a model checkpoint for a fine-tuning job that is ready to use.
-
 """)
 model FineTuningJobCheckpoint {
   /** The checkpoint identifier, which can be referenced in the API endpoints. */
   id: string;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the checkpoint was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   /** The name of the fine-tuned checkpoint model that is created. */

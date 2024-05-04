@@ -10,7 +10,6 @@ namespace OpenAI;
 model CreateEmbeddingRequest {
   @doc("""
   Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
-  
   """)
   @extension("x-oaiExpandable", true)
   input: string | string[] | int32[] | int32[][];
@@ -34,7 +33,6 @@ model CreateEmbeddingRequest {
 
   @doc("""
   The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
-  
   """)
   @minValue(1)
   dimensions?: int32;
@@ -71,14 +69,11 @@ model Embedding {
   /** The index of the embedding in the list of embeddings. */
   index: int32;
 
+  // Tool customization: apply missing string union for embedding response valuese
   /**
    * The embedding vector, which is a list of floats. The length of vector depends on the model as
    * listed in the [embedding guide](/docs/guides/embeddings).
    */
-  @extension(
-    "x-customTspIngestionRule",
-    "apply missing string union for embedding response valuese"
-  )
   embedding: float[] | string;
 
   /** The object type, which is always "embedding". */

@@ -39,19 +39,13 @@ model OpenAIFile {
   /** The file identifier, which can be referenced in the API endpoints. */
   id: string;
 
+  // Tool customization: file response values can have null byte counts
   /** The size of the file, in bytes. */
-  @extension(
-    "x-customTspIngestionRule",
-    "file response values can have null byte counts"
-  )
   bytes: int32 | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the file was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   /** The name of the file. */

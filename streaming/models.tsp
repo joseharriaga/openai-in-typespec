@@ -32,7 +32,6 @@ to create a message during a run, we emit a `thread.message.created event`, a
 We may add additional events over time, so we recommend handling unknown events gracefully
 in your code. See the [Assistants API quickstart](/docs/assistants/overview) to learn how to
 integrate the Assistants API with streaming.
-
 """)
 union AssistantStreamEvent {
   ThreadStreamEvent,

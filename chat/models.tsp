@@ -9,6 +9,9 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+// Tool generated type. Extracts ChatCompletionTokenLogprob.bytes
+model ChatCompletionTokenLogprobBytes is int32[];
+
 model CreateChatCompletionRequest {
   /**
    * A list of messages comprising the conversation so far. [Example Python
@@ -115,7 +118,6 @@ model CreateChatCompletionRequest {
   Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
   
   **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-  
   """)
   response_format?: {
     @doc("""
@@ -128,7 +130,6 @@ model CreateChatCompletionRequest {
   This feature is in Beta.
   If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
   Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
-  
   """)
   @minValue(-9223372036854775808)
   @maxValue(9223372036854775807)
@@ -139,7 +140,6 @@ model CreateChatCompletionRequest {
 
   @doc("""
   If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
-  
   """)
   stream?: boolean | null = false;
 
@@ -147,7 +147,6 @@ model CreateChatCompletionRequest {
   What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
   
   We generally recommend altering this or `top_p` but not both.
-  
   """)
   @minValue(0)
   @maxValue(2)
@@ -157,7 +156,6 @@ model CreateChatCompletionRequest {
   An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
   
   We generally recommend altering this or `temperature` but not both.
-  
   """)
   @minValue(0)
   @maxValue(1)
@@ -187,7 +185,6 @@ model CreateChatCompletionRequest {
   Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
   
   `none` is the default when no functions are present. `auto` is the default if functions are present.
-  
   """)
   @extension("x-oaiExpandable", true)
   function_call?: "none" | "auto" | ChatCompletionFunctionCallOption;
@@ -196,7 +193,6 @@ model CreateChatCompletionRequest {
   Deprecated in favor of `tools`.
   
   A list of functions the model may generate JSON inputs for.
-  
   """)
   @minItems(1)
   @maxItems(128)
@@ -217,7 +213,6 @@ model CreateChatCompletionResponse {
     `length` if the maximum number of tokens specified in the request was reached,
     `content_filter` if content was omitted due to a flag from our content filters,
     `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-    
     """)
     finish_reason:
       | "stop"
@@ -238,12 +233,9 @@ model CreateChatCompletionResponse {
     } | null;
   }[];
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created: utcDateTime;
 
   /** The model used for the chat completion. */
@@ -253,7 +245,6 @@ model CreateChatCompletionResponse {
   This fingerprint represents the backend configuration that the model runs with.
   
   Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-  
   """)
   system_fingerprint?: string;
 
@@ -295,7 +286,6 @@ Controls which (if any) tool is called by the model.
 Specifying a particular tool via `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
 
 `none` is the default when no tools are present. `auto` is the default if tools are present.
-
 """)
 @extension("x-oaiExpandable", true)
 union ChatCompletionToolChoiceOption {
@@ -322,8 +312,8 @@ model ChatCompletionRequestMessageContentPartImage {
   type: "image_url";
 
   image_url: {
+    // Tool customization: url uses the url type
     /** Either a URL of the image or the base64 encoded image data. */
-    @extension("x-customTspIngestionRule", "url uses the url type")
     url: url;
 
     /**
@@ -402,7 +392,6 @@ model ChatCompletionRequestUserMessage {
 model ChatCompletionRequestAssistantMessage {
   @doc("""
   The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
-  
   """)
   content?: string | null;
 
@@ -483,7 +472,6 @@ model CreateChatCompletionFunctionResponse {
   choices: {
     @doc("""
     The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
-    
     """)
     finish_reason: "stop" | "length" | "function_call" | "content_filter";
 
@@ -493,12 +481,9 @@ model CreateChatCompletionFunctionResponse {
     message: ChatCompletionResponseMessage;
   }[];
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created: utcDateTime;
 
   /** The model used for the chat completion. */
@@ -508,7 +493,6 @@ model CreateChatCompletionFunctionResponse {
   This fingerprint represents the backend configuration that the model runs with.
   
   Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-  
   """)
   system_fingerprint?: string;
 
@@ -558,7 +542,7 @@ model ChatCompletionTokenLogprob {
   @doc("""
   A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
   """)
-  bytes: int32[] | null;
+  bytes: ChatCompletionTokenLogprobBytes | null;
 
   @doc("""
   List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
@@ -581,7 +565,6 @@ model ChatCompletionTokenLogprob {
 
 @doc("""
 Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
-
 """)
 model ChatCompletionFunctionCallOption {
   /** The name of the function to call. */
@@ -679,7 +662,6 @@ model CreateChatCompletionStreamResponse {
     `length` if the maximum number of tokens specified in the request was reached,
     `content_filter` if content was omitted due to a flag from our content filters,
     `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-    
     """)
     finish_reason:
       | "stop"
@@ -693,15 +675,12 @@ model CreateChatCompletionStreamResponse {
     index: int32;
   }[];
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /**
    * The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
    * same timestamp.
    */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created: utcDateTime;
 
   /** The model to generate the completion. */
@@ -710,7 +689,6 @@ model CreateChatCompletionStreamResponse {
   @doc("""
   This fingerprint represents the backend configuration that the model runs with.
   Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-  
   """)
   system_fingerprint?: string;
 

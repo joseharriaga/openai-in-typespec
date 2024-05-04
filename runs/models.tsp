@@ -11,6 +11,19 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+// Tool generated type. Extracts CreateRunRequest.additional_messages
+model CreateRunRequestAdditional_messages is CreateMessageRequest[];
+
+// Tool generated type. Extracts CreateRunRequest.tools
+@maxItems(20)
+model CreateRunRequestTools
+  is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
+
+// Tool generated type. Extracts CreateThreadAndRunRequest.tools
+@maxItems(20)
+model CreateThreadAndRunRequestTools
+  is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
+
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
   assistant_id: string;
@@ -56,14 +69,13 @@ model CreateRunRequest {
   additional_instructions?: string | null;
 
   /** Adds additional messages to the thread before creating the run. */
-  additional_messages?: CreateMessageRequest[] | null;
+  additional_messages?: CreateRunRequestAdditional_messages | null;
 
   /**
    * Override the tools the assistant can use for this run. This is useful for modifying the
    * behavior on a per-run basis.
    */
-  // !no_nullable! @maxItems(20)
-  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] | null;
+  tools?: CreateRunRequestTools | null;
 
   /**
    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
@@ -94,20 +106,17 @@ model CreateRunRequest {
 
   @doc("""
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-  
   """)
   stream?: boolean | null;
 
   @doc("""
   The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-  
   """)
   @minValue(256)
   max_prompt_tokens?: int32 | null;
 
   @doc("""
   The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-  
   """)
   @minValue(256)
   max_completion_tokens?: int32 | null;
@@ -172,18 +181,15 @@ model CreateThreadAndRunRequest {
    * Override the tools the assistant can use for this run. This is useful for modifying the
    * behavior on a per-run basis.
    */
-  // !no_nullable! @maxItems(20)
-  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] | null;
+  tools?: CreateThreadAndRunRequestTools | null;
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-  
   """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-      
       """)
       @maxItems(20)
       file_ids?: string[] = [];
@@ -227,20 +233,17 @@ model CreateThreadAndRunRequest {
 
   @doc("""
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-  
   """)
   stream?: boolean | null;
 
   @doc("""
   The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-  
   """)
   @minValue(256)
   max_prompt_tokens?: int32 | null;
 
   @doc("""
   The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-  
   """)
   @minValue(256)
   max_completion_tokens?: int32 | null;
@@ -264,7 +267,6 @@ model SubmitToolOutputsRunRequest {
 
   @doc("""
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-  
   """)
   stream?: boolean | null;
 }
@@ -307,7 +309,6 @@ model RunStepDetailsToolCallsObject {
 
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-  
   """)
   tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsFileSearchObject | RunStepDetailsToolCallsFunctionObject)[];
 }
@@ -433,12 +434,9 @@ model RunObject {
   """)
   object: "thread.run";
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   /**
@@ -491,44 +489,29 @@ model RunObject {
     message: string;
   } | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run will expire. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   expires_at: utcDateTime | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was started. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   started_at: utcDateTime | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was cancelled. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   cancelled_at: utcDateTime | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run failed. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   failed_at: utcDateTime | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was completed. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   completed_at: utcDateTime | null;
 
   @doc("""
@@ -594,12 +577,9 @@ model RunStepObject {
   """)
   object: "thread.run.step";
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   /** The ID of the [assistant](/docs/api-reference/assistants) associated with the run step. */
@@ -638,39 +618,27 @@ model RunStepObject {
     message: string;
   } | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /**
    * The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
    * the parent run is expired.
    */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   expired_at: utcDateTime | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step was cancelled. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   cancelled_at: utcDateTime | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step failed. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   failed_at: utcDateTime | null;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step completed. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   completed_at: utcDateTime | null;
 
   /**
@@ -747,7 +715,6 @@ model RunStepDeltaStepDetailsToolCallsObject {
 
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-  
   """)
   tool_calls?: (RunStepDeltaStepDetailsToolCallsCodeObject | RunStepDeltaStepDetailsToolCallsFileSearchObject | RunStepDeltaStepDetailsToolCallsFunctionObject)[];
 }

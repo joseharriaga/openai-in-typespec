@@ -23,12 +23,9 @@ model Model {
   /** The model identifier, which can be referenced in the API endpoints. */
   id: string;
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) when the model was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created: utcDateTime;
 
   /** The object type, which is always "model". */

@@ -10,7 +10,6 @@ namespace OpenAI;
 model CreateSpeechRequest {
   @doc("""
   One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`
-  
   """)
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "tts-1" | "tts-1-hd";
@@ -38,16 +37,17 @@ model CreateSpeechRequest {
 }
 
 model CreateTranscriptionRequest {
+  // Tool customization: binary payloads are encoded bytes
   /**
    * The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
    * mpeg, mpga, m4a, ogg, wav, or webm.
    */
   @extension("x-oaiTypeLabel", "file")
-  file: string;
+  @encode("binary")
+  file: bytes;
 
   @doc("""
   ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
-  
   """)
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "whisper-1";
@@ -67,36 +67,38 @@ model CreateTranscriptionRequest {
 
   @doc("""
   The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
-  
   """)
   response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
 
+  // Tool customization: add missing but documented min/max for temperature
   /**
    * The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
    * random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
    * the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
    * automatically increase the temperature until certain thresholds are hit.
    */
+  @minValue(0)
+  @maxValue(1)
   temperature?: float32 = 0;
 
   @doc("""
   The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.
-  
   """)
   timestamp_granularities?: ("word" | "segment")[] = ["segment"];
 }
 
 model CreateTranslationRequest {
+  // Tool customization: binary payloads are encoded bytes
   /**
    * The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
    * mpeg, mpga, m4a, ogg, wav, or webm.
    */
   @extension("x-oaiTypeLabel", "file")
-  file: string;
+  @encode("binary")
+  file: bytes;
 
   @doc("""
   ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
-  
   """)
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "whisper-1";
@@ -107,19 +109,21 @@ model CreateTranslationRequest {
    */
   prompt?: string;
 
+  // Tool customization: add enum types
   @doc("""
   The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
-  
   """)
-  @extension("x-customTspIngestionRule", "add enum types")
   response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
 
+  // Tool customization: add missing but documented min/max for temperature
   /**
    * The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
    * random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
    * the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
    * automatically increase the temperature until certain thresholds are hit.
    */
+  @minValue(0)
+  @maxValue(1)
   temperature?: float32 = 0;
 }
 
@@ -136,9 +140,9 @@ model CreateTranscriptionResponseVerboseJson {
   /** The language of the input audio. */
   language: string;
 
+  // Tool customization: timespans are encoded durations
   /** The duration of the input audio. */
   @encode("seconds", float)
-  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   duration: duration;
 
   /** The transcribed text. */
@@ -161,9 +165,9 @@ model CreateTranslationResponseVerboseJson {
   """)
   language: string;
 
+  // Tool customization: timespans are encoded durations
   /** The duration of the input audio. */
   @encode("seconds", float)
-  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   duration: duration;
 
   /** The translated text. */
@@ -180,14 +184,14 @@ model TranscriptionSegment {
   /** Seek offset of the segment. */
   seek: int32;
 
+  // Tool customization: timespans are encoded durations
   /** Start time of the segment in seconds. */
   @encode("seconds", float)
-  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   start: duration;
 
+  // Tool customization: timespans are encoded durations
   /** End time of the segment in seconds. */
   @encode("seconds", float)
-  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   end: duration;
 
   /** Text content of the segment. */
@@ -218,13 +222,13 @@ model TranscriptionWord {
   /** The text content of the word. */
   word: string;
 
+  // Tool customization: timespans are encoded durations
   /** Start time of the word in seconds. */
   @encode("seconds", float)
-  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   start: duration;
 
+  // Tool customization: timespans are encoded durations
   /** End time of the word in seconds. */
   @encode("seconds", float)
-  @extension("x-customTspIngestionRule", "timespans are encoded durations")
   end: duration;
 }

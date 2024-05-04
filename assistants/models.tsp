@@ -15,7 +15,6 @@ Specifies the format that the model must output. Compatible with [GPT-4 Turbo](/
 Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
 
 **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
 """)
 @extension("x-oaiExpandable", true)
 union AssistantsApiResponseFormatOption {
@@ -25,7 +24,6 @@ union AssistantsApiResponseFormatOption {
 
 @doc("""
 An object describing the expected output of the model. If `json_object` only `function` type `tools` are allowed to be passed to the Run. If `text` the model can return text or any value needed.
-
 """)
 model AssistantsApiResponseFormat {
   @doc("""
@@ -76,7 +74,6 @@ model CreateAssistantRequest {
 
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
-  
   """)
   @maxItems(128)
   tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
@@ -84,13 +81,11 @@ model CreateAssistantRequest {
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-  
   """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-      
       """)
       @maxItems(20)
       file_ids?: string[] = [];
@@ -180,7 +175,6 @@ model ModifyAssistantRequest {
 
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
-  
   """)
   @maxItems(128)
   tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
@@ -188,13 +182,11 @@ model ModifyAssistantRequest {
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-  
   """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       Overrides the list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-      
       """)
       @maxItems(20)
       file_ids?: string[] = [];
@@ -288,12 +280,9 @@ model AssistantObject {
   """)
   object: "assistant";
 
+  // Tool customization: _at and created are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the assistant was created. */
   @encode("unixTimestamp", int32)
-  @extension(
-    "x-customTspIngestionRule",
-    "_at and created are Unix encoded utcDateTime"
-  )
   created_at: utcDateTime;
 
   /** The name of the assistant. The maximum length is 256 characters. */
@@ -317,7 +306,6 @@ model AssistantObject {
 
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
-  
   """)
   @maxItems(128)
   tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
@@ -325,13 +313,11 @@ model AssistantObject {
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-  
   """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool.
-      
       """)
       @maxItems(20)
       file_ids?: string[] = [];
@@ -399,7 +385,6 @@ Controls which (if any) tool is called by the model.
 `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
 `required` means the model must call one or more tools before responding to the user.
 Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
 """)
 @extension("x-oaiExpandable", true)
 union AssistantsApiToolChoiceOption {

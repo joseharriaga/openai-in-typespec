@@ -1840,6 +1840,19 @@ components:
         name:
           type: string
           description: The name of the function to call.
+    ChatCompletionRequestMessage:
+      anyOf:
+        - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
+        - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
+        - $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
+        - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
+        - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
+      x-oaiExpandable: true
+    ChatCompletionRequestMessageContentPart:
+      anyOf:
+        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
+        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartImage'
+      x-oaiExpandable: true
     ChatCompletionRequestMessageContentPartImage:
       type: object
       required:
@@ -1933,10 +1946,9 @@ components:
             - type: string
             - type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
-                  - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartImage'
+                $ref: '#/components/schemas/ChatCompletionRequestMessageContentPart'
           description: The contents of the user message.
+          x-oaiExpandable: true
         role:
           type: string
           enum:
@@ -2031,7 +2043,7 @@ components:
           description: The token.
         logprob:
           type: number
-          format: double
+          format: float
           description: |-
             The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
             the value `-9999.0` is used to signify that the token is very unlikely.
@@ -2056,7 +2068,7 @@ components:
                 description: The token.
               logprob:
                 type: number
-                format: double
+                format: float
                 description: |-
                   The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
                   the value `-9999.0` is used to signify that the token is very unlikely.
@@ -2091,6 +2103,23 @@ components:
           description: The type of the tool. Currently, only `function` is supported.
         function:
           $ref: '#/components/schemas/FunctionObject'
+    ChatCompletionToolChoiceOption:
+      anyOf:
+        - type: string
+          enum:
+            - none
+            - auto
+        - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
+      description: |-
+        Controls which (if any) function is called by the model.
+        `none` means the model will not call a function and instead generates a message.
+        `auto` means the model can pick between generating a message or calling a function.
+        Specifying a particular function via `{"type": "function", "function": {"name": "my_function"}}`
+        forces the model to call that function.
+
+        `none` is the default when no functions are present. `auto` is the default if functions are
+        present.
+      x-oaiExpandable: true
     CompletionUsage:
       type: object
       required:
@@ -2251,12 +2280,7 @@ components:
         messages:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
+            $ref: '#/components/schemas/ChatCompletionRequestMessage'
           minItems: 1
           description: |-
             A list of messages comprising the conversation so far. [Example Python
@@ -2290,7 +2314,7 @@ components:
           x-oaiTypeLabel: string
         frequency_penalty:
           type: number
-          format: double
+          format: float
           nullable: true
           minimum: -2
           maximum: 2
@@ -2359,7 +2383,7 @@ components:
           default: 1
         presence_penalty:
           type: number
-          format: double
+          format: float
           nullable: true
           minimum: -2
           maximum: 2
@@ -2425,7 +2449,7 @@ components:
           default: false
         temperature:
           type: number
-          format: double
+          format: float
           nullable: true
           minimum: 0
           maximum: 2
@@ -2437,7 +2461,7 @@ components:
           default: 1
         top_p:
           type: number
-          format: double
+          format: float
           nullable: true
           minimum: 0
           maximum: 1
@@ -2456,12 +2480,7 @@ components:
             A list of tools the model may call. Currently, only functions are supported as a tool. Use
             this to provide a list of functions the model may generate JSON inputs for.
         tool_choice:
-          anyOf:
-            - type: string
-              enum:
-                - none
-                - auto
-            - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
+          $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
         user:
           type: string
           description: |-
@@ -2485,6 +2504,7 @@ components:
 
             `none` is the default when no functions are present. `auto` is the default if functions are
             present.
+          x-oaiExpandable: true
         functions:
           type: array
           items:
@@ -2722,7 +2742,7 @@ components:
           default: false
         frequency_penalty:
           type: number
-          format: double
+          format: float
           nullable: true
           minimum: -2
           maximum: 2
@@ -2792,7 +2812,7 @@ components:
           default: 1
         presence_penalty:
           type: number
-          format: double
+          format: float
           nullable: true
           minimum: -2
           maximum: 2
@@ -2840,7 +2860,7 @@ components:
           description: The suffix that comes after a completion of inserted text.
         temperature:
           type: number
-          format: double
+          format: float
           nullable: true
           minimum: 0
           maximum: 2
@@ -2852,7 +2872,7 @@ components:
           default: 1
         top_p:
           type: number
-          format: double
+          format: float
           nullable: true
           minimum: 0
           maximum: 1
@@ -2911,7 +2931,7 @@ components:
                     type: array
                     items:
                       type: number
-                      format: double
+                      format: float
                   tokens:
                     type: array
                     items:
@@ -2922,7 +2942,7 @@ components:
                       type: object
                       additionalProperties:
                         type: number
-                        format: double
+                        format: float
                 nullable: true
               text:
                 type: string
@@ -2986,6 +3006,7 @@ components:
             empty string, and any array must be 2048 dimensions or less. [Example Python
             code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
             tokens.
+          x-oaiExpandable: true
         model:
           anyOf:
             - type: string
@@ -3125,7 +3146,7 @@ components:
                   enum:
                     - auto
                 - type: number
-                  format: double
+                  format: float
               description: |-
                 Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
                 overfitting.
@@ -3521,47 +3542,47 @@ components:
                 properties:
                   hate:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'hate'.
                   hate/threatening:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'hate/threatening'.
                   harassment:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'harassment'.
                   harassment/threatening:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'harassment/threatening'.
                   self-harm:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'self-harm'.
                   self-harm/intent:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'self-harm/intent'.
                   self-harm/instructions:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'self-harm/instructions'.
                   sexual:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'sexual'.
                   sexual/minors:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'sexual/minors'.
                   violence:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'violence'.
                   violence/graphic:
                     type: number
-                    format: double
+                    format: float
                     description: The score for the category 'violence/graphic'.
                 required:
                   - hate
@@ -3676,7 +3697,7 @@ components:
           default: mp3
         speed:
           type: number
-          format: double
+          format: float
           minimum: 0.25
           maximum: 4
           description: The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default.
@@ -3792,7 +3813,7 @@ components:
           default: json
         temperature:
           type: number
-          format: double
+          format: float
           description: |-
             The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
             random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
@@ -3834,7 +3855,7 @@ components:
           description: The language of the input audio.
         duration:
           type: number
-          format: double
+          format: seconds
           description: The duration of the input audio.
           x-customTspIngestionRule: timespans are encoded durations
         text:
@@ -3880,13 +3901,20 @@ components:
             [prompt](/docs/guides/speech-to-text/prompting) should be in English.
         response_format:
           type: string
+          enum:
+            - json
+            - text
+            - srt
+            - verbose_json
+            - vtt
           description: |-
             The format of the transcript output, in one of these options: `json`, `text`, `srt`,
             `verbose_json`, or `vtt`.
+          x-customTspIngestionRule: add enum types
           default: json
         temperature:
           type: number
-          format: double
+          format: float
           description: |-
             The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
             random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
@@ -3912,7 +3940,7 @@ components:
           description: The language of the output translation (always `english`).
         duration:
           type: number
-          format: double
+          format: seconds
           description: The duration of the input audio.
           x-customTspIngestionRule: timespans are encoded durations
         text:
@@ -4030,7 +4058,6 @@ components:
             - type: array
               items:
                 type: number
-                format: double
             - type: string
           description: |-
             The embedding vector, which is a list of floats. The length of vector depends on the model as
@@ -5338,6 +5365,7 @@ components:
             - $ref: '#/components/schemas/RunStepDetailsMessageCreationObject'
             - $ref: '#/components/schemas/RunStepDetailsToolCallsObject'
           description: The details of the run step.
+          x-oaiExpandable: true
         last_error:
           type: object
           properties:
@@ -5500,12 +5528,12 @@ components:
           description: Seek offset of the segment.
         start:
           type: number
-          format: double
+          format: seconds
           description: Start time of the segment in seconds.
           x-customTspIngestionRule: timespans are encoded durations
         end:
           type: number
-          format: double
+          format: seconds
           description: End time of the segment in seconds.
           x-customTspIngestionRule: timespans are encoded durations
         text:
@@ -5519,21 +5547,21 @@ components:
           description: Array of token IDs for the text content.
         temperature:
           type: number
-          format: double
+          format: float
           description: Temperature parameter used for generating the segment.
         avg_logprob:
           type: number
-          format: double
+          format: float
           description: Average logprob of the segment. If the value is lower than -1, consider the logprobs failed.
         compression_ratio:
           type: number
-          format: double
+          format: float
           description: |-
             Compression ratio of the segment. If the value is greater than 2.4, consider the compression
             failed.
         no_speech_prob:
           type: number
-          format: double
+          format: float
           description: |-
             Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
             is below -1, consider this segment silent.
@@ -5549,12 +5577,12 @@ components:
           description: The text content of the word.
         start:
           type: number
-          format: double
+          format: seconds
           description: Start time of the word in seconds.
           x-customTspIngestionRule: timespans are encoded durations
         end:
           type: number
-          format: double
+          format: seconds
           description: End time of the word in seconds.
           x-customTspIngestionRule: timespans are encoded durations
   securitySchemes:

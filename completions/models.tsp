@@ -54,7 +54,7 @@ model CreateCompletionRequest {
    */
   @minValue(-2)
   @maxValue(2)
-  frequency_penalty?: float | null = 0;
+  frequency_penalty?: float32 | null = 0;
 
   /**
    * Modify the likelihood of specified tokens appearing in the completion.
@@ -113,7 +113,7 @@ model CreateCompletionRequest {
    */
   @minValue(-2)
   @maxValue(2)
-  presence_penalty?: float | null = 0;
+  presence_penalty?: float32 | null = 0;
 
   /**
    * If specified, our system will make a best effort to sample deterministically, such that
@@ -151,7 +151,7 @@ model CreateCompletionRequest {
    */
   @minValue(0)
   @maxValue(2)
-  temperature?: float | null = 1;
+  temperature?: float32 | null = 1;
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model
@@ -162,7 +162,7 @@ model CreateCompletionRequest {
    */
   @minValue(0)
   @maxValue(1)
-  top_p?: float | null = 1;
+  top_p?: float32 | null = 1;
 
   /**
    * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
@@ -192,9 +192,9 @@ model CreateCompletionResponse {
     index: int32;
     logprobs: {
       text_offset?: int32[];
-      token_logprobs?: float[];
+      token_logprobs?: float32[];
       tokens?: string[];
-      top_logprobs?: Record<float>[];
+      top_logprobs?: Record<float32>[];
     } | null;
     text: string;
   }[];

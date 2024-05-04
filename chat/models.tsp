@@ -53,7 +53,7 @@ model CreateChatCompletionRequest {
    */
   @minValue(-2)
   @maxValue(2)
-  frequency_penalty?: float | null = 0;
+  frequency_penalty?: float32 | null = 0;
 
   /**
    * Modify the likelihood of specified tokens appearing in the completion.
@@ -111,7 +111,7 @@ model CreateChatCompletionRequest {
    */
   @minValue(-2)
   @maxValue(2)
-  presence_penalty?: float | null = 0;
+  presence_penalty?: float32 | null = 0;
 
   /**
    * An object specifying the format that the model must output. Compatible with [GPT-4
@@ -164,7 +164,7 @@ model CreateChatCompletionRequest {
    */
   @minValue(0)
   @maxValue(2)
-  temperature?: float | null = 1;
+  temperature?: float32 | null = 1;
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model
@@ -175,7 +175,7 @@ model CreateChatCompletionRequest {
    */
   @minValue(0)
   @maxValue(1)
-  top_p?: float | null = 1;
+  top_p?: float32 | null = 1;
 
   /**
    * A list of tools the model may call. Currently, only functions are supported as a tool. Use
@@ -548,7 +548,7 @@ model ChatCompletionTokenLogprob {
    * The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
    * the value `-9999.0` is used to signify that the token is very unlikely.
    */
-  logprob: float;
+  logprob: float32;
 
   /**
    * A list of integers representing the UTF-8 bytes representation of the token. Useful in
@@ -570,7 +570,7 @@ model ChatCompletionTokenLogprob {
      * The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
      * the value `-9999.0` is used to signify that the token is very unlikely.
      */
-    logprob: float;
+    logprob: float32;
 
     /**
      * A list of integers representing the UTF-8 bytes representation of the token. Useful in

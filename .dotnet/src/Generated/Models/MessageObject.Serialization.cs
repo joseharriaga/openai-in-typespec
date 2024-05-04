@@ -29,6 +29,35 @@ namespace OpenAI.Internal.Models
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("thread_id"u8);
             writer.WriteStringValue(ThreadId);
+            writer.WritePropertyName("status"u8);
+            writer.WriteStringValue(Status.ToString());
+            if (IncompleteDetails != null)
+            {
+                writer.WritePropertyName("incomplete_details"u8);
+                writer.WriteObjectValue(IncompleteDetails, options);
+            }
+            else
+            {
+                writer.WriteNull("incomplete_details");
+            }
+            if (CompletedAt != null)
+            {
+                writer.WritePropertyName("completed_at"u8);
+                writer.WriteStringValue(CompletedAt.Value, "O");
+            }
+            else
+            {
+                writer.WriteNull("completed_at");
+            }
+            if (IncompleteAt != null)
+            {
+                writer.WritePropertyName("incomplete_at"u8);
+                writer.WriteStringValue(IncompleteAt.Value, "O");
+            }
+            else
+            {
+                writer.WriteNull("incomplete_at");
+            }
             writer.WritePropertyName("role"u8);
             writer.WriteStringValue(Role.ToString());
             writer.WritePropertyName("content"u8);
@@ -68,13 +97,20 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("run_id");
             }
-            writer.WritePropertyName("file_ids"u8);
-            writer.WriteStartArray();
-            foreach (var item in FileIds)
+            if (Attachments != null && Optional.IsCollectionDefined(Attachments))
             {
-                writer.WriteStringValue(item);
+                writer.WritePropertyName("attachments"u8);
+                writer.WriteStartArray();
+                foreach (var item in Attachments)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
+            else
+            {
+                writer.WriteNull("attachments");
+            }
             if (Metadata != null && Optional.IsCollectionDefined(Metadata))
             {
                 writer.WritePropertyName("metadata"u8);
@@ -132,11 +168,15 @@ namespace OpenAI.Internal.Models
             MessageObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string threadId = default;
+            MessageObjectStatus status = default;
+            MessageObjectIncompleteDetails incompleteDetails = default;
+            DateTimeOffset? completedAt = default;
+            DateTimeOffset? incompleteAt = default;
             MessageObjectRole role = default;
             IReadOnlyList<BinaryData> content = default;
             string assistantId = default;
             string runId = default;
-            IReadOnlyList<string> fileIds = default;
+            IReadOnlyList<MessageObjectAttachment> attachments = default;
             IReadOnlyDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -160,6 +200,41 @@ namespace OpenAI.Internal.Models
                 if (property.NameEquals("thread_id"u8))
                 {
                     threadId = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("status"u8))
+                {
+                    status = new MessageObjectStatus(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("incomplete_details"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        incompleteDetails = null;
+                        continue;
+                    }
+                    incompleteDetails = MessageObjectIncompleteDetails.DeserializeMessageObjectIncompleteDetails(property.Value, options);
+                    continue;
+                }
+                if (property.NameEquals("completed_at"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        completedAt = null;
+                        continue;
+                    }
+                    completedAt = property.Value.GetDateTimeOffset("O");
+                    continue;
+                }
+                if (property.NameEquals("incomplete_at"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        incompleteAt = null;
+                        continue;
+                    }
+                    incompleteAt = property.Value.GetDateTimeOffset("O");
                     continue;
                 }
                 if (property.NameEquals("role"u8))
@@ -204,14 +279,19 @@ namespace OpenAI.Internal.Models
                     runId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("file_ids"u8))
+                if (property.NameEquals("attachments"u8))
                 {
-                    List<string> array = new List<string>();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        attachments = new ChangeTrackingList<MessageObjectAttachment>();
+                        continue;
+                    }
+                    List<MessageObjectAttachment> array = new List<MessageObjectAttachment>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        array.Add(MessageObjectAttachment.DeserializeMessageObjectAttachment(item, options));
                     }
-                    fileIds = array;
+                    attachments = array;
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -240,11 +320,15 @@ namespace OpenAI.Internal.Models
                 @object,
                 createdAt,
                 threadId,
+                status,
+                incompleteDetails,
+                completedAt,
+                incompleteAt,
                 role,
                 content,
                 assistantId,
                 runId,
-                fileIds,
+                attachments,
                 metadata,
                 serializedAdditionalRawData);
         }

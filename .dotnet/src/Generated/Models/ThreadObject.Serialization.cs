@@ -27,6 +27,15 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
+            if (ToolResources != null)
+            {
+                writer.WritePropertyName("tool_resources"u8);
+                writer.WriteObjectValue(ToolResources, options);
+            }
+            else
+            {
+                writer.WriteNull("tool_resources");
+            }
             if (Metadata != null && Optional.IsCollectionDefined(Metadata))
             {
                 writer.WritePropertyName("metadata"u8);
@@ -83,6 +92,7 @@ namespace OpenAI.Internal.Models
             string id = default;
             ThreadObjectObject @object = default;
             DateTimeOffset createdAt = default;
+            ThreadObjectToolResources toolResources = default;
             IReadOnlyDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -101,6 +111,16 @@ namespace OpenAI.Internal.Models
                 if (property.NameEquals("created_at"u8))
                 {
                     createdAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    continue;
+                }
+                if (property.NameEquals("tool_resources"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolResources = null;
+                        continue;
+                    }
+                    toolResources = ThreadObjectToolResources.DeserializeThreadObjectToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -124,7 +144,13 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ThreadObject(id, @object, createdAt, metadata, serializedAdditionalRawData);
+            return new ThreadObject(
+                id,
+                @object,
+                createdAt,
+                toolResources,
+                metadata,
+                serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ThreadObject>.Write(ModelReaderWriterOptions options)

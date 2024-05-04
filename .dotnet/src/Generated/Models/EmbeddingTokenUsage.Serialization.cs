@@ -22,7 +22,7 @@ namespace OpenAI.Embeddings
 
             writer.WriteStartObject();
             writer.WritePropertyName("prompt_tokens"u8);
-            writer.WriteNumberValue(PromptTokens);
+            writer.WriteNumberValue(InputTokens);
             writer.WritePropertyName("total_tokens"u8);
             writer.WriteNumberValue(TotalTokens);
             if (options.Format != "W" && _serializedAdditionalRawData != null)

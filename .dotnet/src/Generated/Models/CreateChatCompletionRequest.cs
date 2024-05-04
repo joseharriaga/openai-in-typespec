@@ -92,7 +92,7 @@ namespace OpenAI.Internal.Models
         /// between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100
         /// should result in a ban or exclusive selection of the relevant token.
         /// </param>
-        /// <param name="logprobs"> Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`. This option is currently not available on the `gpt-4-vision-preview` model. </param>
+        /// <param name="logprobs"> Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`. </param>
         /// <param name="topLogprobs"> An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used. </param>
         /// <param name="maxTokens">
         /// The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
@@ -128,17 +128,16 @@ namespace OpenAI.Internal.Models
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
         /// We generally recommend altering this or `top_p` but not both.
-        ///
         /// </param>
         /// <param name="topP">
         /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
         ///
         /// We generally recommend altering this or `temperature` but not both.
-        ///
         /// </param>
         /// <param name="tools">
         /// A list of tools the model may call. Currently, only functions are supported as a tool. Use
-        /// this to provide a list of functions the model may generate JSON inputs for.
+        /// this to provide a list of functions the model may generate JSON inputs for. A max of 128
+        /// functions are supported.
         /// </param>
         /// <param name="toolChoice"></param>
         /// <param name="user">
@@ -159,7 +158,6 @@ namespace OpenAI.Internal.Models
         /// Deprecated in favor of `tools`.
         ///
         /// A list of functions the model may generate JSON inputs for.
-        ///
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateChatCompletionRequest(IList<BinaryData> messages, CreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<string, int> logitBias, bool? logprobs, int? topLogprobs, int? maxTokens, int? n, float? presencePenalty, CreateChatCompletionRequestResponseFormat responseFormat, long? seed, BinaryData stop, bool? stream, float? temperature, float? topP, IList<ChatCompletionTool> tools, BinaryData toolChoice, string user, BinaryData functionCall, IList<ChatCompletionFunctions> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -269,7 +267,7 @@ namespace OpenAI.Internal.Models
         /// should result in a ban or exclusive selection of the relevant token.
         /// </summary>
         public IDictionary<string, int> LogitBias { get; set; }
-        /// <summary> Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`. This option is currently not available on the `gpt-4-vision-preview` model. </summary>
+        /// <summary> Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`. </summary>
         public bool? Logprobs { get; set; }
         /// <summary> An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used. </summary>
         public int? TopLogprobs { get; set; }
@@ -354,19 +352,18 @@ namespace OpenAI.Internal.Models
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
         /// We generally recommend altering this or `top_p` but not both.
-        ///
         /// </summary>
         public float? Temperature { get; set; }
         /// <summary>
         /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
         ///
         /// We generally recommend altering this or `temperature` but not both.
-        ///
         /// </summary>
         public float? TopP { get; set; }
         /// <summary>
         /// A list of tools the model may call. Currently, only functions are supported as a tool. Use
-        /// this to provide a list of functions the model may generate JSON inputs for.
+        /// this to provide a list of functions the model may generate JSON inputs for. A max of 128
+        /// functions are supported.
         /// </summary>
         public IList<ChatCompletionTool> Tools { get; }
         /// <summary>
@@ -472,7 +469,6 @@ namespace OpenAI.Internal.Models
         /// Deprecated in favor of `tools`.
         ///
         /// A list of functions the model may generate JSON inputs for.
-        ///
         /// </summary>
         public IList<ChatCompletionFunctions> Functions { get; }
     }

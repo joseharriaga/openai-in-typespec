@@ -23,7 +23,14 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("file"u8);
-            writer.WriteStringValue(File);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(global::System.BinaryData.FromStream(File));
+#else
+            using (JsonDocument document = JsonDocument.Parse(BinaryData.FromStream(File)))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
             writer.WritePropertyName("purpose"u8);
             writer.WriteStringValue(Purpose.ToString());
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -64,7 +71,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            string file = default;
+            Stream file = default;
             CreateFileRequestPurpose purpose = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -72,7 +79,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("file"u8))
                 {
-                    file = property.Value.GetString();
+                    file = BinaryData.FromString(property.Value.GetRawText()).ToStream();
                     continue;
                 }
                 if (property.NameEquals("purpose"u8))
@@ -107,7 +114,7 @@ namespace OpenAI.Internal.Models
         internal virtual MultipartFormDataBinaryContent ToMultipartBinaryBody()
         {
             MultipartFormDataBinaryContent content = new MultipartFormDataBinaryContent();
-            content.Add(File, "file");
+            content.Add(File, "file", "file", "application/octet-stream");
             content.Add(Purpose.ToString(), "purpose");
             return content;
         }

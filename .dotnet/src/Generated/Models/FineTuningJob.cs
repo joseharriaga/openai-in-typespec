@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Models;
 
 namespace OpenAI.FineTuning
 {
@@ -78,8 +79,9 @@ namespace OpenAI.FineTuning
         /// The file ID used for validation. You can retrieve the validation results with the [Files
         /// API](/docs/api-reference/files/retrieve-contents).
         /// </param>
+        /// <param name="seed"> The seed used for the fine-tuning job. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="hyperparameters"/>, <paramref name="model"/>, <paramref name="organizationId"/>, <paramref name="resultFiles"/> or <paramref name="trainingFile"/> is null. </exception>
-        internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, string organizationId, IEnumerable<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile)
+        internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, string organizationId, IEnumerable<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, int seed)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(hyperparameters, nameof(hyperparameters));
@@ -101,6 +103,8 @@ namespace OpenAI.FineTuning
             TrainedTokens = trainedTokens;
             TrainingFile = trainingFile;
             ValidationFile = validationFile;
+            Integrations = new ChangeTrackingList<FineTuningIntegration>();
+            Seed = seed;
         }
 
         /// <summary> Initializes a new instance of <see cref="FineTuningJob"/>. </summary>
@@ -139,8 +143,14 @@ namespace OpenAI.FineTuning
         /// The file ID used for validation. You can retrieve the validation results with the [Files
         /// API](/docs/api-reference/files/retrieve-contents).
         /// </param>
+        /// <param name="integrations"> A list of integrations to enable for this fine-tuning job. </param>
+        /// <param name="seed"> The seed used for the fine-tuning job. </param>
+        /// <param name="estimatedFinish">
+        /// The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value
+        /// will be null if the fine-tuning job is not running.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, FineTuningJobObject @object, string organizationId, IReadOnlyList<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, FineTuningJobObject @object, string organizationId, IReadOnlyList<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, IReadOnlyList<FineTuningIntegration> integrations, int seed, int? estimatedFinish, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -156,6 +166,9 @@ namespace OpenAI.FineTuning
             TrainedTokens = trainedTokens;
             TrainingFile = trainingFile;
             ValidationFile = validationFile;
+            Integrations = integrations;
+            Seed = seed;
+            EstimatedFinish = estimatedFinish;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -214,5 +227,14 @@ namespace OpenAI.FineTuning
         /// API](/docs/api-reference/files/retrieve-contents).
         /// </summary>
         public string ValidationFile { get; }
+        /// <summary> A list of integrations to enable for this fine-tuning job. </summary>
+        public IReadOnlyList<FineTuningIntegration> Integrations { get; }
+        /// <summary> The seed used for the fine-tuning job. </summary>
+        public int Seed { get; }
+        /// <summary>
+        /// The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value
+        /// will be null if the fine-tuning job is not running.
+        /// </summary>
+        public int? EstimatedFinish { get; }
     }
 }

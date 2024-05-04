@@ -25,15 +25,22 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(Role.ToString());
             writer.WritePropertyName("content"u8);
             writer.WriteStringValue(Content);
-            if (Optional.IsCollectionDefined(FileIds))
+            if (Optional.IsCollectionDefined(Attachments))
             {
-                writer.WritePropertyName("file_ids"u8);
-                writer.WriteStartArray();
-                foreach (var item in FileIds)
+                if (Attachments != null)
                 {
-                    writer.WriteStringValue(item);
+                    writer.WritePropertyName("attachments"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Attachments)
+                    {
+                        writer.WriteObjectValue(item, options);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
+                else
+                {
+                    writer.WriteNull("attachments");
+                }
             }
             if (Optional.IsCollectionDefined(Metadata))
             {
@@ -93,7 +100,7 @@ namespace OpenAI.Internal.Models
             }
             CreateMessageRequestRole role = default;
             string content = default;
-            IList<string> fileIds = default;
+            IList<CreateMessageRequestAttachment> attachments = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -109,18 +116,18 @@ namespace OpenAI.Internal.Models
                     content = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("file_ids"u8))
+                if (property.NameEquals("attachments"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    List<string> array = new List<string>();
+                    List<CreateMessageRequestAttachment> array = new List<CreateMessageRequestAttachment>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        array.Add(CreateMessageRequestAttachment.DeserializeCreateMessageRequestAttachment(item, options));
                     }
-                    fileIds = array;
+                    attachments = array;
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -143,7 +150,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateMessageRequest(role, content, fileIds ?? new ChangeTrackingList<string>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new CreateMessageRequest(role, content, attachments ?? new ChangeTrackingList<CreateMessageRequestAttachment>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateMessageRequest>.Write(ModelReaderWriterOptions options)

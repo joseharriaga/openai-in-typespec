@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
 namespace OpenAI.FineTuning
 {
@@ -50,12 +51,11 @@ namespace OpenAI.FineTuning
         /// <param name="trainingFile">
         /// The ID of an uploaded file that contains training data.
         ///
-        /// See [upload file](/docs/api-reference/files/upload) for how to upload a file.
+        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
         ///
         /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-        ///
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="trainingFile"/> is null. </exception>
         public CreateFineTuningJobRequest(CreateFineTuningJobRequestModel model, string trainingFile)
@@ -64,6 +64,7 @@ namespace OpenAI.FineTuning
 
             Model = model;
             TrainingFile = trainingFile;
+            Integrations = new ChangeTrackingList<CreateFineTuningJobRequestIntegration>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateFineTuningJobRequest"/>. </summary>
@@ -74,12 +75,11 @@ namespace OpenAI.FineTuning
         /// <param name="trainingFile">
         /// The ID of an uploaded file that contains training data.
         ///
-        /// See [upload file](/docs/api-reference/files/upload) for how to upload a file.
+        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
         ///
         /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-        ///
         /// </param>
         /// <param name="hyperparameters"> The hyperparameters used for the fine-tuning job. </param>
         /// <param name="suffix">
@@ -98,16 +98,23 @@ namespace OpenAI.FineTuning
         /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-        ///
+        /// </param>
+        /// <param name="integrations"> A list of integrations to enable for your fine-tuning job. </param>
+        /// <param name="seed">
+        /// The seed controls the reproducibility of the job. Passing in the same seed and job parameters
+        /// should produce the same results, but may differ in rare cases.
+        /// If a seed is not specified, one will be generated for you.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateFineTuningJobRequest(CreateFineTuningJobRequestModel model, string trainingFile, CreateFineTuningJobRequestHyperparameters hyperparameters, string suffix, string validationFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateFineTuningJobRequest(CreateFineTuningJobRequestModel model, string trainingFile, CreateFineTuningJobRequestHyperparameters hyperparameters, string suffix, string validationFile, IList<CreateFineTuningJobRequestIntegration> integrations, int? seed, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             TrainingFile = trainingFile;
             Hyperparameters = hyperparameters;
             Suffix = suffix;
             ValidationFile = validationFile;
+            Integrations = integrations;
+            Seed = seed;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -124,12 +131,11 @@ namespace OpenAI.FineTuning
         /// <summary>
         /// The ID of an uploaded file that contains training data.
         ///
-        /// See [upload file](/docs/api-reference/files/upload) for how to upload a file.
+        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
         ///
         /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-        ///
         /// </summary>
         public string TrainingFile { get; }
         /// <summary> The hyperparameters used for the fine-tuning job. </summary>
@@ -151,8 +157,15 @@ namespace OpenAI.FineTuning
         /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-        ///
         /// </summary>
         public string ValidationFile { get; set; }
+        /// <summary> A list of integrations to enable for your fine-tuning job. </summary>
+        public IList<CreateFineTuningJobRequestIntegration> Integrations { get; set; }
+        /// <summary>
+        /// The seed controls the reproducibility of the job. Passing in the same seed and job parameters
+        /// should produce the same results, but may differ in rare cases.
+        /// If a seed is not specified, one will be generated for you.
+        /// </summary>
+        public int? Seed { get; set; }
     }
 }

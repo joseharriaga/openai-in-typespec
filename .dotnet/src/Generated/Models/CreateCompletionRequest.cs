@@ -105,7 +105,6 @@ namespace OpenAI.LegacyCompletions
         /// Include the log probabilities on the `logprobs` most likely output tokens, as well the chosen tokens. For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1` elements in the response.
         ///
         /// The maximum value for `logprobs` is 5.
-        ///
         /// </param>
         /// <param name="maxTokens">
         /// The maximum number of [tokens](/tokenizer) that can be generated in the completion.
@@ -134,18 +133,20 @@ namespace OpenAI.LegacyCompletions
         /// not contain the stop sequence.
         /// </param>
         /// <param name="stream"> Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </param>
-        /// <param name="suffix"> The suffix that comes after a completion of inserted text. </param>
+        /// <param name="suffix">
+        /// The suffix that comes after a completion of inserted text.
+        ///
+        /// This parameter is only supported for `gpt-3.5-turbo-instruct`.
+        /// </param>
         /// <param name="temperature">
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
         /// We generally recommend altering this or `top_p` but not both.
-        ///
         /// </param>
         /// <param name="topP">
         /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
         ///
         /// We generally recommend altering this or `temperature` but not both.
-        ///
         /// </param>
         /// <param name="user">
         /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
@@ -341,20 +342,22 @@ namespace OpenAI.LegacyCompletions
         public BinaryData Stop { get; set; }
         /// <summary> Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </summary>
         public bool? Stream { get; set; }
-        /// <summary> The suffix that comes after a completion of inserted text. </summary>
+        /// <summary>
+        /// The suffix that comes after a completion of inserted text.
+        ///
+        /// This parameter is only supported for `gpt-3.5-turbo-instruct`.
+        /// </summary>
         public string Suffix { get; set; }
         /// <summary>
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
         /// We generally recommend altering this or `top_p` but not both.
-        ///
         /// </summary>
         public float? Temperature { get; set; }
         /// <summary>
         /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
         ///
         /// We generally recommend altering this or `temperature` but not both.
-        ///
         /// </summary>
         public float? TopP { get; set; }
         /// <summary>

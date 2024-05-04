@@ -21,6 +21,18 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
+            if (Optional.IsDefined(ToolResources))
+            {
+                if (ToolResources != null)
+                {
+                    writer.WritePropertyName("tool_resources"u8);
+                    writer.WriteObjectValue(ToolResources, options);
+                }
+                else
+                {
+                    writer.WriteNull("tool_resources");
+                }
+            }
             if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
@@ -77,11 +89,22 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
+            ModifyThreadRequestToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("tool_resources"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolResources = null;
+                        continue;
+                    }
+                    toolResources = ModifyThreadRequestToolResources.DeserializeModifyThreadRequestToolResources(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("metadata"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -102,7 +125,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ModifyThreadRequest(metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new ModifyThreadRequest(toolResources, metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ModifyThreadRequest>.Write(ModelReaderWriterOptions options)

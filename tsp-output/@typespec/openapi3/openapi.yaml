@@ -159,149 +159,6 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteAssistantResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /assistants/{assistant_id}/files:
-    post:
-      tags:
-        - Assistants
-      operationId: createAssistantFile
-      summary: |-
-        Create an assistant file by attaching a [File](/docs/api-reference/files) to a
-        [assistant](/docs/api-reference/assistants).
-      parameters:
-        - name: assistant_id
-          in: path
-          required: true
-          description: The ID of the assistant for which to create a file.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: '#/components/schemas/AssistantFileObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateAssistantFileRequest'
-    get:
-      tags:
-        - Assistants
-      operationId: listAssistantFiles
-      summary: Returns a list of assistant files.
-      parameters:
-        - name: assistant_id
-          in: path
-          required: true
-          description: The ID of the assistant the file belongs to.
-          schema:
-            type: string
-        - name: limit
-          in: query
-          required: false
-          description: |-
-            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-            default is 20.
-          schema:
-            type: integer
-            format: int32
-            default: 20
-        - name: order
-          in: query
-          required: false
-          description: |-
-            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-            for descending order.
-          schema:
-            $ref: '#/components/schemas/ListOrder'
-            default: desc
-        - name: after
-          in: query
-          required: false
-          description: |-
-            A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-            For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-            subsequent call can include after=obj_foo in order to fetch the next page of the list.
-          schema:
-            type: string
-        - name: before
-          in: query
-          required: false
-          description: |-
-            A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-            For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-            subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListAssistantFilesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /assistants/{assistant_id}/files/{file_id}:
-    get:
-      tags:
-        - Assistants
-      operationId: getAssistantFile
-      summary: Retrieves an assistant file.
-      parameters:
-        - name: assistant_id
-          in: path
-          required: true
-          description: The ID of the assistant the file belongs to.
-          schema:
-            type: string
-        - name: file_id
-          in: path
-          required: true
-          description: The ID of the file we're getting.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: '#/components/schemas/AssistantFileObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      tags:
-        - Assistants
-      operationId: deleteAssistantFile
-      summary: Delete an assistant file.
-      parameters:
-        - name: assistant_id
-          in: path
-          required: true
-          description: The ID of the assistant the file belongs to.
-          schema:
-            type: string
-        - name: file_id
-          in: path
-          required: true
-          description: The ID of the file to delete.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: '#/components/schemas/DeleteAssistantFileResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
   /audio/speech:
     post:
       tags:
@@ -1114,105 +971,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ModifyMessageRequest'
-  /threads/{thread_id}/messages/{message_id}/files:
-    get:
-      tags:
-        - Assistants
-      operationId: listMessageFiles
-      summary: Returns a list of message files.
-      parameters:
-        - name: thread_id
-          in: path
-          required: true
-          description: The ID of the thread that the message and files belong to.
-          schema:
-            type: string
-        - name: message_id
-          in: path
-          required: true
-          description: The ID of the message that the files belongs to.
-          schema:
-            type: string
-        - name: limit
-          in: query
-          required: false
-          description: |-
-            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-            default is 20.
-          schema:
-            type: integer
-            format: int32
-            default: 20
-        - name: order
-          in: query
-          required: false
-          description: |-
-            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-            for descending order.
-          schema:
-            $ref: '#/components/schemas/ListOrder'
-            default: desc
-        - name: after
-          in: query
-          required: false
-          description: |-
-            A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-            For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-            subsequent call can include after=obj_foo in order to fetch the next page of the list.
-          schema:
-            type: string
-        - name: before
-          in: query
-          required: false
-          description: |-
-            A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-            For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-            subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListMessageFilesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/messages/{message_id}/files/{file_id}:
-    get:
-      tags:
-        - Assistants
-      operationId: getMessageFile
-      summary: Retrieves a message file.
-      parameters:
-        - name: thread_id
-          in: path
-          required: true
-          description: The ID of the thread to which the message and File belong.
-          schema:
-            type: string
-        - name: message_id
-          in: path
-          required: true
-          description: The ID of the message the file belongs to.
-          schema:
-            type: string
-        - name: file_id
-          in: path
-          required: true
-          description: The ID of the file being retrieved.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageFileObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/runs:
     post:
       tags:
@@ -1528,31 +1286,6 @@ security:
   - BearerAuth: []
 components:
   schemas:
-    AssistantFileObject:
-      type: object
-      required:
-        - id
-        - object
-        - created_at
-        - assistant_id
-      properties:
-        id:
-          type: string
-          description: The identifier, which can be referenced in API endpoints.
-        object:
-          type: string
-          enum:
-            - assistant.file
-          description: The object type, which is always `assistant.file`.
-        created_at:
-          type: integer
-          format: unixtime
-          description: The Unix timestamp (in seconds) for when the assistant file was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
-        assistant_id:
-          type: string
-          description: The assistant ID that the file is attached to.
-      description: A list of [Files](/docs/api-reference/files) attached to an `assistant`.
     AssistantObject:
       type: object
       required:
@@ -1564,7 +1297,6 @@ components:
         - model
         - instructions
         - tools
-        - file_ids
         - metadata
       properties:
         id:
@@ -1579,7 +1311,6 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the assistant was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         name:
           type: string
           nullable: true
@@ -1599,33 +1330,45 @@ components:
         instructions:
           type: string
           nullable: true
-          maxLength: 32768
-          description: The system instructions that the assistant uses. The maximum length is 32768 characters.
+          maxLength: 256000
+          description: The system instructions that the assistant uses. The maximum length is 256,000 characters.
         tools:
           type: array
           items:
             anyOf:
               - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFileSearch'
               - $ref: '#/components/schemas/AssistantToolsFunction'
           maxItems: 128
-<<<<<<< HEAD
-          description: |
-            A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-=======
-          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
->>>>>>> user/travisw/tool-ingested-tsp
+          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+          x-oaiExpandable: true
           default: []
-        file_ids:
-          type: array
-          items:
-            type: string
-          maxItems: 20
-          description: |-
-            A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
-            maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-            ascending order.
-          default: []
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              type: object
+              properties:
+                vector_store_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 1
+                  description: |-
+                    The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
+                    assistant. There can be a maximum of 1 vector store attached to the assistant.
+          nullable: true
+          description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
           type: object
           additionalProperties:
@@ -1636,6 +1379,33 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: |-
+            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
+            more random, while lower values like 0.2 will make it more focused and deterministic.
+          default: 1
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 1
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model
+            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
+            comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or temperature but not both.
+          default: 1
+        response_format:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
+          nullable: true
       description: Represents an `assistant` that can call the model and use tools.
     AssistantToolsCode:
       type: object
@@ -1647,6 +1417,16 @@ components:
           enum:
             - code_interpreter
           description: 'The type of tool being defined: `code_interpreter`'
+    AssistantToolsFileSearch:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - file_search
+          description: 'The type of tool being defined: `file_search`'
     AssistantToolsFunction:
       type: object
       required:
@@ -1660,7 +1440,47 @@ components:
           description: 'The type of tool being defined: `function`'
         function:
           $ref: '#/components/schemas/FunctionObject'
-    AssistantToolsRetrieval:
+    AssistantsApiResponseFormat:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+            - json_object
+          description: Must be one of `text` or `json_object`.
+          default: text
+      description: An object describing the expected output of the model. If `json_object` only `function` type `tools` are allowed to be passed to the Run. If `text` the model can return text or any value needed.
+    AssistantsApiResponseFormatOption:
+      anyOf:
+        - type: string
+          enum:
+            - none
+            - auto
+        - $ref: '#/components/schemas/AssistantsApiResponseFormat'
+      description: |-
+        Specifies the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+        Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+
+        **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+      x-oaiExpandable: true
+    AssistantsApiToolChoiceOption:
+      anyOf:
+        - type: string
+          enum:
+            - none
+            - auto
+            - required
+        - $ref: '#/components/schemas/AssistantsNamedToolChoice'
+      description: |-
+        Controls which (if any) tool is called by the model.
+        `none` means the model will not call any tools and instead generates a message.
+        `auto` is the default value and means the model can pick between generating a message or calling one or more tools.
+        `required` means the model must call one or more tools before responding to the user.
+        Specifying a particular tool like `{"type": "file_search"}` or `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+      x-oaiExpandable: true
+    AssistantsNamedToolChoice:
       type: object
       required:
         - type
@@ -1668,8 +1488,215 @@ components:
         type:
           type: string
           enum:
-            - retrieval
-          description: 'The type of tool being defined: `retrieval`'
+            - function
+            - code_interpreter
+            - file_search
+          description: The type of the tool. If type is `function`, the function name must be set
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the function to call.
+          required:
+            - name
+      description: Specifies a tool the model should use. Use to force the model to call a specific tool.
+    Batch:
+      type: object
+      required:
+        - id
+        - object
+        - endpoint
+        - input_file_id
+        - completion_window
+        - status
+        - created_at
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          enum:
+            - batch
+          description: The object type, which is always `batch`.
+        endpoint:
+          type: string
+          description: The OpenAI API endpoint used by the batch.
+        errors:
+          type: object
+          properties:
+            object:
+              type: string
+              description: The object type, which is always `list`.
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: An error code identifying the error type.
+                  message:
+                    type: string
+                    description: A human-readable message providing more details about the error.
+                  param:
+                    type: string
+                    nullable: true
+                    description: The name of the parameter that caused the error, if applicable.
+                  line:
+                    type: integer
+                    format: int32
+                    nullable: true
+                    description: The line number of the input file where the error occurred, if applicable.
+        input_file_id:
+          type: string
+          description: The ID of the input file for the batch.
+        completion_window:
+          type: string
+          description: The time frame within which the batch should be processed.
+        status:
+          type: string
+          enum:
+            - validating
+            - failed
+            - in_progress
+            - finalizing
+            - completed
+            - expired
+            - cancelling
+            - cancelled
+          description: The current status of the batch.
+        output_file_id:
+          type: string
+          description: The ID of the file containing the outputs of successfully executed requests.
+        error_file_id:
+          type: string
+          description: The ID of the file containing the outputs of requests with errors.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch was created.
+        in_progress_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch started processing.
+        expires_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch will expire.
+        finalizing_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch started finalizing.
+        completed_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch was completed.
+        failed_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch failed.
+        expired_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch expired.
+        cancelling_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch started cancelling.
+        cancelled_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the batch was cancelled.
+        request_counts:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Total number of requests in the batch.
+            completed:
+              type: integer
+              format: int32
+              description: Number of requests that have been completed successfully.
+            failed:
+              type: integer
+              format: int32
+              description: Number of requests that have failed.
+          required:
+            - total
+            - completed
+            - failed
+          description: The request counts for different statuses within the batch.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: |-
+            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
+            additional information about the object in a structured format. Keys can be a maximum of 64
+            characters long and values can be a maxium of 512 characters long.
+          x-oaiTypeLabel: map
+    BatchRequestInput:
+      type: object
+      properties:
+        custom_id:
+          type: string
+          description: |-
+            A developer-provided per-request id that will be used to match outputs to inputs. Must be
+            unique for each request in a batch.
+        method:
+          type: string
+          enum:
+            - POST
+          description: The HTTP method to be used for the request. Currently only `POST` is supported.
+        url:
+          type: string
+          format: uri
+          description: The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions` and `/v1/embeddings` are supported.
+      description: The per-line object of the batch input file
+    BatchRequestOutput:
+      type: object
+      properties:
+        id:
+          type: string
+        custom_id:
+          type: string
+          description: A developer-provided per-request id that will be used to match outputs to inputs.
+        response:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              format: int32
+              description: The HTTP status code of the response
+            request_id:
+              type: string
+              description: |-
+                An unique identifier for the OpenAI API request. Please include this request ID when
+                contacting support.
+            body:
+              type: object
+              additionalProperties:
+                type: string
+              description: The JSON body of the response
+              x-oaiTypeLabel: map
+          nullable: true
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: A machine-readable error code.
+            message:
+              type: string
+              description: A human-readable error message.
+          nullable: true
+          description: |-
+            For requests that failed with a non-HTTP error, this will contain more information on the
+            cause of the failure.
+      description: The per-line object of the batch output and error files
     ChatCompletionFunctionCallOption:
       type: object
       required:
@@ -1678,12 +1705,7 @@ components:
         name:
           type: string
           description: The name of the function to call.
-<<<<<<< HEAD
-      description: |
-        Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
-=======
       description: 'Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.'
->>>>>>> user/travisw/tool-ingested-tsp
     ChatCompletionFunctions:
       type: object
       required:
@@ -1793,12 +1815,7 @@ components:
         content:
           type: string
           nullable: true
-<<<<<<< HEAD
-          description: |
-            The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
-=======
           description: The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
->>>>>>> user/travisw/tool-ingested-tsp
         role:
           type: string
           enum:
@@ -1877,7 +1894,6 @@ components:
               type: string
               format: uri
               description: Either a URL of the image or the base64 encoded image data.
-              x-customTspIngestionRule: url uses the url type
             detail:
               type: string
               enum:
@@ -2048,16 +2064,9 @@ components:
           format: float
           description: The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
         bytes:
-<<<<<<< HEAD
-          type: array
-          items:
-            type: integer
-            format: int32
-=======
           type: object
           allOf:
             - $ref: '#/components/schemas/ChatCompletionTokenLogprobBytesItem'
->>>>>>> user/travisw/tool-ingested-tsp
           nullable: true
           description: A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
         top_logprobs:
@@ -2084,14 +2093,11 @@ components:
               - logprob
               - bytes
           description: List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
-<<<<<<< HEAD
-=======
     ChatCompletionTokenLogprobBytesItem:
       type: array
       items:
         type: integer
         format: int32
->>>>>>> user/travisw/tool-ingested-tsp
     ChatCompletionTool:
       type: object
       required:
@@ -2111,18 +2117,16 @@ components:
           enum:
             - none
             - auto
+            - required
         - $ref: '#/components/schemas/ChatCompletionNamedToolChoice'
-<<<<<<< HEAD
-      description: |
-=======
       description: |-
->>>>>>> user/travisw/tool-ingested-tsp
-        Controls which (if any) function is called by the model.
-        `none` means the model will not call a function and instead generates a message.
-        `auto` means the model can pick between generating a message or calling a function.
-        Specifying a particular function via `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that function.
+        Controls which (if any) tool is called by the model.
+        `none` means the model will not call any tool and instead generates a message.
+        `auto` means the model can pick between generating a message or calling one or more tools.
+        `required` means the model must call one or more tools.
+        Specifying a particular tool via `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
 
-        `none` is the default when no functions are present. `auto` is the default if functions are present.
+        `none` is the default when no tools are present. `auto` is the default if tools are present.
       x-oaiExpandable: true
     CompletionUsage:
       type: object
@@ -2144,25 +2148,39 @@ components:
           format: int32
           description: Total number of tokens used in the request (prompt + completion).
       description: Usage statistics for the completion request.
-    CreateAssistantFileRequest:
-      type: object
-      required:
-        - file_id
-      properties:
-        file_id:
-          type: string
-          description: A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should use. Useful for tools like `retrieval` and `code_interpreter` that can access files.
     CreateAssistantRequest:
       type: object
       required:
         - model
       properties:
         model:
-          type: string
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - gpt-4-turbo
+                - gpt-4-turbo-2024-04-09
+                - gpt-4-0125-preview
+                - gpt-4-turbo-preview
+                - gpt-4-1106-preview
+                - gpt-4-vision-preview
+                - gpt-4
+                - gpt-4-0314
+                - gpt-4-0613
+                - gpt-4-32k
+                - gpt-4-32k-0314
+                - gpt-4-32k-0613
+                - gpt-3.5-turbo
+                - gpt-3.5-turbo-16k
+                - gpt-3.5-turbo-0613
+                - gpt-3.5-turbo-1106
+                - gpt-3.5-turbo-0125
+                - gpt-3.5-turbo-16k-0613
           description: |-
             ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
             see all of your available models, or see our [Model overview](/docs/models/overview) for
             descriptions of them.
+          x-oaiTypeLabel: string
         name:
           type: string
           nullable: true
@@ -2176,33 +2194,72 @@ components:
         instructions:
           type: string
           nullable: true
-          maxLength: 32768
-          description: The system instructions that the assistant uses. The maximum length is 32768 characters.
+          maxLength: 256000
+          description: The system instructions that the assistant uses. The maximum length is 256,000 characters.
         tools:
           type: array
           items:
             anyOf:
               - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFileSearch'
               - $ref: '#/components/schemas/AssistantToolsFunction'
           maxItems: 128
-<<<<<<< HEAD
-          description: |
-            A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-=======
-          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
->>>>>>> user/travisw/tool-ingested-tsp
+          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+          x-oaiExpandable: true
           default: []
-        file_ids:
-          type: array
-          items:
-            type: string
-          maxItems: 20
-          description: |-
-            A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
-            maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-            ascending order.
-          default: []
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              type: object
+              properties:
+                vector_store_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 1
+                  description: |-
+                    The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
+                    There can be a maximum of 1 vector store attached to the assistant.
+                vector_stores:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      file_ids:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 10000
+                        description: |-
+                          A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
+                          a maximum of 10000 files in a vector store.
+                      metadata:
+                        type: object
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
+                          storing additional information about the vector store in a structured format. Keys can
+                          be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+                        x-oaiTypeLabel: map
+                  maxItems: 1
+                  description: |-
+                    A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
+                    file_ids and attach it to this assistant. There can be a maximum of 1 vector store
+                    attached to the assistant.
+          nullable: true
+          description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
           type: object
           additionalProperties:
@@ -2213,6 +2270,33 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: |-
+            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
+            more random, while lower values like 0.2 will make it more focused and deterministic.
+          default: 1
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 1
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model
+            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
+            comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or temperature but not both.
+          default: 1
+        response_format:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
+          nullable: true
     CreateChatCompletionFunctionResponse:
       type: object
       required:
@@ -2237,12 +2321,7 @@ components:
                   - length
                   - function_call
                   - content_filter
-<<<<<<< HEAD
-                description: |
-                  The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
-=======
                 description: The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
->>>>>>> user/travisw/tool-ingested-tsp
               index:
                 type: integer
                 format: int32
@@ -2258,20 +2337,12 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the chat completion was created.
-<<<<<<< HEAD
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
-=======
->>>>>>> user/travisw/tool-ingested-tsp
         model:
           type: string
           description: The model used for the chat completion.
         system_fingerprint:
           type: string
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             This fingerprint represents the backend configuration that the model runs with.
 
             Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
@@ -2302,6 +2373,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4-turbo
+                - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
                 - gpt-4-turbo-preview
                 - gpt-4-1106-preview
@@ -2356,7 +2429,7 @@ components:
         logprobs:
           type: boolean
           nullable: true
-          description: Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`. This option is currently not available on the `gpt-4-vision-preview` model.
+          description: Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.
           default: false
         top_logprobs:
           type: integer
@@ -2407,11 +2480,7 @@ components:
                 - json_object
               description: Must be one of `text` or `json_object`.
               default: text
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
 
             Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
@@ -2423,7 +2492,7 @@ components:
           nullable: true
           minimum: -9223372036854776000
           maximum: 9223372036854776000
-          description: |
+          description: |-
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
             Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
@@ -2437,12 +2506,7 @@ components:
         stream:
           type: boolean
           nullable: true
-<<<<<<< HEAD
-          description: |
-            If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
-=======
           description: 'If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).'
->>>>>>> user/travisw/tool-ingested-tsp
           default: false
         temperature:
           type: number
@@ -2450,11 +2514,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 2
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 
             We generally recommend altering this or `top_p` but not both.
@@ -2465,11 +2525,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 1
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or `temperature` but not both.
@@ -2480,7 +2536,8 @@ components:
             $ref: '#/components/schemas/ChatCompletionTool'
           description: |-
             A list of tools the model may call. Currently, only functions are supported as a tool. Use
-            this to provide a list of functions the model may generate JSON inputs for.
+            this to provide a list of functions the model may generate JSON inputs for. A max of 128
+            functions are supported.
         tool_choice:
           $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
         user:
@@ -2495,7 +2552,7 @@ components:
                 - none
                 - auto
             - $ref: '#/components/schemas/ChatCompletionFunctionCallOption'
-          description: |
+          description: |-
             Deprecated in favor of `tool_choice`.
 
             Controls which (if any) function is called by the model.
@@ -2511,7 +2568,7 @@ components:
             $ref: '#/components/schemas/ChatCompletionFunctions'
           minItems: 1
           maxItems: 128
-          description: |
+          description: |-
             Deprecated in favor of `tools`.
 
             A list of functions the model may generate JSON inputs for.
@@ -2540,11 +2597,7 @@ components:
                   - tool_calls
                   - content_filter
                   - function_call
-<<<<<<< HEAD
-                description: |
-=======
                 description: |-
->>>>>>> user/travisw/tool-ingested-tsp
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
                   `length` if the maximum number of tokens specified in the request was reached,
                   `content_filter` if content was omitted due to a flag from our content filters,
@@ -2578,13 +2631,12 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the chat completion was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         model:
           type: string
           description: The model used for the chat completion.
         system_fingerprint:
           type: string
-          description: |
+          description: |-
             This fingerprint represents the backend configuration that the model runs with.
 
             Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
@@ -2637,11 +2689,7 @@ components:
                   - content_filter
                   - function_call
                 nullable: true
-<<<<<<< HEAD
-                description: |
-=======
                 description: |-
->>>>>>> user/travisw/tool-ingested-tsp
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
                   `length` if the maximum number of tokens specified in the request was reached,
                   `content_filter` if content was omitted due to a flag from our content filters,
@@ -2661,20 +2709,12 @@ components:
           description: |-
             The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
             same timestamp.
-<<<<<<< HEAD
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
-=======
->>>>>>> user/travisw/tool-ingested-tsp
         model:
           type: string
           description: The model to generate the completion.
         system_fingerprint:
           type: string
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             This fingerprint represents the backend configuration that the model runs with.
             Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
         object:
@@ -2734,11 +2774,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 20
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.
 
             When used with `n`, `best_of` controls the number of candidate completions and `n` specifies how many to return – `best_of` must be greater than `n`.
@@ -2770,7 +2806,7 @@ components:
             type: integer
             format: int32
           nullable: true
-          description: |
+          description: |-
             Modify the likelihood of specified tokens appearing in the completion.
 
             Accepts a JSON object that maps tokens (specified by their token ID in the GPT tokenizer) to an associated bias value from -100 to 100. You can use this [tokenizer tool](/tokenizer?view=bpe) to convert text to token IDs. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
@@ -2783,11 +2819,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 5
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             Include the log probabilities on the `logprobs` most likely output tokens, as well the chosen tokens. For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1` elements in the response.
 
             The maximum value for `logprobs` is 5.
@@ -2796,11 +2828,7 @@ components:
           format: int32
           nullable: true
           minimum: 0
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             The maximum number of [tokens](/tokenizer) that can be generated in the completion.
 
             The token count of your prompt plus `max_tokens` cannot exceed the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
@@ -2811,7 +2839,7 @@ components:
           nullable: true
           minimum: 1
           maximum: 128
-          description: |
+          description: |-
             How many completions to generate for each prompt.
 
             **Note:** Because this parameter generates many completions, it can quickly consume your token quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
@@ -2835,11 +2863,7 @@ components:
           nullable: true
           minimum: -9223372036854776000
           maximum: 9223372036854776000
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
 
             Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
@@ -2856,28 +2880,22 @@ components:
         stream:
           type: boolean
           nullable: true
-<<<<<<< HEAD
-          description: |
-            Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
-=======
           description: 'Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).'
->>>>>>> user/travisw/tool-ingested-tsp
           default: false
         suffix:
           type: string
           nullable: true
-          description: The suffix that comes after a completion of inserted text.
+          description: |-
+            The suffix that comes after a completion of inserted text.
+
+            This parameter is only supported for `gpt-3.5-turbo-instruct`.
         temperature:
           type: number
           format: float
           nullable: true
           minimum: 0
           maximum: 2
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 
             We generally recommend altering this or `top_p` but not both.
@@ -2888,11 +2906,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 1
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or `temperature` but not both.
@@ -2925,11 +2939,7 @@ components:
                   - stop
                   - length
                   - content_filter
-<<<<<<< HEAD
-                description: |
-=======
                 description: |-
->>>>>>> user/travisw/tool-ingested-tsp
                   The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
                   `length` if the maximum number of tokens specified in the request was reached,
                   or `content_filter` if content was omitted due to a flag from our content filters.
@@ -2973,13 +2983,12 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the completion was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         model:
           type: string
           description: The model used for completion.
         system_fingerprint:
           type: string
-          description: |
+          description: |-
             This fingerprint represents the backend configuration that the model runs with.
 
             Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
@@ -3015,12 +3024,7 @@ components:
                 items:
                   type: integer
                   format: int32
-<<<<<<< HEAD
-          description: |
-            Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
-=======
           description: Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
->>>>>>> user/travisw/tool-ingested-tsp
           x-oaiExpandable: true
         model:
           anyOf:
@@ -3046,12 +3050,7 @@ components:
           type: integer
           format: int32
           minimum: 1
-<<<<<<< HEAD
-          description: |
-            The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
-=======
           description: The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
->>>>>>> user/travisw/tool-ingested-tsp
         user:
           type: string
           description: |-
@@ -3101,6 +3100,7 @@ components:
       properties:
         file:
           type: string
+          format: binary
           description: The File object (not file name) to be uploaded.
         purpose:
           type: string
@@ -3133,10 +3133,10 @@ components:
           x-oaiTypeLabel: string
         training_file:
           type: string
-          description: |
+          description: |-
             The ID of an uploaded file that contains training data.
 
-            See [upload file](/docs/api-reference/files/upload) for how to upload a file.
+            See [upload file](/docs/api-reference/files/create) for how to upload a file.
 
             Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
 
@@ -3183,18 +3183,14 @@ components:
           nullable: true
           minLength: 1
           maxLength: 40
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             A string of up to 18 characters that will be added to your fine-tuned model name.
 
             For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
         validation_file:
           type: string
           nullable: true
-          description: |
+          description: |-
             The ID of an uploaded file that contains validation data.
 
             If you provide this file, the data is used to generate validation
@@ -3205,6 +3201,70 @@ components:
             Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+        integrations:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestIntegrations'
+          nullable: true
+          description: A list of integrations to enable for your fine-tuning job.
+        seed:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 2147483647
+          description: |-
+            The seed controls the reproducibility of the job. Passing in the same seed and job parameters
+            should produce the same results, but may differ in rare cases.
+            If a seed is not specified, one will be generated for you.
+    CreateFineTuningJobRequestIntegrations:
+      type: array
+      items:
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+              - wandb
+            description: The type of integration to enable. Currently, only "wandb" (Weights and Biases) is supported.
+          wandb:
+            type: object
+            properties:
+              project:
+                type: string
+                description: The name of the project that the new run will be created under.
+              name:
+                type: string
+                nullable: true
+                description: A display name to set for the run. If not set, we will use the Job ID as the name.
+              entity:
+                type: string
+                nullable: true
+                description: |-
+                  The entity to use for the run. This allows you to set the team or username of the WandB
+                  user that you would
+                  like associated with the run. If not set, the default entity for the registered WandB API
+                  key is used.
+              tags:
+                type: array
+                items:
+                  type: string
+                description: |-
+                  A list of tags to be attached to the newly created run. These tags are passed through
+                  directly to WandB. Some
+                  default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}",
+                  "openai/{ftjob-abcdef}".
+            required:
+              - project
+            description: |-
+              The settings for your integration with Weights and Biases. This payload specifies the
+              project that
+              metrics will be sent to. Optionally, you can set an explicit display name for your run, add
+              tags
+              to your run, and set a default entity (team, username, etc) to be associated with your run.
+        required:
+          - type
+          - wandb
     CreateImageEditRequestMultiPart:
       type: object
       required:
@@ -3217,7 +3277,6 @@ components:
           description: |-
             The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not
             provided, image must have transparency, which will be used as the mask.
-          x-customTspIngestionRule: binary payloads are encoded bytes
         prompt:
           type: string
           description: A text description of the desired image(s). The maximum length is 1000 characters.
@@ -3225,10 +3284,6 @@ components:
           type: string
           format: binary
           description: An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions as `image`.
-<<<<<<< HEAD
-          x-customTspIngestionRule: binary payloads are encoded bytes
-=======
->>>>>>> user/travisw/tool-ingested-tsp
         model:
           anyOf:
             - type: string
@@ -3395,20 +3450,22 @@ components:
           type: string
           enum:
             - user
-          description: The role of the entity that is creating the message. Currently only `user` is supported.
+            - assistant
+          description: |-
+            The role of the entity that is creating the message. Allowed values include:
+            - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
+            - `assistant`: Indicates the message is generated by the assistant. Use this value to insert messages from the assistant into the conversation.
         content:
           type: string
           minLength: 1
-          maxLength: 32768
+          maxLength: 256000
           description: The content of the message.
-        file_ids:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          maxItems: 10
-          description: A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a maximum of 10 files attached to a message. Useful for tools like `retrieval` and `code_interpreter` that can access and use files.
-          default: []
+        attachments:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CreateMessageRequestAttachmentsItem'
+          nullable: true
+          description: A list of files attached to the message, and the tools they should be added to.
         metadata:
           type: object
           additionalProperties:
@@ -3419,6 +3476,22 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+    CreateMessageRequestAttachmentsItem:
+      type: array
+      items:
+        type: object
+        properties:
+          file_id:
+            type: string
+            description: The ID of the file to attach to the message.
+          tools:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/AssistantToolsCode'
+                - $ref: '#/components/schemas/AssistantToolsFileSearch'
+            description: The tools to add this file to.
+            x-oaiExpandable: true
     CreateModerationRequest:
       type: object
       required:
@@ -3438,11 +3511,7 @@ components:
               enum:
                 - text-moderation-latest
                 - text-moderation-stable
-<<<<<<< HEAD
-          description: |
-=======
           description: |-
->>>>>>> user/travisw/tool-ingested-tsp
             Two content moderations models are available: `text-moderation-stable` and `text-moderation-latest`.
 
             The default is `text-moderation-latest` which will be automatically upgraded over time. This ensures you are always using our most accurate model. If you use `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
@@ -3607,12 +3676,34 @@ components:
           type: string
           description: The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run.
         model:
-          type: string
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - gpt-4-turbo
+                - gpt-4-turbo-2024-04-09
+                - gpt-4-0125-preview
+                - gpt-4-turbo-preview
+                - gpt-4-1106-preview
+                - gpt-4-vision-preview
+                - gpt-4
+                - gpt-4-0314
+                - gpt-4-0613
+                - gpt-4-32k
+                - gpt-4-32k-0314
+                - gpt-4-32k-0613
+                - gpt-3.5-turbo
+                - gpt-3.5-turbo-16k
+                - gpt-3.5-turbo-0613
+                - gpt-3.5-turbo-1106
+                - gpt-3.5-turbo-0125
+                - gpt-3.5-turbo-16k-0613
           nullable: true
           description: |-
             The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
             is provided here, it will override the model associated with the assistant. If not, the model
             associated with the assistant will be used.
+          x-oaiTypeLabel: string
         instructions:
           type: string
           nullable: true
@@ -3625,19 +3716,16 @@ components:
           description: |-
             Appends additional instructions at the end of the instructions for the run. This is useful for
             modifying the behavior on a per-run basis without overriding other instructions.
+        additional_messages:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CreateRunRequestAdditional_messages'
+          nullable: true
+          description: Adds additional messages to the thread before creating the run.
         tools:
-<<<<<<< HEAD
-          type: array
-          items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsRetrieval'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
-=======
           type: object
           allOf:
             - $ref: '#/components/schemas/CreateRunRequestTools'
->>>>>>> user/travisw/tool-ingested-tsp
           nullable: true
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
@@ -3652,17 +3740,71 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
-<<<<<<< HEAD
-=======
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: |-
+            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
+            more random, while lower values like 0.2 will make it more focused and deterministic.
+          default: 1
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 1
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model
+            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
+            comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or temperature but not both.
+          default: 1
+        stream:
+          type: boolean
+          nullable: true
+          description: 'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.'
+        max_prompt_tokens:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 256
+          description: The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+        max_completion_tokens:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 256
+          description: The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+        truncation_strategy:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TruncationObject'
+          nullable: true
+        tool_choice:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
+          nullable: true
+        response_format:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
+          nullable: true
+    CreateRunRequestAdditional_messages:
+      type: array
+      items:
+        $ref: '#/components/schemas/CreateMessageRequest'
     CreateRunRequestTools:
       type: array
       items:
         anyOf:
           - $ref: '#/components/schemas/AssistantToolsCode'
-          - $ref: '#/components/schemas/AssistantToolsRetrieval'
+          - $ref: '#/components/schemas/AssistantToolsFileSearch'
           - $ref: '#/components/schemas/AssistantToolsFunction'
       maxItems: 20
->>>>>>> user/travisw/tool-ingested-tsp
+      x-oaiExpandable: true
     CreateSpeechRequest:
       type: object
       required:
@@ -3677,8 +3819,7 @@ components:
               enum:
                 - tts-1
                 - tts-1-hd
-          description: |
-            One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`
+          description: 'One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`'
           x-oaiTypeLabel: string
         input:
           type: string
@@ -3725,12 +3866,34 @@ components:
             - $ref: '#/components/schemas/CreateThreadRequest'
           description: If no thread is provided, an empty thread will be created.
         model:
-          type: string
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - gpt-4-turbo
+                - gpt-4-turbo-2024-04-09
+                - gpt-4-0125-preview
+                - gpt-4-turbo-preview
+                - gpt-4-1106-preview
+                - gpt-4-vision-preview
+                - gpt-4
+                - gpt-4-0314
+                - gpt-4-0613
+                - gpt-4-32k
+                - gpt-4-32k-0314
+                - gpt-4-32k-0613
+                - gpt-3.5-turbo
+                - gpt-3.5-turbo-16k
+                - gpt-3.5-turbo-0613
+                - gpt-3.5-turbo-1106
+                - gpt-3.5-turbo-0125
+                - gpt-3.5-turbo-16k-0613
           nullable: true
           description: |-
             The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
             is provided here, it will override the model associated with the assistant. If not, the model
             associated with the assistant will be used.
+          x-oaiTypeLabel: string
         instructions:
           type: string
           nullable: true
@@ -3738,22 +3901,39 @@ components:
             Override the default system message of the assistant. This is useful for modifying the
             behavior on a per-run basis.
         tools:
-<<<<<<< HEAD
-          type: array
-          items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsRetrieval'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
-=======
           type: object
           allOf:
             - $ref: '#/components/schemas/CreateThreadAndRunRequestTools'
->>>>>>> user/travisw/tool-ingested-tsp
           nullable: true
           description: |-
             Override the tools the assistant can use for this run. This is useful for modifying the
             behavior on a per-run basis.
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              type: object
+              properties:
+                vector_store_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 1
+                  description: |-
+                    The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
+                    assistant. There can be a maximum of 1 vector store attached to the assistant.
+          nullable: true
+          description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
           type: object
           additionalProperties:
@@ -3764,12 +3944,64 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: |-
+            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
+            more random, while lower values like 0.2 will make it more focused and deterministic.
+          default: 1
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 1
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model
+            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
+            comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or temperature but not both.
+          default: 1
+        stream:
+          type: boolean
+          nullable: true
+          description: 'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.'
+        max_prompt_tokens:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 256
+          description: The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+        max_completion_tokens:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 256
+          description: The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
+        truncation_strategy:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TruncationObject'
+          nullable: true
+        tool_choice:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
+          nullable: true
+        response_format:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
+          nullable: true
     CreateThreadAndRunRequestTools:
       type: array
       items:
         anyOf:
           - $ref: '#/components/schemas/AssistantToolsCode'
-          - $ref: '#/components/schemas/AssistantToolsRetrieval'
+          - $ref: '#/components/schemas/AssistantToolsFileSearch'
           - $ref: '#/components/schemas/AssistantToolsFunction'
       maxItems: 20
     CreateThreadRequest:
@@ -3780,6 +4012,59 @@ components:
           items:
             $ref: '#/components/schemas/CreateMessageRequest'
           description: A list of [messages](/docs/api-reference/messages) to start the thread with.
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              type: object
+              properties:
+                vector_store_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 1
+                  description: |-
+                    The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
+                    There can be a maximum of 1 vector store attached to the thread.
+                vector_stores:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      file_ids:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 10000
+                        description: |-
+                          A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
+                          a maximum of 10000 files in a vector store.
+                      metadata:
+                        type: object
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
+                          storing additional information about the vector store in a structured format. Keys can
+                          be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+                        x-oaiTypeLabel: map
+                  maxItems: 1
+                  description: |-
+                    A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
+                    file_ids and attach it to this thread. There can be a maximum of 1 vector store attached
+                    to the thread.
+          nullable: true
+          description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
           type: object
           additionalProperties:
@@ -3798,6 +4083,7 @@ components:
       properties:
         file:
           type: string
+          format: binary
           description: |-
             The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
             mpeg, mpga, m4a, ogg, wav, or webm.
@@ -3808,12 +4094,7 @@ components:
             - type: string
               enum:
                 - whisper-1
-<<<<<<< HEAD
-          description: |
-            ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
-=======
           description: ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
->>>>>>> user/travisw/tool-ingested-tsp
           x-oaiTypeLabel: string
         language:
           type: string
@@ -3834,21 +4115,13 @@ components:
             - srt
             - verbose_json
             - vtt
-<<<<<<< HEAD
-          description: |
-            The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
-=======
           description: 'The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.'
->>>>>>> user/travisw/tool-ingested-tsp
           default: json
         temperature:
           type: number
           format: float
-<<<<<<< HEAD
-=======
           minimum: 0
           maximum: 1
->>>>>>> user/travisw/tool-ingested-tsp
           description: |-
             The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
             random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
@@ -3862,12 +4135,7 @@ components:
             enum:
               - word
               - segment
-<<<<<<< HEAD
-          description: |
-            The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.
-=======
           description: 'The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.'
->>>>>>> user/travisw/tool-ingested-tsp
           default:
             - segment
     CreateTranscriptionResponseJson:
@@ -3893,7 +4161,6 @@ components:
           type: number
           format: seconds
           description: The duration of the input audio.
-          x-customTspIngestionRule: timespans are encoded durations
         text:
           type: string
           description: The transcribed text.
@@ -3916,6 +4183,7 @@ components:
       properties:
         file:
           type: string
+          format: binary
           description: |-
             The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
             mpeg, mpga, m4a, ogg, wav, or webm.
@@ -3926,12 +4194,7 @@ components:
             - type: string
               enum:
                 - whisper-1
-<<<<<<< HEAD
-          description: |
-            ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
-=======
           description: ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.
->>>>>>> user/travisw/tool-ingested-tsp
           x-oaiTypeLabel: string
         prompt:
           type: string
@@ -3946,22 +4209,13 @@ components:
             - srt
             - verbose_json
             - vtt
-<<<<<<< HEAD
-          description: |
-            The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
-          x-customTspIngestionRule: add enum types
-=======
           description: 'The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.'
->>>>>>> user/travisw/tool-ingested-tsp
           default: json
         temperature:
           type: number
           format: float
-<<<<<<< HEAD
-=======
           minimum: 0
           maximum: 1
->>>>>>> user/travisw/tool-ingested-tsp
           description: |-
             The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
             random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
@@ -3989,7 +4243,6 @@ components:
           type: number
           format: seconds
           description: The duration of the input audio.
-          x-customTspIngestionRule: timespans are encoded durations
         text:
           type: string
           description: The translated text.
@@ -3998,24 +4251,50 @@ components:
           items:
             $ref: '#/components/schemas/TranscriptionSegment'
           description: Segments of the translated text and their corresponding details.
-    DeleteAssistantFileResponse:
+    CreateVectorStoreFileBatchRequest:
       type: object
       required:
-        - id
-        - deleted
-        - object
+        - file_ids
       properties:
-        id:
+        file_ids:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 500
+          description: A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
+    CreateVectorStoreFileRequest:
+      type: object
+      required:
+        - file_id
+      properties:
+        file_id:
           type: string
-        deleted:
-          type: boolean
-        object:
+          description: A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files.
+    CreateVectorStoreRequest:
+      type: object
+      properties:
+        file_ids:
+          type: array
+          items:
+            type: string
+          maxItems: 500
+          description: A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
+        name:
           type: string
-          enum:
-            - assistant.file.deleted
-      description: |-
-        Deletes the association between the assistant and the file, but does not delete the
-        [File](/docs/api-reference/files) object itself.
+          description: The name of the vector store.
+        expires_after:
+          $ref: '#/components/schemas/VectorStoreExpirationAfter'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: |-
+            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
+            additional information about the object in a structured format. Keys can be a maximum of 64
+            characters long and values can be a maxium of 512 characters long.
+          x-oaiTypeLabel: map
     DeleteAssistantResponse:
       type: object
       required:
@@ -4089,6 +4368,36 @@ components:
           type: string
           enum:
             - thread.deleted
+    DeleteVectorStoreFileResponse:
+      type: object
+      required:
+        - id
+        - deleted
+        - object
+      properties:
+        id:
+          type: string
+        deleted:
+          type: boolean
+        object:
+          type: string
+          enum:
+            - vector_store.file.deleted
+    DeleteVectorStoreResponse:
+      type: object
+      required:
+        - id
+        - deleted
+        - object
+      properties:
+        id:
+          type: string
+        deleted:
+          type: boolean
+        object:
+          type: string
+          enum:
+            - vector_store.deleted
     Embedding:
       type: object
       required:
@@ -4109,7 +4418,6 @@ components:
           description: |-
             The embedding vector, which is a list of floats. The length of vector depends on the model as
             listed in the [embedding guide](/docs/guides/embeddings).
-          x-customTspIngestionRule: apply missing string union for embedding response valuese
         object:
           type: string
           enum:
@@ -4141,6 +4449,52 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/Error'
+    FineTuningIntegration:
+      type: object
+      required:
+        - type
+        - wandb
+      properties:
+        type:
+          type: string
+          enum:
+            - wandb
+          description: The type of the integration being enabled for the fine-tuning job
+        wandb:
+          type: object
+          properties:
+            project:
+              type: string
+              description: The name of the project that the new run will be created under.
+            name:
+              type: string
+              nullable: true
+              description: A display name to set for the run. If not set, we will use the Job ID as the name.
+            entity:
+              type: string
+              nullable: true
+              description: |-
+                The entity to use for the run. This allows you to set the team or username of the WandB user
+                that you would
+                like associated with the run. If not set, the default entity for the registered WandB API
+                key is used.
+            tags:
+              type: array
+              items:
+                type: string
+              description: |-
+                A list of tags to be attached to the newly created run. These tags are passed through
+                directly to WandB. Some
+                default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}",
+                "openai/{ftjob-abcdef}".
+          required:
+            - project
+          description: |-
+            The settings for your integration with Weights and Biases. This payload specifies the project
+            that
+            metrics will be sent to. Optionally, you can set an explicit display name for your run, add
+            tags
+            to your run, and set a default entity (team, username, etc) to be associated with your run.
     FineTuningJob:
       type: object
       required:
@@ -4158,6 +4512,7 @@ components:
         - trained_tokens
         - training_file
         - validation_file
+        - seed
       properties:
         id:
           type: string
@@ -4166,7 +4521,6 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the fine-tuning job was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         error:
           type: object
           properties:
@@ -4199,7 +4553,6 @@ components:
           description: |-
             The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
             null if the fine-tuning job is still running.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         hyperparameters:
           type: object
           properties:
@@ -4267,12 +4620,83 @@ components:
           description: |-
             The file ID used for validation. You can retrieve the validation results with the [Files
             API](/docs/api-reference/files/retrieve-contents).
-<<<<<<< HEAD
-      description: |
-        The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
-=======
+        integrations:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/FineTuningJobIntegrationsItem'
+          nullable: true
+          description: A list of integrations to enable for this fine-tuning job.
+        seed:
+          type: integer
+          format: int32
+          description: The seed used for the fine-tuning job.
+        estimated_finish:
+          type: integer
+          format: int32
+          nullable: true
+          description: |-
+            The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value
+            will be null if the fine-tuning job is not running.
       description: The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
->>>>>>> user/travisw/tool-ingested-tsp
+    FineTuningJobCheckpoint:
+      type: object
+      required:
+        - id
+        - created_at
+        - fine_tuned_model_checkpoint
+        - step_number
+        - metrics
+        - fine_tuning_job_id
+        - object
+      properties:
+        id:
+          type: string
+          description: The checkpoint identifier, which can be referenced in the API endpoints.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the checkpoint was created.
+        fine_tuned_model_checkpoint:
+          type: string
+          description: The name of the fine-tuned checkpoint model that is created.
+        step_number:
+          type: integer
+          format: int32
+          description: The step number that the checkpoint was created at.
+        metrics:
+          type: object
+          properties:
+            step:
+              type: number
+              format: float
+            train_loss:
+              type: number
+              format: float
+            train_mean_token_accuracy:
+              type: number
+              format: float
+            valid_loss:
+              type: number
+              format: float
+            valid_mean_token_accuracy:
+              type: number
+              format: float
+            full_valid_loss:
+              type: number
+              format: float
+            full_valid_mean_token_accuracy:
+              type: number
+              format: float
+          description: Metrics at the step number during the fine-tuning job.
+        fine_tuning_job_id:
+          type: string
+          description: The name of the fine-tuning job that this checkpoint was created from.
+        object:
+          type: string
+          enum:
+            - fine_tuning.job.checkpoint
+          description: The object type, which is always "fine_tuning.job.checkpoint".
+      description: The `fine_tuning.job.checkpoint` object represents a model checkpoint for a fine-tuning job that is ready to use.
     FineTuningJobEvent:
       type: object
       required:
@@ -4287,7 +4711,6 @@ components:
         created_at:
           type: integer
           format: unixtime
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         level:
           type: string
           enum:
@@ -4301,6 +4724,12 @@ components:
           enum:
             - fine_tuning.job.event
       description: Fine-tuning job event object
+    FineTuningJobIntegrationsItem:
+      type: array
+      items:
+        $ref: '#/components/schemas/FineTuningIntegration'
+      maxItems: 5
+      x-oaiExpandable: true
     FunctionObject:
       type: object
       required:
@@ -4332,12 +4761,10 @@ components:
           type: string
           format: base64
           description: The base64-encoded JSON of the generated image, if `response_format` is `b64_json`.
-          x-customTspIngestionRule: base64 input uses an encoded bytes type
         url:
           type: string
           format: uri
           description: The URL of the generated image, if `response_format` is `url` (default).
-          x-customTspIngestionRule: url uses the url type
         revised_prompt:
           type: string
           description: The prompt that was used to generate the image, if there was any revision to the prompt.
@@ -4351,32 +4778,10 @@ components:
         created:
           type: integer
           format: unixtime
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         data:
           type: array
           items:
             $ref: '#/components/schemas/Image'
-    ListAssistantFilesResponse:
-      type: object
-      required:
-        - object
-        - data
-        - first_id
-        - last_id
-        - has_more
-      properties:
-        object:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssistantFileObject'
-        first_id:
-          type: string
-        last_id:
-          type: string
-        has_more:
-          type: boolean
     ListAssistantsResponse:
       type: object
       required:
@@ -4398,6 +4803,27 @@ components:
           type: string
         has_more:
           type: boolean
+    ListBatchesResponse:
+      type: object
+      required:
+        - data
+        - has_more
+        - object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Batch'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+        object:
+          type: string
+          enum:
+            - list
     ListFilesResponse:
       type: object
       required:
@@ -4412,6 +4838,29 @@ components:
           type: string
           enum:
             - list
+    ListFineTuningJobCheckpointsResponse:
+      type: object
+      required:
+        - data
+        - object
+        - has_more
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FineTuningJobCheckpoint'
+        object:
+          type: string
+          enum:
+            - list
+        first_id:
+          type: string
+          nullable: true
+        last_id:
+          type: string
+          nullable: true
+        has_more:
+          type: boolean
     ListFineTuningJobEventsResponse:
       type: object
       required:
@@ -4426,27 +4875,6 @@ components:
           type: string
           enum:
             - list
-    ListMessageFilesResponse:
-      type: object
-      required:
-        - object
-        - data
-        - first_id
-        - last_id
-        - has_more
-      properties:
-        object:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/MessageFileObject'
-        first_id:
-          type: string
-        last_id:
-          type: string
-        has_more:
-          type: boolean
     ListMessagesResponse:
       type: object
       required:
@@ -4569,6 +4997,48 @@ components:
           type: string
         has_more:
           type: boolean
+    ListVectorStoreFilesResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VectorStoreFileObject'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    ListVectorStoresResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VectorStoreObject'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
     MessageContentImageFileObject:
       type: object
       required:
@@ -4628,7 +5098,7 @@ components:
           minimum: 0
       description: |-
         A citation within the message that points to a specific quote from a specific File associated
-        with the assistant or the message. Generated when the assistant uses the "retrieval" tool to
+        with the assistant or the message. Generated when the assistant uses the "file_search" tool to
         search files.
     MessageContentTextAnnotationsFilePathObject:
       type: object
@@ -4687,37 +5157,168 @@ components:
                 anyOf:
                   - $ref: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
                   - $ref: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
+              x-oaiExpandable: true
           required:
             - value
             - annotations
       description: The text content that is part of a message.
-    MessageFileObject:
+    MessageDeltaContentImageFileObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the content part in the message.
+        type:
+          type: string
+          enum:
+            - image_file
+          description: Always `image_file`.
+        image_file:
+          type: object
+          properties:
+            file_id:
+              type: string
+              description: The [File](/docs/api-reference/files) ID of the image in the message content.
+      description: References an image [File](/docs/api-reference/files) in the content of a message.
+    MessageDeltaContentTextAnnotationsFileCitationObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the annotation in the text content part.
+        type:
+          type: string
+          enum:
+            - file_citation
+          description: Always `file_citation`.
+        text:
+          type: string
+          description: The text in the message content that needs to be replaced.
+        file_citation:
+          type: object
+          properties:
+            file_id:
+              type: string
+              description: The ID of the specific File the citation is from.
+            quote:
+              type: string
+              description: The specific quote in the file.
+        start_index:
+          type: integer
+          format: int32
+          minimum: 0
+        end_index:
+          type: integer
+          format: int32
+          minimum: 0
+      description: |-
+        A citation within the message that points to a specific quote from a specific File associated
+        with the assistant or the message. Generated when the assistant uses the "file_search" tool to
+        search files.
+    MessageDeltaContentTextAnnotationsFilePathObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the annotation in the text content part.
+        type:
+          type: string
+          enum:
+            - file_path
+          description: Always `file_path`.
+        text:
+          type: string
+          description: The text in the message content that needs to be replaced.
+        file_path:
+          type: object
+          properties:
+            file_id:
+              type: string
+              description: The ID of the file that was generated.
+        start_index:
+          type: integer
+          format: int32
+          minimum: 0
+        end_index:
+          type: integer
+          format: int32
+          minimum: 0
+      description: A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
+    MessageDeltaContentTextObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the content part in the message.
+        type:
+          type: string
+          enum:
+            - text
+          description: Always `text`.
+        text:
+          type: object
+          properties:
+            value:
+              type: string
+              description: The data that makes up the text.
+            annotations:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFileCitationObject'
+                  - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFilePathObject'
+              x-oaiExpandable: true
+      description: The text content that is part of a message.
+    MessageDeltaObject:
       type: object
       required:
         - id
         - object
-        - created_at
-        - message_id
+        - delta
       properties:
         id:
           type: string
-          description: The identifier, which can be referenced in API endpoints.
+          description: The identifier of the message, which can be referenced in API endpoints.
         object:
           type: string
           enum:
-            - thread.message.file
-          description: The object type, which is always `thread.message.file`.
-        created_at:
-          type: integer
-          format: unixtime
-          description: The Unix timestamp (in seconds) for when the message file was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
-        message_id:
-          type: string
-          description: |-
-            The ID of the [message](/docs/api-reference/messages) that the
-            [File](/docs/api-reference/files) is attached to.
-      description: A list of files attached to a `message`.
+            - thread.message.delta
+          description: The object type, which is always `thread.message.delta`.
+        delta:
+          type: object
+          properties:
+            role:
+              type: string
+              enum:
+                - user
+                - assistant
+              description: The entity that produced the message. One of `user` or `assistant`.
+            content:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/MessageDeltaContentImageFileObject'
+                  - $ref: '#/components/schemas/MessageDeltaContentTextObject'
+              description: The content of the message in array of text and/or images.
+              x-oaiExpandable: true
+          description: The delta containing the fields that have changed on the Message.
+      description: Represents a message delta i.e. any changed fields on a message during streaming.
     MessageObject:
       type: object
       required:
@@ -4725,11 +5326,15 @@ components:
         - object
         - created_at
         - thread_id
+        - status
+        - incomplete_details
+        - completed_at
+        - incomplete_at
         - role
         - content
         - assistant_id
         - run_id
-        - file_ids
+        - attachments
         - metadata
       properties:
         id:
@@ -4744,10 +5349,42 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the message was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         thread_id:
           type: string
           description: The [thread](/docs/api-reference/threads) ID that this message belongs to.
+        status:
+          type: string
+          enum:
+            - in_progress
+            - incomplete
+            - completed
+          description: The status of the message, which can be either `in_progress`, `incomplete`, or `completed`.
+        incomplete_details:
+          type: object
+          properties:
+            reason:
+              type: string
+              enum:
+                - content_filter
+                - max_tokens
+                - run_cancelled
+                - run_expired
+                - run_failed
+              description: The reason the message is incomplete.
+          required:
+            - reason
+          nullable: true
+          description: On an incomplete message, details about why the message is incomplete.
+        completed_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the message was completed.
+        incomplete_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the message was marked as incomplete.
         role:
           type: string
           enum:
@@ -4761,6 +5398,7 @@ components:
               - $ref: '#/components/schemas/MessageContentImageFileObject'
               - $ref: '#/components/schemas/MessageContentTextObject'
           description: The content of the message in array of text and/or images.
+          x-oaiExpandable: true
         assistant_id:
           type: string
           nullable: true
@@ -4770,19 +5408,13 @@ components:
         run_id:
           type: string
           nullable: true
-          description: |-
-            If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-            this message.
-        file_ids:
-          type: array
-          items:
-            type: string
-          maxItems: 10
-          description: |-
-            A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-            tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-            attached to a message.
-          default: []
+          description: The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
+        attachments:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/MessageObjectAttachmentsItem'
+          nullable: true
+          description: A list of files attached to the message, and the tools they were added to.
         metadata:
           type: object
           additionalProperties:
@@ -4794,6 +5426,22 @@ components:
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: Represents a message within a [thread](/docs/api-reference/threads).
+    MessageObjectAttachmentsItem:
+      type: array
+      items:
+        type: object
+        properties:
+          file_id:
+            type: string
+            description: The ID of the file to attach to the message.
+          tools:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/AssistantToolsCode'
+                - $ref: '#/components/schemas/AssistantToolsFileSearch'
+            description: The tools to add this file to.
+            x-oaiExpandable: true
     Model:
       type: object
       required:
@@ -4809,7 +5457,6 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) when the model was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         object:
           type: string
           enum:
@@ -4841,34 +5488,45 @@ components:
         instructions:
           type: string
           nullable: true
-          maxLength: 32768
-          description: The system instructions that the assistant uses. The maximum length is 32768 characters.
+          maxLength: 256000
+          description: The system instructions that the assistant uses. The maximum length is 256,000 characters.
         tools:
           type: array
           items:
             anyOf:
               - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFileSearch'
               - $ref: '#/components/schemas/AssistantToolsFunction'
           maxItems: 128
-<<<<<<< HEAD
-          description: |
-            A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-=======
-          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
->>>>>>> user/travisw/tool-ingested-tsp
+          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+          x-oaiExpandable: true
           default: []
-        file_ids:
-          type: array
-          items:
-            type: string
-          maxItems: 20
-          description: |-
-            A list of [File](/docs/api-reference/files) IDs attached to this assistant. There can be a
-            maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-            ascending order. If a file was previously attached to the list but does not show up in the
-            list, it will be deleted from the assistant.
-          default: []
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: Overrides the list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              type: object
+              properties:
+                vector_store_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 1
+                  description: |-
+                    Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this
+                    assistant. There can be a maximum of 1 vector store attached to the assistant.
+          nullable: true
+          description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
           type: object
           additionalProperties:
@@ -4879,6 +5537,33 @@ components:
             additional information about the object in a structured format. Keys can be a maximum of 64
             characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: |-
+            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
+            more random, while lower values like 0.2 will make it more focused and deterministic.
+          default: 1
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 1
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model
+            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
+            comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or temperature but not both.
+          default: 1
+        response_format:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
+          nullable: true
     ModifyMessageRequest:
       type: object
       properties:
@@ -4908,6 +5593,32 @@ components:
     ModifyThreadRequest:
       type: object
       properties:
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              type: object
+              properties:
+                vector_store_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 1
+                  description: |-
+                    The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
+                    There can be a maximum of 1 vector store attached to the thread.
+          nullable: true
+          description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
           type: object
           additionalProperties:
@@ -4937,12 +5648,10 @@ components:
           format: int32
           nullable: true
           description: The size of the file, in bytes.
-          x-customTspIngestionRule: file response values can have null byte counts
         created_at:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the file was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         filename:
           type: string
           description: The name of the file.
@@ -5006,12 +5715,17 @@ components:
         - cancelled_at
         - failed_at
         - completed_at
+        - incomplete_details
         - model
         - instructions
         - tools
-        - file_ids
         - metadata
         - usage
+        - max_prompt_tokens
+        - max_completion_tokens
+        - truncation_strategy
+        - tool_choice
+        - response_format
       properties:
         id:
           type: string
@@ -5025,7 +5739,6 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the run was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         thread_id:
           type: string
           description: The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
@@ -5089,32 +5802,41 @@ components:
         expires_at:
           type: integer
           format: unixtime
+          nullable: true
           description: The Unix timestamp (in seconds) for when the run will expire.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         started_at:
           type: integer
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was started.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         cancelled_at:
           type: integer
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was cancelled.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         failed_at:
           type: integer
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run failed.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         completed_at:
           type: integer
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run was completed.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
+        incomplete_details:
+          type: object
+          properties:
+            reason:
+              type: string
+              enum:
+                - max_completion_tokens
+                - max_prompt_tokens
+              description: |-
+                The reason why the run is incomplete. This will point to which specific token limit was
+                reached over the course of the run.
+          nullable: true
+          description: Details on why the run is incomplete. Will be `null` if the run is not incomplete.
         model:
           type: string
           description: The model that the [assistant](/docs/api-reference/assistants) used for this run.
@@ -5126,18 +5848,11 @@ components:
           items:
             anyOf:
               - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsRetrieval'
+              - $ref: '#/components/schemas/AssistantToolsFileSearch'
               - $ref: '#/components/schemas/AssistantToolsFunction'
           maxItems: 20
           description: The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
-          default: []
-        file_ids:
-          type: array
-          items:
-            type: string
-          description: |-
-            The list of [File](/docs/api-reference/files) IDs the
-            [assistant](/docs/api-reference/assistants) used for this run.
+          x-oaiExpandable: true
           default: []
         metadata:
           type: object
@@ -5151,6 +5866,41 @@ components:
           x-oaiTypeLabel: map
         usage:
           $ref: '#/components/schemas/RunCompletionUsage'
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          description: The sampling temperature used for this run. If not set, defaults to 1.
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          description: The nucleus sampling value used for this run. If not set, defaults to 1.
+        max_prompt_tokens:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 256
+          description: The maximum number of prompt tokens specified to have been used over the course of the run.
+        max_completion_tokens:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 256
+          description: The maximum number of completion tokens specified to have been used over the course of the run.
+        truncation_strategy:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TruncationObject'
+          nullable: true
+        tool_choice:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
+          nullable: true
+        response_format:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
+          nullable: true
       description: Represents an execution run on a [thread](/docs/api-reference/threads).
     RunStepCompletionUsage:
       type: object
@@ -5172,6 +5922,200 @@ components:
           format: int32
           description: Total number of tokens used (prompt + completion).
       description: Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.
+    RunStepDeltaObject:
+      type: object
+      required:
+        - id
+        - object
+        - delta
+      properties:
+        id:
+          type: string
+          description: The identifier of the run step, which can be referenced in API endpoints.
+        object:
+          type: string
+          enum:
+            - thread.run.step.delta
+          description: The object type, which is always `thread.run.step.delta`.
+        delta:
+          type: object
+          properties:
+            step_details:
+              anyOf:
+                - $ref: '#/components/schemas/RunStepDeltaStepDetailsMessageCreationObject'
+                - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObject'
+              description: The details of the run step.
+              x-oaiExpandable: true
+          description: The delta containing the fields that have changed on the run step.
+      description: Represents a run step delta i.e. any changed fields on a run step during streaming.
+    RunStepDeltaStepDetailsMessageCreationObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - message_creation
+          description: Always `message_creation`.
+        message_creation:
+          type: object
+          properties:
+            message_id:
+              type: string
+              description: The ID of the message that was created by this run step.
+      description: Details of the message creation by the run step.
+    RunStepDeltaStepDetailsToolCallsCodeObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the tool call in the tool calls array.
+        id:
+          type: string
+          description: The ID of the tool call.
+        type:
+          type: string
+          enum:
+            - code_interpreter
+          description: The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
+        code_interpreter:
+          type: object
+          properties:
+            input:
+              type: string
+              description: The input to the Code Interpreter tool call.
+            outputs:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject'
+                  - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutputImageObject'
+              description: The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+              x-oaiExpandable: true
+          description: The Code Interpreter tool call definition.
+      description: Details of the Code Interpreter tool call the run step was involved in.
+    RunStepDeltaStepDetailsToolCallsCodeOutputImageObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the output in the outputs array.
+        type:
+          type: string
+          enum:
+            - image
+          description: Always `image`.
+        image:
+          type: object
+          properties:
+            file_id:
+              type: string
+              description: The [file](/docs/api-reference/files) ID of the image.
+    RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the output in the outputs array.
+        type:
+          type: string
+          enum:
+            - logs
+          description: Always `logs`.
+        logs:
+          type: string
+          description: The text output from the Code Interpreter tool call.
+      description: Text output from the Code Interpreter tool call as part of a run step.
+    RunStepDeltaStepDetailsToolCallsFileSearchObject:
+      type: object
+      required:
+        - index
+        - type
+        - file_search
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the tool call in the tool calls array.
+        id:
+          type: string
+          description: The ID of the tool call object.
+        type:
+          type: string
+          enum:
+            - file_search
+          description: The type of tool call. This is always going to be `file_search` for this type of tool call.
+        file_search:
+          type: object
+          additionalProperties:
+            type: string
+          description: For now, this is always going to be an empty object.
+          x-oaiTypeLabel: map
+    RunStepDeltaStepDetailsToolCallsFunctionObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the tool call in the tool calls array.
+        id:
+          type: string
+          description: The ID of the tool call object.
+        type:
+          type: string
+          enum:
+            - function
+          description: The type of tool call. This is always going to be `function` for this type of tool call.
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the function.
+            arguments:
+              type: string
+              description: The arguments passed to the function.
+            output:
+              type: string
+              nullable: true
+              description: The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+          description: The definition of the function that was called.
+    RunStepDeltaStepDetailsToolCallsObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - tool_calls
+          description: Always `tool_calls`.
+        tool_calls:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeObject'
+              - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsFileSearchObject'
+              - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsFunctionObject'
+          description: 'An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.'
+          x-oaiExpandable: true
+      description: Details of the tool call.
     RunStepDetailsMessageCreationObject:
       type: object
       required:
@@ -5220,6 +6164,7 @@ components:
                   - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputLogsObject'
                   - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputImageObject'
               description: The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
+              x-oaiExpandable: true
           required:
             - input
             - outputs
@@ -5259,6 +6204,27 @@ components:
           type: string
           description: The text output from the Code Interpreter tool call.
       description: Text output from the Code Interpreter tool call as part of a run step.
+    RunStepDetailsToolCallsFileSearchObject:
+      type: object
+      required:
+        - id
+        - type
+        - file_search
+      properties:
+        id:
+          type: string
+          description: The ID of the tool call object.
+        type:
+          type: string
+          enum:
+            - file_search
+          description: The type of tool call. This is always going to be `file_search` for this type of tool call.
+        file_search:
+          type: object
+          additionalProperties:
+            type: string
+          description: For now, this is always going to be an empty object.
+          x-oaiTypeLabel: map
     RunStepDetailsToolCallsFunctionObject:
       type: object
       required:
@@ -5308,36 +6274,11 @@ components:
           items:
             anyOf:
               - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeObject'
-              - $ref: '#/components/schemas/RunStepDetailsToolCallsRetrievalObject'
+              - $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchObject'
               - $ref: '#/components/schemas/RunStepDetailsToolCallsFunctionObject'
-<<<<<<< HEAD
-          description: |
-            An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.
-=======
-          description: 'An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.'
->>>>>>> user/travisw/tool-ingested-tsp
+          description: 'An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.'
+          x-oaiExpandable: true
       description: Details of the tool call.
-    RunStepDetailsToolCallsRetrievalObject:
-      type: object
-      required:
-        - id
-        - type
-        - retrieval
-      properties:
-        id:
-          type: string
-          description: The ID of the tool call object.
-        type:
-          type: string
-          enum:
-            - retrieval
-          description: The type of tool call. This is always going to be `retrieval` for this type of tool call.
-        retrieval:
-          type: object
-          additionalProperties:
-            type: string
-          description: For now, this is always going to be an empty object.
-          x-oaiTypeLabel: map
     RunStepObject:
       type: object
       required:
@@ -5370,7 +6311,6 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the run step was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         assistant_id:
           type: string
           description: The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
@@ -5425,31 +6365,21 @@ components:
           description: |-
             The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
             the parent run is expired.
-<<<<<<< HEAD
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
-=======
->>>>>>> user/travisw/tool-ingested-tsp
         cancelled_at:
           type: integer
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step was cancelled.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         failed_at:
           type: integer
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step failed.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
         completed_at:
           type: integer
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the run step completed.
-<<<<<<< HEAD
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
-=======
->>>>>>> user/travisw/tool-ingested-tsp
         metadata:
           type: object
           additionalProperties:
@@ -5511,12 +6441,17 @@ components:
                 type: string
                 description: The output of the tool call to be submitted to continue the run.
           description: A list of tools for which the outputs are being submitted.
+        stream:
+          type: boolean
+          nullable: true
+          description: 'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.'
     ThreadObject:
       type: object
       required:
         - id
         - object
         - created_at
+        - tool_resources
         - metadata
       properties:
         id:
@@ -5531,7 +6466,32 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the thread was created.
-          x-customTspIngestionRule: _at and created are Unix encoded utcDateTime
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              type: object
+              properties:
+                vector_store_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 1
+                  description: |-
+                    The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
+                    There can be a maximum of 1 vector store attached to the thread.
+          nullable: true
+          description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
           type: object
           additionalProperties:
@@ -5569,12 +6529,10 @@ components:
           type: number
           format: seconds
           description: Start time of the segment in seconds.
-          x-customTspIngestionRule: timespans are encoded durations
         end:
           type: number
           format: seconds
           description: End time of the segment in seconds.
-          x-customTspIngestionRule: timespans are encoded durations
         text:
           type: string
           description: Text content of the segment.
@@ -5616,15 +6574,288 @@ components:
           type: number
           format: seconds
           description: Start time of the word in seconds.
-          x-customTspIngestionRule: timespans are encoded durations
         end:
           type: number
           format: seconds
           description: End time of the word in seconds.
-<<<<<<< HEAD
-          x-customTspIngestionRule: timespans are encoded durations
-=======
->>>>>>> user/travisw/tool-ingested-tsp
+    TruncationObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - auto
+            - last_messages
+          description: The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
+        last_messages:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          description: The number of most recent messages from the thread when constructing the context for the run.
+      description: |-
+        Controls for how a thread will be truncated prior to the run. Use this to control the intial
+        context window of the run.
+    UpdateVectorStoreRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: The name of the vector store.
+        expires_after:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/VectorStoreExpirationAfter'
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: |-
+            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
+            additional information about the object in a structured format. Keys can be a maximum of 64
+            characters long and values can be a maxium of 512 characters long.
+          x-oaiTypeLabel: map
+    VectorStoreExpirationAfter:
+      type: object
+      required:
+        - anchor
+        - days
+      properties:
+        anchor:
+          type: string
+          enum:
+            - last_active_at
+          description: 'Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`.'
+        days:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 365
+          description: The number of days after the anchor time that the vector store will expire.
+      description: The expiration policy for a vector store.
+    VectorStoreFileBatchObject:
+      type: object
+      required:
+        - id
+        - object
+        - created_at
+        - vector_store_id
+        - status
+        - file_counts
+      properties:
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints.
+        object:
+          type: string
+          enum:
+            - vector_store.files_batch
+          description: The object type, which is always `vector_store.file_batch`.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the vector store files batch was created.
+        vector_store_id:
+          type: string
+          description: |-
+            The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
+            [File](/docs/api-reference/files) is attached to.
+        status:
+          type: string
+          enum:
+            - in_progress
+            - completed
+            - cancelled
+            - failed
+          description: The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`.
+        file_counts:
+          type: object
+          properties:
+            in_progress:
+              type: integer
+              format: int32
+              description: The number of files that are currently being processed.
+            completed:
+              type: integer
+              format: int32
+              description: The number of files that have been processed.
+            failed:
+              type: integer
+              format: int32
+              description: The number of files that have failed to process.
+            cancelled:
+              type: integer
+              format: int32
+              description: The number of files that where cancelled.
+            total:
+              type: integer
+              format: int32
+              description: The total number of files.
+          required:
+            - in_progress
+            - completed
+            - failed
+            - cancelled
+            - total
+      description: A batch of files attached to a vector store.
+    VectorStoreFileObject:
+      type: object
+      required:
+        - id
+        - object
+        - usage_bytes
+        - created_at
+        - vector_store_id
+        - status
+        - last_error
+      properties:
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints.
+        object:
+          type: string
+          enum:
+            - vector_store.file
+          description: The object type, which is always `vector_store.file`.
+        usage_bytes:
+          type: integer
+          format: int32
+          description: |-
+            The total vector store usage in bytes. Note that this may be different from the original file
+            size.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the vector store file was created.
+        vector_store_id:
+          type: string
+          description: |-
+            The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
+            [File](/docs/api-reference/files) is attached to.
+        status:
+          type: string
+          enum:
+            - in_progress
+            - completed
+            - cancelled
+            - failed
+          description: The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use.
+        last_error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+                - internal_error
+                - file_not_found
+                - parsing_error
+                - unhandled_mime_type
+              description: One of `server_error` or `rate_limit_exceeded`.
+            message:
+              type: string
+              description: A human-readable description of the error.
+          required:
+            - code
+            - message
+          nullable: true
+          description: The last error associated with this vector store file. Will be `null` if there are no errors.
+      description: A list of files attached to a vector store.
+    VectorStoreObject:
+      type: object
+      required:
+        - id
+        - object
+        - created_at
+        - name
+        - usage_bytes
+        - file_counts
+        - status
+        - last_active_at
+        - metadata
+      properties:
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints.
+        object:
+          type: string
+          enum:
+            - vector_store
+          description: The object type, which is always `vector_store`.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the vector store was created.
+        name:
+          type: string
+          description: The name of the vector store.
+        usage_bytes:
+          type: integer
+          format: int32
+          description: The total number of bytes used by the files in the vector store.
+        file_counts:
+          type: object
+          properties:
+            in_progress:
+              type: integer
+              format: int32
+              description: The number of files that are currently being processed.
+            completed:
+              type: integer
+              format: int32
+              description: The number of files that have been successfully processed.
+            failed:
+              type: integer
+              format: int32
+              description: The number of files that have failed to process.
+            cancelled:
+              type: integer
+              format: int32
+              description: The number of files that were cancelled.
+            total:
+              type: integer
+              format: int32
+              description: The total number of files.
+          required:
+            - in_progress
+            - completed
+            - failed
+            - cancelled
+            - total
+        status:
+          type: string
+          enum:
+            - expired
+            - in_progress
+            - completed
+          description: The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use.
+        expires_after:
+          $ref: '#/components/schemas/VectorStoreExpirationAfter'
+        expires_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the vector store will expire.
+        last_active_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the vector store was last active.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: |-
+            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
+            additional information about the object in a structured format. Keys can be a maximum of 64
+            characters long and values can be a maxium of 512 characters long.
+          x-oaiTypeLabel: map
+      description: A vector store is a collection of processed files can be used by the `file_search` tool.
   securitySchemes:
     BearerAuth:
       type: http

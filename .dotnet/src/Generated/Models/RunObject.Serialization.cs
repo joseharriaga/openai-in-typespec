@@ -51,8 +51,15 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("last_error");
             }
-            writer.WritePropertyName("expires_at"u8);
-            writer.WriteNumberValue(ExpiresAt, "U");
+            if (ExpiresAt != null)
+            {
+                writer.WritePropertyName("expires_at"u8);
+                writer.WriteStringValue(ExpiresAt.Value, "O");
+            }
+            else
+            {
+                writer.WriteNull("expires_at");
+            }
             if (StartedAt != null)
             {
                 writer.WritePropertyName("started_at"u8);
@@ -89,6 +96,15 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("completed_at");
             }
+            if (IncompleteDetails != null)
+            {
+                writer.WritePropertyName("incomplete_details"u8);
+                writer.WriteObjectValue(IncompleteDetails, options);
+            }
+            else
+            {
+                writer.WriteNull("incomplete_details");
+            }
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model);
             writer.WritePropertyName("instructions"u8);
@@ -112,13 +128,6 @@ namespace OpenAI.Internal.Models
 #endif
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("file_ids"u8);
-            writer.WriteStartArray();
-            foreach (var item in FileIds)
-            {
-                writer.WriteStringValue(item);
-            }
-            writer.WriteEndArray();
             if (Metadata != null && Optional.IsCollectionDefined(Metadata))
             {
                 writer.WritePropertyName("metadata"u8);
@@ -136,6 +145,89 @@ namespace OpenAI.Internal.Models
             }
             writer.WritePropertyName("usage"u8);
             writer.WriteObjectValue(Usage, options);
+            if (Optional.IsDefined(Temperature))
+            {
+                if (Temperature != null)
+                {
+                    writer.WritePropertyName("temperature"u8);
+                    writer.WriteNumberValue(Temperature.Value);
+                }
+                else
+                {
+                    writer.WriteNull("temperature");
+                }
+            }
+            if (Optional.IsDefined(TopP))
+            {
+                if (TopP != null)
+                {
+                    writer.WritePropertyName("top_p"u8);
+                    writer.WriteNumberValue(TopP.Value);
+                }
+                else
+                {
+                    writer.WriteNull("top_p");
+                }
+            }
+            if (MaxPromptTokens != null)
+            {
+                writer.WritePropertyName("max_prompt_tokens"u8);
+                writer.WriteNumberValue(MaxPromptTokens.Value);
+            }
+            else
+            {
+                writer.WriteNull("max_prompt_tokens");
+            }
+            if (MaxCompletionTokens != null)
+            {
+                writer.WritePropertyName("max_completion_tokens"u8);
+                writer.WriteNumberValue(MaxCompletionTokens.Value);
+            }
+            else
+            {
+                writer.WriteNull("max_completion_tokens");
+            }
+            if (TruncationStrategy != null)
+            {
+                writer.WritePropertyName("truncation_strategy"u8);
+                writer.WriteObjectValue(TruncationStrategy, options);
+            }
+            else
+            {
+                writer.WriteNull("truncation_strategy");
+            }
+            if (ToolChoice != null)
+            {
+                writer.WritePropertyName("tool_choice"u8);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(ToolChoice);
+#else
+                using (JsonDocument document = JsonDocument.Parse(ToolChoice))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
+            }
+            else
+            {
+                writer.WriteNull("tool_choice");
+            }
+            if (ResponseFormat != null)
+            {
+                writer.WritePropertyName("response_format"u8);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(ResponseFormat);
+#else
+                using (JsonDocument document = JsonDocument.Parse(ResponseFormat))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
+            }
+            else
+            {
+                writer.WriteNull("response_format");
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -182,17 +274,24 @@ namespace OpenAI.Internal.Models
             RunObjectStatus status = default;
             RunObjectRequiredAction requiredAction = default;
             RunObjectLastError lastError = default;
-            DateTimeOffset expiresAt = default;
+            DateTimeOffset? expiresAt = default;
             DateTimeOffset? startedAt = default;
             DateTimeOffset? cancelledAt = default;
             DateTimeOffset? failedAt = default;
             DateTimeOffset? completedAt = default;
+            RunObjectIncompleteDetails incompleteDetails = default;
             string model = default;
             string instructions = default;
             IReadOnlyList<BinaryData> tools = default;
-            IReadOnlyList<string> fileIds = default;
             IReadOnlyDictionary<string, string> metadata = default;
             RunCompletionUsage usage = default;
+            float? temperature = default;
+            float? topP = default;
+            int? maxPromptTokens = default;
+            int? maxCompletionTokens = default;
+            TruncationObject truncationStrategy = default;
+            BinaryData toolChoice = default;
+            BinaryData responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -249,6 +348,13 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("expires_at"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        expiresAt = null;
+                        continue;
+                    }
+                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
+                    // expiresAt = property.Value.GetDateTimeOffset("O");
                     expiresAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
@@ -300,6 +406,16 @@ namespace OpenAI.Internal.Models
                     completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
+                if (property.NameEquals("incomplete_details"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        incompleteDetails = null;
+                        continue;
+                    }
+                    incompleteDetails = RunObjectIncompleteDetails.DeserializeRunObjectIncompleteDetails(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("model"u8))
                 {
                     model = property.Value.GetString();
@@ -327,16 +443,6 @@ namespace OpenAI.Internal.Models
                     tools = array;
                     continue;
                 }
-                if (property.NameEquals("file_ids"u8))
-                {
-                    List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(item.GetString());
-                    }
-                    fileIds = array;
-                    continue;
-                }
                 if (property.NameEquals("metadata"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -355,6 +461,76 @@ namespace OpenAI.Internal.Models
                 if (property.NameEquals("usage"u8))
                 {
                     usage = RunCompletionUsage.DeserializeRunCompletionUsage(property.Value, options);
+                    continue;
+                }
+                if (property.NameEquals("temperature"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        temperature = null;
+                        continue;
+                    }
+                    temperature = property.Value.GetSingle();
+                    continue;
+                }
+                if (property.NameEquals("top_p"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        topP = null;
+                        continue;
+                    }
+                    topP = property.Value.GetSingle();
+                    continue;
+                }
+                if (property.NameEquals("max_prompt_tokens"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        maxPromptTokens = null;
+                        continue;
+                    }
+                    maxPromptTokens = property.Value.GetInt32();
+                    continue;
+                }
+                if (property.NameEquals("max_completion_tokens"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        maxCompletionTokens = null;
+                        continue;
+                    }
+                    maxCompletionTokens = property.Value.GetInt32();
+                    continue;
+                }
+                if (property.NameEquals("truncation_strategy"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        truncationStrategy = null;
+                        continue;
+                    }
+                    truncationStrategy = TruncationObject.DeserializeTruncationObject(property.Value, options);
+                    continue;
+                }
+                if (property.NameEquals("tool_choice"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolChoice = null;
+                        continue;
+                    }
+                    toolChoice = BinaryData.FromString(property.Value.GetRawText());
+                    continue;
+                }
+                if (property.NameEquals("response_format"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        responseFormat = null;
+                        continue;
+                    }
+                    responseFormat = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (options.Format != "W")
@@ -377,12 +553,19 @@ namespace OpenAI.Internal.Models
                 cancelledAt,
                 failedAt,
                 completedAt,
+                incompleteDetails,
                 model,
                 instructions,
                 tools,
-                fileIds,
                 metadata,
                 usage,
+                temperature,
+                topP,
+                maxPromptTokens,
+                maxCompletionTokens,
+                truncationStrategy,
+                toolChoice,
+                responseFormat,
                 serializedAdditionalRawData);
         }
 

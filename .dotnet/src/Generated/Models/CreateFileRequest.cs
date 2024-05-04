@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OpenAI.Internal.Models
 {
@@ -52,7 +53,7 @@ namespace OpenAI.Internal.Models
         /// This allows us to validate the format of the uploaded file is correct for fine-tuning.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-        public CreateFileRequest(string file, CreateFileRequestPurpose purpose)
+        public CreateFileRequest(Stream file, CreateFileRequestPurpose purpose)
         {
             Argument.AssertNotNull(file, nameof(file));
 
@@ -70,7 +71,7 @@ namespace OpenAI.Internal.Models
         /// This allows us to validate the format of the uploaded file is correct for fine-tuning.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateFileRequest(string file, CreateFileRequestPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateFileRequest(Stream file, CreateFileRequestPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             File = file;
             Purpose = purpose;
@@ -83,7 +84,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> The File object (not file name) to be uploaded. </summary>
-        public string File { get; }
+        public Stream File { get; }
         /// <summary>
         /// The intended purpose of the uploaded file.
         ///

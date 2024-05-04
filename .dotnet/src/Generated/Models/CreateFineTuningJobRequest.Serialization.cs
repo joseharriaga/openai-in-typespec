@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
 namespace OpenAI.FineTuning
 {
@@ -54,6 +55,35 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("validation_file");
                 }
             }
+            if (Optional.IsCollectionDefined(Integrations))
+            {
+                if (Integrations != null)
+                {
+                    writer.WritePropertyName("integrations"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Integrations)
+                    {
+                        writer.WriteObjectValue(item, options);
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("integrations");
+                }
+            }
+            if (Optional.IsDefined(Seed))
+            {
+                if (Seed != null)
+                {
+                    writer.WritePropertyName("seed"u8);
+                    writer.WriteNumberValue(Seed.Value);
+                }
+                else
+                {
+                    writer.WriteNull("seed");
+                }
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -97,6 +127,8 @@ namespace OpenAI.FineTuning
             CreateFineTuningJobRequestHyperparameters hyperparameters = default;
             string suffix = default;
             string validationFile = default;
+            IList<CreateFineTuningJobRequestIntegration> integrations = default;
+            int? seed = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -140,6 +172,30 @@ namespace OpenAI.FineTuning
                     validationFile = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("integrations"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<CreateFineTuningJobRequestIntegration> array = new List<CreateFineTuningJobRequestIntegration>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(CreateFineTuningJobRequestIntegration.DeserializeCreateFineTuningJobRequestIntegration(item, options));
+                    }
+                    integrations = array;
+                    continue;
+                }
+                if (property.NameEquals("seed"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        seed = null;
+                        continue;
+                    }
+                    seed = property.Value.GetInt32();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
@@ -152,6 +208,8 @@ namespace OpenAI.FineTuning
                 hyperparameters,
                 suffix,
                 validationFile,
+                integrations ?? new ChangeTrackingList<CreateFineTuningJobRequestIntegration>(),
+                seed,
                 serializedAdditionalRawData);
         }
 

@@ -43,21 +43,21 @@ namespace OpenAI.Embeddings
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/>. </summary>
-        /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
+        /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         internal EmbeddingTokenUsage(int inputTokens, int totalTokens)
         {
-            PromptTokens = promptTokens;
+            InputTokens = inputTokens;
             TotalTokens = totalTokens;
         }
 
         /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/>. </summary>
-        /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
+        /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal EmbeddingTokenUsage(int inputTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            PromptTokens = promptTokens;
+            InputTokens = inputTokens;
             TotalTokens = totalTokens;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -66,9 +66,6 @@ namespace OpenAI.Embeddings
         internal EmbeddingTokenUsage()
         {
         }
-
-        /// <summary> The number of tokens used by the prompt. </summary>
-        public int PromptTokens { get; }
         /// <summary> The total number of tokens used by the request. </summary>
         public int TotalTokens { get; }
     }

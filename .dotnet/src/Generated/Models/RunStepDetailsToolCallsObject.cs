@@ -45,8 +45,8 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsObject"/>. </summary>
         /// <param name="toolCalls">
-        /// An array of tool calls the run step was involved in. These can be associated with one of three
-        /// types of tools: `code_interpreter`, `retrieval`, or `function`.
+        /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.
+        ///
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="toolCalls"/> is null. </exception>
         internal RunStepDetailsToolCallsObject(IEnumerable<BinaryData> toolCalls)
@@ -59,8 +59,8 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsObject"/>. </summary>
         /// <param name="type"> Always `tool_calls`. </param>
         /// <param name="toolCalls">
-        /// An array of tool calls the run step was involved in. These can be associated with one of three
-        /// types of tools: `code_interpreter`, `retrieval`, or `function`.
+        /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.
+        ///
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDetailsToolCallsObject(RunStepDetailsToolCallsObjectType type, IReadOnlyList<BinaryData> toolCalls, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -79,8 +79,8 @@ namespace OpenAI.Internal.Models
         public RunStepDetailsToolCallsObjectType Type { get; } = RunStepDetailsToolCallsObjectType.ToolCalls;
 
         /// <summary>
-        /// An array of tool calls the run step was involved in. These can be associated with one of three
-        /// types of tools: `code_interpreter`, `retrieval`, or `function`.
+        /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.
+        ///
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>

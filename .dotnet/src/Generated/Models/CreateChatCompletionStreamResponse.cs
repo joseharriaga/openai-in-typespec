@@ -77,8 +77,8 @@ namespace OpenAI.Internal.Models
         /// <param name="model"> The model to generate the completion. </param>
         /// <param name="systemFingerprint">
         /// This fingerprint represents the backend configuration that the model runs with.
-        /// Can be used in conjunction with the `seed` request parameter to understand when backend
-        /// changes have been made that might impact determinism.
+        /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+        ///
         /// </param>
         /// <param name="object"> The object type, which is always `chat.completion.chunk`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -111,8 +111,8 @@ namespace OpenAI.Internal.Models
         public string Model { get; }
         /// <summary>
         /// This fingerprint represents the backend configuration that the model runs with.
-        /// Can be used in conjunction with the `seed` request parameter to understand when backend
-        /// changes have been made that might impact determinism.
+        /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+        ///
         /// </summary>
         public string SystemFingerprint { get; }
         /// <summary> The object type, which is always `chat.completion.chunk`. </summary>

@@ -8,7 +8,9 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateMessageRequest {
-  /** The role of the entity that is creating the message. Currently only `user` is supported. */
+  @doc("""
+  The role of the entity that is creating the message. Currently only `user` is supported.
+  """)
   role: "user";
 
   /** The content of the message. */
@@ -16,11 +18,9 @@ model CreateMessageRequest {
   @maxLength(32768)
   content: string;
 
-  /**
-   * A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-   * maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-   * `code_interpreter` that can access and use files.
-   */
+  @doc("""
+  A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a maximum of 10 files attached to a message. Useful for tools like `retrieval` and `code_interpreter` that can access and use files.
+  """)
   @minItems(1)
   @maxItems(10)
   file_ids?: string[] = [];
@@ -71,7 +71,9 @@ model MessageObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `thread.message`. */
+  @doc("""
+  The object type, which is always `thread.message`.
+  """)
   object: "thread.message";
 
   /** The Unix timestamp (in seconds) for when the message was created. */
@@ -85,7 +87,9 @@ model MessageObject {
   /** The [thread](/docs/api-reference/threads) ID that this message belongs to. */
   thread_id: string;
 
-  /** The entity that produced the message. One of `user` or `assistant`. */
+  @doc("""
+  The entity that produced the message. One of `user` or `assistant`.
+  """)
   role: "user" | "assistant";
 
   /** The content of the message in array of text and/or images. */
@@ -122,7 +126,9 @@ model MessageObject {
 
 /** References an image [File](/docs/api-reference/files) in the content of a message. */
 model MessageContentImageFileObject {
-  /** Always `image_file`. */
+  @doc("""
+  Always `image_file`.
+  """)
   type: "image_file";
 
   image_file: {
@@ -133,7 +139,9 @@ model MessageContentImageFileObject {
 
 /** The text content that is part of a message. */
 model MessageContentTextObject {
-  /** Always `text`. */
+  @doc("""
+  Always `text`.
+  """)
   type: "text";
 
   text: {
@@ -150,7 +158,9 @@ model MessageContentTextObject {
  * search files.
  */
 model MessageContentTextAnnotationsFileCitationObject {
-  /** Always `file_citation`. */
+  @doc("""
+  Always `file_citation`.
+  """)
   type: "file_citation";
 
   /** The text in the message content that needs to be replaced. */
@@ -171,12 +181,13 @@ model MessageContentTextAnnotationsFileCitationObject {
   end_index: int32;
 }
 
-/**
- * A URL for the file that's generated when the assistant used the `code_interpreter` tool to
- * generate a file.
- */
+@doc("""
+A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
+""")
 model MessageContentTextAnnotationsFilePathObject {
-  /** Always `file_path`. */
+  @doc("""
+  Always `file_path`.
+  """)
   type: "file_path";
 
   /** The text in the message content that needs to be replaced. */
@@ -194,12 +205,16 @@ model MessageContentTextAnnotationsFilePathObject {
   end_index: int32;
 }
 
-/** A list of files attached to a `message`. */
+@doc("""
+A list of files attached to a `message`.
+""")
 model MessageFileObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `thread.message.file`. */
+  @doc("""
+  The object type, which is always `thread.message.file`.
+  """)
   object: "thread.message.file";
 
   /** The Unix timestamp (in seconds) for when the message file was created. */

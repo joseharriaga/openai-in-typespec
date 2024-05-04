@@ -48,10 +48,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="SubmitToolOutputsRunRequestToolOutput"/>. </summary>
-        /// <param name="toolCallId">
-        /// The ID of the tool call in the `required_action` object within the run object the output is
-        /// being submitted for.
-        /// </param>
+        /// <param name="toolCallId"> The ID of the tool call in the `required_action` object within the run object the output is being submitted for. </param>
         /// <param name="output"> The output of the tool call to be submitted to continue the run. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal SubmitToolOutputsRunRequestToolOutput(string toolCallId, string output, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -61,10 +58,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary>
-        /// The ID of the tool call in the `required_action` object within the run object the output is
-        /// being submitted for.
-        /// </summary>
+        /// <summary> The ID of the tool call in the `required_action` object within the run object the output is being submitted for. </summary>
         public string ToolCallId { get; set; }
         /// <summary> The output of the tool call to be submitted to continue the run. </summary>
         public string Output { get; set; }

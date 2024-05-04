@@ -47,14 +47,8 @@ namespace OpenAI.Internal.Models
         /// <param name="bytes"> The size of the file, in bytes. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the file was created. </param>
         /// <param name="filename"> The name of the file. </param>
-        /// <param name="purpose">
-        /// The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`,
-        /// `assistants`, and `assistants_output`.
-        /// </param>
-        /// <param name="status">
-        /// Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or
-        /// `error`.
-        /// </param>
+        /// <param name="purpose"> The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`. </param>
+        /// <param name="status"> Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="filename"/> is null. </exception>
         internal OpenAIFile(string id, int? bytes, DateTimeOffset createdAt, string filename, OpenAIFilePurpose purpose, OpenAIFileStatus status)
         {
@@ -75,18 +69,9 @@ namespace OpenAI.Internal.Models
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the file was created. </param>
         /// <param name="filename"> The name of the file. </param>
         /// <param name="object"> The object type, which is always `file`. </param>
-        /// <param name="purpose">
-        /// The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`,
-        /// `assistants`, and `assistants_output`.
-        /// </param>
-        /// <param name="status">
-        /// Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or
-        /// `error`.
-        /// </param>
-        /// <param name="statusDetails">
-        /// Deprecated. For details on why a fine-tuning training file failed validation, see the `error`
-        /// field on `fine_tuning.job`.
-        /// </param>
+        /// <param name="purpose"> The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`. </param>
+        /// <param name="status"> Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`. </param>
+        /// <param name="statusDetails"> Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal OpenAIFile(string id, int? bytes, DateTimeOffset createdAt, string filename, OpenAIFileObject @object, OpenAIFilePurpose purpose, OpenAIFileStatus status, string statusDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -117,20 +102,11 @@ namespace OpenAI.Internal.Models
         /// <summary> The object type, which is always `file`. </summary>
         public OpenAIFileObject Object { get; } = OpenAIFileObject.File;
 
-        /// <summary>
-        /// The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`,
-        /// `assistants`, and `assistants_output`.
-        /// </summary>
+        /// <summary> The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`. </summary>
         public OpenAIFilePurpose Purpose { get; }
-        /// <summary>
-        /// Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or
-        /// `error`.
-        /// </summary>
+        /// <summary> Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`. </summary>
         public OpenAIFileStatus Status { get; }
-        /// <summary>
-        /// Deprecated. For details on why a fine-tuning training file failed validation, see the `error`
-        /// field on `fine_tuning.job`.
-        /// </summary>
+        /// <summary> Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`. </summary>
         public string StatusDetails { get; }
     }
 }

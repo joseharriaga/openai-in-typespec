@@ -59,10 +59,7 @@ namespace OpenAI
         /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
         /// failed.
         /// </param>
-        /// <param name="noSpeechProbability">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
-        /// is below -1, consider this segment silent.
-        /// </param>
+        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
         /// <returns> A new <see cref="Audio.TranscribedSegment"/> instance for mocking. </returns>
         public static TranscribedSegment TranscribedSegment(int id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = default, double averageLogProbability = default, float compressionRatio = default, double noSpeechProbability = default)
         {
@@ -105,8 +102,8 @@ namespace OpenAI
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
         /// <param name="tools">
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+        ///
         /// </param>
         /// <param name="fileIds">
         /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
@@ -174,8 +171,8 @@ namespace OpenAI
         /// </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
         /// <param name="tools">
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+        ///
         /// </param>
         /// <param name="fileIds">
         /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
@@ -306,16 +303,8 @@ namespace OpenAI
         /// between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100
         /// should result in a ban or exclusive selection of the relevant token.
         /// </param>
-        /// <param name="logprobs">
-        /// Whether to return log probabilities of the output tokens or not. If true, returns the log
-        /// probabilities of each output token returned in the `content` of `message`. This option is
-        /// currently not available on the `gpt-4-vision-preview` model.
-        /// </param>
-        /// <param name="topLogprobs">
-        /// An integer between 0 and 20 specifying the number of most likely tokens to return at each
-        /// token position, each with an associated log probability. `logprobs` must be set to `true` if
-        /// this parameter is used.
-        /// </param>
+        /// <param name="logprobs"> Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`. This option is currently not available on the `gpt-4-vision-preview` model. </param>
+        /// <param name="topLogprobs"> An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used. </param>
         /// <param name="maxTokens">
         /// The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
         ///
@@ -324,11 +313,7 @@ namespace OpenAI
         /// code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
         /// tokens.
         /// </param>
-        /// <param name="n">
-        /// How many chat completion choices to generate for each input message. Note that you will be
-        /// charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to
-        /// minimize costs.
-        /// </param>
+        /// <param name="n"> How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs. </param>
         /// <param name="presencePenalty">
         /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
         /// in the text so far, increasing the model's likelihood to talk about new topics.
@@ -337,47 +322,35 @@ namespace OpenAI
         /// penalties.](/docs/guides/text-generation/parameter-details)
         /// </param>
         /// <param name="responseFormat">
-        /// An object specifying the format that the model must output. Compatible with [GPT-4
-        /// Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
-        /// `gpt-3.5-turbo-1106`.
+        /// An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
         ///
-        /// Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the
-        /// model generates is valid JSON.
+        /// Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
         ///
-        /// **Important:** when using JSON mode, you **must** also instruct the model to produce JSON
-        /// yourself via a system or user message. Without this, the model may generate an unending stream
-        /// of whitespace until the generation reaches the token limit, resulting in a long-running and
-        /// seemingly "stuck" request. Also note that the message content may be partially cut off if
-        /// `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the
-        /// conversation exceeded the max context length.
+        /// **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+        ///
         /// </param>
         /// <param name="seed">
         /// This feature is in Beta.
-        /// If specified, our system will make a best effort to sample deterministically, such that
-        /// repeated requests with the same `seed` and parameters should return the same result.
-        /// Determinism is not guaranteed, and you should refer to the `system_fingerprint` response
-        /// parameter to monitor changes in the backend.
+        /// If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
+        /// Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+        ///
         /// </param>
         /// <param name="stop"> Up to 4 sequences where the API will stop generating further tokens. </param>
         /// <param name="stream">
-        /// If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only
-        /// [server-sent
-        /// events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-        /// as they become available, with the stream terminated by a `data: [DONE]` message. [Example
-        /// Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
+        /// If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
+        ///
         /// </param>
         /// <param name="temperature">
-        /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-        /// more random, while lower values like 0.2 will make it more focused and deterministic.
+        /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
         /// We generally recommend altering this or `top_p` but not both.
+        ///
         /// </param>
         /// <param name="topP">
-        /// An alternative to sampling with temperature, called nucleus sampling, where the model
-        /// considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-        /// comprising the top 10% probability mass are considered.
+        /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
         ///
         /// We generally recommend altering this or `temperature` but not both.
+        ///
         /// </param>
         /// <param name="tools">
         /// A list of tools the model may call. Currently, only functions are supported as a tool. Use
@@ -394,16 +367,16 @@ namespace OpenAI
         /// Controls which (if any) function is called by the model.
         /// `none` means the model will not call a function and instead generates a message.
         /// `auto` means the model can pick between generating a message or calling a function.
-        /// Specifying a particular function via `{"name": "my_function"}` forces the model to call that
-        /// function.
+        /// Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
         ///
-        /// `none` is the default when no functions are present. `auto` is the default if functions are
-        /// present.
+        /// `none` is the default when no functions are present. `auto` is the default if functions are present.
+        ///
         /// </param>
         /// <param name="functions">
         /// Deprecated in favor of `tools`.
         ///
         /// A list of functions the model may generate JSON inputs for.
+        ///
         /// </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionRequest"/> instance for mocking. </returns>
         public static CreateChatCompletionRequest CreateChatCompletionRequest(IEnumerable<BinaryData> messages = null, CreateChatCompletionRequestModel model = default, float? frequencyPenalty = null, IDictionary<string, int> logitBias = null, bool? logprobs = null, int? topLogprobs = null, int? maxTokens = null, int? n = null, float? presencePenalty = null, CreateChatCompletionRequestResponseFormat responseFormat = null, long? seed = null, BinaryData stop = null, bool? stream = null, float? temperature = null, float? topP = null, IEnumerable<ChatCompletionTool> tools = null, BinaryData toolChoice = null, string user = null, BinaryData functionCall = null, IEnumerable<ChatCompletionFunctions> functions = null)
@@ -495,8 +468,8 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestAssistantMessage"/>. </summary>
         /// <param name="content">
-        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is
-        /// specified.
+        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
+        ///
         /// </param>
         /// <param name="role"> The role of the messages author, in this case `assistant`. </param>
         /// <param name="name">
@@ -504,10 +477,7 @@ namespace OpenAI
         /// participants of the same role.
         /// </param>
         /// <param name="toolCalls"></param>
-        /// <param name="functionCall">
-        /// Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be
-        /// called, as generated by the model.
-        /// </param>
+        /// <param name="functionCall"> Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestAssistantMessage"/> instance for mocking. </returns>
         public static ChatCompletionRequestAssistantMessage ChatCompletionRequestAssistantMessage(string content = null, ChatCompletionRequestAssistantMessageRole role = default, string name = null, IEnumerable<ChatCompletionMessageToolCall> toolCalls = null, ChatCompletionRequestAssistantMessageFunctionCall functionCall = null)
         {
@@ -581,21 +551,18 @@ namespace OpenAI
         /// </param>
         /// <param name="parameters"></param>
         /// <returns> A new <see cref="Models.ChatCompletionFunctions"/> instance for mocking. </returns>
-        public static ChatCompletionFunctions ChatCompletionFunctions(string description = null, string name = null, IDictionary<string, BinaryData> parameters = null)
+        public static ChatCompletionFunctions ChatCompletionFunctions(string description = null, string name = null, FunctionParameters parameters = null)
         {
-            parameters ??= new Dictionary<string, BinaryData>();
-
             return new ChatCompletionFunctions(description, name, parameters, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionResponseChoice"/>. </summary>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
-        /// natural stop point or a provided stop sequence,
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
         /// `length` if the maximum number of tokens specified in the request was reached,
         /// `content_filter` if content was omitted due to a flag from our content filters,
-        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called
-        /// a function.
+        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+        ///
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
@@ -610,10 +577,7 @@ namespace OpenAI
         /// <param name="content"> The contents of the message. </param>
         /// <param name="toolCalls"></param>
         /// <param name="role"> The role of the author of this message. </param>
-        /// <param name="functionCall">
-        /// Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be
-        /// called, as generated by the model.
-        /// </param>
+        /// <param name="functionCall"> Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. </param>
         /// <returns> A new <see cref="Models.ChatCompletionResponseMessage"/> instance for mocking. </returns>
         public static ChatCompletionResponseMessage ChatCompletionResponseMessage(string content = null, IEnumerable<ChatCompletionMessageToolCall> toolCalls = null, ChatCompletionResponseMessageRole role = default, ChatCompletionResponseMessageFunctionCall functionCall = null)
         {
@@ -647,20 +611,9 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionTokenLogprob"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob">
-        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
-        /// the value `-9999.0` is used to signify that the token is very unlikely.
-        /// </param>
-        /// <param name="bytes">
-        /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
-        /// instances where characters are represented by multiple tokens and their byte representations
-        /// must be combined to generate the correct text representation. Can be `null` if there is no
-        /// bytes representation for the token.
-        /// </param>
-        /// <param name="topLogprobs">
-        /// List of the most likely tokens and their log probability, at this token position. In rare
-        /// cases, there may be fewer than the number of requested `top_logprobs` returned.
-        /// </param>
+        /// <param name="logprob"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
+        /// <param name="bytes"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
+        /// <param name="topLogprobs"> List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned. </param>
         /// <returns> A new <see cref="Models.ChatCompletionTokenLogprob"/> instance for mocking. </returns>
         public static ChatCompletionTokenLogprob ChatCompletionTokenLogprob(string token = null, float logprob = default, IEnumerable<int> bytes = null, IEnumerable<ChatCompletionTokenLogprobTopLogprob> topLogprobs = null)
         {
@@ -672,16 +625,8 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionTokenLogprobTopLogprob"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob">
-        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
-        /// the value `-9999.0` is used to signify that the token is very unlikely.
-        /// </param>
-        /// <param name="bytes">
-        /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
-        /// instances where characters are represented by multiple tokens and their byte representations
-        /// must be combined to generate the correct text representation. Can be `null` if there is no
-        /// bytes representation for the token.
-        /// </param>
+        /// <param name="logprob"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
+        /// <param name="bytes"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
         /// <returns> A new <see cref="Models.ChatCompletionTokenLogprobTopLogprob"/> instance for mocking. </returns>
         public static ChatCompletionTokenLogprobTopLogprob ChatCompletionTokenLogprobTopLogprob(string token = null, float logprob = default, IEnumerable<int> bytes = null)
         {
@@ -705,18 +650,9 @@ namespace OpenAI
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the file was created. </param>
         /// <param name="filename"> The name of the file. </param>
         /// <param name="object"> The object type, which is always `file`. </param>
-        /// <param name="purpose">
-        /// The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`,
-        /// `assistants`, and `assistants_output`.
-        /// </param>
-        /// <param name="status">
-        /// Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or
-        /// `error`.
-        /// </param>
-        /// <param name="statusDetails">
-        /// Deprecated. For details on why a fine-tuning training file failed validation, see the `error`
-        /// field on `fine_tuning.job`.
-        /// </param>
+        /// <param name="purpose"> The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`. </param>
+        /// <param name="status"> Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`. </param>
+        /// <param name="statusDetails"> Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`. </param>
         /// <returns> A new <see cref="Models.OpenAIFile"/> instance for mocking. </returns>
         public static OpenAIFile OpenAIFile(string id = null, int? bytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFileObject @object = default, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null)
         {
@@ -777,11 +713,7 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.CreateMessageRequest"/>. </summary>
         /// <param name="role"> The role of the entity that is creating the message. Currently only `user` is supported. </param>
         /// <param name="content"> The content of the message. </param>
-        /// <param name="fileIds">
-        /// A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-        /// maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-        /// `code_interpreter` that can access and use files.
-        /// </param>
+        /// <param name="fileIds"> A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a maximum of 10 files attached to a message. Useful for tools like `retrieval` and `code_interpreter` that can access and use files. </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
@@ -1021,13 +953,10 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.CreateModerationRequest"/>. </summary>
         /// <param name="input"> The input text to classify. </param>
         /// <param name="model">
-        /// Two content moderations models are available: `text-moderation-stable` and
-        /// `text-moderation-latest`.
+        /// Two content moderations models are available: `text-moderation-stable` and `text-moderation-latest`.
         ///
-        /// The default is `text-moderation-latest` which will be automatically upgraded over time. This
-        /// ensures you are always using our most accurate model. If you use `text-moderation-stable`, we
-        /// will provide advanced notice before updating the model. Accuracy of `text-moderation-stable`
-        /// may be slightly lower than for `text-moderation-latest`.
+        /// The default is `text-moderation-latest` which will be automatically upgraded over time. This ensures you are always using our most accurate model. If you use `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
+        ///
         /// </param>
         /// <returns> A new <see cref="Models.CreateModerationRequest"/> instance for mocking. </returns>
         public static CreateModerationRequest CreateModerationRequest(BinaryData input = null, CreateModerationRequestModel? model = null)
@@ -1180,10 +1109,7 @@ namespace OpenAI
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the run was created. </param>
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run. </param>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. </param>
-        /// <param name="status">
-        /// The status of the run, which can be either `queued`, `in_progress`, `requires_action`,
-        /// `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
-        /// </param>
+        /// <param name="status"> The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, or `expired`. </param>
         /// <param name="requiredAction"> Details on the action required to continue the run. Will be `null` if no action is required. </param>
         /// <param name="lastError"> The last error associated with this run. Will be `null` if there are no errors. </param>
         /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the run will expire. </param>
@@ -1382,10 +1308,7 @@ namespace OpenAI
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was run. </param>
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
         /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
-        /// <param name="status">
-        /// The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
-        /// `completed`, or `expired`.
-        /// </param>
+        /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
         /// <param name="stepDetails"> The details of the run step. </param>
         /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
         /// <param name="expiredAt">
@@ -1446,8 +1369,8 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsObject"/>. </summary>
         /// <param name="type"> Always `tool_calls`. </param>
         /// <param name="toolCalls">
-        /// An array of tool calls the run step was involved in. These can be associated with one of three
-        /// types of tools: `code_interpreter`, `retrieval`, or `function`.
+        /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.
+        ///
         /// </param>
         /// <returns> A new <see cref="Models.RunStepDetailsToolCallsObject"/> instance for mocking. </returns>
         public static RunStepDetailsToolCallsObject RunStepDetailsToolCallsObject(RunStepDetailsToolCallsObjectType type = default, IEnumerable<BinaryData> toolCalls = null)
@@ -1459,10 +1382,7 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsCodeObject"/>. </summary>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="type">
-        /// The type of tool call. This is always going to be `code_interpreter` for this type of tool
-        /// call.
-        /// </param>
+        /// <param name="type"> The type of tool call. This is always going to be `code_interpreter` for this type of tool call. </param>
         /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
         /// <returns> A new <see cref="Models.RunStepDetailsToolCallsCodeObject"/> instance for mocking. </returns>
         public static RunStepDetailsToolCallsCodeObject RunStepDetailsToolCallsCodeObject(string id = null, RunStepDetailsToolCallsCodeObjectType type = default, RunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = null)
@@ -1472,11 +1392,7 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
         /// <param name="input"> The input to the Code Interpreter tool call. </param>
-        /// <param name="outputs">
-        /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
-        /// different object type.
-        /// </param>
+        /// <param name="outputs"> The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type. </param>
         /// <returns> A new <see cref="Models.RunStepDetailsToolCallsCodeObjectCodeInterpreter"/> instance for mocking. </returns>
         public static RunStepDetailsToolCallsCodeObjectCodeInterpreter RunStepDetailsToolCallsCodeObjectCodeInterpreter(string input = null, IEnumerable<BinaryData> outputs = null)
         {
@@ -1536,10 +1452,7 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsFunctionObjectFunction"/>. </summary>
         /// <param name="name"> The name of the function. </param>
         /// <param name="arguments"> The arguments passed to the function. </param>
-        /// <param name="output">
-        /// The output of the function. This will be `null` if the outputs have not been
-        /// [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-        /// </param>
+        /// <param name="output"> The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet. </param>
         /// <returns> A new <see cref="Models.RunStepDetailsToolCallsFunctionObjectFunction"/> instance for mocking. </returns>
         public static RunStepDetailsToolCallsFunctionObjectFunction RunStepDetailsToolCallsFunctionObjectFunction(string name = null, string arguments = null, string output = null)
         {
@@ -1629,10 +1542,8 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionFunctionResponseChoice"/>. </summary>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
-        /// natural stop point or a provided stop sequence, `length` if the maximum number of tokens
-        /// specified in the request was reached, `content_filter` if content was omitted due to a flag
-        /// from our content filters, or `function_call` if the model called a function.
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
+        ///
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
@@ -1644,10 +1555,7 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionStreamResponseDelta"/>. </summary>
         /// <param name="content"> The contents of the chunk message. </param>
-        /// <param name="functionCall">
-        /// Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be
-        /// called, as generated by the model.
-        /// </param>
+        /// <param name="functionCall"> Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. </param>
         /// <param name="toolCalls"></param>
         /// <param name="role"> The role of the author of this message. </param>
         /// <returns> A new <see cref="Models.ChatCompletionStreamResponseDelta"/> instance for mocking. </returns>
@@ -1705,8 +1613,8 @@ namespace OpenAI
         /// <param name="model"> The model to generate the completion. </param>
         /// <param name="systemFingerprint">
         /// This fingerprint represents the backend configuration that the model runs with.
-        /// Can be used in conjunction with the `seed` request parameter to understand when backend
-        /// changes have been made that might impact determinism.
+        /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+        ///
         /// </param>
         /// <param name="object"> The object type, which is always `chat.completion.chunk`. </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponse"/> instance for mocking. </returns>
@@ -1728,12 +1636,11 @@ namespace OpenAI
         /// <param name="delta"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
-        /// natural stop point or a provided stop sequence,
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
         /// `length` if the maximum number of tokens specified in the request was reached,
         /// `content_filter` if content was omitted due to a flag from our content filters,
-        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called
-        /// a function.
+        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+        ///
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponseChoice"/> instance for mocking. </returns>

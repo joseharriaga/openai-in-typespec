@@ -7,10 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary>
-    /// A URL for the file that's generated when the assistant used the `code_interpreter` tool to
-    /// generate a file.
-    /// </summary>
+    /// <summary> A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file. </summary>
     internal partial class MessageContentTextAnnotationsFilePathObject
     {
         /// <summary>

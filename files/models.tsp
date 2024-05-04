@@ -32,7 +32,9 @@ model DeleteFileResponse {
   deleted: boolean;
 }
 
-/** The `File` object represents a document that has been uploaded to OpenAI. */
+@doc("""
+The `File` object represents a document that has been uploaded to OpenAI.
+""")
 model OpenAIFile {
   /** The file identifier, which can be referenced in the API endpoints. */
   id: string;
@@ -55,28 +57,27 @@ model OpenAIFile {
   /** The name of the file. */
   filename: string;
 
-  /** The object type, which is always `file`. */
+  @doc("""
+  The object type, which is always `file`.
+  """)
   object: "file";
 
-  /**
-   * The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`,
-   * `assistants`, and `assistants_output`.
-   */
+  @doc("""
+  The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`.
+  """)
   purpose:
     | "fine-tune"
     | "fine-tune-results"
     | "assistants"
     | "assistants_output";
 
-  /**
-   * Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or
-   * `error`.
-   */
+  @doc("""
+  Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
+  """)
   status: "uploaded" | "processed" | "error";
 
-  /**
-   * Deprecated. For details on why a fine-tuning training file failed validation, see the `error`
-   * field on `fine_tuning.job`.
-   */
+  @doc("""
+  Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
+  """)
   status_details?: string;
 }

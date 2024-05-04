@@ -29,10 +29,10 @@ model CreateAssistantRequest {
   @maxLength(32768)
   instructions?: string | null;
 
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-   * Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-   */
+  @doc("""
+  A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+  
+  """)
   @maxItems(128)
   tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
   ];
@@ -74,10 +74,10 @@ model ModifyAssistantRequest {
   @maxLength(32768)
   instructions?: string | null;
 
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-   * Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-   */
+  @doc("""
+  A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+  
+  """)
   @maxItems(128)
   tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
   ];
@@ -101,10 +101,9 @@ model ModifyAssistantRequest {
 }
 
 model CreateAssistantFileRequest {
-  /**
-   * A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should
-   * use. Useful for tools like `retrieval` and `code_interpreter` that can access files.
-   */
+  @doc("""
+  A [File](/docs/api-reference/files) ID (with `purpose="assistants"`) that the assistant should use. Useful for tools like `retrieval` and `code_interpreter` that can access files.
+  """)
   file_id: string;
 }
 
@@ -141,28 +140,38 @@ model DeleteAssistantFileResponse {
 }
 
 model AssistantToolsCode {
-  /** The type of tool being defined: `code_interpreter` */
+  @doc("""
+  The type of tool being defined: `code_interpreter`
+  """)
   type: "code_interpreter";
 }
 
 model AssistantToolsRetrieval {
-  /** The type of tool being defined: `retrieval` */
+  @doc("""
+  The type of tool being defined: `retrieval`
+  """)
   type: "retrieval";
 }
 
 model AssistantToolsFunction {
-  /** The type of tool being defined: `function` */
+  @doc("""
+  The type of tool being defined: `function`
+  """)
   type: "function";
 
   function: FunctionObject;
 }
 
-/** Represents an `assistant` that can call the model and use tools. */
+@doc("""
+Represents an `assistant` that can call the model and use tools.
+""")
 model AssistantObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `assistant`. */
+  @doc("""
+  The object type, which is always `assistant`.
+  """)
   object: "assistant";
 
   /** The Unix timestamp (in seconds) for when the assistant was created. */
@@ -192,10 +201,10 @@ model AssistantObject {
   @maxLength(32768)
   instructions: string | null;
 
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-   * Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-   */
+  @doc("""
+  A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
+  
+  """)
   @maxItems(128)
   tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
   ];
@@ -217,12 +226,16 @@ model AssistantObject {
   metadata: Record<string> | null;
 }
 
-/** A list of [Files](/docs/api-reference/files) attached to an `assistant`. */
+@doc("""
+A list of [Files](/docs/api-reference/files) attached to an `assistant`.
+""")
 model AssistantFileObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `assistant.file`. */
+  @doc("""
+  The object type, which is always `assistant.file`.
+  """)
   object: "assistant.file";
 
   /** The Unix timestamp (in seconds) for when the assistant file was created. */

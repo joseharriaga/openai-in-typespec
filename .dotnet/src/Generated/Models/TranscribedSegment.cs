@@ -56,10 +56,7 @@ namespace OpenAI.Audio
         /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
         /// failed.
         /// </param>
-        /// <param name="noSpeechProbability">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
-        /// is below -1, consider this segment silent.
-        /// </param>
+        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="tokenIds"/> is null. </exception>
         internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IEnumerable<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability)
         {
@@ -91,10 +88,7 @@ namespace OpenAI.Audio
         /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
         /// failed.
         /// </param>
-        /// <param name="noSpeechProbability">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
-        /// is below -1, consider this segment silent.
-        /// </param>
+        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {

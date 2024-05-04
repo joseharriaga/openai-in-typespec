@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> Enum for status in FineTuningJob. </summary>
     internal readonly partial struct FineTuningJobStatus : IEquatable<FineTuningJobStatus>

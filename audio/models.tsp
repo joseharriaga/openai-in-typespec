@@ -31,7 +31,7 @@ model CreateSpeechRequest {
   /** The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. */
   @minValue(0.25)
   @maxValue(4.0)
-  speed?: float64 = 1.0;
+  speed?: float32 = 1.0;
 }
 
 model CreateTranscriptionRequest {
@@ -74,7 +74,7 @@ model CreateTranscriptionRequest {
    * the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
    * automatically increase the temperature until certain thresholds are hit.
    */
-  temperature?: float64 = 0;
+  temperature?: float32 = 0;
 
   /**
    * The timestamp granularities to populate for this transcription. `response_format` must be set
@@ -110,7 +110,8 @@ model CreateTranslationRequest {
    * The format of the transcript output, in one of these options: `json`, `text`, `srt`,
    * `verbose_json`, or `vtt`.
    */
-  response_format?: string = "json";
+  @extension("x-customTspIngestionRule", "add enum types")
+  response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
 
   /**
    * The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
@@ -118,7 +119,7 @@ model CreateTranslationRequest {
    * the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
    * automatically increase the temperature until certain thresholds are hit.
    */
-  temperature?: float64 = 0;
+  temperature?: float32 = 0;
 }
 
 /** Represents a transcription response returned by model, based on the provided input. */
@@ -135,7 +136,7 @@ model CreateTranscriptionResponseVerboseJson {
   language: string;
 
   /** The duration of the input audio. */
-  @encode("seconds", float64)
+  @encode("seconds", float)
   @extension("x-customTspIngestionRule", "timespans are encoded durations")
   duration: duration;
 
@@ -158,7 +159,7 @@ model CreateTranslationResponseVerboseJson {
   language: string;
 
   /** The duration of the input audio. */
-  @encode("seconds", float64)
+  @encode("seconds", float)
   @extension("x-customTspIngestionRule", "timespans are encoded durations")
   duration: duration;
 
@@ -177,12 +178,12 @@ model TranscriptionSegment {
   seek: int32;
 
   /** Start time of the segment in seconds. */
-  @encode("seconds", float64)
+  @encode("seconds", float)
   @extension("x-customTspIngestionRule", "timespans are encoded durations")
   start: duration;
 
   /** End time of the segment in seconds. */
-  @encode("seconds", float64)
+  @encode("seconds", float)
   @extension("x-customTspIngestionRule", "timespans are encoded durations")
   end: duration;
 
@@ -193,22 +194,22 @@ model TranscriptionSegment {
   tokens: int32[];
 
   /** Temperature parameter used for generating the segment. */
-  temperature: float64;
+  temperature: float32;
 
   /** Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. */
-  avg_logprob: float64;
+  avg_logprob: float32;
 
   /**
    * Compression ratio of the segment. If the value is greater than 2.4, consider the compression
    * failed.
    */
-  compression_ratio: float64;
+  compression_ratio: float32;
 
   /**
    * Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
    * is below -1, consider this segment silent.
    */
-  no_speech_prob: float64;
+  no_speech_prob: float32;
 }
 
 model TranscriptionWord {
@@ -216,12 +217,12 @@ model TranscriptionWord {
   word: string;
 
   /** Start time of the word in seconds. */
-  @encode("seconds", float64)
+  @encode("seconds", float)
   @extension("x-customTspIngestionRule", "timespans are encoded durations")
   start: duration;
 
   /** End time of the word in seconds. */
-  @encode("seconds", float64)
+  @encode("seconds", float)
   @extension("x-customTspIngestionRule", "timespans are encoded durations")
   end: duration;
 }

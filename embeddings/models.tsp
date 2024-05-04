@@ -16,6 +16,7 @@ model CreateEmbeddingRequest {
    * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
    * tokens.
    */
+  @extension("x-oaiExpandable", true)
   input: string | string[] | int32[] | int32[][];
 
   /**
@@ -75,8 +76,16 @@ model Embedding {
    * The embedding vector, which is a list of floats. The length of vector depends on the model as
    * listed in the [embedding guide](/docs/guides/embeddings).
    */
+<<<<<<< HEAD
   @extension("x-customTspIngestionRule", "apply missing string union for embedding response valuese")
   embedding: float64[] | string;
+=======
+  @extension(
+    "x-customTspIngestionRule",
+    "apply missing string union for embedding response valuese"
+  )
+  embedding: float[] | string;
+>>>>>>> user/travisw/tool-ingested-tsp
 
   /** The object type, which is always "embedding". */
   object: "embedding";

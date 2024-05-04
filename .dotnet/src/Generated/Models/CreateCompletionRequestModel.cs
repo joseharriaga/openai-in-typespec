@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.LegacyCompletions
 {
     /// <summary> The CreateCompletionRequestModel. </summary>
     internal readonly partial struct CreateCompletionRequestModel : IEquatable<CreateCompletionRequestModel>

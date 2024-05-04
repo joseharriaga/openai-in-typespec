@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> The `fine_tuning.job` object represents a fine-tuning job that has been created through the API. </summary>
     internal partial class FineTuningJob

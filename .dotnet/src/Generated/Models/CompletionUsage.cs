@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.LegacyCompletions
 {
     /// <summary> Usage statistics for the completion request. </summary>
     internal partial class CompletionUsage

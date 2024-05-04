@@ -71,14 +71,14 @@ namespace OpenAI.Internal.Models
 
         internal static ChatCompletionTokenLogprobTopLogprob DeserializeChatCompletionTokenLogprobTopLogprob(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             string token = default;
-            double logprob = default;
+            float logprob = default;
             IReadOnlyList<int> bytes = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -91,7 +91,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("logprob"u8))
                 {
-                    logprob = property.Value.GetDouble();
+                    logprob = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("bytes"u8))
@@ -157,10 +157,10 @@ namespace OpenAI.Internal.Models
             return DeserializeChatCompletionTokenLogprobTopLogprob(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

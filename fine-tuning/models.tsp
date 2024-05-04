@@ -39,7 +39,7 @@ model CreateFineTuningJobRequest {
      * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
      * overfitting.
      */
-    learning_rate_multiplier?: "auto" | float64 = "auto";
+    learning_rate_multiplier?: "auto" | float32 = "auto";
 
     /**
      * The number of epochs to train the model for. An epoch refers to one full cycle

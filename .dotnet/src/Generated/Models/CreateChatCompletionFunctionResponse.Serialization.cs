@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.LegacyCompletions;
 
 namespace OpenAI.Internal.Models
 {
@@ -27,7 +28,7 @@ namespace OpenAI.Internal.Models
             writer.WriteStartArray();
             foreach (var item in Choices)
             {
-                writer.WriteObjectValue<CreateChatCompletionFunctionResponseChoice>(item, options);
+                writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
             writer.WritePropertyName("created"u8);
@@ -44,7 +45,7 @@ namespace OpenAI.Internal.Models
             if (Optional.IsDefined(Usage))
             {
                 writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue<CompletionUsage>(Usage, options);
+                writer.WriteObjectValue(Usage, options);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -78,7 +79,7 @@ namespace OpenAI.Internal.Models
 
         internal static CreateChatCompletionFunctionResponse DeserializeCreateChatCompletionFunctionResponse(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -195,10 +196,10 @@ namespace OpenAI.Internal.Models
             return DeserializeCreateChatCompletionFunctionResponse(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

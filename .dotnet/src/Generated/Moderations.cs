@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenAI.Internal.Models;
 
@@ -43,24 +42,26 @@ namespace OpenAI.Internal
         /// <summary> Classifies if text is potentially harmful. </summary>
         /// <param name="content"> The <see cref="CreateModerationRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks> Create moderation. </remarks>
         public virtual async Task<ClientResult<CreateModerationResponse>> CreateModerationAsync(CreateModerationRequest content)
         {
             Argument.AssertNotNull(content, nameof(content));
 
-            using BinaryContent content0 = content.ToBinaryBody();
-            ClientResult result = await CreateModerationAsync(content0, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content0 = content.ToBinaryContent();
+            ClientResult result = await CreateModerationAsync(content0, null).ConfigureAwait(false);
             return ClientResult.FromValue(CreateModerationResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Classifies if text is potentially harmful. </summary>
         /// <param name="content"> The <see cref="CreateModerationRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks> Create moderation. </remarks>
         public virtual ClientResult<CreateModerationResponse> CreateModeration(CreateModerationRequest content)
         {
             Argument.AssertNotNull(content, nameof(content));
 
-            using BinaryContent content0 = content.ToBinaryBody();
-            ClientResult result = CreateModeration(content0, DefaultRequestContext);
+            using BinaryContent content0 = content.ToBinaryContent();
+            ClientResult result = CreateModeration(content0, null);
             return ClientResult.FromValue(CreateModerationResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -133,14 +134,9 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
-
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });

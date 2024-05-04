@@ -1,37 +1,21 @@
 using System;
-using System.ClientModel.Primitives;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace OpenAI.Audio;
 
+[CodeGenModel("CreateTranslationResponseVerboseJson")]
+[CodeGenSerialization(nameof(Duration), DeserializationValueHook = nameof(DeserializeNullableTimespan))]
 public partial class AudioTranslation
 {
-    public string Text { get; }
+    // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
+    private CreateTranslationResponseVerboseJsonTask Task { get; }
 
-    internal AudioTranslation(string text)
-    {
-        Text = text;
-    }
+    // CUSTOM: Made nullable because this is an optional property.
+    /// <summary> TODO. </summary>
+    public TimeSpan? Duration { get; }
 
-    internal static AudioTranslation Deserialize(BinaryData content)
-    {
-        using JsonDocument responseDocument = JsonDocument.Parse(content);
-        return DeserializeAudioTranslation(responseDocument.RootElement);
-    }
-
-    internal static AudioTranslation DeserializeAudioTranslation(JsonElement element, ModelReaderWriterOptions options = default)
-    {
-        string text = null;
-
-        foreach (JsonProperty property in element.EnumerateObject())
-        {
-            if (property.NameEquals("text"u8))
-            {
-                text = property.Value.GetString();
-                continue;
-            }
-        }
-
-        return new AudioTranslation(text);
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static void DeserializeNullableTimespan(JsonProperty property, ref TimeSpan? nullableTimespan)
+        => CustomSerialization.DeserializeNullableTimeSpan(property, ref nullableTimespan);
 }

@@ -1,6 +1,5 @@
 ﻿using OpenAI.Internal;
 using System;
-using System.ClientModel.Primitives;
 using System.IO;
 
 namespace OpenAI.Images;
@@ -8,27 +7,64 @@ namespace OpenAI.Images;
 /// <summary>
 /// Represents additional options available to control the behavior of an image generation operation.
 /// </summary>
+[CodeGenModel("CreateImageVariationRequest")]
+[CodeGenSuppress("ImageVariationOptions", typeof(BinaryData))]
 public partial class ImageVariationOptions
 {
-    /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Size"/>
-    public GeneratedImageSize? Size { get; init; }
+    // CUSTOM: Made internal. The model is specified by the client.
+    /// <summary> The model to use for image generation. Only `dall-e-2` is supported at this time. </summary>
+    internal CreateImageVariationRequestModel? Model { get; set; }
 
-    /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.ResponseFormat"/>
-    public GeneratedImageFormat? ResponseFormat { get; init; }
+    // CUSTOM:
+    // - Made internal. This value comes from a parameter on the client method.
+    // - Added setter.
+    /// <summary>
+    /// The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB,
+    /// and square.
+    /// <para>
+    /// To assign a byte[] to this property use <see cref="BinaryData.FromBytes(byte[])"/>.
+    /// The byte[] will be serialized to a Base64 encoded string.
+    /// </para>
+    /// <para>
+    /// Examples:
+    /// <list type="bullet">
+    /// <item>
+    /// <term>BinaryData.FromBytes(new byte[] { 1, 2, 3 })</term>
+    /// <description>Creates a payload of "AQID".</description>
+    /// </item>
+    /// </list>
+    /// </para>
+    /// </summary>
+    internal BinaryData Image { get; set; }
 
-    /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
-    public string User { get; init; }
+    // CUSTOM: Made internal. This value comes from a parameter on the client method.
+    /// <summary> The number of images to generate. Must be between 1 and 10. </summary>
+    internal long? N { get; set; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream image, string fileName,  string model, int? imageCount)
+    // CUSTOM: Made public now that there are no required properties.
+    /// <summary> Initializes a new instance of <see cref="ImageVariationOptions"/>. </summary>
+    public ImageVariationOptions()
+    {
+    }
+
+    // CUSTOM: Changed property type.
+    /// <summary> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </summary>
+    public GeneratedImageSize? Size { get; set; }
+
+    // CUSTOM: Changed property type.
+    /// <summary> The format in which the generated images are returned. Must be one of `url` or `b64_json`. </summary>
+    public GeneratedImageFormat? ResponseFormat { get; set; }
+
+    internal MultipartFormDataBinaryContent ToMultipartContent(Stream image, string imageFilename)
     {
         MultipartFormDataBinaryContent content = new();
 
-        content.Add(image, "image", fileName);
-        content.Add(model, "model");
+        content.Add(image, "image", imageFilename);
+        content.Add(Model.Value.ToString(), "model");
 
-        if (imageCount is not null)
+        if (N is not null)
         {
-            content.Add(imageCount.Value, "n");
+            content.Add(N.Value, "n");
         }
 
         if (ResponseFormat is not null)
@@ -45,8 +81,7 @@ public partial class ImageVariationOptions
 
         if (Size is not null)
         {
-            string imageSize = Size.ToString();
-            content.Add(imageSize, "size");
+            content.Add(Size.ToString(), "size");
         }
 
         if (User is not null)

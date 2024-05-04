@@ -1,5 +1,5 @@
 $repoRoot = Join-Path $PSScriptRoot .. .. -Resolve
-$dotnetFolder = Join-Path $repoRoot .dotnet
+$dotnetFolder = Join-Path $repoRoot .dotnet\src
 
 function Invoke([scriptblock]$script) {
   $scriptString = $script | Out-String

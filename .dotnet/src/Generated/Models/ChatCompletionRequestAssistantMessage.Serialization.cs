@@ -46,14 +46,14 @@ namespace OpenAI.Internal.Models
                 writer.WriteStartArray();
                 foreach (var item in ToolCalls)
                 {
-                    writer.WriteObjectValue<ChatCompletionMessageToolCall>(item, options);
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
             if (Optional.IsDefined(FunctionCall))
             {
                 writer.WritePropertyName("function_call"u8);
-                writer.WriteObjectValue<ChatCompletionRequestAssistantMessageFunctionCall>(FunctionCall, options);
+                writer.WriteObjectValue(FunctionCall, options);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -87,7 +87,7 @@ namespace OpenAI.Internal.Models
 
         internal static ChatCompletionRequestAssistantMessage DeserializeChatCompletionRequestAssistantMessage(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -199,10 +199,10 @@ namespace OpenAI.Internal.Models
             return DeserializeChatCompletionRequestAssistantMessage(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

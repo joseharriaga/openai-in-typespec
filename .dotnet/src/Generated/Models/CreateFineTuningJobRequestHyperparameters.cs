@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> The CreateFineTuningJobRequestHyperparameters. </summary>
     internal partial class CreateFineTuningJobRequestHyperparameters
@@ -129,7 +129,7 @@ namespace OpenAI.Internal.Models
         /// <description>"auto"</description>
         /// </item>
         /// <item>
-        /// <description><see cref="double"/></description>
+        /// <description><see cref="float"/></description>
         /// </item>
         /// </list>
         /// </remarks>

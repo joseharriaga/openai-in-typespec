@@ -2,38 +2,79 @@ using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OpenAI.Images;
 
 /// <summary> The service client for OpenAI image operations. </summary>
+[CodeGenClient("Images")]
+[CodeGenSuppress("ImageClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions))]
+[CodeGenSuppress("CreateImage", typeof(ImageGenerationOptions))]
+[CodeGenSuppress("CreateImageEditAsync", typeof(ImageEditOptions))]
+[CodeGenSuppress("CreateImageEdit", typeof(ImageEditOptions))]
+[CodeGenSuppress("CreateImageVariationAsync", typeof(ImageVariationOptions))]
+[CodeGenSuppress("CreateImageVariation", typeof(ImageVariationOptions))]
 public partial class ImageClient
 {
-    private readonly OpenAIClientConnector _clientConnector;
-    private Internal.Images Shim => _clientConnector.InternalClient.GetImagesClient();
+    private readonly string _model;
+
+    // CUSTOM:
+    // - Added `model` parameter.
+    // - Added support for retrieving credential and endpoint from environment variables.
+    /// <summary> Initializes a new instance of ImageClient. </summary>
+    /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
+    /// <param name="credential"> The key credential to copy. </param>
+    /// <param name="options"> OpenAI Endpoint. </param>
+    public ImageClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+    {
+        Argument.AssertNotNullOrEmpty(model, nameof(model));
+        options ??= new OpenAIClientOptions();
+
+        _model = model;
+        _keyCredential = credential ?? new(Environment.GetEnvironmentVariable(OpenAIClient.s_OpenAIApiKeyEnvironmentVariable) ?? string.Empty);
+        _pipeline = ClientPipeline.Create(options, Array.Empty<PipelinePolicy>(), new PipelinePolicy[] { ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(_keyCredential, AuthorizationHeader, AuthorizationApiKeyPrefix) }, Array.Empty<PipelinePolicy>());
+        _endpoint = options.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIClient.s_OpenAIEndpointEnvironmentVariable) ?? OpenAIClient.s_defaultOpenAIV1Endpoint);
+    }
+
+    // CUSTOM:
+    // - Added `model` parameter.
+    /// <summary> Initializes a new instance of EmbeddingClient. </summary>
+    /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
+    /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
+    /// <param name="credential"> The key credential to copy. </param>
+    /// <param name="endpoint"> OpenAI Endpoint. </param>
+    internal ImageClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
+    {
+        _pipeline = pipeline;
+        _model = model;
+        _keyCredential = credential;
+        _endpoint = endpoint;
+    }
+
+    #region GenerateImages
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ImageClient"/>, used for image operation requests. 
+    /// Generates a single image for a provided prompt.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
-    /// </remarks>
-    /// <param name="model">The model name for image operations that the client should use.</param>
-    /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public ImageClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = null)
+    /// <param name="prompt"> The description and instructions for the image. </param>
+    /// <param name="options"> Additional options for the image generation request. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImage>> GenerateImageAsync(string prompt, ImageGenerationOptions options = null)
     {
-        _clientConnector = new(model, credential, options);
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+
+        options ??= new();
+        CreateImageGenerationOptions(prompt, null, ref options);
+
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateImagesAsync(content, (RequestOptions)null).ConfigureAwait(false);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary>
@@ -41,305 +82,341 @@ public partial class ImageClient
     /// </summary>
     /// <param name="prompt"> The description and instructions for the image. </param>
     /// <param name="options"> Additional options for the image generation request. </param>
-    /// <returns> A result for a single image generation. </returns>
-    public virtual ClientResult<GeneratedImage> GenerateImage(
-        string prompt,
-        ImageGenerationOptions options = null)
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImage> GenerateImage(string prompt, ImageGenerationOptions options = null)
     {
-        ClientResult<GeneratedImageCollection> multiResult = GenerateImages(prompt, imageCount: null, options);
-        return ClientResult.FromValue(multiResult.Value[0], multiResult.GetRawResponse());
-    }
-
-    /// <summary>
-    /// Generates a single image for a provided prompt.
-    /// </summary>
-    /// <param name="prompt"> The description and instructions for the image. </param>
-    /// <param name="options"> Additional options for the image generation request. </param>
-    /// <returns> A result for a single image generation. </returns>
-    public virtual async Task<ClientResult<GeneratedImage>> GenerateImageAsync(
-        string prompt,
-        ImageGenerationOptions options = null)
-    {
-        ClientResult<GeneratedImageCollection> multiResult = await GenerateImagesAsync(prompt, imageCount: null, options).ConfigureAwait(false);
-        return ClientResult.FromValue(multiResult.Value[0], multiResult.GetRawResponse());
-    }
-
-    /// <summary>
-    /// Generates a collection of image alternatives for a provided prompt.
-    /// </summary>
-    /// <param name="prompt"> The description and instructions for the image. </param>
-    /// <param name="imageCount">
-    ///     The number of alternative images to generate for the prompt.
-    /// </param>
-    /// <param name="options"> Additional options for the image generation request. </param>
-    /// <returns> A result for a single image generation. </returns>
-    public virtual ClientResult<GeneratedImageCollection> GenerateImages(
-        string prompt,
-        int? imageCount = null,
-        ImageGenerationOptions options = null)
-    {
-        Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
-        ClientResult response = Shim.CreateImage(BinaryContent.Create(request));
-        GeneratedImageCollection resultValue = GeneratedImageCollection.Deserialize(response.GetRawResponse().Content);
-        return ClientResult.FromValue(resultValue, response.GetRawResponse());
-    }
-
-    /// <summary>
-    /// Generates a collection of image alternatives for a provided prompt.
-    /// </summary>
-    /// <param name="prompt"> The description and instructions for the image. </param>
-    /// <param name="imageCount">
-    ///     The number of alternative images to generate for the prompt.
-    /// </param>
-    /// <param name="options"> Additional options for the image generation request. </param>
-    /// <returns> A result for a single image generation. </returns>
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(
-        string prompt,
-        int? imageCount = null,
-        ImageGenerationOptions options = null)
-    {
-        Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
-        ClientResult response = await Shim.CreateImageAsync(BinaryContent.Create(request));
-        GeneratedImageCollection resultValue = GeneratedImageCollection.Deserialize(response.GetRawResponse().Content);
-        return ClientResult.FromValue(resultValue, response.GetRawResponse());
-    }
-
-    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
-        FileStream image,
-        string prompt,
-        int? imageCount = null,
-        ImageEditOptions options = null)
-     => GenerateImageEdits(image, Path.GetFileName(image.Name), prompt, imageCount, options);
-
-    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
-        Stream image,
-        string fileName,
-        string prompt,
-        int? imageCount = null,
-        ImageEditOptions options = null)
-    {
-        Argument.AssertNotNull(image, nameof(image));
-        Argument.AssertNotNull(fileName, nameof(fileName));
-        Argument.AssertNotNull(prompt, nameof(prompt));
-
-        if (options?.Mask is not null)
-        {
-            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
-        }
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
 
         options ??= new();
+        CreateImageGenerationOptions(prompt, null, ref options);
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, fileName, prompt, _clientConnector.Model, imageCount);
-
-        ClientResult result = GenerateImageEdits(content, content.ContentType);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
-
-        return ClientResult.FromValue(value, response);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateImages(content, (RequestOptions)null);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(
-        FileStream image,
-        string prompt,
-        int? imageCount = null,
-        ImageEditOptions options = null)
-        => await GenerateImageEditsAsync(image, Path.GetFileName(image.Name), prompt, imageCount, options).ConfigureAwait(false);
-
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(
-        Stream image,
-        string fileName,
-        string prompt,
-        int? imageCount = null,
-        ImageEditOptions options = null)
+    /// <summary> Creates an image given a prompt. </summary>
+    /// <param name="prompt"> TODO </param>
+    /// <param name="imageCount"> TODO </param>
+    /// <param name="options"> TODO </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(string prompt, int? imageCount = null, ImageGenerationOptions options = null)
     {
-        Argument.AssertNotNull(image, nameof(image));
-        Argument.AssertNotNull(fileName, nameof(fileName));
-        Argument.AssertNotNull(prompt, nameof(prompt));
-
-        if (options?.Mask is not null)
-        {
-            Argument.AssertNotNull(options.MaskFileName, nameof(options.MaskFileName));
-        }
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
 
         options ??= new();
+        CreateImageGenerationOptions(prompt, imageCount, ref options);
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, fileName, prompt, _clientConnector.Model, imageCount);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateImagesAsync(content, (RequestOptions)null).ConfigureAwait(false);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
 
+    /// <summary> Creates an image given a prompt. </summary>
+    /// <param name="prompt"> TODO </param>
+    /// <param name="imageCount"> TODO </param>
+    /// <param name="options"> TODO </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImages(string prompt, int? imageCount = null, ImageGenerationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+
+        options ??= new();
+        CreateImageGenerationOptions(prompt, imageCount, ref options);
+
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateImages(content, (RequestOptions)null);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    #endregion
+
+    #region GenerateImageEdits
+
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+
+        options ??= new();
+        CreateImageEditOptions(image, imageFilename, prompt, null, null, null, ref options);
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, null, null);
         ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
-
-        return ClientResult.FromValue(value, response);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
-    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
-        FileStream image,
-        int? imageCount = null,
-        ImageVariationOptions options = null)
-        => GenerateImageVariations(image, Path.GetFileName(image.Name), imageCount, options);
-
-    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(
-        Stream image,
-        string fileName,
-        int? imageCount = null,
-        ImageVariationOptions options = null)
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null)
     {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
-        Argument.AssertNotNull(fileName, nameof(fileName));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
 
         options ??= new();
+        CreateImageEditOptions(image, imageFilename, prompt, null, null, null, ref options);
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, fileName, _clientConnector.Model, imageCount);
-
-        ClientResult result = GenerateImageVariations(content, content.ContentType);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
-
-        return ClientResult.FromValue(value, response);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, null, null);
+        ClientResult result = GenerateImageEdits(content, content.ContentType);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
-
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(
-        FileStream image,
-        int? imageCount = null,
-        ImageVariationOptions options = null)
-        => await GenerateImageVariationsAsync(image, Path.GetFileName(image.Name), imageCount, options).ConfigureAwait(false);
-
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(
-        Stream image,
-        string fileName,
-        int? imageCount = null,
-        ImageVariationOptions options = null)
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="mask"> TODO. </param>
+    /// <param name="maskFilename"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null)
     {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
-        Argument.AssertNotNull(fileName, nameof(fileName));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
 
         options ??= new();
+        CreateImageEditOptions(image, imageFilename, prompt, mask, maskFilename, null, ref options);
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, fileName, _clientConnector.Model, imageCount);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
+        ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+    }
 
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="mask"> TODO. </param>
+    /// <param name="maskFilename"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+
+        options ??= new();
+        CreateImageEditOptions(image, imageFilename, prompt, mask, maskFilename, null, ref options);
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
+        ClientResult result = GenerateImageEdits(content, content.ContentType);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, int? imageCount = null, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+
+        options ??= new();
+        CreateImageEditOptions(image, imageFilename, prompt, null, null, imageCount, ref options);
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, null, null);
+        ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, int? imageCount = null, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+
+        options ??= new();
+        CreateImageEditOptions(image, imageFilename, prompt, null, null, imageCount, ref options);
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, null, null);
+        ClientResult result = GenerateImageEdits(content, content.ContentType);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="mask"> TODO. </param>
+    /// <param name="maskFilename"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int? imageCount = null, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+
+        options ??= new();
+        CreateImageEditOptions(image, imageFilename, prompt, mask, maskFilename, imageCount, ref options);
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
+        ClientResult result = await GenerateImageEditsAsync(content, content.ContentType).ConfigureAwait(false);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="mask"> TODO. </param>
+    /// <param name="maskFilename"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int? imageCount = null, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+
+        options ??= new();
+        CreateImageEditOptions(image, imageFilename, prompt, mask, maskFilename, imageCount, ref options);
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
+        ClientResult result = GenerateImageEdits(content, content.ContentType);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    #endregion
+
+    #region GenerateImageVariations
+
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(Stream image, string imageFilename, ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+
+        options ??= new();
+        CreateImageVariationOptions(image, imageFilename, null, ref options);
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
         ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType).ConfigureAwait(false);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        GeneratedImageCollection value = GeneratedImageCollection.Deserialize(response.Content!);
-
-        return ClientResult.FromValue(value, response);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
-    private Internal.Models.CreateImageRequest CreateInternalImageRequest(
-        string prompt,
-        int? imageCount = null,
-        ImageGenerationOptions options = null)
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImage> GenerateImageVariation(Stream image, string imageFilename, ImageVariationOptions options = null)
     {
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+
         options ??= new();
-        Internal.Models.CreateImageRequestQuality? internalQuality = null;
-        if (options.Quality != null)
-        {
-            internalQuality = options.Quality switch
-            {
-                GeneratedImageQuality.Standard => Internal.Models.CreateImageRequestQuality.Standard,
-                GeneratedImageQuality.High => Internal.Models.CreateImageRequestQuality.Hd,
-                _ => throw new ArgumentException(nameof(options.Quality)),
-            };
-        }
+        CreateImageVariationOptions(image, imageFilename, null, ref options);
 
-        Internal.Models.CreateImageRequestResponseFormat? internalFormat = null;
-        if (options.ResponseFormat != null)
-        {
-            internalFormat = options.ResponseFormat switch
-            {
-                GeneratedImageFormat.Bytes => Internal.Models.CreateImageRequestResponseFormat.B64Json,
-                GeneratedImageFormat.Uri => Internal.Models.CreateImageRequestResponseFormat.Url,
-                _ => throw new ArgumentException(nameof(options.ResponseFormat)),
-            };
-        }
-
-        Internal.Models.CreateImageRequestSize? internalSize = null;
-        if (options.Size is not null)
-        {
-            internalSize = options.Size.ToString();
-        }
-
-        Internal.Models.CreateImageRequestStyle? internalStyle = null;
-        if (options.Style != null)
-        {
-            internalStyle = options.Style switch
-            {
-                GeneratedImageStyle.Vivid => Internal.Models.CreateImageRequestStyle.Vivid,
-                GeneratedImageStyle.Natural => Internal.Models.CreateImageRequestStyle.Natural,
-                _ => throw new ArgumentException(nameof(options.Style)),
-            };
-        }
-
-        return new Internal.Models.CreateImageRequest(
-            prompt,
-            _clientConnector.Model,
-            imageCount,
-            quality: internalQuality,
-            responseFormat: internalFormat,
-            size: internalSize,
-            style: internalStyle,
-            options.User,
-            serializedAdditionalRawData: null);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
+        ClientResult result = GenerateImageVariations(content, content.ContentType);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
-    private PipelineMessage CreateCreateImageEditsRequest(BinaryContent content, string contentType, RequestOptions options)
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(Stream image, string imageFilename, int? imageCount = null, ImageVariationOptions options = null)
     {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
 
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
+        options ??= new();
+        CreateImageVariationOptions(image, imageFilename, imageCount, ref options);
 
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-
-        StringBuilder path = new();
-        path.Append("/images/edits");
-        uriBuilder.Path += path.ToString();
-
-        request.Uri = uriBuilder.Uri;
-
-        request.Headers.Set("Content-Type", contentType);
-
-        request.Content = content;
-
-        message.Apply(options);
-
-        return message;
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
+        ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType).ConfigureAwait(false);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    private PipelineMessage CreateImageVariationsRequest(BinaryContent content, string contentType, RequestOptions options)
+    /// <summary> TODO. </summary>
+    /// <param name="image"> TODO. </param>
+    /// <param name="imageFilename"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(Stream image, string imageFilename, int? imageCount = null, ImageVariationOptions options = null)
     {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        Argument.AssertNotNull(image, nameof(image));
+        Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
 
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
+        options ??= new();
+        CreateImageVariationOptions(image, imageFilename, imageCount, ref options);
 
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-
-        StringBuilder path = new();
-        path.Append("/images/variations");
-        uriBuilder.Path += path.ToString();
-
-        request.Uri = uriBuilder.Uri;
-
-        request.Headers.Set("Content-Type", contentType);
-
-        request.Content = content;
-
-        message.Apply(options);
-
-        return message;
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
+        ClientResult result = GenerateImageVariations(content, content.ContentType);
+        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    private static PipelineMessageClassifier _responseErrorClassifier200;
-    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+    #endregion
+
+    private void CreateImageGenerationOptions(string prompt, int? imageCount, ref ImageGenerationOptions options)
+    {
+        options.Prompt = prompt;
+        options.N = imageCount;
+        options.Model = _model;
+    }
+
+    private void CreateImageEditOptions(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int? imageCount, ref ImageEditOptions options)
+    {
+        options.Prompt = prompt;
+        options.N = imageCount;
+        options.Model = _model;
+    }
+
+    private void CreateImageVariationOptions(Stream image, string imageFilename, int? imageCount, ref ImageVariationOptions options)
+    {
+        options.N = imageCount;
+        options.Model = _model;
+    }
 }

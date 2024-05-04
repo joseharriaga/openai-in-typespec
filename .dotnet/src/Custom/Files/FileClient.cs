@@ -14,27 +14,59 @@ namespace OpenAI.Files;
 /// </summary>
 public partial class FileClient
 {
+    private readonly ClientPipeline _pipeline;
+    private readonly Uri _endpoint;
     private readonly OpenAIClientConnector _clientConnector;
     private Internal.Files Shim => _clientConnector.InternalClient.GetFilesClient();
 
+    /// <inheritdoc cref="OpenAIClient.Pipeline"/>
+    public ClientPipeline Pipeline => _pipeline;
+
     /// <summary>
-    /// Initializes a new instance of <see cref="FileClient"/>, used for file operation requests. 
+    /// Initializes a new instance of <see cref="FileClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public FileClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {
+        // Temporary pending codegen integration
+        _clientConnector = new(model: null, credential, options);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="FileClient"/> that will use an API key from the OPENAI_API_KEY
+    /// environment variable when authenticating.
     /// </summary>
     /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
+    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
+    /// <see cref="FileClient(ApiKeyCredential,OpenAIClientOptions)"/>.
     /// </remarks>
-    /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public FileClient(ApiKeyCredential credential = default, OpenAIClientOptions options = null)
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
+    public FileClient(OpenAIClientOptions options = null)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
+              OpenAIClient.GetEndpoint(options),
+              options)
     {
-        _clientConnector = new(model: null, credential, options);
+        // Temporary pending codegen integration
+        _clientConnector = new(model: null, OpenAIClient.GetApiKey(), options);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="FileClient"/>.
+    /// </summary>
+    /// <param name="pipeline"> The client pipeline to use. </param>
+    /// <param name="endpoint"> The endpoint to use. </param>
+    protected internal FileClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)
+    {
+        _pipeline = pipeline;
+        _endpoint = endpoint;
     }
 
     public virtual ClientResult<OpenAIFileInfo> UploadFile(FileStream file, OpenAIFilePurpose purpose)

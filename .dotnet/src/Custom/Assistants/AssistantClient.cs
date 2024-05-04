@@ -13,34 +13,67 @@ namespace OpenAI.Assistants;
 [Experimental("OPENAI001")]
 public partial class AssistantClient
 {
-    private OpenAIClientConnector _clientConnector;
+    private readonly Uri _endpoint;
+    private readonly ClientPipeline _pipeline;
+
+    /// <inheritdoc cref="OpenAIClient.Pipeline"/>
+    public ClientPipeline Pipeline => _pipeline;
+
+    private readonly OpenAIClientConnector _clientConnector;
     private Internal.Assistants Shim => _clientConnector.InternalClient.GetAssistantsClient();
     private Internal.Threads ThreadShim => _clientConnector.InternalClient.GetThreadsClient();
     private Internal.Messages MessageShim => _clientConnector.InternalClient.GetMessagesClient();
     private Internal.Runs RunShim => _clientConnector.InternalClient.GetRunsClient();
 
     /// <summary>
-    /// Initializes a new instance of <see cref="AssistantClient"/>, used for assistant requests. 
+    /// Initializes a new instance of <see cref="AssistantClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public AssistantClient(ApiKeyCredential credential, OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {}
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="AssistantClient"/> that will use an API key from the OPENAI_API_KEY
+    /// environment variable when authenticating.
     /// </summary>
     /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
+    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
+    /// <see cref="AssistantClient(ApiKeyCredential,OpenAIClientOptions)"/>.
     /// </remarks>
-    /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public AssistantClient(ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
+    public AssistantClient(OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {}
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="AssistantClient"/>.
+    /// </summary>
+    /// <param name="pipeline"> The <see cref="ClientPipeline"/> instance to use. </param>
+    /// <param name="endpoint"> The endpoint to use. </param>
+    protected internal AssistantClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)
     {
-        options ??= new();
-        options.AddPolicy(
-            new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
-            PipelinePosition.PerCall);
-        _clientConnector = new(model: "none", credential, options);
+        _pipeline = pipeline;
+        _endpoint = endpoint;
+
+        // Temporary pending codegen integration
+        if (options is null)
+        {
+            options = new();
+            options.AddPolicy(
+                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
+                PipelinePosition.PerCall);
+        }
+        _clientConnector = new(model: "none", OpenAIClient.GetApiKey(), options);
     }
 
     public virtual ClientResult<Assistant> CreateAssistant(

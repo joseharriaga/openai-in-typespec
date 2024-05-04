@@ -95,19 +95,19 @@ public partial class ChatCompletionOptions
         return internalFunctions;
     }
 
-    internal static IDictionary<string, BinaryData> CreateInternalFunctionParameters(BinaryData parameters)
+    internal static Internal.Models.FunctionParameters CreateInternalFunctionParameters(BinaryData parameters)
     {
-        ChangeTrackingDictionary<string, BinaryData> parametersMap = [];
+        Internal.Models.FunctionParameters internalParameters = new();
         if (parameters == null)
         {
-            return parametersMap;
+            return internalParameters;
         }
         JsonElement parametersElement = JsonDocument.Parse(parameters.ToString()).RootElement;
         foreach (JsonProperty property in parametersElement.EnumerateObject())
         {
             BinaryData propertyData = BinaryData.FromString(property.Value.GetRawText());
-            parametersMap[property.Name] = propertyData;
+            internalParameters.AdditionalProperties[property.Name] = propertyData;
         }
-        return parametersMap;
+        return internalParameters;
     }
 }

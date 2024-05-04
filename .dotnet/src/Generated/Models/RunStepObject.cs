@@ -49,10 +49,7 @@ namespace OpenAI.Internal.Models
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was run. </param>
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
         /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
-        /// <param name="status">
-        /// The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
-        /// `completed`, or `expired`.
-        /// </param>
+        /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
         /// <param name="stepDetails"> The details of the run step. </param>
         /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
         /// <param name="expiredAt">
@@ -103,10 +100,7 @@ namespace OpenAI.Internal.Models
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was run. </param>
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
         /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
-        /// <param name="status">
-        /// The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
-        /// `completed`, or `expired`.
-        /// </param>
+        /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
         /// <param name="stepDetails"> The details of the run step. </param>
         /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
         /// <param name="expiredAt">
@@ -164,10 +158,7 @@ namespace OpenAI.Internal.Models
         public string RunId { get; }
         /// <summary> The type of run step, which can be either `message_creation` or `tool_calls`. </summary>
         public RunStepObjectType Type { get; }
-        /// <summary>
-        /// The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
-        /// `completed`, or `expired`.
-        /// </summary>
+        /// <summary> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </summary>
         public RunStepObjectStatus Status { get; }
         /// <summary>
         /// The details of the run step.

@@ -8,7 +8,10 @@ using System.Linq;
 
 namespace OpenAI.FineTuning
 {
-    /// <summary> The `fine_tuning.job` object represents a fine-tuning job that has been created through the API. </summary>
+    /// <summary>
+    /// The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
+    ///
+    /// </summary>
     internal partial class FineTuningJob
     {
         /// <summary>
@@ -46,10 +49,7 @@ namespace OpenAI.FineTuning
         /// <summary> Initializes a new instance of <see cref="FineTuningJob"/>. </summary>
         /// <param name="id"> The object identifier, which can be referenced in the API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the fine-tuning job was created. </param>
-        /// <param name="error">
-        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of
-        /// the failure.
-        /// </param>
+        /// <param name="error"> For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure. </param>
         /// <param name="fineTunedModel">
         /// The name of the fine-tuned model that is being created. The value will be null if the
         /// fine-tuning job is still running.
@@ -68,10 +68,7 @@ namespace OpenAI.FineTuning
         /// The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </param>
-        /// <param name="status">
-        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-        /// `running`, `succeeded`, `failed`, or `cancelled`.
-        /// </param>
+        /// <param name="status"> The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`. </param>
         /// <param name="trainedTokens">
         /// The total number of billable tokens processed by this fine-tuning job. The value will be null
         /// if the fine-tuning job is still running.
@@ -112,10 +109,7 @@ namespace OpenAI.FineTuning
         /// <summary> Initializes a new instance of <see cref="FineTuningJob"/>. </summary>
         /// <param name="id"> The object identifier, which can be referenced in the API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the fine-tuning job was created. </param>
-        /// <param name="error">
-        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of
-        /// the failure.
-        /// </param>
+        /// <param name="error"> For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure. </param>
         /// <param name="fineTunedModel">
         /// The name of the fine-tuned model that is being created. The value will be null if the
         /// fine-tuning job is still running.
@@ -135,10 +129,7 @@ namespace OpenAI.FineTuning
         /// The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </param>
-        /// <param name="status">
-        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-        /// `running`, `succeeded`, `failed`, or `cancelled`.
-        /// </param>
+        /// <param name="status"> The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`. </param>
         /// <param name="trainedTokens">
         /// The total number of billable tokens processed by this fine-tuning job. The value will be null
         /// if the fine-tuning job is still running.
@@ -180,10 +171,7 @@ namespace OpenAI.FineTuning
         public string Id { get; }
         /// <summary> The Unix timestamp (in seconds) for when the fine-tuning job was created. </summary>
         public DateTimeOffset CreatedAt { get; }
-        /// <summary>
-        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of
-        /// the failure.
-        /// </summary>
+        /// <summary> For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure. </summary>
         public FineTuningJobError Error { get; }
         /// <summary>
         /// The name of the fine-tuned model that is being created. The value will be null if the
@@ -212,10 +200,7 @@ namespace OpenAI.FineTuning
         /// [Files API](/docs/api-reference/files/retrieve-contents).
         /// </summary>
         public IReadOnlyList<string> ResultFiles { get; }
-        /// <summary>
-        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-        /// `running`, `succeeded`, `failed`, or `cancelled`.
-        /// </summary>
+        /// <summary> The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`. </summary>
         public FineTuningJobStatus Status { get; }
         /// <summary>
         /// The total number of billable tokens processed by this fine-tuning job. The value will be null

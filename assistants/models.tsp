@@ -30,7 +30,7 @@ An object describing the expected output of the model. If `json_object` only `fu
 model AssistantsApiResponseFormat {
   @doc("""
   Must be one of `text` or `json_object`.
-""")
+  """)
   type?: "text" | "json_object" = "text";
 }
 
@@ -76,22 +76,22 @@ model CreateAssistantRequest {
 
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
-
-""")
+  
+  """)
   @maxItems(128)
   tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
   ];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-
-""")
+  
+  """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-
-""")
+      
+      """)
       @maxItems(20)
       file_ids?: string[] = [];
     };
@@ -180,22 +180,22 @@ model ModifyAssistantRequest {
 
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
-
-""")
+  
+  """)
   @maxItems(128)
   tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
   ];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-
-""")
+  
+  """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       Overrides the list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-
-""")
+      
+      """)
       @maxItems(20)
       file_ids?: string[] = [];
     };
@@ -256,21 +256,21 @@ model DeleteAssistantResponse {
 model AssistantToolsCode {
   @doc("""
   The type of tool being defined: `code_interpreter`
-""")
+  """)
   type: "code_interpreter";
 }
 
 model AssistantToolsFileSearch {
   @doc("""
   The type of tool being defined: `file_search`
-""")
+  """)
   type: "file_search";
 }
 
 model AssistantToolsFunction {
   @doc("""
   The type of tool being defined: `function`
-""")
+  """)
   type: "function";
 
   function: FunctionObject;
@@ -285,7 +285,7 @@ model AssistantObject {
 
   @doc("""
   The object type, which is always `assistant`.
-""")
+  """)
   object: "assistant";
 
   /** The Unix timestamp (in seconds) for when the assistant was created. */
@@ -317,22 +317,22 @@ model AssistantObject {
 
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
-
-""")
+  
+  """)
   @maxItems(128)
   tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
   ];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-
-""")
+  
+  """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool.
-
-""")
+      
+      """)
       @maxItems(20)
       file_ids?: string[] = [];
     };
@@ -383,7 +383,7 @@ model AssistantObject {
 model TruncationObject {
   @doc("""
   The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
-""")
+  """)
   type: "auto" | "last_messages";
 
   /**
@@ -411,7 +411,7 @@ union AssistantsApiToolChoiceOption {
 model AssistantsNamedToolChoice {
   @doc("""
   The type of the tool. If type is `function`, the function name must be set
-""")
+  """)
   type: "function" | "code_interpreter" | "file_search";
 
   function?: {

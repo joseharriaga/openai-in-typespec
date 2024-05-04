@@ -15,14 +15,14 @@ model CreateThreadRequest {
 
   @doc("""
   A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-
-""")
+  
+  """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-
-""")
+      
+      """)
       @maxItems(20)
       file_ids?: string[] = [];
     };
@@ -71,14 +71,14 @@ model CreateThreadRequest {
 model ModifyThreadRequest {
   @doc("""
   A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-
-""")
+  
+  """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-
-""")
+      
+      """)
       @maxItems(20)
       file_ids?: string[] = [];
     };
@@ -114,7 +114,7 @@ model ThreadObject {
 
   @doc("""
   The object type, which is always `thread`.
-""")
+  """)
   object: "thread";
 
   /** The Unix timestamp (in seconds) for when the thread was created. */
@@ -127,14 +127,14 @@ model ThreadObject {
 
   @doc("""
   A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-
-""")
+  
+  """)
   tool_resources: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-
-""")
+      
+      """)
       @maxItems(20)
       file_ids?: string[] = [];
     };

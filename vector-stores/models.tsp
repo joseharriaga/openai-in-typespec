@@ -11,7 +11,7 @@ namespace OpenAI;
 model VectorStoreExpirationAfter {
   @doc("""
   Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`.
-""")
+  """)
   anchor: "last_active_at";
 
   /** The number of days after the anchor time that the vector store will expire. */
@@ -29,7 +29,7 @@ model VectorStoreObject {
 
   @doc("""
   The object type, which is always `vector_store`.
-""")
+  """)
   object: "vector_store";
 
   /** The Unix timestamp (in seconds) for when the vector store was created. */
@@ -65,7 +65,7 @@ model VectorStoreObject {
 
   @doc("""
   The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use.
-""")
+  """)
   status: "expired" | "in_progress" | "completed";
 
   expires_after?: VectorStoreExpirationAfter;
@@ -98,7 +98,7 @@ model VectorStoreObject {
 model CreateVectorStoreRequest {
   @doc("""
   A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
-""")
+  """)
   @maxItems(500)
   file_ids?: string[];
 
@@ -152,7 +152,7 @@ model VectorStoreFileObject {
 
   @doc("""
   The object type, which is always `vector_store.file`.
-""")
+  """)
   object: "vector_store.file";
 
   /**
@@ -177,16 +177,16 @@ model VectorStoreFileObject {
 
   @doc("""
   The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use.
-""")
+  """)
   status: "in_progress" | "completed" | "cancelled" | "failed";
 
   @doc("""
   The last error associated with this vector store file. Will be `null` if there are no errors.
-""")
+  """)
   last_error: {
     @doc("""
     One of `server_error` or `rate_limit_exceeded`.
-""")
+    """)
     code:
       | "internal_error"
       | "file_not_found"
@@ -201,7 +201,7 @@ model VectorStoreFileObject {
 model CreateVectorStoreFileRequest {
   @doc("""
   A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files.
-""")
+  """)
   file_id: string;
 }
 
@@ -226,7 +226,7 @@ model VectorStoreFileBatchObject {
 
   @doc("""
   The object type, which is always `vector_store.file_batch`.
-""")
+  """)
   object: "vector_store.files_batch";
 
   /** The Unix timestamp (in seconds) for when the vector store files batch was created. */
@@ -245,7 +245,7 @@ model VectorStoreFileBatchObject {
 
   @doc("""
   The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`.
-""")
+  """)
   status: "in_progress" | "completed" | "cancelled" | "failed";
 
   file_counts: {
@@ -269,7 +269,7 @@ model VectorStoreFileBatchObject {
 model CreateVectorStoreFileBatchRequest {
   @doc("""
   A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
-""")
+  """)
   @minItems(1)
   @maxItems(500)
   file_ids: string[];

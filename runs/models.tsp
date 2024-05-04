@@ -94,21 +94,21 @@ model CreateRunRequest {
 
   @doc("""
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-
-""")
+  
+  """)
   stream?: boolean | null;
 
   @doc("""
   The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-
-""")
+  
+  """)
   @minValue(256)
   max_prompt_tokens?: int32 | null;
 
   @doc("""
   The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-
-""")
+  
+  """)
   @minValue(256)
   max_completion_tokens?: int32 | null;
 
@@ -177,14 +177,14 @@ model CreateThreadAndRunRequest {
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-
-""")
+  
+  """)
   tool_resources?: {
     code_interpreter?: {
       @doc("""
       A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
-
-""")
+      
+      """)
       @maxItems(20)
       file_ids?: string[] = [];
     };
@@ -227,21 +227,21 @@ model CreateThreadAndRunRequest {
 
   @doc("""
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-
-""")
+  
+  """)
   stream?: boolean | null;
 
   @doc("""
   The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-
-""")
+  
+  """)
   @minValue(256)
   max_prompt_tokens?: int32 | null;
 
   @doc("""
   The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.
-
-""")
+  
+  """)
   @minValue(256)
   max_completion_tokens?: int32 | null;
 
@@ -255,7 +255,7 @@ model SubmitToolOutputsRunRequest {
   tool_outputs: {
     @doc("""
     The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
-""")
+    """)
     tool_call_id?: string;
 
     /** The output of the tool call to be submitted to continue the run. */
@@ -264,8 +264,8 @@ model SubmitToolOutputsRunRequest {
 
   @doc("""
   If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
-
-""")
+  
+  """)
   stream?: boolean | null;
 }
 
@@ -289,7 +289,7 @@ model ListRunStepsResponse {
 model RunStepDetailsMessageCreationObject {
   @doc("""
   Always `message_creation`.
-""")
+  """)
   type: "message_creation";
 
   message_creation: {
@@ -302,13 +302,13 @@ model RunStepDetailsMessageCreationObject {
 model RunStepDetailsToolCallsObject {
   @doc("""
   Always `tool_calls`.
-""")
+  """)
   type: "tool_calls";
 
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-
-""")
+  
+  """)
   tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsFileSearchObject | RunStepDetailsToolCallsFunctionObject)[];
 }
 
@@ -319,7 +319,7 @@ model RunStepDetailsToolCallsCodeObject {
 
   @doc("""
   The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-""")
+  """)
   type: "code_interpreter";
 
   /** The Code Interpreter tool call definition. */
@@ -329,7 +329,7 @@ model RunStepDetailsToolCallsCodeObject {
 
     @doc("""
     The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-""")
+    """)
     outputs: (RunStepDetailsToolCallsCodeOutputLogsObject | RunStepDetailsToolCallsCodeOutputImageObject)[];
   };
 }
@@ -338,7 +338,7 @@ model RunStepDetailsToolCallsCodeObject {
 model RunStepDetailsToolCallsCodeOutputLogsObject {
   @doc("""
   Always `logs`.
-""")
+  """)
   type: "logs";
 
   /** The text output from the Code Interpreter tool call. */
@@ -348,7 +348,7 @@ model RunStepDetailsToolCallsCodeOutputLogsObject {
 model RunStepDetailsToolCallsCodeOutputImageObject {
   @doc("""
   Always `image`.
-""")
+  """)
   type: "image";
 
   image: {
@@ -363,7 +363,7 @@ model RunStepDetailsToolCallsFileSearchObject {
 
   @doc("""
   The type of tool call. This is always going to be `file_search` for this type of tool call.
-""")
+  """)
   type: "file_search";
 
   /** For now, this is always going to be an empty object. */
@@ -377,7 +377,7 @@ model RunStepDetailsToolCallsFunctionObject {
 
   @doc("""
   The type of tool call. This is always going to be `function` for this type of tool call.
-""")
+  """)
   type: "function";
 
   /** The definition of the function that was called. */
@@ -390,7 +390,7 @@ model RunStepDetailsToolCallsFunctionObject {
 
     @doc("""
     The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-""")
+    """)
     output: string | null;
   };
 }
@@ -430,7 +430,7 @@ model RunObject {
 
   @doc("""
   The object type, which is always `thread.run`.
-""")
+  """)
   object: "thread.run";
 
   /** The Unix timestamp (in seconds) for when the run was created. */
@@ -451,7 +451,7 @@ model RunObject {
 
   @doc("""
   The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
-""")
+  """)
   status:
     | "queued"
     | "in_progress"
@@ -464,11 +464,11 @@ model RunObject {
 
   @doc("""
   Details on the action required to continue the run. Will be `null` if no action is required.
-""")
+  """)
   required_action: {
     @doc("""
     For now, this is always `submit_tool_outputs`.
-""")
+    """)
     type: "submit_tool_outputs";
 
     /** Details on the tool outputs needed for this run to continue. */
@@ -480,11 +480,11 @@ model RunObject {
 
   @doc("""
   The last error associated with this run. Will be `null` if there are no errors.
-""")
+  """)
   last_error: {
     @doc("""
     One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-""")
+    """)
     code: "server_error" | "rate_limit_exceeded" | "invalid_prompt";
 
     /** A human-readable description of the error. */
@@ -533,7 +533,7 @@ model RunObject {
 
   @doc("""
   Details on why the run is incomplete. Will be `null` if the run is not incomplete.
-""")
+  """)
   incomplete_details: {
     /**
      * The reason why the run is incomplete. This will point to which specific token limit was
@@ -591,7 +591,7 @@ model RunStepObject {
 
   @doc("""
   The object type, which is always `thread.run.step`.
-""")
+  """)
   object: "thread.run.step";
 
   /** The Unix timestamp (in seconds) for when the run step was created. */
@@ -613,12 +613,12 @@ model RunStepObject {
 
   @doc("""
   The type of run step, which can be either `message_creation` or `tool_calls`.
-""")
+  """)
   type: "message_creation" | "tool_calls";
 
   @doc("""
   The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
-""")
+  """)
   status: "in_progress" | "cancelled" | "failed" | "completed" | "expired";
 
   /** The details of the run step. */
@@ -627,11 +627,11 @@ model RunStepObject {
 
   @doc("""
   The last error associated with this run step. Will be `null` if there are no errors.
-""")
+  """)
   last_error: {
     @doc("""
     One of `server_error` or `rate_limit_exceeded`.
-""")
+    """)
     code: "server_error" | "rate_limit_exceeded";
 
     /** A human-readable description of the error. */
@@ -694,7 +694,7 @@ model RunToolCallObject {
 
   @doc("""
   The type of tool call the output is required for. For now, this is always `function`.
-""")
+  """)
   type: "function";
 
   /** The function definition. */
@@ -714,7 +714,7 @@ model RunStepDeltaObject {
 
   @doc("""
   The object type, which is always `thread.run.step.delta`.
-""")
+  """)
   object: "thread.run.step.delta";
 
   /** The delta containing the fields that have changed on the run step. */
@@ -729,7 +729,7 @@ model RunStepDeltaObject {
 model RunStepDeltaStepDetailsMessageCreationObject {
   @doc("""
   Always `message_creation`.
-""")
+  """)
   type: "message_creation";
 
   message_creation?: {
@@ -742,13 +742,13 @@ model RunStepDeltaStepDetailsMessageCreationObject {
 model RunStepDeltaStepDetailsToolCallsObject {
   @doc("""
   Always `tool_calls`.
-""")
+  """)
   type: "tool_calls";
 
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-
-""")
+  
+  """)
   tool_calls?: (RunStepDeltaStepDetailsToolCallsCodeObject | RunStepDeltaStepDetailsToolCallsFileSearchObject | RunStepDeltaStepDetailsToolCallsFunctionObject)[];
 }
 
@@ -762,7 +762,7 @@ model RunStepDeltaStepDetailsToolCallsCodeObject {
 
   @doc("""
   The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
-""")
+  """)
   type: "code_interpreter";
 
   /** The Code Interpreter tool call definition. */
@@ -772,7 +772,7 @@ model RunStepDeltaStepDetailsToolCallsCodeObject {
 
     @doc("""
     The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-""")
+    """)
     outputs?: (RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject | RunStepDeltaStepDetailsToolCallsCodeOutputImageObject)[];
   };
 }
@@ -784,7 +784,7 @@ model RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject {
 
   @doc("""
   Always `logs`.
-""")
+  """)
   type: "logs";
 
   /** The text output from the Code Interpreter tool call. */
@@ -797,7 +797,7 @@ model RunStepDeltaStepDetailsToolCallsCodeOutputImageObject {
 
   @doc("""
   Always `image`.
-""")
+  """)
   type: "image";
 
   image?: {
@@ -815,7 +815,7 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject {
 
   @doc("""
   The type of tool call. This is always going to be `file_search` for this type of tool call.
-""")
+  """)
   type: "file_search";
 
   /** For now, this is always going to be an empty object. */
@@ -832,7 +832,7 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
 
   @doc("""
   The type of tool call. This is always going to be `function` for this type of tool call.
-""")
+  """)
   type: "function";
 
   /** The definition of the function that was called. */
@@ -845,7 +845,7 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
 
     @doc("""
     The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-""")
+    """)
     output?: string | null;
   };
 }

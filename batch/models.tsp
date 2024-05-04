@@ -12,7 +12,7 @@ model Batch {
 
   @doc("""
   The object type, which is always `batch`.
-""")
+  """)
   object: "batch";
 
   /** The OpenAI API endpoint used by the batch. */
@@ -21,7 +21,7 @@ model Batch {
   errors?: {
     @doc("""
     The object type, which is always `list`.
-""")
+    """)
     object?: string;
 
     data?: {
@@ -165,12 +165,12 @@ model BatchRequestInput {
 
   @doc("""
   The HTTP method to be used for the request. Currently only `POST` is supported.
-""")
+  """)
   method?: "POST";
 
   @doc("""
   The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions` and `/v1/embeddings` are supported.
-""")
+  """)
   @extension("x-customTspIngestionRule", "url uses the url type")
   url?: url;
 }

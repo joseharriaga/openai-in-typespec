@@ -59,12 +59,12 @@ model OpenAIFile {
 
   @doc("""
   The object type, which is always `file`.
-""")
+  """)
   object: "file";
 
   @doc("""
   The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`.
-""")
+  """)
   purpose:
     | "fine-tune"
     | "fine-tune-results"
@@ -73,11 +73,11 @@ model OpenAIFile {
 
   @doc("""
   Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
-""")
+  """)
   status: "uploaded" | "processed" | "error";
 
   @doc("""
   Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
-""")
+  """)
   status_details?: string;
 }

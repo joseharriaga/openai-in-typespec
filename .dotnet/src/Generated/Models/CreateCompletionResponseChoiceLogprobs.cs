@@ -46,9 +46,9 @@ namespace OpenAI.LegacyCompletions
         internal CreateCompletionResponseChoiceLogprobs()
         {
             TextOffset = new ChangeTrackingList<int>();
-            TokenLogprobs = new ChangeTrackingList<double>();
+            TokenLogprobs = new ChangeTrackingList<float>();
             Tokens = new ChangeTrackingList<string>();
-            TopLogprobs = new ChangeTrackingList<IDictionary<string, double>>();
+            TopLogprobs = new ChangeTrackingList<IDictionary<string, float>>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionResponseChoiceLogprobs"/>. </summary>
@@ -57,7 +57,7 @@ namespace OpenAI.LegacyCompletions
         /// <param name="tokens"></param>
         /// <param name="topLogprobs"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionResponseChoiceLogprobs(IReadOnlyList<int> textOffset, IReadOnlyList<double> tokenLogprobs, IReadOnlyList<string> tokens, IReadOnlyList<IDictionary<string, double>> topLogprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateCompletionResponseChoiceLogprobs(IReadOnlyList<int> textOffset, IReadOnlyList<float> tokenLogprobs, IReadOnlyList<string> tokens, IReadOnlyList<IDictionary<string, float>> topLogprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             TextOffset = textOffset;
             TokenLogprobs = tokenLogprobs;
@@ -69,10 +69,10 @@ namespace OpenAI.LegacyCompletions
         /// <summary> Gets the text offset. </summary>
         public IReadOnlyList<int> TextOffset { get; }
         /// <summary> Gets the token logprobs. </summary>
-        public IReadOnlyList<double> TokenLogprobs { get; }
+        public IReadOnlyList<float> TokenLogprobs { get; }
         /// <summary> Gets the tokens. </summary>
         public IReadOnlyList<string> Tokens { get; }
         /// <summary> Gets the top logprobs. </summary>
-        public IReadOnlyList<IDictionary<string, double>> TopLogprobs { get; }
+        public IReadOnlyList<IDictionary<string, float>> TopLogprobs { get; }
     }
 }

@@ -6,7 +6,6 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
-using OpenAI.Models;
 
 namespace OpenAI.Embeddings
 {

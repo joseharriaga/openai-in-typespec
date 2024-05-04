@@ -77,7 +77,7 @@ namespace OpenAI.Audio
         /// generating word timestamps incurs additional latency.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AudioTranscriptionOptions(BinaryData file, CreateTranscriptionRequestModel model, string language, string prompt, AudioTranscriptionFormat? responseFormat, double? temperature, IList<BinaryData> timestampGranularities, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranscriptionOptions(BinaryData file, CreateTranscriptionRequestModel model, string language, string prompt, AudioTranscriptionFormat? responseFormat, float? temperature, IList<BinaryData> timestampGranularities, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             File = file;
             Model = model;
@@ -110,6 +110,6 @@ namespace OpenAI.Audio
         /// the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
         /// automatically increase the temperature until certain thresholds are hit.
         /// </summary>
-        public double? Temperature { get; set; }
+        public float? Temperature { get; set; }
     }
 }

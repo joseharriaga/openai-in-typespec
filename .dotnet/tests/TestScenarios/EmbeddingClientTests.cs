@@ -45,7 +45,7 @@ public partial class EmbeddingClientTests
         Assert.That(response.Value.Count, Is.EqualTo(3));
         Assert.That(response.Value.Model, Contains.Substring("text-embedding-3-small"));
         Assert.That(response.Value.Usage, Is.Not.Null);
-        Assert.That(response.Value.Usage.InputTokens, Is.GreaterThan(0));
+        Assert.That(response.Value.Usage.PromptTokens, Is.GreaterThan(0));
         Assert.That(response.Value.Usage.TotalTokens, Is.GreaterThan(0));
 
         for (int i = 0; i < response.Value.Count; i++)

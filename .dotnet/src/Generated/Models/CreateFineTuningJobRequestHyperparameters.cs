@@ -129,7 +129,7 @@ namespace OpenAI.FineTuning
         /// <description>"auto"</description>
         /// </item>
         /// <item>
-        /// <description><see cref="double"/></description>
+        /// <description><see cref="float"/></description>
         /// </item>
         /// </list>
         /// </remarks>

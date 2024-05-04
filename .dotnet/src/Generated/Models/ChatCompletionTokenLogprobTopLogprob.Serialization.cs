@@ -78,7 +78,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string token = default;
-            double logprob = default;
+            float logprob = default;
             IReadOnlyList<int> bytes = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -91,7 +91,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("logprob"u8))
                 {
-                    logprob = property.Value.GetDouble();
+                    logprob = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("bytes"u8))

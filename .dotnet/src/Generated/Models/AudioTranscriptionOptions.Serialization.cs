@@ -118,7 +118,7 @@ namespace OpenAI.Audio
             string language = default;
             string prompt = default;
             AudioTranscriptionFormat? responseFormat = default;
-            double? temperature = default;
+            float? temperature = default;
             IList<BinaryData> timestampGranularities = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -159,7 +159,7 @@ namespace OpenAI.Audio
                     {
                         continue;
                     }
-                    temperature = property.Value.GetDouble();
+                    temperature = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("timestamp_granularities"u8))

@@ -286,19 +286,19 @@ namespace OpenAI.Internal.Models
             }
             IList<BinaryData> messages = default;
             CreateChatCompletionRequestModel model = default;
-            double? frequencyPenalty = default;
+            float? frequencyPenalty = default;
             IDictionary<string, int> logitBias = default;
             bool? logprobs = default;
             int? topLogprobs = default;
             int? maxTokens = default;
             int? n = default;
-            double? presencePenalty = default;
+            float? presencePenalty = default;
             CreateChatCompletionRequestResponseFormat responseFormat = default;
             long? seed = default;
             BinaryData stop = default;
             bool? stream = default;
-            double? temperature = default;
-            double? topP = default;
+            float? temperature = default;
+            float? topP = default;
             IList<ChatCompletionTool> tools = default;
             BinaryData toolChoice = default;
             string user = default;
@@ -337,7 +337,7 @@ namespace OpenAI.Internal.Models
                         frequencyPenalty = null;
                         continue;
                     }
-                    frequencyPenalty = property.Value.GetDouble();
+                    frequencyPenalty = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("logit_bias"u8))
@@ -401,7 +401,7 @@ namespace OpenAI.Internal.Models
                         presencePenalty = null;
                         continue;
                     }
-                    presencePenalty = property.Value.GetDouble();
+                    presencePenalty = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))
@@ -449,7 +449,7 @@ namespace OpenAI.Internal.Models
                         temperature = null;
                         continue;
                     }
-                    temperature = property.Value.GetDouble();
+                    temperature = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("top_p"u8))
@@ -459,7 +459,7 @@ namespace OpenAI.Internal.Models
                         topP = null;
                         continue;
                     }
-                    topP = property.Value.GetDouble();
+                    topP = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("tools"u8))

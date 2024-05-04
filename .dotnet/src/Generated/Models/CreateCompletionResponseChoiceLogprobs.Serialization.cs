@@ -111,9 +111,9 @@ namespace OpenAI.LegacyCompletions
                 return null;
             }
             IReadOnlyList<int> textOffset = default;
-            IReadOnlyList<double> tokenLogprobs = default;
+            IReadOnlyList<float> tokenLogprobs = default;
             IReadOnlyList<string> tokens = default;
-            IReadOnlyList<IDictionary<string, double>> topLogprobs = default;
+            IReadOnlyList<IDictionary<string, float>> topLogprobs = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -138,10 +138,10 @@ namespace OpenAI.LegacyCompletions
                     {
                         continue;
                     }
-                    List<double> array = new List<double>();
+                    List<float> array = new List<float>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetDouble());
+                        array.Add(item.GetSingle());
                     }
                     tokenLogprobs = array;
                     continue;
@@ -166,7 +166,7 @@ namespace OpenAI.LegacyCompletions
                     {
                         continue;
                     }
-                    List<IDictionary<string, double>> array = new List<IDictionary<string, double>>();
+                    List<IDictionary<string, float>> array = new List<IDictionary<string, float>>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
                         if (item.ValueKind == JsonValueKind.Null)
@@ -175,10 +175,10 @@ namespace OpenAI.LegacyCompletions
                         }
                         else
                         {
-                            Dictionary<string, double> dictionary = new Dictionary<string, double>();
+                            Dictionary<string, float> dictionary = new Dictionary<string, float>();
                             foreach (var property0 in item.EnumerateObject())
                             {
-                                dictionary.Add(property0.Name, property0.Value.GetDouble());
+                                dictionary.Add(property0.Name, property0.Value.GetSingle());
                             }
                             array.Add(dictionary);
                         }
@@ -192,7 +192,7 @@ namespace OpenAI.LegacyCompletions
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateCompletionResponseChoiceLogprobs(textOffset ?? new ChangeTrackingList<int>(), tokenLogprobs ?? new ChangeTrackingList<double>(), tokens ?? new ChangeTrackingList<string>(), topLogprobs ?? new ChangeTrackingList<IDictionary<string, double>>(), serializedAdditionalRawData);
+            return new CreateCompletionResponseChoiceLogprobs(textOffset ?? new ChangeTrackingList<int>(), tokenLogprobs ?? new ChangeTrackingList<float>(), tokens ?? new ChangeTrackingList<string>(), topLogprobs ?? new ChangeTrackingList<IDictionary<string, float>>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateCompletionResponseChoiceLogprobs>.Write(ModelReaderWriterOptions options)

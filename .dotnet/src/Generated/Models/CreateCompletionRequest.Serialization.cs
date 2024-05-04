@@ -253,18 +253,18 @@ namespace OpenAI.LegacyCompletions
             BinaryData prompt = default;
             int? bestOf = default;
             bool? echo = default;
-            double? frequencyPenalty = default;
+            float? frequencyPenalty = default;
             IDictionary<string, int> logitBias = default;
             int? logprobs = default;
             int? maxTokens = default;
             int? n = default;
-            double? presencePenalty = default;
+            float? presencePenalty = default;
             long? seed = default;
             BinaryData stop = default;
             bool? stream = default;
             string suffix = default;
-            double? temperature = default;
-            double? topP = default;
+            float? temperature = default;
+            float? topP = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -307,7 +307,7 @@ namespace OpenAI.LegacyCompletions
                         frequencyPenalty = null;
                         continue;
                     }
-                    frequencyPenalty = property.Value.GetDouble();
+                    frequencyPenalty = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("logit_bias"u8))
@@ -361,7 +361,7 @@ namespace OpenAI.LegacyCompletions
                         presencePenalty = null;
                         continue;
                     }
-                    presencePenalty = property.Value.GetDouble();
+                    presencePenalty = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("seed"u8))
@@ -410,7 +410,7 @@ namespace OpenAI.LegacyCompletions
                         temperature = null;
                         continue;
                     }
-                    temperature = property.Value.GetDouble();
+                    temperature = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("top_p"u8))
@@ -420,7 +420,7 @@ namespace OpenAI.LegacyCompletions
                         topP = null;
                         continue;
                     }
-                    topP = property.Value.GetDouble();
+                    topP = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("user"u8))

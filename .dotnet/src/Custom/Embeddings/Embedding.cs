@@ -70,7 +70,7 @@ public partial class Embedding
     {
         Argument.AssertNotNull(embeddingProperty, nameof(embeddingProperty));
 
-        Index = index;
+        Index = (int)index;
         EmbeddingProperty = embeddingProperty;
 
         // Handle additional custom properties.
@@ -88,7 +88,7 @@ public partial class Embedding
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
     internal Embedding(long index, BinaryData embeddingProperty, OpenAI.Embeddings.EmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
-        Index = index;
+        Index = (int)index;
         EmbeddingProperty = embeddingProperty;
         Object = @object;
         _serializedAdditionalRawData = serializedAdditionalRawData;

@@ -54,7 +54,7 @@ namespace OpenAI.Internal.Models
         /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
-        internal CreateModerationResponseResultCategoryScores(double hate, double hateThreatening, double harassment, double harassmentThreatening, double selfHarm, double selfHarmIntent, double selfHarmInstructions, double sexual, double sexualMinors, double violence, double violenceGraphic)
+        internal CreateModerationResponseResultCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -82,7 +82,7 @@ namespace OpenAI.Internal.Models
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateModerationResponseResultCategoryScores(double hate, double hateThreatening, double harassment, double harassmentThreatening, double selfHarm, double selfHarmIntent, double selfHarmInstructions, double sexual, double sexualMinors, double violence, double violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateModerationResponseResultCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -104,26 +104,26 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> The score for the category 'hate'. </summary>
-        public double Hate { get; }
+        public float Hate { get; }
         /// <summary> The score for the category 'hate/threatening'. </summary>
-        public double HateThreatening { get; }
+        public float HateThreatening { get; }
         /// <summary> The score for the category 'harassment'. </summary>
-        public double Harassment { get; }
+        public float Harassment { get; }
         /// <summary> The score for the category 'harassment/threatening'. </summary>
-        public double HarassmentThreatening { get; }
+        public float HarassmentThreatening { get; }
         /// <summary> The score for the category 'self-harm'. </summary>
-        public double SelfHarm { get; }
+        public float SelfHarm { get; }
         /// <summary> The score for the category 'self-harm/intent'. </summary>
-        public double SelfHarmIntent { get; }
+        public float SelfHarmIntent { get; }
         /// <summary> The score for the category 'self-harm/instructions'. </summary>
-        public double SelfHarmInstructions { get; }
+        public float SelfHarmInstructions { get; }
         /// <summary> The score for the category 'sexual'. </summary>
-        public double Sexual { get; }
+        public float Sexual { get; }
         /// <summary> The score for the category 'sexual/minors'. </summary>
-        public double SexualMinors { get; }
+        public float SexualMinors { get; }
         /// <summary> The score for the category 'violence'. </summary>
-        public double Violence { get; }
+        public float Violence { get; }
         /// <summary> The score for the category 'violence/graphic'. </summary>
-        public double ViolenceGraphic { get; }
+        public float ViolenceGraphic { get; }
     }
 }

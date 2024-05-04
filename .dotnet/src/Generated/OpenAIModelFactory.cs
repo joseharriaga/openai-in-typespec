@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenAI.Audio;
+using OpenAI.Embeddings;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
 
@@ -63,7 +64,7 @@ namespace OpenAI
         /// is below -1, consider this segment silent.
         /// </param>
         /// <returns> A new <see cref="Audio.TranscribedSegment"/> instance for mocking. </returns>
-        public static TranscribedSegment TranscribedSegment(int id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, double temperature = default, double averageLogProbability = default, double compressionRatio = default, double noSpeechProbability = default)
+        public static TranscribedSegment TranscribedSegment(int id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = default, double averageLogProbability = default, float compressionRatio = default, double noSpeechProbability = default)
         {
             tokenIds ??= new List<long>();
 
@@ -405,7 +406,7 @@ namespace OpenAI
         /// A list of functions the model may generate JSON inputs for.
         /// </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionRequest"/> instance for mocking. </returns>
-        public static CreateChatCompletionRequest CreateChatCompletionRequest(IEnumerable<BinaryData> messages = null, CreateChatCompletionRequestModel model = default, double? frequencyPenalty = null, IDictionary<string, int> logitBias = null, bool? logprobs = null, int? topLogprobs = null, int? maxTokens = null, int? n = null, double? presencePenalty = null, CreateChatCompletionRequestResponseFormat responseFormat = null, long? seed = null, BinaryData stop = null, bool? stream = null, double? temperature = null, double? topP = null, IEnumerable<ChatCompletionTool> tools = null, BinaryData toolChoice = null, string user = null, BinaryData functionCall = null, IEnumerable<ChatCompletionFunctions> functions = null)
+        public static CreateChatCompletionRequest CreateChatCompletionRequest(IEnumerable<BinaryData> messages = null, CreateChatCompletionRequestModel model = default, float? frequencyPenalty = null, IDictionary<string, int> logitBias = null, bool? logprobs = null, int? topLogprobs = null, int? maxTokens = null, int? n = null, float? presencePenalty = null, CreateChatCompletionRequestResponseFormat responseFormat = null, long? seed = null, BinaryData stop = null, bool? stream = null, float? temperature = null, float? topP = null, IEnumerable<ChatCompletionTool> tools = null, BinaryData toolChoice = null, string user = null, BinaryData functionCall = null, IEnumerable<ChatCompletionFunctions> functions = null)
         {
             messages ??= new List<BinaryData>();
             logitBias ??= new Dictionary<string, int>();
@@ -661,7 +662,7 @@ namespace OpenAI
         /// cases, there may be fewer than the number of requested `top_logprobs` returned.
         /// </param>
         /// <returns> A new <see cref="Models.ChatCompletionTokenLogprob"/> instance for mocking. </returns>
-        public static ChatCompletionTokenLogprob ChatCompletionTokenLogprob(string token = null, double logprob = default, IEnumerable<int> bytes = null, IEnumerable<ChatCompletionTokenLogprobTopLogprob> topLogprobs = null)
+        public static ChatCompletionTokenLogprob ChatCompletionTokenLogprob(string token = null, float logprob = default, IEnumerable<int> bytes = null, IEnumerable<ChatCompletionTokenLogprobTopLogprob> topLogprobs = null)
         {
             bytes ??= new List<int>();
             topLogprobs ??= new List<ChatCompletionTokenLogprobTopLogprob>();
@@ -682,20 +683,20 @@ namespace OpenAI
         /// bytes representation for the token.
         /// </param>
         /// <returns> A new <see cref="Models.ChatCompletionTokenLogprobTopLogprob"/> instance for mocking. </returns>
-        public static ChatCompletionTokenLogprobTopLogprob ChatCompletionTokenLogprobTopLogprob(string token = null, double logprob = default, IEnumerable<int> bytes = null)
+        public static ChatCompletionTokenLogprobTopLogprob ChatCompletionTokenLogprobTopLogprob(string token = null, float logprob = default, IEnumerable<int> bytes = null)
         {
             bytes ??= new List<int>();
 
             return new ChatCompletionTokenLogprobTopLogprob(token, logprob, bytes?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateEmbeddingResponseUsage"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Embeddings.EmbeddingTokenUsage"/>. </summary>
         /// <param name="promptTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
-        /// <returns> A new <see cref="Models.CreateEmbeddingResponseUsage"/> instance for mocking. </returns>
-        public static CreateEmbeddingResponseUsage CreateEmbeddingResponseUsage(int promptTokens = default, int totalTokens = default)
+        /// <returns> A new <see cref="Embeddings.EmbeddingTokenUsage"/> instance for mocking. </returns>
+        public static EmbeddingTokenUsage EmbeddingTokenUsage(int promptTokens = default, int totalTokens = default)
         {
-            return new CreateEmbeddingResponseUsage(promptTokens, totalTokens, serializedAdditionalRawData: null);
+            return new EmbeddingTokenUsage(promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.OpenAIFile"/>. </summary>
@@ -1119,7 +1120,7 @@ namespace OpenAI
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
         /// <returns> A new <see cref="Models.CreateModerationResponseResultCategoryScores"/> instance for mocking. </returns>
-        public static CreateModerationResponseResultCategoryScores CreateModerationResponseResultCategoryScores(double hate = default, double hateThreatening = default, double harassment = default, double harassmentThreatening = default, double selfHarm = default, double selfHarmIntent = default, double selfHarmInstructions = default, double sexual = default, double sexualMinors = default, double violence = default, double violenceGraphic = default)
+        public static CreateModerationResponseResultCategoryScores CreateModerationResponseResultCategoryScores(float hate = default, float hateThreatening = default, float harassment = default, float harassmentThreatening = default, float selfHarm = default, float selfHarmIntent = default, float selfHarmInstructions = default, float sexual = default, float sexualMinors = default, float violence = default, float violenceGraphic = default)
         {
             return new CreateModerationResponseResultCategoryScores(
                 hate,

@@ -192,7 +192,7 @@ namespace OpenAI.Internal.Models
         /// A list of functions the model may generate JSON inputs for.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateChatCompletionRequest(IList<BinaryData> messages, CreateChatCompletionRequestModel model, double? frequencyPenalty, IDictionary<string, int> logitBias, bool? logprobs, int? topLogprobs, int? maxTokens, int? n, double? presencePenalty, CreateChatCompletionRequestResponseFormat responseFormat, long? seed, BinaryData stop, bool? stream, double? temperature, double? topP, IList<ChatCompletionTool> tools, BinaryData toolChoice, string user, BinaryData functionCall, IList<ChatCompletionFunctions> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateChatCompletionRequest(IList<BinaryData> messages, CreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<string, int> logitBias, bool? logprobs, int? topLogprobs, int? maxTokens, int? n, float? presencePenalty, CreateChatCompletionRequestResponseFormat responseFormat, long? seed, BinaryData stop, bool? stream, float? temperature, float? topP, IList<ChatCompletionTool> tools, BinaryData toolChoice, string user, BinaryData functionCall, IList<ChatCompletionFunctions> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Messages = messages;
             Model = model;
@@ -288,7 +288,7 @@ namespace OpenAI.Internal.Models
         /// [See more information about frequency and presence
         /// penalties.](/docs/guides/text-generation/parameter-details)
         /// </summary>
-        public double? FrequencyPenalty { get; set; }
+        public float? FrequencyPenalty { get; set; }
         /// <summary>
         /// Modify the likelihood of specified tokens appearing in the completion.
         ///
@@ -333,7 +333,7 @@ namespace OpenAI.Internal.Models
         /// [See more information about frequency and presence
         /// penalties.](/docs/guides/text-generation/parameter-details)
         /// </summary>
-        public double? PresencePenalty { get; set; }
+        public float? PresencePenalty { get; set; }
         /// <summary>
         /// An object specifying the format that the model must output. Compatible with [GPT-4
         /// Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
@@ -414,7 +414,7 @@ namespace OpenAI.Internal.Models
         ///
         /// We generally recommend altering this or `top_p` but not both.
         /// </summary>
-        public double? Temperature { get; set; }
+        public float? Temperature { get; set; }
         /// <summary>
         /// An alternative to sampling with temperature, called nucleus sampling, where the model
         /// considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
@@ -422,7 +422,7 @@ namespace OpenAI.Internal.Models
         ///
         /// We generally recommend altering this or `temperature` but not both.
         /// </summary>
-        public double? TopP { get; set; }
+        public float? TopP { get; set; }
         /// <summary>
         /// A list of tools the model may call. Currently, only functions are supported as a tool. Use
         /// this to provide a list of functions the model may generate JSON inputs for.
@@ -441,10 +441,7 @@ namespace OpenAI.Internal.Models
         /// Supported types:
         /// <list type="bullet">
         /// <item>
-        /// <description>"none"</description>
-        /// </item>
-        /// <item>
-        /// <description>"auto"</description>
+        /// <description><see cref="BinaryData"/></description>
         /// </item>
         /// <item>
         /// <description><see cref="ChatCompletionNamedToolChoice"/></description>

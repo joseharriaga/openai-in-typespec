@@ -174,7 +174,7 @@ namespace OpenAI.LegacyCompletions
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, double? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, double? presencePenalty, long? seed, BinaryData stop, bool? stream, string suffix, double? temperature, double? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, float? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, float? presencePenalty, long? seed, BinaryData stop, bool? stream, string suffix, float? temperature, float? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Prompt = prompt;
@@ -280,7 +280,7 @@ namespace OpenAI.LegacyCompletions
         /// [See more information about frequency and presence
         /// penalties.](/docs/guides/text-generation/parameter-details)
         /// </summary>
-        public double? FrequencyPenalty { get; set; }
+        public float? FrequencyPenalty { get; set; }
         /// <summary>
         /// Modify the likelihood of specified tokens appearing in the completion.
         ///
@@ -326,7 +326,7 @@ namespace OpenAI.LegacyCompletions
         /// [See more information about frequency and presence
         /// penalties.](/docs/guides/text-generation/parameter-details)
         /// </summary>
-        public double? PresencePenalty { get; set; }
+        public float? PresencePenalty { get; set; }
         /// <summary>
         /// If specified, our system will make a best effort to sample deterministically, such that
         /// repeated requests with the same `seed` and parameters should return the same result.
@@ -393,7 +393,7 @@ namespace OpenAI.LegacyCompletions
         ///
         /// We generally recommend altering this or `top_p` but not both.
         /// </summary>
-        public double? Temperature { get; set; }
+        public float? Temperature { get; set; }
         /// <summary>
         /// An alternative to sampling with temperature, called nucleus sampling, where the model
         /// considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
@@ -401,7 +401,7 @@ namespace OpenAI.LegacyCompletions
         ///
         /// We generally recommend altering this or `temperature` but not both.
         /// </summary>
-        public double? TopP { get; set; }
+        public float? TopP { get; set; }
         /// <summary>
         /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
         /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).

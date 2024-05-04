@@ -61,7 +61,7 @@ namespace OpenAI.Audio
         /// is below -1, consider this segment silent.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="tokenIds"/> is null. </exception>
-        internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IEnumerable<long> tokenIds, double temperature, double averageLogProbability, double compressionRatio, double noSpeechProbability)
+        internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IEnumerable<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability)
         {
             Argument.AssertNotNull(text, nameof(text));
             Argument.AssertNotNull(tokenIds, nameof(tokenIds));
@@ -96,7 +96,7 @@ namespace OpenAI.Audio
         /// is below -1, consider this segment silent.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<long> tokenIds, double temperature, double averageLogProbability, double compressionRatio, double noSpeechProbability, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             SeekOffset = seekOffset;
@@ -125,11 +125,11 @@ namespace OpenAI.Audio
         /// <summary> Text content of the segment. </summary>
         public string Text { get; }
         /// <summary> Temperature parameter used for generating the segment. </summary>
-        public double Temperature { get; }
+        public float Temperature { get; }
         /// <summary>
         /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
         /// failed.
         /// </summary>
-        public double CompressionRatio { get; }
+        public float CompressionRatio { get; }
     }
 }

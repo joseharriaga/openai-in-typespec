@@ -854,38 +854,6 @@ namespace OpenAI
             return new MessageFileObject(id, @object, createdAt, messageId, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ListModelsResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <returns> A new <see cref="Models.ListModelsResponse"/> instance for mocking. </returns>
-        public static ListModelsResponse ListModelsResponse(ListModelsResponseObject @object = default, IEnumerable<Model> data = null)
-        {
-            data ??= new List<Model>();
-
-            return new ListModelsResponse(@object, data?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.Model"/>. </summary>
-        /// <param name="id"> The model identifier, which can be referenced in the API endpoints. </param>
-        /// <param name="created"> The Unix timestamp (in seconds) when the model was created. </param>
-        /// <param name="object"> The object type, which is always "model". </param>
-        /// <param name="ownedBy"> The organization that owns the model. </param>
-        /// <returns> A new <see cref="Models.Model"/> instance for mocking. </returns>
-        public static Model Model(string id = null, DateTimeOffset created = default, ModelObject @object = default, string ownedBy = null)
-        {
-            return new Model(id, created, @object, ownedBy, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteModelResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.DeleteModelResponse"/> instance for mocking. </returns>
-        public static DeleteModelResponse DeleteModelResponse(string id = null, bool deleted = default, string @object = null)
-        {
-            return new DeleteModelResponse(id, deleted, @object, serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.CreateModerationRequest"/>. </summary>
         /// <param name="input"> The input text to classify. </param>
         /// <param name="model">

@@ -8,9 +8,9 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Models
 {
-    internal partial class DeleteModelResponse : IJsonModel<DeleteModelResponse>
+    public partial class DeleteModelResponse : IJsonModel<DeleteModelResponse>
     {
         void IJsonModel<DeleteModelResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {

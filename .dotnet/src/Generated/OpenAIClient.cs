@@ -12,6 +12,7 @@ using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.LegacyCompletions;
+using OpenAI.Models;
 
 namespace OpenAI
 {
@@ -35,7 +36,6 @@ namespace OpenAI
         private OpenAI.Internal.Assistants _cachedAssistants;
         private OpenAI.Internal.Chat _cachedChat;
         private OpenAI.Internal.Messages _cachedMessages;
-        private OpenAI.Internal.ModelsOps _cachedModelsOps;
         private OpenAI.Internal.Moderations _cachedModerations;
         private OpenAI.Internal.Runs _cachedRuns;
         private OpenAI.Internal.Threads _cachedThreads;
@@ -50,12 +50,6 @@ namespace OpenAI
         internal OpenAI.Internal.Messages GetMessagesClient()
         {
             return Volatile.Read(ref _cachedMessages) ?? Interlocked.CompareExchange(ref _cachedMessages, new OpenAI.Internal.Messages(_pipeline, _keyCredential, _endpoint), null) ?? _cachedMessages;
-        }
-
-        /// <summary> Initializes a new instance of ModelsOps. </summary>
-        internal OpenAI.Internal.ModelsOps GetModelsOpsClient()
-        {
-            return Volatile.Read(ref _cachedModelsOps) ?? Interlocked.CompareExchange(ref _cachedModelsOps, new OpenAI.Internal.ModelsOps(_pipeline, _keyCredential, _endpoint), null) ?? _cachedModelsOps;
         }
 
         /// <summary> Initializes a new instance of Moderations. </summary>

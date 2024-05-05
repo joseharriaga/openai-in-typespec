@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The CreateThreadRequestToolResourcesFileSearch. </summary>
-    internal partial class CreateThreadRequestToolResourcesFileSearch
+    /// <summary> The CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers. </summary>
+    internal partial class CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,41 +42,30 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearch"/>. </summary>
-        public CreateThreadRequestToolResourcesFileSearch()
+        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers"/>. </summary>
+        public CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers()
         {
-            VectorStoreIds = new ChangeTrackingList<string>();
-            VectorStores = new ChangeTrackingList<CreateThreadRequestToolResourcesFileSearchVectorStore>();
+            VectorStores = new ChangeTrackingList<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearch"/>. </summary>
-        /// <param name="vectorStoreIds">
-        /// The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-        /// There can be a maximum of 1 vector store attached to the thread.
-        /// </param>
+        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers"/>. </summary>
         /// <param name="vectorStores">
         /// A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
         /// file_ids and attach it to this thread. There can be a maximum of 1 vector store attached
         /// to the thread.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateThreadRequestToolResourcesFileSearch(IList<string> vectorStoreIds, IList<CreateThreadRequestToolResourcesFileSearchVectorStore> vectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers(IList<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> vectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            VectorStoreIds = vectorStoreIds;
             VectorStores = vectorStores;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary>
-        /// The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-        /// There can be a maximum of 1 vector store attached to the thread.
-        /// </summary>
-        public IList<string> VectorStoreIds { get; }
-        /// <summary>
         /// A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
         /// file_ids and attach it to this thread. There can be a maximum of 1 vector store attached
         /// to the thread.
         /// </summary>
-        public IList<CreateThreadRequestToolResourcesFileSearchVectorStore> VectorStores { get; }
+        public IList<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> VectorStores { get; }
     }
 }

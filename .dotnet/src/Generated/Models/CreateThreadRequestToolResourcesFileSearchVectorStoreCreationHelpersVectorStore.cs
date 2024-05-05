@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The CreateThreadRequestToolResourcesFileSearchVectorStore. </summary>
-    internal partial class CreateThreadRequestToolResourcesFileSearchVectorStore
+    /// <summary> The CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore. </summary>
+    internal partial class CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,14 +42,14 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearchVectorStore"/>. </summary>
-        public CreateThreadRequestToolResourcesFileSearchVectorStore()
+        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore"/>. </summary>
+        public CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore()
         {
             FileIds = new ChangeTrackingList<string>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearchVectorStore"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore"/>. </summary>
         /// <param name="fileIds">
         /// A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
         /// a maximum of 10000 files in a vector store.
@@ -60,7 +60,7 @@ namespace OpenAI.Internal.Models
         /// be a maximum of 64 characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateThreadRequestToolResourcesFileSearchVectorStore(IList<string> fileIds, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(IList<string> fileIds, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileIds = fileIds;
             Metadata = metadata;

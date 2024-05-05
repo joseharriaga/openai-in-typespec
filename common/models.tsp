@@ -3,6 +3,8 @@
  * Edits made directly to this file will be lost.
  */
 
+import "./custom.tsp";
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;

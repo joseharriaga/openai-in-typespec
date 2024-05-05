@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Internal.Models
 {
-    internal partial class CreateThreadRequestToolResourcesFileSearchVectorStore : IJsonModel<CreateThreadRequestToolResourcesFileSearchVectorStore>
+    internal partial class CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore : IJsonModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>
     {
-        void IJsonModel<CreateThreadRequestToolResourcesFileSearchVectorStore>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateThreadRequestToolResourcesFileSearchVectorStore)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -60,19 +60,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateThreadRequestToolResourcesFileSearchVectorStore IJsonModel<CreateThreadRequestToolResourcesFileSearchVectorStore>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore IJsonModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateThreadRequestToolResourcesFileSearchVectorStore)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateThreadRequestToolResourcesFileSearchVectorStore(document.RootElement, options);
+            return DeserializeCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(document.RootElement, options);
         }
 
-        internal static CreateThreadRequestToolResourcesFileSearchVectorStore DeserializeCreateThreadRequestToolResourcesFileSearchVectorStore(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore DeserializeCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -120,46 +120,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateThreadRequestToolResourcesFileSearchVectorStore(fileIds ?? new ChangeTrackingList<string>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(fileIds ?? new ChangeTrackingList<string>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStore>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateThreadRequestToolResourcesFileSearchVectorStore)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateThreadRequestToolResourcesFileSearchVectorStore IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStore>.Create(BinaryData data, ModelReaderWriterOptions options)
+        CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateThreadRequestToolResourcesFileSearchVectorStore(document.RootElement, options);
+                        return DeserializeCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateThreadRequestToolResourcesFileSearchVectorStore)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStore>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateThreadRequestToolResourcesFileSearchVectorStore FromResponse(PipelineResponse response)
+        internal static CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateThreadRequestToolResourcesFileSearchVectorStore(document.RootElement);
+            return DeserializeCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

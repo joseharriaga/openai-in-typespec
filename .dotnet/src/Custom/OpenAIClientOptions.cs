@@ -16,7 +16,6 @@ public partial class OpenAIClientOptions : ClientPipelineOptions
     {
         get
         {
-            AssertNotFrozen();
             return _endpoint;
         }
         set

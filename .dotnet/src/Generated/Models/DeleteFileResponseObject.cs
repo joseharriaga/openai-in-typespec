@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
     /// <summary> The DeleteFileResponse_object. </summary>
     internal readonly partial struct DeleteFileResponseObject : IEquatable<DeleteFileResponseObject>

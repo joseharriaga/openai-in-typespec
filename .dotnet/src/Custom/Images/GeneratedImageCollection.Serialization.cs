@@ -48,7 +48,7 @@ public partial class GeneratedImageCollection : IJsonModel<GeneratedImageCollect
     }
 
     // CUSTOM: Recovered the deserialization of _serializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
-    internal static GeneratedImageCollection DeserializeImagesResponse(JsonElement element, ModelReaderWriterOptions options = null)
+    internal static GeneratedImageCollection DeserializeGeneratedImageCollection(JsonElement element, ModelReaderWriterOptions options = null)
     {
         options ??= new ModelReaderWriterOptions("W");
 

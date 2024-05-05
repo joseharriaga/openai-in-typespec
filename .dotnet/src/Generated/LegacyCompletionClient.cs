@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.LegacyCompletions
@@ -42,24 +41,26 @@ namespace OpenAI.LegacyCompletions
         /// <summary> Creates a completion for the provided prompt and parameters. </summary>
         /// <param name="createCompletionRequest"> The <see cref="CreateCompletionRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="createCompletionRequest"/> is null. </exception>
+        /// <remarks> Create completion. </remarks>
         public virtual async Task<ClientResult<CreateCompletionResponse>> CreateCompletionAsync(CreateCompletionRequest createCompletionRequest)
         {
             Argument.AssertNotNull(createCompletionRequest, nameof(createCompletionRequest));
 
-            using BinaryContent content = createCompletionRequest.ToBinaryBody();
-            ClientResult result = await CreateCompletionAsync(content, DefaultRequestContext).ConfigureAwait(false);
+            using BinaryContent content = createCompletionRequest.ToBinaryContent();
+            ClientResult result = await CreateCompletionAsync(content, null).ConfigureAwait(false);
             return ClientResult.FromValue(CreateCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Creates a completion for the provided prompt and parameters. </summary>
         /// <param name="createCompletionRequest"> The <see cref="CreateCompletionRequest"/> to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="createCompletionRequest"/> is null. </exception>
+        /// <remarks> Create completion. </remarks>
         public virtual ClientResult<CreateCompletionResponse> CreateCompletion(CreateCompletionRequest createCompletionRequest)
         {
             Argument.AssertNotNull(createCompletionRequest, nameof(createCompletionRequest));
 
-            using BinaryContent content = createCompletionRequest.ToBinaryBody();
-            ClientResult result = CreateCompletion(content, DefaultRequestContext);
+            using BinaryContent content = createCompletionRequest.ToBinaryContent();
+            ClientResult result = CreateCompletion(content, null);
             return ClientResult.FromValue(CreateCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
@@ -132,14 +133,9 @@ namespace OpenAI.LegacyCompletions
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null)
-            {
-                message.Apply(options);
-            }
+            if (options != null) { message.Apply(options); }
             return message;
         }
-
-        private static RequestOptions DefaultRequestContext = new RequestOptions();
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });

@@ -1,4 +1,3 @@
 options:
   "@azure-tools/typespec-csharp":
-    generate-test-project: true
     unreferenced-types-handling: keepAll

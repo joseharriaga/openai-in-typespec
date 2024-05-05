@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenAI.Internal;
+namespace OpenAI;
 
 internal class MultipartFormDataBinaryContent : BinaryContent
 {
@@ -34,10 +34,18 @@ internal class MultipartFormDataBinaryContent : BinaryContent
 
     internal HttpContent HttpContent => _multipartContent;
 
-    public void Add(Stream stream, string name, string fileName = default)
+    public void Add(Stream content, string name, string fileName = default, string contentType = null)
     {
-        Add(new StreamContent(stream), name, fileName);
+        Argument.AssertNotNull(content, nameof(content));
+        Argument.AssertNotNullOrEmpty(name, nameof(name));
+
+        Add(new StreamContent(content), name, fileName, contentType);
     }
+
+    //public void Add(Stream stream, string name, string fileName = default)
+    //{
+    //    Add(new StreamContent(stream), name, fileName);
+    //}
 
     public void Add(string content, string name, string fileName = default)
     {
@@ -68,6 +76,21 @@ internal class MultipartFormDataBinaryContent : BinaryContent
         Add(new ByteArrayContent(content.ToArray()), name, fileName);
     }
 
+    private void Add(HttpContent content, string name, string filename, string contentType)
+    {
+        if (filename != null)
+        {
+            Argument.AssertNotNullOrEmpty(filename, nameof(filename));
+            AddFileNameHeader(content, name, filename);
+        }
+        if (contentType != null)
+        {
+            Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
+            AddContentTypeHeader(content, contentType);
+        }
+        _multipartContent.Add(content, name);
+    }
+
     private void Add(HttpContent content, string name, string fileName)
     {
         if (fileName is not null)
@@ -89,6 +112,12 @@ internal class MultipartFormDataBinaryContent : BinaryContent
             FileName = filename
         };
         content.Headers.ContentDisposition = header;
+    }
+
+    public static void AddContentTypeHeader(HttpContent content, string contentType)
+    {
+        MediaTypeHeaderValue header = new MediaTypeHeaderValue(contentType);
+        content.Headers.ContentType = header;
     }
 
     private static string CreateBoundary()

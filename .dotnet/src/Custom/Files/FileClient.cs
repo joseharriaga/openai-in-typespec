@@ -1,10 +1,7 @@
-using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenAI.Files;
@@ -12,186 +9,211 @@ namespace OpenAI.Files;
 /// <summary>
 ///     The service client for OpenAI file operations.
 /// </summary>
+[CodeGenClient("Files")]
+[CodeGenSuppress("CreateFileAsync", typeof(UploadFileOptions))]
+[CodeGenSuppress("CreateFile", typeof(UploadFileOptions))]
+[CodeGenSuppress("GetFilesAsync", typeof(string))]
+[CodeGenSuppress("GetFiles", typeof(string))]
+[CodeGenSuppress("RetrieveFileAsync", typeof(string))]
+[CodeGenSuppress("RetrieveFile", typeof(string))]
+[CodeGenSuppress("DeleteFileAsync", typeof(string))]
+[CodeGenSuppress("DeleteFile", typeof(string))]
+[CodeGenSuppress("DownloadFileAsync", typeof(string))]
+[CodeGenSuppress("DownloadFile", typeof(string))]
 public partial class FileClient
 {
-    private readonly OpenAIClientConnector _clientConnector;
-    private Internal.Files Shim => _clientConnector.InternalClient.GetFilesClient();
+    /// <summary>
+    /// Initializes a new instance of <see cref="FileClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public FileClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              OpenAIClient.GetEndpoint(options),
+              options) 
+    { }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="FileClient"/>, used for file operation requests. 
+    /// Initializes a new instance of <see cref="FileClient"/> that will use an API key from the OPENAI_API_KEY
+    /// environment variable when authenticating.
     /// </summary>
     /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
+    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
+    /// <see cref="FileClient(ApiKeyCredential,OpenAIClientOptions)"/>.
     /// </remarks>
-    /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public FileClient(ApiKeyCredential credential = default, OpenAIClientOptions options = null)
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
+    public FileClient(OpenAIClientOptions options = null)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
+              OpenAIClient.GetEndpoint(options),
+              options)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="FileClient"/>.
+    /// </summary>
+    /// <param name="pipeline"> The client pipeline to use. </param>
+    /// <param name="endpoint"> The endpoint to use. </param>
+    protected internal FileClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)
     {
-        _clientConnector = new(model: null, credential, options);
+        _pipeline = pipeline;
+        _endpoint = endpoint;
     }
 
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(FileStream file, OpenAIFilePurpose purpose)
-        => UploadFile(file, Path.GetFileName(file.Name), purpose);
-
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string fileName, OpenAIFilePurpose purpose)
+    /// <summary>
+    /// Upload a file that can be used across various endpoints. The size of all the files uploaded by
+    /// one organization can be up to 100 GB.
+    ///
+    /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
+    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
+    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    ///
+    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// </summary>
+    /// <param name="file"> TODO. </param>
+    /// <param name="filename"> TODO. </param>
+    /// <param name="purpose"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadAsync(Stream file, string filename, OpenAIFilePurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
-        Argument.AssertNotNull(fileName, nameof(fileName));
+        Argument.AssertNotNullOrEmpty(filename, nameof(filename));
 
-        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
+        UploadFileOptions options = new()
+        {
+            Purpose = new UploadFileOptionsPurpose(purpose.ToString())
+        };
 
-        ClientResult result = UploadFile(content, content.ContentType);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
-        OpenAIFileInfo fileInfo = new(internalFile);
-
-        return ClientResult.FromValue(fileInfo, response);
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
+        ClientResult result = await UploadAsync(content, content.ContentType).ConfigureAwait(false);
+        return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(FileStream file, OpenAIFilePurpose purpose)
-        => await UploadFileAsync(file, Path.GetFileName(file.Name), purpose).ConfigureAwait(false);
-
-    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string fileName, OpenAIFilePurpose purpose)
+    /// <summary>
+    /// Upload a file that can be used across various endpoints. The size of all the files uploaded by
+    /// one organization can be up to 100 GB.
+    ///
+    /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
+    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
+    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    ///
+    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// </summary>
+    /// <param name="file"> TODO. </param>
+    /// <param name="filename"> TODO. </param>
+    /// <param name="purpose"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    public virtual ClientResult<OpenAIFileInfo> Upload(Stream file, string filename, OpenAIFilePurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
-        Argument.AssertNotNull(fileName, nameof(fileName));
+        Argument.AssertNotNullOrEmpty(filename, nameof(filename));
 
-        using MultipartFormDataBinaryContent content = UploadFileOptions.ToMultipartContent(file, fileName, purpose);
-
-        ClientResult result = await UploadFileAsync(content, content.ContentType).ConfigureAwait(false);
-
-        PipelineResponse response = result.GetRawResponse();
-
-        Internal.Models.OpenAIFile internalFile = Internal.Models.OpenAIFile.FromResponse(response);
-        OpenAIFileInfo fileInfo = new(internalFile);
-
-        return ClientResult.FromValue(fileInfo, response);
-    }
-
-    public virtual ClientResult<OpenAIFileInfo> GetFileInfo(string fileId)
-    {
-        ClientResult<Internal.Models.OpenAIFile> internalResult = Shim.RetrieveFile(fileId);
-        return ClientResult.FromValue(new OpenAIFileInfo(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual async Task<ClientResult<OpenAIFileInfo>> GetFileInfoAsync(string fileId)
-    {
-        ClientResult<Internal.Models.OpenAIFile> internalResult = await Shim.RetrieveFileAsync(fileId);
-        return ClientResult.FromValue(new OpenAIFileInfo(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual ClientResult<OpenAIFileInfoCollection> GetFileInfoList(OpenAIFilePurpose? purpose = null)
-    {
-        ClientResult<Internal.Models.ListFilesResponse> result = Shim.GetFiles(purpose?.ToString());
-        List<OpenAIFileInfo> infoItems = [];
-        foreach (Internal.Models.OpenAIFile internalFile in result.Value.Data)
+        UploadFileOptions options = new()
         {
-            infoItems.Add(new(internalFile));
-        }
-        return ClientResult.FromValue(new OpenAIFileInfoCollection(infoItems), result.GetRawResponse());
+            Purpose = new UploadFileOptionsPurpose(purpose.ToString())
+        };
+
+        using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
+        ClientResult result = Upload(content, content.ContentType);
+        return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    public virtual async Task<ClientResult<OpenAIFileInfoCollection>> GetFileInfoListAsync(OpenAIFilePurpose? purpose = null)
+    /// <summary> Returns a list of files that belong to the user's organization. </summary>
+    /// <param name="purpose"> Only return files with the given purpose. </param>
+    /// <remarks> List files. </remarks>
+    public virtual async Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose? purpose = null)
     {
-        ClientResult<Internal.Models.ListFilesResponse> result = await Shim.GetFilesAsync(purpose?.ToString()).ConfigureAwait(false);
-        List<OpenAIFileInfo> infoItems = [];
-        foreach (Internal.Models.OpenAIFile internalFile in result.Value.Data)
-        {
-            infoItems.Add(new(internalFile));
-        }
-        return ClientResult.FromValue(new OpenAIFileInfoCollection(infoItems), result.GetRawResponse());
+        ClientResult result = await GetFilesAsync(purpose?.ToString(), null).ConfigureAwait(false);
+        return ClientResult.FromValue(OpenAIFileInfoCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    public virtual ClientResult<BinaryData> DownloadFile(string fileId)
+    /// <summary> Returns a list of files that belong to the user's organization. </summary>
+    /// <param name="purpose"> Only return files with the given purpose. </param>
+    /// <remarks> List files. </remarks>
+    public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose? purpose = null)
     {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
-        PipelineRequest request = message.Request;
-        request.Method = "GET";
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append($"/files/{fileId}/content");
-        uriBuilder.Path += path.ToString();
-        request.Uri = uriBuilder.Uri;
-        request.Headers.Set("content-type", "multipart/form-data");
-        Shim.Pipeline.Send(message);
-
-        if (message.Response.IsError)
-        {
-            throw new ClientResultException(message.Response);
-        }
-
-        return ClientResult.FromValue(message.Response.Content, message.Response);
+        ClientResult result = GetFiles(purpose?.ToString(), null);
+        return ClientResult.FromValue(OpenAIFileInfoCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    public virtual async Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId)
+    /// <summary> Returns information about a specific file. </summary>
+    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <remarks> Retrieve file. </remarks>
+    public virtual async Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId)
     {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
-        PipelineRequest request = message.Request;
-        request.Method = "GET";
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append($"/files/{fileId}/content");
-        uriBuilder.Path += path.ToString();
-        request.Uri = uriBuilder.Uri;
-        request.Headers.Set("content-type", "multipart/form-data");
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-        await Shim.Pipeline.SendAsync(message).ConfigureAwait(false);
-
-        if (message.Response.IsError)
-        {
-            throw new ClientResultException(message.Response);
-        }
-
-        return ClientResult.FromValue(message.Response.Content, message.Response);
+        ClientResult result = await GetFileAsync(fileId, (RequestOptions)null).ConfigureAwait(false);
+        return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    public virtual void DeleteFile(string fileId)
+    /// <summary> Returns information about a specific file. </summary>
+    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <remarks> Retrieve file. </remarks>
+    public virtual ClientResult<OpenAIFileInfo> GetFile(string fileId)
     {
-        _ = Shim.DeleteFile(fileId);
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
+        ClientResult result = GetFile(fileId, (RequestOptions)null);
+        return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    public virtual async Task DeleteFileAsync(string fileId)
+    /// <summary> Delete a file. </summary>
+    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <remarks> Delete file. </remarks>
+    public virtual async Task<ClientResult<DeleteFileResponse>> DeleteAsync(string fileId)
     {
-        _ = Shim.DeleteFileAsync(fileId);
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
+        ClientResult result = await DeleteAsync(fileId, null).ConfigureAwait(false);
+        return ClientResult.FromValue(DeleteFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    private PipelineMessage CreateUploadFileRequest(BinaryContent content, string contentType, RequestOptions options)
+    /// <summary> Delete a file. </summary>
+    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <remarks> Delete file. </remarks>
+    public virtual ClientResult<DeleteFileResponse> Delete(string fileId)
     {
-        PipelineMessage message = Shim.Pipeline.CreateMessage();
-        message.ResponseClassifier = ResponseErrorClassifier200;
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
-
-        UriBuilder uriBuilder = new(_clientConnector.Endpoint.AbsoluteUri);
-
-        StringBuilder path = new();
-        path.Append("/files");
-        uriBuilder.Path += path.ToString();
-
-        request.Uri = uriBuilder.Uri;
-
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", contentType);
-
-        request.Content = content;
-
-        message.Apply(options);
-
-        return message;
+        ClientResult result = Delete(fileId, null);
+        return ClientResult.FromValue(DeleteFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    private static PipelineMessageClassifier _responseErrorClassifier200;
-    private static PipelineMessageClassifier ResponseErrorClassifier200 => _responseErrorClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+    /// <summary> Returns the contents of the specified file. </summary>
+    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <remarks> Download file. </remarks>
+    public virtual async Task<ClientResult<BinaryData>> DownloadContentAsync(string fileId)
+    {
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
+        ClientResult result = await DownloadContentAsync(fileId, null).ConfigureAwait(false);
+        return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
+    }
+
+    /// <summary> Returns the contents of the specified file. </summary>
+    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <remarks> Download file. </remarks>
+    public virtual ClientResult<BinaryData> DownloadContent(string fileId)
+    {
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
+        ClientResult result = DownloadContent(fileId, null);
+        return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
+    }
 }

@@ -36,7 +36,7 @@ public partial class EmbeddingClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GenerateEmbeddingAsync(BinaryContent content, RequestOptions options = null)
+    public virtual async Task<ClientResult> GenerateEmbeddingsAsync(BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
 
@@ -69,7 +69,7 @@ public partial class EmbeddingClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GenerateEmbedding(BinaryContent content, RequestOptions options = null)
+    public virtual ClientResult GenerateEmbeddings(BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
 

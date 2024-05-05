@@ -1,9 +1,7 @@
-using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.Audio;
@@ -11,14 +9,12 @@ namespace OpenAI.Audio;
 /// <summary> The service client for OpenAI audio operations. </summary>
 [CodeGenClient("Audio")]
 [CodeGenSuppress("AudioClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranscriptionAsync", typeof(AudioTranscriptionOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranscription", typeof(AudioTranscriptionOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranslationAsync", typeof(AudioTranslationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateTranslation", typeof(AudioTranslationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateCreateTranscriptionRequest", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("CreateCreateTranslationRequest", typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions))]
+[CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions))]
+[CodeGenSuppress("CreateTranscriptionAsync", typeof(AudioTranscriptionOptions))]
+[CodeGenSuppress("CreateTranscription", typeof(AudioTranscriptionOptions))]
+[CodeGenSuppress("CreateTranslationAsync", typeof(AudioTranslationOptions))]
+[CodeGenSuppress("CreateTranslation", typeof(AudioTranslationOptions))]
 public partial class AudioClient
 {
     private readonly string _model;
@@ -26,33 +22,54 @@ public partial class AudioClient
     // CUSTOM:
     // - Added `model` parameter.
     // - Added support for retrieving credential and endpoint from environment variables.
-    /// <summary> Initializes a new instance of AudioClient. </summary>
-    /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-    /// <param name="credential"> The key credential to copy. </param>
-    /// <param name="options"> OpenAI Endpoint. </param>
-    public AudioClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = default)
-    {
-        Argument.AssertNotNullOrEmpty(model, nameof(model));
-        options ??= new OpenAIClientOptions();
 
-        _model = model;
-        _keyCredential = credential ?? new(Environment.GetEnvironmentVariable(OpenAIClient.s_OpenAIApiKeyEnvironmentVariable) ?? string.Empty);
-        _pipeline = ClientPipeline.Create(options, Array.Empty<PipelinePolicy>(), new PipelinePolicy[] { ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(_keyCredential, AuthorizationHeader, AuthorizationApiKeyPrefix) }, Array.Empty<PipelinePolicy>());
-        _endpoint = options.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIClient.s_OpenAIEndpointEnvironmentVariable) ?? OpenAIClient.s_defaultOpenAIV1Endpoint);
-    }
+    /// <summary>
+    /// Initializes a new instance of <see cref="AudioClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="model"> The model name to use for audio operations. </param>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public AudioClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              model,
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {}
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="AudioClient"/> that will use an API key from the OPENAI_API_KEY
+    /// environment variable when authenticating.
+    /// </summary>
+    /// <remarks>
+    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
+    /// <see cref="AudioClient(string,ApiKeyCredential,OpenAIClientOptions)"/>.
+    /// </remarks>
+    /// <param name="model"> The model name to use for audio operations. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
+    public AudioClient(string model, OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
+              model,
+              OpenAIClient.GetEndpoint(options),
+              options)
+    { }
 
     // CUSTOM:
     // - Added `model` parameter.
+
     /// <summary> Initializes a new instance of EmbeddingClient. </summary>
     /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-    /// <param name="credential"> The key credential to copy. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>
-    internal AudioClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
+    protected internal AudioClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options)
     {
+        Argument.AssertNotNullOrEmpty(model, nameof(model));
+
         _pipeline = pipeline;
         _model = model;
-        _keyCredential = credential;
         _endpoint = endpoint;
     }
 
@@ -80,8 +97,8 @@ public partial class AudioClient
         options ??= new();
         CreateSpeechGenerationOptions(text, voice, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateSpeechFromTextAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateSpeechFromTextAsync(content, null).ConfigureAwait(false);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
@@ -107,8 +124,8 @@ public partial class AudioClient
         options ??= new();
         CreateSpeechGenerationOptions(text, voice, ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateSpeechFromText(content, DefaultRequestContext);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateSpeechFromText(content, (RequestOptions)null);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
@@ -163,8 +180,9 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
     /// <param name="options"> Options for the transcription. </param>
-    /// <returns> Audio transcription data for the provided file. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Audio transcription data for the provided file. </returns>
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
@@ -182,8 +200,9 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
     /// <param name="options"> Options for the transcription. </param>
-    /// <returns> Audio transcription data for the provided file. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Audio transcription data for the provided file. </returns>
     public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
@@ -243,11 +262,12 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to translate. </param>
     /// <param name="options"> Options for the translation. </param>
-    /// <returns> Audio translation data for the provided file. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Audio translation data for the provided file. </returns>
     public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null)
     {
-        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+        Argument.AssertNotNullOrEmpty(audioFilePath, nameof(audioFilePath));
 
         using FileStream audioStream = File.OpenRead(audioFilePath);
         return TranslateAudio(audioStream, audioFilePath, options);
@@ -262,8 +282,9 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to translate. </param>
     /// <param name="options"> Options for the translation. </param>
-    /// <returns> Audio translation data for the provided file. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Audio translation data for the provided file. </returns>
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
@@ -273,49 +294,7 @@ public partial class AudioClient
     }
 
     #endregion
-
-    // CUSTOM: Parametrized the Content-Type header.
-    internal PipelineMessage CreateCreateTranscriptionRequest(BinaryContent content, string contentType, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/audio/transcriptions", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("content-type", contentType);
-        request.Content = content;
-        if (options != null)
-        {
-            message.Apply(options);
-        }
-        return message;
-    }
-
-    // CUSTOM: Parametrized the Content-Type header.
-    internal PipelineMessage CreateCreateTranslationRequest(BinaryContent content, string contentType, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/audio/translations", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("content-type", contentType);
-        request.Content = content;
-        if (options != null)
-        {
-            message.Apply(options);
-        }
-        return message;
-    }
-
+    
     private void CreateSpeechGenerationOptions(string text, GeneratedSpeechVoice voice, ref SpeechGenerationOptions options)
     {
         options.Input = text;

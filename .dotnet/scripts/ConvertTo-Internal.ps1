@@ -8,15 +8,11 @@ function Edit-GeneratedOpenAIClient {
 
     Write-Output "Editing $($file.FullName)"
 
-    # $content = $content -creplace "public partial class", "internal partial class"
-    # $content = $content -creplace "public readonly partial struct", "internal readonly partial struct"
-    # $content = $content -creplace "public static partial class", "internal static partial class"
-    # $content = $content -creplace "namespace OpenAI", "namespace OpenAI.Internal"
-    # $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
-     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FileClient _cachedFileClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
@@ -34,6 +30,7 @@ function Edit-GeneratedSubclients {
     $exclusions = @(
         "AudioClient.cs",
         "EmbeddingClient.cs",
+        "FileClient.cs",
         "FineTuningClient.cs",
         "ImageClient.cs",
         "LegacyCompletionClient.cs"
@@ -101,6 +98,21 @@ function Edit-GeneratedModels {
         "EmbeddingOptionsEncodingFormat.cs",
         "EmbeddingTokenUsage.cs",
         "EmbeddingTokenUsage.Serialization.cs",
+
+        "DeleteFileResponse.cs",
+        "DeleteFileResponseObject.cs",
+        "DeleteFileResponse.Serialization.cs",
+        "ListFilesResponseObject.cs",
+        "OpenAIFileInfo.cs",
+        "OpenAIFileInfo.Serialization.cs",
+        "OpenAIFileInfoCollection.cs",
+        "OpenAIFileInfoCollection.Serialization.cs",
+        "OpenAIFileObject.cs",
+        "OpenAIFilePurpose.cs",
+        "OpenAIFileStatus.cs",
+        "UploadFileOptions.cs",
+        "UploadFileOptions.Serialization.cs",
+        "UploadFileOptionsPurpose.cs"
 
         "CreateFineTuningJobRequest.cs",
         "CreateFineTuningJobRequest.Serialization.cs",
@@ -191,15 +203,7 @@ function Edit-GeneratedModelFactory {
     $content | Set-Content -Path $file.FullName -NoNewline
 }
 
-function Remove-GeneratedTests {
-    $root = Split-Path $PSScriptRoot -Parent
-
-    $directory = Join-Path -Path $root -ChildPath "tests\Generated"
-    Remove-Item -LiteralPath $directory -Recurse -Force
-}
-
 Edit-GeneratedOpenAIClient
 Edit-GeneratedSubclients
 Edit-GeneratedModels
 Edit-GeneratedModelFactory
-Remove-GeneratedTests

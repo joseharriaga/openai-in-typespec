@@ -49,7 +49,7 @@ namespace OpenAI.Samples
                 }
                 """).ToStream();
 
-            OpenAIFileInfo openAIFileInfo = await fileClient.UploadFileAsync(document, "test-rag-file-delete-me.json", OpenAIFilePurpose.Assistants);
+            OpenAIFileInfo openAIFileInfo = await fileClient.UploadAsync(document, "test-rag-file-delete-me.json", OpenAIFilePurpose.Assistants);
 
             // Now, we'll create a client intended to help with that data
             AssistantCreationOptions assistantOptions = new()
@@ -124,8 +124,8 @@ namespace OpenAI.Samples
                     }
                     else if (contentItem is MessageImageFileContent imageFileContent)
                     {
-                        OpenAIFileInfo imageInfo = await fileClient.GetFileInfoAsync(imageFileContent.FileId);
-                        BinaryData imageBytes = await fileClient.DownloadFileAsync(imageFileContent.FileId);
+                        OpenAIFileInfo imageInfo = await fileClient.GetFileAsync(imageFileContent.FileId);
+                        BinaryData imageBytes = await fileClient.DownloadContentAsync(imageFileContent.FileId);
                         using FileStream stream = File.OpenWrite($"{imageInfo.Filename}.png");
                         await imageBytes.ToStream().CopyToAsync(stream);
 

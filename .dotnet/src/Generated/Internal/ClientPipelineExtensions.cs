@@ -2,19 +2,41 @@
 
 #nullable disable
 
-using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI
 {
     internal static partial class ClientPipelineExtensions
     {
-        public static async ValueTask<ClientResult<bool>> ProcessHeadAsBoolMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext)
+        public static async ValueTask<PipelineResponse> ProcessMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)
         {
-            PipelineResponse response = await pipeline.ProcessMessageAsync(message, requestContext).ConfigureAwait(false);
+            await pipeline.SendAsync(message).ConfigureAwait(false);
+
+            if (message.Response.IsError && (options?.ErrorOptions & ClientErrorBehaviors.NoThrow) != ClientErrorBehaviors.NoThrow)
+            {
+                throw await ClientResultException.CreateAsync(message.Response).ConfigureAwait(false);
+            }
+
+            return message.Response;
+        }
+
+        public static PipelineResponse ProcessMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)
+        {
+            pipeline.Send(message);
+
+            if (message.Response.IsError && (options?.ErrorOptions & ClientErrorBehaviors.NoThrow) != ClientErrorBehaviors.NoThrow)
+            {
+                throw new ClientResultException(message.Response);
+            }
+
+            return message.Response;
+        }
+
+        public static async ValueTask<ClientResult<bool>> ProcessHeadAsBoolMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)
+        {
+            PipelineResponse response = await pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
             switch (response.Status)
             {
                 case >= 200 and < 300:
@@ -26,9 +48,9 @@ namespace OpenAI
             }
         }
 
-        public static ClientResult<bool> ProcessHeadAsBoolMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext)
+        public static ClientResult<bool> ProcessHeadAsBoolMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)
         {
-            PipelineResponse response = pipeline.ProcessMessage(message, requestContext);
+            PipelineResponse response = pipeline.ProcessMessage(message, options);
             switch (response.Status)
             {
                 case >= 200 and < 300:

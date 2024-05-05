@@ -6,6 +6,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 
 namespace OpenAI.Audio
@@ -22,7 +23,14 @@ namespace OpenAI.Audio
 
             writer.WriteStartObject();
             writer.WritePropertyName("file"u8);
-            writer.WriteBase64StringValue(File.ToArray(), "D");
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(File);
+#else
+            using (JsonDocument document = JsonDocument.Parse(File))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(Language))
@@ -99,7 +107,7 @@ namespace OpenAI.Audio
 
         internal static AudioTranscriptionOptions DeserializeAudioTranscriptionOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -118,7 +126,7 @@ namespace OpenAI.Audio
             {
                 if (property.NameEquals("file"u8))
                 {
-                    file = BinaryData.FromBytes(property.Value.GetBytesFromBase64("D"));
+                    file = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (property.NameEquals("model"u8))
@@ -192,6 +200,52 @@ namespace OpenAI.Audio
                 serializedAdditionalRawData);
         }
 
+        private BinaryData SerializeMultipart(ModelReaderWriterOptions options)
+        {
+            using MultipartFormDataBinaryContent content = ToMultipartBinaryBody();
+            using MemoryStream stream = new MemoryStream();
+            content.WriteTo(stream);
+            if (stream.Position > int.MaxValue)
+            {
+                return BinaryData.FromStream(stream);
+            }
+            else
+            {
+                return new BinaryData(stream.GetBuffer().AsMemory(0, (int)stream.Position));
+            }
+        }
+
+        internal virtual MultipartFormDataBinaryContent ToMultipartBinaryBody()
+        {
+            MultipartFormDataBinaryContent content = new MultipartFormDataBinaryContent();
+            content.Add(File, "file", "file");
+            content.Add(Model.ToString(), "model");
+            if (Optional.IsDefined(Language))
+            {
+                content.Add(Language, "language");
+            }
+            if (Optional.IsDefined(Prompt))
+            {
+                content.Add(Prompt, "prompt");
+            }
+            if (Optional.IsDefined(ResponseFormat))
+            {
+                content.Add(ResponseFormat.Value.ToSerialString(), "response_format");
+            }
+            if (Optional.IsDefined(Temperature))
+            {
+                content.Add(Temperature.Value, "temperature");
+            }
+            if (Optional.IsCollectionDefined(TimestampGranularities))
+            {
+                foreach (BinaryData item in TimestampGranularities)
+                {
+                    content.Add(item, "timestamp_granularities", "timestamp_granularities");
+                }
+            }
+            return content;
+        }
+
         BinaryData IPersistableModel<AudioTranscriptionOptions>.Write(ModelReaderWriterOptions options)
         {
             var format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
@@ -200,6 +254,8 @@ namespace OpenAI.Audio
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
+                case "MFD":
+                    return SerializeMultipart(options);
                 default:
                     throw new FormatException($"The model {nameof(AudioTranscriptionOptions)} does not support writing '{options.Format}' format.");
             }
@@ -221,7 +277,7 @@ namespace OpenAI.Audio
             }
         }
 
-        string IPersistableModel<AudioTranscriptionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AudioTranscriptionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "MFD";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
@@ -231,10 +287,10 @@ namespace OpenAI.Audio
             return DeserializeAudioTranscriptionOptions(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

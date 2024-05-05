@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace OpenAI.Images
@@ -22,37 +21,6 @@ namespace OpenAI.Images
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeGeneratedImageCollection(document.RootElement, options);
-        }
-
-        internal static GeneratedImageCollection DeserializeGeneratedImageCollection(JsonElement element, ModelReaderWriterOptions options = null)
-        {
-            options ??= new ModelReaderWriterOptions("W");
-
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            DateTimeOffset created = default;
-            IReadOnlyList<GeneratedImage> data = default;
-            foreach (var property in element.EnumerateObject())
-            {
-                if (property.NameEquals("created"u8))
-                {
-                    created = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
-                    continue;
-                }
-                if (property.NameEquals("data"u8))
-                {
-                    List<GeneratedImage> array = new List<GeneratedImage>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(GeneratedImage.DeserializeGeneratedImage(item, options));
-                    }
-                    data = array;
-                    continue;
-                }
-            }
-            return new GeneratedImageCollection(created, data);
         }
 
         BinaryData IPersistableModel<GeneratedImageCollection>.Write(ModelReaderWriterOptions options)
@@ -94,10 +62,10 @@ namespace OpenAI.Images
             return DeserializeGeneratedImageCollection(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

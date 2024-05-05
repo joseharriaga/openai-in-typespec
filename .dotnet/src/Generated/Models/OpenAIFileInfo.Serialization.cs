@@ -8,25 +8,25 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
-    internal partial class OpenAIFile : IJsonModel<OpenAIFile>
+    public partial class OpenAIFileInfo : IJsonModel<OpenAIFileInfo>
     {
-        void IJsonModel<OpenAIFile>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<OpenAIFileInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<OpenAIFile>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIFileInfo>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(OpenAIFile)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(OpenAIFileInfo)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            if (Bytes != null)
+            if (SizeInBytes != null)
             {
                 writer.WritePropertyName("bytes"u8);
-                writer.WriteNumberValue(Bytes.Value);
+                writer.WriteNumberValue(SizeInBytes.Value);
             }
             else
             {
@@ -65,21 +65,21 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        OpenAIFile IJsonModel<OpenAIFile>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        OpenAIFileInfo IJsonModel<OpenAIFileInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<OpenAIFile>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIFileInfo>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(OpenAIFile)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(OpenAIFileInfo)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeOpenAIFile(document.RootElement, options);
+            return DeserializeOpenAIFileInfo(document.RootElement, options);
         }
 
-        internal static OpenAIFile DeserializeOpenAIFile(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static OpenAIFileInfo DeserializeOpenAIFileInfo(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -148,7 +148,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new OpenAIFile(
+            return new OpenAIFileInfo(
                 id,
                 bytes,
                 createdAt,
@@ -160,49 +160,49 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<OpenAIFile>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<OpenAIFileInfo>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<OpenAIFile>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIFileInfo>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(OpenAIFile)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(OpenAIFileInfo)} does not support writing '{options.Format}' format.");
             }
         }
 
-        OpenAIFile IPersistableModel<OpenAIFile>.Create(BinaryData data, ModelReaderWriterOptions options)
+        OpenAIFileInfo IPersistableModel<OpenAIFileInfo>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<OpenAIFile>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIFileInfo>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeOpenAIFile(document.RootElement, options);
+                        return DeserializeOpenAIFileInfo(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(OpenAIFile)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(OpenAIFileInfo)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<OpenAIFile>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<OpenAIFileInfo>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static OpenAIFile FromResponse(PipelineResponse response)
+        internal static OpenAIFileInfo FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeOpenAIFile(document.RootElement);
+            return DeserializeOpenAIFileInfo(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal virtual BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

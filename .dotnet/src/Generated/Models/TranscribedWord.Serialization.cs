@@ -63,7 +63,7 @@ namespace OpenAI.Audio
 
         internal static TranscribedWord DeserializeTranscribedWord(JsonElement element, ModelReaderWriterOptions options = null)
         {
-            options ??= new ModelReaderWriterOptions("W");
+            options ??= ModelSerializationExtensions.WireOptions;
 
             string word = default;
             TimeSpan start = default;
@@ -79,12 +79,12 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("start"u8))
                 {
-                    start = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    DeserializeTimeSpan(property, ref start);
                     continue;
                 }
                 if (property.NameEquals("end"u8))
                 {
-                    end = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    DeserializeTimeSpan(property, ref end);
                     continue;
                 }
                 if (options.Format != "W")
@@ -141,10 +141,10 @@ namespace OpenAI.Audio
             return DeserializeTranscribedWord(document.RootElement);
         }
 
-        /// <summary> Convert into a Utf8JsonRequestBody. </summary>
-        internal BinaryContent ToBinaryBody()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, new ModelReaderWriterOptions("W"));
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

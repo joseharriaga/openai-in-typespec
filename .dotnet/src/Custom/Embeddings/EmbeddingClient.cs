@@ -3,7 +3,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.Embeddings;
@@ -11,8 +10,8 @@ namespace OpenAI.Embeddings;
 /// <summary> The service client for the OpenAI Embeddings endpoint. </summary>
 [CodeGenClient("Embeddings")]
 [CodeGenSuppress("EmbeddingClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions), typeof(CancellationToken))]
+[CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingOptions))]
+[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions))]
 public partial class EmbeddingClient
 {
     private readonly string _model;
@@ -20,33 +19,54 @@ public partial class EmbeddingClient
     // CUSTOM:
     // - Added `model` parameter.
     // - Added support for retrieving credential and endpoint from environment variables.
-    /// <summary> Initializes a new instance of EmbeddingClient. </summary>
-    /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-    /// <param name="credential"> The key credential to copy. </param>
-    /// <param name="options"> OpenAI Endpoint. </param>
-    public EmbeddingClient(string model, ApiKeyCredential credential = default, OpenAIClientOptions options = default)
-    {
-        Argument.AssertNotNullOrEmpty(model, nameof(model));
-        options ??= new OpenAIClientOptions();
 
-        _model = model;
-        _keyCredential = credential ?? new(Environment.GetEnvironmentVariable(OpenAIClient.s_OpenAIApiKeyEnvironmentVariable) ?? string.Empty);
-        _pipeline = ClientPipeline.Create(options, Array.Empty<PipelinePolicy>(), new PipelinePolicy[] { ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(_keyCredential, AuthorizationHeader, AuthorizationApiKeyPrefix) }, Array.Empty<PipelinePolicy>());
-        _endpoint = options.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIClient.s_OpenAIEndpointEnvironmentVariable) ?? OpenAIClient.s_defaultOpenAIV1Endpoint);
-    }
+    /// <summary>
+    /// Initializes a new instance of <see cref="EmbeddingClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="model"> The model name to use for audio operations. </param>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public EmbeddingClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              model,
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {}
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="EmbeddingClient"/> that will use an API key from the OPENAI_API_KEY
+    /// environment variable when authenticating.
+    /// </summary>
+    /// <remarks>
+    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
+    /// <see cref="EmbeddingClient(string,ApiKeyCredential,OpenAIClientOptions)"/>.
+    /// </remarks>
+    /// <param name="model"> The model name to use for audio operations. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
+    public EmbeddingClient(string model, OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
+              model,
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {}
 
     // CUSTOM:
     // - Added `model` parameter.
+
     /// <summary> Initializes a new instance of EmbeddingClient. </summary>
     /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="model"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-    /// <param name="credential"> The key credential to copy. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>
-    internal EmbeddingClient(ClientPipeline pipeline, string model, ApiKeyCredential credential, Uri endpoint)
+    protected internal EmbeddingClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options)
     {
+        Argument.AssertNotNullOrEmpty(model, nameof(model));
+
         _pipeline = pipeline;
         _model = model;
-        _keyCredential = credential;
         _endpoint = endpoint;
     }
 
@@ -61,10 +81,10 @@ public partial class EmbeddingClient
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
         options ??= new();
-        CreateEmbeddingOptions(BinaryData.FromString(input), ref options);
+        CreateEmbeddingOptions(BinaryData.FromObjectAsJson(input), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateEmbeddingAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
@@ -81,8 +101,8 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(input), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateEmbedding(content, DefaultRequestContext);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
@@ -99,9 +119,10 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateEmbeddingAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+
     }
 
     // CUSTOM: Added to simplify passing the input as a collection of strings instead of BinaryData.
@@ -117,8 +138,8 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateEmbedding(content, DefaultRequestContext);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -135,8 +156,8 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = await GenerateEmbeddingAsync(content, DefaultRequestContext).ConfigureAwait(false);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -153,8 +174,8 @@ public partial class EmbeddingClient
         options ??= new();
         CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryBody();
-        ClientResult result = GenerateEmbedding(content, DefaultRequestContext);
+        using BinaryContent content = options.ToBinaryContent();
+        ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 

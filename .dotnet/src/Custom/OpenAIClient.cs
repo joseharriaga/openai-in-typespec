@@ -6,7 +6,7 @@ using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
-using OpenAI.ModelManagement;
+using OpenAI.Models;
 using OpenAI.Moderations;
 using System;
 using System.ClientModel;
@@ -32,7 +32,7 @@ namespace OpenAI;
 [CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
 // [CodeGenSuppress("GetMessagesClient")]
-// [CodeGenSuppress("GetModelsOpsClient")]
+[CodeGenSuppress("GetModelClientClient")]
 // [CodeGenSuppress("GetModerationsClient")]
 // [CodeGenSuppress("GetRunsClient")]
 // [CodeGenSuppress("GetThreadsClient")]
@@ -180,7 +180,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ModelManagementClient"/>. </returns>
-    public virtual ModelManagementClient GetModelManagementClient() => new(_pipeline, _endpoint, _options);
+    public virtual ModelClient GetModelClient() => new(_pipeline, _endpoint, _options);
 
     /// <summary>
     /// Gets a new instance of <see cref="ModerationClient"/> that reuses the client configuration details provided to

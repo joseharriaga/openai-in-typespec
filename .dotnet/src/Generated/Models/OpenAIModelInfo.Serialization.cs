@@ -8,23 +8,23 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Models
 {
-    internal partial class Model : IJsonModel<Model>
+    public partial class OpenAIModelInfo : IJsonModel<OpenAIModelInfo>
     {
-        void IJsonModel<Model>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<OpenAIModelInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Model>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(Model)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(OpenAIModelInfo)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("created"u8);
-            writer.WriteNumberValue(Created, "U");
+            writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("object"u8);
             writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("owned_by"u8);
@@ -47,19 +47,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        Model IJsonModel<Model>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        OpenAIModelInfo IJsonModel<OpenAIModelInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Model>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(Model)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(OpenAIModelInfo)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeModel(document.RootElement, options);
+            return DeserializeOpenAIModelInfo(document.RootElement, options);
         }
 
-        internal static Model DeserializeModel(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static OpenAIModelInfo DeserializeOpenAIModelInfo(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -101,46 +101,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new Model(id, created, @object, ownedBy, serializedAdditionalRawData);
+            return new OpenAIModelInfo(id, created, @object, ownedBy, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<Model>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<OpenAIModelInfo>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Model>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(Model)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(OpenAIModelInfo)} does not support writing '{options.Format}' format.");
             }
         }
 
-        Model IPersistableModel<Model>.Create(BinaryData data, ModelReaderWriterOptions options)
+        OpenAIModelInfo IPersistableModel<OpenAIModelInfo>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Model>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeModel(document.RootElement, options);
+                        return DeserializeOpenAIModelInfo(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(Model)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(OpenAIModelInfo)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<Model>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<OpenAIModelInfo>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static Model FromResponse(PipelineResponse response)
+        internal static OpenAIModelInfo FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeModel(document.RootElement);
+            return DeserializeOpenAIModelInfo(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

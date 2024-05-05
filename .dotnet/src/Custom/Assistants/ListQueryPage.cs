@@ -31,16 +31,6 @@ public abstract partial class ListQueryPage
         return new(assistants, internalResponse.FirstId, internalResponse.LastId, internalResponse.HasMore);
     }
 
-    internal static ListQueryPage<AssistantFileAssociation> Create(Internal.Models.ListAssistantFilesResponse internalResponse)
-    {
-        ChangeTrackingList<AssistantFileAssociation> assistantFileAssociations = new();
-        foreach (Internal.Models.AssistantFileObject internalFile in internalResponse.Data)
-        {
-            assistantFileAssociations.Add(new(internalFile));
-        }
-        return new(assistantFileAssociations, internalResponse.FirstId, internalResponse.LastId, internalResponse.HasMore);
-    }
-
     internal static ListQueryPage<ThreadMessage> Create(Internal.Models.ListMessagesResponse internalResponse)
     {
         ChangeTrackingList<ThreadMessage> messages = new();
@@ -49,16 +39,6 @@ public abstract partial class ListQueryPage
             messages.Add(new(internalMessage));
         }
         return new(messages, internalResponse.FirstId, internalResponse.LastId, internalResponse.HasMore);
-    }
-
-    internal static ListQueryPage<MessageFileAssociation> Create(Internal.Models.ListMessageFilesResponse internalResponse)
-    {
-        ChangeTrackingList<MessageFileAssociation> messageFileAssociations = new();
-        foreach (Internal.Models.MessageFileObject internalFile in internalResponse.Data)
-        {
-            messageFileAssociations.Add(new(internalFile));
-        }
-        return new(messageFileAssociations, internalResponse.FirstId, internalResponse.LastId, internalResponse.HasMore);
     }
 
     internal static ListQueryPage<ThreadRun> Create(Internal.Models.ListRunsResponse internalResponse)
@@ -77,9 +57,7 @@ public abstract partial class ListQueryPage
         return internalResponse switch
         {
             Internal.Models.ListAssistantsResponse internalAssistantsResponse => Create(internalAssistantsResponse),
-            Internal.Models.ListAssistantFilesResponse internalFilesResponse => Create(internalFilesResponse),
             Internal.Models.ListMessagesResponse internalMessagesResponse => Create(internalMessagesResponse),
-            Internal.Models.ListMessageFilesResponse internalMessageFilesResponse => Create(internalMessageFilesResponse),
             Internal.Models.ListRunsResponse internalRunsResponse => Create(internalRunsResponse),
             _ => throw new ArgumentException(
                 $"Unknown type for generic {nameof(ListQueryPage)} conversion: {internalResponse.GetType()}"),

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
@@ -59,4 +60,8 @@ public partial class AssistantCreationOptions
     /// </list>
     /// </remarks>
     public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
+
+    public float? Temperature { get; init; }
+    public float? TopP { get; init; }
+    public BinaryData ResponseFormat { get; init; }
 }

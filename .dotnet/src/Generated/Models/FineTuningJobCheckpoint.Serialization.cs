@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     internal partial class FineTuningJobCheckpoint : IJsonModel<FineTuningJobCheckpoint>
     {

@@ -12,9 +12,8 @@ public partial class ThreadMessage
     public MessageRole Role { get; }
     public IReadOnlyList<MessageContent> ContentItems { get; }
     public string AssistantId { get; }
-
     public string RunId { get; }
-    public IReadOnlyList<string> FileIds { get; }
+
     /// <summary>
     /// An optional key/value mapping of additional, supplemental data items to attach to the <see cref="Assistant"/>.
     /// This information may be useful for storing custom details in a structured format.
@@ -54,7 +53,6 @@ public partial class ThreadMessage
         ThreadId = internalMessage.ThreadId;
         RunId = internalMessage.RunId;
         Metadata = internalMessage.Metadata ?? new Dictionary<string, string>();
-        FileIds = internalMessage.FileIds ?? [];
         CreatedAt = internalMessage.CreatedAt;
         Role = convertedRole;
         ContentItems = content;

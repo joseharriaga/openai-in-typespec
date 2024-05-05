@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> The `fine_tuning.job.checkpoint` object represents a model checkpoint for a fine-tuning job that is ready to use. </summary>
     internal partial class FineTuningJobCheckpoint

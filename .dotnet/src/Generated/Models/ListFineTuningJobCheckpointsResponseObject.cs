@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> The ListFineTuningJobCheckpointsResponse_object. </summary>
     internal readonly partial struct ListFineTuningJobCheckpointsResponseObject : IEquatable<ListFineTuningJobCheckpointsResponseObject>

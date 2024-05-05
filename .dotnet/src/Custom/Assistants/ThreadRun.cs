@@ -24,7 +24,6 @@ public partial class ThreadRun
     public string Model { get; }
     public string Instructions { get; }
     public IReadOnlyList<ToolInfo> Tools { get; }
-    public IReadOnlyList<string> FileIds { get; }
     /// <summary>
     /// An optional key/value mapping of additional, supplemental data items to attach to the <see cref="Assistant"/>.
     /// This information may be useful for storing custom details in a structured format.
@@ -62,7 +61,6 @@ public partial class ThreadRun
             _ => throw new ArgumentException(nameof(Status)),
         };
         Metadata = internalRun.Metadata ?? new Dictionary<string, string>();
-        FileIds = internalRun.FileIds ?? [];
         Model = internalRun.Model;
         Instructions = internalRun.Instructions;
 

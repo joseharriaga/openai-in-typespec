@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> The CreateFineTuningJobRequestIntegration. </summary>
     internal partial class CreateFineTuningJobRequestIntegration

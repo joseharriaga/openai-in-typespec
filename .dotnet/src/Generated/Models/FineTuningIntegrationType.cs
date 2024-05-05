@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> The FineTuningIntegration_type. </summary>
     internal readonly partial struct FineTuningIntegrationType : IEquatable<FineTuningIntegrationType>

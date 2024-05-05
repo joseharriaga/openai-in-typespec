@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
@@ -59,4 +60,20 @@ public partial class RunCreationOptions
     /// </list>
     /// </remarks>
     public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
+
+    public float? Temperature { get; init; }
+
+    public float? TopP { get; init; }
+
+    internal bool? Stream { get; init; }
+
+    public int? MaxPromptTokens { get; init; }
+
+    public int? MaxCompletionTokens { get; init; }
+
+    internal Internal.Models.TruncationObject TruncationStrategy { get; init; }
+
+    public BinaryData ToolChoice { get; init; }
+
+    public BinaryData ResponseFormat { get; init; }
 }

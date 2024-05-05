@@ -63,7 +63,21 @@ function Remove-RequestContentHelper {
     Remove-Item $file
 }
 
+function Partialize-ClientPipelineExtensions {
+    $root = Split-Path $PSScriptRoot -Parent
+    $directory = Join-Path -Path $root -ChildPath "src\Generated\Internal"
+    $file = Get-ChildItem -Path $directory -Filter "ClientPipelineExtensions.cs"
+    $content = Get-Content -Path $file -Raw
+
+    Write-Output "Editing $($file.FullName)"
+
+    $content = $content -creplace "internal static class ClientPipelineExtensions", "internal static partial class ClientPipelineExtensions"
+
+    $content | Set-Content -Path $file.FullName -NoNewline
+}
+
 Update-Subclients
 Update-InternalClientUriBuilder
 Remove-Utf8JsonRequestBody
 Remove-RequestContentHelper
+Partialize-ClientPipelineExtensions

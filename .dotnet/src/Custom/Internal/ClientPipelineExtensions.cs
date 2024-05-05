@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace OpenAI;
 
-internal static class ClientPipelineExtendedExtensions
+internal static partial class ClientPipelineExtensions
 {
-    public static async ValueTask<PipelineResponse> ProcessMessageExAsync(
+    public static async ValueTask<PipelineResponse> ProcessMessageAsync(
         this ClientPipeline pipeline,
         PipelineMessage message,
         RequestOptions requestContext,
@@ -32,7 +32,7 @@ internal static class ClientPipelineExtendedExtensions
         throw new ClientResultException(errorMessage, message.Response);
     }
 
-    public static PipelineResponse ProcessMessageEx(
+    public static PipelineResponse ProcessMessage(
         this ClientPipeline pipeline,
         PipelineMessage message,
         RequestOptions requestContext,

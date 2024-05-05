@@ -10,42 +10,8 @@ using System.Threading.Tasks;
 
 namespace OpenAI
 {
-    internal static class ClientPipelineExtensions
+    internal static partial class ClientPipelineExtensions
     {
-        public static async ValueTask<PipelineResponse> ProcessMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext, CancellationToken cancellationToken = default)
-        {
-            await pipeline.SendAsync(message).ConfigureAwait(false);
-
-            if (message.Response == null)
-            {
-                throw new InvalidOperationException("Failed to receive Result.");
-            }
-
-            if (!message.Response.IsError || requestContext?.ErrorOptions == ClientErrorBehaviors.NoThrow)
-            {
-                return message.Response;
-            }
-
-            throw new ClientResultException(message.Response);
-        }
-
-        public static PipelineResponse ProcessMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext, CancellationToken cancellationToken = default)
-        {
-            pipeline.Send(message);
-
-            if (message.Response == null)
-            {
-                throw new InvalidOperationException("Failed to receive Result.");
-            }
-
-            if (!message.Response.IsError || requestContext?.ErrorOptions == ClientErrorBehaviors.NoThrow)
-            {
-                return message.Response;
-            }
-
-            throw new ClientResultException(message.Response);
-        }
-
         public static async ValueTask<ClientResult<bool>> ProcessHeadAsBoolMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext)
         {
             PipelineResponse response = await pipeline.ProcessMessageAsync(message, requestContext).ConfigureAwait(false);

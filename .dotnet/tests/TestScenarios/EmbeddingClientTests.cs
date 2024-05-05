@@ -1,7 +1,9 @@
 ﻿using NUnit.Framework;
 using OpenAI.Embeddings;
+using System;
 using System.ClientModel;
 using System.Collections.Generic;
+using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Embeddings;
 
@@ -63,4 +65,26 @@ public partial class EmbeddingClientTests
     {
         // TODO: Add this test.
     }
+
+    [Test]
+    public void BadOptions()
+    {
+        EmbeddingClient client = GetTestClient();
+        Exception caughtException = null;
+        try
+        {
+            client.GenerateEmbedding("foo", new EmbeddingOptions()
+            {
+                Dimensions = -42,
+            });
+        }
+        catch (Exception ex)
+        {
+            caughtException = ex;
+        }
+        Assert.That(caughtException, Is.InstanceOf<ClientResultException>());
+        Assert.That(caughtException.Message, Contains.Substring("dimensions"));
+    }
+
+    private static EmbeddingClient GetTestClient() => GetTestClient<EmbeddingClient>(TestScenario.Embeddings);
 }

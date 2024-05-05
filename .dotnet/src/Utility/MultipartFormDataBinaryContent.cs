@@ -42,10 +42,10 @@ internal class MultipartFormDataBinaryContent : BinaryContent
         Add(new StreamContent(content), name, fileName, contentType);
     }
 
-    public void Add(Stream stream, string name, string fileName = default)
-    {
-        Add(new StreamContent(stream), name, fileName);
-    }
+    //public void Add(Stream stream, string name, string fileName = default)
+    //{
+    //    Add(new StreamContent(stream), name, fileName);
+    //}
 
     public void Add(string content, string name, string fileName = default)
     {

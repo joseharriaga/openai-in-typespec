@@ -4,6 +4,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenAI.Chat;
@@ -293,6 +294,32 @@ public partial class ChatClient
                 responseForEnumeration.GetRawResponse().ContentStream,
                 e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
     }
+
+    private PipelineMessage CreateChatCompletionPipelineMessage(BinaryContent content, RequestOptions options = null, bool bufferResponse = true)
+    {
+        PipelineMessage message = Pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        message.BufferResponse = bufferResponse;
+        PipelineRequest request = message.Request;
+        request.Method = "POST";
+        UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
+        StringBuilder path = new();
+        path.Append("/chat/completions");
+        uriBuilder.Path += path.ToString();
+        request.Uri = uriBuilder.Uri;
+        request.Headers.Set("Accept", "application/json");
+        request.Headers.Set("Content-Type", "application/json");
+        request.Content = content;
+        if (options is not null)
+        {
+            message.Apply(options);
+        }
+        return message;
+    }
+
+    private static PipelineMessageClassifier s_pipelineMessageClassifier200;
+    internal static PipelineMessageClassifier PipelineMessageClassifier200
+        => s_pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(
         IEnumerable<ChatRequestMessage> messages,

@@ -69,5 +69,5 @@ interface Files {
   downloadFile(
     /** The ID of the file to use for this request. */
     @path file_id: string,
-  ): string | ErrorResponse;
+  ): bytes | ErrorResponse;
 }

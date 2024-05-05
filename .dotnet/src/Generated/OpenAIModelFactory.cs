@@ -625,51 +625,6 @@ namespace OpenAI
             return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.OpenAIFile"/>. </summary>
-        /// <param name="id"> The file identifier, which can be referenced in the API endpoints. </param>
-        /// <param name="bytes"> The size of the file, in bytes. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the file was created. </param>
-        /// <param name="filename"> The name of the file. </param>
-        /// <param name="object"> The object type, which is always `file`. </param>
-        /// <param name="purpose"> The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`. </param>
-        /// <param name="status"> Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`. </param>
-        /// <param name="statusDetails"> Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`. </param>
-        /// <returns> A new <see cref="Models.OpenAIFile"/> instance for mocking. </returns>
-        public static OpenAIFile OpenAIFile(string id = null, int? bytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFileObject @object = default, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null)
-        {
-            return new OpenAIFile(
-                id,
-                bytes,
-                createdAt,
-                filename,
-                @object,
-                purpose,
-                status,
-                statusDetails,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListFilesResponse"/>. </summary>
-        /// <param name="data"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.ListFilesResponse"/> instance for mocking. </returns>
-        public static ListFilesResponse ListFilesResponse(IEnumerable<OpenAIFile> data = null, ListFilesResponseObject @object = default)
-        {
-            data ??= new List<OpenAIFile>();
-
-            return new ListFilesResponse(data?.ToList(), @object, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteFileResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="object"></param>
-        /// <param name="deleted"></param>
-        /// <returns> A new <see cref="Models.DeleteFileResponse"/> instance for mocking. </returns>
-        public static DeleteFileResponse DeleteFileResponse(string id = null, DeleteFileResponseObject @object = default, bool deleted = default)
-        {
-            return new DeleteFileResponse(id, @object, deleted, serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Images.GeneratedImageCollection"/>. </summary>
         /// <param name="created"></param>
         /// <param name="data"></param>

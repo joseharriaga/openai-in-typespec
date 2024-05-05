@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
     /// <summary> The DeleteFileResponse. </summary>
-    internal partial class DeleteFileResponse
+    public partial class DeleteFileResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -74,8 +74,6 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Gets the id. </summary>
         public string Id { get; }
-        /// <summary> Gets the object. </summary>
-        public DeleteFileResponseObject Object { get; } = DeleteFileResponseObject.File;
 
         /// <summary> Gets the deleted. </summary>
         public bool Deleted { get; }

@@ -4,12 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
-    /// <summary> The ListFilesResponse. </summary>
-    internal partial class ListFilesResponse
+    /// <summary> The CreateFileRequest. </summary>
+    public partial class UploadFileOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,35 +43,21 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ListFilesResponse"/>. </summary>
-        /// <param name="data"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="data"/> is null. </exception>
-        internal ListFilesResponse(IEnumerable<OpenAIFile> data)
-        {
-            Argument.AssertNotNull(data, nameof(data));
-
-            Data = data.ToList();
-        }
-
-        /// <summary> Initializes a new instance of <see cref="ListFilesResponse"/>. </summary>
-        /// <param name="data"></param>
-        /// <param name="object"></param>
+        /// <summary> Initializes a new instance of <see cref="UploadFileOptions"/>. </summary>
+        /// <param name="file"> The File object (not file name) to be uploaded. </param>
+        /// <param name="purpose">
+        /// The intended purpose of the uploaded file.
+        ///
+        /// Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for
+        /// [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages).
+        /// This allows us to validate the format of the uploaded file is correct for fine-tuning.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ListFilesResponse(IReadOnlyList<OpenAIFile> data, ListFilesResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal UploadFileOptions(Stream file, UploadFileOptionsPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Data = data;
-            Object = @object;
+            File = file;
+            Purpose = purpose;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> Initializes a new instance of <see cref="ListFilesResponse"/> for deserialization. </summary>
-        internal ListFilesResponse()
-        {
-        }
-
-        /// <summary> Gets the data. </summary>
-        public IReadOnlyList<OpenAIFile> Data { get; }
-        /// <summary> Gets the object. </summary>
-        public ListFilesResponseObject Object { get; } = ListFilesResponseObject.List;
     }
 }

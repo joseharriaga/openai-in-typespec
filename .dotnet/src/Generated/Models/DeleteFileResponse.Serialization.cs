@@ -8,9 +8,9 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
-    internal partial class DeleteFileResponse : IJsonModel<DeleteFileResponse>
+    public partial class DeleteFileResponse : IJsonModel<DeleteFileResponse>
     {
         void IJsonModel<DeleteFileResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {

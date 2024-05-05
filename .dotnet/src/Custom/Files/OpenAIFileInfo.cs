@@ -1,21 +1,14 @@
-using System;
-
 namespace OpenAI.Files;
 
+[CodeGenModel("OpenAIFile")]
 public partial class OpenAIFileInfo
 {
-    public string Id { get; }
-    public OpenAIFilePurpose Purpose { get; }
-    public string Filename { get; }
-    public long? Size { get; }
-    public DateTimeOffset CreatedAt { get; }
+    // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
+    /// <summary> The object type, which is always "file". </summary>
+    private OpenAIFileObject Object { get; } = OpenAIFileObject.File;
 
-    internal OpenAIFileInfo(Internal.Models.OpenAIFile internalFile)
-    {
-        Id = internalFile.Id;
-        Purpose = internalFile.Purpose.ToString();
-        Filename = internalFile.Filename;
-        Size = internalFile.Bytes;
-        CreatedAt = internalFile.CreatedAt;
-    }
+    // CUSTOM: Renamed.
+    /// <summary> The size of the file, in bytes. </summary>
+    [CodeGenMember("Bytes")]
+    public long? SizeInBytes { get; }
 }

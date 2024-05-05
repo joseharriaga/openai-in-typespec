@@ -94,7 +94,8 @@ public partial class ChatClientTests
     [Test]
     public void AuthFailure()
     {
-        ChatClient client = new("gpt-3.5-turbo", new ApiKeyCredential("not-a-real-key"));
+        string fakeApiKey = "not-a-real-key-but-should-be-sanitized";
+        ChatClient client = new("gpt-3.5-turbo", new ApiKeyCredential(fakeApiKey));
         Exception caughtException = null;
         try
         {
@@ -107,6 +108,8 @@ public partial class ChatClientTests
         var clientResultException = caughtException as ClientResultException;
         Assert.That(clientResultException, Is.Not.Null);
         Assert.That(clientResultException.Status, Is.EqualTo((int)HttpStatusCode.Unauthorized));
+        Assert.That(clientResultException.Message, Does.Contain("API key"));
+        Assert.That(clientResultException.Message, Does.Not.Contain(fakeApiKey));
     }
 
     private static ChatClient GetTestClient(string overrideModel = null) => GetTestClient<ChatClient>(TestScenario.Chat, overrideModel);

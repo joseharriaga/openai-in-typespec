@@ -83,7 +83,7 @@ public partial class EmbeddingClientTests
             caughtException = ex;
         }
         Assert.That(caughtException, Is.InstanceOf<ClientResultException>());
-        Assert.That(caughtException.Message, Contains.Substring("asdfasd"));
+        Assert.That(caughtException.Message, Contains.Substring("dimensions"));
     }
 
     private static EmbeddingClient GetTestClient() => GetTestClient<EmbeddingClient>(TestScenario.Embeddings);

@@ -15,6 +15,7 @@ function Edit-GeneratedOpenAIClient {
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FileClient _cachedFileClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
+        $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
     $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
 
@@ -33,6 +34,7 @@ function Edit-GeneratedSubclients {
         "FileClient.cs",
         "FineTuningClient.cs",
         "ImageClient.cs",
+        "ModelClient.cs",
         "LegacyCompletionClient.cs"
     )
 
@@ -166,7 +168,17 @@ function Edit-GeneratedModels {
         "CreateCompletionResponseChoiceLogprobs.Serialization.cs",
         "CreateCompletionResponseObject.cs",
         "CompletionUsage.cs",
-        "CompletionUsage.Serialization.cs"
+        "CompletionUsage.Serialization.cs",
+
+        "DeleteModelResponse.cs",
+        "DeleteModelResponse.Serialization.cs",
+        "DeleteModelResponseObject.cs",
+        "ListModelsResponseObject.cs",
+        "ModelObject.cs",
+        "OpenAIModelInfo.cs",
+        "OpenAIModelInfo.Serialization.cs",
+        "OpenAIModelInfoCollection.cs",
+        "OpenAIModelInfoCollection.Serialization.cs"
     )
 
     foreach ($file in $files) {

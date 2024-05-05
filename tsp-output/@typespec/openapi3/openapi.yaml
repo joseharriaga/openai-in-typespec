@@ -635,6 +635,7 @@ paths:
             application/json:
               schema:
                 type: string
+                format: byte
         default:
           description: An unexpected error response.
           content:

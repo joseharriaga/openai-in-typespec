@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Models
 {
     /// <summary> Describes an OpenAI model offering that can be used with the API. </summary>
-    internal partial class Model
+    public partial class OpenAIModelInfo
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,47 +42,43 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="Model"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="OpenAIModelInfo"/>. </summary>
         /// <param name="id"> The model identifier, which can be referenced in the API endpoints. </param>
-        /// <param name="created"> The Unix timestamp (in seconds) when the model was created. </param>
+        /// <param name="createdAt"> The Unix timestamp (in seconds) when the model was created. </param>
         /// <param name="ownedBy"> The organization that owns the model. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="ownedBy"/> is null. </exception>
-        internal Model(string id, DateTimeOffset created, string ownedBy)
+        internal OpenAIModelInfo(string id, DateTimeOffset createdAt, string ownedBy)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(ownedBy, nameof(ownedBy));
 
             Id = id;
-            Created = created;
+            CreatedAt = createdAt;
             OwnedBy = ownedBy;
         }
 
-        /// <summary> Initializes a new instance of <see cref="Model"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="OpenAIModelInfo"/>. </summary>
         /// <param name="id"> The model identifier, which can be referenced in the API endpoints. </param>
-        /// <param name="created"> The Unix timestamp (in seconds) when the model was created. </param>
+        /// <param name="createdAt"> The Unix timestamp (in seconds) when the model was created. </param>
         /// <param name="object"> The object type, which is always "model". </param>
         /// <param name="ownedBy"> The organization that owns the model. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal Model(string id, DateTimeOffset created, ModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal OpenAIModelInfo(string id, DateTimeOffset createdAt, ModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
-            Created = created;
+            CreatedAt = createdAt;
             Object = @object;
             OwnedBy = ownedBy;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="Model"/> for deserialization. </summary>
-        internal Model()
+        /// <summary> Initializes a new instance of <see cref="OpenAIModelInfo"/> for deserialization. </summary>
+        internal OpenAIModelInfo()
         {
         }
 
         /// <summary> The model identifier, which can be referenced in the API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The Unix timestamp (in seconds) when the model was created. </summary>
-        public DateTimeOffset Created { get; }
-        /// <summary> The object type, which is always "model". </summary>
-        public ModelObject Object { get; } = ModelObject.Model;
 
         /// <summary> The organization that owns the model. </summary>
         public string OwnedBy { get; }

@@ -10,41 +10,51 @@ namespace OpenAI.Tests.Files;
 public partial class FileClientTests
 {
     [Test]
-    public void ListFilesWorks()
+    public void List()
     {
         FileClient client = GetTestClient();
-        ClientResult<OpenAIFileInfoCollection> result = client.GetFileInfoList();
-        Assert.That(result.Value.Count, Is.GreaterThan(0));
-        Console.WriteLine(result.Value.Count);
-        ClientResult<OpenAIFileInfoCollection> assistantsResult = client.GetFileInfoList(OpenAIFilePurpose.Assistants);
-        Assert.That(assistantsResult.Value.Count, Is.GreaterThan(0));
-        Assert.That(assistantsResult.Value.Count, Is.LessThan(result.Value.Count));
-        Console.WriteLine(assistantsResult.Value.Count);
+
+        ClientResult<OpenAIFileInfoCollection> allFiles = client.GetFiles();
+        Assert.That(allFiles.Value.Count, Is.GreaterThan(0));
+        Console.WriteLine($"Total files count: {allFiles.Value.Count}");
+
+        ClientResult<OpenAIFileInfoCollection> assistantsFiles = client.GetFiles(OpenAIFilePurpose.Assistants);
+        Assert.Greater(assistantsFiles.Value.Count, 0);
+        Assert.Less(assistantsFiles.Value.Count, allFiles.Value.Count);
+        Console.WriteLine($"Assistant files count: {assistantsFiles.Value.Count}");
     }
 
     [Test]
-    public void UploadFileWorks()
+    public void UploadAndDelete()
     {
         FileClient client = GetTestClient();
-        using Stream uploadData = BinaryData.FromString("hello, this is a text file, please delete me").ToStream();
 
-        ClientResult<OpenAIFileInfo> uploadResult = client.UploadFile(uploadData, "test-file-delete-me.txt", OpenAIFilePurpose.Assistants);
-        Assert.That(uploadResult.Value, Is.Not.Null);
+        using Stream file = BinaryData.FromString("Hello! This is a test text file. Please delete me.").ToStream();
+        string filename = "test-file-delete-me.txt";
 
-        ClientResult<OpenAIFileInfo> fileInfoResult = client.GetFileInfo(uploadResult.Value.Id);
-        Assert.AreEqual(uploadResult.Value.Id, fileInfoResult.Value.Id);
-        Assert.AreEqual(uploadResult.Value.Filename, fileInfoResult.Value.Filename);
+        ClientResult<OpenAIFileInfo> uploadedFile = client.Upload(file, filename, OpenAIFilePurpose.Assistants);
+        Assert.NotNull(uploadedFile.Value);
+        Assert.AreEqual(filename, uploadedFile.Value.Filename);
+        Assert.AreEqual(OpenAIFilePurpose.Assistants, uploadedFile.Value.Purpose);
+
+        ClientResult<OpenAIFileInfo> fileInfo = client.GetFile(uploadedFile.Value.Id);
+        Assert.AreEqual(uploadedFile.Value.Id, fileInfo.Value.Id);
+        Assert.AreEqual(uploadedFile.Value.Filename, fileInfo.Value.Filename);
+
+        ClientResult<DeleteFileResponse> deleteResponse = client.Delete(uploadedFile.Value.Id);
+        Assert.AreEqual(uploadedFile.Value.Id, deleteResponse.Value.Id);
+        Assert.IsTrue(deleteResponse.Value.Deleted);
     }
 
     [Test]
-    public void DownloadAndInfoWork()
+    public void Download()
     {
         FileClient client = GetTestClient();
 
-        ClientResult<OpenAIFileInfo> fileInfoResult = client.GetFileInfo("file-S7roYWamZqfMK9D979HU4q6m");
-        Assert.That(fileInfoResult.Value, Is.Not.Null);
+        ClientResult<OpenAIFileInfo> fileInfo = client.GetFile("file-S7roYWamZqfMK9D979HU4q6m");
+        Assert.NotNull(fileInfo);
 
-        ClientResult<BinaryData> downloadResult = client.DownloadFile("file-S7roYWamZqfMK9D979HU4q6m");
+        ClientResult<BinaryData> downloadResult = client.DownloadContent("file-S7roYWamZqfMK9D979HU4q6m");
         Assert.That(downloadResult.Value, Is.Not.Null);
     }
 

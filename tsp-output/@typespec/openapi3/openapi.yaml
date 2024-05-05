@@ -419,6 +419,7 @@ paths:
               schema:
                 anyOf:
                   - type: string
+                    format: byte
                   - $ref: '#/components/schemas/ErrorResponse'
   /fine_tuning/jobs:
     post:

@@ -5,10 +5,10 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
-    /// <summary> Enum for purpose in OpenAIFile. </summary>
-    internal readonly partial struct OpenAIFilePurpose : IEquatable<OpenAIFilePurpose>
+    /// <summary> Enum for purpose in OpenAIFileInfo. </summary>
+    public readonly partial struct OpenAIFilePurpose : IEquatable<OpenAIFilePurpose>
     {
         private readonly string _value;
 

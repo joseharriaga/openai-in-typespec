@@ -9,16 +9,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
-    internal partial class CreateFileRequest : IJsonModel<CreateFileRequest>
+    public partial class UploadFileOptions : IJsonModel<UploadFileOptions>
     {
-        void IJsonModel<CreateFileRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<UploadFileOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateFileRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<UploadFileOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateFileRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(UploadFileOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -51,19 +51,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateFileRequest IJsonModel<CreateFileRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        UploadFileOptions IJsonModel<UploadFileOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateFileRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<UploadFileOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateFileRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(UploadFileOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateFileRequest(document.RootElement, options);
+            return DeserializeUploadFileOptions(document.RootElement, options);
         }
 
-        internal static CreateFileRequest DeserializeCreateFileRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static UploadFileOptions DeserializeUploadFileOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -72,7 +72,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             Stream file = default;
-            CreateFileRequestPurpose purpose = default;
+            UploadFileOptionsPurpose purpose = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("purpose"u8))
                 {
-                    purpose = new CreateFileRequestPurpose(property.Value.GetString());
+                    purpose = new UploadFileOptionsPurpose(property.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")
@@ -93,7 +93,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateFileRequest(file, purpose, serializedAdditionalRawData);
+            return new UploadFileOptions(file, purpose, serializedAdditionalRawData);
         }
 
         private BinaryData SerializeMultipart(ModelReaderWriterOptions options)
@@ -119,9 +119,9 @@ namespace OpenAI.Internal.Models
             return content;
         }
 
-        BinaryData IPersistableModel<CreateFileRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<UploadFileOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateFileRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<UploadFileOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
@@ -130,34 +130,34 @@ namespace OpenAI.Internal.Models
                 case "MFD":
                     return SerializeMultipart(options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateFileRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(UploadFileOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateFileRequest IPersistableModel<CreateFileRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        UploadFileOptions IPersistableModel<UploadFileOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateFileRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<UploadFileOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateFileRequest(document.RootElement, options);
+                        return DeserializeUploadFileOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateFileRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(UploadFileOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateFileRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "MFD";
+        string IPersistableModel<UploadFileOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "MFD";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateFileRequest FromResponse(PipelineResponse response)
+        internal static UploadFileOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateFileRequest(document.RootElement);
+            return DeserializeUploadFileOptions(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

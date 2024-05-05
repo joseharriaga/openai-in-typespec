@@ -28,6 +28,7 @@ namespace OpenAI;
 [CodeGenSuppress("GetChatClient")]
 [CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
+[CodeGenSuppress("GetFileClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
 // [CodeGenSuppress("GetMessagesClient")]
@@ -37,6 +38,12 @@ namespace OpenAI;
 // [CodeGenSuppress("GetThreadsClient")]
 public partial class OpenAIClient
 {
+    private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
+    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v1";
+    private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
+    private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
+    private const string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
+
     private readonly OpenAIClientOptions _options;
 
     /// <summary>
@@ -193,15 +200,15 @@ public partial class OpenAIClient
             perCallPolicies: [],
             perTryPolicies:
             [
-                ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, "Authorization", "Bearer"),
-                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set(s_OpenAIBetaFeatureHeader, s_OpenAIBetaAssistantsV1HeaderValue)),
+                ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, AuthorizationHeader, AuthorizationApiKeyPrefix),
+                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set(OpenAIBetaFeatureHeader, OpenAIBetaAssistantsV1HeaderValue)),
             ],
             beforeTransportPolicies: []);
     }
 
     internal static Uri GetEndpoint(OpenAIClientOptions options)
     {
-        return options?.Endpoint ?? new(Environment.GetEnvironmentVariable(s_OpenAIEndpointEnvironmentVariable) ?? s_defaultOpenAIV1Endpoint);
+        return options?.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIEndpointEnvironmentVariable) ?? s_defaultOpenAIV1Endpoint);
     }
 
     internal static ApiKeyCredential GetApiKey(ApiKeyCredential explicitCredential = null, bool requireExplicitCredential = false)
@@ -216,24 +223,15 @@ public partial class OpenAIClient
         }
         else
         {
-            string environmentApiKey = Environment.GetEnvironmentVariable(s_OpenAIApiKeyEnvironmentVariable);
+            string environmentApiKey = Environment.GetEnvironmentVariable(OpenAIApiKeyEnvironmentVariable);
             if (string.IsNullOrEmpty(environmentApiKey))
             {
                 throw new InvalidOperationException(
-                    $"No environment variable value was found for {s_OpenAIApiKeyEnvironmentVariable}. "
+                    $"No environment variable value was found for {OpenAIApiKeyEnvironmentVariable}. "
                     + "Please either populate this environment variable or provide authentication information directly "
                     + "to the client constructor.");
             }
             return new(environmentApiKey);
         }
     }
-
-    private static readonly string s_OpenAIBetaFeatureHeader = "OpenAI-Beta";
-    private static readonly string s_OpenAIBetaAssistantsV1HeaderValue = "assistants=v1";
-    private static readonly string s_OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
-    private static readonly string s_OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
-    private static readonly string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
-    private static PipelineMessageClassifier s_pipelineMessageClassifier200;
-    internal static PipelineMessageClassifier PipelineMessageClassifier200
-        => s_pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }

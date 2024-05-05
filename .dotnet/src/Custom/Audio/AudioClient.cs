@@ -180,8 +180,9 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
     /// <param name="options"> Options for the transcription. </param>
-    /// <returns> Audio transcription data for the provided file. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Audio transcription data for the provided file. </returns>
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
@@ -199,8 +200,9 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
     /// <param name="options"> Options for the transcription. </param>
-    /// <returns> Audio transcription data for the provided file. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Audio transcription data for the provided file. </returns>
     public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
@@ -260,11 +262,12 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to translate. </param>
     /// <param name="options"> Options for the translation. </param>
-    /// <returns> Audio translation data for the provided file. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Audio translation data for the provided file. </returns>
     public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null)
     {
-        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+        Argument.AssertNotNullOrEmpty(audioFilePath, nameof(audioFilePath));
 
         using FileStream audioStream = File.OpenRead(audioFilePath);
         return TranslateAudio(audioStream, audioFilePath, options);
@@ -279,8 +282,9 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to translate. </param>
     /// <param name="options"> Options for the translation. </param>
-    /// <returns> Audio translation data for the provided file. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Audio translation data for the provided file. </returns>
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));

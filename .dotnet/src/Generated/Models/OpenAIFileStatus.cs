@@ -5,10 +5,10 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
-    /// <summary> Enum for status in OpenAIFile. </summary>
-    internal readonly partial struct OpenAIFileStatus : IEquatable<OpenAIFileStatus>
+    /// <summary> Enum for status in OpenAIFileInfo. </summary>
+    public readonly partial struct OpenAIFileStatus : IEquatable<OpenAIFileStatus>
     {
         private readonly string _value;
 

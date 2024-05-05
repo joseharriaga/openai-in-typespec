@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 
-namespace OpenAI.Tests;
+namespace OpenAI.Tests.Miscellaneous;
 
 public partial class GitHubTests
 {

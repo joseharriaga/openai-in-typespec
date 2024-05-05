@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Models
 {
     /// <summary> The Model_object. </summary>
     internal readonly partial struct ModelObject : IEquatable<ModelObject>

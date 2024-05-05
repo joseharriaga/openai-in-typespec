@@ -74,21 +74,8 @@ internal static partial class ClientPipelineExtensions
     {
         try
         {
-            using JsonDocument errorDocument = JsonDocument.Parse(response.Content);
-            Internal.Models.Error error
-                = Internal.Models.ErrorResponse
-                    .DeserializeErrorResponse(errorDocument.RootElement)
-                    .Error;
-
-            StringBuilder messageBuilder = new();
-            messageBuilder.AppendLine($"HTTP {response.Status} ({error.Type}: {error.Code})");
-            if (!string.IsNullOrEmpty(error.Param))
-            {
-                messageBuilder.AppendLine($"Parameter: {error.Param}");
-            }
-            messageBuilder.AppendLine();
-            messageBuilder.Append(error.Message);
-            return messageBuilder.ToString();
+            Internal.OpenAIError openAIError = Internal.OpenAIError.FromResponse(response);
+            return openAIError.ToExceptionMessage(response.Status);
         }
         catch (Exception)
         {

@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal
 {
     /// <summary> The Error. </summary>
-    internal partial class Error
+    internal partial class OpenAIError
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,13 +42,13 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="Error"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="OpenAIError"/>. </summary>
         /// <param name="type"></param>
         /// <param name="message"></param>
         /// <param name="param"></param>
         /// <param name="code"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="type"/> or <paramref name="message"/> is null. </exception>
-        internal Error(string type, string message, string param, string code)
+        internal OpenAIError(string type, string message, string param, string code)
         {
             Argument.AssertNotNull(type, nameof(type));
             Argument.AssertNotNull(message, nameof(message));
@@ -59,13 +59,13 @@ namespace OpenAI.Internal.Models
             Code = code;
         }
 
-        /// <summary> Initializes a new instance of <see cref="Error"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="OpenAIError"/>. </summary>
         /// <param name="type"></param>
         /// <param name="message"></param>
         /// <param name="param"></param>
         /// <param name="code"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal Error(string type, string message, string param, string code, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal OpenAIError(string type, string message, string param, string code, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             Message = message;
@@ -74,8 +74,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="Error"/> for deserialization. </summary>
-        internal Error()
+        /// <summary> Initializes a new instance of <see cref="OpenAIError"/> for deserialization. </summary>
+        internal OpenAIError()
         {
         }
 

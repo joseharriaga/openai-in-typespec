@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal
 {
     /// <summary> The ErrorResponse. </summary>
-    internal partial class ErrorResponse
+    internal partial class OpenAIErrorResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,31 +42,31 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ErrorResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="OpenAIErrorResponse"/>. </summary>
         /// <param name="error"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="error"/> is null. </exception>
-        internal ErrorResponse(Error error)
+        internal OpenAIErrorResponse(OpenAIError error)
         {
             Argument.AssertNotNull(error, nameof(error));
 
             Error = error;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ErrorResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="OpenAIErrorResponse"/>. </summary>
         /// <param name="error"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ErrorResponse(Error error, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal OpenAIErrorResponse(OpenAIError error, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Error = error;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ErrorResponse"/> for deserialization. </summary>
-        internal ErrorResponse()
+        /// <summary> Initializes a new instance of <see cref="OpenAIErrorResponse"/> for deserialization. </summary>
+        internal OpenAIErrorResponse()
         {
         }
 
         /// <summary> Gets the error. </summary>
-        public Error Error { get; }
+        public OpenAIError Error { get; }
     }
 }

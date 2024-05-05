@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Internal.Models
 {
-    internal partial class CreateAssistantRequestToolResourcesFileSearchVectorStore : IJsonModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>
+    internal partial class CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore : IJsonModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>
     {
-        void IJsonModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesFileSearchVectorStore)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -60,19 +60,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateAssistantRequestToolResourcesFileSearchVectorStore IJsonModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore IJsonModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesFileSearchVectorStore)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStore(document.RootElement, options);
+            return DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(document.RootElement, options);
         }
 
-        internal static CreateAssistantRequestToolResourcesFileSearchVectorStore DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStore(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -120,46 +120,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateAssistantRequestToolResourcesFileSearchVectorStore(fileIds ?? new ChangeTrackingList<string>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(fileIds ?? new ChangeTrackingList<string>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesFileSearchVectorStore)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateAssistantRequestToolResourcesFileSearchVectorStore IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>.Create(BinaryData data, ModelReaderWriterOptions options)
+        CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStore(document.RootElement, options);
+                        return DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesFileSearchVectorStore)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStore>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateAssistantRequestToolResourcesFileSearchVectorStore FromResponse(PipelineResponse response)
+        internal static CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStore(document.RootElement);
+            return DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

@@ -5,36 +5,36 @@ namespace OpenAI;
 // This customization allows us to concretely specify that the file_search object must provide
 // either ID references --or-- in-line creation helpers, but not both.
 
-alias CreateThreadRequestToolResourcesFileSearch = CreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences | CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers;
+alias CreateAssistantRequestToolResourcesFileSearch = CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences | CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers;
 
-model CreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences {
-  ...CreateThreadRequestToolResourcesFileSearchBase;
+model CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences {
+  ...CreateAssistantRequestToolResourcesFileSearchBase;
 
   /**
-   * The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-   * There can be a maximum of 1 vector store attached to the thread.
+   * The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
+   * There can be a maximum of 1 vector store attached to the assistant.
    */
   @maxItems(1)
   vector_store_ids?: string[];
 }
 
-model CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers {
-  ...CreateThreadRequestToolResourcesFileSearchBase;
+model CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers {
+  ...CreateAssistantRequestToolResourcesFileSearchBase;
 
   /**
    * A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
-   * file_ids and attach it to this thread. There can be a maximum of 1 vector store attached
-   * to the thread.
+   * file_ids and attach it to this assistant. There can be a maximum of 1 vector store
+   * attached to the assistant.
    */
   @maxItems(1)
-  vector_stores?: CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelper[];
+  vector_stores?: CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelper[];
 }
 
-model CreateThreadRequestToolResourcesFileSearchBase {
+model CreateAssistantRequestToolResourcesFileSearchBase {
   // Common fields (currently none)
 }
 
-alias CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelper = {
+alias CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelper = {
   /**
    * A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
    * a maximum of 10000 files in a vector store.

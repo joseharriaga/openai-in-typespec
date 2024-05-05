@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The CreateAssistantRequestToolResourcesFileSearch. </summary>
-    internal partial class CreateAssistantRequestToolResourcesFileSearch
+    /// <summary> The CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers. </summary>
+    internal partial class CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,41 +42,30 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResourcesFileSearch"/>. </summary>
-        public CreateAssistantRequestToolResourcesFileSearch()
+        /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers"/>. </summary>
+        public CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers()
         {
-            VectorStoreIds = new ChangeTrackingList<string>();
-            VectorStores = new ChangeTrackingList<CreateAssistantRequestToolResourcesFileSearchVectorStore>();
+            VectorStores = new ChangeTrackingList<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResourcesFileSearch"/>. </summary>
-        /// <param name="vectorStoreIds">
-        /// The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
-        /// There can be a maximum of 1 vector store attached to the assistant.
-        /// </param>
+        /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers"/>. </summary>
         /// <param name="vectorStores">
         /// A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
         /// file_ids and attach it to this assistant. There can be a maximum of 1 vector store
         /// attached to the assistant.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateAssistantRequestToolResourcesFileSearch(IList<string> vectorStoreIds, IList<CreateAssistantRequestToolResourcesFileSearchVectorStore> vectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers(IList<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> vectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            VectorStoreIds = vectorStoreIds;
             VectorStores = vectorStores;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary>
-        /// The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
-        /// There can be a maximum of 1 vector store attached to the assistant.
-        /// </summary>
-        public IList<string> VectorStoreIds { get; }
-        /// <summary>
         /// A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
         /// file_ids and attach it to this assistant. There can be a maximum of 1 vector store
         /// attached to the assistant.
         /// </summary>
-        public IList<CreateAssistantRequestToolResourcesFileSearchVectorStore> VectorStores { get; }
+        public IList<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> VectorStores { get; }
     }
 }

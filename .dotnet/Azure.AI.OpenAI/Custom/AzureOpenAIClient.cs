@@ -195,7 +195,7 @@ public partial class AzureOpenAIClient : OpenAIClient
             + "use the Azure AI Services Account Management API to interact with Azure OpenAI model deployments.");
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override ModerationClient GetModerationClient()
+    public override ModerationClient GetModerationClient(string _)
         => throw new NotSupportedException($"Azure OpenAI does not support the OpenAI moderations API. Please refer "
             + "to the documentation on Microsoft's Responsible AI embedded content filters to learn more about Azure "
             + "OpenAI's content filter policies and content filter annotations.");

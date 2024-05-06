@@ -12,7 +12,7 @@ namespace Azure.AI.OpenAI.Files;
 internal partial class AzureFileClient : FileClient
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override ClientResult Delete(string fileId, RequestOptions options)
+    public override ClientResult DeleteFile(string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -21,7 +21,7 @@ internal partial class AzureFileClient : FileClient
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override async Task<ClientResult> DeleteAsync(string fileId, RequestOptions options)
+    public override async Task<ClientResult> DeleteFileAsync(string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -30,7 +30,7 @@ internal partial class AzureFileClient : FileClient
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override ClientResult DownloadContent(string fileId, RequestOptions options)
+    public override ClientResult DownloadFile(string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -39,7 +39,7 @@ internal partial class AzureFileClient : FileClient
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override async Task<ClientResult> DownloadContentAsync(string fileId, RequestOptions options)
+    public override async Task<ClientResult> DownloadFileAsync(string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -84,7 +84,7 @@ internal partial class AzureFileClient : FileClient
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override ClientResult Upload(BinaryContent content, string contentType, RequestOptions options = null)
+    public override ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -94,7 +94,7 @@ internal partial class AzureFileClient : FileClient
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override async Task<ClientResult> UploadAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    public override async Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));

@@ -5,12 +5,14 @@ using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Images;
+using OpenAI.Internal.Models;
 using OpenAI.Models;
 using OpenAI.Moderations;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 namespace OpenAI;
 

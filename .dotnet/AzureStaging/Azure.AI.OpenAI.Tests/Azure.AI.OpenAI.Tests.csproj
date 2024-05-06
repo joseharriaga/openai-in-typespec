@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\OpenAI.csproj" />
     <ProjectReference Include="..\Azure.AI.OpenAI\Azure.AI.OpenAI.csproj" />
-    <ProjectReference Include="..\src\OpenAI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

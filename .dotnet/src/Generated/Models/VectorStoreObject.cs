@@ -55,13 +55,12 @@ namespace OpenAI.Internal.Models
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="fileCounts"/> or <paramref name="status"/> is null. </exception>
-        internal VectorStoreObject(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreObjectFileCounts fileCounts, string status, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/> or <paramref name="fileCounts"/> is null. </exception>
+        internal VectorStoreObject(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreObjectFileCounts fileCounts, VectorStoreObjectStatus status, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(fileCounts, nameof(fileCounts));
-            Argument.AssertNotNull(status, nameof(status));
 
             Id = id;
             CreatedAt = createdAt;
@@ -90,7 +89,7 @@ namespace OpenAI.Internal.Models
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreObject(string id, string @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreObjectFileCounts fileCounts, string status, VectorStoreExpirationAfter expiresAfter, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreObject(string id, VectorStoreObjectObject @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreObjectFileCounts fileCounts, VectorStoreObjectStatus status, VectorStoreExpirationAfter expiresAfter, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -114,7 +113,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
         /// <summary> The object type, which is always `vector_store`. </summary>
-        public string Object { get; } = "vector_store";
+        public VectorStoreObjectObject Object { get; } = VectorStoreObjectObject.VectorStore;
 
         /// <summary> The Unix timestamp (in seconds) for when the vector store was created. </summary>
         public DateTimeOffset CreatedAt { get; }
@@ -125,7 +124,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Gets the file counts. </summary>
         public VectorStoreObjectFileCounts FileCounts { get; }
         /// <summary> The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. </summary>
-        public string Status { get; }
+        public VectorStoreObjectStatus Status { get; }
         /// <summary> Gets the expires after. </summary>
         public VectorStoreExpirationAfter ExpiresAfter { get; }
         /// <summary> The Unix timestamp (in seconds) for when the vector store will expire. </summary>

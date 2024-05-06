@@ -46,7 +46,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateVectorStoreFileBatchRequest"/>. </summary>
         /// <param name="fileIds"> A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileIds"/> is null. </exception>
-        internal CreateVectorStoreFileBatchRequest(IEnumerable<string> fileIds)
+        public CreateVectorStoreFileBatchRequest(IEnumerable<string> fileIds)
         {
             Argument.AssertNotNull(fileIds, nameof(fileIds));
 
@@ -56,7 +56,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateVectorStoreFileBatchRequest"/>. </summary>
         /// <param name="fileIds"> A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateVectorStoreFileBatchRequest(IReadOnlyList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateVectorStoreFileBatchRequest(IList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileIds = fileIds;
             _serializedAdditionalRawData = serializedAdditionalRawData;
@@ -68,6 +68,6 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. </summary>
-        public IReadOnlyList<string> FileIds { get; }
+        public IList<string> FileIds { get; }
     }
 }

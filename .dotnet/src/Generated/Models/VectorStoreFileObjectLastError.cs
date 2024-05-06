@@ -45,10 +45,9 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="VectorStoreFileObjectLastError"/>. </summary>
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="code"/> or <paramref name="message"/> is null. </exception>
-        internal VectorStoreFileObjectLastError(string code, string message)
+        /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
+        internal VectorStoreFileObjectLastError(VectorStoreFileObjectLastErrorCode code, string message)
         {
-            Argument.AssertNotNull(code, nameof(code));
             Argument.AssertNotNull(message, nameof(message));
 
             Code = code;
@@ -59,7 +58,7 @@ namespace OpenAI.Internal.Models
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreFileObjectLastError(string code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreFileObjectLastError(VectorStoreFileObjectLastErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             Message = message;
@@ -72,7 +71,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> One of `server_error` or `rate_limit_exceeded`. </summary>
-        public string Code { get; }
+        public VectorStoreFileObjectLastErrorCode Code { get; }
         /// <summary> A human-readable description of the error. </summary>
         public string Message { get; }
     }

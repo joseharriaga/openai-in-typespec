@@ -24,7 +24,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object);
+            writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("name"u8);
@@ -34,7 +34,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("file_counts"u8);
             writer.WriteObjectValue(FileCounts, options);
             writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status);
+            writer.WriteStringValue(Status.ToString());
             if (Optional.IsDefined(ExpiresAfter))
             {
                 if (ExpiresAfter != null)
@@ -122,12 +122,12 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string id = default;
-            string @object = default;
+            VectorStoreObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string name = default;
             int usageBytes = default;
             VectorStoreObjectFileCounts fileCounts = default;
-            string status = default;
+            VectorStoreObjectStatus status = default;
             VectorStoreExpirationAfter expiresAfter = default;
             DateTimeOffset? expiresAt = default;
             DateTimeOffset? lastActiveAt = default;
@@ -143,7 +143,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetString();
+                    @object = new VectorStoreObjectObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("created_at"u8))
@@ -168,7 +168,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    status = property.Value.GetString();
+                    status = new VectorStoreObjectStatus(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("expires_after"u8))

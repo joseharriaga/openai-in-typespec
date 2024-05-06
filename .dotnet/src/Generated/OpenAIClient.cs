@@ -40,6 +40,7 @@ namespace OpenAI
         private OpenAI.Internal.Messages _cachedMessages;
         private OpenAI.Internal.Runs _cachedRuns;
         private OpenAI.Internal.Threads _cachedThreads;
+        private OpenAI.Internal.VectorStores _cachedVectorStores;
 
         /// <summary> Initializes a new instance of Assistants. </summary>
         internal OpenAI.Internal.Assistants GetAssistantsClient()
@@ -63,6 +64,12 @@ namespace OpenAI
         internal OpenAI.Internal.Threads GetThreadsClient()
         {
             return Volatile.Read(ref _cachedThreads) ?? Interlocked.CompareExchange(ref _cachedThreads, new OpenAI.Internal.Threads(_pipeline, _keyCredential, _endpoint), null) ?? _cachedThreads;
+        }
+
+        /// <summary> Initializes a new instance of VectorStores. </summary>
+        internal OpenAI.Internal.VectorStores GetVectorStoresClient()
+        {
+            return Volatile.Read(ref _cachedVectorStores) ?? Interlocked.CompareExchange(ref _cachedVectorStores, new OpenAI.Internal.VectorStores(_pipeline, _keyCredential, _endpoint), null) ?? _cachedVectorStores;
         }
     }
 }

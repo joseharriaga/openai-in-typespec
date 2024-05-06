@@ -43,7 +43,7 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="UpdateVectorStoreRequest"/>. </summary>
-        internal UpdateVectorStoreRequest()
+        public UpdateVectorStoreRequest()
         {
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
@@ -57,7 +57,7 @@ namespace OpenAI.Internal.Models
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal UpdateVectorStoreRequest(string name, VectorStoreExpirationAfter expiresAfter, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal UpdateVectorStoreRequest(string name, VectorStoreExpirationAfter expiresAfter, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Name = name;
             ExpiresAfter = expiresAfter;
@@ -66,14 +66,14 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> The name of the vector store. </summary>
-        public string Name { get; }
-        /// <summary> Gets the expires after. </summary>
-        public VectorStoreExpirationAfter ExpiresAfter { get; }
+        public string Name { get; set; }
+        /// <summary> Gets or sets the expires after. </summary>
+        public VectorStoreExpirationAfter ExpiresAfter { get; set; }
         /// <summary>
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </summary>
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; set; }
     }
 }

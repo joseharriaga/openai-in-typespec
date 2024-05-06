@@ -84,4 +84,17 @@ interface Messages {
 
     @body message: ModifyMessageRequest,
   ): MessageObject | ErrorResponse;
+
+  @route("{message_id}")
+  @delete
+  @operationId("deleteMessage")
+  @tag("Assistants")
+  @summary("Deletes a message.")
+  deleteMessage(
+    /** The ID of the thread to which this message belongs. */
+    @path thread_id: string,
+
+    /** The ID of the message to delete. */
+    @path message_id: string,
+  ): DeleteMessageResponse | ErrorResponse;
 }

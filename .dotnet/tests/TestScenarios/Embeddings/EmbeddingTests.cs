@@ -41,20 +41,20 @@ public partial class EmbeddingTests
             Dimensions = Dimensions,
         };
 
-        EmbeddingCollection collection = await client.GenerateEmbeddingsAsync(prompts, options);
-        Assert.IsNotNull(collection);
-        Assert.AreEqual(3, collection.Count);
-        Assert.AreEqual("text-embedding-3-small", collection.Model);
-        Assert.Greater(collection.Usage.InputTokens, 0);
-        Assert.Greater(collection.Usage.TotalTokens, 0);
+        EmbeddingCollection embeddings = await client.GenerateEmbeddingsAsync(prompts, options);
+        Assert.IsNotNull(embeddings);
+        Assert.AreEqual(3, embeddings.Count);
+        Assert.AreEqual("text-embedding-3-small", embeddings.Model);
+        Assert.Greater(embeddings.Usage.InputTokens, 0);
+        Assert.Greater(embeddings.Usage.TotalTokens, 0);
 
-        for (int i = 0; i < collection.Count; i++)
+        for (int i = 0; i < embeddings.Count; i++)
         {
-            Assert.AreEqual(i, collection[i].Index);
-            Assert.NotNull(collection[i].Vector);
-            Assert.AreEqual(Dimensions, collection[i].Vector.Span.Length);
+            Assert.AreEqual(i, embeddings[i].Index);
+            Assert.NotNull(embeddings[i].Vector);
+            Assert.AreEqual(Dimensions, embeddings[i].Vector.Span.Length);
 
-            float[] array = collection[i].Vector.ToArray();
+            float[] array = embeddings[i].Vector.ToArray();
             Assert.AreEqual(Dimensions, array.Length);
         }
     }

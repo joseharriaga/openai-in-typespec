@@ -23,19 +23,19 @@ namespace OpenAI;
 [CodeGenModel("OpenAIClient")]
 [CodeGenSuppress("OpenAIClient", typeof(ApiKeyCredential))]
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
-[CodeGenSuppress("GetAudioClientClient")]
 // [CodeGenSuppress("GetAssistantsClient")]
+// [CodeGenSuppress("GetMessagesClient")]
+// [CodeGenSuppress("GetRunsClient")]
+// [CodeGenSuppress("GetThreadsClient")]
+[CodeGenSuppress("GetAudioClientClient")]
 [CodeGenSuppress("GetChatClient")]
 [CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
 [CodeGenSuppress("GetFileClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
-// [CodeGenSuppress("GetMessagesClient")]
 [CodeGenSuppress("GetModelClientClient")]
-// [CodeGenSuppress("GetModerationsClient")]
-// [CodeGenSuppress("GetRunsClient")]
-// [CodeGenSuppress("GetThreadsClient")]
+[CodeGenSuppress("GetModerationClientClient")]
 public partial class OpenAIClient
 {
     private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
@@ -191,7 +191,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ModerationClient"/>. </returns>
-    public virtual ModerationClient GetModerationClient() => new(_pipeline, _endpoint, _options);
+    public virtual ModerationClient GetModerationClient(string model) => new(_pipeline, model, _endpoint, _options);
 
     internal static ClientPipeline CreatePipeline(ApiKeyCredential credential, OpenAIClientOptions options = null)
     {

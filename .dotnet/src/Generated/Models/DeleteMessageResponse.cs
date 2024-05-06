@@ -59,7 +59,7 @@ namespace OpenAI.Internal.Models
         /// <param name="deleted"></param>
         /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal DeleteMessageResponse(string id, bool deleted, string @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal DeleteMessageResponse(string id, bool deleted, DeleteMessageResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -77,6 +77,6 @@ namespace OpenAI.Internal.Models
         /// <summary> Gets the deleted. </summary>
         public bool Deleted { get; }
         /// <summary> Gets the object. </summary>
-        public string Object { get; } = "thread.message.deleted";
+        public DeleteMessageResponseObject Object { get; } = DeleteMessageResponseObject.ThreadMessageDeleted;
     }
 }

@@ -62,7 +62,7 @@ namespace OpenAI.FineTuning
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ListFineTuningJobCheckpointsResponse(IReadOnlyList<FineTuningJobCheckpoint> data, string @object, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ListFineTuningJobCheckpointsResponse(IReadOnlyList<FineTuningJobCheckpoint> data, ListFineTuningJobCheckpointsResponseObject @object, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Data = data;
             Object = @object;
@@ -80,7 +80,7 @@ namespace OpenAI.FineTuning
         /// <summary> Gets the data. </summary>
         public IReadOnlyList<FineTuningJobCheckpoint> Data { get; }
         /// <summary> Gets the object. </summary>
-        public string Object { get; } = "list";
+        public ListFineTuningJobCheckpointsResponseObject Object { get; } = ListFineTuningJobCheckpointsResponseObject.List;
 
         /// <summary> Gets the first id. </summary>
         public string FirstId { get; }

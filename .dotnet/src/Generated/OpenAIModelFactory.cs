@@ -869,6 +869,16 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.DeleteMessageResponse"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="deleted"></param>
+        /// <param name="object"></param>
+        /// <returns> A new <see cref="Models.DeleteMessageResponse"/> instance for mocking. </returns>
+        public static DeleteMessageResponse DeleteMessageResponse(string id = null, bool deleted = default, DeleteMessageResponseObject @object = default)
+        {
+            return new DeleteMessageResponse(id, deleted, @object, serializedAdditionalRawData: null);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCollection"/>. </summary>
         /// <param name="id"> The unique identifier for the moderation request. </param>
         /// <param name="model"> The model used to generate the moderation results. </param>
@@ -1720,16 +1730,6 @@ namespace OpenAI
             content ??= new List<ChatCompletionTokenLogprob>();
 
             return new CreateChatCompletionStreamResponseChoiceLogprobs(content?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteMessageResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.DeleteMessageResponse"/> instance for mocking. </returns>
-        public static DeleteMessageResponse DeleteMessageResponse(string id = null, bool deleted = default, string @object = null)
-        {
-            return new DeleteMessageResponse(id, deleted, @object, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentImageFileObject"/>. </summary>

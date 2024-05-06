@@ -650,6 +650,42 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/FineTuningJob'
                   - $ref: '#/components/schemas/ErrorResponse'
+  /fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
+    get:
+      tags:
+        - Fine-tuning
+      operationId: listFineTuningJobCheckpoints
+      summary: List the checkpoints for a fine-tuning job.
+      parameters:
+        - name: fine_tuning_job_id
+          in: path
+          required: true
+          description: The ID of the fine-tuning job to get checkpoints for.
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          description: Identifier for the last checkpoint ID from the previous pagination request.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Number of checkpoints to retrieve.
+          schema:
+            type: integer
+            format: int32
+            default: 10
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ListFineTuningJobCheckpointsResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /fine_tuning/jobs/{fine_tuning_job_id}/events:
     get:
       tags:
@@ -1098,6 +1134,33 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ModifyMessageRequest'
+    delete:
+      tags:
+        - Assistants
+      operationId: deleteMessage
+      summary: Deletes a message.
+      parameters:
+        - name: thread_id
+          in: path
+          required: true
+          description: The ID of the thread to which this message belongs.
+          schema:
+            type: string
+        - name: message_id
+          in: path
+          required: true
+          description: The ID of the message to delete.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/DeleteMessageResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
   /threads/{thread_id}/runs:
     post:
       tags:

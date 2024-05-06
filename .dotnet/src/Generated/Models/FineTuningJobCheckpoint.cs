@@ -74,7 +74,7 @@ namespace OpenAI.FineTuning
         /// <param name="fineTuningJobId"> The name of the fine-tuning job that this checkpoint was created from. </param>
         /// <param name="object"> The object type, which is always "fine_tuning.job.checkpoint". </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal FineTuningJobCheckpoint(string id, DateTimeOffset createdAt, string fineTunedModelCheckpoint, int stepNumber, FineTuningJobCheckpointMetrics metrics, string fineTuningJobId, string @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FineTuningJobCheckpoint(string id, DateTimeOffset createdAt, string fineTunedModelCheckpoint, int stepNumber, FineTuningJobCheckpointMetrics metrics, string fineTuningJobId, FineTuningJobCheckpointObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -104,6 +104,6 @@ namespace OpenAI.FineTuning
         /// <summary> The name of the fine-tuning job that this checkpoint was created from. </summary>
         public string FineTuningJobId { get; }
         /// <summary> The object type, which is always "fine_tuning.job.checkpoint". </summary>
-        public string Object { get; } = "fine_tuning.job.checkpoint";
+        public FineTuningJobCheckpointObject Object { get; } = FineTuningJobCheckpointObject.FineTuningJobCheckpoint;
     }
 }

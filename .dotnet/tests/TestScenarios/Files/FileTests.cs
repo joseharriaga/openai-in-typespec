@@ -40,7 +40,7 @@ public partial class FileTests
         Assert.AreEqual(uploadedFile.Id, fileInfo.Id);
         Assert.AreEqual(uploadedFile.Filename, fileInfo.Filename);
 
-        DeleteFileResponse deleteResponse = await client.DeleteAsync(uploadedFile.Id);
+        DeleteFileResponse deleteResponse = await client.DeleteFileAsync(uploadedFile.Id);
         Assert.AreEqual(uploadedFile.Id, deleteResponse.Id);
         Assert.IsTrue(deleteResponse.Deleted);
     }
@@ -53,7 +53,7 @@ public partial class FileTests
         OpenAIFileInfo fileInfo = await client.GetFileAsync("file-S7roYWamZqfMK9D979HU4q6m");
         Assert.NotNull(fileInfo);
 
-        BinaryData downloadedContent = await client.DownloadContentAsync("file-S7roYWamZqfMK9D979HU4q6m");
+        BinaryData downloadedContent = await client.DownloadFileAsync("file-S7roYWamZqfMK9D979HU4q6m");
         Assert.That(downloadedContent, Is.Not.Null);
     }
 

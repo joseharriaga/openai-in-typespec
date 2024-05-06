@@ -125,7 +125,7 @@ namespace OpenAI.Samples
                     else if (contentItem is MessageImageFileContent imageFileContent)
                     {
                         OpenAIFileInfo imageInfo = await fileClient.GetFileAsync(imageFileContent.FileId);
-                        BinaryData imageBytes = await fileClient.DownloadContentAsync(imageFileContent.FileId);
+                        BinaryData imageBytes = await fileClient.DownloadFileAsync(imageFileContent.FileId);
                         using FileStream stream = File.OpenWrite($"{imageInfo.Filename}.png");
                         await imageBytes.ToStream().CopyToAsync(stream);
 

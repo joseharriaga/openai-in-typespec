@@ -88,7 +88,7 @@ public partial class FileClient
         };
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
-        ClientResult result = await UploadAsync(content, content.ContentType).ConfigureAwait(false);
+        ClientResult result = await UploadFileAsync(content, content.ContentType).ConfigureAwait(false);
         return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -117,7 +117,7 @@ public partial class FileClient
         };
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
-        ClientResult result = Upload(content, content.ContentType);
+        ClientResult result = UploadFile(content, content.ContentType);
         return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -170,11 +170,11 @@ public partial class FileClient
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <remarks> Delete file. </remarks>
-    public virtual async Task<ClientResult<DeleteFileResponse>> DeleteAsync(string fileId)
+    public virtual async Task<ClientResult<DeleteFileResponse>> DeleteFileAsync(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-        ClientResult result = await DeleteAsync(fileId, null).ConfigureAwait(false);
+        ClientResult result = await DeleteFileAsync(fileId, null).ConfigureAwait(false);
         return ClientResult.FromValue(DeleteFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -183,11 +183,11 @@ public partial class FileClient
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <remarks> Delete file. </remarks>
-    public virtual ClientResult<DeleteFileResponse> Delete(string fileId)
+    public virtual ClientResult<DeleteFileResponse> DeleteFile(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-        ClientResult result = Delete(fileId, null);
+        ClientResult result = DeleteFile(fileId, null);
         return ClientResult.FromValue(DeleteFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
@@ -196,11 +196,11 @@ public partial class FileClient
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <remarks> Download file. </remarks>
-    public virtual async Task<ClientResult<BinaryData>> DownloadContentAsync(string fileId)
+    public virtual async Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-        ClientResult result = await DownloadContentAsync(fileId, null).ConfigureAwait(false);
+        ClientResult result = await DownloadFileAsync(fileId, null).ConfigureAwait(false);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
@@ -209,11 +209,11 @@ public partial class FileClient
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <remarks> Download file. </remarks>
-    public virtual ClientResult<BinaryData> DownloadContent(string fileId)
+    public virtual ClientResult<BinaryData> DownloadFile(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
-        ClientResult result = DownloadContent(fileId, null);
+        ClientResult result = DownloadFile(fileId, null);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 }

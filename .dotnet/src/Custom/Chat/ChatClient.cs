@@ -252,9 +252,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, null, bufferResponse: false);
-        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, null);
-        ClientResult protocolResult = ClientResult.FromResponse(response);
+        ClientResult protocolResult = CompleteChatStreaming(content, (RequestOptions)null);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
             protocolResult,
             (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
@@ -285,9 +283,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, null, bufferResponse: false);
-        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, null);
-        ClientResult protocolResult = ClientResult.FromResponse(response);
+        ClientResult protocolResult = await CompleteChatStreamingAsync(content, (RequestOptions)null).ConfigureAwait(false);
         return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
             protocolResult,
             (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(

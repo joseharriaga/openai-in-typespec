@@ -31,9 +31,10 @@ public partial class ChatClient
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult CompleteChatStreaming(BinaryContent content, RequestOptions options = null)
     {
-            using PipelineMessage message = CreateChatCompletionPipelineMessage(content, options);
-            message.BufferResponse = false;
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        using PipelineMessage message = CreateChatCompletionPipelineMessage(content, options);
+        message.BufferResponse = false;
+        _ = Pipeline.ProcessMessage(message, options);
+        return ClientResult.FromResponse(message.ExtractResponse());
     }
 
     /// <inheritdoc cref="Internal.Chat.CreateChatCompletionAsync(BinaryContent, RequestOptions)"/>
@@ -42,7 +43,7 @@ public partial class ChatClient
     {
         using PipelineMessage message = CreateChatCompletionPipelineMessage(content, options);
         message.BufferResponse = false;
-        PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
-        return ClientResult.FromResponse(response);
+        _ = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
+        return ClientResult.FromResponse(message.ExtractResponse());
     }
 }

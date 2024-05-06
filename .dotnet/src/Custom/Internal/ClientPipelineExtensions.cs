@@ -1,6 +1,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -20,14 +21,9 @@ internal static partial class ClientPipelineExtensions
     {
         await pipeline.SendAsync(message).ConfigureAwait(false);
 
-        if (message.Response == null)
-        {
-            throw new InvalidOperationException("Failed to receive Result.");
-        }
-
         if (message.Response.IsError && (options?.ErrorOptions & ClientErrorBehaviors.NoThrow) != ClientErrorBehaviors.NoThrow)
         {
-            throw await TryBufferResponseAndCreateErrorAsync(message.Response).ConfigureAwait(false) switch
+            throw await TryBufferResponseAndCreateErrorAsync(message).ConfigureAwait(false) switch
             {
                 string errorMessage when !string.IsNullOrEmpty(errorMessage)
                     => new ClientResultException(errorMessage, message.Response),
@@ -47,7 +43,7 @@ internal static partial class ClientPipelineExtensions
 
         if (message.Response.IsError && (options?.ErrorOptions & ClientErrorBehaviors.NoThrow) != ClientErrorBehaviors.NoThrow)
         {
-            throw TryBufferResponseAndCreateError(message.Response) switch
+            throw TryBufferResponseAndCreateError(message) switch
             {
                 string errorMessage when !string.IsNullOrEmpty(errorMessage)
                     => new ClientResultException(errorMessage, message.Response),
@@ -58,28 +54,24 @@ internal static partial class ClientPipelineExtensions
         return message.Response;
     }
 
-    private static string TryBufferResponseAndCreateError(PipelineResponse response)
+    private static string TryBufferResponseAndCreateError(PipelineMessage message)
     {
-        response.BufferContent();
-        return TryCreateErrorMessageFromResponse(response);
+        if (message.BufferResponse)
+        {
+            message.Response.BufferContent();
+        }
+        return TryCreateErrorMessageFromResponse(message.Response);
     }
 
-    private static async Task<string> TryBufferResponseAndCreateErrorAsync(PipelineResponse response)
+    private static async Task<string> TryBufferResponseAndCreateErrorAsync(PipelineMessage message)
     {
-        await response.BufferContentAsync().ConfigureAwait(false);
-        return TryCreateErrorMessageFromResponse(response);
+        if (message.BufferResponse)
+        {
+            await message.Response.BufferContentAsync().ConfigureAwait(false);
+        }
+        return TryCreateErrorMessageFromResponse(message.Response);
     }
 
     private static string TryCreateErrorMessageFromResponse(PipelineResponse response)
-    {
-        try
-        {
-            Internal.OpenAIError openAIError = Internal.OpenAIError.FromResponse(response);
-            return openAIError.ToExceptionMessage(response.Status);
-        }
-        catch (Exception)
-        {
-            return null;
-        }
-    }
+        => Internal.OpenAIError.TryCreateFromResponse(response)?.ToExceptionMessage(response.Status);
 }

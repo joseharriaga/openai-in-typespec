@@ -12,12 +12,19 @@ namespace OpenAI.Internal;
 [CodeGenModel("Error")]
 internal partial class OpenAIError
 {
-    internal static OpenAIError FromResponse(PipelineResponse response)
+    internal static OpenAIError TryCreateFromResponse(PipelineResponse response)
     {
-        using JsonDocument errorDocument = JsonDocument.Parse(response.Content);
-        OpenAIErrorResponse errorResponse
-            = OpenAIErrorResponse.DeserializeOpenAIErrorResponse(errorDocument.RootElement);
-        return errorResponse.Error;
+        try
+        {
+            using JsonDocument errorDocument = JsonDocument.Parse(response.Content);
+            OpenAIErrorResponse errorResponse
+                = OpenAIErrorResponse.DeserializeOpenAIErrorResponse(errorDocument.RootElement);
+            return errorResponse.Error;
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 
     public string ToExceptionMessage(int httpStatus)

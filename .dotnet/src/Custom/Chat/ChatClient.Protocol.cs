@@ -26,4 +26,23 @@ public partial class ChatClient
         PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         return ClientResult.FromResponse(response);
     }
+
+    /// <inheritdoc cref="Internal.Chat.CreateChatCompletion(BinaryContent, RequestOptions)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult CompleteChatStreaming(BinaryContent content, RequestOptions options = null)
+    {
+            using PipelineMessage message = CreateChatCompletionPipelineMessage(content, options);
+            message.BufferResponse = false;
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+    }
+
+    /// <inheritdoc cref="Internal.Chat.CreateChatCompletionAsync(BinaryContent, RequestOptions)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> CompleteChatStreamingAsync(BinaryContent content, RequestOptions options = null)
+    {
+        using PipelineMessage message = CreateChatCompletionPipelineMessage(content, options);
+        message.BufferResponse = false;
+        PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
+        return ClientResult.FromResponse(response);
+    }
 }

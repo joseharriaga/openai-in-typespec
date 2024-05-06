@@ -20,3 +20,6 @@ public readonly partial struct BatchCompletionTimeframe {}
 
 [CodeGenModel("CreateBatchRequest")]
 internal readonly partial struct InternalCreateBatchRequest {}
+
+[CodeGenModel("InternalCreateBatchRequestEndpoint")]
+public readonly partial struct BatchOperationEndpoint {}

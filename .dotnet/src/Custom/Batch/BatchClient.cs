@@ -8,8 +8,8 @@ namespace OpenAI.Batch;
 
 [CodeGenClient("Batches")]
 [CodeGenSuppress("BatchClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateBatch", typeof(string), typeof(string), typeof(BatchCompletionTimeframe), typeof(IDictionary<string, string>))]
-[CodeGenSuppress("CreateBatchAsync", typeof(string), typeof(string), typeof(BatchCompletionTimeframe), typeof(IDictionary<string, string>))]
+[CodeGenSuppress("CreateBatch", typeof(string), typeof(BatchOperationEndpoint), typeof(BatchCompletionTimeframe), typeof(IDictionary<string, string>))]
+[CodeGenSuppress("CreateBatchAsync", typeof(string), typeof(BatchOperationEndpoint), typeof(BatchCompletionTimeframe), typeof(IDictionary<string, string>))]
 [CodeGenSuppress("RetrieveBatch", typeof(string))]
 [CodeGenSuppress("RetrieveBatchAsync", typeof(string))]
 [CodeGenSuppress("RetrieveBatch", typeof(string), typeof(RequestOptions))]
@@ -74,7 +74,7 @@ public partial class BatchClient
     /// <param name="metadata"> Optional custom metadata for the batch. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputFileId"/> or <paramref name="endpoint"/> is null. </exception>
     /// <remarks> Create batch. </remarks>
-    public virtual async Task<ClientResult<Batch>> CreateBatchAsync(string inputFileId, string endpoint, BatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata = null)
+    public virtual async Task<ClientResult<Batch>> CreateBatchAsync(string inputFileId, BatchOperationEndpoint endpoint, BatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata = null)
     {
         Argument.AssertNotNull(inputFileId, nameof(inputFileId));
         Argument.AssertNotNull(endpoint, nameof(endpoint));
@@ -97,7 +97,7 @@ public partial class BatchClient
     /// <param name="metadata"> Optional custom metadata for the batch. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputFileId"/> or <paramref name="endpoint"/> is null. </exception>
     /// <remarks> Create batch. </remarks>
-    public virtual ClientResult<Batch> CreateBatch(string inputFileId, string endpoint, BatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata = null)
+    public virtual ClientResult<Batch> CreateBatch(string inputFileId, BatchOperationEndpoint endpoint, BatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata = null)
     {
         Argument.AssertNotNull(inputFileId, nameof(inputFileId));
         Argument.AssertNotNull(endpoint, nameof(endpoint));

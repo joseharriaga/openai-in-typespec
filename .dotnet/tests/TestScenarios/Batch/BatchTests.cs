@@ -39,7 +39,7 @@ public partial class BatchTests
         BatchClient client = GetTestClient();
         OpenAI.Batch.Batch newBatch = await client.CreateBatchAsync(
             inputFile.Id,
-            "/v1/chat/completions",
+            BatchOperationEndpoint.V1ChatCompletions,
             BatchCompletionTimeframe._24h,
             new Dictionary<string, string>()
             {
@@ -49,7 +49,7 @@ public partial class BatchTests
         Assert.That(newBatch.Status, Is.EqualTo(BatchStatus.Validating));
         Assert.That(newBatch.Metadata["test-metadata-key"], Is.EqualTo("test metadata value"));
         newBatch = await client.GetBatchAsync(newBatch.Id);
-        Assert.That(newBatch.Endpoint, Is.EqualTo("/v1/chat/completions"));
+        Assert.That(newBatch.Endpoint, Is.EqualTo(BatchOperationEndpoint.V1ChatCompletions));
         newBatch = await client.CancelBatchAsync(newBatch.Id);
         Assert.That(newBatch.Status, Is.EqualTo(BatchStatus.Cancelling));
     }

@@ -53,11 +53,10 @@ namespace OpenAI.Batch
         /// <param name="endpoint"> The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and `/v1/embeddings` are supported. </param>
         /// <param name="completionWindow"> The time frame within which the batch should be processed. Currently only `24h` is supported. </param>
         /// <param name="metadata"> Optional custom metadata for the batch. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="inputFileId"/> or <paramref name="endpoint"/> is null. </exception>
-        public InternalCreateBatchRequest(string inputFileId, string endpoint, BatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata)
+        /// <exception cref="ArgumentNullException"> <paramref name="inputFileId"/> is null. </exception>
+        public InternalCreateBatchRequest(string inputFileId, BatchOperationEndpoint endpoint, BatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata)
         {
             Argument.AssertNotNull(inputFileId, nameof(inputFileId));
-            Argument.AssertNotNull(endpoint, nameof(endpoint));
 
             InputFileId = inputFileId;
             Endpoint = endpoint;
@@ -77,7 +76,7 @@ namespace OpenAI.Batch
         /// <param name="completionWindow"> The time frame within which the batch should be processed. Currently only `24h` is supported. </param>
         /// <param name="metadata"> Optional custom metadata for the batch. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalCreateBatchRequest(string inputFileId, string endpoint, BatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateBatchRequest(string inputFileId, BatchOperationEndpoint endpoint, BatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             InputFileId = inputFileId;
             Endpoint = endpoint;
@@ -100,7 +99,7 @@ namespace OpenAI.Batch
         /// </summary>
         public string InputFileId { get; }
         /// <summary> The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and `/v1/embeddings` are supported. </summary>
-        public string Endpoint { get; }
+        public BatchOperationEndpoint Endpoint { get; }
         /// <summary> The time frame within which the batch should be processed. Currently only `24h` is supported. </summary>
         public BatchCompletionTimeframe CompletionWindow { get; } = BatchCompletionTimeframe._24h;
 

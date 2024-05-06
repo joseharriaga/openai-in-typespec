@@ -28,7 +28,7 @@ interface Batches {
     /**
      * The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and `/v1/embeddings` are supported.
      */
-    endpoint: "/v1/chat/completions" | "/v1/embeddings"
+    endpoint: "/v1/chat/completions" | "/v1/embeddings",
 
     /**
      * The time frame within which the batch should be processed. Currently only `24h` is supported.

@@ -272,6 +272,9 @@ paths:
                     Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/requestInput), and must be uploaded with the purpose `batch`.
                 endpoint:
                   type: string
+                  enum:
+                    - /v1/chat/completions
+                    - /v1/embeddings
                   description: The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and `/v1/embeddings` are supported.
                 completion_window:
                   type: string

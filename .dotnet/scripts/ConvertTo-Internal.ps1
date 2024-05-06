@@ -223,6 +223,7 @@ function Edit-GeneratedModels {
         "BatchCompletionTimeframe.cs",
         "BatchError.cs",
         "BatchError.Serialization.cs",
+        "BatchOperationEndpoint.cs",
         "BatchStatus.cs",
         "InternalBatchErrors.cs",
         "InternalBatchErrors.Serialization.cs",

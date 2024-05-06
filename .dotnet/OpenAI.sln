@@ -6,9 +6,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAI", "src\OpenAI.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAI.Tests", "tests\OpenAI.Tests.csproj", "{1F1CD1D4-9932-4B73-99D8-C252A67D4B46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.AI.OpenAI.Staging", "Azure.AI.OpenAI.Staging\Azure.AI.OpenAI.Staging.csproj", "{832CB3CC-4039-4A66-984A-6A8A7DA695DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI", "Azure.AI.OpenAI\Azure.AI.OpenAI.csproj", "{C496D944-868E-481B-BABC-82634003289F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.AI.OpenAI.Tests.Staging", "Azure.AI.OpenAI.Tests.Staging\Azure.AI.OpenAI.Tests.Staging.csproj", "{B87E6190-6926-4618-8629-B3720E670C78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI.Tests", "Azure.AI.OpenAI.Tests\Azure.AI.OpenAI.Tests.csproj", "{F9B7E9F9-33F4-4E26-A367-B27CEE0EC247}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,14 +24,14 @@ Global
 		{1F1CD1D4-9932-4B73-99D8-C252A67D4B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F1CD1D4-9932-4B73-99D8-C252A67D4B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F1CD1D4-9932-4B73-99D8-C252A67D4B46}.Release|Any CPU.Build.0 = Release|Any CPU
-		{832CB3CC-4039-4A66-984A-6A8A7DA695DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{832CB3CC-4039-4A66-984A-6A8A7DA695DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{832CB3CC-4039-4A66-984A-6A8A7DA695DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{832CB3CC-4039-4A66-984A-6A8A7DA695DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B87E6190-6926-4618-8629-B3720E670C78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B87E6190-6926-4618-8629-B3720E670C78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B87E6190-6926-4618-8629-B3720E670C78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B87E6190-6926-4618-8629-B3720E670C78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C496D944-868E-481B-BABC-82634003289F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C496D944-868E-481B-BABC-82634003289F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C496D944-868E-481B-BABC-82634003289F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C496D944-868E-481B-BABC-82634003289F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9B7E9F9-33F4-4E26-A367-B27CEE0EC247}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9B7E9F9-33F4-4E26-A367-B27CEE0EC247}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9B7E9F9-33F4-4E26-A367-B27CEE0EC247}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9B7E9F9-33F4-4E26-A367-B27CEE0EC247}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

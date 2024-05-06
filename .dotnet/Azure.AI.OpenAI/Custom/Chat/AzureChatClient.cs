@@ -1,24 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using OpenAI.Audio;
+using OpenAI.Chat;
 using System.ClientModel.Primitives;
 
-namespace Azure.AI.OpenAI.Staging.Audio;
+namespace Azure.AI.OpenAI.Chat;
 
 /// <summary>
-/// The scenario client used for audio operations with the Azure OpenAI service.
+/// The scenario client used for chat completion operations with the Azure OpenAI service.
 /// </summary>
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-internal partial class AzureAudioClient : AudioClient
+internal partial class AzureChatClient : ChatClient
 {
     private readonly string _deploymentName;
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    internal AzureAudioClient(
+    internal AzureChatClient(
         ClientPipeline pipeline,
         string deploymentName,
         Uri endpoint,
@@ -31,6 +31,6 @@ internal partial class AzureAudioClient : AudioClient
         _apiVersion = options.Version;
     }
 
-    protected AzureAudioClient()
+    protected AzureChatClient()
     { }
 }

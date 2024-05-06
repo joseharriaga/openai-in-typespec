@@ -4,7 +4,7 @@
 using OpenAI.Assistants;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Azure.AI.OpenAI.Staging.Assistant;
+namespace Azure.AI.OpenAI.Assistants;
 
 [Experimental("OPENAI001")]
 internal partial class AzureAssistantClient : AssistantClient

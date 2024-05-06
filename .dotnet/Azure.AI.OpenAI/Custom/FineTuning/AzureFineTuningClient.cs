@@ -4,7 +4,7 @@
 using OpenAI.FineTuning;
 using System.ClientModel.Primitives;
 
-namespace Azure.AI.OpenAI.Staging.FineTuning;
+namespace Azure.AI.OpenAI.FineTuning;
 
 /// <summary>
 /// The scenario client used for fine-tuning operations with the Azure OpenAI service.

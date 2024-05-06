@@ -4,7 +4,7 @@
 using OpenAI.Files;
 using System.ClientModel.Primitives;
 
-namespace Azure.AI.OpenAI.Staging.FineTuning;
+namespace Azure.AI.OpenAI.Files;
 
 /// <summary>
 /// The scenario client used for Files operations with the Azure OpenAI service.
@@ -26,8 +26,6 @@ internal partial class AzureFileClient : FileClient
         options ??= new();
         _endpoint = endpoint;
         _apiVersion = options.Version;
-
-        throw new NotImplementedException($"Protocol support not yet implemented");
     }
 
     protected AzureFileClient()

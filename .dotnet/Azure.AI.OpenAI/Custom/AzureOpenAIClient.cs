@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.OpenAI.Staging.Audio;
-using Azure.AI.OpenAI.Staging.Chat;
-using Azure.AI.OpenAI.Staging.Embeddings;
-using Azure.AI.OpenAI.Staging.FineTuning;
-using Azure.AI.OpenAI.Staging.Images;
+using Azure.AI.OpenAI.Assistants;
+using Azure.AI.OpenAI.Audio;
+using Azure.AI.OpenAI.Chat;
+using Azure.AI.OpenAI.Embeddings;
+using Azure.AI.OpenAI.Files;
+using Azure.AI.OpenAI.FineTuning;
+using Azure.AI.OpenAI.Images;
 using Azure.Core;
 using OpenAI;
 using OpenAI.Assistants;
@@ -15,14 +17,14 @@ using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Images;
-using OpenAI.ModelManagement;
+using OpenAI.Models;
 using OpenAI.Moderations;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Azure.AI.OpenAI.Staging;
+namespace Azure.AI.OpenAI;
 
 /// <summary>
 /// The top-level client for the Azure OpenAI service.
@@ -188,7 +190,7 @@ public partial class AzureOpenAIClient : OpenAIClient
         => new AzureImageClient(Pipeline, deploymentName, Endpoint, _options);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override ModelManagementClient GetModelManagementClient()
+    public override ModelClient GetModelClient()
         => throw new NotSupportedException($"Azure OpenAI does not support the OpenAI model management API. Please "
             + "use the Azure AI Services Account Management API to interact with Azure OpenAI model deployments.");
 

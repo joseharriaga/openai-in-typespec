@@ -5,10 +5,12 @@ using OpenAI;
 using OpenAI.Images;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Metrics;
 using System.Text;
 
-namespace Azure.AI.OpenAI.Staging.Images;
+namespace Azure.AI.OpenAI.Images;
 
 internal partial class AzureImageClient : ImageClient
 {
@@ -57,35 +59,30 @@ internal partial class AzureImageClient : ImageClient
         return ClientResult.FromResponse(response);
     }
 
-    private PipelineMessage CreateImagesRequestMessage(
-        string operation,
-        BinaryContent content,
-        string contentType,
-        RequestOptions options = null)
-    {
-        PipelineMessage message = Pipeline.CreateMessage();
-        message.ResponseClassifier = AzureOpenAIClient.PipelineMessageClassifier200;
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
-        UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append($"openai/deployments/{_deploymentName}/images/{operation}");
-        uriBuilder.Path += path.ToString();
-        uriBuilder.Query += $"?api-version={_apiVersion}";
-        request.Uri = uriBuilder.Uri;
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", contentType);
-        request.Content = content;
-        message.Apply(options ?? null);
-        return message;
-    }
-
     private PipelineMessage CreateGenerateImagesRequestMessage(BinaryContent content, RequestOptions options = null)
-        => CreateImagesRequestMessage("generations", content, "application/json", options);
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+            .WithMethod("POST")
+            .WithOperation("/images/generations")
+            .WithContent(content, "application/json")
+            .WithAccept("application/json")
+            .WithOptions(options)
+            .Build();
 
     private PipelineMessage CreateGenerateImageEditsRequestMessage(BinaryContent content, string contentType, RequestOptions options = null)
-        => CreateImagesRequestMessage("edits", content, contentType, options);
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+            .WithMethod("POST")
+            .WithOperation("/images/edits")
+            .WithContent(content, contentType)
+            .WithAccept("application/json")
+            .WithOptions(options)
+            .Build();
 
     private PipelineMessage CreateGenerateImageVariationsRequestMessage(BinaryContent content, string contentType, RequestOptions options = null)
-        => CreateImagesRequestMessage("variations", content, contentType, options);
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+            .WithMethod("POST")
+            .WithOperation("/images/variations")
+            .WithContent(content, contentType)
+            .WithAccept("application/json")
+            .WithOptions(options)
+            .Build();
 }

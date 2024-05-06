@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.ComponentModel;
 using System.Text;
 
-namespace Azure.AI.OpenAI.Staging.Embeddings;
+namespace Azure.AI.OpenAI.Embeddings;
 
 internal partial class AzureEmbeddingClient : EmbeddingClient
 {
@@ -28,21 +28,11 @@ internal partial class AzureEmbeddingClient : EmbeddingClient
     }
 
     private PipelineMessage CreateEmbeddingPipelineMessage(BinaryContent content, RequestOptions options = null)
-    {
-        PipelineMessage message = Pipeline.CreateMessage();
-        message.ResponseClassifier = AzureOpenAIClient.PipelineMessageClassifier200;
-        PipelineRequest request = message.Request;
-        request.Method = "POST";
-        UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);
-        StringBuilder path = new();
-        path.Append($"openai/deployments/{_deploymentName}/embeddings");
-        uriBuilder.Path += path.ToString();
-        uriBuilder.Query += $"?api-version={_apiVersion}";
-        request.Uri = uriBuilder.Uri;
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", "application/json");
-        request.Content = content;
-        message.Apply(options ?? null);
-        return message;
-    }
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+            .WithMethod("POST")
+            .WithOperation("/embeddings")
+            .WithContent(content, "application/json")
+            .WithAccept("application/json")
+            .WithOptions(options)
+            .Build();
 }

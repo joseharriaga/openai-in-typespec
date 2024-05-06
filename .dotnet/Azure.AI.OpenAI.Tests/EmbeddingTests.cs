@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.OpenAI.Staging;
-using Azure.AI.OpenAI.Staging.Embeddings;
+using Azure.AI.OpenAI;
+using Azure.AI.OpenAI.Embeddings;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using System.ClientModel;
 
-namespace Azure.AI.OpenAI.Tests.Staging;
+namespace Azure.AI.OpenAI.Tests;
 
 public class EmbeddingTests
 {

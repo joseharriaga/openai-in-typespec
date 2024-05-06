@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Azure.AI.OpenAI.Staging\Azure.AI.OpenAI.Staging.csproj" />
+    <ProjectReference Include="..\Azure.AI.OpenAI\Azure.AI.OpenAI.csproj" />
     <ProjectReference Include="..\src\OpenAI.csproj" />
   </ItemGroup>
 

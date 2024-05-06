@@ -1,24 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using OpenAI.Chat;
+using OpenAI.Images;
 using System.ClientModel.Primitives;
 
-namespace Azure.AI.OpenAI.Staging.Chat;
+namespace Azure.AI.OpenAI.Images;
 
 /// <summary>
-/// The scenario client used for chat completion operations with the Azure OpenAI service.
+/// The scenario client used for image operations with the Azure OpenAI service.
 /// </summary>
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-internal partial class AzureChatClient : ChatClient
+internal partial class AzureImageClient : ImageClient
 {
     private readonly string _deploymentName;
     private readonly Uri _endpoint;
     private readonly string _apiVersion;
 
-    internal AzureChatClient(
+    internal AzureImageClient(
         ClientPipeline pipeline,
         string deploymentName,
         Uri endpoint,
@@ -31,6 +31,6 @@ internal partial class AzureChatClient : ChatClient
         _apiVersion = options.Version;
     }
 
-    protected AzureChatClient()
-    { }
+    protected AzureImageClient()
+    {}
 }

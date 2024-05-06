@@ -3,7 +3,7 @@
 
 using OpenAI;
 
-namespace Azure.AI.OpenAI.Staging;
+namespace Azure.AI.OpenAI;
 
 /// <summary>
 /// Defines the scenario-independent, client-level options for the Azure-specific OpenAI client.

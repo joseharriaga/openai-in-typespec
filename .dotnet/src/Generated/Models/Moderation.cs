@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Moderations
 {
     /// <summary> The CreateModerationResponseResult. </summary>
-    internal partial class CreateModerationResponseResult
+    public partial class Moderation
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,12 +42,12 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResult"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Moderation"/>. </summary>
         /// <param name="flagged"> Whether any of the below categories are flagged. </param>
         /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
         /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="categories"/> or <paramref name="categoryScores"/> is null. </exception>
-        internal CreateModerationResponseResult(bool flagged, CreateModerationResponseResultCategories categories, CreateModerationResponseResultCategoryScores categoryScores)
+        internal Moderation(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores)
         {
             Argument.AssertNotNull(categories, nameof(categories));
             Argument.AssertNotNull(categoryScores, nameof(categoryScores));
@@ -57,12 +57,12 @@ namespace OpenAI.Internal.Models
             CategoryScores = categoryScores;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResult"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Moderation"/>. </summary>
         /// <param name="flagged"> Whether any of the below categories are flagged. </param>
         /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
         /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateModerationResponseResult(bool flagged, CreateModerationResponseResultCategories categories, CreateModerationResponseResultCategoryScores categoryScores, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal Moderation(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Flagged = flagged;
             Categories = categories;
@@ -70,16 +70,16 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResult"/> for deserialization. </summary>
-        internal CreateModerationResponseResult()
+        /// <summary> Initializes a new instance of <see cref="Moderation"/> for deserialization. </summary>
+        internal Moderation()
         {
         }
 
         /// <summary> Whether any of the below categories are flagged. </summary>
         public bool Flagged { get; }
         /// <summary> A list of the categories, and whether they are flagged or not. </summary>
-        public CreateModerationResponseResultCategories Categories { get; }
+        public ModerationCategories Categories { get; }
         /// <summary> A list of the categories along with their scores as predicted by model. </summary>
-        public CreateModerationResponseResultCategoryScores CategoryScores { get; }
+        public ModerationCategoryScores CategoryScores { get; }
     }
 }

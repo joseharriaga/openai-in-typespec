@@ -27,17 +27,6 @@ namespace OpenAI.Models
         {
         }
 
-        /// <summary> Initializes a new instance of ModelClient. </summary>
-        /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
-        /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal ModelClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
-        {
-            _pipeline = pipeline;
-            _keyCredential = keyCredential;
-            _endpoint = endpoint;
-        }
-
         internal PipelineMessage CreateGetModelsRequest(RequestOptions options)
         {
             var message = _pipeline.CreateMessage();

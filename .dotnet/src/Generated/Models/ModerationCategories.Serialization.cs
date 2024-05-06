@@ -8,41 +8,41 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Moderations
 {
-    internal partial class CreateModerationResponseResultCategoryScores : IJsonModel<CreateModerationResponseResultCategoryScores>
+    public partial class ModerationCategories : IJsonModel<ModerationCategories>
     {
-        void IJsonModel<CreateModerationResponseResultCategoryScores>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ModerationCategories>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateModerationResponseResultCategoryScores>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ModerationCategories>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateModerationResponseResultCategoryScores)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ModerationCategories)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("hate"u8);
-            writer.WriteNumberValue(Hate);
+            writer.WriteBooleanValue(Hate);
             writer.WritePropertyName("hate/threatening"u8);
-            writer.WriteNumberValue(HateThreatening);
+            writer.WriteBooleanValue(HateThreatening);
             writer.WritePropertyName("harassment"u8);
-            writer.WriteNumberValue(Harassment);
+            writer.WriteBooleanValue(Harassment);
             writer.WritePropertyName("harassment/threatening"u8);
-            writer.WriteNumberValue(HarassmentThreatening);
+            writer.WriteBooleanValue(HarassmentThreatening);
             writer.WritePropertyName("self-harm"u8);
-            writer.WriteNumberValue(SelfHarm);
+            writer.WriteBooleanValue(SelfHarm);
             writer.WritePropertyName("self-harm/intent"u8);
-            writer.WriteNumberValue(SelfHarmIntent);
+            writer.WriteBooleanValue(SelfHarmIntent);
             writer.WritePropertyName("self-harm/instructions"u8);
-            writer.WriteNumberValue(SelfHarmInstructions);
+            writer.WriteBooleanValue(SelfHarmInstructions);
             writer.WritePropertyName("sexual"u8);
-            writer.WriteNumberValue(Sexual);
+            writer.WriteBooleanValue(Sexual);
             writer.WritePropertyName("sexual/minors"u8);
-            writer.WriteNumberValue(SexualMinors);
+            writer.WriteBooleanValue(SexualMinors);
             writer.WritePropertyName("violence"u8);
-            writer.WriteNumberValue(Violence);
+            writer.WriteBooleanValue(Violence);
             writer.WritePropertyName("violence/graphic"u8);
-            writer.WriteNumberValue(ViolenceGraphic);
+            writer.WriteBooleanValue(ViolenceGraphic);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -61,19 +61,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateModerationResponseResultCategoryScores IJsonModel<CreateModerationResponseResultCategoryScores>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ModerationCategories IJsonModel<ModerationCategories>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateModerationResponseResultCategoryScores>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ModerationCategories>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateModerationResponseResultCategoryScores)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ModerationCategories)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateModerationResponseResultCategoryScores(document.RootElement, options);
+            return DeserializeModerationCategories(document.RootElement, options);
         }
 
-        internal static CreateModerationResponseResultCategoryScores DeserializeCreateModerationResponseResultCategoryScores(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ModerationCategories DeserializeModerationCategories(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -81,74 +81,74 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            float hate = default;
-            float hateThreatening = default;
-            float harassment = default;
-            float harassmentThreatening = default;
-            float selfHarm = default;
-            float selfHarmIntent = default;
-            float selfHarmInstructions = default;
-            float sexual = default;
-            float sexualMinors = default;
-            float violence = default;
-            float violenceGraphic = default;
+            bool hate = default;
+            bool hateThreatening = default;
+            bool harassment = default;
+            bool harassmentThreatening = default;
+            bool selfHarm = default;
+            bool selfHarmIntent = default;
+            bool selfHarmInstructions = default;
+            bool sexual = default;
+            bool sexualMinors = default;
+            bool violence = default;
+            bool violenceGraphic = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("hate"u8))
                 {
-                    hate = property.Value.GetSingle();
+                    hate = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("hate/threatening"u8))
                 {
-                    hateThreatening = property.Value.GetSingle();
+                    hateThreatening = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("harassment"u8))
                 {
-                    harassment = property.Value.GetSingle();
+                    harassment = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("harassment/threatening"u8))
                 {
-                    harassmentThreatening = property.Value.GetSingle();
+                    harassmentThreatening = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("self-harm"u8))
                 {
-                    selfHarm = property.Value.GetSingle();
+                    selfHarm = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("self-harm/intent"u8))
                 {
-                    selfHarmIntent = property.Value.GetSingle();
+                    selfHarmIntent = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("self-harm/instructions"u8))
                 {
-                    selfHarmInstructions = property.Value.GetSingle();
+                    selfHarmInstructions = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("sexual"u8))
                 {
-                    sexual = property.Value.GetSingle();
+                    sexual = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("sexual/minors"u8))
                 {
-                    sexualMinors = property.Value.GetSingle();
+                    sexualMinors = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("violence"u8))
                 {
-                    violence = property.Value.GetSingle();
+                    violence = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("violence/graphic"u8))
                 {
-                    violenceGraphic = property.Value.GetSingle();
+                    violenceGraphic = property.Value.GetBoolean();
                     continue;
                 }
                 if (options.Format != "W")
@@ -157,7 +157,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateModerationResponseResultCategoryScores(
+            return new ModerationCategories(
                 hate,
                 hateThreatening,
                 harassment,
@@ -172,43 +172,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateModerationResponseResultCategoryScores>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ModerationCategories>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateModerationResponseResultCategoryScores>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ModerationCategories>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateModerationResponseResultCategoryScores)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ModerationCategories)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateModerationResponseResultCategoryScores IPersistableModel<CreateModerationResponseResultCategoryScores>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ModerationCategories IPersistableModel<ModerationCategories>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateModerationResponseResultCategoryScores>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ModerationCategories>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateModerationResponseResultCategoryScores(document.RootElement, options);
+                        return DeserializeModerationCategories(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateModerationResponseResultCategoryScores)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ModerationCategories)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateModerationResponseResultCategoryScores>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ModerationCategories>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateModerationResponseResultCategoryScores FromResponse(PipelineResponse response)
+        internal static ModerationCategories FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateModerationResponseResultCategoryScores(document.RootElement);
+            return DeserializeModerationCategories(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

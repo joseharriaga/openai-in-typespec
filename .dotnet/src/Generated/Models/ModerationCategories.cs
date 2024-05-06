@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Moderations
 {
     /// <summary> The CreateModerationResponseResultCategories. </summary>
-    internal partial class CreateModerationResponseResultCategories
+    public partial class ModerationCategories
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,7 +42,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResultCategories"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ModerationCategories"/>. </summary>
         /// <param name="hate">
         /// Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
         /// religion, nationality, sexual orientation, disability status, or caste. Hateful content
@@ -74,7 +74,7 @@ namespace OpenAI.Internal.Models
         /// <param name="sexualMinors"> Sexual content that includes an individual who is under 18 years old. </param>
         /// <param name="violence"> Content that depicts death, violence, or physical injury. </param>
         /// <param name="violenceGraphic"> Content that depicts death, violence, or physical injury in graphic detail. </param>
-        internal CreateModerationResponseResultCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic)
+        internal ModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -89,7 +89,7 @@ namespace OpenAI.Internal.Models
             ViolenceGraphic = violenceGraphic;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResultCategories"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ModerationCategories"/>. </summary>
         /// <param name="hate">
         /// Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
         /// religion, nationality, sexual orientation, disability status, or caste. Hateful content
@@ -122,7 +122,7 @@ namespace OpenAI.Internal.Models
         /// <param name="violence"> Content that depicts death, violence, or physical injury. </param>
         /// <param name="violenceGraphic"> Content that depicts death, violence, or physical injury in graphic detail. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateModerationResponseResultCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -138,8 +138,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResultCategories"/> for deserialization. </summary>
-        internal CreateModerationResponseResultCategories()
+        /// <summary> Initializes a new instance of <see cref="ModerationCategories"/> for deserialization. </summary>
+        internal ModerationCategories()
         {
         }
 

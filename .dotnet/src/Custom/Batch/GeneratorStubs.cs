@@ -14,3 +14,9 @@ internal partial class InternalListBatchesResponse {}
 
 [CodeGenModel("ListBatchesResponseObject")]
 internal readonly partial struct InternalListBatchesResponseObject {}
+
+[CodeGenModel("CreateBatchRequestCompletionWindow")]
+public readonly partial struct BatchCompletionTimeframe {}
+
+[CodeGenModel("CreateBatchRequest")]
+internal readonly partial struct InternalCreateBatchRequest {}

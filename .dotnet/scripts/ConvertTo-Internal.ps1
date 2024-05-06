@@ -206,6 +206,7 @@ function Edit-GeneratedModels {
 
         "Batch.cs",
         "Batch.Serialization.cs",
+        "BatchCompletionTimeframe.cs",
         "BatchError.cs",
         "BatchError.Serialization.cs",
         "BatchStatus.cs",
@@ -213,6 +214,8 @@ function Edit-GeneratedModels {
         "InternalBatchErrors.Serialization.cs",
         "InternalBatchRequestCounts.cs",
         "InternalBatchRequestCounts.Serialization.cs",
+        "InternalCreateBatchRequest.cs",
+        "InternalCreateBatchRequest.Serialization.cs",
         "InternalListBatchesResponse.cs",
         "InternalListBatchesResponse.Serialization.cs",
         "InternalListBatchesResponseObject.cs",

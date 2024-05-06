@@ -10,12 +10,13 @@ function Edit-GeneratedOpenAIClient {
 
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.BatchClient _cachedBatchClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FileClient _cachedFileClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
-        $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
     $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
 
@@ -30,6 +31,7 @@ function Edit-GeneratedSubclients {
 
     $exclusions = @(
         "AudioClient.cs",
+        "BatchClient.cs",
         "EmbeddingClient.cs",
         "FileClient.cs",
         "FineTuningClient.cs",
@@ -200,7 +202,21 @@ function Edit-GeneratedModels {
         "OpenAIModelInfo.cs",
         "OpenAIModelInfo.Serialization.cs",
         "OpenAIModelInfoCollection.cs",
-        "OpenAIModelInfoCollection.Serialization.cs"
+        "OpenAIModelInfoCollection.Serialization.cs",
+
+        "Batch.cs",
+        "Batch.Serialization.cs",
+        "BatchError.cs",
+        "BatchError.Serialization.cs",
+        "BatchStatus.cs",
+        "InternalBatchErrors.cs",
+        "InternalBatchErrors.Serialization.cs",
+        "InternalBatchRequestCounts.cs",
+        "InternalBatchRequestCounts.Serialization.cs",
+        "InternalListBatchesResponse.cs",
+        "InternalListBatchesResponse.Serialization.cs",
+        "InternalListBatchesResponseObject.cs",
+        "InternalListBatchesResponseObject.Serialization.cs"
     )
 
     foreach ($file in $files) {

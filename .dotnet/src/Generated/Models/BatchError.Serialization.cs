@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
-    internal partial class BatchErrorsDatum : IJsonModel<BatchErrorsDatum>
+    public partial class BatchError : IJsonModel<BatchError>
     {
-        void IJsonModel<BatchErrorsDatum>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<BatchError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchErrorsDatum>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<BatchError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(BatchErrorsDatum)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(BatchError)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -73,19 +73,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        BatchErrorsDatum IJsonModel<BatchErrorsDatum>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        BatchError IJsonModel<BatchError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchErrorsDatum>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<BatchError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(BatchErrorsDatum)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(BatchError)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeBatchErrorsDatum(document.RootElement, options);
+            return DeserializeBatchError(document.RootElement, options);
         }
 
-        internal static BatchErrorsDatum DeserializeBatchErrorsDatum(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static BatchError DeserializeBatchError(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -137,46 +137,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new BatchErrorsDatum(code, message, param, line, serializedAdditionalRawData);
+            return new BatchError(code, message, param, line, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<BatchErrorsDatum>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<BatchError>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchErrorsDatum>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<BatchError>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(BatchErrorsDatum)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(BatchError)} does not support writing '{options.Format}' format.");
             }
         }
 
-        BatchErrorsDatum IPersistableModel<BatchErrorsDatum>.Create(BinaryData data, ModelReaderWriterOptions options)
+        BatchError IPersistableModel<BatchError>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchErrorsDatum>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<BatchError>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeBatchErrorsDatum(document.RootElement, options);
+                        return DeserializeBatchError(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(BatchErrorsDatum)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(BatchError)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<BatchErrorsDatum>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<BatchError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static BatchErrorsDatum FromResponse(PipelineResponse response)
+        internal static BatchError FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeBatchErrorsDatum(document.RootElement);
+            return DeserializeBatchError(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

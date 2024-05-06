@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
     /// <summary> The ListBatchesResponse. </summary>
-    internal partial class ListBatchesResponse
+    internal partial class InternalListBatchesResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,11 +43,11 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ListBatchesResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalListBatchesResponse"/>. </summary>
         /// <param name="data"></param>
         /// <param name="hasMore"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="data"/> is null. </exception>
-        internal ListBatchesResponse(IEnumerable<Batch> data, bool hasMore)
+        internal InternalListBatchesResponse(IEnumerable<Batch> data, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
 
@@ -55,14 +55,14 @@ namespace OpenAI.Internal.Models
             HasMore = hasMore;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ListBatchesResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalListBatchesResponse"/>. </summary>
         /// <param name="data"></param>
         /// <param name="firstId"></param>
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ListBatchesResponse(IReadOnlyList<Batch> data, string firstId, string lastId, bool hasMore, string @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListBatchesResponse(IReadOnlyList<Batch> data, string firstId, string lastId, bool hasMore, InternalListBatchesResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Data = data;
             FirstId = firstId;
@@ -72,8 +72,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ListBatchesResponse"/> for deserialization. </summary>
-        internal ListBatchesResponse()
+        /// <summary> Initializes a new instance of <see cref="InternalListBatchesResponse"/> for deserialization. </summary>
+        internal InternalListBatchesResponse()
         {
         }
 
@@ -86,6 +86,6 @@ namespace OpenAI.Internal.Models
         /// <summary> Gets the has more. </summary>
         public bool HasMore { get; }
         /// <summary> Gets the object. </summary>
-        public string Object { get; } = "list";
+        public InternalListBatchesResponseObject Object { get; } = InternalListBatchesResponseObject.List;
     }
 }

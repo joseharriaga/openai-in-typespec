@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenAI.Audio;
+using OpenAI.Batch;
 using OpenAI.Embeddings;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
@@ -279,6 +280,17 @@ namespace OpenAI
         public static DeleteAssistantResponse DeleteAssistantResponse(string id = null, bool deleted = default, DeleteAssistantResponseObject @object = default)
         {
             return new DeleteAssistantResponse(id, deleted, @object, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Batch.BatchError"/>. </summary>
+        /// <param name="code"> An error code identifying the error type. </param>
+        /// <param name="message"> A human-readable message providing more details about the error. </param>
+        /// <param name="param"> The name of the parameter that caused the error, if applicable. </param>
+        /// <param name="line"> The line number of the input file where the error occurred, if applicable. </param>
+        /// <returns> A new <see cref="Batch.BatchError"/> instance for mocking. </returns>
+        public static BatchError BatchError(string code = null, string message = null, string param = null, int? line = null)
+        {
+            return new BatchError(code, message, param, line, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionRequest"/>. </summary>
@@ -1557,92 +1569,6 @@ namespace OpenAI
             return new CreateTranslationResponseJson(text, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.Batch"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="object"> The object type, which is always `batch`. </param>
-        /// <param name="endpoint"> The OpenAI API endpoint used by the batch. </param>
-        /// <param name="errors"></param>
-        /// <param name="inputFileId"> The ID of the input file for the batch. </param>
-        /// <param name="completionWindow"> The time frame within which the batch should be processed. </param>
-        /// <param name="status"> The current status of the batch. </param>
-        /// <param name="outputFileId"> The ID of the file containing the outputs of successfully executed requests. </param>
-        /// <param name="errorFileId"> The ID of the file containing the outputs of requests with errors. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the batch was created. </param>
-        /// <param name="inProgressAt"> The Unix timestamp (in seconds) for when the batch started processing. </param>
-        /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the batch will expire. </param>
-        /// <param name="finalizingAt"> The Unix timestamp (in seconds) for when the batch started finalizing. </param>
-        /// <param name="completedAt"> The Unix timestamp (in seconds) for when the batch was completed. </param>
-        /// <param name="failedAt"> The Unix timestamp (in seconds) for when the batch failed. </param>
-        /// <param name="expiredAt"> The Unix timestamp (in seconds) for when the batch expired. </param>
-        /// <param name="cancellingAt"> The Unix timestamp (in seconds) for when the batch started cancelling. </param>
-        /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the batch was cancelled. </param>
-        /// <param name="requestCounts"> The request counts for different statuses within the batch. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <returns> A new <see cref="Models.Batch"/> instance for mocking. </returns>
-        public static Batch Batch(string id = null, string @object = null, string endpoint = null, BatchErrors errors = null, string inputFileId = null, string completionWindow = null, string status = null, string outputFileId = null, string errorFileId = null, DateTimeOffset createdAt = default, DateTimeOffset? inProgressAt = null, DateTimeOffset? expiresAt = null, DateTimeOffset? finalizingAt = null, DateTimeOffset? completedAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? expiredAt = null, DateTimeOffset? cancellingAt = null, DateTimeOffset? cancelledAt = null, BatchRequestCounts requestCounts = null, IReadOnlyDictionary<string, string> metadata = null)
-        {
-            metadata ??= new Dictionary<string, string>();
-
-            return new Batch(
-                id,
-                @object,
-                endpoint,
-                errors,
-                inputFileId,
-                completionWindow,
-                status,
-                outputFileId,
-                errorFileId,
-                createdAt,
-                inProgressAt,
-                expiresAt,
-                finalizingAt,
-                completedAt,
-                failedAt,
-                expiredAt,
-                cancellingAt,
-                cancelledAt,
-                requestCounts,
-                metadata,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.BatchErrors"/>. </summary>
-        /// <param name="object"> The object type, which is always `list`. </param>
-        /// <param name="data"></param>
-        /// <returns> A new <see cref="Models.BatchErrors"/> instance for mocking. </returns>
-        public static BatchErrors BatchErrors(string @object = null, IEnumerable<BatchErrorsDatum> data = null)
-        {
-            data ??= new List<BatchErrorsDatum>();
-
-            return new BatchErrors(@object, data?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.BatchErrorsDatum"/>. </summary>
-        /// <param name="code"> An error code identifying the error type. </param>
-        /// <param name="message"> A human-readable message providing more details about the error. </param>
-        /// <param name="param"> The name of the parameter that caused the error, if applicable. </param>
-        /// <param name="line"> The line number of the input file where the error occurred, if applicable. </param>
-        /// <returns> A new <see cref="Models.BatchErrorsDatum"/> instance for mocking. </returns>
-        public static BatchErrorsDatum BatchErrorsDatum(string code = null, string message = null, string param = null, int? line = null)
-        {
-            return new BatchErrorsDatum(code, message, param, line, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestCounts"/>. </summary>
-        /// <param name="total"> Total number of requests in the batch. </param>
-        /// <param name="completed"> Number of requests that have been completed successfully. </param>
-        /// <param name="failed"> Number of requests that have failed. </param>
-        /// <returns> A new <see cref="Models.BatchRequestCounts"/> instance for mocking. </returns>
-        public static BatchRequestCounts BatchRequestCounts(int total = default, int completed = default, int failed = default)
-        {
-            return new BatchRequestCounts(total, completed, failed, serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.BatchRequestInput"/>. </summary>
         /// <param name="customId">
         /// A developer-provided per-request id that will be used to match outputs to inputs. Must be
@@ -1692,26 +1618,6 @@ namespace OpenAI
         public static BatchRequestOutputError BatchRequestOutputError(string code = null, string message = null)
         {
             return new BatchRequestOutputError(code, message, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListBatchesResponse"/>. </summary>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.ListBatchesResponse"/> instance for mocking. </returns>
-        public static ListBatchesResponse ListBatchesResponse(IEnumerable<Batch> data = null, string firstId = null, string lastId = null, bool hasMore = default, string @object = null)
-        {
-            data ??= new List<Batch>();
-
-            return new ListBatchesResponse(
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                @object,
-                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionFunctionResponseChoice"/>. </summary>

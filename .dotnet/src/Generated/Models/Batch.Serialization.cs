@@ -8,9 +8,9 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
-    internal partial class Batch : IJsonModel<Batch>
+    public partial class Batch : IJsonModel<Batch>
     {
         void IJsonModel<Batch>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -27,17 +27,17 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(Object);
             writer.WritePropertyName("endpoint"u8);
             writer.WriteStringValue(Endpoint);
-            if (Optional.IsDefined(Errors))
+            if (Optional.IsDefined(_internalErrors))
             {
                 writer.WritePropertyName("errors"u8);
-                writer.WriteObjectValue(Errors, options);
+                writer.WriteObjectValue<InternalBatchErrors>(_internalErrors, options);
             }
             writer.WritePropertyName("input_file_id"u8);
             writer.WriteStringValue(InputFileId);
             writer.WritePropertyName("completion_window"u8);
             writer.WriteStringValue(CompletionWindow);
             writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status);
+            writer.WriteStringValue(Status.ToString());
             if (Optional.IsDefined(OutputFileId))
             {
                 writer.WritePropertyName("output_file_id"u8);
@@ -90,11 +90,8 @@ namespace OpenAI.Internal.Models
                 writer.WritePropertyName("cancelled_at"u8);
                 writer.WriteNumberValue(CancelledAt.Value, "U");
             }
-            if (Optional.IsDefined(RequestCounts))
-            {
-                writer.WritePropertyName("request_counts"u8);
-                writer.WriteObjectValue(RequestCounts, options);
-            }
+            writer.WritePropertyName("request_counts"u8);
+            writer.WriteObjectValue<InternalBatchRequestCounts>(_internalRequestCounts, options);
             if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
@@ -154,10 +151,10 @@ namespace OpenAI.Internal.Models
             string id = default;
             string @object = default;
             string endpoint = default;
-            BatchErrors errors = default;
+            InternalBatchErrors errors = default;
             string inputFileId = default;
             string completionWindow = default;
-            string status = default;
+            BatchStatus status = default;
             string outputFileId = default;
             string errorFileId = default;
             DateTimeOffset createdAt = default;
@@ -169,7 +166,7 @@ namespace OpenAI.Internal.Models
             DateTimeOffset? expiredAt = default;
             DateTimeOffset? cancellingAt = default;
             DateTimeOffset? cancelledAt = default;
-            BatchRequestCounts requestCounts = default;
+            InternalBatchRequestCounts requestCounts = default;
             IReadOnlyDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -196,7 +193,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    errors = BatchErrors.DeserializeBatchErrors(property.Value, options);
+                    errors = InternalBatchErrors.DeserializeInternalBatchErrors(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("input_file_id"u8))
@@ -211,7 +208,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    status = property.Value.GetString();
+                    status = new BatchStatus(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("output_file_id"u8))
@@ -307,7 +304,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    requestCounts = BatchRequestCounts.DeserializeBatchRequestCounts(property.Value, options);
+                    requestCounts = InternalBatchRequestCounts.DeserializeInternalBatchRequestCounts(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))

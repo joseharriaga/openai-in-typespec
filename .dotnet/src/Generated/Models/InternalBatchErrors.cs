@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
     /// <summary> The BatchErrors. </summary>
-    internal partial class BatchErrors
+    internal partial class InternalBatchErrors
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,17 +42,17 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="BatchErrors"/>. </summary>
-        internal BatchErrors()
+        /// <summary> Initializes a new instance of <see cref="InternalBatchErrors"/>. </summary>
+        internal InternalBatchErrors()
         {
-            Data = new ChangeTrackingList<BatchErrorsDatum>();
+            Data = new ChangeTrackingList<BatchError>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="BatchErrors"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalBatchErrors"/>. </summary>
         /// <param name="object"> The object type, which is always `list`. </param>
         /// <param name="data"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal BatchErrors(string @object, IReadOnlyList<BatchErrorsDatum> data, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalBatchErrors(string @object, IReadOnlyList<BatchError> data, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -62,6 +62,6 @@ namespace OpenAI.Internal.Models
         /// <summary> The object type, which is always `list`. </summary>
         public string Object { get; }
         /// <summary> Gets the data. </summary>
-        public IReadOnlyList<BatchErrorsDatum> Data { get; }
+        public IReadOnlyList<BatchError> Data { get; }
     }
 }

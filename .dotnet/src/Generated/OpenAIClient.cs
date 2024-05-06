@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
 using OpenAI.Audio;
+using OpenAI.Batch;
 using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuning;

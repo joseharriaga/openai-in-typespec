@@ -1,12 +1,12 @@
-using OpenAI.ClientShared.Internal;
 using System;
-using System.ClientModel.Internal;
-
+using System.ClientModel.Primitives;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenAI.Assistants;
+using OpenAI.Assistants;
+
+namespace OpenAI;
 
 public abstract partial class ListQueryPage
 {
@@ -66,7 +66,7 @@ public abstract partial class ListQueryPage
 }
 
 public partial class ListQueryPage<T> : ListQueryPage, IReadOnlyList<T>
-    where T : class
+    where T : class, IJsonModel<T>
 {
     public IReadOnlyList<T> Items { get; }
 

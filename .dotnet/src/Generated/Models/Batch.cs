@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
     /// <summary> The Batch. </summary>
-    internal partial class Batch
+    public partial class Batch
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -49,14 +50,13 @@ namespace OpenAI.Internal.Models
         /// <param name="completionWindow"> The time frame within which the batch should be processed. </param>
         /// <param name="status"> The current status of the batch. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the batch was created. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="endpoint"/>, <paramref name="inputFileId"/>, <paramref name="completionWindow"/> or <paramref name="status"/> is null. </exception>
-        internal Batch(string id, string endpoint, string inputFileId, string completionWindow, string status, DateTimeOffset createdAt)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="endpoint"/>, <paramref name="inputFileId"/> or <paramref name="completionWindow"/> is null. </exception>
+        internal Batch(string id, string endpoint, string inputFileId, string completionWindow, BatchStatus status, DateTimeOffset createdAt)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(endpoint, nameof(endpoint));
             Argument.AssertNotNull(inputFileId, nameof(inputFileId));
             Argument.AssertNotNull(completionWindow, nameof(completionWindow));
-            Argument.AssertNotNull(status, nameof(status));
 
             Id = id;
             Endpoint = endpoint;
@@ -71,7 +71,7 @@ namespace OpenAI.Internal.Models
         /// <param name="id"></param>
         /// <param name="object"> The object type, which is always `batch`. </param>
         /// <param name="endpoint"> The OpenAI API endpoint used by the batch. </param>
-        /// <param name="errors"></param>
+        /// <param name="internalErrors"></param>
         /// <param name="inputFileId"> The ID of the input file for the batch. </param>
         /// <param name="completionWindow"> The time frame within which the batch should be processed. </param>
         /// <param name="status"> The current status of the batch. </param>
@@ -86,19 +86,19 @@ namespace OpenAI.Internal.Models
         /// <param name="expiredAt"> The Unix timestamp (in seconds) for when the batch expired. </param>
         /// <param name="cancellingAt"> The Unix timestamp (in seconds) for when the batch started cancelling. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the batch was cancelled. </param>
-        /// <param name="requestCounts"> The request counts for different statuses within the batch. </param>
+        /// <param name="internalRequestCounts"> The request counts for different statuses within the batch. </param>
         /// <param name="metadata">
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64
         /// characters long and values can be a maxium of 512 characters long.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal Batch(string id, string @object, string endpoint, BatchErrors errors, string inputFileId, string completionWindow, string status, string outputFileId, string errorFileId, DateTimeOffset createdAt, DateTimeOffset? inProgressAt, DateTimeOffset? expiresAt, DateTimeOffset? finalizingAt, DateTimeOffset? completedAt, DateTimeOffset? failedAt, DateTimeOffset? expiredAt, DateTimeOffset? cancellingAt, DateTimeOffset? cancelledAt, BatchRequestCounts requestCounts, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal Batch(string id, string @object, string endpoint, InternalBatchErrors internalErrors, string inputFileId, string completionWindow, BatchStatus status, string outputFileId, string errorFileId, DateTimeOffset createdAt, DateTimeOffset? inProgressAt, DateTimeOffset? expiresAt, DateTimeOffset? finalizingAt, DateTimeOffset? completedAt, DateTimeOffset? failedAt, DateTimeOffset? expiredAt, DateTimeOffset? cancellingAt, DateTimeOffset? cancelledAt, InternalBatchRequestCounts internalRequestCounts, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
             Endpoint = endpoint;
-            Errors = errors;
+            _internalErrors = internalErrors;
             InputFileId = inputFileId;
             CompletionWindow = completionWindow;
             Status = status;
@@ -113,7 +113,7 @@ namespace OpenAI.Internal.Models
             ExpiredAt = expiredAt;
             CancellingAt = cancellingAt;
             CancelledAt = cancelledAt;
-            RequestCounts = requestCounts;
+            _internalRequestCounts = internalRequestCounts;
             Metadata = metadata;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -125,19 +125,15 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Gets the id. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always `batch`. </summary>
-        public string Object { get; } = "batch";
 
         /// <summary> The OpenAI API endpoint used by the batch. </summary>
         public string Endpoint { get; }
-        /// <summary> Gets the errors. </summary>
-        public BatchErrors Errors { get; }
         /// <summary> The ID of the input file for the batch. </summary>
         public string InputFileId { get; }
         /// <summary> The time frame within which the batch should be processed. </summary>
         public string CompletionWindow { get; }
         /// <summary> The current status of the batch. </summary>
-        public string Status { get; }
+        public BatchStatus Status { get; }
         /// <summary> The ID of the file containing the outputs of successfully executed requests. </summary>
         public string OutputFileId { get; }
         /// <summary> The ID of the file containing the outputs of requests with errors. </summary>
@@ -160,8 +156,6 @@ namespace OpenAI.Internal.Models
         public DateTimeOffset? CancellingAt { get; }
         /// <summary> The Unix timestamp (in seconds) for when the batch was cancelled. </summary>
         public DateTimeOffset? CancelledAt { get; }
-        /// <summary> The request counts for different statuses within the batch. </summary>
-        public BatchRequestCounts RequestCounts { get; }
         /// <summary>
         /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
         /// additional information about the object in a structured format. Keys can be a maximum of 64

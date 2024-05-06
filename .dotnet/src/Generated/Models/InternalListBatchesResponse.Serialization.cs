@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
-    internal partial class ListBatchesResponse : IJsonModel<ListBatchesResponse>
+    internal partial class InternalListBatchesResponse : IJsonModel<InternalListBatchesResponse>
     {
-        void IJsonModel<ListBatchesResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalListBatchesResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ListBatchesResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalListBatchesResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ListBatchesResponse)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalListBatchesResponse)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -41,7 +41,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("has_more"u8);
             writer.WriteBooleanValue(HasMore);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object);
+            writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -60,19 +60,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        ListBatchesResponse IJsonModel<ListBatchesResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalListBatchesResponse IJsonModel<InternalListBatchesResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ListBatchesResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalListBatchesResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ListBatchesResponse)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalListBatchesResponse)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeListBatchesResponse(document.RootElement, options);
+            return DeserializeInternalListBatchesResponse(document.RootElement, options);
         }
 
-        internal static ListBatchesResponse DeserializeListBatchesResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalListBatchesResponse DeserializeInternalListBatchesResponse(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
             string firstId = default;
             string lastId = default;
             bool hasMore = default;
-            string @object = default;
+            InternalListBatchesResponseObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -116,7 +116,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetString();
+                    @object = new InternalListBatchesResponseObject(property.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")
@@ -125,7 +125,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ListBatchesResponse(
+            return new InternalListBatchesResponse(
                 data,
                 firstId,
                 lastId,
@@ -134,43 +134,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ListBatchesResponse>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalListBatchesResponse>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ListBatchesResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalListBatchesResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ListBatchesResponse)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalListBatchesResponse)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ListBatchesResponse IPersistableModel<ListBatchesResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalListBatchesResponse IPersistableModel<InternalListBatchesResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ListBatchesResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalListBatchesResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeListBatchesResponse(document.RootElement, options);
+                        return DeserializeInternalListBatchesResponse(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ListBatchesResponse)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalListBatchesResponse)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ListBatchesResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalListBatchesResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static ListBatchesResponse FromResponse(PipelineResponse response)
+        internal static InternalListBatchesResponse FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeListBatchesResponse(document.RootElement);
+            return DeserializeInternalListBatchesResponse(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

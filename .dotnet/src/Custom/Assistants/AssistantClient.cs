@@ -631,7 +631,7 @@ public partial class AssistantClient
     }
 
     internal virtual ClientResult<ListQueryPage<T>> GetListQueryPage<T, U>(Func<ClientResult<U>> internalFunc)
-        where T : class
+        where T : class, IJsonModel<T>
         where U : class
     {
         ClientResult<U> internalResult = internalFunc.Invoke();
@@ -640,7 +640,7 @@ public partial class AssistantClient
     }
 
     internal virtual async Task<ClientResult<ListQueryPage<T>>> GetListQueryPageAsync<T, U>(Func<Task<ClientResult<U>>> internalAsyncFunc)
-        where T : class
+        where T : class, IJsonModel<T>
         where U : class
     {
         ClientResult<U> internalResult = await internalAsyncFunc.Invoke().ConfigureAwait(false);

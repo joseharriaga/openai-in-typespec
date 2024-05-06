@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
     /// <summary> The BatchErrorsDatum. </summary>
-    internal partial class BatchErrorsDatum
+    public partial class BatchError
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,18 +42,18 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="BatchErrorsDatum"/>. </summary>
-        internal BatchErrorsDatum()
+        /// <summary> Initializes a new instance of <see cref="BatchError"/>. </summary>
+        internal BatchError()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="BatchErrorsDatum"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="BatchError"/>. </summary>
         /// <param name="code"> An error code identifying the error type. </param>
         /// <param name="message"> A human-readable message providing more details about the error. </param>
         /// <param name="param"> The name of the parameter that caused the error, if applicable. </param>
         /// <param name="line"> The line number of the input file where the error occurred, if applicable. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal BatchErrorsDatum(string code, string message, string param, int? line, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal BatchError(string code, string message, string param, int? line, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             Message = message;

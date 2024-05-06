@@ -1,18 +1,17 @@
 using OpenAI.Assistants;
 using OpenAI.Audio;
+using OpenAI.Batch;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Images;
-using OpenAI.Internal.Models;
 using OpenAI.Models;
 using OpenAI.Moderations;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 
 namespace OpenAI;
 
@@ -25,6 +24,7 @@ namespace OpenAI;
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
 [CodeGenSuppress("GetAudioClientClient")]
 // [CodeGenSuppress("GetAssistantsClient")]
+[CodeGenSuppress("GetBatchClientClient")]
 [CodeGenSuppress("GetChatClient")]
 [CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
@@ -115,6 +115,17 @@ public partial class OpenAIClient
     /// </remarks>
     /// <returns> A new <see cref="AudioClient"/>. </returns>
     public virtual AudioClient GetAudioClient(string model) => new(_pipeline, model, _endpoint, _options);
+
+    /// <summary>
+    /// Gets a new instance of <see cref="BatchClient"/> that reuses the client configuration details provided to
+    /// the <see cref="OpenAIClient"/> instance.
+    /// </summary>
+    /// <remarks>
+    /// This method is functionally equivalent to using the <see cref="BatchClient"/> constructor directly with
+    /// the same configuration details.
+    /// </remarks>
+    /// <returns> A new <see cref="BatchClient"/>. </returns>
+    public virtual BatchClient GetBatchClient() => new(_pipeline, _endpoint, _options);
 
     /// <summary>
     /// Gets a new instance of <see cref="ChatClient"/> that reuses the client configuration details provided to

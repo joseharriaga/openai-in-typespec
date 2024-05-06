@@ -1,5 +1,6 @@
 ﻿using OpenAI.Assistants;
 using OpenAI.Audio;
+using OpenAI.Batch;
 using OpenAI.Chat;
 using OpenAI.Files;
 using OpenAI.Images;
@@ -16,6 +17,7 @@ internal static class TestHelpers
     public enum TestScenario
     {
         Assistants,
+        Batch,
         TextToSpeech,
         Chat,
         VisionChat,
@@ -35,14 +37,15 @@ internal static class TestHelpers
         options.AddPolicy(GetDumpPolicy(), PipelinePosition.PerTry);
         object clientObject = scenario switch
         {
-            TestScenario.Chat => new ChatClient(overrideModel ?? "gpt-3.5-turbo", options),
-            TestScenario.VisionChat => new ChatClient(overrideModel ?? "gpt-4-vision-preview", options),
 #pragma warning disable OPENAI001
             TestScenario.Assistants => new AssistantClient(options),
 #pragma warning restore OPENAI001
-            TestScenario.Images => new ImageClient(overrideModel ?? "dall-e-3", options),
+            TestScenario.Batch => new BatchClient(options),
+            TestScenario.Chat => new ChatClient(overrideModel ?? "gpt-3.5-turbo", options),
             TestScenario.Files => new FileClient(options),
+            TestScenario.Images => new ImageClient(overrideModel ?? "dall-e-3", options),
             TestScenario.Transcription => new AudioClient(overrideModel ?? "whisper-1", options),
+            TestScenario.VisionChat => new ChatClient(overrideModel ?? "gpt-4-vision-preview", options),
             _ => throw new NotImplementedException(),
         };
         return (T)clientObject;

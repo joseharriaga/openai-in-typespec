@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
     /// <summary> The BatchRequestCounts. </summary>
-    internal partial class BatchRequestCounts
+    internal readonly partial struct InternalBatchRequestCounts
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,25 +40,25 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="BatchRequestCounts"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/>. </summary>
         /// <param name="total"> Total number of requests in the batch. </param>
         /// <param name="completed"> Number of requests that have been completed successfully. </param>
         /// <param name="failed"> Number of requests that have failed. </param>
-        internal BatchRequestCounts(int total, int completed, int failed)
+        internal InternalBatchRequestCounts(int total, int completed, int failed)
         {
             Total = total;
             Completed = completed;
             Failed = failed;
         }
 
-        /// <summary> Initializes a new instance of <see cref="BatchRequestCounts"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/>. </summary>
         /// <param name="total"> Total number of requests in the batch. </param>
         /// <param name="completed"> Number of requests that have been completed successfully. </param>
         /// <param name="failed"> Number of requests that have failed. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal BatchRequestCounts(int total, int completed, int failed, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalBatchRequestCounts(int total, int completed, int failed, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Total = total;
             Completed = completed;
@@ -66,8 +66,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="BatchRequestCounts"/> for deserialization. </summary>
-        internal BatchRequestCounts()
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/> for deserialization. </summary>
+        public InternalBatchRequestCounts()
         {
         }
 

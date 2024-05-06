@@ -2,7 +2,6 @@ import "@typespec/http";
 import "@typespec/openapi";
 
 import "../common/models.tsp";
-import "../common/errors.tsp";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -25,31 +24,31 @@ interface Assistants {
   @tag("Assistants")
   @summary("Returns a list of assistants.")
   listAssistants(
-    /** 
+    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
      * default is 20.
      */
-    @query limit?: int32 = 20;
+    @query limit?: int32 = 20,
 
     /**
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc;
+    @query order?: ListOrder = ListOrder.desc,
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include after=obj_foo in order to fetch the next page of the list.
      */
-    @query after?: string;
+    @query after?: string,
 
     /**
      * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
      */
-    @query before?: string;
+    @query before?: string,
   ): ListAssistantsResponse | ErrorResponse;
 
   @route("{assistant_id}")
@@ -95,6 +94,7 @@ interface Assistants {
   createAssistantFile(
     /** The ID of the assistant for which to create a file. */
     @path assistant_id: string,
+
     @body file: CreateAssistantFileRequest,
   ): AssistantFileObject | ErrorResponse;
 
@@ -107,31 +107,31 @@ interface Assistants {
     /** The ID of the assistant the file belongs to. */
     @path assistant_id: string,
 
-    /** 
+    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
      * default is 20.
      */
-    @query limit?: int32 = 20;
+    @query limit?: int32 = 20,
 
     /**
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc;
+    @query order?: ListOrder = ListOrder.desc,
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include after=obj_foo in order to fetch the next page of the list.
      */
-    @query after?: string;
+    @query after?: string,
 
     /**
      * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
      */
-    @query before?: string;
+    @query before?: string,
   ): ListAssistantFilesResponse | ErrorResponse;
 
   @route("{assistant_id}/files/{file_id}")
@@ -155,7 +155,7 @@ interface Assistants {
   deleteAssistantFile(
     /** The ID of the assistant the file belongs to. */
     @path assistant_id: string,
-  
+
     /** The ID of the file to delete. */
     @path file_id: string,
   ): DeleteAssistantFileResponse | ErrorResponse;

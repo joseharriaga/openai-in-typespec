@@ -31,7 +31,7 @@ public partial class FileTests
         using Stream file = BinaryData.FromString("Hello! This is a test text file. Please delete me.").ToStream();
         string filename = "test-file-delete-me.txt";
 
-        OpenAIFileInfo uploadedFile = await client.UploadAsync(file, filename, OpenAIFilePurpose.Assistants);
+        OpenAIFileInfo uploadedFile = await client.UploadFileAsync(file, filename, OpenAIFilePurpose.Assistants);
         Assert.NotNull(uploadedFile);
         Assert.AreEqual(filename, uploadedFile.Filename);
         Assert.AreEqual(OpenAIFilePurpose.Assistants, uploadedFile.Purpose);

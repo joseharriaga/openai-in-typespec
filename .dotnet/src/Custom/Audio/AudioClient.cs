@@ -107,7 +107,7 @@ public partial class AudioClient
     /// </summary>
     /// <remarks>
     /// Unless otherwise specified via <see cref="SpeechGenerationOptions.ResponseFormat"/>, the <c>mp3</c> format of
-    /// <see cref="AudioDataFormat.Mp3"/> will be used for the generated audio.
+    /// <see cref="GeneratedSpeechFormat.Mp3"/> will be used for the generated audio.
     /// </remarks>
     /// <param name="text"> The text for the voice to speak. </param>
     /// <param name="voice"> The voice to use. </param>
@@ -115,7 +115,7 @@ public partial class AudioClient
     /// <returns>
     ///     A result containing generated, spoken audio in the specified output format.
     ///     Unless otherwise specified via <see cref="SpeechGenerationOptions.ResponseFormat"/>, the <c>mp3</c> format of
-    ///     <see cref="AudioDataFormat.Mp3"/> will be used for the generated audio.
+    ///     <see cref="GeneratedSpeechFormat.Mp3"/> will be used for the generated audio.
     /// </returns>
     public virtual ClientResult<BinaryData> GenerateSpeechFromText(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null)
     {
@@ -180,15 +180,15 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
     /// <param name="options"> Options for the transcription. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
     /// <returns> Audio transcription data for the provided file. </returns>
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null)
     {
-        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+        Argument.AssertNotNullOrEmpty(audioFilePath, nameof(audioFilePath));
 
         using FileStream audioStream = File.OpenRead(audioFilePath);
-        return await TranscribeAudioAsync(audioStream, audioFilePath, options);
+        return await TranscribeAudioAsync(audioStream, audioFilePath, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -200,12 +200,12 @@ public partial class AudioClient
     /// </remarks>
     /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
     /// <param name="options"> Options for the transcription. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
     /// <returns> Audio transcription data for the provided file. </returns>
     public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null)
     {
-        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+        Argument.AssertNotNullOrEmpty(audioFilePath, nameof(audioFilePath));
 
         using FileStream audioStream = File.OpenRead(audioFilePath);
         return TranscribeAudio(audioStream, audioFilePath, options);

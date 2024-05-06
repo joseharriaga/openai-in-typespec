@@ -49,7 +49,7 @@ namespace OpenAI.Samples
                 }
                 """).ToStream();
 
-            OpenAIFileInfo openAIFileInfo = await fileClient.UploadAsync(document, "test-rag-file-delete-me.json", OpenAIFilePurpose.Assistants);
+            OpenAIFileInfo openAIFileInfo = await fileClient.UploadFileAsync(document, "test-rag-file-delete-me.json", OpenAIFilePurpose.Assistants);
 
             // Now, we'll create a client intended to help with that data
             AssistantCreationOptions assistantOptions = new()

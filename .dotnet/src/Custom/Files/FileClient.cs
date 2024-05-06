@@ -80,7 +80,7 @@ public partial class FileClient
     /// <param name="filename"> TODO. </param>
     /// <param name="purpose"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadAsync(Stream file, string filename, OpenAIFilePurpose purpose)
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, OpenAIFilePurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
         Argument.AssertNotNullOrEmpty(filename, nameof(filename));
@@ -109,7 +109,7 @@ public partial class FileClient
     /// <param name="filename"> TODO. </param>
     /// <param name="purpose"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-    public virtual ClientResult<OpenAIFileInfo> Upload(Stream file, string filename, OpenAIFilePurpose purpose)
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, OpenAIFilePurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
         Argument.AssertNotNullOrEmpty(filename, nameof(filename));
@@ -122,6 +122,48 @@ public partial class FileClient
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
         ClientResult result = UploadFile(content, content.ContentType);
         return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary>
+    /// Upload a file that can be used across various endpoints. The size of all the files uploaded by
+    /// one organization can be up to 100 GB.
+    ///
+    /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
+    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
+    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    ///
+    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// </summary>
+    /// <param name="filePath"> TODO. </param>
+    /// <param name="purpose"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, OpenAIFilePurpose purpose)
+    {
+        Argument.AssertNotNullOrEmpty(filePath, nameof(filePath));
+
+        using FileStream stream = File.OpenRead(filePath);
+        return await UploadFileAsync(stream, filePath, purpose).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Upload a file that can be used across various endpoints. The size of all the files uploaded by
+    /// one organization can be up to 100 GB.
+    ///
+    /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
+    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
+    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    ///
+    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// </summary>
+    /// <param name="filePath"> TODO. </param>
+    /// <param name="purpose"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, OpenAIFilePurpose purpose)
+    {
+        Argument.AssertNotNullOrEmpty(filePath, nameof(filePath));
+
+        using FileStream stream = File.OpenRead(filePath);
+        return UploadFile(stream, filePath, purpose);
     }
 
     /// <summary> Returns a list of files that belong to the user's organization. </summary>

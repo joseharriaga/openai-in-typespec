@@ -120,7 +120,7 @@ public partial class ImageClient
     /// <param name="options"> TODO </param>
     /// <exception cref="ArgumentNullException"> <paramref name="prompt"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(string prompt, int? imageCount = null, ImageGenerationOptions options = null)
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(string prompt, int imageCount, ImageGenerationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
 
@@ -138,7 +138,7 @@ public partial class ImageClient
     /// <param name="options"> TODO </param>
     /// <exception cref="ArgumentNullException"> <paramref name="prompt"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<GeneratedImageCollection> GenerateImages(string prompt, int? imageCount = null, ImageGenerationOptions options = null)
+    public virtual ClientResult<GeneratedImageCollection> GenerateImages(string prompt, int imageCount, ImageGenerationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
 
@@ -159,13 +159,13 @@ public partial class ImageClient
     /// <param name="imageFilename"> TODO. </param>
     /// <param name="prompt"> TODO. </param>
     /// <param name="options"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/>, <paramref name="imageFilename"/>, or <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> or <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
     public virtual async Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, ImageEditOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
 
         options ??= new();
         CreateImageEditOptions(image, imageFilename, prompt, null, null, null, ref options);
@@ -180,13 +180,13 @@ public partial class ImageClient
     /// <param name="imageFilename"> TODO. </param>
     /// <param name="prompt"> TODO. </param>
     /// <param name="options"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/>, <paramref name="imageFilename"/>, or <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> or <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
     public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
 
         options ??= new();
         CreateImageEditOptions(image, imageFilename, prompt, null, null, null, ref options);
@@ -197,19 +197,51 @@ public partial class ImageClient
     }
 
     /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/> or <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/> or <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(string imageFilePath, string prompt, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        return await GenerateImageEditAsync(imageStream, imageFilePath, prompt, options).ConfigureAwait(false);
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/> or <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/> or <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImage> GenerateImageEdit(string imageFilePath, string prompt, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        return GenerateImageEdit(imageStream, imageFilePath, prompt,options);
+    }
+
+    /// <summary> TODO. </summary>
     /// <param name="image"> TODO. </param>
     /// <param name="imageFilename"> TODO. </param>
     /// <param name="prompt"> TODO. </param>
     /// <param name="mask"> TODO. </param>
     /// <param name="maskFilename"> TODO. </param>
     /// <param name="options"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/>, <paramref name="imageFilename"/>, <paramref name="prompt"/>, <paramref name="mask"/>, or <paramref name="maskFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/>, <paramref name="prompt"/>, or <paramref name="maskFilename"/> is an empty string, and was expected to be non-empty. </exception>
     public virtual async Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(mask, nameof(mask));
+        Argument.AssertNotNullOrEmpty(maskFilename, nameof(maskFilename));
 
         options ??= new();
         CreateImageEditOptions(image, imageFilename, prompt, mask, maskFilename, null, ref options);
@@ -226,13 +258,15 @@ public partial class ImageClient
     /// <param name="mask"> TODO. </param>
     /// <param name="maskFilename"> TODO. </param>
     /// <param name="options"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/>, <paramref name="imageFilename"/>, <paramref name="prompt"/>, <paramref name="mask"/>, or <paramref name="maskFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/>, <paramref name="prompt"/>, or <paramref name="maskFilename"/> is an empty string, and was expected to be non-empty. </exception>
     public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(mask, nameof(mask));
+        Argument.AssertNotNullOrEmpty(maskFilename, nameof(maskFilename));
 
         options ??= new();
         CreateImageEditOptions(image, imageFilename, prompt, mask, maskFilename, null, ref options);
@@ -243,18 +277,54 @@ public partial class ImageClient
     }
 
     /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="maskFilePath"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/>, <paramref name="prompt"/> or <paramref name="maskFilePath"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/>, <paramref name="prompt"/>, or <paramref name="maskFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(string imageFilePath, string prompt, string maskFilePath, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNullOrEmpty(maskFilePath, nameof(maskFilePath));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        using FileStream maskStream = File.OpenRead(maskFilePath);
+        return await GenerateImageEditAsync(imageStream, imageFilePath, prompt, maskStream, maskFilePath, options).ConfigureAwait(false);
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="maskFilePath"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/>, <paramref name="prompt"/> or <paramref name="maskFilePath"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/>, <paramref name="prompt"/>, or <paramref name="maskFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImage> GenerateImageEdit(string imageFilePath, string prompt, string maskFilePath, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNullOrEmpty(maskFilePath, nameof(maskFilePath));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        using FileStream maskStream = File.OpenRead(maskFilePath);
+        return GenerateImageEdit(imageStream, imageFilePath, prompt, maskStream, maskFilePath, options);
+    }
+
+    /// <summary> TODO. </summary>
     /// <param name="image"> TODO. </param>
     /// <param name="imageFilename"> TODO. </param>
     /// <param name="prompt"> TODO. </param>
     /// <param name="imageCount"> TODO. </param>
     /// <param name="options"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, int? imageCount = null, ImageEditOptions options = null)
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/>, <paramref name="imageFilename"/>, or <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> or <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
 
         options ??= new();
         CreateImageEditOptions(image, imageFilename, prompt, null, null, imageCount, ref options);
@@ -270,13 +340,13 @@ public partial class ImageClient
     /// <param name="prompt"> TODO. </param>
     /// <param name="imageCount"> TODO. </param>
     /// <param name="options"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, int? imageCount = null, ImageEditOptions options = null)
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/>, <paramref name="imageFilename"/>, or <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> or <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
 
         options ??= new();
         CreateImageEditOptions(image, imageFilename, prompt, null, null, imageCount, ref options);
@@ -287,6 +357,38 @@ public partial class ImageClient
     }
 
     /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/> or <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/> or <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        return await GenerateImageEditsAsync(imageStream, imageFilePath, prompt, imageCount, options).ConfigureAwait(false);
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/> or <paramref name="prompt"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/> or <paramref name="prompt"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        return GenerateImageEdits(imageStream, imageFilePath, prompt, imageCount, options);
+    }
+
+    /// <summary> TODO. </summary>
     /// <param name="image"> TODO. </param>
     /// <param name="imageFilename"> TODO. </param>
     /// <param name="prompt"> TODO. </param>
@@ -294,13 +396,15 @@ public partial class ImageClient
     /// <param name="maskFilename"> TODO. </param>
     /// <param name="imageCount"> TODO. </param>
     /// <param name="options"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int? imageCount = null, ImageEditOptions options = null)
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/>, <paramref name="imageFilename"/>, <paramref name="prompt"/>, <paramref name="mask"/>, or <paramref name="maskFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/>, <paramref name="prompt"/>, or <paramref name="maskFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(mask, nameof(mask));
+        Argument.AssertNotNullOrEmpty(maskFilename, nameof(maskFilename));
 
         options ??= new();
         CreateImageEditOptions(image, imageFilename, prompt, mask, maskFilename, imageCount, ref options);
@@ -318,13 +422,15 @@ public partial class ImageClient
     /// <param name="maskFilename"> TODO. </param>
     /// <param name="imageCount"> TODO. </param>
     /// <param name="options"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="prompt"/>, <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="prompt"/> or <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int? imageCount = null, ImageEditOptions options = null)
+    /// <exception cref="ArgumentNullException"> <paramref name="image"/>, <paramref name="imageFilename"/>, <paramref name="prompt"/>, <paramref name="mask"/>, or <paramref name="maskFilename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilename"/>, <paramref name="prompt"/>, or <paramref name="maskFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNull(mask, nameof(mask));
+        Argument.AssertNotNullOrEmpty(maskFilename, nameof(maskFilename));
 
         options ??= new();
         CreateImageEditOptions(image, imageFilename, prompt, mask, maskFilename, imageCount, ref options);
@@ -332,6 +438,44 @@ public partial class ImageClient
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
         ClientResult result = GenerateImageEdits(content, content.ContentType);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="maskFilePath"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/>, <paramref name="prompt"/> or <paramref name="maskFilePath"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/>, <paramref name="prompt"/>, or <paramref name="maskFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNullOrEmpty(maskFilePath, nameof(maskFilePath));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        using FileStream maskStream = File.OpenRead(maskFilePath);
+        return await GenerateImageEditsAsync(imageStream, imageFilePath, prompt, maskStream, maskFilePath, imageCount, options).ConfigureAwait(false);
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="prompt"> TODO. </param>
+    /// <param name="maskFilePath"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/>, <paramref name="prompt"/> or <paramref name="maskFilePath"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/>, <paramref name="prompt"/>, or <paramref name="maskFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+        Argument.AssertNotNullOrEmpty(prompt, nameof(prompt));
+        Argument.AssertNotNullOrEmpty(maskFilePath, nameof(maskFilePath));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        using FileStream maskStream = File.OpenRead(maskFilePath);
+        return GenerateImageEdits(imageStream, imageFilePath, prompt, maskStream, maskFilePath, imageCount, options);
     }
 
     #endregion
@@ -377,13 +521,39 @@ public partial class ImageClient
     }
 
     /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(string imageFilePath, ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        return await GenerateImageVariationAsync(imageStream, imageFilePath, options).ConfigureAwait(false);
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImage> GenerateImageVariation(string imageFilePath, ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        return GenerateImageVariation(imageStream, imageFilePath, options);
+    }
+
+    /// <summary> TODO. </summary>
     /// <param name="image"> TODO. </param>
     /// <param name="imageFilename"> TODO. </param>
     /// <param name="imageCount"> TODO. </param>
     /// <param name="options"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(Stream image, string imageFilename, int? imageCount = null, ImageVariationOptions options = null)
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null)
     {
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
@@ -403,7 +573,7 @@ public partial class ImageClient
     /// <param name="options"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="image"/> or <paramref name="imageFilename"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="imageFilename"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(Stream image, string imageFilename, int? imageCount = null, ImageVariationOptions options = null)
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null)
     {
         Argument.AssertNotNull(image, nameof(image));
         Argument.AssertNotNullOrEmpty(imageFilename, nameof(imageFilename));
@@ -414,6 +584,34 @@ public partial class ImageClient
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
         ClientResult result = GenerateImageVariations(content, content.ContentType);
         return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual async Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(string imageFilePath, int imageCount, ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        return await GenerateImageVariationsAsync(imageStream, imageFilePath, imageCount, options).ConfigureAwait(false);
+    }
+
+    /// <summary> TODO. </summary>
+    /// <param name="imageFilePath"> TODO. </param>
+    /// <param name="imageCount"> TODO. </param>
+    /// <param name="options"> TODO. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFilePath"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="imageFilePath"/> is an empty string, and was expected to be non-empty. </exception>
+    public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(string imageFilePath, int imageCount, ImageVariationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(imageFilePath, nameof(imageFilePath));
+
+        using FileStream imageStream = File.OpenRead(imageFilePath);
+        return GenerateImageVariations(imageStream, imageFilePath, imageCount, options);
     }
 
     #endregion

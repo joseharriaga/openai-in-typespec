@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Moderations
 {
     /// <summary> The CreateModerationRequestModel. </summary>
     internal readonly partial struct CreateModerationRequestModel : IEquatable<CreateModerationRequestModel>

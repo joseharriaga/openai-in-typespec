@@ -10,6 +10,7 @@ using OpenAI.Batch;
 using OpenAI.Embeddings;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
+using OpenAI.Moderations;
 
 namespace OpenAI
 {
@@ -868,42 +869,29 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateModerationRequest"/>. </summary>
-        /// <param name="input"> The input text to classify. </param>
-        /// <param name="model">
-        /// Two content moderations models are available: `text-moderation-stable` and `text-moderation-latest`.
-        ///
-        /// The default is `text-moderation-latest` which will be automatically upgraded over time. This ensures you are always using our most accurate model. If you use `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateModerationRequest"/> instance for mocking. </returns>
-        public static CreateModerationRequest CreateModerationRequest(BinaryData input = null, CreateModerationRequestModel? model = null)
-        {
-            return new CreateModerationRequest(input, model, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateModerationResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCollection"/>. </summary>
         /// <param name="id"> The unique identifier for the moderation request. </param>
         /// <param name="model"> The model used to generate the moderation results. </param>
         /// <param name="results"> A list of moderation objects. </param>
-        /// <returns> A new <see cref="Models.CreateModerationResponse"/> instance for mocking. </returns>
-        public static CreateModerationResponse CreateModerationResponse(string id = null, string model = null, IEnumerable<CreateModerationResponseResult> results = null)
+        /// <returns> A new <see cref="Moderations.ModerationCollection"/> instance for mocking. </returns>
+        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<Moderation> results = null)
         {
-            results ??= new List<CreateModerationResponseResult>();
+            results ??= new List<Moderation>();
 
-            return new CreateModerationResponse(id, model, results?.ToList(), serializedAdditionalRawData: null);
+            return new ModerationCollection(id, model, results?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateModerationResponseResult"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Moderations.Moderation"/>. </summary>
         /// <param name="flagged"> Whether any of the below categories are flagged. </param>
         /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
         /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
-        /// <returns> A new <see cref="Models.CreateModerationResponseResult"/> instance for mocking. </returns>
-        public static CreateModerationResponseResult CreateModerationResponseResult(bool flagged = default, CreateModerationResponseResultCategories categories = null, CreateModerationResponseResultCategoryScores categoryScores = null)
+        /// <returns> A new <see cref="Moderations.Moderation"/> instance for mocking. </returns>
+        public static Moderation Moderation(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
         {
-            return new CreateModerationResponseResult(flagged, categories, categoryScores, serializedAdditionalRawData: null);
+            return new Moderation(flagged, categories, categoryScores, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateModerationResponseResultCategories"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCategories"/>. </summary>
         /// <param name="hate">
         /// Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
         /// religion, nationality, sexual orientation, disability status, or caste. Hateful content
@@ -935,10 +923,10 @@ namespace OpenAI
         /// <param name="sexualMinors"> Sexual content that includes an individual who is under 18 years old. </param>
         /// <param name="violence"> Content that depicts death, violence, or physical injury. </param>
         /// <param name="violenceGraphic"> Content that depicts death, violence, or physical injury in graphic detail. </param>
-        /// <returns> A new <see cref="Models.CreateModerationResponseResultCategories"/> instance for mocking. </returns>
-        public static CreateModerationResponseResultCategories CreateModerationResponseResultCategories(bool hate = default, bool hateThreatening = default, bool harassment = default, bool harassmentThreatening = default, bool selfHarm = default, bool selfHarmIntent = default, bool selfHarmInstructions = default, bool sexual = default, bool sexualMinors = default, bool violence = default, bool violenceGraphic = default)
+        /// <returns> A new <see cref="Moderations.ModerationCategories"/> instance for mocking. </returns>
+        public static ModerationCategories ModerationCategories(bool hate = default, bool hateThreatening = default, bool harassment = default, bool harassmentThreatening = default, bool selfHarm = default, bool selfHarmIntent = default, bool selfHarmInstructions = default, bool sexual = default, bool sexualMinors = default, bool violence = default, bool violenceGraphic = default)
         {
-            return new CreateModerationResponseResultCategories(
+            return new ModerationCategories(
                 hate,
                 hateThreatening,
                 harassment,
@@ -953,7 +941,7 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateModerationResponseResultCategoryScores"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCategoryScores"/>. </summary>
         /// <param name="hate"> The score for the category 'hate'. </param>
         /// <param name="hateThreatening"> The score for the category 'hate/threatening'. </param>
         /// <param name="harassment"> The score for the category 'harassment'. </param>
@@ -965,10 +953,10 @@ namespace OpenAI
         /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
-        /// <returns> A new <see cref="Models.CreateModerationResponseResultCategoryScores"/> instance for mocking. </returns>
-        public static CreateModerationResponseResultCategoryScores CreateModerationResponseResultCategoryScores(float hate = default, float hateThreatening = default, float harassment = default, float harassmentThreatening = default, float selfHarm = default, float selfHarmIntent = default, float selfHarmInstructions = default, float sexual = default, float sexualMinors = default, float violence = default, float violenceGraphic = default)
+        /// <returns> A new <see cref="Moderations.ModerationCategoryScores"/> instance for mocking. </returns>
+        public static ModerationCategoryScores ModerationCategoryScores(float hate = default, float hateThreatening = default, float harassment = default, float harassmentThreatening = default, float selfHarm = default, float selfHarmIntent = default, float selfHarmInstructions = default, float sexual = default, float sexualMinors = default, float violence = default, float violenceGraphic = default)
         {
-            return new CreateModerationResponseResultCategoryScores(
+            return new ModerationCategoryScores(
                 hate,
                 hateThreatening,
                 harassment,

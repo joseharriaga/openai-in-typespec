@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Moderations
 {
     /// <summary> The CreateModerationResponseResultCategoryScores. </summary>
-    internal partial class CreateModerationResponseResultCategoryScores
+    public partial class ModerationCategoryScores
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,7 +42,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResultCategoryScores"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ModerationCategoryScores"/>. </summary>
         /// <param name="hate"> The score for the category 'hate'. </param>
         /// <param name="hateThreatening"> The score for the category 'hate/threatening'. </param>
         /// <param name="harassment"> The score for the category 'harassment'. </param>
@@ -54,7 +54,7 @@ namespace OpenAI.Internal.Models
         /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
-        internal CreateModerationResponseResultCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
+        internal ModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -69,7 +69,7 @@ namespace OpenAI.Internal.Models
             ViolenceGraphic = violenceGraphic;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResultCategoryScores"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ModerationCategoryScores"/>. </summary>
         /// <param name="hate"> The score for the category 'hate'. </param>
         /// <param name="hateThreatening"> The score for the category 'hate/threatening'. </param>
         /// <param name="harassment"> The score for the category 'harassment'. </param>
@@ -82,7 +82,7 @@ namespace OpenAI.Internal.Models
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateModerationResponseResultCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -98,8 +98,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateModerationResponseResultCategoryScores"/> for deserialization. </summary>
-        internal CreateModerationResponseResultCategoryScores()
+        /// <summary> Initializes a new instance of <see cref="ModerationCategoryScores"/> for deserialization. </summary>
+        internal ModerationCategoryScores()
         {
         }
 

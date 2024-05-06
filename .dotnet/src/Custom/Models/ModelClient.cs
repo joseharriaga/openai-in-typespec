@@ -10,6 +10,7 @@ namespace OpenAI.Models;
 /// The service client for OpenAI model operations.
 /// </summary>
 [CodeGenClient("ModelsOps")]
+[CodeGenSuppress("ModelClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("GetModelsAsync")]
 [CodeGenSuppress("GetModels")]
 [CodeGenSuppress("RetrieveAsync", typeof(string))]

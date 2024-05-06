@@ -24,7 +24,7 @@ public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollect
         writer.WriteStartArray();
         foreach (var item in Items)
         {
-            writer.WriteObjectValue(item, options);
+            writer.WriteObjectValue<OpenAIFileInfo>(item, options);
         }
         writer.WriteEndArray();
         writer.WritePropertyName("object"u8);

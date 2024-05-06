@@ -10,12 +10,13 @@ function Edit-GeneratedOpenAIClient {
 
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FileClient _cachedFileClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
-        $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModerationClient _cachedModerationClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
     $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
 
@@ -34,8 +35,9 @@ function Edit-GeneratedSubclients {
         "FileClient.cs",
         "FineTuningClient.cs",
         "ImageClient.cs",
+        "LegacyCompletionClient.cs",
         "ModelClient.cs",
-        "LegacyCompletionClient.cs"
+        "ModerationClient.cs"
     )
 
     foreach ($file in $files) {
@@ -178,7 +180,19 @@ function Edit-GeneratedModels {
         "OpenAIModelInfo.cs",
         "OpenAIModelInfo.Serialization.cs",
         "OpenAIModelInfoCollection.cs",
-        "OpenAIModelInfoCollection.Serialization.cs"
+        "OpenAIModelInfoCollection.Serialization.cs",
+
+        "CreateModerationRequestModel.cs",
+        "Moderation.cs",
+        "Moderation.Serialization.cs",
+        "ModerationCategories.cs",
+        "ModerationCategories.Serialization.cs",
+        "ModerationCategoryScores.cs",
+        "ModerationCategoryScores.Serialization.cs",
+        "ModerationCollection.cs",
+        "ModerationCollection.Serialization.cs",
+        "ModerationOptions.cs",
+        "ModerationOptions.Serialization.cs"
     )
 
     foreach ($file in $files) {

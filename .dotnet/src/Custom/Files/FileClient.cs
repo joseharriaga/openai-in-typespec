@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 namespace OpenAI.Files;
 
 /// <summary>
-///     The service client for OpenAI file operations.
+/// The service client for OpenAI file operations.
 /// </summary>
 [CodeGenClient("Files")]
+[CodeGenSuppress("FileClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateFileAsync", typeof(UploadFileOptions))]
 [CodeGenSuppress("CreateFile", typeof(UploadFileOptions))]
 [CodeGenSuppress("GetFilesAsync", typeof(string))]
@@ -33,7 +34,8 @@ public partial class FileClient
               OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
               OpenAIClient.GetEndpoint(options),
               options) 
-    { }
+    {
+    }
 
     /// <summary>
     /// Initializes a new instance of <see cref="FileClient"/> that will use an API key from the OPENAI_API_KEY
@@ -50,7 +52,8 @@ public partial class FileClient
               OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
               OpenAIClient.GetEndpoint(options),
               options)
-    { }
+    {
+    }
 
     /// <summary>
     /// Initializes a new instance of <see cref="FileClient"/>.

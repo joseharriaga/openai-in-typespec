@@ -1,7 +1,6 @@
 import "@typespec/http";
 import "@typespec/openapi";
 
-import "../common/errors.tsp";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -16,9 +15,7 @@ interface Audio {
   @operationId("createSpeech")
   @tag("Audio")
   @summary("Generates audio from the input text.")
-  createSpeech(
-    @body speech: CreateSpeechRequest,
-  ): {
+  createSpeech(@body speech: CreateSpeechRequest): {
     /** chunked */
     @header("Transfer-Encoding") transferEncoding?: string;
 
@@ -35,14 +32,15 @@ interface Audio {
     @header contentType: "multipart/form-data",
     @body audio: CreateTranscriptionRequest,
   ):
-  | CreateTranscriptionResponseVerboseJson
-  | CreateTranscriptionResponseJson
-  | {
-      // TODO: This response is not defined in the OpenAPI spec.
-      @header contentType: "text/plain";
-      @body text: string; 
-    }
-  | ErrorResponse;
+    | CreateTranscriptionResponseVerboseJson
+    | CreateTranscriptionResponseJson
+    | {
+        // TODO: This response is not defined in the OpenAPI spec.
+        @header contentType: "text/plain";
+
+        @body text: string;
+      }
+    | ErrorResponse;
 
   @route("translations")
   @post
@@ -53,12 +51,13 @@ interface Audio {
     @header contentType: "multipart/form-data",
     @body audio: CreateTranslationRequest,
   ):
-  | CreateTranslationResponseVerboseJson
-  | CreateTranslationResponseJson
-  | {
-      // TODO: This response is not defined in the OpenAPI spec.
-      @header contentType: "text/plain";
-      @body text: string; 
-    }
-  | ErrorResponse;
+    | CreateTranslationResponseVerboseJson
+    | CreateTranslationResponseJson
+    | {
+        // TODO: This response is not defined in the OpenAPI spec.
+        @header contentType: "text/plain";
+
+        @body text: string;
+      }
+    | ErrorResponse;
 }

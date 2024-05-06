@@ -1,7 +1,6 @@
 import "@typespec/http";
 import "@typespec/openapi";
 
-import "../common/errors.tsp";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -15,9 +14,7 @@ interface Threads {
   @operationId("createThread")
   @tag("Assistants")
   @summary("Create a thread.")
-  createThread(
-    @body thread: CreateThreadRequest,
-  ): ThreadObject | ErrorResponse;
+  createThread(@body thread: CreateThreadRequest): ThreadObject | ErrorResponse;
 
   @route("{thread_id}")
   @get
@@ -37,6 +34,7 @@ interface Threads {
   modifyThread(
     /** The ID of the thread to modify. Only the `metadata` can be modified. */
     @path thread_id: string,
+
     @body thread: ModifyThreadRequest,
   ): ThreadObject | ErrorResponse;
 

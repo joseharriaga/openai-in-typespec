@@ -2,7 +2,6 @@ import "@typespec/http";
 import "@typespec/openapi";
 
 import "../common/models.tsp";
-import "../common/errors.tsp";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -18,7 +17,7 @@ interface Runs {
   @tag("Assistants")
   @summary("Create a thread and run it in one request.")
   createThreadAndRun(
-    @body threadAndRun: CreateThreadAndRunRequest;
+    @body threadAndRun: CreateThreadAndRunRequest,
   ): RunObject | ErrorResponse;
 
   @route("{thread_id}/runs")
@@ -42,31 +41,31 @@ interface Runs {
     /** The ID of the thread the run belongs to. */
     @path thread_id: string,
 
-    /** 
+    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
      * default is 20.
      */
-    @query limit?: int32 = 20;
+    @query limit?: int32 = 20,
 
     /**
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc;
+    @query order?: ListOrder = ListOrder.desc,
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include after=obj_foo in order to fetch the next page of the list.
      */
-    @query after?: string;
+    @query after?: string,
 
     /**
      * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
      */
-    @query before?: string;
+    @query before?: string,
   ): ListRunsResponse | ErrorResponse;
 
   @route("{thread_id}/runs/{run_id}")
@@ -141,31 +140,31 @@ interface Runs {
     /** The ID of the run the run steps belong to. */
     @path run_id: string,
 
-    /** 
+    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
      * default is 20.
      */
-    @query limit?: int32 = 20;
+    @query limit?: int32 = 20,
 
     /**
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc;
+    @query order?: ListOrder = ListOrder.desc,
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include after=obj_foo in order to fetch the next page of the list.
      */
-    @query after?: string;
+    @query after?: string,
 
     /**
      * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
      */
-    @query before?: string;
+    @query before?: string,
   ): ListRunStepsResponse | ErrorResponse;
 
   @route("{thread_id}/runs/{run_id}/steps/{step_id}")

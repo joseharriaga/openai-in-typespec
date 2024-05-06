@@ -29,7 +29,7 @@ using TypeSpec.Http;
   license: {
     name: "MIT",
     url: "https://github.com/openai/openai-openapi/blob/master/LICENSE",
-  }
+  },
 })
 @server("https://api.openai.com/v1", "OpenAI Endpoint")
 @useAuth(BearerAuth)

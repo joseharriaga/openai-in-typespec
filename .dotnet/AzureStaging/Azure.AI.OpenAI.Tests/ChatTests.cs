@@ -69,4 +69,26 @@ public class ChatTests
         chatCompletion = chatClient.CompleteChat("Hello again, world!");
         Assert.That(chatCompletion?.Content, Is.Not.Null);
     }
+
+    [Test]
+    public void CanDescribeAnImage()
+    {
+        using Stream imageStream = File.OpenRead(Path.Combine("Assets", "stop_sign.png"));
+        BinaryData imageData = BinaryData.FromStream(imageStream);
+
+        AzureOpenAIClient azureClient = new(
+            new Uri("https://openai-sdk-test-automation-account-sweden-central.openai.azure.com/"),
+            new DefaultAzureCredential());
+        ChatClient client = azureClient.GetChatClient("gpt-4-turbo");
+
+        ChatCompletion chatCompletion = client.CompleteChat(
+            [
+                ChatRequestMessage.CreateUserMessage(
+                    "describe this image to me",
+                    ChatMessageContent.FromImage(imageData, "image/png")),
+            ]);
+
+        Assert.That(chatCompletion.Content.ToText(), Is.Not.Null.Or.Empty);
+        Assert.That(chatCompletion.Content.ToText().ToLower(), Does.Contain("stop"));
+    }
 }

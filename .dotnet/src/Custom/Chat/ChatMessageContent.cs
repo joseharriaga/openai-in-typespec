@@ -15,13 +15,13 @@ public partial class ChatMessageContent
     public ChatMessageContentKind ContentKind { get; }
 
     private object _contentValue;
-    private string _contentMediaTypeName;
+    private string _contentMediaType;
 
-    internal ChatMessageContent(object value,  ChatMessageContentKind kind, string contentMediaTypeName = null)
+    internal ChatMessageContent(object value, ChatMessageContentKind kind, string contentMediaType = null)
     {
         _contentValue = value;
         ContentKind = kind;
-        _contentMediaTypeName = contentMediaTypeName;
+        _contentMediaType = contentMediaType;
     }
 
     /// <summary>
@@ -35,31 +35,59 @@ public partial class ChatMessageContent
     /// Creates a new instance of <see cref="ChatMessageContent"/> that encapsulates image content obtained from
     /// an internet location that will be accessible to the model when evaluating a message with this content.
     /// </summary>
+    /// <remarks>
+    /// Do not use this method for binary image data. Instead, use one of the suitable overloads:
+    /// <list type="bullet">
+    /// <item> <see cref="FromImage(Stream, string)"/></item>
+    /// <item> <see cref="FromImage(BinaryData, string)"/></item>
+    /// </list>
+    /// </remarks>
     /// <param name="imageUri">
     ///     An internet location pointing to an image. This must be accessible to the model.
     /// </param>
     /// <returns> A new instance of <see cref="ChatMessageContent"/>. </returns>
-    public static ChatMessageContent FromImage(Uri imageUri) => new(imageUri, ChatMessageContentKind.Image);
+    public static ChatMessageContent FromImage(Uri imageUri) => new(imageUri, ChatMessageContentKind.ImageLocation);
+
+    /// <summary>
+    /// Creates a new instance of <see cref="ChatMessageContent"/> that encapsulates image content in an accessible
+    /// binary stream.
+    /// </summary>
+    /// <remarks>
+    /// Together with the corresponding MIME type like<c> image/png</c> that describes the image data format, this will
+    /// be automatically encoded as a base64-encoded <c>data:</c> URI upon request.
+    /// </remarks>
+    /// <param name="imageStream"> The readable stream containing the image data to use as content. </param>
+    /// <param name="mediaType">
+    /// The MIME descriptor, like <c>image/png</c>, corresponding to the image data format of the provided data. 
+    /// </param>
+    /// <returns> A new instance of <see cref="ChatMessageContent"/>. </returns>
+    public static ChatMessageContent FromImage(Stream imageStream, string mediaType)
+        => FromImage(BinaryData.FromStream(imageStream), mediaType);
 
     /// <summary>
     /// Creates a new instance of <see cref="ChatMessageContent"/> that encapsulates binary image content.
     /// </summary>
-    /// <param name="image"> The data stream containing the image content. </param>
-    /// <param name="mediaType"> The media type name, e.g. image/png, for the image. </param>
+    /// <remarks>
+    /// Together with the corresponding MIME type like<c> image/png</c> that describes the image data format, this will
+    /// be automatically encoded as a base64-encoded <c>data:</c> URI upon request.
+    /// </remarks>
+    /// <param name="imageBytes"> The image data to use as content. </param>
+    /// <param name="mediaType">
+    /// The MIME descriptor, like <c>image/png</c>, corresponding to the image data format of the provided data. 
+    /// </param>
     /// <returns> A new instance of <see cref="ChatMessageContent"/>. </returns>
-    public static ChatMessageContent FromImage(Stream image, string mediaType)
-        => new(image, ChatMessageContentKind.Image, mediaType);
+    public static ChatMessageContent FromImage(BinaryData imageBytes, string mediaType)
+        => new(imageBytes, ChatMessageContentKind.ImageData, mediaType);
 
     /// <summary>
-    /// Provides the <see cref="string"/> associated with a content item using
-    /// <see cref="ChatMessageContentKind.Text"/>.
+    /// Provides the <see cref="string"/> representation of this content.
     /// </summary>
     /// <remarks>
-    /// <see cref="ToString"/> will infer from the content type and `ChatMessageContent` known to be text can typically
-    /// be treated like a string without calling this explicitly.
+    /// This method will throw if this content instance's <see cref="ChatMessageContentKind"/> does not support this
+    /// representation.
     /// </remarks>
-    /// <returns> The content string for the text content item. </returns>
-    /// <exception cref="InvalidOperationException"> The content does not support a text representation. </exception>
+    /// <returns> The textual representation of the content item. </returns>
+    /// <exception cref="InvalidOperationException"> The content does not support a Uri representation. </exception>
     public string ToText()
         => ContentKind switch
         {
@@ -69,23 +97,47 @@ public partial class ChatMessageContent
         };
 
     /// <summary>
-    /// Provides a <see cref="Uri"/> associated with a content item. These URIs can refer to an internet location
-    /// accessible to the target model or can be base64-encoded data URIs.
+    /// Provides the <see cref="Uri"/> representation of this content.
     /// </summary>
-    /// <returns> A URI representation of the content item. </returns>
-    /// <exception cref="InvalidOperationException"> The content does not support a URI representation. </exception>
+    /// <remarks>
+    /// This method will throw if this content instance's <see cref="ChatMessageContentKind"/> does not support this
+    /// representation.
+    /// </remarks>
+    /// <returns> The binary representation of the content item. </returns>
+    /// <exception cref="InvalidOperationException"> The content does not support a Uri representation. </exception>
     public Uri ToUri()
         => ContentKind switch
         {
-            ChatMessageContentKind.Image => _contentValue switch
+            ChatMessageContentKind.ImageLocation => _contentValue switch
             {
                 Uri imageUri => imageUri,
-                Stream imageStream => CreateDataUriFromStream(imageStream, _contentMediaTypeName),
                 _ => throw new InvalidOperationException(
                     $"Cannot convert underlying image data type '{_contentValue?.GetType()}' to a {nameof(Uri)}"),
             },
             _ => throw new InvalidOperationException(
                 $"{nameof(ToText)} conversion not supported for content kind: {ContentKind}"),
+        };
+
+    /// <summary>
+    /// Provides the <see cref="BinaryData"/> representation of this content.
+    /// </summary>
+    /// <remarks>
+    /// This method will throw if this content instance's <see cref="ChatMessageContentKind"/> does not support this
+    /// representation.
+    /// </remarks>
+    /// <returns> The BinaryData for the content item. </returns>
+    /// <exception cref="InvalidOperationException"> The content does not support a BinaryData representation. </exception>
+    public BinaryData ToBinaryData()
+        => ContentKind switch
+        {
+            ChatMessageContentKind.ImageData => _contentValue switch
+            {
+                BinaryData binaryData => binaryData,
+                _ => throw new InvalidOperationException(
+                    $"Cannot convert underlying image data type '{_contentValue?.GetType()}' to  {nameof(BinaryData)}"),
+            },
+            _ => throw new InvalidOperationException(
+                $"{nameof(ToBinaryData)} conversion not supported for content kind: {ContentKind}"),
         };
 
     /// <summary>
@@ -107,6 +159,11 @@ public partial class ChatMessageContent
     /// <param name="content"></param>
     public static explicit operator Uri(ChatMessageContent content) => content.ToUri();
 
+    /// <summary>
+    /// An explicit operator allowing a content item to be treated as a BinaryData instance.
+    /// </summary>
+    public static explicit operator BinaryData(ChatMessageContent content) => content.ToBinaryData();
+
     /// <inheritdoc/>
     public override string ToString()
     {
@@ -117,12 +174,10 @@ public partial class ChatMessageContent
         return base.ToString();
     }
 
-    private static Uri CreateDataUriFromStream(Stream dataStream, string mediaType)
+    internal string ToBase64DataString()
     {
-        using MemoryStream byteStream = new();
-        dataStream.CopyTo(byteStream);
-        byte[] bytes = byteStream.ToArray();
-        string base64Bytes = Convert.ToBase64String(bytes);
-        return new Uri($"data:{mediaType};base64,{base64Bytes}");
+        BinaryData imageData = _contentValue as BinaryData;
+        string base64ImageData = Convert.ToBase64String(imageData.ToArray());
+        return $"data:{_contentMediaType};base64,{base64ImageData}";
     }
 }

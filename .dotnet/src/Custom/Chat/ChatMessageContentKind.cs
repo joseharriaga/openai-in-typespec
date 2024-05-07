@@ -8,12 +8,24 @@ public enum ChatMessageContentKind
     /// <summary>
     /// Plain text content, represented as a <see cref="string"/>.
     /// </summary>
+    /// <remarks>
+    /// Content of this type may be retrieved via <see cref="ChatMessageContent.ToText"/>.
+    /// </remarks>
     Text,
     /// <summary>
-    /// Image content, as used exclusively by <c>gpt-4-vision-preview</c> when providing an array of content items
-    /// into a chat completion request.
+    /// Binary image information from a stream or other caller-accessible source.
     /// </summary>
-    Image,
+    /// <remarks>
+    /// Content of this type may be retrieved via <see cref="ChatMessageContent.ToBinaryData"/>.
+    /// </remarks>
+    ImageData,
+    /// <summary>
+    /// A model-accessible internet location for an image.
+    /// </summary>
+    /// <remarks>
+    /// Content of this type may be retrieved via <see cref="ChatMessageContent.ToUri"/>.
+    /// </remarks>
+    ImageLocation,
     // Audio,
     // Video,
 }

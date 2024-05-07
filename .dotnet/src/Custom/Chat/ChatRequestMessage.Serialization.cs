@@ -25,18 +25,11 @@ public abstract partial class ChatRequestMessage :  IJsonModel<ChatRequestMessag
             {
                 writer.WriteNullValue();
             }
-            else if (Content.Span.Length == 1)
+            else if (Content.Span.Length == 1 && Content.Span[0].ContentKind == ChatMessageContentKind.Text)
             {
-                if (Content.Span[0].ContentKind == ChatMessageContentKind.Text)
-                {
-                    writer.WriteStringValue(Content.Span[0].ToText());
-                }
-                else
-                {
-                    throw new InvalidOperationException();
-                }
+                writer.WriteStringValue(Content.Span[0].ToText());
             }
-            else if (Content.Span.Length > 1)
+            else
             {
                 writer.WriteStartArray();
                 foreach (ChatMessageContent contentItem in Content.Span)
@@ -47,12 +40,20 @@ public abstract partial class ChatRequestMessage :  IJsonModel<ChatRequestMessag
                         writer.WriteString("type"u8, "text"u8);
                         writer.WriteString("text"u8, contentItem.ToText());
                     }
-                    else if (contentItem.ContentKind == ChatMessageContentKind.Image)
+                    else if (contentItem.ContentKind == ChatMessageContentKind.ImageLocation)
                     {
                         writer.WriteString("type"u8, "image_url"u8);
                         writer.WritePropertyName("image_url"u8);
                         writer.WriteStartObject();
                         writer.WriteString("url"u8, contentItem.ToUri().AbsoluteUri);
+                        writer.WriteEndObject();
+                    }
+                    else if (contentItem.ContentKind == ChatMessageContentKind.ImageData)
+                    {
+                        writer.WriteString("type"u8, "image_url"u8);
+                        writer.WritePropertyName("image_url"u8);
+                        writer.WriteStartObject();
+                        writer.WriteString("url"u8, contentItem.ToBase64DataString());
                         writer.WriteEndObject();
                     }
                     else

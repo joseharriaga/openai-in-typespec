@@ -2,53 +2,17 @@
 
 #nullable disable
 
-using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI
 {
-    internal static class ClientPipelineExtensions
+    internal static partial class ClientPipelineExtensions
     {
-        public static async ValueTask<PipelineResponse> ProcessMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext, CancellationToken cancellationToken = default)
+        public static async ValueTask<ClientResult<bool>> ProcessHeadAsBoolMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)
         {
-            await pipeline.SendAsync(message).ConfigureAwait(false);
-
-            if (message.Response == null)
-            {
-                throw new InvalidOperationException("Failed to receive Result.");
-            }
-
-            if (!message.Response.IsError || requestContext?.ErrorOptions == ClientErrorBehaviors.NoThrow)
-            {
-                return message.Response;
-            }
-
-            throw new ClientResultException(message.Response);
-        }
-
-        public static PipelineResponse ProcessMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext, CancellationToken cancellationToken = default)
-        {
-            pipeline.Send(message);
-
-            if (message.Response == null)
-            {
-                throw new InvalidOperationException("Failed to receive Result.");
-            }
-
-            if (!message.Response.IsError || requestContext?.ErrorOptions == ClientErrorBehaviors.NoThrow)
-            {
-                return message.Response;
-            }
-
-            throw new ClientResultException(message.Response);
-        }
-
-        public static async ValueTask<ClientResult<bool>> ProcessHeadAsBoolMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext)
-        {
-            PipelineResponse response = await pipeline.ProcessMessageAsync(message, requestContext).ConfigureAwait(false);
+            PipelineResponse response = await pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
             switch (response.Status)
             {
                 case >= 200 and < 300:
@@ -60,9 +24,9 @@ namespace OpenAI
             }
         }
 
-        public static ClientResult<bool> ProcessHeadAsBoolMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions requestContext)
+        public static ClientResult<bool> ProcessHeadAsBoolMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)
         {
-            PipelineResponse response = pipeline.ProcessMessage(message, requestContext);
+            PipelineResponse response = pipeline.ProcessMessage(message, options);
             switch (response.Status)
             {
                 case >= 200 and < 300:

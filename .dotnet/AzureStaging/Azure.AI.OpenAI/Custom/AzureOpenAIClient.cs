@@ -220,10 +220,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     internal static ClientPipeline CreatePipeline(TokenCredential credential, OpenAIClientOptions options = null)
     {
         Argument.AssertNotNull(credential, nameof(credential));
-        TokenRequestContext tokenRequestContext = new(scopes: ["https://cognitiveservices.azure.com/.default"]);
-        return CreatePipeline(
-            ApiKeyAuthenticationPolicy.CreateBearerAuthorizationPolicy(new ApiKeyCredential(credential.GetToken(tokenRequestContext, default).Token)),
-            options);
+        return CreatePipeline(new AzureTokenAuthenticationPolicy(credential), options);
     }
 
     internal static ApiKeyCredential GetApiKey(ApiKeyCredential explicitCredential = null, bool requireExplicitCredential = false)

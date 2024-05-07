@@ -44,15 +44,9 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="VectorStoreFileObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="usageBytes">
-        /// The total vector store usage in bytes. Note that this may be different from the original file
-        /// size.
-        /// </param>
+        /// <param name="usageBytes"> The total vector store usage in bytes. Note that this may be different from the original file size. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store file was created. </param>
-        /// <param name="vectorStoreId">
-        /// The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
-        /// [File](/docs/api-reference/files) is attached to.
-        /// </param>
+        /// <param name="vectorStoreId"> The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. </param>
         /// <param name="status"> The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use. </param>
         /// <param name="lastError"> The last error associated with this vector store file. Will be `null` if there are no errors. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="vectorStoreId"/> or <paramref name="status"/> is null. </exception>
@@ -73,15 +67,9 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="VectorStoreFileObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `vector_store.file`. </param>
-        /// <param name="usageBytes">
-        /// The total vector store usage in bytes. Note that this may be different from the original file
-        /// size.
-        /// </param>
+        /// <param name="usageBytes"> The total vector store usage in bytes. Note that this may be different from the original file size. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store file was created. </param>
-        /// <param name="vectorStoreId">
-        /// The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
-        /// [File](/docs/api-reference/files) is attached to.
-        /// </param>
+        /// <param name="vectorStoreId"> The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. </param>
         /// <param name="status"> The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use. </param>
         /// <param name="lastError"> The last error associated with this vector store file. Will be `null` if there are no errors. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -107,17 +95,11 @@ namespace OpenAI.Internal.Models
         /// <summary> The object type, which is always `vector_store.file`. </summary>
         public string Object { get; } = "vector_store.file";
 
-        /// <summary>
-        /// The total vector store usage in bytes. Note that this may be different from the original file
-        /// size.
-        /// </summary>
+        /// <summary> The total vector store usage in bytes. Note that this may be different from the original file size. </summary>
         public int UsageBytes { get; }
         /// <summary> The Unix timestamp (in seconds) for when the vector store file was created. </summary>
         public DateTimeOffset CreatedAt { get; }
-        /// <summary>
-        /// The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
-        /// [File](/docs/api-reference/files) is attached to.
-        /// </summary>
+        /// <summary> The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. </summary>
         public string VectorStoreId { get; }
         /// <summary> The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use. </summary>
         public string Status { get; }

@@ -100,8 +100,7 @@ namespace OpenAI.FineTuning
         /// </param>
         /// <param name="integrations"> A list of integrations to enable for your fine-tuning job. </param>
         /// <param name="seed">
-        /// The seed controls the reproducibility of the job. Passing in the same seed and job parameters
-        /// should produce the same results, but may differ in rare cases.
+        /// The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
         /// If a seed is not specified, one will be generated for you.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -161,8 +160,7 @@ namespace OpenAI.FineTuning
         /// <summary> A list of integrations to enable for your fine-tuning job. </summary>
         public IList<CreateFineTuningJobRequestIntegration> Integrations { get; set; }
         /// <summary>
-        /// The seed controls the reproducibility of the job. Passing in the same seed and job parameters
-        /// should produce the same results, but may differ in rare cases.
+        /// The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
         /// If a seed is not specified, one will be generated for you.
         /// </summary>
         public int? Seed { get; set; }

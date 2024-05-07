@@ -30,11 +30,7 @@ model CreateThreadRequest {
     file_search?: CreateThreadRequestToolResourcesFileSearch;
   } | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
@@ -52,20 +48,13 @@ model ModifyThreadRequest {
       file_ids?: string[] = [];
     };
     file_search?: {
-      /**
-       * The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-       * There can be a maximum of 1 vector store attached to the thread.
-       */
+      /** The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. */
       @maxItems(1)
       vector_store_ids?: string[];
     };
   } | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
@@ -86,7 +75,7 @@ model ThreadObject {
   """)
   object: "thread";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the thread was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -103,26 +92,21 @@ model ThreadObject {
       file_ids?: string[] = [];
     };
     file_search?: {
-      /**
-       * The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-       * There can be a maximum of 1 vector store attached to the thread.
-       */
+      /** The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. */
       @maxItems(1)
       vector_store_ids?: string[];
     };
   } | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 }
 
 model ListThreadsResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
+
   data: ThreadObject[];
   first_id: string;
   last_id: string;

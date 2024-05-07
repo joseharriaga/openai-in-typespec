@@ -10,22 +10,22 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateCompletionRequest {
-  /**
-   * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-   * see all of your available models, or see our [Model overview](/docs/models/overview) for
-   * descriptions of them.
-   */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "gpt-3.5-turbo-instruct" | "davinci-002" | "babbage-002";
 
   /**
-   * The prompt(s) to generate completions for, encoded as a string, array of strings, array of
-   * tokens, or array of token arrays.
+   * The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
    *
-   * Note that <|endoftext|> is the document separator that the model sees during training, so if a
-   * prompt is not specified the model will generate as if from the beginning of a new document.
+   * Note that <|endoftext|> is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
    */
-  prompt: string | string[] | int32[] | int32[][] | null = "<|endoftext|>";
+  prompt:
+    | string
+    | string[]
+    | int32[]
+    | int32[][]
+    | null
+    | null = "<|endoftext|>";
 
   @doc("""
   Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.
@@ -42,12 +42,9 @@ model CreateCompletionRequest {
   echo?: boolean | null = false;
 
   /**
-   * Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
-   * frequency in the text so far, decreasing the model's likelihood to repeat the same line
-   * verbatim.
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
    *
-   * [See more information about frequency and presence
-   * penalties.](/docs/guides/text-generation/parameter-details)
+   * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
    */
   @minValue(-2)
   @maxValue(2)
@@ -61,7 +58,7 @@ model CreateCompletionRequest {
   As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|> token from being generated.
   """)
   @extension("x-oaiTypeLabel", "map")
-  logit_bias?: Record<int32> | null;
+  logit_bias?: Record<int32> | null = null;
 
   @doc("""
   Include the log probabilities on the `logprobs` most likely output tokens, as well the chosen tokens. For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1` elements in the response.
@@ -70,7 +67,7 @@ model CreateCompletionRequest {
   """)
   @minValue(0)
   @maxValue(5)
-  logprobs?: int32 | null;
+  logprobs?: int32 | null = null;
 
   @doc("""
   The maximum number of [tokens](/tokenizer) that can be generated in the completion.
@@ -90,11 +87,9 @@ model CreateCompletionRequest {
   n?: int32 | null = 1;
 
   /**
-   * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
-   * in the text so far, increasing the model's likelihood to talk about new topics.
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
    *
-   * [See more information about frequency and presence
-   * penalties.](/docs/guides/text-generation/parameter-details)
+   * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
    */
   @minValue(-2)
   @maxValue(2)
@@ -109,11 +104,8 @@ model CreateCompletionRequest {
   @maxValue(9223372036854775807)
   seed?: int64 | null;
 
-  /**
-   * Up to 4 sequences where the API will stop generating further tokens. The returned text will
-   * not contain the stop sequence.
-   */
-  stop?: string | string[] | null;
+  /** Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence. */
+  stop?: string | string[] | null | null = null;
 
   @doc("""
   Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
@@ -125,7 +117,7 @@ model CreateCompletionRequest {
   
   This parameter is only supported for `gpt-3.5-turbo-instruct`.
   """)
-  suffix?: string | null;
+  suffix?: string | null = null;
 
   @doc("""
   What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
@@ -145,17 +137,11 @@ model CreateCompletionRequest {
   @maxValue(1)
   top_p?: float32 | null = 1;
 
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-   * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-   */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
   user?: string;
 }
 
-/**
- * Represents a completion response from the API. Note: both the streamed and non-streamed response
- * objects share the same shape (unlike the chat endpoint).
- */
+/** Represents a completion response from the API. Note: both the streamed and non-streamed response objects share the same shape (unlike the chat endpoint). */
 model CreateCompletionResponse {
   /** A unique identifier for the completion. */
   id: string;
@@ -179,7 +165,7 @@ model CreateCompletionResponse {
     text: string;
   }[];
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the completion was created. */
   @encode("unixTimestamp", int32)
   created: utcDateTime;

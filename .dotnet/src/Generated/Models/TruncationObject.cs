@@ -7,10 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary>
-    /// Controls for how a thread will be truncated prior to the run. Use this to control the intial
-    /// context window of the run.
-    /// </summary>
+    /// <summary> Controls for how a thread will be truncated prior to the run. Use this to control the intial context window of the run. </summary>
     internal partial class TruncationObject
     {
         /// <summary>

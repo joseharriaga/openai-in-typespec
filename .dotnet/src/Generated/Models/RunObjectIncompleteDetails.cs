@@ -48,10 +48,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="RunObjectIncompleteDetails"/>. </summary>
-        /// <param name="reason">
-        /// The reason why the run is incomplete. This will point to which specific token limit was
-        /// reached over the course of the run.
-        /// </param>
+        /// <param name="reason"> The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunObjectIncompleteDetails(RunObjectIncompleteDetailsReason? reason, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -59,10 +56,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary>
-        /// The reason why the run is incomplete. This will point to which specific token limit was
-        /// reached over the course of the run.
-        /// </summary>
+        /// <summary> The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run. </summary>
         public RunObjectIncompleteDetailsReason? Reason { get; }
     }
 }

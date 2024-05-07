@@ -16,15 +16,15 @@ model CreateFileRequest {
   /**
    * The intended purpose of the uploaded file.
    *
-   * Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for
-   * [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages).
-   * This allows us to validate the format of the uploaded file is correct for fine-tuning.
+   * Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages). This allows us to validate the format of the uploaded file is correct for fine-tuning.
    */
   purpose: "fine-tune" | "assistants";
 }
 
 model ListFilesResponse {
   data: OpenAIFile[];
+
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }
 
@@ -45,7 +45,7 @@ model OpenAIFile {
   /** The size of the file, in bytes. */
   bytes: int32 | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the file was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -67,11 +67,13 @@ model OpenAIFile {
     | "assistants"
     | "assistants_output";
 
+  #deprecated "This field is marked as deprecated."
   @doc("""
   Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
   """)
   status: "uploaded" | "processed" | "error";
 
+  #deprecated "This field is marked as deprecated."
   @doc("""
   Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
   """)

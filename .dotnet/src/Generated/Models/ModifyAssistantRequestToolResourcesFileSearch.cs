@@ -49,10 +49,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="ModifyAssistantRequestToolResourcesFileSearch"/>. </summary>
-        /// <param name="vectorStoreIds">
-        /// Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this
-        /// assistant. There can be a maximum of 1 vector store attached to the assistant.
-        /// </param>
+        /// <param name="vectorStoreIds"> Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ModifyAssistantRequestToolResourcesFileSearch(IList<string> vectorStoreIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -60,10 +57,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary>
-        /// Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this
-        /// assistant. There can be a maximum of 1 vector store attached to the assistant.
-        /// </summary>
+        /// <summary> Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. </summary>
         public IList<string> VectorStoreIds { get; }
     }
 }

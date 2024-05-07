@@ -49,10 +49,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="AssistantObjectToolResourcesFileSearch"/>. </summary>
-        /// <param name="vectorStoreIds">
-        /// The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
-        /// assistant. There can be a maximum of 1 vector store attached to the assistant.
-        /// </param>
+        /// <param name="vectorStoreIds"> The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AssistantObjectToolResourcesFileSearch(IReadOnlyList<string> vectorStoreIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -60,10 +57,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary>
-        /// The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
-        /// assistant. There can be a maximum of 1 vector store attached to the assistant.
-        /// </summary>
+        /// <summary> The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. </summary>
         public IReadOnlyList<string> VectorStoreIds { get; }
     }
 }

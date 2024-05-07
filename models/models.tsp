@@ -8,14 +8,18 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model ListModelsResponse {
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
+
   data: Model[];
 }
 
 model DeleteModelResponse {
   id: string;
   deleted: boolean;
-  object: string;
+
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "model";
 }
 
 /** Describes an OpenAI model offering that can be used with the API. */
@@ -23,7 +27,7 @@ model Model {
   /** The model identifier, which can be referenced in the API endpoints. */
   id: string;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) when the model was created. */
   @encode("unixTimestamp", int32)
   created: utcDateTime;

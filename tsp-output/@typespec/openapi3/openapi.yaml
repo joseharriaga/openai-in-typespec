@@ -1450,10 +1450,7 @@ components:
           description: The description of the assistant. The maximum length is 512 characters.
         model:
           type: string
-          description: |-
-            ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-            see all of your available models, or see our [Model overview](/docs/models/overview) for
-            descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
         instructions:
           type: string
           nullable: true
@@ -1491,9 +1488,7 @@ components:
                   items:
                     type: string
                   maxItems: 1
-                  description: |-
-                    The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
-                    assistant. There can be a maximum of 1 vector store attached to the assistant.
+                  description: The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -1501,10 +1496,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         temperature:
           type: number
@@ -1512,9 +1504,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 2
-          description: |-
-            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-            more random, while lower values like 0.2 will make it more focused and deterministic.
+          description: What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
           default: 1
         top_p:
           type: number
@@ -1523,9 +1513,7 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model
-            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-            comprising the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or temperature but not both.
           default: 1
@@ -1760,19 +1748,14 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
     BatchRequestInput:
       type: object
       properties:
         custom_id:
           type: string
-          description: |-
-            A developer-provided per-request id that will be used to match outputs to inputs. Must be
-            unique for each request in a batch.
+          description: A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch.
         method:
           type: string
           enum:
@@ -1800,9 +1783,7 @@ components:
               description: The HTTP status code of the response
             request_id:
               type: string
-              description: |-
-                An unique identifier for the OpenAI API request. Please include this request ID when
-                contacting support.
+              description: An unique identifier for the OpenAI API request. Please include this request ID when contacting support.
             body:
               type: object
               additionalProperties:
@@ -1820,9 +1801,7 @@ components:
               type: string
               description: A human-readable error message.
           nullable: true
-          description: |-
-            For requests that failed with a non-HTTP error, this will contain more information on the
-            cause of the failure.
+          description: For requests that failed with a non-HTTP error, this will contain more information on the cause of the failure.
       description: The per-line object of the batch output and error files
     ChatCompletionFunctionCallOption:
       type: object
@@ -1840,16 +1819,13 @@ components:
       properties:
         description:
           type: string
-          description: |-
-            A description of what the function does, used by the model to choose when and how to call the
-            function.
+          description: A description of what the function does, used by the model to choose when and how to call the function.
         name:
           type: string
-          description: |-
-            The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
-            dashes, with a maximum length of 64.
+          description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
         parameters:
           $ref: '#/components/schemas/FunctionParameters'
+      deprecated: true
     ChatCompletionMessageToolCall:
       type: object
       required:
@@ -1873,10 +1849,7 @@ components:
               description: The name of the function to call.
             arguments:
               type: string
-              description: |-
-                The arguments to call the function with, as generated by the model in JSON format. Note that
-                the model does not always generate valid JSON, and may hallucinate parameters not defined by
-                your function schema. Validate the arguments in your code before calling your function.
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
           required:
             - name
             - arguments
@@ -1905,10 +1878,7 @@ components:
               description: The name of the function to call.
             arguments:
               type: string
-              description: |-
-                The arguments to call the function with, as generated by the model in JSON format. Note that
-                the model does not always generate valid JSON, and may hallucinate parameters not defined by
-                your function schema. Validate the arguments in your code before calling your function.
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
     ChatCompletionMessageToolCallsItem:
       type: array
       items:
@@ -1950,9 +1920,7 @@ components:
           description: The role of the messages author, in this case `assistant`.
         name:
           type: string
-          description: |-
-            An optional name for the participant. Provides the model information to differentiate between
-            participants of the same role.
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
         tool_calls:
           $ref: '#/components/schemas/ChatCompletionMessageToolCallsItem'
         function_call:
@@ -1960,10 +1928,7 @@ components:
           properties:
             arguments:
               type: string
-              description: |-
-                The arguments to call the function with, as generated by the model in JSON format. Note that
-                the model does not always generate valid JSON, and may hallucinate parameters not defined by
-                your function schema. Validate the arguments in your code before calling your function.
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
             name:
               type: string
               description: The name of the function to call.
@@ -1971,6 +1936,7 @@ components:
             - arguments
             - name
           description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
+          deprecated: true
     ChatCompletionRequestFunctionMessage:
       type: object
       required:
@@ -1990,6 +1956,7 @@ components:
         name:
           type: string
           description: The name of the function to call.
+      deprecated: true
     ChatCompletionRequestMessage:
       anyOf:
         - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
@@ -2027,9 +1994,7 @@ components:
                 - auto
                 - low
                 - high
-              description: |-
-                Specifies the detail level of the image. Learn more in the [Vision
-                guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+              description: Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
               default: auto
           required:
             - url
@@ -2063,9 +2028,7 @@ components:
           description: The role of the messages author, in this case `system`.
         name:
           type: string
-          description: |-
-            An optional name for the participant. Provides the model information to differentiate between
-            participants of the same role.
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
     ChatCompletionRequestToolMessage:
       type: object
       required:
@@ -2105,9 +2068,7 @@ components:
           description: The role of the messages author, in this case `user`.
         name:
           type: string
-          description: |-
-            An optional name for the participant. Provides the model information to differentiate between
-            participants of the same role.
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
     ChatCompletionResponseMessage:
       type: object
       required:
@@ -2130,10 +2091,7 @@ components:
           properties:
             arguments:
               type: string
-              description: |-
-                The arguments to call the function with, as generated by the model in JSON format. Note that
-                the model does not always generate valid JSON, and may hallucinate parameters not defined by
-                your function schema. Validate the arguments in your code before calling your function.
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
             name:
               type: string
               description: The name of the function to call.
@@ -2141,6 +2099,7 @@ components:
             - arguments
             - name
           description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
+          deprecated: true
       description: A chat completion message generated by the model.
     ChatCompletionStreamResponseDelta:
       type: object
@@ -2154,14 +2113,12 @@ components:
           properties:
             arguments:
               type: string
-              description: |-
-                The arguments to call the function with, as generated by the model in JSON format. Note that
-                the model does not always generate valid JSON, and may hallucinate parameters not defined by
-                your function schema. Validate the arguments in your code before calling your function.
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
             name:
               type: string
               description: The name of the function to call.
           description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
+          deprecated: true
         tool_calls:
           type: array
           items:
@@ -2303,10 +2260,7 @@ components:
                 - gpt-3.5-turbo-1106
                 - gpt-3.5-turbo-0125
                 - gpt-3.5-turbo-16k-0613
-          description: |-
-            ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-            see all of your available models, or see our [Model overview](/docs/models/overview) for
-            descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
           x-oaiTypeLabel: string
         name:
           type: string
@@ -2358,10 +2312,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         temperature:
           type: number
@@ -2369,9 +2320,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 2
-          description: |-
-            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-            more random, while lower values like 0.2 will make it more focused and deterministic.
+          description: What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
           default: 1
         top_p:
           type: number
@@ -2380,9 +2329,7 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model
-            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-            comprising the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or temperature but not both.
           default: 1
@@ -2501,9 +2448,7 @@ components:
           items:
             $ref: '#/components/schemas/ChatCompletionRequestMessage'
           minItems: 1
-          description: |-
-            A list of messages comprising the conversation so far. [Example Python
-            code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
+          description: A list of messages comprising the conversation so far. [Example Python code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
         model:
           anyOf:
             - type: string
@@ -2528,10 +2473,7 @@ components:
                 - gpt-3.5-turbo-1106
                 - gpt-3.5-turbo-0125
                 - gpt-3.5-turbo-16k-0613
-          description: |-
-            ID of the model to use. See the [model endpoint
-            compatibility](/docs/models/model-endpoint-compatibility) table for details on which models
-            work with the Chat API.
+          description: ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.
           x-oaiTypeLabel: string
         frequency_penalty:
           type: number
@@ -2540,12 +2482,9 @@ components:
           minimum: -2
           maximum: 2
           description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
-            frequency in the text so far, decreasing the model's likelihood to repeat the same line
-            verbatim.
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
 
-            [See more information about frequency and presence
-            penalties.](/docs/guides/text-generation/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         logit_bias:
           type: object
@@ -2556,12 +2495,9 @@ components:
           description: |-
             Modify the likelihood of specified tokens appearing in the completion.
 
-            Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an
-            associated bias value from -100 to 100. Mathematically, the bias is added to the logits
-            generated by the model prior to sampling. The exact effect will vary per model, but values
-            between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100
-            should result in a ban or exclusive selection of the relevant token.
+            Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
           x-oaiTypeLabel: map
+          default: null
         logprobs:
           type: boolean
           nullable: true
@@ -2581,10 +2517,7 @@ components:
           description: |-
             The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
 
-            The total length of input tokens and generated tokens is limited by the model's context
-            length. [Example Python
-            code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
-            tokens.
+            The total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
         n:
           type: integer
           format: int32
@@ -2600,11 +2533,9 @@ components:
           minimum: -2
           maximum: 2
           description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
-            in the text so far, increasing the model's likelihood to talk about new topics.
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
 
-            [See more information about frequency and presence
-            penalties.](/docs/guides/text-generation/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         response_format:
           type: object
@@ -2638,7 +2569,9 @@ components:
             - type: array
               items:
                 type: string
+          nullable: true
           description: Up to 4 sequences where the API will stop generating further tokens.
+          default: null
         stream:
           type: boolean
           nullable: true
@@ -2670,17 +2603,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ChatCompletionTool'
-          description: |-
-            A list of tools the model may call. Currently, only functions are supported as a tool. Use
-            this to provide a list of functions the model may generate JSON inputs for. A max of 128
-            functions are supported.
+          description: A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
         tool_choice:
           $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
         user:
           type: string
-          description: |-
-            A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-            abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
         function_call:
           anyOf:
             - type: string
@@ -2697,6 +2625,7 @@ components:
             Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
 
             `none` is the default when no functions are present. `auto` is the default if functions are present.
+          deprecated: true
           x-oaiExpandable: true
         functions:
           type: array
@@ -2708,6 +2637,7 @@ components:
             Deprecated in favor of `tools`.
 
             A list of functions the model may generate JSON inputs for.
+          deprecated: true
     CreateChatCompletionResponse:
       type: object
       required:
@@ -2842,9 +2772,7 @@ components:
         created:
           type: integer
           format: unixtime
-          description: |-
-            The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
-            same timestamp.
+          description: The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp.
         model:
           type: string
           description: The model to generate the completion.
@@ -2858,9 +2786,7 @@ components:
           enum:
             - chat.completion.chunk
           description: The object type, which is always `chat.completion.chunk`.
-      description: |-
-        Represents a streamed chunk of a chat completion response returned by model, based on the
-        provided input.
+      description: Represents a streamed chunk of a chat completion response returned by model, based on the provided input.
     CreateCompletionRequest:
       type: object
       required:
@@ -2875,10 +2801,7 @@ components:
                 - gpt-3.5-turbo-instruct
                 - davinci-002
                 - babbage-002
-          description: |-
-            ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-            see all of your available models, or see our [Model overview](/docs/models/overview) for
-            descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
           x-oaiTypeLabel: string
         prompt:
           anyOf:
@@ -2898,11 +2821,9 @@ components:
                   format: int32
           nullable: true
           description: |-
-            The prompt(s) to generate completions for, encoded as a string, array of strings, array of
-            tokens, or array of token arrays.
+            The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
 
-            Note that <|endoftext|> is the document separator that the model sees during training, so if a
-            prompt is not specified the model will generate as if from the beginning of a new document.
+            Note that <|endoftext|> is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
           default: <|endoftext|>
         best_of:
           type: integer
@@ -2929,12 +2850,9 @@ components:
           minimum: -2
           maximum: 2
           description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
-            frequency in the text so far, decreasing the model's likelihood to repeat the same line
-            verbatim.
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
 
-            [See more information about frequency and presence
-            penalties.](/docs/guides/text-generation/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         logit_bias:
           type: object
@@ -2949,6 +2867,7 @@ components:
 
             As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|> token from being generated.
           x-oaiTypeLabel: map
+          default: null
         logprobs:
           type: integer
           format: int32
@@ -2959,6 +2878,7 @@ components:
             Include the log probabilities on the `logprobs` most likely output tokens, as well the chosen tokens. For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1` elements in the response.
 
             The maximum value for `logprobs` is 5.
+          default: null
         max_tokens:
           type: integer
           format: int32
@@ -2987,11 +2907,9 @@ components:
           minimum: -2
           maximum: 2
           description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
-            in the text so far, increasing the model's likelihood to talk about new topics.
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
 
-            [See more information about frequency and presence
-            penalties.](/docs/guides/text-generation/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         seed:
           type: integer
@@ -3010,9 +2928,8 @@ components:
               items:
                 type: string
           nullable: true
-          description: |-
-            Up to 4 sequences where the API will stop generating further tokens. The returned text will
-            not contain the stop sequence.
+          description: Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence.
+          default: null
         stream:
           type: boolean
           nullable: true
@@ -3025,6 +2942,7 @@ components:
             The suffix that comes after a completion of inserted text.
 
             This parameter is only supported for `gpt-3.5-turbo-instruct`.
+          default: null
         temperature:
           type: number
           format: float
@@ -3049,9 +2967,7 @@ components:
           default: 1
         user:
           type: string
-          description: |-
-            A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-            abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
     CreateCompletionResponse:
       type: object
       required:
@@ -3135,9 +3051,7 @@ components:
           description: The object type, which is always "text_completion"
         usage:
           $ref: '#/components/schemas/CompletionUsage'
-      description: |-
-        Represents a completion response from the API. Note: both the streamed and non-streamed response
-        objects share the same shape (unlike the chat endpoint).
+      description: 'Represents a completion response from the API. Note: both the streamed and non-streamed response objects share the same shape (unlike the chat endpoint).'
     CreateEmbeddingRequest:
       type: object
       required:
@@ -3170,10 +3084,7 @@ components:
                 - text-embedding-ada-002
                 - text-embedding-3-small
                 - text-embedding-3-large
-          description: |-
-            ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-            see all of your available models, or see our [Model overview](/docs/models/overview) for
-            descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
           x-oaiTypeLabel: string
         encoding_format:
           type: string
@@ -3189,9 +3100,7 @@ components:
           description: The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
         user:
           type: string
-          description: |-
-            A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-            abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
     CreateEmbeddingResponse:
       type: object
       required:
@@ -3246,9 +3155,7 @@ components:
           description: |-
             The intended purpose of the uploaded file.
 
-            Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for
-            [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages).
-            This allows us to validate the format of the uploaded file is correct for fine-tuning.
+            Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages). This allows us to validate the format of the uploaded file is correct for fine-tuning.
     CreateFineTuningJobRequest:
       type: object
       required:
@@ -3323,6 +3230,7 @@ components:
             A string of up to 18 characters that will be added to your fine-tuned model name.
 
             For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+          default: null
         validation_file:
           type: string
           nullable: true
@@ -3350,8 +3258,7 @@ components:
           minimum: 0
           maximum: 2147483647
           description: |-
-            The seed controls the reproducibility of the job. Passing in the same seed and job parameters
-            should produce the same results, but may differ in rare cases.
+            The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
             If a seed is not specified, one will be generated for you.
     CreateFineTuningJobRequestIntegrations:
       type: array
@@ -3377,26 +3284,20 @@ components:
                 type: string
                 nullable: true
                 description: |-
-                  The entity to use for the run. This allows you to set the team or username of the WandB
-                  user that you would
-                  like associated with the run. If not set, the default entity for the registered WandB API
-                  key is used.
+                  The entity to use for the run. This allows you to set the team or username of the WandB user that you would
+                  like associated with the run. If not set, the default entity for the registered WandB API key is used.
               tags:
                 type: array
                 items:
                   type: string
                 description: |-
-                  A list of tags to be attached to the newly created run. These tags are passed through
-                  directly to WandB. Some
-                  default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}",
-                  "openai/{ftjob-abcdef}".
+                  A list of tags to be attached to the newly created run. These tags are passed through directly to WandB. Some
+                  default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}", "openai/{ftjob-abcdef}".
             required:
               - project
             description: |-
-              The settings for your integration with Weights and Biases. This payload specifies the
-              project that
-              metrics will be sent to. Optionally, you can set an explicit display name for your run, add
-              tags
+              The settings for your integration with Weights and Biases. This payload specifies the project that
+              metrics will be sent to. Optionally, you can set an explicit display name for your run, add tags
               to your run, and set a default entity (team, username, etc) to be associated with your run.
         required:
           - type
@@ -3410,9 +3311,7 @@ components:
         image:
           type: string
           format: binary
-          description: |-
-            The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not
-            provided, image must have transparency, which will be used as the mask.
+          description: The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, image must have transparency, which will be used as the mask.
         prompt:
           type: string
           description: A text description of the desired image(s). The maximum length is 1000 characters.
@@ -3457,9 +3356,7 @@ components:
           default: url
         user:
           type: string
-          description: |-
-            A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-            abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
     CreateImageRequest:
       type: object
       required:
@@ -3523,9 +3420,7 @@ components:
           default: vivid
         user:
           type: string
-          description: |-
-            A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-            abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
     CreateImageVariationRequestMultiPart:
       type: object
       required:
@@ -3533,9 +3428,7 @@ components:
       properties:
         image:
           type: string
-          description: |-
-            The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB,
-            and square.
+          format: binary
         model:
           anyOf:
             - type: string
@@ -3573,9 +3466,7 @@ components:
           default: 1024x1024
         user:
           type: string
-          description: |-
-            A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-            abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
     CreateMessageRequest:
       type: object
       required:
@@ -3607,10 +3498,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
     CreateMessageRequestAttachmentsItem:
       type: array
@@ -3679,16 +3567,10 @@ components:
                 properties:
                   hate:
                     type: boolean
-                    description: |-
-                      Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
-                      religion, nationality, sexual orientation, disability status, or caste. Hateful content
-                      aimed at non-protected groups (e.g., chess players) is harassment.
+                    description: Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment.
                   hate/threatening:
                     type: boolean
-                    description: |-
-                      Hateful content that also includes violence or serious harm towards the targeted group
-                      based on race, gender, ethnicity, religion, nationality, sexual orientation, disability
-                      status, or caste.
+                    description: Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste.
                   harassment:
                     type: boolean
                     description: Content that expresses, incites, or promotes harassing language towards any target.
@@ -3697,24 +3579,16 @@ components:
                     description: Harassment content that also includes violence or serious harm towards any target.
                   self-harm:
                     type: boolean
-                    description: |-
-                      Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting,
-                      and eating disorders.
+                    description: Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders.
                   self-harm/intent:
                     type: boolean
-                    description: |-
-                      Content where the speaker expresses that they are engaging or intend to engage in acts of
-                      self-harm, such as suicide, cutting, and eating disorders.
+                    description: Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders.
                   self-harm/instructions:
                     type: boolean
-                    description: |-
-                      Content that encourages performing acts of self-harm, such as suicide, cutting, and eating
-                      disorders, or that gives instructions or advice on how to commit such acts.
+                    description: Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts.
                   sexual:
                     type: boolean
-                    description: |-
-                      Content meant to arouse sexual excitement, such as the description of sexual activity, or
-                      that promotes sexual services (excluding sex education and wellness).
+                    description: Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness).
                   sexual/minors:
                     type: boolean
                     description: Sexual content that includes an individual who is under 18 years old.
@@ -3835,23 +3709,16 @@ components:
                 - gpt-3.5-turbo-0125
                 - gpt-3.5-turbo-16k-0613
           nullable: true
-          description: |-
-            The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-            is provided here, it will override the model associated with the assistant. If not, the model
-            associated with the assistant will be used.
+          description: The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
           x-oaiTypeLabel: string
         instructions:
           type: string
           nullable: true
-          description: |-
-            Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant.
-            This is useful for modifying the behavior on a per-run basis.
+          description: Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
         additional_instructions:
           type: string
           nullable: true
-          description: |-
-            Appends additional instructions at the end of the instructions for the run. This is useful for
-            modifying the behavior on a per-run basis without overriding other instructions.
+          description: Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions.
         additional_messages:
           type: object
           allOf:
@@ -3863,18 +3730,13 @@ components:
           allOf:
             - $ref: '#/components/schemas/CreateRunRequestTools'
           nullable: true
-          description: |-
-            Override the tools the assistant can use for this run. This is useful for modifying the
-            behavior on a per-run basis.
+          description: Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
         metadata:
           type: object
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         temperature:
           type: number
@@ -3882,9 +3744,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 2
-          description: |-
-            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-            more random, while lower values like 0.2 will make it more focused and deterministic.
+          description: What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
           default: 1
         top_p:
           type: number
@@ -3893,9 +3753,7 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model
-            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-            comprising the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or temperature but not both.
           default: 1
@@ -3939,6 +3797,7 @@ components:
           - $ref: '#/components/schemas/AssistantToolsCode'
           - $ref: '#/components/schemas/AssistantToolsFileSearch'
           - $ref: '#/components/schemas/AssistantToolsFunction'
+        nullable: true
       maxItems: 20
       x-oaiExpandable: true
     CreateSpeechRequest:
@@ -4025,25 +3884,18 @@ components:
                 - gpt-3.5-turbo-0125
                 - gpt-3.5-turbo-16k-0613
           nullable: true
-          description: |-
-            The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-            is provided here, it will override the model associated with the assistant. If not, the model
-            associated with the assistant will be used.
+          description: The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
           x-oaiTypeLabel: string
         instructions:
           type: string
           nullable: true
-          description: |-
-            Override the default system message of the assistant. This is useful for modifying the
-            behavior on a per-run basis.
+          description: Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
         tools:
           type: object
           allOf:
             - $ref: '#/components/schemas/CreateThreadAndRunRequestTools'
           nullable: true
-          description: |-
-            Override the tools the assistant can use for this run. This is useful for modifying the
-            behavior on a per-run basis.
+          description: Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
         tool_resources:
           type: object
           properties:
@@ -4065,9 +3917,7 @@ components:
                   items:
                     type: string
                   maxItems: 1
-                  description: |-
-                    The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
-                    assistant. There can be a maximum of 1 vector store attached to the assistant.
+                  description: The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -4075,10 +3925,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         temperature:
           type: number
@@ -4086,9 +3933,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 2
-          description: |-
-            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-            more random, while lower values like 0.2 will make it more focused and deterministic.
+          description: What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
           default: 1
         top_p:
           type: number
@@ -4097,9 +3942,7 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model
-            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-            comprising the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or temperature but not both.
           default: 1
@@ -4139,6 +3982,7 @@ components:
           - $ref: '#/components/schemas/AssistantToolsCode'
           - $ref: '#/components/schemas/AssistantToolsFileSearch'
           - $ref: '#/components/schemas/AssistantToolsFunction'
+        nullable: true
       maxItems: 20
     CreateThreadRequest:
       type: object
@@ -4172,10 +4016,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
     CreateThreadRequestToolResourcesFileSearchBase:
       type: object
@@ -4229,9 +4070,7 @@ components:
         file:
           type: string
           format: binary
-          description: |-
-            The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-            mpeg, mpga, m4a, ogg, wav, or webm.
+          description: 'The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.'
           x-oaiTypeLabel: file
         model:
           anyOf:
@@ -4243,15 +4082,10 @@ components:
           x-oaiTypeLabel: string
         language:
           type: string
-          description: |-
-            The language of the input audio. Supplying the input language in
-            [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve
-            accuracy and latency.
+          description: The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy and latency.
         prompt:
           type: string
-          description: |-
-            An optional text to guide the model's style or continue a previous audio segment. The
-            [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
+          description: An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
         response_format:
           type: string
           enum:
@@ -4267,11 +4101,7 @@ components:
           format: float
           minimum: 0
           maximum: 1
-          description: |-
-            The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
-            random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
-            the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
-            automatically increase the temperature until certain thresholds are hit.
+          description: The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.
           default: 0
         timestamp_granularities:
           type: array
@@ -4304,7 +4134,7 @@ components:
           description: The language of the input audio.
         duration:
           type: number
-          format: seconds
+          format: float
           description: The duration of the input audio.
         text:
           type: string
@@ -4329,9 +4159,7 @@ components:
         file:
           type: string
           format: binary
-          description: |-
-            The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
-            mpeg, mpga, m4a, ogg, wav, or webm.
+          description: 'The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.'
           x-oaiTypeLabel: file
         model:
           anyOf:
@@ -4343,9 +4171,7 @@ components:
           x-oaiTypeLabel: string
         prompt:
           type: string
-          description: |-
-            An optional text to guide the model's style or continue a previous audio segment. The
-            [prompt](/docs/guides/speech-to-text/prompting) should be in English.
+          description: An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in English.
         response_format:
           type: string
           enum:
@@ -4361,11 +4187,7 @@ components:
           format: float
           minimum: 0
           maximum: 1
-          description: |-
-            The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
-            random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
-            the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
-            automatically increase the temperature until certain thresholds are hit.
+          description: The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.
           default: 0
     CreateTranslationResponseJson:
       type: object
@@ -4377,16 +4199,22 @@ components:
     CreateTranslationResponseVerboseJson:
       type: object
       required:
+        - task
         - language
         - duration
         - text
       properties:
+        task:
+          type: string
+          enum:
+            - translate
+          description: The task label.
         language:
           type: string
           description: The language of the output translation (always `english`).
         duration:
           type: number
-          format: seconds
+          format: float
           description: The duration of the input audio.
         text:
           type: string
@@ -4435,10 +4263,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
     DeleteAssistantResponse:
       type: object
@@ -4498,6 +4323,8 @@ components:
           type: boolean
         object:
           type: string
+          enum:
+            - model
     DeleteThreadResponse:
       type: object
       required:
@@ -4560,9 +4387,7 @@ components:
               items:
                 type: number
             - type: string
-          description: |-
-            The embedding vector, which is a list of floats. The length of vector depends on the model as
-            listed in the [embedding guide](/docs/guides/embeddings).
+          description: The embedding vector, which is a list of floats. The length of vector depends on the model as listed in the [embedding guide](/docs/guides/embeddings).
         object:
           type: string
           enum:
@@ -4619,26 +4444,20 @@ components:
               type: string
               nullable: true
               description: |-
-                The entity to use for the run. This allows you to set the team or username of the WandB user
-                that you would
-                like associated with the run. If not set, the default entity for the registered WandB API
-                key is used.
+                The entity to use for the run. This allows you to set the team or username of the WandB user that you would
+                like associated with the run. If not set, the default entity for the registered WandB API key is used.
             tags:
               type: array
               items:
                 type: string
               description: |-
-                A list of tags to be attached to the newly created run. These tags are passed through
-                directly to WandB. Some
-                default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}",
-                "openai/{ftjob-abcdef}".
+                A list of tags to be attached to the newly created run. These tags are passed through directly to WandB. Some
+                default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}", "openai/{ftjob-abcdef}".
           required:
             - project
           description: |-
-            The settings for your integration with Weights and Biases. This payload specifies the project
-            that
-            metrics will be sent to. Optionally, you can set an explicit display name for your run, add
-            tags
+            The settings for your integration with Weights and Biases. This payload specifies the project that
+            metrics will be sent to. Optionally, you can set an explicit display name for your run, add tags
             to your run, and set a default entity (team, username, etc) to be associated with your run.
     FineTuningJob:
       type: object
@@ -4688,16 +4507,12 @@ components:
         fine_tuned_model:
           type: string
           nullable: true
-          description: |-
-            The name of the fine-tuned model that is being created. The value will be null if the
-            fine-tuning job is still running.
+          description: The name of the fine-tuned model that is being created. The value will be null if the fine-tuning job is still running.
         finished_at:
           type: integer
           format: unixtime
           nullable: true
-          description: |-
-            The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
-            null if the fine-tuning job is still running.
+          description: The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running.
         hyperparameters:
           type: object
           properties:
@@ -4709,16 +4524,12 @@ components:
                 - type: integer
                   format: int32
               description: |-
-                The number of epochs to train the model for. An epoch refers to one full cycle through the
-                training dataset.
-                "auto" decides the optimal number of epochs based on the size of the dataset. If setting the
-                number manually, we support any number between 1 and 50 epochs.
+                The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
+                "auto" decides the optimal number of epochs based on the size of the dataset. If setting the number manually, we support any number between 1 and 50 epochs.
               default: auto
           required:
             - n_epochs
-          description: |-
-            The hyperparameters used for the fine-tuning job. See the [fine-tuning
-            guide](/docs/guides/fine-tuning) for more details.
+          description: The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         model:
           type: string
           description: The base model that is being fine-tuned.
@@ -4734,9 +4545,7 @@ components:
           type: array
           items:
             type: string
-          description: |-
-            The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the
-            [Files API](/docs/api-reference/files/retrieve-contents).
+          description: The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the [Files API](/docs/api-reference/files/retrieve-contents).
         status:
           type: string
           enum:
@@ -4751,20 +4560,14 @@ components:
           type: integer
           format: int32
           nullable: true
-          description: |-
-            The total number of billable tokens processed by this fine-tuning job. The value will be null
-            if the fine-tuning job is still running.
+          description: The total number of billable tokens processed by this fine-tuning job. The value will be null if the fine-tuning job is still running.
         training_file:
           type: string
-          description: |-
-            The file ID used for training. You can retrieve the training data with the [Files
-            API](/docs/api-reference/files/retrieve-contents).
+          description: The file ID used for training. You can retrieve the training data with the [Files API](/docs/api-reference/files/retrieve-contents).
         validation_file:
           type: string
           nullable: true
-          description: |-
-            The file ID used for validation. You can retrieve the validation results with the [Files
-            API](/docs/api-reference/files/retrieve-contents).
+          description: The file ID used for validation. You can retrieve the validation results with the [Files API](/docs/api-reference/files/retrieve-contents).
         integrations:
           type: object
           allOf:
@@ -4779,9 +4582,7 @@ components:
           type: integer
           format: int32
           nullable: true
-          description: |-
-            The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value
-            will be null if the fine-tuning job is not running.
+          description: The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.
       description: The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
     FineTuningJobCheckpoint:
       type: object
@@ -4872,7 +4673,10 @@ components:
     FineTuningJobIntegrationsItem:
       type: array
       items:
-        $ref: '#/components/schemas/FineTuningIntegration'
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/FineTuningIntegration'
+        nullable: true
       maxItems: 5
       x-oaiExpandable: true
     FunctionObject:
@@ -4882,14 +4686,10 @@ components:
       properties:
         description:
           type: string
-          description: |-
-            A description of what the function does, used by the model to choose when and how to call the
-            function.
+          description: A description of what the function does, used by the model to choose when and how to call the function.
         name:
           type: string
-          description: |-
-            The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
-            dashes, with a maximum length of 64.
+          description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
         parameters:
           $ref: '#/components/schemas/FunctionParameters'
     FunctionParameters:
@@ -4938,6 +4738,8 @@ components:
       properties:
         object:
           type: string
+          enum:
+            - list
         data:
           type: array
           items:
@@ -5031,6 +4833,8 @@ components:
       properties:
         object:
           type: string
+          enum:
+            - list
         data:
           type: array
           items:
@@ -5090,6 +4894,8 @@ components:
       properties:
         object:
           type: string
+          enum:
+            - list
         data:
           type: array
           items:
@@ -5111,6 +4917,8 @@ components:
       properties:
         object:
           type: string
+          enum:
+            - list
         data:
           type: array
           items:
@@ -5132,6 +4940,8 @@ components:
       properties:
         object:
           type: string
+          enum:
+            - list
         data:
           type: array
           items:
@@ -5153,6 +4963,8 @@ components:
       properties:
         object:
           type: string
+          enum:
+            - list
         data:
           type: array
           items:
@@ -5174,6 +4986,8 @@ components:
       properties:
         object:
           type: string
+          enum:
+            - list
         data:
           type: array
           items:
@@ -5241,10 +5055,7 @@ components:
           type: integer
           format: int32
           minimum: 0
-      description: |-
-        A citation within the message that points to a specific quote from a specific File associated
-        with the assistant or the message. Generated when the assistant uses the "file_search" tool to
-        search files.
+      description: A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
     MessageContentTextAnnotationsFilePathObject:
       type: object
       required:
@@ -5364,10 +5175,7 @@ components:
           type: integer
           format: int32
           minimum: 0
-      description: |-
-        A citation within the message that points to a specific quote from a specific File associated
-        with the assistant or the message. Generated when the assistant uses the "file_search" tool to
-        search files.
+      description: A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
     MessageDeltaContentTextAnnotationsFilePathObject:
       type: object
       required:
@@ -5547,9 +5355,7 @@ components:
         assistant_id:
           type: string
           nullable: true
-          description: |-
-            If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
-            message.
+          description: If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.
         run_id:
           type: string
           nullable: true
@@ -5565,10 +5371,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: Represents a message within a [thread](/docs/api-reference/threads).
     MessageObjectAttachmentsItem:
@@ -5616,10 +5419,7 @@ components:
       properties:
         model:
           type: string
-          description: |-
-            ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-            see all of your available models, or see our [Model overview](/docs/models/overview) for
-            descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
         name:
           type: string
           nullable: true
@@ -5667,9 +5467,7 @@ components:
                   items:
                     type: string
                   maxItems: 1
-                  description: |-
-                    Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this
-                    assistant. There can be a maximum of 1 vector store attached to the assistant.
+                  description: Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -5677,10 +5475,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         temperature:
           type: number
@@ -5688,9 +5483,7 @@ components:
           nullable: true
           minimum: 0
           maximum: 2
-          description: |-
-            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-            more random, while lower values like 0.2 will make it more focused and deterministic.
+          description: What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
           default: 1
         top_p:
           type: number
@@ -5699,9 +5492,7 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model
-            considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-            comprising the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
 
             We generally recommend altering this or temperature but not both.
           default: 1
@@ -5717,10 +5508,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
     ModifyRunRequest:
       type: object
@@ -5730,10 +5518,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
     ModifyThreadRequest:
       type: object
@@ -5759,9 +5544,7 @@ components:
                   items:
                     type: string
                   maxItems: 1
-                  description: |-
-                    The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-                    There can be a maximum of 1 vector store attached to the thread.
+                  description: The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread.
           nullable: true
           description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -5769,10 +5552,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
     OpenAIFile:
       type: object
@@ -5820,9 +5600,11 @@ components:
             - processed
             - error
           description: Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
+          deprecated: true
         status_details:
           type: string
           description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
+          deprecated: true
       description: The `File` object represents a document that has been uploaded to OpenAI.
     RunCompletionUsage:
       type: object
@@ -5977,9 +5759,7 @@ components:
               enum:
                 - max_completion_tokens
                 - max_prompt_tokens
-              description: |-
-                The reason why the run is incomplete. This will point to which specific token limit was
-                reached over the course of the run.
+              description: The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run.
           nullable: true
           description: Details on why the run is incomplete. Will be `null` if the run is not incomplete.
         model:
@@ -6004,13 +5784,13 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         usage:
-          $ref: '#/components/schemas/RunCompletionUsage'
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/RunCompletionUsage'
+          nullable: true
         temperature:
           type: number
           format: float
@@ -6507,9 +6287,7 @@ components:
           type: integer
           format: unixtime
           nullable: true
-          description: |-
-            The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
-            the parent run is expired.
+          description: The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
         cancelled_at:
           type: integer
           format: unixtime
@@ -6530,13 +6308,13 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
         usage:
-          $ref: '#/components/schemas/RunStepCompletionUsage'
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/RunStepCompletionUsage'
+          nullable: true
       description: Represents a step in execution of a run.
     RunToolCallObject:
       type: object
@@ -6547,9 +6325,7 @@ components:
       properties:
         id:
           type: string
-          description: |-
-            The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
-            the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
+          description: The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
         type:
           type: string
           enum:
@@ -6632,9 +6408,7 @@ components:
                   items:
                     type: string
                   maxItems: 1
-                  description: |-
-                    The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-                    There can be a maximum of 1 vector store attached to the thread.
+                  description: The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread.
           nullable: true
           description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -6642,10 +6416,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: Represents a thread that contains [messages](/docs/api-reference/messages).
     TranscriptionSegment:
@@ -6672,11 +6443,11 @@ components:
           description: Seek offset of the segment.
         start:
           type: number
-          format: seconds
+          format: float
           description: Start time of the segment in seconds.
         end:
           type: number
-          format: seconds
+          format: float
           description: End time of the segment in seconds.
         text:
           type: string
@@ -6698,9 +6469,7 @@ components:
         compression_ratio:
           type: number
           format: float
-          description: |-
-            Compression ratio of the segment. If the value is greater than 2.4, consider the compression
-            failed.
+          description: Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed.
         no_speech_prob:
           type: number
           format: float
@@ -6717,11 +6486,11 @@ components:
           description: The text content of the word.
         start:
           type: number
-          format: seconds
+          format: float
           description: Start time of the word in seconds.
         end:
           type: number
-          format: seconds
+          format: float
           description: End time of the word in seconds.
     TruncationObject:
       type: object
@@ -6740,9 +6509,7 @@ components:
           nullable: true
           minimum: 1
           description: The number of most recent messages from the thread when constructing the context for the run.
-      description: |-
-        Controls for how a thread will be truncated prior to the run. Use this to control the intial
-        context window of the run.
+      description: Controls for how a thread will be truncated prior to the run. Use this to control the intial context window of the run.
     UpdateVectorStoreRequest:
       type: object
       properties:
@@ -6760,10 +6527,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
     VectorStoreExpirationAfter:
       type: object
@@ -6807,9 +6571,7 @@ components:
           description: The Unix timestamp (in seconds) for when the vector store files batch was created.
         vector_store_id:
           type: string
-          description: |-
-            The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
-            [File](/docs/api-reference/files) is attached to.
+          description: The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to.
         status:
           type: string
           enum:
@@ -6870,18 +6632,14 @@ components:
         usage_bytes:
           type: integer
           format: int32
-          description: |-
-            The total vector store usage in bytes. Note that this may be different from the original file
-            size.
+          description: The total vector store usage in bytes. Note that this may be different from the original file size.
         created_at:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) for when the vector store file was created.
         vector_store_id:
           type: string
-          description: |-
-            The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
-            [File](/docs/api-reference/files) is attached to.
+          description: The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to.
         status:
           type: string
           enum:
@@ -6995,10 +6753,7 @@ components:
           additionalProperties:
             type: string
           nullable: true
-          description: |-
-            Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-            additional information about the object in a structured format. Keys can be a maximum of 64
-            characters long and values can be a maxium of 512 characters long.
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: A vector store is a collection of processed files can be used by the `file_search` tool.
   securitySchemes:

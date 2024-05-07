@@ -60,18 +60,14 @@ namespace OpenAI.Internal.Models
         /// <param name="model"> The model that the [assistant](/docs/api-reference/assistants) used for this run. </param>
         /// <param name="instructions"> The instructions that the [assistant](/docs/api-reference/assistants) used for this run. </param>
         /// <param name="tools"> The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <param name="maxPromptTokens"> The maximum number of prompt tokens specified to have been used over the course of the run. </param>
         /// <param name="maxCompletionTokens"> The maximum number of completion tokens specified to have been used over the course of the run. </param>
         /// <param name="truncationStrategy"></param>
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="threadId"/>, <paramref name="assistantId"/>, <paramref name="model"/>, <paramref name="instructions"/>, <paramref name="tools"/> or <paramref name="usage"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="threadId"/>, <paramref name="assistantId"/>, <paramref name="model"/>, <paramref name="instructions"/> or <paramref name="tools"/> is null. </exception>
         internal RunObject(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunObjectStatus status, RunObjectRequiredAction requiredAction, RunObjectLastError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunObjectIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<BinaryData> tools, IReadOnlyDictionary<string, string> metadata, RunCompletionUsage usage, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -80,7 +76,6 @@ namespace OpenAI.Internal.Models
             Argument.AssertNotNull(model, nameof(model));
             Argument.AssertNotNull(instructions, nameof(instructions));
             Argument.AssertNotNull(tools, nameof(tools));
-            Argument.AssertNotNull(usage, nameof(usage));
 
             Id = id;
             CreatedAt = createdAt;
@@ -125,11 +120,7 @@ namespace OpenAI.Internal.Models
         /// <param name="model"> The model that the [assistant](/docs/api-reference/assistants) used for this run. </param>
         /// <param name="instructions"> The instructions that the [assistant](/docs/api-reference/assistants) used for this run. </param>
         /// <param name="tools"> The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <param name="temperature"> The sampling temperature used for this run. If not set, defaults to 1. </param>
         /// <param name="topP"> The nucleus sampling value used for this run. If not set, defaults to 1. </param>
@@ -253,11 +244,7 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public IReadOnlyList<BinaryData> Tools { get; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
         /// <summary> Gets the usage. </summary>
         public RunCompletionUsage Usage { get; }

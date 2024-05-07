@@ -7,11 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary>
-    /// A citation within the message that points to a specific quote from a specific File associated
-    /// with the assistant or the message. Generated when the assistant uses the "file_search" tool to
-    /// search files.
-    /// </summary>
+    /// <summary> A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. </summary>
     internal partial class MessageDeltaContentTextAnnotationsFileCitationObject
     {
         /// <summary>

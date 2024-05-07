@@ -33,7 +33,7 @@ public partial class BatchTests
         testFileStream.Position = 0;
 
         FileClient fileClient = new();
-        OpenAIFileInfo inputFile = await fileClient.UploadAsync(testFileStream, "test-batch-file", OpenAIFilePurpose.BatchInput);
+        OpenAIFileInfo inputFile = await fileClient.UploadFileAsync(testFileStream, "test-batch-file", OpenAIFilePurpose.BatchInput);
         Assert.That(inputFile.Id, Is.Not.Null.Or.Empty);
 
         BatchClient client = GetTestClient();

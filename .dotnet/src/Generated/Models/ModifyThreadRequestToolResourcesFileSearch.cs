@@ -49,10 +49,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="ModifyThreadRequestToolResourcesFileSearch"/>. </summary>
-        /// <param name="vectorStoreIds">
-        /// The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-        /// There can be a maximum of 1 vector store attached to the thread.
-        /// </param>
+        /// <param name="vectorStoreIds"> The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ModifyThreadRequestToolResourcesFileSearch(IList<string> vectorStoreIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -60,10 +57,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary>
-        /// The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-        /// There can be a maximum of 1 vector store attached to the thread.
-        /// </summary>
+        /// <summary> The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. </summary>
         public IList<string> VectorStoreIds { get; }
     }
 }

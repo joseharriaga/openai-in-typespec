@@ -53,11 +53,7 @@ namespace OpenAI.Internal.Models
         /// <param name="fileIds"> A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. </param>
         /// <param name="name"> The name of the vector store. </param>
         /// <param name="expiresAfter"></param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateVectorStoreRequest(IReadOnlyList<string> fileIds, string name, VectorStoreExpirationAfter expiresAfter, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -74,11 +70,7 @@ namespace OpenAI.Internal.Models
         public string Name { get; }
         /// <summary> Gets the expires after. </summary>
         public VectorStoreExpirationAfter ExpiresAfter { get; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
     }
 }

@@ -45,16 +45,13 @@ namespace OpenAI.Models
         /// <summary> Initializes a new instance of <see cref="DeleteModelResponse"/>. </summary>
         /// <param name="id"></param>
         /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="object"/> is null. </exception>
-        internal DeleteModelResponse(string id, bool deleted, string @object)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        internal DeleteModelResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(@object, nameof(@object));
 
             Id = id;
             Deleted = deleted;
-            Object = @object;
         }
 
         /// <summary> Initializes a new instance of <see cref="DeleteModelResponse"/>. </summary>

@@ -44,10 +44,8 @@ namespace OpenAI.FineTuning
 
         /// <summary> Initializes a new instance of <see cref="CreateFineTuningJobRequestIntegration"/>. </summary>
         /// <param name="wandb">
-        /// The settings for your integration with Weights and Biases. This payload specifies the
-        /// project that
-        /// metrics will be sent to. Optionally, you can set an explicit display name for your run, add
-        /// tags
+        /// The settings for your integration with Weights and Biases. This payload specifies the project that
+        /// metrics will be sent to. Optionally, you can set an explicit display name for your run, add tags
         /// to your run, and set a default entity (team, username, etc) to be associated with your run.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="wandb"/> is null. </exception>
@@ -61,10 +59,8 @@ namespace OpenAI.FineTuning
         /// <summary> Initializes a new instance of <see cref="CreateFineTuningJobRequestIntegration"/>. </summary>
         /// <param name="type"> The type of integration to enable. Currently, only "wandb" (Weights and Biases) is supported. </param>
         /// <param name="wandb">
-        /// The settings for your integration with Weights and Biases. This payload specifies the
-        /// project that
-        /// metrics will be sent to. Optionally, you can set an explicit display name for your run, add
-        /// tags
+        /// The settings for your integration with Weights and Biases. This payload specifies the project that
+        /// metrics will be sent to. Optionally, you can set an explicit display name for your run, add tags
         /// to your run, and set a default entity (team, username, etc) to be associated with your run.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -84,10 +80,8 @@ namespace OpenAI.FineTuning
         public CreateFineTuningJobRequestIntegrationType Type { get; } = CreateFineTuningJobRequestIntegrationType.Wandb;
 
         /// <summary>
-        /// The settings for your integration with Weights and Biases. This payload specifies the
-        /// project that
-        /// metrics will be sent to. Optionally, you can set an explicit display name for your run, add
-        /// tags
+        /// The settings for your integration with Weights and Biases. This payload specifies the project that
+        /// metrics will be sent to. Optionally, you can set an explicit display name for your run, add tags
         /// to your run, and set a default entity (team, username, etc) to be associated with your run.
         /// </summary>
         public CreateFineTuningJobRequestIntegrationWandb Wandb { get; }

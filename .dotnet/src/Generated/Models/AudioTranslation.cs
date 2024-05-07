@@ -59,13 +59,15 @@ namespace OpenAI.Audio
         }
 
         /// <summary> Initializes a new instance of <see cref="AudioTranslation"/>. </summary>
+        /// <param name="task"> The task label. </param>
         /// <param name="language"> The language of the output translation (always `english`). </param>
         /// <param name="duration"> The duration of the input audio. </param>
         /// <param name="text"> The translated text. </param>
         /// <param name="segments"> Segments of the translated text and their corresponding details. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AudioTranslation(string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranslation(CreateTranslationResponseVerboseJsonTask task, string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
+            Task = task;
             Language = language;
             Duration = duration;
             Text = text;

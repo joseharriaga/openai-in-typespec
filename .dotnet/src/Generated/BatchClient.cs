@@ -41,7 +41,7 @@ namespace OpenAI.Batch
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -64,7 +64,7 @@ namespace OpenAI.Batch
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -80,7 +80,7 @@ namespace OpenAI.Batch
             uri.AppendPath(batchId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -97,7 +97,7 @@ namespace OpenAI.Batch
             uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 

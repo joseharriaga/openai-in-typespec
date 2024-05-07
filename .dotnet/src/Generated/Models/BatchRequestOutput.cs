@@ -51,10 +51,7 @@ namespace OpenAI.Internal.Models
         /// <param name="id"></param>
         /// <param name="customId"> A developer-provided per-request id that will be used to match outputs to inputs. </param>
         /// <param name="response"></param>
-        /// <param name="error">
-        /// For requests that failed with a non-HTTP error, this will contain more information on the
-        /// cause of the failure.
-        /// </param>
+        /// <param name="error"> For requests that failed with a non-HTTP error, this will contain more information on the cause of the failure. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal BatchRequestOutput(string id, string customId, BatchRequestOutputResponse response, BatchRequestOutputError error, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -71,10 +68,7 @@ namespace OpenAI.Internal.Models
         public string CustomId { get; }
         /// <summary> Gets the response. </summary>
         public BatchRequestOutputResponse Response { get; }
-        /// <summary>
-        /// For requests that failed with a non-HTTP error, this will contain more information on the
-        /// cause of the failure.
-        /// </summary>
+        /// <summary> For requests that failed with a non-HTTP error, this will contain more information on the cause of the failure. </summary>
         public BatchRequestOutputError Error { get; }
     }
 }

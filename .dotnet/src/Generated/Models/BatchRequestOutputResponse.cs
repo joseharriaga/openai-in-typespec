@@ -50,10 +50,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="BatchRequestOutputResponse"/>. </summary>
         /// <param name="statusCode"> The HTTP status code of the response. </param>
-        /// <param name="requestId">
-        /// An unique identifier for the OpenAI API request. Please include this request ID when
-        /// contacting support.
-        /// </param>
+        /// <param name="requestId"> An unique identifier for the OpenAI API request. Please include this request ID when contacting support. </param>
         /// <param name="body"> The JSON body of the response. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal BatchRequestOutputResponse(int? statusCode, string requestId, IReadOnlyDictionary<string, string> body, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -66,10 +63,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The HTTP status code of the response. </summary>
         public int? StatusCode { get; }
-        /// <summary>
-        /// An unique identifier for the OpenAI API request. Please include this request ID when
-        /// contacting support.
-        /// </summary>
+        /// <summary> An unique identifier for the OpenAI API request. Please include this request ID when contacting support. </summary>
         public string RequestId { get; }
         /// <summary> The JSON body of the response. </summary>
         public IReadOnlyDictionary<string, string> Body { get; }

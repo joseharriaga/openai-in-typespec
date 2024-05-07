@@ -44,10 +44,7 @@ namespace OpenAI.Embeddings
 
         /// <summary> Initializes a new instance of <see cref="Embedding"/>. </summary>
         /// <param name="index"> The index of the embedding in the list of embeddings. </param>
-        /// <param name="embeddingProperty">
-        /// The embedding vector, which is a list of floats. The length of vector depends on the model as
-        /// listed in the [embedding guide](/docs/guides/embeddings).
-        /// </param>
+        /// <param name="embeddingProperty"> The embedding vector, which is a list of floats. The length of vector depends on the model as listed in the [embedding guide](/docs/guides/embeddings). </param>
         /// <exception cref="ArgumentNullException"> <paramref name="embeddingProperty"/> is null. </exception>
         internal Embedding(int index, BinaryData embeddingProperty)
         {

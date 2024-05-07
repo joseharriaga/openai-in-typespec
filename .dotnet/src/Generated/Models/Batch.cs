@@ -87,11 +87,7 @@ namespace OpenAI.Batch
         /// <param name="cancellingAt"> The Unix timestamp (in seconds) for when the batch started cancelling. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the batch was cancelled. </param>
         /// <param name="internalRequestCounts"> The request counts for different statuses within the batch. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal Batch(string id, string @object, string endpoint, InternalBatchErrors internalErrors, string inputFileId, string completionWindow, BatchStatus status, string outputFileId, string errorFileId, DateTimeOffset createdAt, DateTimeOffset? inProgressAt, DateTimeOffset? expiresAt, DateTimeOffset? finalizingAt, DateTimeOffset? completedAt, DateTimeOffset? failedAt, DateTimeOffset? expiredAt, DateTimeOffset? cancellingAt, DateTimeOffset? cancelledAt, InternalBatchRequestCounts internalRequestCounts, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -156,11 +152,7 @@ namespace OpenAI.Batch
         public DateTimeOffset? CancellingAt { get; }
         /// <summary> The Unix timestamp (in seconds) for when the batch was cancelled. </summary>
         public DateTimeOffset? CancelledAt { get; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
     }
 }

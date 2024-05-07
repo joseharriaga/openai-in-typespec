@@ -39,7 +39,7 @@ public partial class FileClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> UploadAsync(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual async Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -69,7 +69,7 @@ public partial class FileClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult Upload(BinaryContent content, string contentType, RequestOptions options = null)
+    public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
@@ -167,7 +167,7 @@ public partial class FileClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> DeleteAsync(string fileId, RequestOptions options)
+    public virtual async Task<ClientResult> DeleteFileAsync(string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -188,7 +188,7 @@ public partial class FileClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult Delete(string fileId, RequestOptions options)
+    public virtual ClientResult DeleteFile(string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -209,7 +209,7 @@ public partial class FileClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> DownloadContentAsync(string fileId, RequestOptions options)
+    public virtual async Task<ClientResult> DownloadFileAsync(string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
@@ -230,7 +230,7 @@ public partial class FileClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult DownloadContent(string fileId, RequestOptions options)
+    public virtual ClientResult DownloadFile(string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 

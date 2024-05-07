@@ -34,11 +34,7 @@ model AssistantsApiResponseFormat {
 }
 
 model CreateAssistantRequest {
-  /**
-   * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-   * see all of your available models, or see our [Model overview](/docs/models/overview) for
-   * descriptions of them.
-   */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
@@ -97,26 +93,17 @@ model CreateAssistantRequest {
     file_search?: CreateAssistantRequestToolResourcesFileSearch;
   } | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-   * more random, while lower values like 0.2 will make it more focused and deterministic.
-   */
+  /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
   @maxValue(2)
   temperature?: float32 | null = 1;
 
   /**
-   * An alternative to sampling with temperature, called nucleus sampling, where the model
-   * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-   * comprising the top 10% probability mass are considered.
+   * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
    * We generally recommend altering this or temperature but not both.
    */
@@ -128,11 +115,7 @@ model CreateAssistantRequest {
 }
 
 model ModifyAssistantRequest {
-  /**
-   * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-   * see all of your available models, or see our [Model overview](/docs/models/overview) for
-   * descriptions of them.
-   */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   `model`?: string;
 
   /** The name of the assistant. The maximum length is 256 characters. */
@@ -167,35 +150,23 @@ model ModifyAssistantRequest {
       file_ids?: string[] = [];
     };
     file_search?: {
-      /**
-       * Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this
-       * assistant. There can be a maximum of 1 vector store attached to the assistant.
-       */
+      /** Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
       @maxItems(1)
       vector_store_ids?: string[];
     };
   } | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-   * more random, while lower values like 0.2 will make it more focused and deterministic.
-   */
+  /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
   @maxValue(2)
   temperature?: float32 | null = 1;
 
   /**
-   * An alternative to sampling with temperature, called nucleus sampling, where the model
-   * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-   * comprising the top 10% probability mass are considered.
+   * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
    * We generally recommend altering this or temperature but not both.
    */
@@ -207,7 +178,9 @@ model ModifyAssistantRequest {
 }
 
 model ListAssistantsResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
+
   data: AssistantObject[];
   first_id: string;
   last_id: string;
@@ -255,7 +228,7 @@ model AssistantObject {
   """)
   object: "assistant";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the assistant was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -268,11 +241,7 @@ model AssistantObject {
   @maxLength(512)
   description: string | null;
 
-  /**
-   * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-   * see all of your available models, or see our [Model overview](/docs/models/overview) for
-   * descriptions of them.
-   */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   `model`: string;
 
   /** The system instructions that the assistant uses. The maximum length is 256,000 characters. */
@@ -299,35 +268,23 @@ model AssistantObject {
       file_ids?: string[] = [];
     };
     file_search?: {
-      /**
-       * The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
-       * assistant. There can be a maximum of 1 vector store attached to the assistant.
-       */
+      /** The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
       @maxItems(1)
       vector_store_ids?: string[];
     };
   } | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-   * more random, while lower values like 0.2 will make it more focused and deterministic.
-   */
+  /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
   @maxValue(2)
   temperature?: float32 | null = 1;
 
   /**
-   * An alternative to sampling with temperature, called nucleus sampling, where the model
-   * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-   * comprising the top 10% probability mass are considered.
+   * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
    * We generally recommend altering this or temperature but not both.
    */
@@ -338,19 +295,14 @@ model AssistantObject {
   response_format?: AssistantsApiResponseFormatOption | null;
 }
 
-/**
- * Controls for how a thread will be truncated prior to the run. Use this to control the intial
- * context window of the run.
- */
+/** Controls for how a thread will be truncated prior to the run. Use this to control the intial context window of the run. */
 model TruncationObject {
   @doc("""
   The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`.
   """)
   type: "auto" | "last_messages";
 
-  /**
-   * The number of most recent messages from the thread when constructing the context for the run.
-   */
+  /** The number of most recent messages from the thread when constructing the context for the run. */
   @minValue(1)
   last_messages?: int32 | null;
 }

@@ -47,27 +47,21 @@ model CreateMessageRequest {
   /** A list of files attached to the message, and the tools they should be added to. */
   attachments?: CreateMessageRequestAttachments | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ModifyMessageRequest {
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ListMessagesResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
+
   data: MessageObject[];
   first_id: string;
   last_id: string;
@@ -90,7 +84,7 @@ model MessageObject {
   """)
   object: "thread.message";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the message was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -114,12 +108,12 @@ model MessageObject {
       | "run_failed";
   } | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the message was completed. */
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the message was marked as incomplete. */
   @encode("unixTimestamp", int32)
   incomplete_at: utcDateTime | null;
@@ -133,10 +127,7 @@ model MessageObject {
   @extension("x-oaiExpandable", true)
   content: (MessageContentImageFileObject | MessageContentTextObject)[];
 
-  /**
-   * If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
-   * message.
-   */
+  /** If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. */
   assistant_id: string | null;
 
   @doc("""
@@ -147,11 +138,7 @@ model MessageObject {
   /** A list of files attached to the message, and the tools they were added to. */
   attachments: MessageObjectAttachments | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 }
@@ -185,11 +172,7 @@ model MessageContentTextObject {
   };
 }
 
-/**
- * A citation within the message that points to a specific quote from a specific File associated
- * with the assistant or the message. Generated when the assistant uses the "file_search" tool to
- * search files.
- */
+/** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. */
 model MessageContentTextAnnotationsFileCitationObject {
   @doc("""
   Always `file_citation`.
@@ -296,11 +279,7 @@ model MessageDeltaContentTextObject {
   };
 }
 
-/**
- * A citation within the message that points to a specific quote from a specific File associated
- * with the assistant or the message. Generated when the assistant uses the "file_search" tool to
- * search files.
- */
+/** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. */
 model MessageDeltaContentTextAnnotationsFileCitationObject {
   /** The index of the annotation in the text content part. */
   index: int32;

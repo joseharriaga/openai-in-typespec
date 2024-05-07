@@ -50,11 +50,7 @@ namespace OpenAI.Internal.Models
         /// <param name="fileCounts"></param>
         /// <param name="status"> The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. </param>
         /// <param name="lastActiveAt"> The Unix timestamp (in seconds) for when the vector store was last active. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="fileCounts"/> or <paramref name="status"/> is null. </exception>
         internal VectorStoreObject(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreObjectFileCounts fileCounts, string status, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata)
         {
@@ -84,11 +80,7 @@ namespace OpenAI.Internal.Models
         /// <param name="expiresAfter"></param>
         /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the vector store will expire. </param>
         /// <param name="lastActiveAt"> The Unix timestamp (in seconds) for when the vector store was last active. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal VectorStoreObject(string id, string @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreObjectFileCounts fileCounts, string status, VectorStoreExpirationAfter expiresAfter, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -132,11 +124,7 @@ namespace OpenAI.Internal.Models
         public DateTimeOffset? ExpiresAt { get; }
         /// <summary> The Unix timestamp (in seconds) for when the vector store was last active. </summary>
         public DateTimeOffset? LastActiveAt { get; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
     }
 }

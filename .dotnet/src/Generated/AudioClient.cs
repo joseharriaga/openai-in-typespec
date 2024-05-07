@@ -40,7 +40,7 @@ namespace OpenAI.Audio
             request.Headers.Set("Accept", "application/octet-stream");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -57,7 +57,7 @@ namespace OpenAI.Audio
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("content-type", contentType);
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -74,7 +74,7 @@ namespace OpenAI.Audio
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("content-type", contentType);
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 

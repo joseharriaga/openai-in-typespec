@@ -62,47 +62,47 @@ model Batch {
   /** The ID of the file containing the outputs of requests with errors. */
   error_file_id?: string;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch started processing. */
   @encode("unixTimestamp", int32)
   in_progress_at?: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch will expire. */
   @encode("unixTimestamp", int32)
   expires_at?: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch started finalizing. */
   @encode("unixTimestamp", int32)
   finalizing_at?: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch was completed. */
   @encode("unixTimestamp", int32)
   completed_at?: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch failed. */
   @encode("unixTimestamp", int32)
   failed_at?: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch expired. */
   @encode("unixTimestamp", int32)
   expired_at?: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch started cancelling. */
   @encode("unixTimestamp", int32)
   cancelling_at?: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the batch was cancelled. */
   @encode("unixTimestamp", int32)
   cancelled_at?: utcDateTime;
@@ -119,21 +119,14 @@ model Batch {
     failed: int32;
   };
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 /** The per-line object of the batch input file */
 model BatchRequestInput {
-  /**
-   * A developer-provided per-request id that will be used to match outputs to inputs. Must be
-   * unique for each request in a batch.
-   */
+  /** A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch. */
   custom_id?: string;
 
   @doc("""
@@ -159,10 +152,7 @@ model BatchRequestOutput {
     /** The HTTP status code of the response */
     status_code?: int32;
 
-    /**
-     * An unique identifier for the OpenAI API request. Please include this request ID when
-     * contacting support.
-     */
+    /** An unique identifier for the OpenAI API request. Please include this request ID when contacting support. */
     request_id?: string;
 
     /** The JSON body of the response */
@@ -170,10 +160,7 @@ model BatchRequestOutput {
     body?: Record<string>;
   } | null;
 
-  /**
-   * For requests that failed with a non-HTTP error, this will contain more information on the
-   * cause of the failure.
-   */
+  /** For requests that failed with a non-HTTP error, this will contain more information on the cause of the failure. */
   error?: {
     /** A machine-readable error code. */
     code?: string;
@@ -188,5 +175,7 @@ model ListBatchesResponse {
   first_id?: string;
   last_id?: string;
   has_more: boolean;
+
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }

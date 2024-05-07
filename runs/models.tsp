@@ -18,22 +18,26 @@ model CreateRunRequestAdditional_messages is CreateMessageRequest[];
 @maxItems(20)
 @extension("x-oaiExpandable", true)
 model CreateRunRequestTools
-  is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
+  is (
+    | AssistantToolsCode
+    | AssistantToolsFileSearch
+    | AssistantToolsFunction
+    | null)[];
 
 // Tool generated type. Extracts CreateThreadAndRunRequest.tools
 @maxItems(20)
 model CreateThreadAndRunRequestTools
-  is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
+  is (
+    | AssistantToolsCode
+    | AssistantToolsFileSearch
+    | AssistantToolsFunction
+    | null)[];
 
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
   assistant_id: string;
 
-  /**
-   * The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-   * is provided here, it will override the model associated with the assistant. If not, the model
-   * associated with the assistant will be used.
-   */
+  /** The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. */
   @extension("x-oaiTypeLabel", "string")
   `model`?:
     | string
@@ -57,47 +61,29 @@ model CreateRunRequest {
     | "gpt-3.5-turbo-16k-0613"
     | null;
 
-  /**
-   * Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant.
-   * This is useful for modifying the behavior on a per-run basis.
-   */
+  /** Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. */
   instructions?: string | null;
 
-  /**
-   * Appends additional instructions at the end of the instructions for the run. This is useful for
-   * modifying the behavior on a per-run basis without overriding other instructions.
-   */
+  /** Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions. */
   additional_instructions?: string | null;
 
   /** Adds additional messages to the thread before creating the run. */
   additional_messages?: CreateRunRequestAdditional_messages | null;
 
-  /**
-   * Override the tools the assistant can use for this run. This is useful for modifying the
-   * behavior on a per-run basis.
-   */
+  /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
   tools?: CreateRunRequestTools | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-   * more random, while lower values like 0.2 will make it more focused and deterministic.
-   */
+  /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
   @maxValue(2)
   temperature?: float32 | null = 1;
 
   /**
-   * An alternative to sampling with temperature, called nucleus sampling, where the model
-   * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-   * comprising the top 10% probability mass are considered.
+   * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
    * We generally recommend altering this or temperature but not both.
    */
@@ -128,11 +114,7 @@ model CreateRunRequest {
 }
 
 model ModifyRunRequest {
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
@@ -144,11 +126,7 @@ model CreateThreadAndRunRequest {
   /** If no thread is provided, an empty thread will be created. */
   thread?: CreateThreadRequest;
 
-  /**
-   * The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-   * is provided here, it will override the model associated with the assistant. If not, the model
-   * associated with the assistant will be used.
-   */
+  /** The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. */
   @extension("x-oaiTypeLabel", "string")
   `model`?:
     | string
@@ -172,16 +150,10 @@ model CreateThreadAndRunRequest {
     | "gpt-3.5-turbo-16k-0613"
     | null;
 
-  /**
-   * Override the default system message of the assistant. This is useful for modifying the
-   * behavior on a per-run basis.
-   */
+  /** Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. */
   instructions?: string | null;
 
-  /**
-   * Override the tools the assistant can use for this run. This is useful for modifying the
-   * behavior on a per-run basis.
-   */
+  /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
   tools?: CreateThreadAndRunRequestTools | null;
 
   @doc("""
@@ -196,35 +168,23 @@ model CreateThreadAndRunRequest {
       file_ids?: string[] = [];
     };
     file_search?: {
-      /**
-       * The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this
-       * assistant. There can be a maximum of 1 vector store attached to the assistant.
-       */
+      /** The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
       @maxItems(1)
       vector_store_ids?: string[];
     };
   } | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-   * more random, while lower values like 0.2 will make it more focused and deterministic.
-   */
+  /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
   @maxValue(2)
   temperature?: float32 | null = 1;
 
   /**
-   * An alternative to sampling with temperature, called nucleus sampling, where the model
-   * considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens
-   * comprising the top 10% probability mass are considered.
+   * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
    *
    * We generally recommend altering this or temperature but not both.
    */
@@ -273,7 +233,9 @@ model SubmitToolOutputsRunRequest {
 }
 
 model ListRunsResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
+
   data: RunObject[];
   first_id: string;
   last_id: string;
@@ -281,7 +243,9 @@ model ListRunsResponse {
 }
 
 model ListRunStepsResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
+
   data: RunStepObject[];
   first_id: string;
   last_id: string;
@@ -437,14 +401,12 @@ model RunObject {
   """)
   object: "thread.run";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
-  /**
-   * The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-   */
+  /** The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run. */
   thread_id: string;
 
   /** The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. */
@@ -492,27 +454,27 @@ model RunObject {
     message: string;
   } | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run will expire. */
   @encode("unixTimestamp", int32)
   expires_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was started. */
   @encode("unixTimestamp", int32)
   started_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was cancelled. */
   @encode("unixTimestamp", int32)
   cancelled_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run failed. */
   @encode("unixTimestamp", int32)
   failed_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was completed. */
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
@@ -521,10 +483,7 @@ model RunObject {
   Details on why the run is incomplete. Will be `null` if the run is not incomplete.
   """)
   incomplete_details: {
-    /**
-     * The reason why the run is incomplete. This will point to which specific token limit was
-     * reached over the course of the run.
-     */
+    /** The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run. */
     reason?: "max_completion_tokens" | "max_prompt_tokens";
   } | null;
 
@@ -540,15 +499,11 @@ model RunObject {
   tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
   ];
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
-  usage: RunCompletionUsage;
+  usage: RunCompletionUsage | null;
 
   /** The sampling temperature used for this run. If not set, defaults to 1. */
   temperature?: float32 | null;
@@ -560,9 +515,7 @@ model RunObject {
   @minValue(256)
   max_prompt_tokens: int32 | null;
 
-  /**
-   * The maximum number of completion tokens specified to have been used over the course of the run.
-   */
+  /** The maximum number of completion tokens specified to have been used over the course of the run. */
   @minValue(256)
   max_completion_tokens: int32 | null;
 
@@ -581,7 +534,7 @@ model RunStepObject {
   """)
   object: "thread.run.step";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -622,46 +575,36 @@ model RunStepObject {
     message: string;
   } | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
-  /**
-   * The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
-   * the parent run is expired.
-   */
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+  /** The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. */
   @encode("unixTimestamp", int32)
   expired_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step was cancelled. */
   @encode("unixTimestamp", int32)
   cancelled_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step failed. */
   @encode("unixTimestamp", int32)
   failed_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step completed. */
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
-  usage: RunStepCompletionUsage;
+  usage: RunStepCompletionUsage | null;
 }
 
 /** Tool call objects */
 model RunToolCallObject {
-  /**
-   * The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
-   * the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-   */
+  /** The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint. */
   id: string;
 
   @doc("""

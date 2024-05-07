@@ -32,7 +32,7 @@ model VectorStoreObject {
   """)
   object: "vector_store";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -67,21 +67,17 @@ model VectorStoreObject {
 
   expires_after?: VectorStoreExpirationAfter;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store will expire. */
   @encode("unixTimestamp", int32)
   expires_at?: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store was last active. */
   @encode("unixTimestamp", int32)
   last_active_at: utcDateTime | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 }
@@ -98,11 +94,7 @@ model CreateVectorStoreRequest {
 
   expires_after?: VectorStoreExpirationAfter;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
@@ -113,17 +105,15 @@ model UpdateVectorStoreRequest {
 
   expires_after?: VectorStoreExpirationAfter | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ListVectorStoresResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
+
   data: VectorStoreObject[];
   first_id: string;
   last_id: string;
@@ -146,21 +136,15 @@ model VectorStoreFileObject {
   """)
   object: "vector_store.file";
 
-  /**
-   * The total vector store usage in bytes. Note that this may be different from the original file
-   * size.
-   */
+  /** The total vector store usage in bytes. Note that this may be different from the original file size. */
   usage_bytes: int32;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store file was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
-  /**
-   * The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
-   * [File](/docs/api-reference/files) is attached to.
-   */
+  /** The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. */
   vector_store_id: string;
 
   @doc("""
@@ -194,7 +178,9 @@ model CreateVectorStoreFileRequest {
 }
 
 model ListVectorStoreFilesResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
+
   data: VectorStoreFileObject[];
   first_id: string;
   last_id: string;
@@ -217,15 +203,12 @@ model VectorStoreFileBatchObject {
   """)
   object: "vector_store.files_batch";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the vector store files batch was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
-  /**
-   * The ID of the [vector store](/docs/api-reference/vector-stores/object) that the
-   * [File](/docs/api-reference/files) is attached to.
-   */
+  /** The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. */
   vector_store_id: string;
 
   @doc("""

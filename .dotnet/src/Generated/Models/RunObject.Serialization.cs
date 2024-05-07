@@ -143,8 +143,15 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("metadata");
             }
-            writer.WritePropertyName("usage"u8);
-            writer.WriteObjectValue(Usage, options);
+            if (Usage != null)
+            {
+                writer.WritePropertyName("usage"u8);
+                writer.WriteObjectValue(Usage, options);
+            }
+            else
+            {
+                writer.WriteNull("usage");
+            }
             if (Optional.IsDefined(Temperature))
             {
                 if (Temperature != null)
@@ -460,6 +467,11 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("usage"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        usage = null;
+                        continue;
+                    }
                     usage = RunCompletionUsage.DeserializeRunCompletionUsage(property.Value, options);
                     continue;
                 }

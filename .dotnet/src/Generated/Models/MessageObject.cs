@@ -53,17 +53,10 @@ namespace OpenAI.Internal.Models
         /// <param name="incompleteAt"> The Unix timestamp (in seconds) for when the message was marked as incomplete. </param>
         /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
-        /// <param name="assistantId">
-        /// If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
-        /// message.
-        /// </param>
+        /// <param name="assistantId"> If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. </param>
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints. </param>
         /// <param name="attachments"> A list of files attached to the message, and the tools they were added to. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="threadId"/> or <paramref name="content"/> is null. </exception>
         internal MessageObject(string id, DateTimeOffset createdAt, string threadId, MessageObjectStatus status, MessageObjectIncompleteDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageObjectRole role, IEnumerable<BinaryData> content, string assistantId, string runId, IEnumerable<MessageObjectAttachment> attachments, IReadOnlyDictionary<string, string> metadata)
         {
@@ -97,17 +90,10 @@ namespace OpenAI.Internal.Models
         /// <param name="incompleteAt"> The Unix timestamp (in seconds) for when the message was marked as incomplete. </param>
         /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
-        /// <param name="assistantId">
-        /// If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
-        /// message.
-        /// </param>
+        /// <param name="assistantId"> If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. </param>
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints. </param>
         /// <param name="attachments"> A list of files attached to the message, and the tools they were added to. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal MessageObject(string id, MessageObjectObject @object, DateTimeOffset createdAt, string threadId, MessageObjectStatus status, MessageObjectIncompleteDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageObjectRole role, IReadOnlyList<BinaryData> content, string assistantId, string runId, IReadOnlyList<MessageObjectAttachment> attachments, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -194,20 +180,13 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public IReadOnlyList<BinaryData> Content { get; }
-        /// <summary>
-        /// If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
-        /// message.
-        /// </summary>
+        /// <summary> If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. </summary>
         public string AssistantId { get; }
         /// <summary> The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints. </summary>
         public string RunId { get; }
         /// <summary> A list of files attached to the message, and the tools they were added to. </summary>
         public IReadOnlyList<MessageObjectAttachment> Attachments { get; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
     }
 }

@@ -68,11 +68,7 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="content"> The content of the message. </param>
         /// <param name="attachments"> A list of files attached to the message, and the tools they should be added to. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateMessageRequest(CreateMessageRequestRole role, string content, IList<CreateMessageRequestAttachment> attachments, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -98,11 +94,7 @@ namespace OpenAI.Internal.Models
         public string Content { get; }
         /// <summary> A list of files attached to the message, and the tools they should be added to. </summary>
         public IList<CreateMessageRequestAttachment> Attachments { get; set; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IDictionary<string, string> Metadata { get; set; }
     }
 }

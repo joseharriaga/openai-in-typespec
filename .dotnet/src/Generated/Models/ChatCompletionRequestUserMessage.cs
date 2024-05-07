@@ -55,10 +55,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="ChatCompletionRequestUserMessage"/>. </summary>
         /// <param name="content"> The contents of the user message. </param>
         /// <param name="role"> The role of the messages author, in this case `user`. </param>
-        /// <param name="name">
-        /// An optional name for the participant. Provides the model information to differentiate between
-        /// participants of the same role.
-        /// </param>
+        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatCompletionRequestUserMessage(BinaryData content, ChatCompletionRequestUserMessageRole role, string name, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -118,10 +115,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The role of the messages author, in this case `user`. </summary>
         public ChatCompletionRequestUserMessageRole Role { get; } = ChatCompletionRequestUserMessageRole.User;
 
-        /// <summary>
-        /// An optional name for the participant. Provides the model information to differentiate between
-        /// participants of the same role.
-        /// </summary>
+        /// <summary> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </summary>
         public string Name { get; set; }
     }
 }

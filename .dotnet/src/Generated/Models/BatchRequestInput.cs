@@ -48,10 +48,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="BatchRequestInput"/>. </summary>
-        /// <param name="customId">
-        /// A developer-provided per-request id that will be used to match outputs to inputs. Must be
-        /// unique for each request in a batch.
-        /// </param>
+        /// <param name="customId"> A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch. </param>
         /// <param name="method"> The HTTP method to be used for the request. Currently only `POST` is supported. </param>
         /// <param name="url"> The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions` and `/v1/embeddings` are supported. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -63,10 +60,7 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary>
-        /// A developer-provided per-request id that will be used to match outputs to inputs. Must be
-        /// unique for each request in a batch.
-        /// </summary>
+        /// <summary> A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch. </summary>
         public string CustomId { get; }
         /// <summary> The HTTP method to be used for the request. Currently only `POST` is supported. </summary>
         public string Method { get; }

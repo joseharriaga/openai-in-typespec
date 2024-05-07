@@ -18,23 +18,40 @@ internal partial class AzureTokenAuthenticationPolicy : PipelinePolicy
 
     public override void Process(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
     {
-        if (!_currentToken.HasValue || _currentToken.Value.ExpiresOn < DateTimeOffset.UtcNow + TimeSpan.FromSeconds(30))
+        if (message?.Request is not null)
         {
-            _currentToken = _credential.GetToken(DefaultTokenRequestContext, cancellationToken: default);
+            if (!_currentToken.HasValue || _currentToken.Value.ExpiresOn < DateTimeOffset.UtcNow + TimeSpan.FromSeconds(30))
+            {
+                TokenRequestContext tokenRequestContext = CreateRequestContext(message.Request);
+                _currentToken = _credential.GetToken(tokenRequestContext, cancellationToken: default);
+            }
+            message?.Request?.Headers?.Add("Authorization", $"Bearer {_currentToken.Value.Token}");
         }
-        message?.Request?.Headers?.Add("Authorization", $"Bearer {_currentToken.Value.Token}");
         ProcessNext(message, pipeline, currentIndex);
     }
 
     public override async ValueTask ProcessAsync(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
     {
-        if (!_currentToken.HasValue || _currentToken.Value.ExpiresOn < DateTimeOffset.UtcNow + TimeSpan.FromSeconds(30))
+        if (message?.Request is not null)
         {
-            _currentToken = await _credential.GetTokenAsync(DefaultTokenRequestContext, cancellationToken: default);
+            if (!_currentToken.HasValue || _currentToken.Value.ExpiresOn < DateTimeOffset.UtcNow + TimeSpan.FromSeconds(30))
+            {
+                TokenRequestContext tokenRequestContext = CreateRequestContext(message.Request);
+                _currentToken
+                    = await _credential.GetTokenAsync(tokenRequestContext, cancellationToken: default).ConfigureAwait(false);
+            }
+            message?.Request?.Headers?.Add("Authorization", $"Bearer {_currentToken.Value.Token}");
         }
-        message?.Request?.Headers?.Add("Authorization", $"Bearer {_currentToken.Value.Token}");
-        await ProcessNextAsync(message, pipeline, currentIndex);
+        await ProcessNextAsync(message, pipeline, currentIndex).ConfigureAwait(false);
     }
 
-    private static readonly TokenRequestContext DefaultTokenRequestContext = new(["https://cognitiveservices.azure.com/.default"]);
+    private static TokenRequestContext CreateRequestContext(PipelineRequest request)
+    {
+        string clientRequestId = request.Headers.TryGetValue("x-ms-client-request-id", out string messageClientId) == true
+            ? messageClientId
+            : null;
+        return new TokenRequestContext(DefaultAuthorizationScopes, clientRequestId);
+    }
+
+    private static readonly string[] DefaultAuthorizationScopes = ["https://cognitiveservices.azure.com/.default"];
 }

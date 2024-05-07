@@ -14,13 +14,13 @@ model CreateEmbeddingRequest {
   @extension("x-oaiExpandable", true)
   input: string | string[] | int32[] | int32[][];
 
-  /**
-   * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-   * see all of your available models, or see our [Model overview](/docs/models/overview) for
-   * descriptions of them.
-   */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | "text-embedding-ada-002" | "text-embedding-3-small" | "text-embedding-3-large";
+  `model`:
+    | string
+    | "text-embedding-ada-002"
+    | "text-embedding-3-small"
+    | "text-embedding-3-large";
 
   @doc("""
   The format to return the embeddings in. Can be either `float` or [`base64`](https://pypi.org/project/pybase64/).
@@ -33,10 +33,7 @@ model CreateEmbeddingRequest {
   @minValue(1)
   dimensions?: int32;
 
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-   * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-   */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
   user?: string;
 }
 
@@ -65,14 +62,10 @@ model Embedding {
   /** The index of the embedding in the list of embeddings. */
   index: int32;
 
-  // Tool customization: apply missing string union for embedding response valuese
-  /**
-   * The embedding vector, which is a list of floats. The length of vector depends on the model as
-   * listed in the [embedding guide](/docs/guides/embeddings).
-   */
+  // Tool customization: apply missing string union for embedding response values
+  /** The embedding vector, which is a list of floats. The length of vector depends on the model as listed in the [embedding guide](/docs/guides/embeddings). */
   embedding: float[] | string;
 
   /** The object type, which is always "embedding". */
   object: "embedding";
 }
-

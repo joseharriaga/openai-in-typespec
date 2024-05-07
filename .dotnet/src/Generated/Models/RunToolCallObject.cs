@@ -43,10 +43,7 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="RunToolCallObject"/>. </summary>
-        /// <param name="id">
-        /// The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
-        /// the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-        /// </param>
+        /// <param name="id"> The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint. </param>
         /// <param name="function"> The function definition. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="function"/> is null. </exception>
         internal RunToolCallObject(string id, RunToolCallObjectFunction function)
@@ -59,10 +56,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="RunToolCallObject"/>. </summary>
-        /// <param name="id">
-        /// The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
-        /// the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-        /// </param>
+        /// <param name="id"> The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint. </param>
         /// <param name="type"> The type of tool call the output is required for. For now, this is always `function`. </param>
         /// <param name="function"> The function definition. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -79,10 +73,7 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary>
-        /// The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
-        /// the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-        /// </summary>
+        /// <summary> The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint. </summary>
         public string Id { get; }
         /// <summary> The type of tool call the output is required for. For now, this is always `function`. </summary>
         public RunToolCallObjectType Type { get; } = RunToolCallObjectType.Function;

@@ -45,10 +45,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="MessageFileObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message file was created. </param>
-        /// <param name="messageId">
-        /// The ID of the [message](/docs/api-reference/messages) that the
-        /// [File](/docs/api-reference/files) is attached to.
-        /// </param>
+        /// <param name="messageId"> The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="messageId"/> is null. </exception>
         internal MessageFileObject(string id, DateTimeOffset createdAt, string messageId)
         {
@@ -64,10 +61,7 @@ namespace OpenAI.Internal.Models
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `thread.message.file`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message file was created. </param>
-        /// <param name="messageId">
-        /// The ID of the [message](/docs/api-reference/messages) that the
-        /// [File](/docs/api-reference/files) is attached to.
-        /// </param>
+        /// <param name="messageId"> The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal MessageFileObject(string id, MessageFileObjectObject @object, DateTimeOffset createdAt, string messageId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -90,10 +84,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The Unix timestamp (in seconds) for when the message file was created. </summary>
         public DateTimeOffset CreatedAt { get; }
-        /// <summary>
-        /// The ID of the [message](/docs/api-reference/messages) that the
-        /// [File](/docs/api-reference/files) is attached to.
-        /// </summary>
+        /// <summary> The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to. </summary>
         public string MessageId { get; }
     }
 }

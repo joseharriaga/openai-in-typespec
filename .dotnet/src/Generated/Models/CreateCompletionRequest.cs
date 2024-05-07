@@ -43,17 +43,11 @@ namespace OpenAI.LegacyCompletions
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionRequest"/>. </summary>
-        /// <param name="model">
-        /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-        /// see all of your available models, or see our [Model overview](/docs/models/overview) for
-        /// descriptions of them.
-        /// </param>
+        /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="prompt">
-        /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of
-        /// tokens, or array of token arrays.
+        /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
         ///
-        /// Note that &lt;|endoftext|&gt; is the document separator that the model sees during training, so if a
-        /// prompt is not specified the model will generate as if from the beginning of a new document.
+        /// Note that &lt;|endoftext|&gt; is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="prompt"/> is null. </exception>
         public CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt)
@@ -66,17 +60,11 @@ namespace OpenAI.LegacyCompletions
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionRequest"/>. </summary>
-        /// <param name="model">
-        /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-        /// see all of your available models, or see our [Model overview](/docs/models/overview) for
-        /// descriptions of them.
-        /// </param>
+        /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="prompt">
-        /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of
-        /// tokens, or array of token arrays.
+        /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
         ///
-        /// Note that &lt;|endoftext|&gt; is the document separator that the model sees during training, so if a
-        /// prompt is not specified the model will generate as if from the beginning of a new document.
+        /// Note that &lt;|endoftext|&gt; is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
         /// </param>
         /// <param name="bestOf">
         /// Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.
@@ -87,12 +75,9 @@ namespace OpenAI.LegacyCompletions
         /// </param>
         /// <param name="echo"> Echo back the prompt in addition to the completion. </param>
         /// <param name="frequencyPenalty">
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
-        /// frequency in the text so far, decreasing the model's likelihood to repeat the same line
-        /// verbatim.
+        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
         ///
-        /// [See more information about frequency and presence
-        /// penalties.](/docs/guides/text-generation/parameter-details)
+        /// [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         /// </param>
         /// <param name="logitBias">
         /// Modify the likelihood of specified tokens appearing in the completion.
@@ -117,21 +102,16 @@ namespace OpenAI.LegacyCompletions
         /// **Note:** Because this parameter generates many completions, it can quickly consume your token quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
         /// </param>
         /// <param name="presencePenalty">
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
-        /// in the text so far, increasing the model's likelihood to talk about new topics.
+        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
         ///
-        /// [See more information about frequency and presence
-        /// penalties.](/docs/guides/text-generation/parameter-details)
+        /// [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         /// </param>
         /// <param name="seed">
         /// If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
         ///
         /// Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
         /// </param>
-        /// <param name="stop">
-        /// Up to 4 sequences where the API will stop generating further tokens. The returned text will
-        /// not contain the stop sequence.
-        /// </param>
+        /// <param name="stop"> Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence. </param>
         /// <param name="stream"> Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </param>
         /// <param name="suffix"> The suffix that comes after a completion of inserted text. </param>
         /// <param name="temperature">
@@ -144,10 +124,7 @@ namespace OpenAI.LegacyCompletions
         ///
         /// We generally recommend altering this or `temperature` but not both.
         /// </param>
-        /// <param name="user">
-        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-        /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        /// </param>
+        /// <param name="user"> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, float? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, float? presencePenalty, long? seed, BinaryData stop, bool? stream, string suffix, float? temperature, float? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -176,18 +153,12 @@ namespace OpenAI.LegacyCompletions
         {
         }
 
-        /// <summary>
-        /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-        /// see all of your available models, or see our [Model overview](/docs/models/overview) for
-        /// descriptions of them.
-        /// </summary>
+        /// <summary> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </summary>
         public CreateCompletionRequestModel Model { get; }
         /// <summary>
-        /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of
-        /// tokens, or array of token arrays.
+        /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
         ///
-        /// Note that &lt;|endoftext|&gt; is the document separator that the model sees during training, so if a
-        /// prompt is not specified the model will generate as if from the beginning of a new document.
+        /// Note that &lt;|endoftext|&gt; is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
         /// <para>
         /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -245,12 +216,9 @@ namespace OpenAI.LegacyCompletions
         /// <summary> Echo back the prompt in addition to the completion. </summary>
         public bool? Echo { get; set; }
         /// <summary>
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
-        /// frequency in the text so far, decreasing the model's likelihood to repeat the same line
-        /// verbatim.
+        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
         ///
-        /// [See more information about frequency and presence
-        /// penalties.](/docs/guides/text-generation/parameter-details)
+        /// [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         /// </summary>
         public float? FrequencyPenalty { get; set; }
         /// <summary>
@@ -280,11 +248,9 @@ namespace OpenAI.LegacyCompletions
         /// </summary>
         public int? N { get; set; }
         /// <summary>
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
-        /// in the text so far, increasing the model's likelihood to talk about new topics.
+        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
         ///
-        /// [See more information about frequency and presence
-        /// penalties.](/docs/guides/text-generation/parameter-details)
+        /// [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         /// </summary>
         public float? PresencePenalty { get; set; }
         /// <summary>
@@ -294,8 +260,7 @@ namespace OpenAI.LegacyCompletions
         /// </summary>
         public long? Seed { get; set; }
         /// <summary>
-        /// Up to 4 sequences where the API will stop generating further tokens. The returned text will
-        /// not contain the stop sequence.
+        /// Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence.
         /// <para>
         /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -352,10 +317,7 @@ namespace OpenAI.LegacyCompletions
         /// We generally recommend altering this or `temperature` but not both.
         /// </summary>
         public float? TopP { get; set; }
-        /// <summary>
-        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-        /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        /// </summary>
+        /// <summary> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </summary>
         public string User { get; set; }
     }
 }

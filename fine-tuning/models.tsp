@@ -54,7 +54,7 @@ model CreateFineTuningJobRequest {
   """)
   @minLength(1)
   @maxLength(40)
-  suffix?: string | null;
+  suffix?: string | null = null;
 
   @doc("""
   The ID of an uploaded file that contains validation data.
@@ -73,15 +73,16 @@ model CreateFineTuningJobRequest {
 
 model ListPaginatedFineTuningJobsResponse {
   data: FineTuningJob[];
-
   has_more: boolean;
 
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }
 
 model ListFineTuningJobEventsResponse {
   data: FineTuningJobEvent[];
 
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }
 
@@ -92,7 +93,7 @@ model FineTuningJob {
   /** The object identifier, which can be referenced in the API endpoints. */
   id: string;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the fine-tuning job was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -113,30 +114,19 @@ model FineTuningJob {
     param: string | null;
   } | null;
 
-  /**
-   * The name of the fine-tuned model that is being created. The value will be null if the
-   * fine-tuning job is still running.
-   */
-  `fine_tuned_model`: string | null;
+  /** The name of the fine-tuned model that is being created. The value will be null if the fine-tuning job is still running. */
+  fine_tuned_model: string | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
-  /**
-   * The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
-   * null if the fine-tuning job is still running.
-   */
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+  /** The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running. */
   @encode("unixTimestamp", int32)
   finished_at: utcDateTime | null;
 
-  /**
-   * The hyperparameters used for the fine-tuning job. See the [fine-tuning
-   * guide](/docs/guides/fine-tuning) for more details.
-   */
+  /** The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details. */
   hyperparameters: {
     /**
-     * The number of epochs to train the model for. An epoch refers to one full cycle through the
-     * training dataset.
-     * "auto" decides the optimal number of epochs based on the size of the dataset. If setting the
-     * number manually, we support any number between 1 and 50 epochs.
+     * The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
+     * "auto" decides the optimal number of epochs based on the size of the dataset. If setting the number manually, we support any number between 1 and 50 epochs.
      */
     n_epochs: "auto" | int32 = "auto";
   };
@@ -150,33 +140,27 @@ model FineTuningJob {
   /** The organization that owns the fine-tuning job. */
   organization_id: string;
 
-  /**
-   * The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the
-   * [Files API](/docs/api-reference/files/retrieve-contents).
-   */
+  /** The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the [Files API](/docs/api-reference/files/retrieve-contents). */
   result_files: string[];
 
   @doc("""
   The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`.
   """)
-  status: "validating_files" | "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  status:
+    | "validating_files"
+    | "queued"
+    | "running"
+    | "succeeded"
+    | "failed"
+    | "cancelled";
 
-  /**
-   * The total number of billable tokens processed by this fine-tuning job. The value will be null
-   * if the fine-tuning job is still running.
-   */
+  /** The total number of billable tokens processed by this fine-tuning job. The value will be null if the fine-tuning job is still running. */
   trained_tokens: int32 | null;
 
-  /**
-   * The file ID used for training. You can retrieve the training data with the [Files
-   * API](/docs/api-reference/files/retrieve-contents).
-   */
+  /** The file ID used for training. You can retrieve the training data with the [Files API](/docs/api-reference/files/retrieve-contents). */
   training_file: string;
 
-  /**
-   * The file ID used for validation. You can retrieve the validation results with the [Files
-   * API](/docs/api-reference/files/retrieve-contents).
-   */
+  /** The file ID used for validation. You can retrieve the validation results with the [Files API](/docs/api-reference/files/retrieve-contents). */
   validation_file: string | null;
 }
 
@@ -184,14 +168,11 @@ model FineTuningJob {
 model FineTuningJobEvent {
   id: string;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
   level: "info" | "warn" | "error";
-
   message: string;
-
   object: "fine_tuning.job.event";
 }
-

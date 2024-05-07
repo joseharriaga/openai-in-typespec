@@ -52,20 +52,13 @@ namespace OpenAI.Internal.Models
         /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
         /// <param name="stepDetails"> The details of the run step. </param>
         /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
-        /// <param name="expiredAt">
-        /// The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
-        /// the parent run is expired.
-        /// </param>
+        /// <param name="expiredAt"> The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run step was cancelled. </param>
         /// <param name="failedAt"> The Unix timestamp (in seconds) for when the run step failed. </param>
         /// <param name="completedAt"> The Unix timestamp (in seconds) for when the run step completed. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="assistantId"/>, <paramref name="threadId"/>, <paramref name="runId"/>, <paramref name="stepDetails"/> or <paramref name="usage"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="assistantId"/>, <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepDetails"/> is null. </exception>
         internal RunStepObject(string id, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepObjectType type, RunStepObjectStatus status, BinaryData stepDetails, RunStepObjectLastError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepCompletionUsage usage)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -73,7 +66,6 @@ namespace OpenAI.Internal.Models
             Argument.AssertNotNull(threadId, nameof(threadId));
             Argument.AssertNotNull(runId, nameof(runId));
             Argument.AssertNotNull(stepDetails, nameof(stepDetails));
-            Argument.AssertNotNull(usage, nameof(usage));
 
             Id = id;
             CreatedAt = createdAt;
@@ -103,18 +95,11 @@ namespace OpenAI.Internal.Models
         /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
         /// <param name="stepDetails"> The details of the run step. </param>
         /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
-        /// <param name="expiredAt">
-        /// The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
-        /// the parent run is expired.
-        /// </param>
+        /// <param name="expiredAt"> The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run step was cancelled. </param>
         /// <param name="failedAt"> The Unix timestamp (in seconds) for when the run step failed. </param>
         /// <param name="completedAt"> The Unix timestamp (in seconds) for when the run step completed. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepObject(string id, RunStepObjectObject @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepObjectType type, RunStepObjectStatus status, BinaryData stepDetails, RunStepObjectLastError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepCompletionUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -204,10 +189,7 @@ namespace OpenAI.Internal.Models
         public BinaryData StepDetails { get; }
         /// <summary> The last error associated with this run step. Will be `null` if there are no errors. </summary>
         public RunStepObjectLastError LastError { get; }
-        /// <summary>
-        /// The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
-        /// the parent run is expired.
-        /// </summary>
+        /// <summary> The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. </summary>
         public DateTimeOffset? ExpiredAt { get; }
         /// <summary> The Unix timestamp (in seconds) for when the run step was cancelled. </summary>
         public DateTimeOffset? CancelledAt { get; }
@@ -215,11 +197,7 @@ namespace OpenAI.Internal.Models
         public DateTimeOffset? FailedAt { get; }
         /// <summary> The Unix timestamp (in seconds) for when the run step completed. </summary>
         public DateTimeOffset? CompletedAt { get; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
         /// <summary> Gets the usage. </summary>
         public RunStepCompletionUsage Usage { get; }

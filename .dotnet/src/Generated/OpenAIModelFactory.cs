@@ -56,10 +56,7 @@ namespace OpenAI
         /// <param name="tokenIds"> Array of token IDs for the text content. </param>
         /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
         /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
-        /// <param name="compressionRatio">
-        /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
-        /// failed.
-        /// </param>
+        /// <param name="compressionRatio"> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </param>
         /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
         /// <returns> A new <see cref="Audio.TranscribedSegment"/> instance for mocking. </returns>
         public static TranscribedSegment TranscribedSegment(int id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = default, double averageLogProbability = default, float compressionRatio = default, double noSpeechProbability = default)
@@ -80,39 +77,14 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Audio.AudioTranslation"/>. </summary>
-        /// <param name="language"> The language of the output translation (always `english`). </param>
-        /// <param name="duration"> The duration of the input audio. </param>
-        /// <param name="text"> The translated text. </param>
-        /// <param name="segments"> Segments of the translated text and their corresponding details. </param>
-        /// <returns> A new <see cref="Audio.AudioTranslation"/> instance for mocking. </returns>
-        public static AudioTranslation AudioTranslation(string language = null, TimeSpan? duration = null, string text = null, IEnumerable<TranscribedSegment> segments = null)
-        {
-            segments ??= new List<TranscribedSegment>();
-
-            return new AudioTranslation(language, duration, text, segments?.ToList(), serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.CreateAssistantRequest"/>. </summary>
-        /// <param name="model">
-        /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-        /// see all of your available models, or see our [Model overview](/docs/models/overview) for
-        /// descriptions of them.
-        /// </param>
+        /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
         /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`. </param>
-        /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
-        /// maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-        /// ascending order.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a maximum of 20 files attached to the assistant. Files are ordered by their creation date in ascending order. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <returns> A new <see cref="Models.CreateAssistantRequest"/> instance for mocking. </returns>
         public static CreateAssistantRequest CreateAssistantRequest(string model = null, string name = null, string description = null, string instructions = null, IEnumerable<BinaryData> tools = null, IEnumerable<string> fileIds = null, IDictionary<string, string> metadata = null)
         {
@@ -162,23 +134,11 @@ namespace OpenAI
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the assistant was created. </param>
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
-        /// <param name="model">
-        /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-        /// see all of your available models, or see our [Model overview](/docs/models/overview) for
-        /// descriptions of them.
-        /// </param>
+        /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
         /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`. </param>
-        /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
-        /// maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-        /// ascending order.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a maximum of 20 files attached to the assistant. Files are ordered by their creation date in ascending order. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <returns> A new <see cref="Models.AssistantObject"/> instance for mocking. </returns>
         public static AssistantObject AssistantObject(string id = null, AssistantObjectObject @object = default, DateTimeOffset createdAt = default, string name = null, string description = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null)
         {
@@ -207,7 +167,7 @@ namespace OpenAI
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <returns> A new <see cref="Models.ListAssistantsResponse"/> instance for mocking. </returns>
-        public static ListAssistantsResponse ListAssistantsResponse(string @object = null, IEnumerable<AssistantObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
+        public static ListAssistantsResponse ListAssistantsResponse(ListAssistantsResponseObject @object = default, IEnumerable<AssistantObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
         {
             data ??= new List<AssistantObject>();
 
@@ -248,7 +208,7 @@ namespace OpenAI
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <returns> A new <see cref="Models.ListAssistantFilesResponse"/> instance for mocking. </returns>
-        public static ListAssistantFilesResponse ListAssistantFilesResponse(string @object = null, IEnumerable<AssistantFileObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
+        public static ListAssistantFilesResponse ListAssistantFilesResponse(ListAssistantFilesResponseObject @object = default, IEnumerable<AssistantFileObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
         {
             data ??= new List<AssistantFileObject>();
 
@@ -272,49 +232,30 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionRequest"/>. </summary>
-        /// <param name="messages">
-        /// A list of messages comprising the conversation so far. [Example Python
-        /// code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
-        /// </param>
-        /// <param name="model">
-        /// ID of the model to use. See the [model endpoint
-        /// compatibility](/docs/models/model-endpoint-compatibility) table for details on which models
-        /// work with the Chat API.
-        /// </param>
+        /// <param name="messages"> A list of messages comprising the conversation so far. [Example Python code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models). </param>
+        /// <param name="model"> ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API. </param>
         /// <param name="frequencyPenalty">
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
-        /// frequency in the text so far, decreasing the model's likelihood to repeat the same line
-        /// verbatim.
+        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
         ///
-        /// [See more information about frequency and presence
-        /// penalties.](/docs/guides/text-generation/parameter-details)
+        /// [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         /// </param>
         /// <param name="logitBias">
         /// Modify the likelihood of specified tokens appearing in the completion.
         ///
-        /// Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an
-        /// associated bias value from -100 to 100. Mathematically, the bias is added to the logits
-        /// generated by the model prior to sampling. The exact effect will vary per model, but values
-        /// between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100
-        /// should result in a ban or exclusive selection of the relevant token.
+        /// Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
         /// </param>
         /// <param name="logprobs"> Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`. This option is currently not available on the `gpt-4-vision-preview` model. </param>
         /// <param name="topLogprobs"> An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used. </param>
         /// <param name="maxTokens">
         /// The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
         ///
-        /// The total length of input tokens and generated tokens is limited by the model's context
-        /// length. [Example Python
-        /// code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting
-        /// tokens.
+        /// The total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
         /// </param>
         /// <param name="n"> How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs. </param>
         /// <param name="presencePenalty">
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
-        /// in the text so far, increasing the model's likelihood to talk about new topics.
+        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
         ///
-        /// [See more information about frequency and presence
-        /// penalties.](/docs/guides/text-generation/parameter-details)
+        /// [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         /// </param>
         /// <param name="responseFormat">
         /// An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
@@ -340,15 +281,9 @@ namespace OpenAI
         ///
         /// We generally recommend altering this or `temperature` but not both.
         /// </param>
-        /// <param name="tools">
-        /// A list of tools the model may call. Currently, only functions are supported as a tool. Use
-        /// this to provide a list of functions the model may generate JSON inputs for.
-        /// </param>
+        /// <param name="tools"> A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. </param>
         /// <param name="toolChoice"></param>
-        /// <param name="user">
-        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-        /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        /// </param>
+        /// <param name="user"> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </param>
         /// <param name="functionCall">
         /// Deprecated in favor of `tool_choice`.
         ///
@@ -399,10 +334,7 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestSystemMessage"/>. </summary>
         /// <param name="content"> The contents of the system message. </param>
         /// <param name="role"> The role of the messages author, in this case `system`. </param>
-        /// <param name="name">
-        /// An optional name for the participant. Provides the model information to differentiate between
-        /// participants of the same role.
-        /// </param>
+        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestSystemMessage"/> instance for mocking. </returns>
         public static ChatCompletionRequestSystemMessage ChatCompletionRequestSystemMessage(string content = null, ChatCompletionRequestSystemMessageRole role = default, string name = null)
         {
@@ -412,10 +344,7 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestUserMessage"/>. </summary>
         /// <param name="content"> The contents of the user message. </param>
         /// <param name="role"> The role of the messages author, in this case `user`. </param>
-        /// <param name="name">
-        /// An optional name for the participant. Provides the model information to differentiate between
-        /// participants of the same role.
-        /// </param>
+        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestUserMessage"/> instance for mocking. </returns>
         public static ChatCompletionRequestUserMessage ChatCompletionRequestUserMessage(BinaryData content = null, ChatCompletionRequestUserMessageRole role = default, string name = null)
         {
@@ -442,10 +371,7 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestMessageContentPartImageImageUrl"/>. </summary>
         /// <param name="url"> Either a URL of the image or the base64 encoded image data. </param>
-        /// <param name="detail">
-        /// Specifies the detail level of the image. Learn more in the [Vision
-        /// guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
-        /// </param>
+        /// <param name="detail"> Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding). </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestMessageContentPartImageImageUrl"/> instance for mocking. </returns>
         public static ChatCompletionRequestMessageContentPartImageImageUrl ChatCompletionRequestMessageContentPartImageImageUrl(Uri url = null, ChatCompletionRequestMessageContentPartImageImageUrlDetail? detail = null)
         {
@@ -455,10 +381,7 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestAssistantMessage"/>. </summary>
         /// <param name="content"> The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified. </param>
         /// <param name="role"> The role of the messages author, in this case `assistant`. </param>
-        /// <param name="name">
-        /// An optional name for the participant. Provides the model information to differentiate between
-        /// participants of the same role.
-        /// </param>
+        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
         /// <param name="toolCalls"></param>
         /// <param name="functionCall"> Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestAssistantMessage"/> instance for mocking. </returns>
@@ -524,14 +447,8 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionFunctions"/>. </summary>
-        /// <param name="description">
-        /// A description of what the function does, used by the model to choose when and how to call the
-        /// function.
-        /// </param>
-        /// <param name="name">
-        /// The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
-        /// dashes, with a maximum length of 64.
-        /// </param>
+        /// <param name="description"> A description of what the function does, used by the model to choose when and how to call the function. </param>
+        /// <param name="name"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
         /// <param name="parameters"></param>
         /// <returns> A new <see cref="Models.ChatCompletionFunctions"/> instance for mocking. </returns>
         public static ChatCompletionFunctions ChatCompletionFunctions(string description = null, string name = null, FunctionParameters parameters = null)
@@ -569,11 +486,7 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionResponseMessageFunctionCall"/>. </summary>
-        /// <param name="arguments">
-        /// The arguments to call the function with, as generated by the model in JSON format. Note that
-        /// the model does not always generate valid JSON, and may hallucinate parameters not defined by
-        /// your function schema. Validate the arguments in your code before calling your function.
-        /// </param>
+        /// <param name="arguments"> The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. </param>
         /// <param name="name"> The name of the function to call. </param>
         /// <returns> A new <see cref="Models.ChatCompletionResponseMessageFunctionCall"/> instance for mocking. </returns>
         public static ChatCompletionResponseMessageFunctionCall ChatCompletionResponseMessageFunctionCall(string arguments = null, string name = null)
@@ -651,11 +564,7 @@ namespace OpenAI
         /// <param name="role"> The role of the entity that is creating the message. Currently only `user` is supported. </param>
         /// <param name="content"> The content of the message. </param>
         /// <param name="fileIds"> A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a maximum of 10 files attached to a message. Useful for tools like `retrieval` and `code_interpreter` that can access and use files. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <returns> A new <see cref="Models.CreateMessageRequest"/> instance for mocking. </returns>
         public static CreateMessageRequest CreateMessageRequest(CreateMessageRequestRole role = default, string content = null, IEnumerable<string> fileIds = null, IDictionary<string, string> metadata = null)
         {
@@ -672,24 +581,10 @@ namespace OpenAI
         /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
         /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content"> The content of the message in array of text and/or images. </param>
-        /// <param name="assistantId">
-        /// If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
-        /// message.
-        /// </param>
-        /// <param name="runId">
-        /// If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-        /// this message.
-        /// </param>
-        /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-        /// tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-        /// attached to a message.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="assistantId"> If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. </param>
+        /// <param name="runId"> If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of this message. </param>
+        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be attached to a message. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <returns> A new <see cref="Models.MessageObject"/> instance for mocking. </returns>
         public static MessageObject MessageObject(string id = null, MessageObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, MessageObjectRole role = default, IEnumerable<BinaryData> content = null, string assistantId = null, string runId = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null)
         {
@@ -808,7 +703,7 @@ namespace OpenAI
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <returns> A new <see cref="Models.ListMessagesResponse"/> instance for mocking. </returns>
-        public static ListMessagesResponse ListMessagesResponse(string @object = null, IEnumerable<MessageObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
+        public static ListMessagesResponse ListMessagesResponse(ListMessagesResponseObject @object = default, IEnumerable<MessageObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
         {
             data ??= new List<MessageObject>();
 
@@ -828,7 +723,7 @@ namespace OpenAI
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <returns> A new <see cref="Models.ListMessageFilesResponse"/> instance for mocking. </returns>
-        public static ListMessageFilesResponse ListMessageFilesResponse(string @object = null, IEnumerable<MessageFileObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
+        public static ListMessageFilesResponse ListMessageFilesResponse(ListMessageFilesResponseObject @object = default, IEnumerable<MessageFileObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
         {
             data ??= new List<MessageFileObject>();
 
@@ -845,10 +740,7 @@ namespace OpenAI
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `thread.message.file`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message file was created. </param>
-        /// <param name="messageId">
-        /// The ID of the [message](/docs/api-reference/messages) that the
-        /// [File](/docs/api-reference/files) is attached to.
-        /// </param>
+        /// <param name="messageId"> The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to. </param>
         /// <returns> A new <see cref="Models.MessageFileObject"/> instance for mocking. </returns>
         public static MessageFileObject MessageFileObject(string id = null, MessageFileObjectObject @object = default, DateTimeOffset createdAt = default, string messageId = null)
         {
@@ -878,34 +770,14 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCategories"/>. </summary>
-        /// <param name="hate">
-        /// Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
-        /// religion, nationality, sexual orientation, disability status, or caste. Hateful content
-        /// aimed at non-protected groups (e.g., chess players) is harassment.
-        /// </param>
-        /// <param name="hateThreatening">
-        /// Hateful content that also includes violence or serious harm towards the targeted group
-        /// based on race, gender, ethnicity, religion, nationality, sexual orientation, disability
-        /// status, or caste.
-        /// </param>
+        /// <param name="hate"> Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment. </param>
+        /// <param name="hateThreatening"> Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. </param>
         /// <param name="harassment"> Content that expresses, incites, or promotes harassing language towards any target. </param>
         /// <param name="harassmentThreatening"> Harassment content that also includes violence or serious harm towards any target. </param>
-        /// <param name="selfHarm">
-        /// Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting,
-        /// and eating disorders.
-        /// </param>
-        /// <param name="selfHarmIntent">
-        /// Content where the speaker expresses that they are engaging or intend to engage in acts of
-        /// self-harm, such as suicide, cutting, and eating disorders.
-        /// </param>
-        /// <param name="selfHarmInstructions">
-        /// Content that encourages performing acts of self-harm, such as suicide, cutting, and eating
-        /// disorders, or that gives instructions or advice on how to commit such acts.
-        /// </param>
-        /// <param name="sexual">
-        /// Content meant to arouse sexual excitement, such as the description of sexual activity, or
-        /// that promotes sexual services (excluding sex education and wellness).
-        /// </param>
+        /// <param name="selfHarm"> Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders. </param>
+        /// <param name="selfHarmIntent"> Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders. </param>
+        /// <param name="selfHarmInstructions"> Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts. </param>
+        /// <param name="sexual"> Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness). </param>
         /// <param name="sexualMinors"> Sexual content that includes an individual who is under 18 years old. </param>
         /// <param name="violence"> Content that depicts death, violence, or physical injury. </param>
         /// <param name="violenceGraphic"> Content that depicts death, violence, or physical injury in graphic detail. </param>
@@ -960,24 +832,10 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.CreateThreadAndRunRequest"/>. </summary>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
         /// <param name="thread"> If no thread is provided, an empty thread will be created. </param>
-        /// <param name="model">
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-        /// is provided here, it will override the model associated with the assistant. If not, the model
-        /// associated with the assistant will be used.
-        /// </param>
-        /// <param name="instructions">
-        /// Override the default system message of the assistant. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="tools">
-        /// Override the tools the assistant can use for this run. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="model"> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </param>
+        /// <param name="instructions"> Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="tools"> Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <returns> A new <see cref="Models.CreateThreadAndRunRequest"/> instance for mocking. </returns>
         public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null)
         {
@@ -1011,15 +869,8 @@ namespace OpenAI
         /// <param name="model"> The model that the [assistant](/docs/api-reference/assistants) used for this run. </param>
         /// <param name="instructions"> The instructions that the [assistant](/docs/api-reference/assistants) used for this run. </param>
         /// <param name="tools"> The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. </param>
-        /// <param name="fileIds">
-        /// The list of [File](/docs/api-reference/files) IDs the
-        /// [assistant](/docs/api-reference/assistants) used for this run.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="fileIds"> The list of [File](/docs/api-reference/files) IDs the [assistant](/docs/api-reference/assistants) used for this run. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <returns> A new <see cref="Models.RunObject"/> instance for mocking. </returns>
         public static RunObject RunObject(string id = null, RunObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, string assistantId = null, RunObjectStatus status = default, RunObjectRequiredAction requiredAction = null, RunObjectLastError lastError = null, DateTimeOffset expiresAt = default, DateTimeOffset? startedAt = null, DateTimeOffset? cancelledAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? completedAt = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null, RunCompletionUsage usage = null)
@@ -1071,10 +922,7 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunToolCallObject"/>. </summary>
-        /// <param name="id">
-        /// The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
-        /// the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-        /// </param>
+        /// <param name="id"> The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint. </param>
         /// <param name="type"> The type of tool call the output is required for. For now, this is always `function`. </param>
         /// <param name="function"> The function definition. </param>
         /// <returns> A new <see cref="Models.RunToolCallObject"/> instance for mocking. </returns>
@@ -1113,28 +961,11 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateRunRequest"/>. </summary>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
-        /// <param name="model">
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-        /// is provided here, it will override the model associated with the assistant. If not, the model
-        /// associated with the assistant will be used.
-        /// </param>
-        /// <param name="instructions">
-        /// Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant.
-        /// This is useful for modifying the behavior on a per-run basis.
-        /// </param>
-        /// <param name="additionalInstructions">
-        /// Appends additional instructions at the end of the instructions for the run. This is useful for
-        /// modifying the behavior on a per-run basis without overriding other instructions.
-        /// </param>
-        /// <param name="tools">
-        /// Override the tools the assistant can use for this run. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="model"> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </param>
+        /// <param name="instructions"> Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="additionalInstructions"> Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions. </param>
+        /// <param name="tools"> Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <returns> A new <see cref="Models.CreateRunRequest"/> instance for mocking. </returns>
         public static CreateRunRequest CreateRunRequest(string assistantId = null, string model = null, string instructions = null, string additionalInstructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null)
         {
@@ -1158,7 +989,7 @@ namespace OpenAI
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <returns> A new <see cref="Models.ListRunsResponse"/> instance for mocking. </returns>
-        public static ListRunsResponse ListRunsResponse(string @object = null, IEnumerable<RunObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
+        public static ListRunsResponse ListRunsResponse(ListRunsResponseObject @object = default, IEnumerable<RunObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
         {
             data ??= new List<RunObject>();
 
@@ -1178,7 +1009,7 @@ namespace OpenAI
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <returns> A new <see cref="Models.ListRunStepsResponse"/> instance for mocking. </returns>
-        public static ListRunStepsResponse ListRunStepsResponse(string @object = null, IEnumerable<RunStepObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
+        public static ListRunStepsResponse ListRunStepsResponse(ListRunStepsResponseObject @object = default, IEnumerable<RunStepObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
         {
             data ??= new List<RunStepObject>();
 
@@ -1202,18 +1033,11 @@ namespace OpenAI
         /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
         /// <param name="stepDetails"> The details of the run step. </param>
         /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
-        /// <param name="expiredAt">
-        /// The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
-        /// the parent run is expired.
-        /// </param>
+        /// <param name="expiredAt"> The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run step was cancelled. </param>
         /// <param name="failedAt"> The Unix timestamp (in seconds) for when the run step failed. </param>
         /// <param name="completedAt"> The Unix timestamp (in seconds) for when the run step completed. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <returns> A new <see cref="Models.RunStepObject"/> instance for mocking. </returns>
         public static RunStepObject RunStepObject(string id = null, RunStepObjectObject @object = default, DateTimeOffset createdAt = default, string assistantId = null, string threadId = null, string runId = null, RunStepObjectType type = default, RunStepObjectStatus status = default, BinaryData stepDetails = null, RunStepObjectLastError lastError = null, DateTimeOffset? expiredAt = null, DateTimeOffset? cancelledAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? completedAt = null, IReadOnlyDictionary<string, string> metadata = null, RunStepCompletionUsage usage = null)
@@ -1370,11 +1194,7 @@ namespace OpenAI
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `thread`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the thread was created. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <returns> A new <see cref="Models.ThreadObject"/> instance for mocking. </returns>
         public static ThreadObject ThreadObject(string id = null, ThreadObjectObject @object = default, DateTimeOffset createdAt = default, IReadOnlyDictionary<string, string> metadata = null)
         {
@@ -1452,11 +1272,7 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionStreamResponseDeltaFunctionCall"/>. </summary>
-        /// <param name="arguments">
-        /// The arguments to call the function with, as generated by the model in JSON format. Note that
-        /// the model does not always generate valid JSON, and may hallucinate parameters not defined by
-        /// your function schema. Validate the arguments in your code before calling your function.
-        /// </param>
+        /// <param name="arguments"> The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. </param>
         /// <param name="name"> The name of the function to call. </param>
         /// <returns> A new <see cref="Models.ChatCompletionStreamResponseDeltaFunctionCall"/> instance for mocking. </returns>
         public static ChatCompletionStreamResponseDeltaFunctionCall ChatCompletionStreamResponseDeltaFunctionCall(string arguments = null, string name = null)
@@ -1477,11 +1293,7 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionMessageToolCallChunkFunction"/>. </summary>
         /// <param name="name"> The name of the function to call. </param>
-        /// <param name="arguments">
-        /// The arguments to call the function with, as generated by the model in JSON format. Note that
-        /// the model does not always generate valid JSON, and may hallucinate parameters not defined by
-        /// your function schema. Validate the arguments in your code before calling your function.
-        /// </param>
+        /// <param name="arguments"> The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. </param>
         /// <returns> A new <see cref="Models.ChatCompletionMessageToolCallChunkFunction"/> instance for mocking. </returns>
         public static ChatCompletionMessageToolCallChunkFunction ChatCompletionMessageToolCallChunkFunction(string name = null, string arguments = null)
         {
@@ -1491,10 +1303,7 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionStreamResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. Each chunk has the same ID. </param>
         /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
-        /// <param name="created">
-        /// The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
-        /// same timestamp.
-        /// </param>
+        /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </param>
         /// <param name="model"> The model to generate the completion. </param>
         /// <param name="systemFingerprint">
         /// This fingerprint represents the backend configuration that the model runs with.

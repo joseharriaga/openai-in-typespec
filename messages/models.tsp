@@ -25,54 +25,40 @@ model CreateMessageRequest {
   @maxItems(10)
   file_ids?: string[] = [];
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ModifyMessageRequest {
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ListMessagesResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
 
   data: MessageObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model ListMessageFilesResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
 
   data: MessageFileObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteMessageResponse {
   id: string;
-
   deleted: boolean;
-
   object: "thread.message.deleted";
 }
 
@@ -86,7 +72,7 @@ model MessageObject {
   """)
   object: "thread.message";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the message was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -100,33 +86,20 @@ model MessageObject {
   role: "user" | "assistant";
 
   /** The content of the message in array of text and/or images. */
+  @extension("x-oaiExpandable", true)
   content: (MessageContentImageFileObject | MessageContentTextObject)[];
 
-  /**
-   * If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
-   * message.
-   */
+  /** If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. */
   assistant_id: string | null;
 
-  /**
-   * If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-   * this message.
-   */
+  /** If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of this message. */
   run_id: string | null;
 
-  /**
-   * A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-   * tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-   * attached to a message.
-   */
+  /** A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be attached to a message. */
   @maxItems(10)
   file_ids: string[] = [];
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 }
@@ -155,15 +128,12 @@ model MessageContentTextObject {
     /** The data that makes up the text. */
     value: string;
 
+    @extension("x-oaiExpandable", true)
     annotations: (MessageContentTextAnnotationsFileCitationObject | MessageContentTextAnnotationsFilePathObject)[];
   };
 }
 
-/**
- * A citation within the message that points to a specific quote from a specific File associated
- * with the assistant or the message. Generated when the assistant uses the "retrieval" tool to
- * search files.
- */
+/** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "retrieval" tool to search files. */
 model MessageContentTextAnnotationsFileCitationObject {
   @doc("""
   Always `file_citation`.
@@ -224,15 +194,11 @@ model MessageFileObject {
   """)
   object: "thread.message.file";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the message file was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
-  /**
-   * The ID of the [message](/docs/api-reference/messages) that the
-   * [File](/docs/api-reference/files) is attached to.
-   */
+  /** The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to. */
   message_id: string;
 }
-

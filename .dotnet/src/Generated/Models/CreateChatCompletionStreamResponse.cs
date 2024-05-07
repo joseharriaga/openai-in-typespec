@@ -8,10 +8,7 @@ using System.Linq;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary>
-    /// Represents a streamed chunk of a chat completion response returned by model, based on the
-    /// provided input.
-    /// </summary>
+    /// <summary> Represents a streamed chunk of a chat completion response returned by model, based on the provided input. </summary>
     internal partial class CreateChatCompletionStreamResponse
     {
         /// <summary>
@@ -49,10 +46,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionStreamResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. Each chunk has the same ID. </param>
         /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
-        /// <param name="created">
-        /// The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
-        /// same timestamp.
-        /// </param>
+        /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </param>
         /// <param name="model"> The model to generate the completion. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="choices"/> or <paramref name="model"/> is null. </exception>
         internal CreateChatCompletionStreamResponse(string id, IEnumerable<CreateChatCompletionStreamResponseChoice> choices, DateTimeOffset created, string model)
@@ -70,10 +64,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionStreamResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. Each chunk has the same ID. </param>
         /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
-        /// <param name="created">
-        /// The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
-        /// same timestamp.
-        /// </param>
+        /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </param>
         /// <param name="model"> The model to generate the completion. </param>
         /// <param name="systemFingerprint">
         /// This fingerprint represents the backend configuration that the model runs with.
@@ -101,10 +92,7 @@ namespace OpenAI.Internal.Models
         public string Id { get; }
         /// <summary> A list of chat completion choices. Can be more than one if `n` is greater than 1. </summary>
         public IReadOnlyList<CreateChatCompletionStreamResponseChoice> Choices { get; }
-        /// <summary>
-        /// The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the
-        /// same timestamp.
-        /// </summary>
+        /// <summary> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </summary>
         public DateTimeOffset Created { get; }
         /// <summary> The model to generate the completion. </summary>
         public string Model { get; }

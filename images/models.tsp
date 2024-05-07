@@ -37,26 +37,26 @@ model CreateImageRequest {
   @doc("""
   The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or `1024x1792` for `dall-e-3` models.
   """)
-  size?: "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792" | null = "1024x1024";
+  size?:
+    | "256x256"
+    | "512x512"
+    | "1024x1024"
+    | "1792x1024"
+    | "1024x1792"
+    | null = "1024x1024";
 
   @doc("""
   The style of the generated images. Must be one of `vivid` or `natural`. Vivid causes the model to lean towards generating hyper-real and dramatic images. Natural causes the model to produce more natural, less hyper-real looking images. This param is only supported for `dall-e-3`.
   """)
   style?: "vivid" | "natural" | null = "vivid";
 
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-   * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-   */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
   user?: string;
 }
 
 model CreateImageEditRequest {
   // Tool customization: binary payloads are encoded bytes
-  /**
-   * The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not
-   * provided, image must have transparency, which will be used as the mask.
-   */
+  /** The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, image must have transparency, which will be used as the mask. */
   @encode("binary")
   image: bytes;
 
@@ -91,19 +91,13 @@ model CreateImageEditRequest {
   """)
   response_format?: "url" | "b64_json" | null = "url";
 
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-   * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-   */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
   user?: string;
 }
 
 model CreateImageVariationRequest {
-  /**
-   * The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB,
-   * and square.
-   */
-  image: string;
+  /** The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square. */
+  image: bytes;
 
   @doc("""
   The model to use for image generation. Only `dall-e-2` is supported at this time.
@@ -128,15 +122,12 @@ model CreateImageVariationRequest {
   """)
   size?: "256x256" | "512x512" | "1024x1024" | null = "1024x1024";
 
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-   * abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-   */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
   user?: string;
 }
 
 model ImagesResponse {
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   @encode("unixTimestamp", int32)
   created: utcDateTime;
 
@@ -161,4 +152,3 @@ model Image {
   /** The prompt that was used to generate the image, if there was any revision to the prompt. */
   revised_prompt?: string;
 }
-

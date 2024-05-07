@@ -10,11 +10,7 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateAssistantRequest {
-  /**
-   * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-   * see all of your available models, or see our [Model overview](/docs/models/overview) for
-   * descriptions of them.
-   */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   `model`: string;
 
   /** The name of the assistant. The maximum length is 256 characters. */
@@ -33,31 +29,21 @@ model CreateAssistantRequest {
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
   """)
   @maxItems(128)
-  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [];
+  @extension("x-oaiExpandable", true)
+  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
-  /**
-   * A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
-   * maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-   * ascending order.
-   */
+  /** A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a maximum of 20 files attached to the assistant. Files are ordered by their creation date in ascending order. */
   @maxItems(20)
   file_ids?: string[] = [];
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ModifyAssistantRequest {
-  /**
-   * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-   * see all of your available models, or see our [Model overview](/docs/models/overview) for
-   * descriptions of them.
-   */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   `model`?: string;
 
   /** The name of the assistant. The maximum length is 256 characters. */
@@ -76,22 +62,15 @@ model ModifyAssistantRequest {
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
   """)
   @maxItems(128)
-  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [];
+  @extension("x-oaiExpandable", true)
+  tools?: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
-  /**
-   * A list of [File](/docs/api-reference/files) IDs attached to this assistant. There can be a
-   * maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-   * ascending order. If a file was previously attached to the list but does not show up in the
-   * list, it will be deleted from the assistant.
-   */
+  /** A list of [File](/docs/api-reference/files) IDs attached to this assistant. There can be a maximum of 20 files attached to the assistant. Files are ordered by their creation date in ascending order. If a file was previously attached to the list but does not show up in the list, it will be deleted from the assistant. */
   @maxItems(20)
   file_ids?: string[] = [];
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
@@ -104,46 +83,35 @@ model CreateAssistantFileRequest {
 }
 
 model ListAssistantsResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
 
   data: AssistantObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteAssistantResponse {
   id: string;
-
   deleted: boolean;
-
   object: "assistant.deleted";
 }
 
 model ListAssistantFilesResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
 
   data: AssistantFileObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
-/**
- * Deletes the association between the assistant and the file, but does not delete the
- * [File](/docs/api-reference/files) object itself.
- */
+/** Deletes the association between the assistant and the file, but does not delete the [File](/docs/api-reference/files) object itself. */
 model DeleteAssistantFileResponse {
   id: string;
-
   deleted: boolean;
-
   object: "assistant.file.deleted";
 }
 
@@ -182,7 +150,7 @@ model AssistantObject {
   """)
   object: "assistant";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the assistant was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -195,11 +163,7 @@ model AssistantObject {
   @maxLength(512)
   description: string | null;
 
-  /**
-   * ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-   * see all of your available models, or see our [Model overview](/docs/models/overview) for
-   * descriptions of them.
-   */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   `model`: string;
 
   /** The system instructions that the assistant uses. The maximum length is 32768 characters. */
@@ -210,21 +174,15 @@ model AssistantObject {
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `retrieval`, or `function`.
   """)
   @maxItems(128)
-  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [];
+  @extension("x-oaiExpandable", true)
+  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
-  /**
-   * A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
-   * maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-   * ascending order.
-   */
+  /** A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a maximum of 20 files attached to the assistant. Files are ordered by their creation date in ascending order. */
   @maxItems(20)
   file_ids: string[] = [];
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 }
@@ -241,7 +199,7 @@ model AssistantFileObject {
   """)
   object: "assistant.file";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the assistant file was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -249,4 +207,3 @@ model AssistantFileObject {
   /** The assistant ID that the file is attached to. */
   assistant_id: string;
 }
-

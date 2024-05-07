@@ -38,10 +38,7 @@ model CreateSpeechRequest {
 
 model CreateTranscriptionRequest {
   // Tool customization: binary payloads are encoded bytes
-  /**
-   * The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-   * mpeg, mpga, m4a, ogg, wav, or webm.
-   */
+  /** The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm. */
   @extension("x-oaiTypeLabel", "file")
   @encode("binary")
   file: bytes;
@@ -52,17 +49,10 @@ model CreateTranscriptionRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "whisper-1";
 
-  /**
-   * The language of the input audio. Supplying the input language in
-   * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve
-   * accuracy and latency.
-   */
+  /** The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy and latency. */
   language?: string;
 
-  /**
-   * An optional text to guide the model's style or continue a previous audio segment. The
-   * [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
-   */
+  /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language. */
   prompt?: string;
 
   @doc("""
@@ -71,12 +61,7 @@ model CreateTranscriptionRequest {
   response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
 
   // Tool customization: add missing but documented min/max for temperature
-  /**
-   * The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
-   * random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
-   * the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
-   * automatically increase the temperature until certain thresholds are hit.
-   */
+  /** The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit. */
   @minValue(0)
   @maxValue(1)
   temperature?: float32 = 0;
@@ -89,10 +74,7 @@ model CreateTranscriptionRequest {
 
 model CreateTranslationRequest {
   // Tool customization: binary payloads are encoded bytes
-  /**
-   * The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4,
-   * mpeg, mpga, m4a, ogg, wav, or webm.
-   */
+  /** The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm. */
   @extension("x-oaiTypeLabel", "file")
   @encode("binary")
   file: bytes;
@@ -103,10 +85,7 @@ model CreateTranslationRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "whisper-1";
 
-  /**
-   * An optional text to guide the model's style or continue a previous audio segment. The
-   * [prompt](/docs/guides/speech-to-text/prompting) should be in English.
-   */
+  /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in English. */
   prompt?: string;
 
   // Tool customization: add enum types
@@ -116,12 +95,7 @@ model CreateTranslationRequest {
   response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
 
   // Tool customization: add missing but documented min/max for temperature
-  /**
-   * The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
-   * random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
-   * the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
-   * automatically increase the temperature until certain thresholds are hit.
-   */
+  /** The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit. */
   @minValue(0)
   @maxValue(1)
   temperature?: float32 = 0;
@@ -133,16 +107,14 @@ model CreateTranscriptionResponseJson {
   text: string;
 }
 
-/**
- * Represents a verbose json transcription response returned by model, based on the provided input.
- */
+/** Represents a verbose json transcription response returned by model, based on the provided input. */
 model CreateTranscriptionResponseVerboseJson {
   /** The language of the input audio. */
   language: string;
 
   // Tool customization: timespans are encoded durations
   /** The duration of the input audio. */
-  @encode("seconds", float)
+  @encode("seconds", float32)
   duration: duration;
 
   /** The transcribed text. */
@@ -159,7 +131,11 @@ model CreateTranslationResponseJson {
   text: string;
 }
 
+// Tool customization: Add a missing 'task' field, present on the wire but not in the spec
 model CreateTranslationResponseVerboseJson {
+  /** The task label. */
+  task: "translate";
+
   @doc("""
   The language of the output translation (always `english`).
   """)
@@ -167,7 +143,7 @@ model CreateTranslationResponseVerboseJson {
 
   // Tool customization: timespans are encoded durations
   /** The duration of the input audio. */
-  @encode("seconds", float)
+  @encode("seconds", float32)
   duration: duration;
 
   /** The translated text. */
@@ -186,12 +162,12 @@ model TranscriptionSegment {
 
   // Tool customization: timespans are encoded durations
   /** Start time of the segment in seconds. */
-  @encode("seconds", float)
+  @encode("seconds", float32)
   start: duration;
 
   // Tool customization: timespans are encoded durations
   /** End time of the segment in seconds. */
-  @encode("seconds", float)
+  @encode("seconds", float32)
   end: duration;
 
   /** Text content of the segment. */
@@ -206,10 +182,7 @@ model TranscriptionSegment {
   /** Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. */
   avg_logprob: float32;
 
-  /**
-   * Compression ratio of the segment. If the value is greater than 2.4, consider the compression
-   * failed.
-   */
+  /** Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. */
   compression_ratio: float32;
 
   @doc("""
@@ -224,12 +197,11 @@ model TranscriptionWord {
 
   // Tool customization: timespans are encoded durations
   /** Start time of the word in seconds. */
-  @encode("seconds", float)
+  @encode("seconds", float32)
   start: duration;
 
   // Tool customization: timespans are encoded durations
   /** End time of the word in seconds. */
-  @encode("seconds", float)
+  @encode("seconds", float32)
   end: duration;
 }
-

@@ -12,56 +12,46 @@ namespace OpenAI;
 
 // Tool generated type. Extracts CreateRunRequest.tools
 @maxItems(20)
-model CreateRunRequestTools is (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[];
+@extension("x-oaiExpandable", true)
+model CreateRunRequestTools
+  is (
+    | AssistantToolsCode
+    | AssistantToolsRetrieval
+    | AssistantToolsFunction
+    | null)[];
 
 // Tool generated type. Extracts CreateThreadAndRunRequest.tools
 @maxItems(20)
-model CreateThreadAndRunRequestTools is (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[];
+model CreateThreadAndRunRequestTools
+  is (
+    | AssistantToolsCode
+    | AssistantToolsRetrieval
+    | AssistantToolsFunction
+    | null)[];
 
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
   assistant_id: string;
 
-  /**
-   * The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-   * is provided here, it will override the model associated with the assistant. If not, the model
-   * associated with the assistant will be used.
-   */
+  /** The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. */
   `model`?: string | null;
 
-  /**
-   * Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant.
-   * This is useful for modifying the behavior on a per-run basis.
-   */
+  /** Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. */
   instructions?: string | null;
 
-  /**
-   * Appends additional instructions at the end of the instructions for the run. This is useful for
-   * modifying the behavior on a per-run basis without overriding other instructions.
-   */
+  /** Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions. */
   additional_instructions?: string | null;
 
-  /**
-   * Override the tools the assistant can use for this run. This is useful for modifying the
-   * behavior on a per-run basis.
-   */
+  /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
   tools?: CreateRunRequestTools | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ModifyRunRequest {
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
@@ -73,30 +63,16 @@ model CreateThreadAndRunRequest {
   /** If no thread is provided, an empty thread will be created. */
   thread?: CreateThreadRequest;
 
-  /**
-   * The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-   * is provided here, it will override the model associated with the assistant. If not, the model
-   * associated with the assistant will be used.
-   */
+  /** The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. */
   `model`?: string | null;
 
-  /**
-   * Override the default system message of the assistant. This is useful for modifying the
-   * behavior on a per-run basis.
-   */
+  /** Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. */
   instructions?: string | null;
 
-  /**
-   * Override the tools the assistant can use for this run. This is useful for modifying the
-   * behavior on a per-run basis.
-   */
+  /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
   tools?: CreateThreadAndRunRequestTools | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
@@ -115,26 +91,22 @@ model SubmitToolOutputsRunRequest {
 }
 
 model ListRunsResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
 
   data: RunObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model ListRunStepsResponse {
-  object: string;
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
 
   data: RunStepObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
@@ -161,6 +133,7 @@ model RunStepDetailsToolCallsObject {
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `retrieval`, or `function`.
   """)
+  @extension("x-oaiExpandable", true)
   tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsRetrievalObject | RunStepDetailsToolCallsFunctionObject)[];
 }
 
@@ -182,6 +155,7 @@ model RunStepDetailsToolCallsCodeObject {
     @doc("""
     The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
     """)
+    @extension("x-oaiExpandable", true)
     outputs: (RunStepDetailsToolCallsCodeOutputLogsObject | RunStepDetailsToolCallsCodeOutputImageObject)[];
   };
 }
@@ -285,14 +259,12 @@ model RunObject {
   """)
   object: "thread.run";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
-  /**
-   * The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.
-   */
+  /** The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run. */
   thread_id: string;
 
   /** The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. */
@@ -301,7 +273,15 @@ model RunObject {
   @doc("""
   The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
   """)
-  status: "queued" | "in_progress" | "requires_action" | "cancelling" | "cancelled" | "failed" | "completed" | "expired";
+  status:
+    | "queued"
+    | "in_progress"
+    | "requires_action"
+    | "cancelling"
+    | "cancelled"
+    | "failed"
+    | "completed"
+    | "expired";
 
   @doc("""
   Details on the action required to continue the run. Will be `null` if no action is required.
@@ -332,27 +312,27 @@ model RunObject {
     message: string;
   } | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run will expire. */
   @encode("unixTimestamp", int32)
   expires_at: utcDateTime;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was started. */
   @encode("unixTimestamp", int32)
   started_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was cancelled. */
   @encode("unixTimestamp", int32)
   cancelled_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run failed. */
   @encode("unixTimestamp", int32)
   failed_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run was completed. */
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
@@ -365,23 +345,18 @@ model RunObject {
 
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
   @maxItems(20)
-  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [];
+  @extension("x-oaiExpandable", true)
+  tools: (AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction)[] = [
+  ];
 
-  /**
-   * The list of [File](/docs/api-reference/files) IDs the
-   * [assistant](/docs/api-reference/assistants) used for this run.
-   */
+  /** The list of [File](/docs/api-reference/files) IDs the [assistant](/docs/api-reference/assistants) used for this run. */
   file_ids: string[] = [];
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
-  usage: RunCompletionUsage;
+  usage: RunCompletionUsage | null;
 }
 
 /** Represents a step in execution of a run. */
@@ -394,7 +369,7 @@ model RunStepObject {
   """)
   object: "thread.run.step";
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
@@ -435,46 +410,36 @@ model RunStepObject {
     message: string;
   } | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
-  /**
-   * The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if
-   * the parent run is expired.
-   */
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+  /** The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. */
   @encode("unixTimestamp", int32)
   expired_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step was cancelled. */
   @encode("unixTimestamp", int32)
   cancelled_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step failed. */
   @encode("unixTimestamp", int32)
   failed_at: utcDateTime | null;
 
-  // Tool customization: _at and created are Unix encoded utcDateTime
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the run step completed. */
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
 
-  usage: RunStepCompletionUsage;
+  usage: RunStepCompletionUsage | null;
 }
 
 /** Tool call objects */
 model RunToolCallObject {
-  /**
-   * The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
-   * the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-   */
+  /** The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint. */
   id: string;
 
   @doc("""
@@ -491,4 +456,3 @@ model RunToolCallObject {
     arguments: string;
   };
 }
-

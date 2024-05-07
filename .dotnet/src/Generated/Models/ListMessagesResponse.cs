@@ -44,20 +44,17 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ListMessagesResponse"/>. </summary>
-        /// <param name="object"></param>
         /// <param name="data"></param>
         /// <param name="firstId"></param>
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="object"/>, <paramref name="data"/>, <paramref name="firstId"/> or <paramref name="lastId"/> is null. </exception>
-        internal ListMessagesResponse(string @object, IEnumerable<MessageObject> data, string firstId, string lastId, bool hasMore)
+        /// <exception cref="ArgumentNullException"> <paramref name="data"/>, <paramref name="firstId"/> or <paramref name="lastId"/> is null. </exception>
+        internal ListMessagesResponse(IEnumerable<MessageObject> data, string firstId, string lastId, bool hasMore)
         {
-            Argument.AssertNotNull(@object, nameof(@object));
             Argument.AssertNotNull(data, nameof(data));
             Argument.AssertNotNull(firstId, nameof(firstId));
             Argument.AssertNotNull(lastId, nameof(lastId));
 
-            Object = @object;
             Data = data.ToList();
             FirstId = firstId;
             LastId = lastId;
@@ -71,7 +68,7 @@ namespace OpenAI.Internal.Models
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ListMessagesResponse(string @object, IReadOnlyList<MessageObject> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ListMessagesResponse(ListMessagesResponseObject @object, IReadOnlyList<MessageObject> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -87,7 +84,8 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Gets the object. </summary>
-        public string Object { get; }
+        public ListMessagesResponseObject Object { get; } = ListMessagesResponseObject.List;
+
         /// <summary> Gets the data. </summary>
         public IReadOnlyList<MessageObject> Data { get; }
         /// <summary> Gets the first id. </summary>

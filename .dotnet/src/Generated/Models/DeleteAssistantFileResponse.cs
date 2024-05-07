@@ -7,10 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary>
-    /// Deletes the association between the assistant and the file, but does not delete the
-    /// [File](/docs/api-reference/files) object itself.
-    /// </summary>
+    /// <summary> Deletes the association between the assistant and the file, but does not delete the [File](/docs/api-reference/files) object itself. </summary>
     internal partial class DeleteAssistantFileResponse
     {
         /// <summary>

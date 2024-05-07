@@ -57,24 +57,10 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateThreadAndRunRequest"/>. </summary>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
         /// <param name="thread"> If no thread is provided, an empty thread will be created. </param>
-        /// <param name="model">
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-        /// is provided here, it will override the model associated with the assistant. If not, the model
-        /// associated with the assistant will be used.
-        /// </param>
-        /// <param name="instructions">
-        /// Override the default system message of the assistant. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="tools">
-        /// Override the tools the assistant can use for this run. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="model"> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </param>
+        /// <param name="instructions"> Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="tools"> Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal CreateThreadAndRunRequest(string assistantId, CreateThreadRequest thread, string model, string instructions, IList<BinaryData> tools, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -96,20 +82,12 @@ namespace OpenAI.Internal.Models
         public string AssistantId { get; }
         /// <summary> If no thread is provided, an empty thread will be created. </summary>
         public CreateThreadRequest Thread { get; set; }
-        /// <summary>
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-        /// is provided here, it will override the model associated with the assistant. If not, the model
-        /// associated with the assistant will be used.
-        /// </summary>
+        /// <summary> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </summary>
         public string Model { get; set; }
-        /// <summary>
-        /// Override the default system message of the assistant. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </summary>
+        /// <summary> Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. </summary>
         public string Instructions { get; set; }
         /// <summary>
-        /// Override the tools the assistant can use for this run. This is useful for modifying the
-        /// behavior on a per-run basis.
+        /// Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -153,11 +131,7 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public IList<BinaryData> Tools { get; set; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IDictionary<string, string> Metadata { get; set; }
     }
 }

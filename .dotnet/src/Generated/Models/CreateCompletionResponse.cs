@@ -8,10 +8,7 @@ using System.Linq;
 
 namespace OpenAI.LegacyCompletions
 {
-    /// <summary>
-    /// Represents a completion response from the API. Note: both the streamed and non-streamed response
-    /// objects share the same shape (unlike the chat endpoint).
-    /// </summary>
+    /// <summary> Represents a completion response from the API. Note: both the streamed and non-streamed response objects share the same shape (unlike the chat endpoint). </summary>
     internal partial class CreateCompletionResponse
     {
         /// <summary>

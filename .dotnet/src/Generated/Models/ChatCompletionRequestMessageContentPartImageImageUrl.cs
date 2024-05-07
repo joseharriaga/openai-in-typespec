@@ -54,10 +54,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionRequestMessageContentPartImageImageUrl"/>. </summary>
         /// <param name="url"> Either a URL of the image or the base64 encoded image data. </param>
-        /// <param name="detail">
-        /// Specifies the detail level of the image. Learn more in the [Vision
-        /// guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
-        /// </param>
+        /// <param name="detail"> Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatCompletionRequestMessageContentPartImageImageUrl(Uri url, ChatCompletionRequestMessageContentPartImageImageUrlDetail? detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -73,10 +70,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Either a URL of the image or the base64 encoded image data. </summary>
         public Uri Url { get; }
-        /// <summary>
-        /// Specifies the detail level of the image. Learn more in the [Vision
-        /// guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
-        /// </summary>
+        /// <summary> Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding). </summary>
         public ChatCompletionRequestMessageContentPartImageImageUrlDetail? Detail { get; set; }
     }
 }

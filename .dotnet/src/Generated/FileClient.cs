@@ -40,7 +40,7 @@ namespace OpenAI.Files
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("content-type", contentType);
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -59,7 +59,7 @@ namespace OpenAI.Files
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -75,7 +75,7 @@ namespace OpenAI.Files
             uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -91,7 +91,7 @@ namespace OpenAI.Files
             uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -108,7 +108,7 @@ namespace OpenAI.Files
             uri.AppendPath("/content", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 

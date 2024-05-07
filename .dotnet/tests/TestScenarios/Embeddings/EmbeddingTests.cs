@@ -1,18 +1,30 @@
 ﻿using NUnit.Framework;
 using OpenAI.Embeddings;
+using OpenAI.Tests.Utility;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OpenAI.Tests.Embeddings;
 
-public partial class EmbeddingTests
+[TestFixture(true)]
+[TestFixture(false)]
+public partial class EmbeddingTests : SyncAsyncTestBase
 {
+    public EmbeddingTests(bool isAsync)
+        : base(isAsync)
+    {
+    }
+
     [Test]
     public async Task GenerateSingleEmbedding()
     {
         EmbeddingClient client = new("text-embedding-3-small");
 
-        Embedding embedding = await client.GenerateEmbeddingAsync("hello, world");
+        string input = "Hello, world!";
+
+        Embedding embedding = IsAsync
+            ? await client.GenerateEmbeddingAsync(input)
+            : client.GenerateEmbedding(input);
         Assert.IsNotNull(embedding);
         Assert.AreEqual(0, embedding.Index);
         Assert.IsNotNull(embedding.Vector);
@@ -41,7 +53,9 @@ public partial class EmbeddingTests
             Dimensions = Dimensions,
         };
 
-        EmbeddingCollection embeddings = await client.GenerateEmbeddingsAsync(prompts, options);
+        EmbeddingCollection embeddings = IsAsync
+            ? await client.GenerateEmbeddingsAsync(prompts, options)
+            : client.GenerateEmbeddings(prompts, options);
         Assert.IsNotNull(embeddings);
         Assert.AreEqual(3, embeddings.Count);
         Assert.AreEqual("text-embedding-3-small", embeddings.Model);

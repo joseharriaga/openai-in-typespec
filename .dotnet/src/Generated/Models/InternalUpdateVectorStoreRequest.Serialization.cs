@@ -7,34 +7,32 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.VectorStores
 {
-    internal partial class CreateVectorStoreRequest : IJsonModel<CreateVectorStoreRequest>
+    internal partial class InternalUpdateVectorStoreRequest : IJsonModel<InternalUpdateVectorStoreRequest>
     {
-        void IJsonModel<CreateVectorStoreRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalUpdateVectorStoreRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateVectorStoreRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpdateVectorStoreRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateVectorStoreRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalUpdateVectorStoreRequest)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            if (Optional.IsCollectionDefined(FileIds))
-            {
-                writer.WritePropertyName("file_ids"u8);
-                writer.WriteStartArray();
-                foreach (var item in FileIds)
-                {
-                    writer.WriteStringValue(item);
-                }
-                writer.WriteEndArray();
-            }
             if (Optional.IsDefined(Name))
             {
-                writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
+                if (Name != null)
+                {
+                    writer.WritePropertyName("name"u8);
+                    writer.WriteStringValue(Name);
+                }
+                else
+                {
+                    writer.WriteNull("name");
+                }
             }
             if (Optional.IsDefined(ExpiresAfter))
             {
@@ -84,19 +82,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateVectorStoreRequest IJsonModel<CreateVectorStoreRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalUpdateVectorStoreRequest IJsonModel<InternalUpdateVectorStoreRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateVectorStoreRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpdateVectorStoreRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateVectorStoreRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalUpdateVectorStoreRequest)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateVectorStoreRequest(document.RootElement, options);
+            return DeserializeInternalUpdateVectorStoreRequest(document.RootElement, options);
         }
 
-        internal static CreateVectorStoreRequest DeserializeCreateVectorStoreRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalUpdateVectorStoreRequest DeserializeInternalUpdateVectorStoreRequest(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -104,30 +102,20 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            IReadOnlyList<string> fileIds = default;
             string name = default;
             VectorStoreExpirationAfter expiresAfter = default;
-            IReadOnlyDictionary<string, string> metadata = default;
+            IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("file_ids"u8))
+                if (property.NameEquals("name"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        name = null;
                         continue;
                     }
-                    List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(item.GetString());
-                    }
-                    fileIds = array;
-                    continue;
-                }
-                if (property.NameEquals("name"u8))
-                {
                     name = property.Value.GetString();
                     continue;
                 }
@@ -161,46 +149,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateVectorStoreRequest(fileIds ?? new ChangeTrackingList<string>(), name, expiresAfter, metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new InternalUpdateVectorStoreRequest(name, expiresAfter, metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateVectorStoreRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalUpdateVectorStoreRequest>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateVectorStoreRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpdateVectorStoreRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateVectorStoreRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalUpdateVectorStoreRequest)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateVectorStoreRequest IPersistableModel<CreateVectorStoreRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalUpdateVectorStoreRequest IPersistableModel<InternalUpdateVectorStoreRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateVectorStoreRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpdateVectorStoreRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateVectorStoreRequest(document.RootElement, options);
+                        return DeserializeInternalUpdateVectorStoreRequest(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateVectorStoreRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalUpdateVectorStoreRequest)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateVectorStoreRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalUpdateVectorStoreRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateVectorStoreRequest FromResponse(PipelineResponse response)
+        internal static InternalUpdateVectorStoreRequest FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateVectorStoreRequest(document.RootElement);
+            return DeserializeInternalUpdateVectorStoreRequest(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

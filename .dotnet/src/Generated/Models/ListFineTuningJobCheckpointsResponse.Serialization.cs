@@ -29,7 +29,7 @@ namespace OpenAI.FineTuning
             }
             writer.WriteEndArray();
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object);
+            writer.WriteStringValue(Object.ToString());
             if (Optional.IsDefined(FirstId))
             {
                 if (FirstId != null)
@@ -95,7 +95,7 @@ namespace OpenAI.FineTuning
                 return null;
             }
             IReadOnlyList<FineTuningJobCheckpoint> data = default;
-            string @object = default;
+            ListFineTuningJobCheckpointsResponseObject @object = default;
             string firstId = default;
             string lastId = default;
             bool hasMore = default;
@@ -115,7 +115,7 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetString();
+                    @object = new ListFineTuningJobCheckpointsResponseObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("first_id"u8))

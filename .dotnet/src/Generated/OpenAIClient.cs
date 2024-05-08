@@ -15,6 +15,7 @@ using OpenAI.Images;
 using OpenAI.LegacyCompletions;
 using OpenAI.Models;
 using OpenAI.Moderations;
+using OpenAI.VectorStores;
 
 namespace OpenAI
 {

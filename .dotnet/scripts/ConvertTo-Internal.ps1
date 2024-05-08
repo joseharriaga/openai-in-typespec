@@ -18,6 +18,7 @@ function Edit-GeneratedOpenAIClient {
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModerationClient _cachedModerationClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.VectorStoreClient _cachedVectorStoreClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
     $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
 
@@ -39,7 +40,8 @@ function Edit-GeneratedSubclients {
         "ImageClient.cs",
         "LegacyCompletionClient.cs",
         "ModelClient.cs",
-        "ModerationClient.cs"
+        "ModerationClient.cs",
+        "VectorStoreClient.cs"
     )
 
     foreach ($file in $files) {
@@ -68,6 +70,8 @@ function Edit-GeneratedModels {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs"
     
     $exclusions = @(
+        "ListOrder.cs",
+
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",
         "AudioTranscriptionFormat.Serialization.cs",
@@ -234,7 +238,9 @@ function Edit-GeneratedModels {
         "InternalListBatchesResponse.cs",
         "InternalListBatchesResponse.Serialization.cs",
         "InternalListBatchesResponseObject.cs",
-        "InternalListBatchesResponseObject.Serialization.cs"
+        "InternalListBatchesResponseObject.Serialization.cs",
+
+        "VectorStoreFileStatusFilter.cs"
     )
 
     foreach ($file in $files) {

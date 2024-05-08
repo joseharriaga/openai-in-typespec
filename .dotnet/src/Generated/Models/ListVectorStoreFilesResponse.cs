@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ListVectorStoreFilesResponse(string @object, IReadOnlyList<VectorStoreFileObject> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ListVectorStoreFilesResponse(ListVectorStoreFilesResponseObject @object, IReadOnlyList<VectorStoreFileObject> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Gets the object. </summary>
-        public string Object { get; } = "list";
+        public ListVectorStoreFilesResponseObject Object { get; } = ListVectorStoreFilesResponseObject.List;
 
         /// <summary> Gets the data. </summary>
         public IReadOnlyList<VectorStoreFileObject> Data { get; }

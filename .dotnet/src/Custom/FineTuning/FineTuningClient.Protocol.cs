@@ -224,4 +224,66 @@ public partial class FineTuningClient
         using PipelineMessage message = CreateGetFineTuningEventsRequest(jobId, after, limit, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
+
+    /// <summary>
+    /// [Protocol Method] List the checkpoints for a fine-tuning job.
+    /// <list type="bullet">
+    /// <item>
+    /// <description>
+    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <description>
+    /// Please try the simpler <see cref="GetFineTuningJobCheckpointsAsync(string,string,int?)"/> convenience overload with strongly typed models first.
+    /// </description>
+    /// </item>
+    /// </list>
+    /// </summary>
+    /// <param name="fineTuningJobId"> The ID of the fine-tuning job to get checkpoints for. </param>
+    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
+    /// <param name="limit"> Number of checkpoints to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    public virtual async Task<ClientResult> GetFineTuningJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
+
+        using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(fineTuningJobId, after, limit, options);
+        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+    }
+
+    /// <summary>
+    /// [Protocol Method] List the checkpoints for a fine-tuning job.
+    /// <list type="bullet">
+    /// <item>
+    /// <description>
+    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <description>
+    /// Please try the simpler <see cref="GetFineTuningJobCheckpoints(string,string,int?)"/> convenience overload with strongly typed models first.
+    /// </description>
+    /// </item>
+    /// </list>
+    /// </summary>
+    /// <param name="fineTuningJobId"> The ID of the fine-tuning job to get checkpoints for. </param>
+    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
+    /// <param name="limit"> Number of checkpoints to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    public virtual ClientResult GetFineTuningJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
+
+        using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(fineTuningJobId, after, limit, options);
+        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+    }
 }

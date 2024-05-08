@@ -183,7 +183,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetAssistantsAsync(int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetAssistantsAsync(int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -225,7 +225,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetAssistants(int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetAssistants(int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>

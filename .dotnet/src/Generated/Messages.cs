@@ -205,7 +205,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessagesAsync(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetMessagesAsync(string,int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -252,7 +252,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessages(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetMessages(string,int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -483,6 +483,98 @@ namespace OpenAI.Internal
             return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
+        /// <summary> Deletes a message. </summary>
+        /// <param name="threadId"> The ID of the thread to which this message belongs. </param>
+        /// <param name="messageId"> The ID of the message to delete. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete message. </remarks>
+        public virtual async Task<ClientResult<DeleteMessageResponse>> DeleteMessageAsync(string threadId, string messageId)
+        {
+            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+            ClientResult result = await DeleteMessageAsync(threadId, messageId, null).ConfigureAwait(false);
+            return ClientResult.FromValue(DeleteMessageResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
+        /// <summary> Deletes a message. </summary>
+        /// <param name="threadId"> The ID of the thread to which this message belongs. </param>
+        /// <param name="messageId"> The ID of the message to delete. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Delete message. </remarks>
+        public virtual ClientResult<DeleteMessageResponse> DeleteMessage(string threadId, string messageId)
+        {
+            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+            ClientResult result = DeleteMessage(threadId, messageId, null);
+            return ClientResult.FromValue(DeleteMessageResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
+        /// <summary>
+        /// [Protocol Method] Deletes a message.
+        /// <list type="bullet">
+        /// <item>
+        /// <description>
+        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// Please try the simpler <see cref="DeleteMessageAsync(string,string)"/> convenience overload with strongly typed models first.
+        /// </description>
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <param name="threadId"> The ID of the thread to which this message belongs. </param>
+        /// <param name="messageId"> The ID of the message to delete. </param>
+        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+        /// <returns> The response returned from the service. </returns>
+        public virtual async Task<ClientResult> DeleteMessageAsync(string threadId, string messageId, RequestOptions options)
+        {
+            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+            using PipelineMessage message = CreateDeleteMessageRequest(threadId, messageId, options);
+            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        /// <summary>
+        /// [Protocol Method] Deletes a message.
+        /// <list type="bullet">
+        /// <item>
+        /// <description>
+        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// Please try the simpler <see cref="DeleteMessage(string,string)"/> convenience overload with strongly typed models first.
+        /// </description>
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <param name="threadId"> The ID of the thread to which this message belongs. </param>
+        /// <param name="messageId"> The ID of the message to delete. </param>
+        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+        /// <returns> The response returned from the service. </returns>
+        public virtual ClientResult DeleteMessage(string threadId, string messageId, RequestOptions options)
+        {
+            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+            using PipelineMessage message = CreateDeleteMessageRequest(threadId, messageId, options);
+            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        }
+
         internal PipelineMessage CreateCreateMessageRequest(string threadId, BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
@@ -569,6 +661,24 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
+            message.Apply(options);
+            return message;
+        }
+
+        internal PipelineMessage CreateDeleteMessageRequest(string threadId, string messageId, RequestOptions options)
+        {
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "DELETE";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/messages/", false);
+            uri.AppendPath(messageId, true);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }

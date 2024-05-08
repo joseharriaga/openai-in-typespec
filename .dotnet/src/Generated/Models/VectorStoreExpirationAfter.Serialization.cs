@@ -22,7 +22,7 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("anchor"u8);
-            writer.WriteStringValue(Anchor);
+            writer.WriteStringValue(Anchor.ToString());
             writer.WritePropertyName("days"u8);
             writer.WriteNumberValue(Days);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -63,7 +63,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            string anchor = default;
+            VectorStoreExpirationAfterAnchor anchor = default;
             int days = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -71,7 +71,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("anchor"u8))
                 {
-                    anchor = property.Value.GetString();
+                    anchor = new VectorStoreExpirationAfterAnchor(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("days"u8))

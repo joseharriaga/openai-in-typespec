@@ -111,13 +111,13 @@ public partial class AssistantClient
 
     public virtual ClientResult<ListQueryPage<Assistant>> GetAssistants(
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousAssistantId = null,
         string subsequentAssistantId = null)
     {
         ClientResult<Internal.Models.ListAssistantsResponse> internalFunc() => Shim.GetAssistants(
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousAssistantId,
             subsequentAssistantId);
         return GetListQueryPage<Assistant, Internal.Models.ListAssistantsResponse>(internalFunc);
@@ -125,13 +125,13 @@ public partial class AssistantClient
 
     public virtual Task<ClientResult<ListQueryPage<Assistant>>> GetAssistantsAsync(
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousAssistantId = null,
         string subsequentAssistantId = null)
     {
         Task<ClientResult<Internal.Models.ListAssistantsResponse>> internalAsyncFunc() => Shim.GetAssistantsAsync(
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousAssistantId,
             subsequentAssistantId);
         return GetListQueryPageAsync<Assistant, Internal.Models.ListAssistantsResponse>(internalAsyncFunc);
@@ -309,14 +309,14 @@ public partial class AssistantClient
     public virtual ClientResult<ListQueryPage<ThreadMessage>> GetMessages(
         string threadId,
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousMessageId = null,
         string subsequentMessageId = null)
     {
         ClientResult<Internal.Models.ListMessagesResponse> internalFunc() => MessageShim.GetMessages(
             threadId,
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousMessageId,
             subsequentMessageId);
         return GetListQueryPage<ThreadMessage, Internal.Models.ListMessagesResponse>(internalFunc);
@@ -325,14 +325,14 @@ public partial class AssistantClient
     public virtual Task<ClientResult<ListQueryPage<ThreadMessage>>> GetMessagesAsync(
         string threadId,
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousMessageId = null,
         string subsequentMessageId = null)
     {
         Func<Task<ClientResult<Internal.Models.ListMessagesResponse>>> internalFunc = () => MessageShim.GetMessagesAsync(
                 threadId,
                 maxResults,
-                ToInternalListOrder(createdSortOrder),
+                listOrder,
                 previousMessageId,
                 subsequentMessageId);
         return GetListQueryPageAsync<ThreadMessage, Internal.Models.ListMessagesResponse>(internalFunc);
@@ -395,14 +395,14 @@ public partial class AssistantClient
     public virtual ClientResult<ListQueryPage<ThreadRun>> GetRuns(
         string threadId,
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousRunId = null,
         string subsequentRunId = null)
     {
         ClientResult<Internal.Models.ListRunsResponse> internalFunc() => RunShim.GetRuns(
             threadId,
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousRunId,
             subsequentRunId);
         return GetListQueryPage<ThreadRun, Internal.Models.ListRunsResponse>(internalFunc);
@@ -411,14 +411,14 @@ public partial class AssistantClient
     public virtual Task<ClientResult<ListQueryPage<ThreadRun>>> GetRunsAsync(
         string threadId,
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousRunId = null,
         string subsequentRunId = null)
     {
         Func<Task<ClientResult<Internal.Models.ListRunsResponse>>> internalFunc = () => RunShim.GetRunsAsync(
             threadId,
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousRunId,
             subsequentRunId);
         return GetListQueryPageAsync<ThreadRun, Internal.Models.ListRunsResponse>(internalFunc);
@@ -591,20 +591,6 @@ public partial class AssistantClient
             internalList.Add(ModelReaderWriter.Write(value));
         }
         return internalList;
-    }
-
-    internal static Internal.Models.ListOrder? ToInternalListOrder(CreatedAtSortOrder? order)
-    {
-        if (order == null)
-        {
-            return null;
-        }
-        return order switch
-        {
-            CreatedAtSortOrder.OldestFirst => Internal.Models.ListOrder.Asc,
-            CreatedAtSortOrder.NewestFirst => Internal.Models.ListOrder.Desc,
-            _ => throw new ArgumentException(nameof(order)),
-        };
     }
 
     internal static Internal.Models.CreateMessageRequestRole ToInternalRequestRole(MessageRole role)

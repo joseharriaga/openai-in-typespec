@@ -24,7 +24,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object);
+            writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("usage_bytes"u8);
             writer.WriteNumberValue(UsageBytes);
             writer.WritePropertyName("created_at"u8);
@@ -32,7 +32,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("vector_store_id"u8);
             writer.WriteStringValue(VectorStoreId);
             writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status);
+            writer.WriteStringValue(Status.ToString());
             if (LastError != null)
             {
                 writer.WritePropertyName("last_error"u8);
@@ -81,11 +81,11 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string id = default;
-            string @object = default;
+            VectorStoreFileObjectObject @object = default;
             int usageBytes = default;
             DateTimeOffset createdAt = default;
             string vectorStoreId = default;
-            string status = default;
+            VectorStoreFileObjectStatus status = default;
             VectorStoreFileObjectLastError lastError = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -98,7 +98,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetString();
+                    @object = new VectorStoreFileObjectObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("usage_bytes"u8))
@@ -118,7 +118,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    status = property.Value.GetString();
+                    status = new VectorStoreFileObjectStatus(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("last_error"u8))

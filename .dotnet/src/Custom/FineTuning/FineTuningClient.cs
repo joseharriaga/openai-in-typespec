@@ -18,6 +18,8 @@ namespace OpenAI.FineTuning;
 [CodeGenSuppress("CancelFineTuningJob", typeof(string))]
 [CodeGenSuppress("GetFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?))]
 [CodeGenSuppress("GetFineTuningEvents", typeof(string), typeof(string), typeof(int?))]
+[CodeGenSuppress("GetFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?))]
+[CodeGenSuppress("GetFineTuningJobCheckpoints", typeof(string), typeof(string), typeof(int?))]
 public partial class FineTuningClient
 {
     // Customization: documented constructors, apply protected visibility

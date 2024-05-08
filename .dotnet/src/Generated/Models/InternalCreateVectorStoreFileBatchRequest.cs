@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.VectorStores
 {
     /// <summary> The CreateVectorStoreFileBatchRequest. </summary>
-    internal partial class CreateVectorStoreFileBatchRequest
+    internal partial class InternalCreateVectorStoreFileBatchRequest
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,31 +43,31 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateVectorStoreFileBatchRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileBatchRequest"/>. </summary>
         /// <param name="fileIds"> A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileIds"/> is null. </exception>
-        internal CreateVectorStoreFileBatchRequest(IEnumerable<string> fileIds)
+        public InternalCreateVectorStoreFileBatchRequest(IEnumerable<string> fileIds)
         {
             Argument.AssertNotNull(fileIds, nameof(fileIds));
 
             FileIds = fileIds.ToList();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateVectorStoreFileBatchRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileBatchRequest"/>. </summary>
         /// <param name="fileIds"> A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateVectorStoreFileBatchRequest(IReadOnlyList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateVectorStoreFileBatchRequest(IList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileIds = fileIds;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateVectorStoreFileBatchRequest"/> for deserialization. </summary>
-        internal CreateVectorStoreFileBatchRequest()
+        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileBatchRequest"/> for deserialization. </summary>
+        internal InternalCreateVectorStoreFileBatchRequest()
         {
         }
 
         /// <summary> A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. </summary>
-        public IReadOnlyList<string> FileIds { get; }
+        public IList<string> FileIds { get; }
     }
 }

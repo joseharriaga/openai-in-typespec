@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.VectorStores
 {
     /// <summary> The CreateVectorStoreFileRequest. </summary>
-    internal partial class CreateVectorStoreFileRequest
+    internal partial class InternalCreateVectorStoreFileRequest
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,27 +42,27 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateVectorStoreFileRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileRequest"/>. </summary>
         /// <param name="fileId"> A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
-        internal CreateVectorStoreFileRequest(string fileId)
+        public InternalCreateVectorStoreFileRequest(string fileId)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
 
             FileId = fileId;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateVectorStoreFileRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileRequest"/>. </summary>
         /// <param name="fileId"> A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateVectorStoreFileRequest(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateVectorStoreFileRequest(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateVectorStoreFileRequest"/> for deserialization. </summary>
-        internal CreateVectorStoreFileRequest()
+        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileRequest"/> for deserialization. </summary>
+        internal InternalCreateVectorStoreFileRequest()
         {
         }
 

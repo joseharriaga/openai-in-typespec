@@ -44,7 +44,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="VectorStoreExpirationAfter"/>. </summary>
         /// <param name="days"> The number of days after the anchor time that the vector store will expire. </param>
-        internal VectorStoreExpirationAfter(int days)
+        public VectorStoreExpirationAfter(int days)
         {
             Days = days;
         }
@@ -53,7 +53,7 @@ namespace OpenAI.Internal.Models
         /// <param name="anchor"> Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`. </param>
         /// <param name="days"> The number of days after the anchor time that the vector store will expire. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreExpirationAfter(string anchor, int days, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreExpirationAfter(VectorStoreExpirationAfterAnchor anchor, int days, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Anchor = anchor;
             Days = days;
@@ -66,9 +66,9 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`. </summary>
-        public string Anchor { get; } = "last_active_at";
+        public VectorStoreExpirationAfterAnchor Anchor { get; } = VectorStoreExpirationAfterAnchor.LastActiveAt;
 
         /// <summary> The number of days after the anchor time that the vector store will expire. </summary>
-        public int Days { get; }
+        public int Days { get; set; }
     }
 }

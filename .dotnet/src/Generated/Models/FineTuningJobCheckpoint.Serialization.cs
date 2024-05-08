@@ -34,7 +34,7 @@ namespace OpenAI.FineTuning
             writer.WritePropertyName("fine_tuning_job_id"u8);
             writer.WriteStringValue(FineTuningJobId);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object);
+            writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -79,7 +79,7 @@ namespace OpenAI.FineTuning
             int stepNumber = default;
             FineTuningJobCheckpointMetrics metrics = default;
             string fineTuningJobId = default;
-            string @object = default;
+            FineTuningJobCheckpointObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -116,7 +116,7 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetString();
+                    @object = new FineTuningJobCheckpointObject(property.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

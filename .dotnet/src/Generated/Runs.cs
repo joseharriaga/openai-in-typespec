@@ -287,7 +287,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetRunsAsync(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetRunsAsync(string,int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -334,7 +334,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetRuns(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetRuns(string,int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -847,7 +847,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetRunStepsAsync(string,string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetRunStepsAsync(string,string,int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -896,7 +896,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetRunSteps(string,string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetRunSteps(string,string,int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>

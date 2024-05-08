@@ -16,27 +16,6 @@ namespace OpenAI
     /// <summary> Model factory for models. </summary>
     internal static partial class OpenAIModelFactory
     {
-        /// <summary> Initializes a new instance of <see cref="Audio.AudioTranscription"/>. </summary>
-        /// <param name="language"> The language of the input audio. </param>
-        /// <param name="duration"> The duration of the input audio. </param>
-        /// <param name="text"> The transcribed text. </param>
-        /// <param name="words"> Extracted words and their corresponding timestamps. </param>
-        /// <param name="segments"> Segments of the transcribed text and their corresponding details. </param>
-        /// <returns> A new <see cref="Audio.AudioTranscription"/> instance for mocking. </returns>
-        public static AudioTranscription AudioTranscription(string language = null, TimeSpan? duration = null, string text = null, IEnumerable<TranscribedWord> words = null, IEnumerable<TranscribedSegment> segments = null)
-        {
-            words ??= new List<TranscribedWord>();
-            segments ??= new List<TranscribedSegment>();
-
-            return new AudioTranscription(
-                language,
-                duration,
-                text,
-                words?.ToList(),
-                segments?.ToList(),
-                serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Audio.TranscribedWord"/>. </summary>
         /// <param name="word"> The text content of the word. </param>
         /// <param name="start"> Start time of the word in seconds. </param>

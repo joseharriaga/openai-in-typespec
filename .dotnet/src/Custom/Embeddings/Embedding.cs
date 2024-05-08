@@ -7,6 +7,7 @@ namespace OpenAI.Embeddings;
 /// Represents an embedding vector returned by embedding endpoint.
 /// </summary>
 [CodeGenModel("Embedding")]
+[CodeGenSuppress("Embedding", typeof(int), typeof(BinaryData))]
 public partial class Embedding
 {
     // CUSTOM: Made private. The value of the embedding is publicly exposed as ReadOnlyMemory<float> instead of BinaryData.

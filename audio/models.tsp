@@ -107,8 +107,12 @@ model CreateTranscriptionResponseJson {
   text: string;
 }
 
+// Tool customization: Add a missing 'task' field, present on the wire but not in the spec
 /** Represents a verbose json transcription response returned by model, based on the provided input. */
 model CreateTranscriptionResponseVerboseJson {
+  /** The task label. */
+  task: "transcribe";
+
   /** The language of the input audio. */
   language: string;
 

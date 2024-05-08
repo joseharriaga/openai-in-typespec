@@ -21,6 +21,8 @@ namespace OpenAI.Audio
             }
 
             writer.WriteStartObject();
+            writer.WritePropertyName("task"u8);
+            writer.WriteStringValue(Task.ToString());
             writer.WritePropertyName("language"u8);
             writer.WriteStringValue(Language);
             writer.WritePropertyName("duration"u8);
@@ -85,6 +87,7 @@ namespace OpenAI.Audio
             {
                 return null;
             }
+            CreateTranscriptionResponseVerboseJsonTask task = default;
             string language = default;
             TimeSpan? duration = default;
             string text = default;
@@ -94,6 +97,11 @@ namespace OpenAI.Audio
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("task"u8))
+                {
+                    task = new CreateTranscriptionResponseVerboseJsonTask(property.Value.GetString());
+                    continue;
+                }
                 if (property.NameEquals("language"u8))
                 {
                     language = property.Value.GetString();
@@ -101,7 +109,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("duration"u8))
                 {
-                    DeserializeNullableTimespan(property, ref duration);
+                    duration = TimeSpan.FromSeconds(property.Value.GetDouble());
                     continue;
                 }
                 if (property.NameEquals("text"u8))
@@ -144,6 +152,7 @@ namespace OpenAI.Audio
             }
             serializedAdditionalRawData = rawDataDictionary;
             return new AudioTranscription(
+                task,
                 language,
                 duration,
                 text,

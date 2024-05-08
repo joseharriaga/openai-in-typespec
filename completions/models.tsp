@@ -16,16 +16,10 @@ model CreateCompletionRequest {
 
   /**
    * The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
-   *
+   * 
    * Note that <|endoftext|> is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
    */
-  prompt:
-    | string
-    | string[]
-    | int32[]
-    | int32[][]
-    | null
-    | null = "<|endoftext|>";
+  prompt: string | (string)[] | (int32)[] | ((int32)[])[] | null | null = "<|endoftext|>";
 
   @doc("""
   Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.
@@ -43,7 +37,7 @@ model CreateCompletionRequest {
 
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
-   *
+   * 
    * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
    */
   @minValue(-2)
@@ -88,7 +82,7 @@ model CreateCompletionRequest {
 
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
-   *
+   * 
    * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
    */
   @minValue(-2)
@@ -105,7 +99,7 @@ model CreateCompletionRequest {
   seed?: int64 | null;
 
   /** Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence. */
-  stop?: string | string[] | null | null = null;
+  stop?: string | (string)[] | null | null = null;
 
   @doc("""
   Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
@@ -156,12 +150,17 @@ model CreateCompletionResponse {
     finish_reason: "stop" | "length" | "content_filter";
 
     index: int32;
+
     logprobs: {
       text_offset?: int32[];
+
       token_logprobs?: float32[];
+
       tokens?: string[];
+
       top_logprobs?: Record<float32>[];
     } | null;
+
     text: string;
   }[];
 
@@ -185,3 +184,4 @@ model CreateCompletionResponse {
 
   usage?: CompletionUsage;
 }
+

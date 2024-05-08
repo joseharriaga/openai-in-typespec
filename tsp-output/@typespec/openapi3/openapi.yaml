@@ -4635,10 +4635,16 @@ components:
     CreateTranscriptionResponseVerboseJson:
       type: object
       required:
+        - task
         - language
         - duration
         - text
       properties:
+        task:
+          type: string
+          enum:
+            - transcribe
+          description: The task label.
         language:
           type: string
           description: The language of the input audio.

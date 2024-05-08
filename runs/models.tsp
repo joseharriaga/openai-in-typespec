@@ -12,26 +12,16 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 // Tool generated type. Extracts CreateRunRequest.additional_messages
-model CreateRunRequestAdditional_messages is CreateMessageRequest[];
+model CreateRunRequestAdditional_messages is (CreateMessageRequest)[];
 
 // Tool generated type. Extracts CreateRunRequest.tools
 @maxItems(20)
 @extension("x-oaiExpandable", true)
-model CreateRunRequestTools
-  is (
-    | AssistantToolsCode
-    | AssistantToolsFileSearch
-    | AssistantToolsFunction
-    | null)[];
+model CreateRunRequestTools is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction | null)[];
 
 // Tool generated type. Extracts CreateThreadAndRunRequest.tools
 @maxItems(20)
-model CreateThreadAndRunRequestTools
-  is (
-    | AssistantToolsCode
-    | AssistantToolsFileSearch
-    | AssistantToolsFunction
-    | null)[];
+model CreateThreadAndRunRequestTools is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction | null)[];
 
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
@@ -39,27 +29,7 @@ model CreateRunRequest {
 
   /** The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. */
   @extension("x-oaiTypeLabel", "string")
-  `model`?:
-    | string
-    | "gpt-4-turbo"
-    | "gpt-4-turbo-2024-04-09"
-    | "gpt-4-0125-preview"
-    | "gpt-4-turbo-preview"
-    | "gpt-4-1106-preview"
-    | "gpt-4-vision-preview"
-    | "gpt-4"
-    | "gpt-4-0314"
-    | "gpt-4-0613"
-    | "gpt-4-32k"
-    | "gpt-4-32k-0314"
-    | "gpt-4-32k-0613"
-    | "gpt-3.5-turbo"
-    | "gpt-3.5-turbo-16k"
-    | "gpt-3.5-turbo-0613"
-    | "gpt-3.5-turbo-1106"
-    | "gpt-3.5-turbo-0125"
-    | "gpt-3.5-turbo-16k-0613"
-    | null;
+  `model`?: string | "gpt-4-turbo" | "gpt-4-turbo-2024-04-09" | "gpt-4-0125-preview" | "gpt-4-turbo-preview" | "gpt-4-1106-preview" | "gpt-4-vision-preview" | "gpt-4" | "gpt-4-0314" | "gpt-4-0613" | "gpt-4-32k" | "gpt-4-32k-0314" | "gpt-4-32k-0613" | "gpt-3.5-turbo" | "gpt-3.5-turbo-16k" | "gpt-3.5-turbo-0613" | "gpt-3.5-turbo-1106" | "gpt-3.5-turbo-0125" | "gpt-3.5-turbo-16k-0613" | null;
 
   /** Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. */
   instructions?: string | null;
@@ -84,7 +54,7 @@ model CreateRunRequest {
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-   *
+   * 
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
@@ -109,7 +79,9 @@ model CreateRunRequest {
   max_completion_tokens?: int32 | null;
 
   truncation_strategy?: TruncationObject | null;
+
   tool_choice?: AssistantsApiToolChoiceOption | null;
+
   response_format?: AssistantsApiResponseFormatOption | null;
 }
 
@@ -128,27 +100,7 @@ model CreateThreadAndRunRequest {
 
   /** The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. */
   @extension("x-oaiTypeLabel", "string")
-  `model`?:
-    | string
-    | "gpt-4-turbo"
-    | "gpt-4-turbo-2024-04-09"
-    | "gpt-4-0125-preview"
-    | "gpt-4-turbo-preview"
-    | "gpt-4-1106-preview"
-    | "gpt-4-vision-preview"
-    | "gpt-4"
-    | "gpt-4-0314"
-    | "gpt-4-0613"
-    | "gpt-4-32k"
-    | "gpt-4-32k-0314"
-    | "gpt-4-32k-0613"
-    | "gpt-3.5-turbo"
-    | "gpt-3.5-turbo-16k"
-    | "gpt-3.5-turbo-0613"
-    | "gpt-3.5-turbo-1106"
-    | "gpt-3.5-turbo-0125"
-    | "gpt-3.5-turbo-16k-0613"
-    | null;
+  `model`?: string | "gpt-4-turbo" | "gpt-4-turbo-2024-04-09" | "gpt-4-0125-preview" | "gpt-4-turbo-preview" | "gpt-4-1106-preview" | "gpt-4-vision-preview" | "gpt-4" | "gpt-4-0314" | "gpt-4-0613" | "gpt-4-32k" | "gpt-4-32k-0314" | "gpt-4-32k-0613" | "gpt-3.5-turbo" | "gpt-3.5-turbo-16k" | "gpt-3.5-turbo-0613" | "gpt-3.5-turbo-1106" | "gpt-3.5-turbo-0125" | "gpt-3.5-turbo-16k-0613" | null;
 
   /** Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. */
   instructions?: string | null;
@@ -167,6 +119,7 @@ model CreateThreadAndRunRequest {
       @maxItems(20)
       file_ids?: string[] = [];
     };
+
     file_search?: {
       /** The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
       @maxItems(1)
@@ -185,7 +138,7 @@ model CreateThreadAndRunRequest {
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-   *
+   * 
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
@@ -210,7 +163,9 @@ model CreateThreadAndRunRequest {
   max_completion_tokens?: int32 | null;
 
   truncation_strategy?: TruncationObject | null;
+
   tool_choice?: AssistantsApiToolChoiceOption | null;
+
   response_format?: AssistantsApiResponseFormatOption | null;
 }
 
@@ -237,8 +192,11 @@ model ListRunsResponse {
   object: "list";
 
   data: RunObject[];
+
   first_id: string;
+
   last_id: string;
+
   has_more: boolean;
 }
 
@@ -247,8 +205,11 @@ model ListRunStepsResponse {
   object: "list";
 
   data: RunStepObject[];
+
   first_id: string;
+
   last_id: string;
+
   has_more: boolean;
 }
 
@@ -415,15 +376,7 @@ model RunObject {
   @doc("""
   The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
   """)
-  status:
-    | "queued"
-    | "in_progress"
-    | "requires_action"
-    | "cancelling"
-    | "cancelled"
-    | "failed"
-    | "completed"
-    | "expired";
+  status: "queued" | "in_progress" | "requires_action" | "cancelling" | "cancelled" | "failed" | "completed" | "expired";
 
   @doc("""
   Details on the action required to continue the run. Will be `null` if no action is required.
@@ -496,8 +449,7 @@ model RunObject {
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
   @maxItems(20)
   @extension("x-oaiExpandable", true)
-  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
-  ];
+  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [];
 
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
@@ -520,7 +472,9 @@ model RunObject {
   max_completion_tokens: int32 | null;
 
   truncation_strategy: TruncationObject | null;
+
   tool_choice: AssistantsApiToolChoiceOption | null;
+
   response_format: AssistantsApiResponseFormatOption | null;
 }
 
@@ -765,3 +719,4 @@ model RunStepDeltaStepDetailsToolCallsFunctionObject {
     output?: string | null;
   };
 }
+

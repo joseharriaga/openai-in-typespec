@@ -47,6 +47,7 @@ model ModifyThreadRequest {
       @maxItems(20)
       file_ids?: string[] = [];
     };
+
     file_search?: {
       /** The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. */
       @maxItems(1)
@@ -61,7 +62,9 @@ model ModifyThreadRequest {
 
 model DeleteThreadResponse {
   id: string;
+
   deleted: boolean;
+
   object: "thread.deleted";
 }
 
@@ -91,6 +94,7 @@ model ThreadObject {
       @maxItems(20)
       file_ids?: string[] = [];
     };
+
     file_search?: {
       /** The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. */
       @maxItems(1)
@@ -108,7 +112,11 @@ model ListThreadsResponse {
   object: "list";
 
   data: ThreadObject[];
+
   first_id: string;
+
   last_id: string;
+
   has_more: boolean;
 }
+

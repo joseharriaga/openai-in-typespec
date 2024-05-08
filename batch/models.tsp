@@ -46,15 +46,7 @@ model Batch {
   completion_window: string;
 
   /** The current status of the batch. */
-  status:
-    | "validating"
-    | "failed"
-    | "in_progress"
-    | "finalizing"
-    | "completed"
-    | "expired"
-    | "cancelling"
-    | "cancelled";
+  status: "validating" | "failed" | "in_progress" | "finalizing" | "completed" | "expired" | "cancelling" | "cancelled";
 
   /** The ID of the file containing the outputs of successfully executed requests. */
   output_file_id?: string;
@@ -172,10 +164,14 @@ model BatchRequestOutput {
 
 model ListBatchesResponse {
   data: Batch[];
+
   first_id?: string;
+
   last_id?: string;
+
   has_more: boolean;
 
   // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }
+

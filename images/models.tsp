@@ -37,13 +37,7 @@ model CreateImageRequest {
   @doc("""
   The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or `1024x1792` for `dall-e-3` models.
   """)
-  size?:
-    | "256x256"
-    | "512x512"
-    | "1024x1024"
-    | "1792x1024"
-    | "1024x1792"
-    | null = "1024x1024";
+  size?: "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792" | null = "1024x1024";
 
   @doc("""
   The style of the generated images. Must be one of `vivid` or `natural`. Vivid causes the model to lean towards generating hyper-real and dramatic images. Natural causes the model to produce more natural, less hyper-real looking images. This param is only supported for `dall-e-3`.
@@ -152,3 +146,4 @@ model Image {
   /** The prompt that was used to generate the image, if there was any revision to the prompt. */
   revised_prompt?: string;
 }
+

@@ -11,8 +11,11 @@ namespace OpenAI;
 
 model Error {
   code: string | null;
+
   message: string;
+
   param: string | null;
+
   type: string;
 }
 
@@ -48,3 +51,4 @@ model CompletionUsage {
   /** Total number of tokens used in the request (prompt + completion). */
   total_tokens: int32;
 }
+

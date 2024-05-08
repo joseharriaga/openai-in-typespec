@@ -42,18 +42,6 @@ namespace OpenAI.Embeddings
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="Embedding"/>. </summary>
-        /// <param name="index"> The index of the embedding in the list of embeddings. </param>
-        /// <param name="embeddingProperty"> The embedding vector, which is a list of floats. The length of vector depends on the model as listed in the [embedding guide](/docs/guides/embeddings). </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="embeddingProperty"/> is null. </exception>
-        internal Embedding(int index, BinaryData embeddingProperty)
-        {
-            Argument.AssertNotNull(embeddingProperty, nameof(embeddingProperty));
-
-            Index = index;
-            EmbeddingProperty = embeddingProperty;
-        }
-
         /// <summary> Initializes a new instance of <see cref="Embedding"/> for deserialization. </summary>
         internal Embedding()
         {

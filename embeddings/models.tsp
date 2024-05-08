@@ -16,7 +16,11 @@ model CreateEmbeddingRequest {
 
   /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | "text-embedding-ada-002" | "text-embedding-3-small" | "text-embedding-3-large";
+  `model`:
+    | string
+    | "text-embedding-ada-002"
+    | "text-embedding-3-small"
+    | "text-embedding-3-large";
 
   @doc("""
   The format to return the embeddings in. Can be either `float` or [`base64`](https://pypi.org/project/pybase64/).
@@ -65,4 +69,3 @@ model Embedding {
   /** The object type, which is always "embedding". */
   object: "embedding";
 }
-

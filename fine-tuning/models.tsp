@@ -8,7 +8,8 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 // Tool generated type. Extracts CreateFineTuningJobRequest.integrations
-model CreateFineTuningJobRequestIntegrations is ({
+model CreateFineTuningJobRequestIntegrations
+  is {
     /** The type of integration to enable. Currently, only "wandb" (Weights and Biases) is supported. */
     type: "wandb";
 
@@ -36,7 +37,7 @@ model CreateFineTuningJobRequestIntegrations is ({
        */
       tags?: string[];
     };
-  })[];
+  }[];
 
 // Tool generated type. Extracts FineTuningJob.integrations
 @maxItems(5)
@@ -120,7 +121,6 @@ model CreateFineTuningJobRequest {
 
 model ListPaginatedFineTuningJobsResponse {
   data: FineTuningJob[];
-
   has_more: boolean;
 
   // Tool customization: add a clear enum enforcement of constrained 'object' label
@@ -141,9 +141,7 @@ model ListFineTuningJobCheckpointsResponse {
   object: "list";
 
   first_id?: string | null;
-
   last_id?: string | null;
-
   has_more: boolean;
 }
 
@@ -176,7 +174,7 @@ model FineTuningJob {
   } | null;
 
   /** The name of the fine-tuned model that is being created. The value will be null if the fine-tuning job is still running. */
-  `fine_tuned_model`: string | null;
+  fine_tuned_model: string | null;
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running. */
@@ -207,7 +205,13 @@ model FineTuningJob {
   @doc("""
   The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`.
   """)
-  status: "validating_files" | "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  status:
+    | "validating_files"
+    | "queued"
+    | "running"
+    | "succeeded"
+    | "failed"
+    | "cancelled";
 
   /** The total number of billable tokens processed by this fine-tuning job. The value will be null if the fine-tuning job is still running. */
   trained_tokens: int32 | null;
@@ -267,9 +271,7 @@ model FineTuningJobEvent {
   created_at: utcDateTime;
 
   level: "info" | "warn" | "error";
-
   message: string;
-
   object: "fine_tuning.job.event";
 }
 
@@ -286,7 +288,7 @@ model FineTuningJobCheckpoint {
   created_at: utcDateTime;
 
   /** The name of the fine-tuned checkpoint model that is created. */
-  `fine_tuned_model_checkpoint`: string;
+  fine_tuned_model_checkpoint: string;
 
   /** The step number that the checkpoint was created at. */
   step_number: int32;
@@ -294,17 +296,11 @@ model FineTuningJobCheckpoint {
   /** Metrics at the step number during the fine-tuning job. */
   metrics: {
     step?: float32;
-
     train_loss?: float32;
-
     train_mean_token_accuracy?: float32;
-
     valid_loss?: float32;
-
     valid_mean_token_accuracy?: float32;
-
     full_valid_loss?: float32;
-
     full_valid_mean_token_accuracy?: float32;
   };
 
@@ -314,4 +310,3 @@ model FineTuningJobCheckpoint {
   /** The object type, which is always "fine_tuning.job.checkpoint". */
   object: "fine_tuning.job.checkpoint";
 }
-

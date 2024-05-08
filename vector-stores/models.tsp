@@ -117,19 +117,14 @@ model ListVectorStoresResponse {
   object: "list";
 
   data: VectorStoreObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteVectorStoreResponse {
   id: string;
-
   deleted: boolean;
-
   object: "vector_store.deleted";
 }
 
@@ -166,7 +161,11 @@ model VectorStoreFileObject {
     @doc("""
     One of `server_error` or `rate_limit_exceeded`.
     """)
-    code: "internal_error" | "file_not_found" | "parsing_error" | "unhandled_mime_type";
+    code:
+      | "internal_error"
+      | "file_not_found"
+      | "parsing_error"
+      | "unhandled_mime_type";
 
     /** A human-readable description of the error. */
     message: string;
@@ -185,19 +184,14 @@ model ListVectorStoreFilesResponse {
   object: "list";
 
   data: VectorStoreFileObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteVectorStoreFileResponse {
   id: string;
-
   deleted: boolean;
-
   object: "vector_store.file.deleted";
 }
 
@@ -250,4 +244,3 @@ model CreateVectorStoreFileBatchRequest {
   @maxItems(500)
   file_ids: string[];
 }
-

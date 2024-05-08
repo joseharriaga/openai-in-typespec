@@ -10,24 +10,26 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 // Tool generated type. Extracts CreateMessageRequest.attachments
-model CreateMessageRequestAttachments is ({
+model CreateMessageRequestAttachments
+  is {
     /** The ID of the file to attach to the message. */
     file_id?: string;
 
     /** The tools to add this file to. */
     @extension("x-oaiExpandable", true)
     tools?: (AssistantToolsCode | AssistantToolsFileSearch)[];
-  })[];
+  }[];
 
 // Tool generated type. Extracts MessageObject.attachments
-model MessageObjectAttachments is ({
+model MessageObjectAttachments
+  is {
     /** The ID of the file to attach to the message. */
     file_id?: string;
 
     /** The tools to add this file to. */
     @extension("x-oaiExpandable", true)
     tools?: (AssistantToolsCode | AssistantToolsFileSearch)[];
-  })[];
+  }[];
 
 model CreateMessageRequest {
   @doc("""
@@ -61,19 +63,14 @@ model ListMessagesResponse {
   object: "list";
 
   data: MessageObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteMessageResponse {
   id: string;
-
   deleted: boolean;
-
   object: "thread.message.deleted";
 }
 
@@ -103,7 +100,12 @@ model MessageObject {
   /** On an incomplete message, details about why the message is incomplete. */
   incomplete_details: {
     /** The reason the message is incomplete. */
-    reason: "content_filter" | "max_tokens" | "run_cancelled" | "run_expired" | "run_failed";
+    reason:
+      | "content_filter"
+      | "max_tokens"
+      | "run_cancelled"
+      | "run_expired"
+      | "run_failed";
   } | null;
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
@@ -331,4 +333,3 @@ model MessageDeltaContentTextAnnotationsFilePathObject {
   @minValue(0)
   end_index?: int32;
 }
-

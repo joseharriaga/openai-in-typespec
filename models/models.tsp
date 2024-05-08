@@ -16,7 +16,6 @@ model ListModelsResponse {
 
 model DeleteModelResponse {
   id: string;
-
   deleted: boolean;
 
   // Tool customization: add a clear enum enforcement of constrained 'object' label
@@ -39,4 +38,3 @@ model Model {
   /** The organization that owns the model. */
   owned_by: string;
 }
-

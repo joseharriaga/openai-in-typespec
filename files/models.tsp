@@ -15,7 +15,7 @@ model CreateFileRequest {
 
   /**
    * The intended purpose of the uploaded file.
-   * 
+   *
    * Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages). This allows us to validate the format of the uploaded file is correct for fine-tuning.
    */
   purpose: "fine-tune" | "assistants";
@@ -30,9 +30,7 @@ model ListFilesResponse {
 
 model DeleteFileResponse {
   id: string;
-
   object: "file";
-
   deleted: boolean;
 }
 
@@ -63,18 +61,21 @@ model OpenAIFile {
   @doc("""
   The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`.
   """)
-  purpose: "fine-tune" | "fine-tune-results" | "assistants" | "assistants_output";
+  purpose:
+    | "fine-tune"
+    | "fine-tune-results"
+    | "assistants"
+    | "assistants_output";
 
+  #deprecated "This field is marked as deprecated."
   @doc("""
   Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
   """)
-  #deprecated "This field is marked as deprecated."
   status: "uploaded" | "processed" | "error";
 
+  #deprecated "This field is marked as deprecated."
   @doc("""
   Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
   """)
-  #deprecated "This field is marked as deprecated."
   status_details?: string;
 }
-

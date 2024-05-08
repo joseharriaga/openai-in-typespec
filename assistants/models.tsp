@@ -19,10 +19,9 @@ Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the m
 """)
 @extension("x-oaiExpandable", true)
 union AssistantsApiResponseFormatOption {
-"none" | "auto",
-AssistantsApiResponseFormat
+  "none" | "auto",
+  AssistantsApiResponseFormat,
 }
-
 
 @doc("""
 An object describing the expected output of the model. If `json_object` only `function` type `tools` are allowed to be passed to the Run. If `text` the model can return text or any value needed.
@@ -37,7 +36,26 @@ model AssistantsApiResponseFormat {
 model CreateAssistantRequest {
   /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | "gpt-4-turbo" | "gpt-4-turbo-2024-04-09" | "gpt-4-0125-preview" | "gpt-4-turbo-preview" | "gpt-4-1106-preview" | "gpt-4-vision-preview" | "gpt-4" | "gpt-4-0314" | "gpt-4-0613" | "gpt-4-32k" | "gpt-4-32k-0314" | "gpt-4-32k-0613" | "gpt-3.5-turbo" | "gpt-3.5-turbo-16k" | "gpt-3.5-turbo-0613" | "gpt-3.5-turbo-1106" | "gpt-3.5-turbo-0125" | "gpt-3.5-turbo-16k-0613";
+  `model`:
+    | string
+    | "gpt-4-turbo"
+    | "gpt-4-turbo-2024-04-09"
+    | "gpt-4-0125-preview"
+    | "gpt-4-turbo-preview"
+    | "gpt-4-1106-preview"
+    | "gpt-4-vision-preview"
+    | "gpt-4"
+    | "gpt-4-0314"
+    | "gpt-4-0613"
+    | "gpt-4-32k"
+    | "gpt-4-32k-0314"
+    | "gpt-4-32k-0613"
+    | "gpt-3.5-turbo"
+    | "gpt-3.5-turbo-16k"
+    | "gpt-3.5-turbo-0613"
+    | "gpt-3.5-turbo-1106"
+    | "gpt-3.5-turbo-0125"
+    | "gpt-3.5-turbo-16k-0613";
 
   /** The name of the assistant. The maximum length is 256 characters. */
   @maxLength(256)
@@ -56,7 +74,8 @@ model CreateAssistantRequest {
   """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [];
+  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
+  ];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -85,7 +104,7 @@ model CreateAssistantRequest {
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-   * 
+   *
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
@@ -116,7 +135,8 @@ model ModifyAssistantRequest {
   """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [];
+  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
+  ];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -129,7 +149,6 @@ model ModifyAssistantRequest {
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /** Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
       @maxItems(1)
@@ -148,7 +167,7 @@ model ModifyAssistantRequest {
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-   * 
+   *
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
@@ -163,19 +182,14 @@ model ListAssistantsResponse {
   object: "list";
 
   data: AssistantObject[];
-
   first_id: string;
-
   last_id: string;
-
   has_more: boolean;
 }
 
 model DeleteAssistantResponse {
   id: string;
-
   deleted: boolean;
-
   object: "assistant.deleted";
 }
 
@@ -239,7 +253,8 @@ model AssistantObject {
   """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [];
+  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
+  ];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -252,7 +267,6 @@ model AssistantObject {
       @maxItems(20)
       file_ids?: string[] = [];
     };
-
     file_search?: {
       /** The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
       @maxItems(1)
@@ -271,7 +285,7 @@ model AssistantObject {
 
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-   * 
+   *
    * We generally recommend altering this or temperature but not both.
    */
   @minValue(0)
@@ -302,10 +316,9 @@ Specifying a particular tool like `{"type": "file_search"}` or `{"type": "functi
 """)
 @extension("x-oaiExpandable", true)
 union AssistantsApiToolChoiceOption {
-"none" | "auto" | "required",
-AssistantsNamedToolChoice
+  "none" | "auto" | "required",
+  AssistantsNamedToolChoice,
 }
-
 
 /** Specifies a tool the model should use. Use to force the model to call a specific tool. */
 model AssistantsNamedToolChoice {
@@ -319,4 +332,3 @@ model AssistantsNamedToolChoice {
     name: string;
   };
 }
-

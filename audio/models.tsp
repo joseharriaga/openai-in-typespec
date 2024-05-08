@@ -209,4 +209,3 @@ model TranscriptionWord {
   @encode("seconds", float32)
   end: duration;
 }
-

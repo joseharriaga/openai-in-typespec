@@ -34,152 +34,122 @@ in your code. See the [Assistants API quickstart](/docs/assistants/overview) to 
 integrate the Assistants API with streaming.
 """)
 union AssistantStreamEvent {
-ThreadStreamEvent,
-RunStreamEvent,
-RunStepStreamEvent,
-MessageStreamEvent,
-ErrorEvent,
-DoneEvent
+  ThreadStreamEvent,
+  RunStreamEvent,
+  RunStepStreamEvent,
+  MessageStreamEvent,
+  ErrorEvent,
+  DoneEvent,
 }
-
 
 union ThreadStreamEvent {
-{
-  event: "thread.created";
-
-  data: ThreadObject;
+  {
+    event: "thread.created",
+    data: ThreadObject,
+  },
 }
-}
-
 
 union RunStreamEvent {
-{
-  event: "thread.run.created";
-
-  data: RunObject;
-},
-{
-  event: "thread.run.queued";
-
-  data: RunObject;
-},
-{
-  event: "thread.run.in_progress";
-
-  data: RunObject;
-},
-{
-  event: "thread.run.requires_action";
-
-  data: RunObject;
-},
-{
-  event: "thread.run.completed";
-
-  data: RunObject;
-},
-{
-  event: "thread.run.failed";
-
-  data: RunObject;
-},
-{
-  event: "thread.run.cancelling";
-
-  data: RunObject;
-},
-{
-  event: "thread.run.cancelled";
-
-  data: RunObject;
-},
-{
-  event: "thread.run.expired";
-
-  data: RunObject;
+  {
+    event: "thread.run.created",
+    data: RunObject,
+  },
+  {
+    event: "thread.run.queued",
+    data: RunObject,
+  },
+  {
+    event: "thread.run.in_progress",
+    data: RunObject,
+  },
+  {
+    event: "thread.run.requires_action",
+    data: RunObject,
+  },
+  {
+    event: "thread.run.completed",
+    data: RunObject,
+  },
+  {
+    event: "thread.run.failed",
+    data: RunObject,
+  },
+  {
+    event: "thread.run.cancelling",
+    data: RunObject,
+  },
+  {
+    event: "thread.run.cancelled",
+    data: RunObject,
+  },
+  {
+    event: "thread.run.expired",
+    data: RunObject,
+  },
 }
-}
-
 
 union RunStepStreamEvent {
-{
-  event: "thread.run.step.created";
-
-  data: RunStepObject;
-},
-{
-  event: "thread.run.step.in_progress";
-
-  data: RunStepObject;
-},
-{
-  event: "thread.run.step.delta";
-
-  data: RunStepDeltaObject;
-},
-{
-  event: "thread.run.step.completed";
-
-  data: RunStepObject;
-},
-{
-  event: "thread.run.step.failed";
-
-  data: RunStepObject;
-},
-{
-  event: "thread.run.step.cancelled";
-
-  data: RunStepObject;
-},
-{
-  event: "thread.run.step.expired";
-
-  data: RunStepObject;
+  {
+    event: "thread.run.step.created",
+    data: RunStepObject,
+  },
+  {
+    event: "thread.run.step.in_progress",
+    data: RunStepObject,
+  },
+  {
+    event: "thread.run.step.delta",
+    data: RunStepDeltaObject,
+  },
+  {
+    event: "thread.run.step.completed",
+    data: RunStepObject,
+  },
+  {
+    event: "thread.run.step.failed",
+    data: RunStepObject,
+  },
+  {
+    event: "thread.run.step.cancelled",
+    data: RunStepObject,
+  },
+  {
+    event: "thread.run.step.expired",
+    data: RunStepObject,
+  },
 }
-}
-
 
 union MessageStreamEvent {
-{
-  event: "thread.message.created";
-
-  data: MessageObject;
-},
-{
-  event: "thread.message.in_progress";
-
-  data: MessageObject;
-},
-{
-  event: "thread.message.delta";
-
-  data: MessageDeltaObject;
-},
-{
-  event: "thread.message.completed";
-
-  data: MessageObject;
-},
-{
-  event: "thread.message.incomplete";
-
-  data: MessageObject;
+  {
+    event: "thread.message.created",
+    data: MessageObject,
+  },
+  {
+    event: "thread.message.in_progress",
+    data: MessageObject,
+  },
+  {
+    event: "thread.message.delta",
+    data: MessageDeltaObject,
+  },
+  {
+    event: "thread.message.completed",
+    data: MessageObject,
+  },
+  {
+    event: "thread.message.incomplete",
+    data: MessageObject,
+  },
 }
-}
-
 
 /** Occurs when an [error](/docs/guides/error-codes/api-errors) occurs. This can happen due to an internal server error or a timeout. */
 model ErrorEvent {
   event: "error";
-
   data: Error;
 }
 
 /** Occurs when a stream ends. */
 model DoneEvent {
   event: "done";
-
   data: "[DONE]";
 }
-

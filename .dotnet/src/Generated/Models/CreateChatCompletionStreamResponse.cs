@@ -45,7 +45,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionStreamResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. Each chunk has the same ID. </param>
-        /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
+        /// <param name="choices">
+        /// A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
+        /// last chunk if you set `stream_options: {"include_usage": true}`.
+        /// </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </param>
         /// <param name="model"> The model to generate the completion. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="choices"/> or <paramref name="model"/> is null. </exception>
@@ -63,7 +66,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionStreamResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. Each chunk has the same ID. </param>
-        /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
+        /// <param name="choices">
+        /// A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
+        /// last chunk if you set `stream_options: {"include_usage": true}`.
+        /// </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </param>
         /// <param name="model"> The model to generate the completion. </param>
         /// <param name="systemFingerprint">
@@ -71,8 +77,12 @@ namespace OpenAI.Internal.Models
         /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
         /// </param>
         /// <param name="object"> The object type, which is always `chat.completion.chunk`. </param>
+        /// <param name="usage">
+        /// An optional field that will only be present when you set `stream_options: {"include_usage": true}` in your request.
+        /// When present, it contains a null value except for the last chunk which contains the token usage statistics for the entire request.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateChatCompletionStreamResponse(string id, IReadOnlyList<CreateChatCompletionStreamResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, string @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateChatCompletionStreamResponse(string id, IReadOnlyList<CreateChatCompletionStreamResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, string @object, CreateChatCompletionStreamResponseUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Choices = choices;
@@ -80,6 +90,7 @@ namespace OpenAI.Internal.Models
             Model = model;
             SystemFingerprint = systemFingerprint;
             Object = @object;
+            Usage = usage;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -90,7 +101,10 @@ namespace OpenAI.Internal.Models
 
         /// <summary> A unique identifier for the chat completion. Each chunk has the same ID. </summary>
         public string Id { get; }
-        /// <summary> A list of chat completion choices. Can be more than one if `n` is greater than 1. </summary>
+        /// <summary>
+        /// A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
+        /// last chunk if you set `stream_options: {"include_usage": true}`.
+        /// </summary>
         public IReadOnlyList<CreateChatCompletionStreamResponseChoice> Choices { get; }
         /// <summary> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </summary>
         public DateTimeOffset Created { get; }
@@ -103,5 +117,11 @@ namespace OpenAI.Internal.Models
         public string SystemFingerprint { get; }
         /// <summary> The object type, which is always `chat.completion.chunk`. </summary>
         public string Object { get; } = "chat.completion.chunk";
+
+        /// <summary>
+        /// An optional field that will only be present when you set `stream_options: {"include_usage": true}` in your request.
+        /// When present, it contains a null value except for the last chunk which contains the token usage statistics for the entire request.
+        /// </summary>
+        public CreateChatCompletionStreamResponseUsage Usage { get; }
     }
 }

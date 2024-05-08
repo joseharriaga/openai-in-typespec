@@ -268,6 +268,7 @@ namespace OpenAI
         /// </param>
         /// <param name="stop"> Up to 4 sequences where the API will stop generating further tokens. </param>
         /// <param name="stream"> If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </param>
+        /// <param name="streamOptions"></param>
         /// <param name="temperature">
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
@@ -297,7 +298,7 @@ namespace OpenAI
         /// A list of functions the model may generate JSON inputs for.
         /// </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionRequest"/> instance for mocking. </returns>
-        public static CreateChatCompletionRequest CreateChatCompletionRequest(IEnumerable<BinaryData> messages = null, CreateChatCompletionRequestModel model = default, float? frequencyPenalty = null, IDictionary<string, int> logitBias = null, bool? logprobs = null, int? topLogprobs = null, int? maxTokens = null, int? n = null, float? presencePenalty = null, CreateChatCompletionRequestResponseFormat responseFormat = null, long? seed = null, BinaryData stop = null, bool? stream = null, float? temperature = null, float? topP = null, IEnumerable<ChatCompletionTool> tools = null, BinaryData toolChoice = null, string user = null, BinaryData functionCall = null, IEnumerable<ChatCompletionFunctions> functions = null)
+        public static CreateChatCompletionRequest CreateChatCompletionRequest(IEnumerable<BinaryData> messages = null, CreateChatCompletionRequestModel model = default, float? frequencyPenalty = null, IDictionary<string, int> logitBias = null, bool? logprobs = null, int? topLogprobs = null, int? maxTokens = null, int? n = null, float? presencePenalty = null, CreateChatCompletionRequestResponseFormat responseFormat = null, long? seed = null, BinaryData stop = null, bool? stream = null, ChatCompletionStreamOptions streamOptions = null, float? temperature = null, float? topP = null, IEnumerable<ChatCompletionTool> tools = null, BinaryData toolChoice = null, string user = null, BinaryData functionCall = null, IEnumerable<ChatCompletionFunctions> functions = null)
         {
             messages ??= new List<BinaryData>();
             logitBias ??= new Dictionary<string, int>();
@@ -318,6 +319,7 @@ namespace OpenAI
                 seed,
                 stop,
                 stream,
+                streamOptions,
                 temperature,
                 topP,
                 tools?.ToList(),
@@ -1641,7 +1643,10 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionStreamResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. Each chunk has the same ID. </param>
-        /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
+        /// <param name="choices">
+        /// A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
+        /// last chunk if you set `stream_options: {"include_usage": true}`.
+        /// </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </param>
         /// <param name="model"> The model to generate the completion. </param>
         /// <param name="systemFingerprint">
@@ -1649,8 +1654,12 @@ namespace OpenAI
         /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
         /// </param>
         /// <param name="object"> The object type, which is always `chat.completion.chunk`. </param>
+        /// <param name="usage">
+        /// An optional field that will only be present when you set `stream_options: {"include_usage": true}` in your request.
+        /// When present, it contains a null value except for the last chunk which contains the token usage statistics for the entire request.
+        /// </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponse"/> instance for mocking. </returns>
-        public static CreateChatCompletionStreamResponse CreateChatCompletionStreamResponse(string id = null, IEnumerable<CreateChatCompletionStreamResponseChoice> choices = null, DateTimeOffset created = default, string model = null, string systemFingerprint = null, string @object = null)
+        public static CreateChatCompletionStreamResponse CreateChatCompletionStreamResponse(string id = null, IEnumerable<CreateChatCompletionStreamResponseChoice> choices = null, DateTimeOffset created = default, string model = null, string systemFingerprint = null, string @object = null, CreateChatCompletionStreamResponseUsage usage = null)
         {
             choices ??= new List<CreateChatCompletionStreamResponseChoice>();
 
@@ -1661,6 +1670,7 @@ namespace OpenAI
                 model,
                 systemFingerprint,
                 @object,
+                usage,
                 serializedAdditionalRawData: null);
         }
 
@@ -1688,6 +1698,16 @@ namespace OpenAI
             content ??= new List<ChatCompletionTokenLogprob>();
 
             return new CreateChatCompletionStreamResponseChoiceLogprobs(content?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionStreamResponseUsage"/>. </summary>
+        /// <param name="completionTokens"> Number of tokens in the generated completion. </param>
+        /// <param name="promptTokens"> Number of tokens in the prompt. </param>
+        /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
+        /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponseUsage"/> instance for mocking. </returns>
+        public static CreateChatCompletionStreamResponseUsage CreateChatCompletionStreamResponseUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
+        {
+            return new CreateChatCompletionStreamResponseUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentImageFileObject"/>. </summary>

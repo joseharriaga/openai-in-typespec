@@ -173,6 +173,18 @@ namespace OpenAI.Internal.Models
                     writer.WriteNull("stream");
                 }
             }
+            if (Optional.IsDefined(StreamOptions))
+            {
+                if (StreamOptions != null)
+                {
+                    writer.WritePropertyName("stream_options"u8);
+                    writer.WriteObjectValue(StreamOptions, options);
+                }
+                else
+                {
+                    writer.WriteNull("stream_options");
+                }
+            }
             if (Optional.IsDefined(Temperature))
             {
                 if (Temperature != null)
@@ -297,6 +309,7 @@ namespace OpenAI.Internal.Models
             long? seed = default;
             BinaryData stop = default;
             bool? stream = default;
+            ChatCompletionStreamOptions streamOptions = default;
             float? temperature = default;
             float? topP = default;
             IList<ChatCompletionTool> tools = default;
@@ -442,6 +455,16 @@ namespace OpenAI.Internal.Models
                     stream = property.Value.GetBoolean();
                     continue;
                 }
+                if (property.NameEquals("stream_options"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        streamOptions = null;
+                        continue;
+                    }
+                    streamOptions = ChatCompletionStreamOptions.DeserializeChatCompletionStreamOptions(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("temperature"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -533,6 +556,7 @@ namespace OpenAI.Internal.Models
                 seed,
                 stop,
                 stream,
+                streamOptions,
                 temperature,
                 topP,
                 tools ?? new ChangeTrackingList<ChatCompletionTool>(),

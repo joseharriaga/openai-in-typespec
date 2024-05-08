@@ -4,12 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 
-namespace OpenAI.Files
+namespace OpenAI.Internal.Models
 {
-    /// <summary> The CreateFileRequest. </summary>
-    public partial class UploadFileOptions
+    /// <summary> Options for streaming response. Only set this when you set `stream: true`. </summary>
+    internal partial class ChatCompletionStreamOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,19 +42,21 @@ namespace OpenAI.Files
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="UploadFileOptions"/>. </summary>
-        /// <param name="file"> The File object (not file name) to be uploaded. </param>
-        /// <param name="purpose">
-        /// The intended purpose of the uploaded file.
-        ///
-        /// Use "assistants" for [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages), "batch" for [Batch API](/docs/guides/batch), and "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
-        /// </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal UploadFileOptions(Stream file, UploadFileOptionsPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="ChatCompletionStreamOptions"/>. </summary>
+        public ChatCompletionStreamOptions()
         {
-            File = file;
-            Purpose = purpose;
+        }
+
+        /// <summary> Initializes a new instance of <see cref="ChatCompletionStreamOptions"/>. </summary>
+        /// <param name="includeUsage"> If set, an additional chunk will be streamed before the `data: [DONE]` message. The `usage` field on this chunk shows the token usage statistics for the entire request, and the `choices` field will always be an empty array. All other chunks will also include a `usage` field, but with a null value. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal ChatCompletionStreamOptions(bool? includeUsage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            IncludeUsage = includeUsage;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
+
+        /// <summary> If set, an additional chunk will be streamed before the `data: [DONE]` message. The `usage` field on this chunk shows the token usage statistics for the entire request, and the `choices` field will always be an empty array. All other chunks will also include a `usage` field, but with a null value. </summary>
+        public bool? IncludeUsage { get; set; }
     }
 }

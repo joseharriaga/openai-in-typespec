@@ -98,6 +98,7 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="stop"> Up to 4 sequences where the API will stop generating further tokens. </param>
         /// <param name="stream"> If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </param>
+        /// <param name="streamOptions"></param>
         /// <param name="temperature">
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
@@ -127,7 +128,7 @@ namespace OpenAI.Internal.Models
         /// A list of functions the model may generate JSON inputs for.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateChatCompletionRequest(IList<BinaryData> messages, CreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<string, int> logitBias, bool? logprobs, int? topLogprobs, int? maxTokens, int? n, float? presencePenalty, CreateChatCompletionRequestResponseFormat responseFormat, long? seed, BinaryData stop, bool? stream, float? temperature, float? topP, IList<ChatCompletionTool> tools, BinaryData toolChoice, string user, BinaryData functionCall, IList<ChatCompletionFunctions> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateChatCompletionRequest(IList<BinaryData> messages, CreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<string, int> logitBias, bool? logprobs, int? topLogprobs, int? maxTokens, int? n, float? presencePenalty, CreateChatCompletionRequestResponseFormat responseFormat, long? seed, BinaryData stop, bool? stream, ChatCompletionStreamOptions streamOptions, float? temperature, float? topP, IList<ChatCompletionTool> tools, BinaryData toolChoice, string user, BinaryData functionCall, IList<ChatCompletionFunctions> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Messages = messages;
             Model = model;
@@ -142,6 +143,7 @@ namespace OpenAI.Internal.Models
             Seed = seed;
             Stop = stop;
             Stream = stream;
+            StreamOptions = streamOptions;
             Temperature = temperature;
             TopP = topP;
             Tools = tools;
@@ -298,6 +300,8 @@ namespace OpenAI.Internal.Models
         public BinaryData Stop { get; set; }
         /// <summary> If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </summary>
         public bool? Stream { get; set; }
+        /// <summary> Gets or sets the stream options. </summary>
+        public ChatCompletionStreamOptions StreamOptions { get; set; }
         /// <summary>
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///

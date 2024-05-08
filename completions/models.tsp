@@ -3,7 +3,6 @@
  * Edits made directly to this file will be lost.
  */
 
-import "../chat";
 import "../common";
 
 using TypeSpec.OpenAPI;

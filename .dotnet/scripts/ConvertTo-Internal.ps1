@@ -231,6 +231,7 @@ function Edit-GeneratedModels {
         "BatchStatus.cs",
         "InternalBatchErrors.cs",
         "InternalBatchErrors.Serialization.cs",
+        "InternalBatchErrorsObject.cs",
         "InternalBatchRequestCounts.cs",
         "InternalBatchRequestCounts.Serialization.cs",
         "InternalCreateBatchRequest.cs",

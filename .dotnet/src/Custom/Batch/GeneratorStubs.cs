@@ -6,6 +6,9 @@ public readonly partial struct BatchStatus {}
 [CodeGenModel("BatchErrors")]
 internal partial class InternalBatchErrors {}
 
+[CodeGenModel("BatchErrorsObject")]
+internal readonly partial struct InternalBatchErrorsObject {}
+
 [CodeGenModel("BatchRequestCounts")]
 internal readonly partial struct InternalBatchRequestCounts {}
 

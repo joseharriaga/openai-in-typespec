@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.LegacyCompletions
 {
@@ -132,7 +131,7 @@ namespace OpenAI.LegacyCompletions
         /// </param>
         /// <param name="user"> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, float? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, float? presencePenalty, long? seed, BinaryData stop, bool? stream, ChatCompletionStreamOptions streamOptions, string suffix, float? temperature, float? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, float? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, float? presencePenalty, long? seed, BinaryData stop, bool? stream, InternalChatCompletionStreamOptions streamOptions, string suffix, float? temperature, float? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Prompt = prompt;
@@ -311,7 +310,7 @@ namespace OpenAI.LegacyCompletions
         /// <summary> Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </summary>
         public bool? Stream { get; set; }
         /// <summary> Gets or sets the stream options. </summary>
-        public ChatCompletionStreamOptions StreamOptions { get; set; }
+        public InternalChatCompletionStreamOptions StreamOptions { get; set; }
         /// <summary>
         /// The suffix that comes after a completion of inserted text.
         ///

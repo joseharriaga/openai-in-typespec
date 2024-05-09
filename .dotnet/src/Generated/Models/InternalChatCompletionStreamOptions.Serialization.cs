@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI
 {
-    internal partial class ChatCompletionStreamOptions : IJsonModel<ChatCompletionStreamOptions>
+    internal partial class InternalChatCompletionStreamOptions : IJsonModel<InternalChatCompletionStreamOptions>
     {
-        void IJsonModel<ChatCompletionStreamOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalChatCompletionStreamOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatCompletionStreamOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionStreamOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ChatCompletionStreamOptions)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalChatCompletionStreamOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -44,19 +44,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        ChatCompletionStreamOptions IJsonModel<ChatCompletionStreamOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalChatCompletionStreamOptions IJsonModel<InternalChatCompletionStreamOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatCompletionStreamOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionStreamOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ChatCompletionStreamOptions)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalChatCompletionStreamOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeChatCompletionStreamOptions(document.RootElement, options);
+            return DeserializeInternalChatCompletionStreamOptions(document.RootElement, options);
         }
 
-        internal static ChatCompletionStreamOptions DeserializeChatCompletionStreamOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalChatCompletionStreamOptions DeserializeInternalChatCompletionStreamOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -84,46 +84,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ChatCompletionStreamOptions(includeUsage, serializedAdditionalRawData);
+            return new InternalChatCompletionStreamOptions(includeUsage, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ChatCompletionStreamOptions>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalChatCompletionStreamOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatCompletionStreamOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionStreamOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ChatCompletionStreamOptions)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalChatCompletionStreamOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ChatCompletionStreamOptions IPersistableModel<ChatCompletionStreamOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalChatCompletionStreamOptions IPersistableModel<InternalChatCompletionStreamOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatCompletionStreamOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionStreamOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeChatCompletionStreamOptions(document.RootElement, options);
+                        return DeserializeInternalChatCompletionStreamOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ChatCompletionStreamOptions)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalChatCompletionStreamOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ChatCompletionStreamOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalChatCompletionStreamOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static ChatCompletionStreamOptions FromResponse(PipelineResponse response)
+        internal static InternalChatCompletionStreamOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeChatCompletionStreamOptions(document.RootElement);
+            return DeserializeInternalChatCompletionStreamOptions(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

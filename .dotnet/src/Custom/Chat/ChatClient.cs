@@ -358,6 +358,7 @@ public partial class ChatClient
             options?.Seed,
             options?.GetInternalStopSequences(),
             stream,
+            new(includeUsage: true, serializedAdditionalRawData: null),
             options?.Temperature,
             options?.NucleusSamplingFactor,
             options?.GetInternalTools(),

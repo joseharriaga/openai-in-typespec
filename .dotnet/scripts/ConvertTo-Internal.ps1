@@ -200,6 +200,9 @@ function Edit-GeneratedModels {
         "CompletionUsage.cs",
         "CompletionUsage.Serialization.cs",
 
+        "InternalChatCompletionStreamOptions.cs",
+        "InternalChatCompletionStreamOptions.Serialization.cs",
+
         "DeleteModelResponse.cs",
         "DeleteModelResponse.Serialization.cs",
         "DeleteModelResponseObject.cs",

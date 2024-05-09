@@ -18,4 +18,11 @@ public class ChatTokenUsage
         OutputTokens = (int)internalUsage.CompletionTokens;
         TotalTokens = (int)internalUsage.TotalTokens;
     }
+
+    internal ChatTokenUsage(int inputTokens, int outputTokens, int totalTokens)
+    {
+        InputTokens = inputTokens;
+        OutputTokens = outputTokens;
+        TotalTokens = totalTokens;
+    }
 }

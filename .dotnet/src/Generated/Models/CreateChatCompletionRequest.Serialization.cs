@@ -309,7 +309,7 @@ namespace OpenAI.Internal.Models
             long? seed = default;
             BinaryData stop = default;
             bool? stream = default;
-            ChatCompletionStreamOptions streamOptions = default;
+            InternalChatCompletionStreamOptions streamOptions = default;
             float? temperature = default;
             float? topP = default;
             IList<ChatCompletionTool> tools = default;
@@ -462,7 +462,7 @@ namespace OpenAI.Internal.Models
                         streamOptions = null;
                         continue;
                     }
-                    streamOptions = ChatCompletionStreamOptions.DeserializeChatCompletionStreamOptions(property.Value, options);
+                    streamOptions = InternalChatCompletionStreamOptions.DeserializeInternalChatCompletionStreamOptions(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("temperature"u8))

@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI
 {
     /// <summary> Options for streaming response. Only set this when you set `stream: true`. </summary>
-    internal partial class ChatCompletionStreamOptions
+    internal partial class InternalChatCompletionStreamOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,15 +42,15 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ChatCompletionStreamOptions"/>. </summary>
-        public ChatCompletionStreamOptions()
+        /// <summary> Initializes a new instance of <see cref="InternalChatCompletionStreamOptions"/>. </summary>
+        public InternalChatCompletionStreamOptions()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="ChatCompletionStreamOptions"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalChatCompletionStreamOptions"/>. </summary>
         /// <param name="includeUsage"> If set, an additional chunk will be streamed before the `data: [DONE]` message. The `usage` field on this chunk shows the token usage statistics for the entire request, and the `choices` field will always be an empty array. All other chunks will also include a `usage` field, but with a null value. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ChatCompletionStreamOptions(bool? includeUsage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalChatCompletionStreamOptions(bool? includeUsage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             IncludeUsage = includeUsage;
             _serializedAdditionalRawData = serializedAdditionalRawData;

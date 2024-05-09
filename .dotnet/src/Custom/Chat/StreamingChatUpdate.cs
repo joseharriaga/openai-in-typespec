@@ -150,6 +150,9 @@ public partial class StreamingChatUpdate
     /// <inheritdoc cref="ChatCompletion.SystemFingerprint"/>
     public string SystemFingerprint { get; }
 
+    /// <inheritdoc cref="Internal.Models.CreateChatCompletionStreamResponseUsage"/>
+    public ChatTokenUsage TokenUsage { get; }
+
     /// <summary>
     /// The log probability information for choices in the chat completion response, as requested via
     /// <see cref="ChatCompletionOptions.IncludeLogProbabilities"/>.
@@ -160,6 +163,7 @@ public partial class StreamingChatUpdate
         string id,
         DateTimeOffset created,
         string systemFingerprint = null,
+        ChatTokenUsage usage = null,
         int? choiceIndex = null,
         ChatRole? role = null,
         string contentUpdate = null,
@@ -172,6 +176,7 @@ public partial class StreamingChatUpdate
         Id = id;
         Created = created;
         SystemFingerprint = systemFingerprint;
+        TokenUsage = usage;
         ChoiceIndex = choiceIndex;
         Role = role;
         ContentUpdate = contentUpdate;
@@ -192,6 +197,7 @@ public partial class StreamingChatUpdate
         string id = default;
         DateTimeOffset created = default;
         string systemFingerprint = null;
+        ChatTokenUsage usage = null;
         foreach (JsonProperty property in element.EnumerateObject())
         {
             if (property.NameEquals("id"u8))
@@ -207,6 +213,14 @@ public partial class StreamingChatUpdate
             if (property.NameEquals("system_fingerprint"))
             {
                 systemFingerprint = property.Value.GetString();
+                continue;
+            }
+            if (property.NameEquals("usage") && property.Value.ValueKind == JsonValueKind.Object)
+            {
+                Internal.Models.CreateChatCompletionStreamResponseUsage streamingUsage
+                    = Internal.Models.CreateChatCompletionStreamResponseUsage
+                        .DeserializeCreateChatCompletionStreamResponseUsage(property.Value);
+                usage = new(streamingUsage.PromptTokens, streamingUsage.CompletionTokens, streamingUsage.TotalTokens);
                 continue;
             }
             if (property.NameEquals("choices"u8))
@@ -314,6 +328,7 @@ public partial class StreamingChatUpdate
                             id,
                             created,
                             systemFingerprint,
+                            usage,
                             choiceIndex,
                             role,
                             contentUpdate,
@@ -329,7 +344,7 @@ public partial class StreamingChatUpdate
         }
         if (results.Count == 0)
         {
-            results.Add(new StreamingChatUpdate(id, created, systemFingerprint));
+            results.Add(new StreamingChatUpdate(id, created, systemFingerprint, usage));
         }
         return results;
     }

@@ -21,33 +21,27 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(FileId))
+            writer.WritePropertyName("file_id"u8);
+            writer.WriteStringValue(FileId);
+            writer.WritePropertyName("tools"u8);
+            writer.WriteStartArray();
+            foreach (var item in Tools)
             {
-                writer.WritePropertyName("file_id"u8);
-                writer.WriteStringValue(FileId);
-            }
-            if (Optional.IsCollectionDefined(Tools))
-            {
-                writer.WritePropertyName("tools"u8);
-                writer.WriteStartArray();
-                foreach (var item in Tools)
+                if (item == null)
                 {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
+                    writer.WriteNullValue();
+                    continue;
+                }
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
-                writer.WriteEndArray();
+#endif
             }
+            writer.WriteEndArray();
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -99,10 +93,6 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("tools"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     List<BinaryData> array = new List<BinaryData>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -124,7 +114,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateMessageRequestAttachment(fileId, tools ?? new ChangeTrackingList<BinaryData>(), serializedAdditionalRawData);
+            return new CreateMessageRequestAttachment(fileId, tools, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateMessageRequestAttachment>.Write(ModelReaderWriterOptions options)

@@ -13,11 +13,11 @@ namespace OpenAI;
 model CreateMessageRequestAttachments
   is {
     /** The ID of the file to attach to the message. */
-    file_id?: string;
+    file_id: string;
 
     /** The tools to add this file to. */
     @extension("x-oaiExpandable", true)
-    tools?: (AssistantToolsCode | AssistantToolsFileSearch)[];
+    tools: (AssistantToolsCode | AssistantToolsFileSearch)[];
   }[];
 
 // Tool generated type. Extracts MessageObject.attachments

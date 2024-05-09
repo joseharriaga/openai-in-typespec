@@ -412,8 +412,9 @@ model RunObject {
   /** The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. */
   assistant_id: string;
 
+  // Tool customization: manually add missing 'incomplete' to enum
   @doc("""
-  The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
+  The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`.
   """)
   status:
     | "queued"
@@ -423,7 +424,8 @@ model RunObject {
     | "cancelled"
     | "failed"
     | "completed"
-    | "expired";
+    | "expired"
+    | "incomplete";
 
   @doc("""
   Details on the action required to continue the run. Will be `null` if no action is required.

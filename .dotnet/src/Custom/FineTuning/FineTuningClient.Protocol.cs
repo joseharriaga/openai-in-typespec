@@ -15,6 +15,8 @@ namespace OpenAI.FineTuning;
 [CodeGenSuppress("CancelFineTuningJob", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("GetFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
 [CodeGenSuppress("GetFineTuningEvents", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("GetFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("GetFineTuningJobCheckpoints", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
 public partial class FineTuningClient
 {
     // CUSTOM:
@@ -227,18 +229,6 @@ public partial class FineTuningClient
 
     /// <summary>
     /// [Protocol Method] List the checkpoints for a fine-tuning job.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetFineTuningJobCheckpointsAsync(string,string,int?)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="fineTuningJobId"> The ID of the fine-tuning job to get checkpoints for. </param>
     /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
@@ -248,7 +238,7 @@ public partial class FineTuningClient
     /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetFineTuningJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public virtual async Task<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -258,18 +248,6 @@ public partial class FineTuningClient
 
     /// <summary>
     /// [Protocol Method] List the checkpoints for a fine-tuning job.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetFineTuningJobCheckpoints(string,string,int?)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="fineTuningJobId"> The ID of the fine-tuning job to get checkpoints for. </param>
     /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
@@ -279,7 +257,7 @@ public partial class FineTuningClient
     /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetFineTuningJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public virtual ClientResult GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 

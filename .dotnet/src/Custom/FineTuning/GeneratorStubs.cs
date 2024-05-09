@@ -12,19 +12,19 @@ internal partial class CreateFineTuningJobRequestHyperparameters { }
 internal partial class CreateFineTuningJobRequestIntegration { }
 
 [CodeGenModel("CreateFineTuningJobRequestIntegrationType")]
-internal partial struct CreateFineTuningJobRequestIntegrationType { }
+internal readonly partial struct CreateFineTuningJobRequestIntegrationType { }
 
 [CodeGenModel("CreateFineTuningJobRequestIntegrationWandb")]
 internal partial class CreateFineTuningJobRequestIntegrationWandb { }
 
 [CodeGenModel("CreateFineTuningJobRequestModel")]
-internal partial struct CreateFineTuningJobRequestModel { }
+internal readonly partial struct CreateFineTuningJobRequestModel { }
 
 [CodeGenModel("FineTuningIntegration")]
 internal partial class FineTuningIntegration { }
 
 [CodeGenModel("FineTuningIntegrationType")]
-internal partial struct FineTuningIntegrationType { }
+internal readonly partial struct FineTuningIntegrationType { }
 
 [CodeGenModel("FineTuningIntegrationWandb")]
 internal partial class FineTuningIntegrationWandb { }
@@ -39,7 +39,7 @@ internal partial class FineTuningJobCheckpoint { }
 internal partial class FineTuningJobCheckpointMetrics { }
 
 [CodeGenModel("FineTuningJobCheckpointObject")]
-internal partial struct FineTuningJobCheckpointObject { }
+internal readonly partial struct FineTuningJobCheckpointObject { }
 
 [CodeGenModel("FineTuningJobError")]
 internal partial class FineTuningJobError { }
@@ -48,29 +48,29 @@ internal partial class FineTuningJobError { }
 internal partial class FineTuningJobEvent { }
 
 [CodeGenModel("FineTuningJobEventLevel")]
-internal partial struct FineTuningJobEventLevel { }
+internal readonly partial struct FineTuningJobEventLevel { }
 
 [CodeGenModel("FineTuningJobEventObject")]
-internal partial struct FineTuningJobEventObject { }
+internal readonly partial struct FineTuningJobEventObject { }
 
 [CodeGenModel("FineTuningJobHyperparameters")]
 internal partial class FineTuningJobHyperparameters { }
 
 [CodeGenModel("FineTuningJobObject")]
-internal partial struct FineTuningJobObject { }
+internal readonly partial struct FineTuningJobObject { }
 
 [CodeGenModel("FineTuningJobStatus")]
-internal partial struct FineTuningJobStatus { }
+internal readonly partial struct FineTuningJobStatus { }
 
 [CodeGenModel("ListFineTuningJobCheckpointsResponse")]
 internal partial class ListFineTuningJobCheckpointsResponse { }
 
 [CodeGenModel("ListFineTuningJobCheckpointsResponseObject")]
-internal partial struct ListFineTuningJobCheckpointsResponseObject { }
+internal readonly partial struct ListFineTuningJobCheckpointsResponseObject { }
 
 [CodeGenModel("ListFineTuningJobEventsResponse")]
 internal partial class ListFineTuningJobEventsResponse { }
 
 [CodeGenModel("ListFineTuningJobEventsResponseObject")]
-internal partial struct ListFineTuningJobEventsResponseObject { }
+internal readonly partial struct ListFineTuningJobEventsResponseObject { }
 

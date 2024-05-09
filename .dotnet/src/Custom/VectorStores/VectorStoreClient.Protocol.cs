@@ -9,18 +9,6 @@ public partial class VectorStoreClient
 {
     /// <summary>
     /// [Protocol Method] Returns a list of vector-stores.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStoresAsync(int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="limit">
     /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
@@ -51,18 +39,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Returns a list of vector-stores.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStores(int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="limit">
     /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
@@ -93,18 +69,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Creates a vector store.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateVectorStoreAsync(CreateVectorStoreRequest)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -121,18 +85,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Creates a vector store.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateVectorStore(CreateVectorStoreRequest)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -149,18 +101,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Retrieves a vector store.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStoreAsync(string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -178,18 +118,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Retrieves a vector store.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStore(string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -207,18 +135,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Modifies a vector store.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="ModifyVectorStoreAsync(string,UpdateVectorStoreRequest)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store to modify. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
@@ -238,18 +154,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Modifies a vector store.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="ModifyVectorStore(string,UpdateVectorStoreRequest)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store to modify. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
@@ -269,18 +173,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Delete a vector store.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="DeleteVectorStoreAsync(string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store to delete. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -298,18 +190,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Delete a vector store.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="DeleteVectorStore(string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store to delete. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -327,18 +207,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Returns a list of vector store files.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStoreFilesAsync(string,int?,ListOrder?,string,string,VectorStoreFileStatusFilter?)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the files belong to. </param>
     /// <param name="limit">
@@ -375,18 +243,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Returns a list of vector store files.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStoreFiles(string,int?,ListOrder?,string,string,VectorStoreFileStatusFilter?)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the files belong to. </param>
     /// <param name="limit">
@@ -423,18 +279,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateVectorStoreFileAsync(string,CreateVectorStoreFileRequest)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a File. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
@@ -454,18 +298,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateVectorStoreFile(string,CreateVectorStoreFileRequest)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a File. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
@@ -485,18 +317,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Retrieves a vector store file.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStoreFileAsync(string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file belongs to. </param>
     /// <param name="fileId"> The ID of the file being retrieved. </param>
@@ -516,18 +336,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Retrieves a vector store file.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStoreFile(string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file belongs to. </param>
     /// <param name="fileId"> The ID of the file being retrieved. </param>
@@ -547,18 +355,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](/docs/api-reference/files/delete) endpoint.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="DeleteVectorStoreFileAsync(string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file belongs to. </param>
     /// <param name="fileId"> The ID of the file to delete. </param>
@@ -578,18 +374,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](/docs/api-reference/files/delete) endpoint.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="DeleteVectorStoreFile(string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file belongs to. </param>
     /// <param name="fileId"> The ID of the file to delete. </param>
@@ -609,18 +393,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Create a vector store file batch.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateVectorStoreFileBatchAsync(string,CreateVectorStoreFileBatchRequest)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a file batch. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
@@ -640,18 +412,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Create a vector store file batch.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateVectorStoreFileBatch(string,CreateVectorStoreFileBatchRequest)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a file batch. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
@@ -671,18 +431,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Retrieves a vector store file batch.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStoreFileBatchAsync(string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
     /// <param name="batchId"> The ID of the file batch being retrieved. </param>
@@ -702,18 +450,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Retrieves a vector store file batch.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetVectorStoreFileBatch(string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
     /// <param name="batchId"> The ID of the file batch being retrieved. </param>
@@ -733,18 +469,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CancelVectorStoreFileBatchAsync(string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
     /// <param name="batchId"> The ID of the file batch to cancel. </param>
@@ -764,18 +488,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CancelVectorStoreFileBatch(string,string)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
     /// <param name="batchId"> The ID of the file batch to cancel. </param>
@@ -795,18 +507,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Returns a list of vector store files in a batch.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetFilesInVectorStoreBatchesAsync(string,string,int?,ListOrder?,string,string,VectorStoreFileStatusFilter?)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
     /// <param name="batchId"> The ID of the file batch that the files belong to. </param>
@@ -845,18 +545,6 @@ public partial class VectorStoreClient
 
     /// <summary>
     /// [Protocol Method] Returns a list of vector store files in a batch.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GetFilesInVectorStoreBatches(string,string,int?,ListOrder?,string,string,VectorStoreFileStatusFilter?)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
     /// <param name="batchId"> The ID of the file batch that the files belong to. </param>

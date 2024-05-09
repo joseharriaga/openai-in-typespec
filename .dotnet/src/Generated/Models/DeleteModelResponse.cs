@@ -59,7 +59,7 @@ namespace OpenAI.Models
         /// <param name="deleted"></param>
         /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal DeleteModelResponse(string id, bool deleted, string @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal DeleteModelResponse(string id, bool deleted, DeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;

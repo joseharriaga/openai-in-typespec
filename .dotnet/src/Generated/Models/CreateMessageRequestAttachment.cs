@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Internal.Models
 {
@@ -43,9 +44,16 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateMessageRequestAttachment"/>. </summary>
-        public CreateMessageRequestAttachment()
+        /// <param name="fileId"> The ID of the file to attach to the message. </param>
+        /// <param name="tools"> The tools to add this file to. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> or <paramref name="tools"/> is null. </exception>
+        public CreateMessageRequestAttachment(string fileId, IEnumerable<BinaryData> tools)
         {
-            Tools = new ChangeTrackingList<BinaryData>();
+            Argument.AssertNotNull(fileId, nameof(fileId));
+            Argument.AssertNotNull(tools, nameof(tools));
+
+            FileId = fileId;
+            Tools = tools.ToList();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateMessageRequestAttachment"/>. </summary>
@@ -59,8 +67,13 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
+        /// <summary> Initializes a new instance of <see cref="CreateMessageRequestAttachment"/> for deserialization. </summary>
+        internal CreateMessageRequestAttachment()
+        {
+        }
+
         /// <summary> The ID of the file to attach to the message. </summary>
-        public string FileId { get; set; }
+        public string FileId { get; }
         /// <summary>
         /// The tools to add this file to.
         /// <para>

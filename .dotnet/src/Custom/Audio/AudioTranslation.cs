@@ -6,7 +6,7 @@ namespace OpenAI.Audio;
 public partial class AudioTranslation
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
-    private CreateTranslationResponseVerboseJsonTask Task { get; }
+    private CreateTranslationResponseVerboseJsonTask Task { get; } = CreateTranslationResponseVerboseJsonTask.Translate;
 
     // CUSTOM: Made nullable because this is an optional property.
     /// <summary> TODO. </summary>

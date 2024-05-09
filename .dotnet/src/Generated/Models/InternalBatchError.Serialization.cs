@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Batch
 {
-    public partial class BatchError : IJsonModel<BatchError>
+    internal partial class InternalBatchError : IJsonModel<InternalBatchError>
     {
-        void IJsonModel<BatchError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalBatchError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(BatchError)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalBatchError)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -73,19 +73,19 @@ namespace OpenAI.Batch
             writer.WriteEndObject();
         }
 
-        BatchError IJsonModel<BatchError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalBatchError IJsonModel<InternalBatchError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(BatchError)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalBatchError)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeBatchError(document.RootElement, options);
+            return DeserializeInternalBatchError(document.RootElement, options);
         }
 
-        internal static BatchError DeserializeBatchError(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalBatchError DeserializeInternalBatchError(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -137,46 +137,46 @@ namespace OpenAI.Batch
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new BatchError(code, message, param, line, serializedAdditionalRawData);
+            return new InternalBatchError(code, message, param, line, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<BatchError>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalBatchError>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchError>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(BatchError)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalBatchError)} does not support writing '{options.Format}' format.");
             }
         }
 
-        BatchError IPersistableModel<BatchError>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalBatchError IPersistableModel<InternalBatchError>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchError>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeBatchError(document.RootElement, options);
+                        return DeserializeInternalBatchError(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(BatchError)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalBatchError)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<BatchError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalBatchError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static BatchError FromResponse(PipelineResponse response)
+        internal static InternalBatchError FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeBatchError(document.RootElement);
+            return DeserializeInternalBatchError(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

@@ -75,7 +75,7 @@ namespace OpenAI.Batch
                 return null;
             }
             InternalBatchErrorsObject? @object = default;
-            IReadOnlyList<BatchError> data = default;
+            IReadOnlyList<InternalBatchError> data = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -95,10 +95,10 @@ namespace OpenAI.Batch
                     {
                         continue;
                     }
-                    List<BatchError> array = new List<BatchError>();
+                    List<InternalBatchError> array = new List<InternalBatchError>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(BatchError.DeserializeBatchError(item, options));
+                        array.Add(InternalBatchError.DeserializeInternalBatchError(item, options));
                     }
                     data = array;
                     continue;
@@ -109,7 +109,7 @@ namespace OpenAI.Batch
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalBatchErrors(@object, data ?? new ChangeTrackingList<BatchError>(), serializedAdditionalRawData);
+            return new InternalBatchErrors(@object, data ?? new ChangeTrackingList<InternalBatchError>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<InternalBatchErrors>.Write(ModelReaderWriterOptions options)

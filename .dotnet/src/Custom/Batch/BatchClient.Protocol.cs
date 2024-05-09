@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace OpenAI.Batch;
@@ -16,7 +15,6 @@ public partial class BatchClient
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> CreateBatchAsync(BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
@@ -33,7 +31,6 @@ public partial class BatchClient
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult CreateBatch(BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
@@ -50,7 +47,6 @@ public partial class BatchClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> GetBatchesAsync(string after, int? limit, RequestOptions options)
     {
         using PipelineMessage message = CreateGetBatchesRequest(after, limit, options);
@@ -65,7 +61,6 @@ public partial class BatchClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult GetBatches(string after, int? limit, RequestOptions options)
     {
         using PipelineMessage message = CreateGetBatchesRequest(after, limit, options);
@@ -81,7 +76,6 @@ public partial class BatchClient
     /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> GetBatchAsync(string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));

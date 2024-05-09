@@ -47,7 +47,7 @@ namespace OpenAI.Batch
         /// <param name="data"></param>
         /// <param name="hasMore"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="data"/> is null. </exception>
-        internal InternalListBatchesResponse(IEnumerable<Batch> data, bool hasMore)
+        internal InternalListBatchesResponse(IEnumerable<InternalBatchJob> data, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
 
@@ -62,7 +62,7 @@ namespace OpenAI.Batch
         /// <param name="hasMore"></param>
         /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalListBatchesResponse(IReadOnlyList<Batch> data, string firstId, string lastId, bool hasMore, InternalListBatchesResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListBatchesResponse(IReadOnlyList<InternalBatchJob> data, string firstId, string lastId, bool hasMore, InternalListBatchesResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Data = data;
             FirstId = firstId;
@@ -78,7 +78,7 @@ namespace OpenAI.Batch
         }
 
         /// <summary> Gets the data. </summary>
-        public IReadOnlyList<Batch> Data { get; }
+        public IReadOnlyList<InternalBatchJob> Data { get; }
         /// <summary> Gets the first id. </summary>
         public string FirstId { get; }
         /// <summary> Gets the last id. </summary>

@@ -84,8 +84,8 @@ namespace OpenAI.Batch
             options ??= ModelSerializationExtensions.WireOptions;
 
             string inputFileId = default;
-            BatchOperationEndpoint endpoint = default;
-            BatchCompletionTimeframe completionWindow = default;
+            InternalBatchOperationEndpoint endpoint = default;
+            InternalBatchCompletionTimeframe completionWindow = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -98,12 +98,12 @@ namespace OpenAI.Batch
                 }
                 if (property.NameEquals("endpoint"u8))
                 {
-                    endpoint = new BatchOperationEndpoint(property.Value.GetString());
+                    endpoint = new InternalBatchOperationEndpoint(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("completion_window"u8))
                 {
-                    completionWindow = new BatchCompletionTimeframe(property.Value.GetString());
+                    completionWindow = new InternalBatchCompletionTimeframe(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))

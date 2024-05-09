@@ -14,9 +14,9 @@ public class ChatTokenUsage
 
     internal ChatTokenUsage(OpenAI.LegacyCompletions.CompletionUsage internalUsage)
     {
-        InputTokens = (int)internalUsage.PromptTokens;
-        OutputTokens = (int)internalUsage.CompletionTokens;
-        TotalTokens = (int)internalUsage.TotalTokens;
+        InputTokens = internalUsage.PromptTokens;
+        OutputTokens = internalUsage.CompletionTokens;
+        TotalTokens = internalUsage.TotalTokens;
     }
 
     internal ChatTokenUsage(int inputTokens, int outputTokens, int totalTokens)

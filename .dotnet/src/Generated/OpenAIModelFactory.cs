@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenAI.Audio;
-using OpenAI.Batch;
 using OpenAI.Embeddings;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
@@ -215,17 +214,6 @@ namespace OpenAI
         public static DeleteAssistantResponse DeleteAssistantResponse(string id = null, bool deleted = default, DeleteAssistantResponseObject @object = default)
         {
             return new DeleteAssistantResponse(id, deleted, @object, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Batch.BatchError"/>. </summary>
-        /// <param name="code"> An error code identifying the error type. </param>
-        /// <param name="message"> A human-readable message providing more details about the error. </param>
-        /// <param name="param"> The name of the parameter that caused the error, if applicable. </param>
-        /// <param name="line"> The line number of the input file where the error occurred, if applicable. </param>
-        /// <returns> A new <see cref="Batch.BatchError"/> instance for mocking. </returns>
-        public static BatchError BatchError(string code = null, string message = null, string param = null, int? line = null)
-        {
-            return new BatchError(code, message, param, line, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestSystemMessage"/>. </summary>
@@ -787,7 +775,7 @@ namespace OpenAI
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the run was created. </param>
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run. </param>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. </param>
-        /// <param name="status"> The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, or `expired`. </param>
+        /// <param name="status"> The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`. </param>
         /// <param name="requiredAction"> Details on the action required to continue the run. Will be `null` if no action is required. </param>
         /// <param name="lastError"> The last error associated with this run. Will be `null` if there are no errors. </param>
         /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the run will expire. </param>

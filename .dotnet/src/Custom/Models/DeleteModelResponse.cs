@@ -5,5 +5,5 @@ public partial class DeleteModelResponse
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> Gets the object. </summary>
-    private string Object { get; }
+    private DeleteModelResponseObject Object { get; } = DeleteModelResponseObject.Model;
 }

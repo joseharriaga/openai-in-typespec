@@ -80,7 +80,7 @@ namespace OpenAI.Batch
             {
                 return null;
             }
-            IReadOnlyList<Batch> data = default;
+            IReadOnlyList<InternalBatchJob> data = default;
             string firstId = default;
             string lastId = default;
             bool hasMore = default;
@@ -91,10 +91,10 @@ namespace OpenAI.Batch
             {
                 if (property.NameEquals("data"u8))
                 {
-                    List<Batch> array = new List<Batch>();
+                    List<InternalBatchJob> array = new List<InternalBatchJob>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(Batch.DeserializeBatch(item, options));
+                        array.Add(InternalBatchJob.DeserializeInternalBatchJob(item, options));
                     }
                     data = array;
                     continue;

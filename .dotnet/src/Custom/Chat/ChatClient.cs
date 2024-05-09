@@ -344,6 +344,9 @@ public partial class ChatClient
             messageDataItems.Add(ModelReaderWriter.Write(message));
         }
         Dictionary<string, BinaryData> additionalData = [];
+        InternalChatCompletionStreamOptions streamOptions = stream == true
+            ? new InternalChatCompletionStreamOptions(includeUsage: stream, serializedAdditionalRawData: null)
+            : null;
         return new Internal.Models.CreateChatCompletionRequest(
             messageDataItems,
             _model,
@@ -358,7 +361,7 @@ public partial class ChatClient
             options?.Seed,
             options?.GetInternalStopSequences(),
             stream,
-            new(includeUsage: true, serializedAdditionalRawData: null),
+            streamOptions,
             options?.Temperature,
             options?.NucleusSamplingFactor,
             options?.GetInternalTools(),

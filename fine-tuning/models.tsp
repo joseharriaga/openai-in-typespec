@@ -42,7 +42,7 @@ model CreateFineTuningJobRequestIntegrations
 // Tool generated type. Extracts FineTuningJob.integrations
 @maxItems(5)
 @extension("x-oaiExpandable", true)
-model FineTuningJobIntegrations is (FineTuningIntegration | null)[];
+model FineTuningJobIntegrations is FineTuningIntegration[];
 
 model CreateFineTuningJobRequest {
   /**

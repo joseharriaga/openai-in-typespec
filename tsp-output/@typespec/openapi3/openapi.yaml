@@ -4312,7 +4312,6 @@ components:
           - $ref: '#/components/schemas/AssistantToolsCode'
           - $ref: '#/components/schemas/AssistantToolsFileSearch'
           - $ref: '#/components/schemas/AssistantToolsFunction'
-        nullable: true
       maxItems: 20
       x-oaiExpandable: true
     CreateSpeechRequest:
@@ -4497,7 +4496,6 @@ components:
           - $ref: '#/components/schemas/AssistantToolsCode'
           - $ref: '#/components/schemas/AssistantToolsFileSearch'
           - $ref: '#/components/schemas/AssistantToolsFunction'
-        nullable: true
       maxItems: 20
     CreateThreadRequest:
       type: object
@@ -5194,10 +5192,7 @@ components:
     FineTuningJobIntegrationsItem:
       type: array
       items:
-        type: object
-        allOf:
-          - $ref: '#/components/schemas/FineTuningIntegration'
-        nullable: true
+        $ref: '#/components/schemas/FineTuningIntegration'
       maxItems: 5
       x-oaiExpandable: true
     FunctionObject:

@@ -18,20 +18,12 @@ model CreateRunRequestAdditional_messages is CreateMessageRequest[];
 @maxItems(20)
 @extension("x-oaiExpandable", true)
 model CreateRunRequestTools
-  is (
-    | AssistantToolsCode
-    | AssistantToolsFileSearch
-    | AssistantToolsFunction
-    | null)[];
+  is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
 
 // Tool generated type. Extracts CreateThreadAndRunRequest.tools
 @maxItems(20)
 model CreateThreadAndRunRequestTools
-  is (
-    | AssistantToolsCode
-    | AssistantToolsFileSearch
-    | AssistantToolsFunction
-    | null)[];
+  is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
 
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */

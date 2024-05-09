@@ -48,16 +48,16 @@ internal partial class FineTuningJobError { }
 internal partial class FineTuningJobEvent { }
 
 [CodeGenModel("FineTuningJobEventLevel")]
-internal partial struct FineTuningJobEventLevel { }
+internal readonly partial struct FineTuningJobEventLevel { }
 
 [CodeGenModel("FineTuningJobEventObject")]
-internal partial struct FineTuningJobEventObject { }
+internal readonly partial struct FineTuningJobEventObject { }
 
 [CodeGenModel("FineTuningJobHyperparameters")]
 internal partial class FineTuningJobHyperparameters { }
 
 [CodeGenModel("FineTuningJobObject")]
-internal partial struct FineTuningJobObject { }
+internal readonly partial struct FineTuningJobObject { }
 
 [CodeGenModel("FineTuningJobStatus")]
 internal readonly partial struct FineTuningJobStatus { }

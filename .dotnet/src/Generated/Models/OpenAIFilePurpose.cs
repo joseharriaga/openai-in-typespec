@@ -21,6 +21,8 @@ namespace OpenAI.Files
 
         private const string AssistantsValue = "assistants";
         private const string AssistantsOutputValue = "assistants_output";
+        private const string BatchValue = "batch";
+        private const string BatchOutputValue = "batch_output";
         private const string FineTuneValue = "fine-tune";
         private const string FineTuneResultsValue = "fine-tune-results";
 
@@ -30,6 +32,8 @@ namespace OpenAI.Files
         public static OpenAIFilePurpose AssistantsOutput { get; } = new OpenAIFilePurpose(AssistantsOutputValue);
         /// <summary> batch. </summary>
         public static OpenAIFilePurpose Batch { get; } = new OpenAIFilePurpose(BatchValue);
+        /// <summary> batch_output. </summary>
+        public static OpenAIFilePurpose BatchOutput { get; } = new OpenAIFilePurpose(BatchOutputValue);
         /// <summary> fine-tune. </summary>
         public static OpenAIFilePurpose FineTune { get; } = new OpenAIFilePurpose(FineTuneValue);
         /// <summary> fine-tune-results. </summary>

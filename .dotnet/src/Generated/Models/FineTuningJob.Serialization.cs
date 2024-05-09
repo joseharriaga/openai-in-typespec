@@ -113,7 +113,7 @@ namespace OpenAI.FineTuning
                 if (EstimatedFinish != null)
                 {
                     writer.WritePropertyName("estimated_finish"u8);
-                    writer.WriteNumberValue(EstimatedFinish.Value);
+                    writer.WriteStringValue(EstimatedFinish.Value, "O");
                 }
                 else
                 {
@@ -174,7 +174,7 @@ namespace OpenAI.FineTuning
             string validationFile = default;
             IReadOnlyList<FineTuningIntegration> integrations = default;
             int seed = default;
-            int? estimatedFinish = default;
+            DateTimeOffset? estimatedFinish = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -305,7 +305,7 @@ namespace OpenAI.FineTuning
                         estimatedFinish = null;
                         continue;
                     }
-                    estimatedFinish = property.Value.GetInt32();
+                    estimatedFinish = property.Value.GetDateTimeOffset("O");
                     continue;
                 }
                 if (options.Format != "W")

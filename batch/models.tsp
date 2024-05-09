@@ -19,10 +19,11 @@ model Batch {
   endpoint: string;
 
   errors?: {
+    // Tool customization: add a clear enum enforcement of constrained 'object' label
     @doc("""
     The object type, which is always `list`.
     """)
-    object?: string;
+    object?: "list";
 
     data?: {
       /** An error code identifying the error type. */

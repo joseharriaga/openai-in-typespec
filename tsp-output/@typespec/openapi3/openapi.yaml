@@ -2152,6 +2152,8 @@ components:
           properties:
             object:
               type: string
+              enum:
+                - list
               description: The object type, which is always `list`.
             data:
               type: array
@@ -5138,7 +5140,7 @@ components:
           description: The seed used for the fine-tuning job.
         estimated_finish:
           type: integer
-          format: int32
+          format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.
       description: The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.

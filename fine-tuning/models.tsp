@@ -228,8 +228,10 @@ model FineTuningJob {
   /** The seed used for the fine-tuning job. */
   seed: int32;
 
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running. */
-  estimated_finish?: int32 | null;
+  @encode("unixTimestamp", int32)
+  estimated_finish?: utcDateTime | null;
 }
 
 model FineTuningIntegration {

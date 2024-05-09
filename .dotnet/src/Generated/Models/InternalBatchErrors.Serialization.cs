@@ -24,7 +24,7 @@ namespace OpenAI.Batch
             if (Optional.IsDefined(Object))
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object);
+                writer.WriteStringValue(Object.Value.ToString());
             }
             if (Optional.IsCollectionDefined(Data))
             {
@@ -74,7 +74,7 @@ namespace OpenAI.Batch
             {
                 return null;
             }
-            string @object = default;
+            InternalBatchErrorsObject? @object = default;
             IReadOnlyList<BatchError> data = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -82,7 +82,11 @@ namespace OpenAI.Batch
             {
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    @object = new InternalBatchErrorsObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("data"u8))

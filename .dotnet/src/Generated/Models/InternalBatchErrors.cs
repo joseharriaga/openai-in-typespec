@@ -52,7 +52,7 @@ namespace OpenAI.Batch
         /// <param name="object"> The object type, which is always `list`. </param>
         /// <param name="data"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalBatchErrors(string @object, IReadOnlyList<BatchError> data, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalBatchErrors(InternalBatchErrorsObject? @object, IReadOnlyList<BatchError> data, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -60,7 +60,7 @@ namespace OpenAI.Batch
         }
 
         /// <summary> The object type, which is always `list`. </summary>
-        public string Object { get; }
+        public InternalBatchErrorsObject? Object { get; }
         /// <summary> Gets the data. </summary>
         public IReadOnlyList<BatchError> Data { get; }
     }

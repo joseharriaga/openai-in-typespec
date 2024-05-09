@@ -4,12 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 
-namespace OpenAI.Files
+namespace OpenAI.Internal.Models
 {
-    /// <summary> The CreateFileRequest. </summary>
-    public partial class UploadFileOptions
+    /// <summary> The text content that is part of a message. </summary>
+    internal partial class MessageRequestContentTextObject
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,19 +42,36 @@ namespace OpenAI.Files
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="UploadFileOptions"/>. </summary>
-        /// <param name="file"> The File object (not file name) to be uploaded. </param>
-        /// <param name="purpose">
-        /// The intended purpose of the uploaded file.
-        ///
-        /// Use "assistants" for [Assistants](/docs/api-reference/assistants) and [Message](/docs/api-reference/messages) files, "vision" for Assistants image file inputs, "batch" for [Batch API](/docs/guides/batch), and "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
-        /// </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal UploadFileOptions(Stream file, UploadFileOptionsPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="MessageRequestContentTextObject"/>. </summary>
+        /// <param name="text"> Text content to be sent to the model. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="text"/> is null. </exception>
+        public MessageRequestContentTextObject(string text)
         {
-            File = file;
-            Purpose = purpose;
+            Argument.AssertNotNull(text, nameof(text));
+
+            Text = text;
+        }
+
+        /// <summary> Initializes a new instance of <see cref="MessageRequestContentTextObject"/>. </summary>
+        /// <param name="type"> Always `text`. </param>
+        /// <param name="text"> Text content to be sent to the model. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal MessageRequestContentTextObject(MessageRequestContentTextObjectType type, string text, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            Type = type;
+            Text = text;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
+
+        /// <summary> Initializes a new instance of <see cref="MessageRequestContentTextObject"/> for deserialization. </summary>
+        internal MessageRequestContentTextObject()
+        {
+        }
+
+        /// <summary> Always `text`. </summary>
+        public MessageRequestContentTextObjectType Type { get; } = MessageRequestContentTextObjectType.Text;
+
+        /// <summary> Text content to be sent to the model. </summary>
+        public string Text { get; }
     }
 }

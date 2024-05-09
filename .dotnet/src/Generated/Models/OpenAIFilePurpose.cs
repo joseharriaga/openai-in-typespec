@@ -25,6 +25,7 @@ namespace OpenAI.Files
         private const string BatchOutputValue = "batch_output";
         private const string FineTuneValue = "fine-tune";
         private const string FineTuneResultsValue = "fine-tune-results";
+        private const string VisionValue = "vision";
 
         /// <summary> assistants. </summary>
         public static OpenAIFilePurpose Assistants { get; } = new OpenAIFilePurpose(AssistantsValue);
@@ -38,6 +39,8 @@ namespace OpenAI.Files
         public static OpenAIFilePurpose FineTune { get; } = new OpenAIFilePurpose(FineTuneValue);
         /// <summary> fine-tune-results. </summary>
         public static OpenAIFilePurpose FineTuneResults { get; } = new OpenAIFilePurpose(FineTuneResultsValue);
+        /// <summary> vision. </summary>
+        public static OpenAIFilePurpose Vision { get; } = new OpenAIFilePurpose(VisionValue);
         /// <summary> Determines if two <see cref="OpenAIFilePurpose"/> values are the same. </summary>
         public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right) => left.Equals(right);
         /// <summary> Determines if two <see cref="OpenAIFilePurpose"/> values are not the same. </summary>

@@ -26,6 +26,11 @@ namespace OpenAI.Internal.Models
                 writer.WritePropertyName("file_id"u8);
                 writer.WriteStringValue(FileId);
             }
+            if (Optional.IsDefined(Detail))
+            {
+                writer.WritePropertyName("detail"u8);
+                writer.WriteStringValue(Detail);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -65,6 +70,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string fileId = default;
+            string detail = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -74,13 +80,18 @@ namespace OpenAI.Internal.Models
                     fileId = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("detail"u8))
+                {
+                    detail = property.Value.GetString();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageDeltaContentImageFileObjectImageFile(fileId, serializedAdditionalRawData);
+            return new MessageDeltaContentImageFileObjectImageFile(fileId, detail, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<MessageDeltaContentImageFileObjectImageFile>.Write(ModelReaderWriterOptions options)

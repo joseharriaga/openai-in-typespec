@@ -79,6 +79,9 @@ namespace OpenAI.Internal.Models
         /// <item>
         /// <description><see cref="MessageDeltaContentTextObject"/></description>
         /// </item>
+        /// <item>
+        /// <description><see cref="MessageDeltaContentImageUrlObject"/></description>
+        /// </item>
         /// </list>
         /// </remarks>
         /// Examples:

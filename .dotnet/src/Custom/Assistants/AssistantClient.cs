@@ -242,7 +242,7 @@ public partial class AssistantClient
     {
         Internal.Models.CreateMessageRequest request = new(
             ToInternalRequestRole(role),
-            content,
+            BinaryData.FromString(content),
             null, // TODO: to do - attachments
             options.Metadata,
             serializedAdditionalRawData: null);
@@ -258,7 +258,7 @@ public partial class AssistantClient
     {
         Internal.Models.CreateMessageRequest request = new(
             ToInternalRequestRole(role),
-            content,
+            BinaryData.FromString(content),
             null, // TODO -- to do: attachments
             options.Metadata,
             serializedAdditionalRawData: null);
@@ -608,7 +608,7 @@ public partial class AssistantClient
         {
             internalList.Add(new Internal.Models.CreateMessageRequest(
                 ToInternalRequestRole(message.Role),
-                message.Content,
+                BinaryData.FromString(message.Content),
                 null, // TODO -- to do: attachments
                 message.Metadata,
                 serializedAdditionalRawData: null));

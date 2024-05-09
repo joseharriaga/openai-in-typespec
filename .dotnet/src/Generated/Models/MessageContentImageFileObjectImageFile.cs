@@ -43,9 +43,9 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="MessageContentImageFileObjectImageFile"/>. </summary>
-        /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. </param>
+        /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
-        internal MessageContentImageFileObjectImageFile(string fileId)
+        public MessageContentImageFileObjectImageFile(string fileId)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
 
@@ -53,11 +53,13 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageContentImageFileObjectImageFile"/>. </summary>
-        /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. </param>
+        /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </param>
+        /// <param name="detail"> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageContentImageFileObjectImageFile(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageContentImageFileObjectImageFile(string fileId, MessageContentImageFileObjectImageFileDetail? detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
+            Detail = detail;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -66,7 +68,9 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> The [File](/docs/api-reference/files) ID of the image in the message content. </summary>
-        public string FileId { get; }
+        /// <summary> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </summary>
+        public string FileId { get; set; }
+        /// <summary> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </summary>
+        public MessageContentImageFileObjectImageFileDetail? Detail { get; set; }
     }
 }

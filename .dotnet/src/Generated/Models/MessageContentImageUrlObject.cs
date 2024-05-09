@@ -4,12 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 
-namespace OpenAI.Files
+namespace OpenAI.Internal.Models
 {
-    /// <summary> The CreateFileRequest. </summary>
-    public partial class UploadFileOptions
+    /// <summary> References an image URL in the content of a message. </summary>
+    internal partial class MessageContentImageUrlObject
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,19 +42,36 @@ namespace OpenAI.Files
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="UploadFileOptions"/>. </summary>
-        /// <param name="file"> The File object (not file name) to be uploaded. </param>
-        /// <param name="purpose">
-        /// The intended purpose of the uploaded file.
-        ///
-        /// Use "assistants" for [Assistants](/docs/api-reference/assistants) and [Message](/docs/api-reference/messages) files, "vision" for Assistants image file inputs, "batch" for [Batch API](/docs/guides/batch), and "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
-        /// </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal UploadFileOptions(Stream file, UploadFileOptionsPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="MessageContentImageUrlObject"/>. </summary>
+        /// <param name="imageUrl"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="imageUrl"/> is null. </exception>
+        public MessageContentImageUrlObject(MessageContentImageUrlObjectImageUrl imageUrl)
         {
-            File = file;
-            Purpose = purpose;
+            Argument.AssertNotNull(imageUrl, nameof(imageUrl));
+
+            ImageUrl = imageUrl;
+        }
+
+        /// <summary> Initializes a new instance of <see cref="MessageContentImageUrlObject"/>. </summary>
+        /// <param name="type"> The type of the content part. </param>
+        /// <param name="imageUrl"></param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal MessageContentImageUrlObject(MessageContentImageUrlObjectType type, MessageContentImageUrlObjectImageUrl imageUrl, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            Type = type;
+            ImageUrl = imageUrl;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
+
+        /// <summary> Initializes a new instance of <see cref="MessageContentImageUrlObject"/> for deserialization. </summary>
+        internal MessageContentImageUrlObject()
+        {
+        }
+
+        /// <summary> The type of the content part. </summary>
+        public MessageContentImageUrlObjectType Type { get; } = MessageContentImageUrlObjectType.ImageUrl;
+
+        /// <summary> Gets or sets the image url. </summary>
+        public MessageContentImageUrlObjectImageUrl ImageUrl { get; set; }
     }
 }

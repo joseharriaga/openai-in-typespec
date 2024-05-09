@@ -39,10 +39,8 @@ model CreateMessageRequest {
   """)
   role: "user" | "assistant";
 
-  /** The content of the message. */
-  @minLength(1)
-  @maxLength(256000)
-  content: string;
+  @extension("x-oaiExpandable", true)
+  content: string | (MessageContentImageFileObject | MessageContentImageUrlObject | MessageRequestContentTextObject)[];
 
   /** A list of files attached to the message, and the tools they should be added to. */
   attachments?: CreateMessageRequestAttachments | null;
@@ -125,7 +123,7 @@ model MessageObject {
 
   /** The content of the message in array of text and/or images. */
   @extension("x-oaiExpandable", true)
-  content: (MessageContentImageFileObject | MessageContentTextObject)[];
+  content: (MessageContentImageFileObject | MessageContentImageUrlObject | MessageContentTextObject)[];
 
   /** If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. */
   assistant_id: string | null;
@@ -151,8 +149,15 @@ model MessageContentImageFileObject {
   type: "image_file";
 
   image_file: {
-    /** The [File](/docs/api-reference/files) ID of the image in the message content. */
+    @doc("""
+    The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
+    """)
     file_id: string;
+
+    @doc("""
+    Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
+    """)
+    detail?: "auto" | "low" | "high" = "auto";
   };
 }
 
@@ -232,8 +237,54 @@ model MessageDeltaContentImageFileObject {
   type: "image_file";
 
   image_file?: {
-    /** The [File](/docs/api-reference/files) ID of the image in the message content. */
+    @doc("""
+    The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content.
+    """)
     file_id?: string;
+
+    @doc("""
+    Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
+    """)
+    detail?: "auto" | "low" | "high" = "auto";
+  };
+}
+
+/** References an image URL in the content of a message. */
+model MessageContentImageUrlObject {
+  /** The type of the content part. */
+  type: "image_url";
+
+  image_url: {
+    // Tool customization: url uses the url type
+    /** The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp. */
+    url: url;
+
+    @doc("""
+    Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`
+    """)
+    detail?: "auto" | "low" | "high" = "auto";
+  };
+}
+
+/** References an image URL in the content of a message. */
+model MessageDeltaContentImageUrlObject {
+  /** The index of the content part in the message. */
+  index: int32;
+
+  @doc("""
+  Always `image_url`.
+  """)
+  type: "image_url";
+
+  image_url?: {
+    // Tool customization: url uses the url type
+    /** The URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp. */
+    url?: url;
+
+    @doc("""
+    Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`.
+    """)
+    detail?: "auto" | "low" | "high" = "auto";
   };
 }
 
@@ -256,7 +307,7 @@ model MessageDeltaObject {
 
     /** The content of the message in array of text and/or images. */
     @extension("x-oaiExpandable", true)
-    content?: (MessageDeltaContentImageFileObject | MessageDeltaContentTextObject)[];
+    content?: (MessageDeltaContentImageFileObject | MessageDeltaContentTextObject | MessageDeltaContentImageUrlObject)[];
   };
 }
 
@@ -277,6 +328,17 @@ model MessageDeltaContentTextObject {
     @extension("x-oaiExpandable", true)
     annotations?: (MessageDeltaContentTextAnnotationsFileCitationObject | MessageDeltaContentTextAnnotationsFilePathObject)[];
   };
+}
+
+/** The text content that is part of a message. */
+model MessageRequestContentTextObject {
+  @doc("""
+  Always `text`.
+  """)
+  type: "text";
+
+  /** Text content to be sent to the model */
+  text: string;
 }
 
 /** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. */

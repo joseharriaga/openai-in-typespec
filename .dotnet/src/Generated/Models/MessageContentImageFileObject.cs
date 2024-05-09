@@ -45,7 +45,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="MessageContentImageFileObject"/>. </summary>
         /// <param name="imageFile"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="imageFile"/> is null. </exception>
-        internal MessageContentImageFileObject(MessageContentImageFileObjectImageFile imageFile)
+        public MessageContentImageFileObject(MessageContentImageFileObjectImageFile imageFile)
         {
             Argument.AssertNotNull(imageFile, nameof(imageFile));
 
@@ -71,7 +71,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Always `image_file`. </summary>
         public MessageContentImageFileObjectType Type { get; } = MessageContentImageFileObjectType.ImageFile;
 
-        /// <summary> Gets the image file. </summary>
-        public MessageContentImageFileObjectImageFile ImageFile { get; }
+        /// <summary> Gets or sets the image file. </summary>
+        public MessageContentImageFileObjectImageFile ImageFile { get; set; }
     }
 }

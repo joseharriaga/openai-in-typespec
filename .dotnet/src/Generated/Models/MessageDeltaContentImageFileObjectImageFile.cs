@@ -48,15 +48,19 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentImageFileObjectImageFile"/>. </summary>
-        /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. </param>
+        /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </param>
+        /// <param name="detail"> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentImageFileObjectImageFile(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaContentImageFileObjectImageFile(string fileId, string detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
+            Detail = detail;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The [File](/docs/api-reference/files) ID of the image in the message content. </summary>
+        /// <summary> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </summary>
         public string FileId { get; }
+        /// <summary> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </summary>
+        public string Detail { get; }
     }
 }

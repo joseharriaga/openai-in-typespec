@@ -10,19 +10,19 @@ using System.Text.Json;
 
 namespace OpenAI.Internal.Models
 {
-    internal partial class MessageContentImageFileObjectImageFile : IJsonModel<MessageContentImageFileObjectImageFile>
+    internal partial class MessageContentImageUrlObjectImageUrl : IJsonModel<MessageContentImageUrlObjectImageUrl>
     {
-        void IJsonModel<MessageContentImageFileObjectImageFile>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<MessageContentImageUrlObjectImageUrl>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageContentImageFileObjectImageFile>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageContentImageUrlObjectImageUrl>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageContentImageFileObjectImageFile)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageContentImageUrlObjectImageUrl)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("file_id"u8);
-            writer.WriteStringValue(FileId);
+            writer.WritePropertyName("url"u8);
+            writer.WriteStringValue(Url.AbsoluteUri);
             if (Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
@@ -46,19 +46,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        MessageContentImageFileObjectImageFile IJsonModel<MessageContentImageFileObjectImageFile>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        MessageContentImageUrlObjectImageUrl IJsonModel<MessageContentImageUrlObjectImageUrl>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageContentImageFileObjectImageFile>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageContentImageUrlObjectImageUrl>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageContentImageFileObjectImageFile)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageContentImageUrlObjectImageUrl)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeMessageContentImageFileObjectImageFile(document.RootElement, options);
+            return DeserializeMessageContentImageUrlObjectImageUrl(document.RootElement, options);
         }
 
-        internal static MessageContentImageFileObjectImageFile DeserializeMessageContentImageFileObjectImageFile(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static MessageContentImageUrlObjectImageUrl DeserializeMessageContentImageUrlObjectImageUrl(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -66,15 +66,15 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            string fileId = default;
-            MessageContentImageFileObjectImageFileDetail? detail = default;
+            Uri url = default;
+            MessageContentImageUrlObjectImageUrlDetail? detail = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("file_id"u8))
+                if (property.NameEquals("url"u8))
                 {
-                    fileId = property.Value.GetString();
+                    url = new Uri(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("detail"u8))
@@ -83,7 +83,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    detail = new MessageContentImageFileObjectImageFileDetail(property.Value.GetString());
+                    detail = new MessageContentImageUrlObjectImageUrlDetail(property.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")
@@ -92,46 +92,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageContentImageFileObjectImageFile(fileId, detail, serializedAdditionalRawData);
+            return new MessageContentImageUrlObjectImageUrl(url, detail, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<MessageContentImageFileObjectImageFile>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<MessageContentImageUrlObjectImageUrl>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageContentImageFileObjectImageFile>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageContentImageUrlObjectImageUrl>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(MessageContentImageFileObjectImageFile)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageContentImageUrlObjectImageUrl)} does not support writing '{options.Format}' format.");
             }
         }
 
-        MessageContentImageFileObjectImageFile IPersistableModel<MessageContentImageFileObjectImageFile>.Create(BinaryData data, ModelReaderWriterOptions options)
+        MessageContentImageUrlObjectImageUrl IPersistableModel<MessageContentImageUrlObjectImageUrl>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageContentImageFileObjectImageFile>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageContentImageUrlObjectImageUrl>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeMessageContentImageFileObjectImageFile(document.RootElement, options);
+                        return DeserializeMessageContentImageUrlObjectImageUrl(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(MessageContentImageFileObjectImageFile)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageContentImageUrlObjectImageUrl)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<MessageContentImageFileObjectImageFile>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<MessageContentImageUrlObjectImageUrl>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static MessageContentImageFileObjectImageFile FromResponse(PipelineResponse response)
+        internal static MessageContentImageUrlObjectImageUrl FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeMessageContentImageFileObjectImageFile(document.RootElement);
+            return DeserializeMessageContentImageUrlObjectImageUrl(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

@@ -4,12 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 
-namespace OpenAI.Files
+namespace OpenAI.Internal.Models
 {
-    /// <summary> The CreateFileRequest. </summary>
-    public partial class UploadFileOptions
+    /// <summary> The MessageDeltaContentImageUrlObjectImageUrl. </summary>
+    internal partial class MessageDeltaContentImageUrlObjectImageUrl
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,19 +42,25 @@ namespace OpenAI.Files
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="UploadFileOptions"/>. </summary>
-        /// <param name="file"> The File object (not file name) to be uploaded. </param>
-        /// <param name="purpose">
-        /// The intended purpose of the uploaded file.
-        ///
-        /// Use "assistants" for [Assistants](/docs/api-reference/assistants) and [Message](/docs/api-reference/messages) files, "vision" for Assistants image file inputs, "batch" for [Batch API](/docs/guides/batch), and "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
-        /// </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal UploadFileOptions(Stream file, UploadFileOptionsPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="MessageDeltaContentImageUrlObjectImageUrl"/>. </summary>
+        internal MessageDeltaContentImageUrlObjectImageUrl()
         {
-            File = file;
-            Purpose = purpose;
+        }
+
+        /// <summary> Initializes a new instance of <see cref="MessageDeltaContentImageUrlObjectImageUrl"/>. </summary>
+        /// <param name="url"> The URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp. </param>
+        /// <param name="detail"> Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal MessageDeltaContentImageUrlObjectImageUrl(Uri url, string detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            Url = url;
+            Detail = detail;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
+
+        /// <summary> The URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp. </summary>
+        public Uri Url { get; }
+        /// <summary> Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. </summary>
+        public string Detail { get; }
     }
 }

@@ -154,6 +154,9 @@ namespace OpenAI.Internal.Models
         /// <description><see cref="MessageContentImageFileObject"/></description>
         /// </item>
         /// <item>
+        /// <description><see cref="MessageContentImageUrlObject"/></description>
+        /// </item>
+        /// <item>
         /// <description><see cref="MessageContentTextObject"/></description>
         /// </item>
         /// </list>

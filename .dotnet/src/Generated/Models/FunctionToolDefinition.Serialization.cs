@@ -21,10 +21,10 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("type"u8);
-            writer.WriteObjectValue<object>(Type, options);
             writer.WritePropertyName("function"u8);
             writer.WriteObjectValue(Function, options);
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -63,20 +63,20 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            object type = default;
             FunctionDefinition function = default;
+            string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
-                {
-                    type = property.Value.GetObject();
-                    continue;
-                }
                 if (property.NameEquals("function"u8))
                 {
                     function = FunctionDefinition.DeserializeFunctionDefinition(property.Value, options);
+                    continue;
+                }
+                if (property.NameEquals("type"u8))
+                {
+                    type = property.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -85,7 +85,7 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FunctionToolDefinition(type, function, serializedAdditionalRawData);
+            return new FunctionToolDefinition(type, serializedAdditionalRawData, function);
         }
 
         BinaryData IPersistableModel<FunctionToolDefinition>.Write(ModelReaderWriterOptions options)
@@ -121,14 +121,14 @@ namespace OpenAI.Assistants
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static FunctionToolDefinition FromResponse(PipelineResponse response)
+        internal static new FunctionToolDefinition FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeFunctionToolDefinition(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

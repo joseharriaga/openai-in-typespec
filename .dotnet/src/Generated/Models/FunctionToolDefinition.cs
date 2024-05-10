@@ -4,45 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
     /// <summary> The AssistantToolsFunction. </summary>
-    public partial class FunctionToolDefinition
+    public partial class FunctionToolDefinition : ToolDefinition
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
         /// <summary> Initializes a new instance of <see cref="FunctionToolDefinition"/>. </summary>
         /// <param name="function"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="function"/> is null. </exception>
@@ -50,18 +17,17 @@ namespace OpenAI.Assistants
         {
             Argument.AssertNotNull(function, nameof(function));
 
+            Type = "function";
             Function = function;
         }
 
         /// <summary> Initializes a new instance of <see cref="FunctionToolDefinition"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `function`. </param>
-        /// <param name="function"></param>
+        /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal FunctionToolDefinition(object type, FunctionDefinition function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <param name="function"></param>
+        internal FunctionToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, FunctionDefinition function) : base(type, serializedAdditionalRawData)
         {
-            Type = type;
             Function = function;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="FunctionToolDefinition"/> for deserialization. </summary>

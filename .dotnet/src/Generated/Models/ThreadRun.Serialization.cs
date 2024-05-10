@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Assistants;
 using OpenAI.Models;
 
 namespace OpenAI.Internal.Models
@@ -114,19 +115,7 @@ namespace OpenAI.Internal.Models
             writer.WriteStartArray();
             foreach (var item in Tools)
             {
-                if (item == null)
-                {
-                    writer.WriteNullValue();
-                    continue;
-                }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                using (JsonDocument document = JsonDocument.Parse(item))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
             if (Metadata != null && Optional.IsCollectionDefined(Metadata))
@@ -290,7 +279,7 @@ namespace OpenAI.Internal.Models
             RunObjectIncompleteDetails incompleteDetails = default;
             string model = default;
             string instructions = default;
-            IReadOnlyList<BinaryData> tools = default;
+            IReadOnlyList<ToolDefinition> tools = default;
             IReadOnlyDictionary<string, string> metadata = default;
             RunTokenUsage usage = default;
             float? temperature = default;
@@ -436,17 +425,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("tools"u8))
                 {
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<ToolDefinition> array = new List<ToolDefinition>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
                     }
                     tools = array;
                     continue;

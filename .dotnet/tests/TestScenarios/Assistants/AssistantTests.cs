@@ -27,16 +27,16 @@ public partial class AssistantTests
         Assert.That(assistants, Is.Not.Null.Or.Empty);
     }
 
-    // [Test]
-    // public void CreatingAndDeletingAssistantsWorks()
-    // {
-    //     AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
-    //     ClientResult<Assistant> result = client.CreateAssistant("gpt-3.5-turbo");
-    //     Assert.That(result.Value, Is.Not.Null);
-    //     Assert.That(result.Value.Id, Is.Not.Null.Or.Empty);
-    //     ClientResult<bool> deletionResult = client.DeleteAssistant(result.Value.Id);
-    //     Assert.That(deletionResult.Value, Is.True);
-    // }
+    [Test]
+    public void CreatingAndDeletingAssistantsWorks()
+    {
+        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
+        ClientResult<Assistant> result = client.CreateAssistant(new AssistantCreationOptions("gpt-3.5-turbo"));
+        Assert.That(result.Value, Is.Not.Null);
+        Assert.That(result.Value.Id, Is.Not.Null.Or.Empty);
+        ClientResult<bool> deletionResult = client.DeleteAssistant(result.Value.Id);
+        Assert.That(deletionResult.Value, Is.True);
+    }
 
     // [Test]
     // public async Task AddingMessagesWorks()

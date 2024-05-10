@@ -5,10 +5,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    /// <summary> The CreateAssistantRequestToolResourcesCodeInterpreter. </summary>
-    internal partial class CreateAssistantRequestToolResourcesCodeInterpreter
+    /// <summary>
+    /// The AssistantToolDefinition.
+    /// Please note <see cref="ToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+    /// The available derived classes include <see cref="CodeInterpreterToolDefinition"/>, <see cref="FileSearchToolDefinition"/> and <see cref="FunctionToolDefinition"/>.
+    /// </summary>
+    public abstract partial class ToolDefinition
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,24 +44,23 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResourcesCodeInterpreter"/>. </summary>
-        public CreateAssistantRequestToolResourcesCodeInterpreter()
+        /// <summary> Initializes a new instance of <see cref="ToolDefinition"/>. </summary>
+        protected ToolDefinition()
         {
-            FileIds = new ChangeTrackingList<string>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResourcesCodeInterpreter"/>. </summary>
-        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool. </param>
+        /// <summary> Initializes a new instance of <see cref="ToolDefinition"/>. </summary>
+        /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateAssistantRequestToolResourcesCodeInterpreter(IList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            FileIds = fileIds;
+            Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool. </summary>
-        public IList<string> FileIds { get; }
+        /// <summary> Gets or sets the type. </summary>
+        internal string Type { get; set; }
     }
 }

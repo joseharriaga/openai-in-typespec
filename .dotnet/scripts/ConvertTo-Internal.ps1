@@ -98,10 +98,15 @@ function Edit-GeneratedModels {
         "AssistantCodeInterpreterToolResources.Serialization.cs",
         "CodeInterpreterToolDefinition.cs",
         "CodeInterpreterToolDefinition.Serialization.cs",
+        "CodeInterpreterToolResourceDefinitions.cs",
+        "CodeInterpreterToolResourceDefinitions.Serialization.cs",
         "FileSearchToolDefinition.cs",
         "FileSearchToolDefinition.Serialization.cs",
+        "FileSearchToolResourceDefinitions.cs",
+        "FileSearchToolResourceDefinitions.Serialization.cs",
         "FunctionToolDefinition.cs",
         "FunctionToolDefinition.Serialization.cs",
+        "InternalCreateAssistantRequestModel.cs",
         "InternalDeleteAssistantResponse.cs",
         "InternalDeleteAssistantResponse.Serialization.cs",
         "InternalDeleteMessageResponse.cs",
@@ -143,6 +148,10 @@ function Edit-GeneratedModels {
         "ThreadCreationOptions.Serialization.cs",
         "ThreadModificationOptions.cs",
         "ThreadModificationOptions.Serialization.cs",
+        "ToolDefinition.cs",
+        "ToolDefinition.Serialization.cs",
+        "ToolResourceDefinitions.cs",
+        "ToolResourceDefinitions.Serialization.cs",
 
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",
@@ -320,6 +329,8 @@ function Edit-GeneratedModels {
         "InternalListBatchesResponse.Serialization.cs",
         "InternalListBatchesResponseObject.cs",
         "InternalListBatchesResponseObject.Serialization.cs",
+        "InternalUnknownAssistantToolDefinition.cs",
+        "InternalUnknownAssistantToolDefinition.Serialization.cs",
 
         "VectorStoreFileStatusFilter.cs"
     )
@@ -334,6 +345,7 @@ function Edit-GeneratedModels {
         Write-Output "Editing $($file.FullName)"
 
         $content = $content -creplace "public partial class", "internal partial class"
+        $content = $content -creplace "public abstract partial class", "internal abstract partial class"
         $content = $content -creplace "public readonly partial struct", "internal readonly partial struct"
         $content = $content -creplace "public static partial class", "internal static partial class"
         $content = $content -creplace "namespace OpenAI", "namespace OpenAI.Internal"

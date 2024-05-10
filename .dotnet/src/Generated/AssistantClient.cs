@@ -28,6 +28,32 @@ namespace OpenAI.Assistants
         {
         }
 
+        /// <summary> Create an assistant with a model and instructions. </summary>
+        /// <param name="assistant"> The <see cref="AssistantCreationOptions"/> to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="assistant"/> is null. </exception>
+        /// <remarks> Create assistant. </remarks>
+        public virtual async Task<ClientResult<Assistant>> CreateAssistantAsync(AssistantCreationOptions assistant)
+        {
+            Argument.AssertNotNull(assistant, nameof(assistant));
+
+            using BinaryContent content = assistant.ToBinaryContent();
+            ClientResult result = await CreateAssistantAsync(content, null).ConfigureAwait(false);
+            return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
+        /// <summary> Create an assistant with a model and instructions. </summary>
+        /// <param name="assistant"> The <see cref="AssistantCreationOptions"/> to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="assistant"/> is null. </exception>
+        /// <remarks> Create assistant. </remarks>
+        public virtual ClientResult<Assistant> CreateAssistant(AssistantCreationOptions assistant)
+        {
+            Argument.AssertNotNull(assistant, nameof(assistant));
+
+            using BinaryContent content = assistant.ToBinaryContent();
+            ClientResult result = CreateAssistant(content, null);
+            return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
         /// <summary> Retrieves an assistant. </summary>
         /// <param name="assistantId"> The ID of the assistant to retrieve. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>

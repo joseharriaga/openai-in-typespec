@@ -35,4 +35,7 @@ internal partial class InternalSubmitToolOutputsRunRequest { }
 internal partial class InternalListRunStepsResponse { private readonly object Object; }
 
 [CodeGenModel("DeleteThreadResponse")]
-internal partial class InternalDeleteThreadResponse { private readonly object Object; } 
+internal partial class InternalDeleteThreadResponse { private readonly object Object; }
+
+[CodeGenModel("CreateAssistantRequestModel")]
+internal readonly partial struct InternalCreateAssistantRequestModel { }

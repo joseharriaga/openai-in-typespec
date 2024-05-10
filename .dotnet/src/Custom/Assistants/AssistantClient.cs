@@ -13,8 +13,6 @@ namespace OpenAI.Assistants;
 [Experimental("OPENAI001")]
 [CodeGenClient("Assistants")]
 [CodeGenSuppress("AssistantClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateAssistantAsync", typeof(AssistantCreationOptions))]
-[CodeGenSuppress("CreateAssistant", typeof(AssistantCreationOptions))]
 [CodeGenSuppress("ModifyAssistantAsync", typeof(string), typeof(AssistantModificationOptions))]
 [CodeGenSuppress("ModifyAssistant", typeof(string), typeof(AssistantModificationOptions))]
 public partial class AssistantClient
@@ -158,9 +156,8 @@ public partial class AssistantClient
     /// <returns> A value indicating whether the deletion was successful. </returns>
     public virtual ClientResult<bool> DeleteAssistant(string assistantId)
     {
-        ClientResult protocolResult = DeleteAssistant(assistantId);
+        ClientResult protocolResult = DeleteAssistant(assistantId, (RequestOptions)null);
         InternalDeleteAssistantResponse internalResponse = InternalDeleteAssistantResponse.FromResponse(protocolResult.GetRawResponse());
         return ClientResult.FromValue(internalResponse.Deleted, protocolResult.GetRawResponse());
     }
-
 }

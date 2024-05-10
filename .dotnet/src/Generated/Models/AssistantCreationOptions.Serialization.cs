@@ -7,11 +7,10 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>
+    public partial class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>
     {
         void IJsonModel<AssistantCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -23,7 +22,7 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model.ToString());
+            writer.WriteStringValue(Model);
             if (Optional.IsDefined(Name))
             {
                 if (Name != null)
@@ -60,10 +59,15 @@ namespace OpenAI.Internal.Models
                     writer.WriteNull("instructions");
                 }
             }
-            if (Optional.IsCollectionDefined(InternalToolElementRouter))
+            if (Optional.IsCollectionDefined(Tools))
             {
                 writer.WritePropertyName("tools"u8);
-                SerializeTools(writer);
+                writer.WriteStartArray();
+                foreach (var item in Tools)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
             if (Optional.IsDefined(ToolResources))
             {
@@ -176,12 +180,12 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            CreateAssistantRequestModel model = default;
+            string model = default;
             string name = default;
             string description = default;
             string instructions = default;
-            IList<JsonElement> tools = default;
-            CreateAssistantRequestToolResources toolResources = default;
+            IList<ToolDefinition> tools = default;
+            ToolResourceDefinitions toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
@@ -192,7 +196,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("model"u8))
                 {
-                    model = new CreateAssistantRequestModel(property.Value.GetString());
+                    model = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
@@ -227,7 +231,16 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("tools"u8))
                 {
-                    DeserializeTools(property, ref tools);
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<ToolDefinition> array = new List<ToolDefinition>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
+                    }
+                    tools = array;
                     continue;
                 }
                 if (property.NameEquals("tool_resources"u8))
@@ -237,7 +250,7 @@ namespace OpenAI.Internal.Models
                         toolResources = null;
                         continue;
                     }
-                    toolResources = CreateAssistantRequestToolResources.DeserializeCreateAssistantRequestToolResources(property.Value, options);
+                    toolResources = ToolResourceDefinitions.DeserializeToolResourceDefinitions(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -295,7 +308,7 @@ namespace OpenAI.Internal.Models
                 name,
                 description,
                 instructions,
-                tools ?? new ChangeTrackingList<JsonElement>(),
+                tools ?? new ChangeTrackingList<ToolDefinition>(),
                 toolResources,
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 temperature,

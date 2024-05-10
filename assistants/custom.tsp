@@ -50,3 +50,8 @@ alias CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelper = {
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string>;
 };
+
+@discriminator("type")
+model AssistantToolDefinition {
+  type: string;
+}

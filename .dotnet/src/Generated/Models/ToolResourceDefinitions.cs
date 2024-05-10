@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The CreateAssistantRequestToolResources. </summary>
-    internal partial class CreateAssistantRequestToolResources
+    public partial class ToolResourceDefinitions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,16 +43,16 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResources"/>. </summary>
-        public CreateAssistantRequestToolResources()
+        /// <summary> Initializes a new instance of <see cref="ToolResourceDefinitions"/>. </summary>
+        public ToolResourceDefinitions()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResources"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ToolResourceDefinitions"/>. </summary>
         /// <param name="codeInterpreter"></param>
         /// <param name="fileSearch"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateAssistantRequestToolResources(CreateAssistantRequestToolResourcesCodeInterpreter codeInterpreter, BinaryData fileSearch, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ToolResourceDefinitions(CodeInterpreterToolResourceDefinitions codeInterpreter, BinaryData fileSearch, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             CodeInterpreter = codeInterpreter;
             FileSearch = fileSearch;
@@ -59,7 +60,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Gets or sets the code interpreter. </summary>
-        public CreateAssistantRequestToolResourcesCodeInterpreter CodeInterpreter { get; set; }
+        public CodeInterpreterToolResourceDefinitions CodeInterpreter { get; set; }
         /// <summary>
         /// Gets or sets the file search
         /// <para>

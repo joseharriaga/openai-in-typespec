@@ -3,44 +3,27 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Assistants;
+using OpenAI.Internal.Models;
 
-// namespace OpenAI.Assistants;
-namespace OpenAI.Internal.Models;
+namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when creating a new <see cref="Assistant"/>.
 /// </summary>
 [CodeGenModel("CreateAssistantRequest")]
-[CodeGenSerialization(nameof(InternalToolElementRouter), SerializationValueHook = nameof(SerializeTools),
-DeserializationValueHook = nameof(DeserializeTools))]
-internal partial class AssistantCreationOptions
+[CodeGenSuppress("AssistantCreationOptions", typeof(InternalCreateAssistantRequestModel))]
+public partial class AssistantCreationOptions
 {
-    [CodeGenMember("Tools")]
-    private IList<JsonElement> InternalToolElementRouter
-    {
-        get => [];
-        set
-        {
-            foreach (JsonElement element in value)
-            {
-                Tools.Add(ToolDefinition.DeserializeToolDefinition(element, options: null));
-            }
-        }
-    }
+    public string Model { get; set; }
 
-    /// <summary>
-    /// A list of tools enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types code_interpreter, file_search, or function.
-    /// </summary>
-    public IList<ToolDefinition> Tools { get; } = [];
+    public AssistantCreationOptions(string model)
+        : this(new InternalCreateAssistantRequestModel(model))
+    { }
 
-    private static void SerializeTools(Utf8JsonWriter writer)
+    internal AssistantCreationOptions(InternalCreateAssistantRequestModel model)
     {
-        throw new NotImplementedException();
-    }
-
-    private static void DeserializeTools(JsonProperty property, ref IList<JsonElement> vestigialTools)
-    {
-        List<JsonElement> elements = [.. property.Value.EnumerateArray()];
-        vestigialTools = elements;
+        Model = model.ToString();
+        Metadata = new ChangeTrackingDictionary<string, string>();
+        Tools = new ChangeTrackingList<ToolDefinition>();
     }
 }

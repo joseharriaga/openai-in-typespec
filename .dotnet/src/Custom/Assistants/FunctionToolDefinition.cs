@@ -33,8 +33,7 @@ public partial class FunctionToolDefinition : ToolDefinition
     /// <summary>
     /// Creates a new instance of <see cref="FunctionToolDefinition"/>. 
     /// </summary>
-    /// <param name="name"> The name of the function. </param>
-    public FunctionToolDefinition(string name)
-        : this(new FunctionDefinition(name))
+    public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null)
+        : this(new FunctionDefinition(description, name, parameters, serializedAdditionalRawData: null))
     {}
 }

@@ -494,7 +494,7 @@ public partial class AssistantClient
             options.Name,
             options.Description,
             options.Instructions,
-            ToInternalBinaryDataList(options.Tools),
+            null, // TODO -- to do: tools
             null, // TODO -- to do: toolResources
             options.Metadata,
             options.Temperature,
@@ -511,7 +511,7 @@ public partial class AssistantClient
             options.Name,
             options.Description,
             options.Instructions,
-            ToInternalBinaryDataList(options.Tools),
+            null, // TODO -- to do: tools
             null, // TODO -- to do: toolResources
             options.Metadata,
             options.Temperature,
@@ -542,7 +542,7 @@ public partial class AssistantClient
             options.InstructionsOverride,
             options.AdditionalInstructions,
             null, // TODO -- to do: additional messages
-            ToInternalBinaryDataList(options.ToolsOverride),
+            null, // TODO -- to do: tools
             options.Metadata,
             options.Temperature,
             options.TopP,
@@ -568,7 +568,7 @@ public partial class AssistantClient
             internalThreadOptions,
             runOptions.ModelOverride,
             runOptions.InstructionsOverride,
-            ToInternalBinaryDataList(runOptions.ToolsOverride),
+            null, // TODO -- to do: tools
             null, // TODO -- to do: toolResources
             runOptions.Metadata,
             runOptions.Temperature,

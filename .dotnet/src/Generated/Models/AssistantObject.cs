@@ -50,10 +50,14 @@ namespace OpenAI.Internal.Models
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 256,000 characters. </param>
-        /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`. </param>
+        /// <param name="tools">
+        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
+        /// </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="model"/> or <paramref name="tools"/> is null. </exception>
-        internal AssistantObject(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IEnumerable<BinaryData> tools, IReadOnlyDictionary<string, string> metadata)
+        internal AssistantObject(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IEnumerable<AssistantToolDefinition> tools, IReadOnlyDictionary<string, string> metadata)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(model, nameof(model));
@@ -77,7 +81,11 @@ namespace OpenAI.Internal.Models
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 256,000 characters. </param>
-        /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`. </param>
+        /// <param name="tools">
+        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
+        /// </param>
         /// <param name="toolResources"> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
@@ -88,7 +96,7 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AssistantObject(string id, AssistantObjectObject @object, DateTimeOffset createdAt, string name, string description, string model, string instructions, IReadOnlyList<BinaryData> tools, AssistantObjectToolResources toolResources, IReadOnlyDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantObject(string id, AssistantObjectObject @object, DateTimeOffset createdAt, string name, string description, string model, string instructions, IReadOnlyList<AssistantToolDefinition> tools, AssistantObjectToolResources toolResources, IReadOnlyDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -128,49 +136,10 @@ namespace OpenAI.Internal.Models
         public string Instructions { get; }
         /// <summary>
         /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
-        /// <para>
-        /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// <remarks>
-        /// Supported types:
-        /// <list type="bullet">
-        /// <item>
-        /// <description><see cref="AssistantToolsCode"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="AssistantToolsFileSearch"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="AssistantToolsFunction"/></description>
-        /// </item>
-        /// </list>
-        /// </remarks>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
         /// </summary>
-        public IReadOnlyList<BinaryData> Tools { get; }
+        public IReadOnlyList<AssistantToolDefinition> Tools { get; }
         /// <summary> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </summary>
         public AssistantObjectToolResources ToolResources { get; }
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>

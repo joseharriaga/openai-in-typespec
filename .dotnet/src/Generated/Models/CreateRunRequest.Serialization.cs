@@ -84,19 +84,7 @@ namespace OpenAI.Internal.Models
                     writer.WriteStartArray();
                     foreach (var item in Tools)
                     {
-                        if (item == null)
-                        {
-                            writer.WriteNullValue();
-                            continue;
-                        }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                        using (JsonDocument document = JsonDocument.Parse(item))
-                        {
-                            JsonSerializer.Serialize(writer, document.RootElement);
-                        }
-#endif
+                        writer.WriteObjectValue(item, options);
                     }
                     writer.WriteEndArray();
                 }
@@ -276,7 +264,7 @@ namespace OpenAI.Internal.Models
             string instructions = default;
             string additionalInstructions = default;
             IList<CreateMessageRequest> additionalMessages = default;
-            IList<BinaryData> tools = default;
+            IList<AssistantToolDefinition> tools = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
@@ -345,17 +333,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<AssistantToolDefinition> array = new List<AssistantToolDefinition>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(AssistantToolDefinition.DeserializeAssistantToolDefinition(item, options));
                     }
                     tools = array;
                     continue;
@@ -466,7 +447,7 @@ namespace OpenAI.Internal.Models
                 instructions,
                 additionalInstructions,
                 additionalMessages ?? new ChangeTrackingList<CreateMessageRequest>(),
-                tools ?? new ChangeTrackingList<BinaryData>(),
+                tools ?? new ChangeTrackingList<AssistantToolDefinition>(),
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 temperature,
                 topP,

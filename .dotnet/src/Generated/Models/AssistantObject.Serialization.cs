@@ -60,19 +60,7 @@ namespace OpenAI.Internal.Models
             writer.WriteStartArray();
             foreach (var item in Tools)
             {
-                if (item == null)
-                {
-                    writer.WriteNullValue();
-                    continue;
-                }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                using (JsonDocument document = JsonDocument.Parse(item))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
             if (Optional.IsDefined(ToolResources))
@@ -190,7 +178,7 @@ namespace OpenAI.Internal.Models
             string description = default;
             string model = default;
             string instructions = default;
-            IReadOnlyList<BinaryData> tools = default;
+            IReadOnlyList<AssistantToolDefinition> tools = default;
             AssistantObjectToolResources toolResources = default;
             IReadOnlyDictionary<string, string> metadata = default;
             float? temperature = default;
@@ -252,17 +240,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("tools"u8))
                 {
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<AssistantToolDefinition> array = new List<AssistantToolDefinition>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(AssistantToolDefinition.DeserializeAssistantToolDefinition(item, options));
                     }
                     tools = array;
                     continue;

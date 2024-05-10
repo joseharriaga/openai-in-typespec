@@ -259,6 +259,7 @@ function Edit-GeneratedModels {
         Write-Output "Editing $($file.FullName)"
 
         $content = $content -creplace "public partial class", "internal partial class"
+        $content = $content -creplace "public abstract partial class", "internal abstract partial class"
         $content = $content -creplace "public readonly partial struct", "internal readonly partial struct"
         $content = $content -creplace "public static partial class", "internal static partial class"
         $content = $content -creplace "namespace OpenAI", "namespace OpenAI.Internal"

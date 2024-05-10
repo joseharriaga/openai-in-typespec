@@ -10,19 +10,17 @@ using System.Text.Json;
 
 namespace OpenAI.Internal.Models
 {
-    internal partial class AssistantToolsFunction : IJsonModel<AssistantToolsFunction>
+    internal partial class UnknownAssistantToolDefinition : IJsonModel<AssistantToolDefinition>
     {
-        void IJsonModel<AssistantToolsFunction>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AssistantToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AssistantToolsFunction>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AssistantToolsFunction)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AssistantToolDefinition)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue(Function, options);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -43,19 +41,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        AssistantToolsFunction IJsonModel<AssistantToolsFunction>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AssistantToolDefinition IJsonModel<AssistantToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AssistantToolsFunction>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AssistantToolsFunction)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AssistantToolDefinition)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAssistantToolsFunction(document.RootElement, options);
+            return DeserializeAssistantToolDefinition(document.RootElement, options);
         }
 
-        internal static AssistantToolsFunction DeserializeAssistantToolsFunction(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static UnknownAssistantToolDefinition DeserializeUnknownAssistantToolDefinition(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -63,17 +61,11 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            FunctionObject function = default;
-            string type = default;
+            string type = "Unknown";
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("function"u8))
-                {
-                    function = FunctionObject.DeserializeFunctionObject(property.Value, options);
-                    continue;
-                }
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString();
@@ -85,52 +77,52 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AssistantToolsFunction(type, serializedAdditionalRawData, function);
+            return new UnknownAssistantToolDefinition(type, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AssistantToolsFunction>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AssistantToolDefinition>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AssistantToolsFunction>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AssistantToolsFunction)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AssistantToolDefinition)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AssistantToolsFunction IPersistableModel<AssistantToolsFunction>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AssistantToolDefinition IPersistableModel<AssistantToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AssistantToolsFunction>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAssistantToolsFunction(document.RootElement, options);
+                        return DeserializeAssistantToolDefinition(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AssistantToolsFunction)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AssistantToolDefinition)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AssistantToolsFunction>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AssistantToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new AssistantToolsFunction FromResponse(PipelineResponse response)
+        internal static new UnknownAssistantToolDefinition FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAssistantToolsFunction(document.RootElement);
+            return DeserializeUnknownAssistantToolDefinition(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal override BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create<AssistantToolDefinition>(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

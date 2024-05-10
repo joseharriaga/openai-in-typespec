@@ -51,7 +51,7 @@ namespace OpenAI.Internal.Models
 
             AssistantId = assistantId;
             AdditionalMessages = new ChangeTrackingList<CreateMessageRequest>();
-            Tools = new ChangeTrackingList<BinaryData>();
+            Tools = new ChangeTrackingList<AssistantToolDefinition>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
@@ -61,7 +61,11 @@ namespace OpenAI.Internal.Models
         /// <param name="instructions"> Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
         /// <param name="additionalInstructions"> Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions. </param>
         /// <param name="additionalMessages"> Adds additional messages to the thread before creating the run. </param>
-        /// <param name="tools"> Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="tools">
+        /// Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
+        /// </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
         /// <param name="topP">
@@ -76,7 +80,7 @@ namespace OpenAI.Internal.Models
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateRunRequest(string assistantId, CreateRunRequestModel? model, string instructions, string additionalInstructions, IList<CreateMessageRequest> additionalMessages, IList<BinaryData> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateRunRequest(string assistantId, CreateRunRequestModel? model, string instructions, string additionalInstructions, IList<CreateMessageRequest> additionalMessages, IList<AssistantToolDefinition> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Model = model;
@@ -113,49 +117,10 @@ namespace OpenAI.Internal.Models
         public IList<CreateMessageRequest> AdditionalMessages { get; set; }
         /// <summary>
         /// Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
-        /// <para>
-        /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// <remarks>
-        /// Supported types:
-        /// <list type="bullet">
-        /// <item>
-        /// <description><see cref="AssistantToolsCode"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="AssistantToolsFileSearch"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="AssistantToolsFunction"/></description>
-        /// </item>
-        /// </list>
-        /// </remarks>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
         /// </summary>
-        public IList<BinaryData> Tools { get; set; }
+        public IList<AssistantToolDefinition> Tools { get; set; }
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IDictionary<string, string> Metadata { get; set; }
         /// <summary> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </summary>

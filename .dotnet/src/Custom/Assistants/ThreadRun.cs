@@ -77,10 +77,7 @@ public partial class ThreadRun
         List<ToolInfo> tools = [];
         if (internalRun.Tools != null)
         {
-            foreach (BinaryData unionToolInfo in internalRun.Tools)
-            {
-                tools.Add(ToolInfo.DeserializeToolInfo(JsonDocument.Parse(unionToolInfo).RootElement));
-            }
+            // TODO -- to do: tools
         }
         Tools = tools;
 

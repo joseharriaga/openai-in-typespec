@@ -1969,10 +1969,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsFileSearch'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
+            $ref: '#/components/schemas/AssistantToolDefinition'
           maxItems: 128
           description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
           x-oaiExpandable: true
@@ -2032,6 +2029,19 @@ components:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
       description: Represents an `assistant` that can call the model and use tools.
+    AssistantToolDefinition:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          code_interpreter: '#/components/schemas/AssistantToolsCode'
+          file_search: '#/components/schemas/AssistantToolsFileSearch'
+          function: '#/components/schemas/AssistantToolsFunction'
     AssistantToolsCode:
       type: object
       required:
@@ -2042,6 +2052,8 @@ components:
           enum:
             - code_interpreter
           description: 'The type of tool being defined: `code_interpreter`'
+      allOf:
+        - $ref: '#/components/schemas/AssistantToolDefinition'
     AssistantToolsFileSearch:
       type: object
       required:
@@ -2052,6 +2064,8 @@ components:
           enum:
             - file_search
           description: 'The type of tool being defined: `file_search`'
+      allOf:
+        - $ref: '#/components/schemas/AssistantToolDefinition'
     AssistantToolsFunction:
       type: object
       required:
@@ -2065,6 +2079,8 @@ components:
           description: 'The type of tool being defined: `function`'
         function:
           $ref: '#/components/schemas/FunctionObject'
+      allOf:
+        - $ref: '#/components/schemas/AssistantToolDefinition'
     AssistantsApiResponseFormat:
       type: object
       properties:
@@ -2799,10 +2815,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsFileSearch'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
+            $ref: '#/components/schemas/AssistantToolDefinition'
           maxItems: 128
           description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
           x-oaiExpandable: true
@@ -4288,11 +4301,12 @@ components:
           nullable: true
           description: Adds additional messages to the thread before creating the run.
         tools:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateRunRequestTools'
+          type: array
+          items:
+            $ref: '#/components/schemas/AssistantToolDefinition'
           nullable: true
           description: Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+          x-oaiExpandable: true
         metadata:
           type: object
           additionalProperties:
@@ -4352,15 +4366,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/CreateMessageRequest'
-    CreateRunRequestTools:
-      type: array
-      items:
-        anyOf:
-          - $ref: '#/components/schemas/AssistantToolsCode'
-          - $ref: '#/components/schemas/AssistantToolsFileSearch'
-          - $ref: '#/components/schemas/AssistantToolsFunction'
-      maxItems: 20
-      x-oaiExpandable: true
     CreateSpeechRequest:
       type: object
       required:
@@ -4452,9 +4457,9 @@ components:
           nullable: true
           description: Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
         tools:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateThreadAndRunRequestTools'
+          type: array
+          items:
+            $ref: '#/components/schemas/AssistantToolDefinition'
           nullable: true
           description: Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
         tool_resources:
@@ -4536,14 +4541,6 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
-    CreateThreadAndRunRequestTools:
-      type: array
-      items:
-        anyOf:
-          - $ref: '#/components/schemas/AssistantToolsCode'
-          - $ref: '#/components/schemas/AssistantToolsFileSearch'
-          - $ref: '#/components/schemas/AssistantToolsFunction'
-      maxItems: 20
     CreateThreadRequest:
       type: object
       properties:
@@ -6103,10 +6100,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsFileSearch'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
+            $ref: '#/components/schemas/AssistantToolDefinition'
           maxItems: 128
           description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
           x-oaiExpandable: true
@@ -6440,10 +6434,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsFileSearch'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
+            $ref: '#/components/schemas/AssistantToolDefinition'
           maxItems: 20
           description: The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
           x-oaiExpandable: true

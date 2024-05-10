@@ -61,7 +61,11 @@ namespace OpenAI
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 256,000 characters. </param>
-        /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`. </param>
+        /// <param name="tools">
+        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
+        /// </param>
         /// <param name="toolResources"> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
@@ -72,9 +76,9 @@ namespace OpenAI
         /// </param>
         /// <param name="responseFormat"></param>
         /// <returns> A new <see cref="Models.CreateAssistantRequest"/> instance for mocking. </returns>
-        public static CreateAssistantRequest CreateAssistantRequest(CreateAssistantRequestModel model = default, string name = null, string description = null, string instructions = null, IEnumerable<BinaryData> tools = null, CreateAssistantRequestToolResources toolResources = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, BinaryData responseFormat = null)
+        public static CreateAssistantRequest CreateAssistantRequest(CreateAssistantRequestModel model = default, string name = null, string description = null, string instructions = null, IEnumerable<AssistantToolDefinition> tools = null, CreateAssistantRequestToolResources toolResources = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, BinaryData responseFormat = null)
         {
-            tools ??= new List<BinaryData>();
+            tools ??= new List<AssistantToolDefinition>();
             metadata ??= new Dictionary<string, string>();
 
             return new CreateAssistantRequest(
@@ -91,31 +95,6 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantToolsCode"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `code_interpreter`. </param>
-        /// <returns> A new <see cref="Models.AssistantToolsCode"/> instance for mocking. </returns>
-        public static AssistantToolsCode AssistantToolsCode(AssistantToolsCodeType type = default)
-        {
-            return new AssistantToolsCode(type, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantToolsFileSearch"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `file_search`. </param>
-        /// <returns> A new <see cref="Models.AssistantToolsFileSearch"/> instance for mocking. </returns>
-        public static AssistantToolsFileSearch AssistantToolsFileSearch(AssistantToolsFileSearchType type = default)
-        {
-            return new AssistantToolsFileSearch(type, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantToolsFunction"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `function`. </param>
-        /// <param name="function"></param>
-        /// <returns> A new <see cref="Models.AssistantToolsFunction"/> instance for mocking. </returns>
-        public static AssistantToolsFunction AssistantToolsFunction(AssistantToolsFunctionType type = default, FunctionObject function = null)
-        {
-            return new AssistantToolsFunction(type, function, serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.AssistantObject"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `assistant`. </param>
@@ -124,7 +103,11 @@ namespace OpenAI
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 256,000 characters. </param>
-        /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`. </param>
+        /// <param name="tools">
+        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
+        /// </param>
         /// <param name="toolResources"> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
@@ -135,9 +118,9 @@ namespace OpenAI
         /// </param>
         /// <param name="responseFormat"></param>
         /// <returns> A new <see cref="Models.AssistantObject"/> instance for mocking. </returns>
-        public static AssistantObject AssistantObject(string id = null, AssistantObjectObject @object = default, DateTimeOffset createdAt = default, string name = null, string description = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, AssistantObjectToolResources toolResources = null, IReadOnlyDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, BinaryData responseFormat = null)
+        public static AssistantObject AssistantObject(string id = null, AssistantObjectObject @object = default, DateTimeOffset createdAt = default, string name = null, string description = null, string model = null, string instructions = null, IEnumerable<AssistantToolDefinition> tools = null, AssistantObjectToolResources toolResources = null, IReadOnlyDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, BinaryData responseFormat = null)
         {
-            tools ??= new List<BinaryData>();
+            tools ??= new List<AssistantToolDefinition>();
             metadata ??= new Dictionary<string, string>();
 
             return new AssistantObject(
@@ -739,7 +722,11 @@ namespace OpenAI
         /// <param name="thread"> If no thread is provided, an empty thread will be created. </param>
         /// <param name="model"> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </param>
         /// <param name="instructions"> Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
-        /// <param name="tools"> Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="tools">
+        /// Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
+        /// </param>
         /// <param name="toolResources"> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
@@ -755,9 +742,9 @@ namespace OpenAI
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <returns> A new <see cref="Models.CreateThreadAndRunRequest"/> instance for mocking. </returns>
-        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, CreateThreadAndRunRequestModel? model = null, string instructions = null, IEnumerable<BinaryData> tools = null, CreateThreadAndRunRequestToolResources toolResources = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, bool? stream = null, int? maxPromptTokens = null, int? maxCompletionTokens = null, TruncationObject truncationStrategy = null, BinaryData toolChoice = null, BinaryData responseFormat = null)
+        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, CreateThreadAndRunRequestModel? model = null, string instructions = null, IEnumerable<AssistantToolDefinition> tools = null, CreateThreadAndRunRequestToolResources toolResources = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, bool? stream = null, int? maxPromptTokens = null, int? maxCompletionTokens = null, TruncationObject truncationStrategy = null, BinaryData toolChoice = null, BinaryData responseFormat = null)
         {
-            tools ??= new List<BinaryData>();
+            tools ??= new List<AssistantToolDefinition>();
             metadata ??= new Dictionary<string, string>();
 
             return new CreateThreadAndRunRequest(
@@ -796,7 +783,11 @@ namespace OpenAI
         /// <param name="incompleteDetails"> Details on why the run is incomplete. Will be `null` if the run is not incomplete. </param>
         /// <param name="model"> The model that the [assistant](/docs/api-reference/assistants) used for this run. </param>
         /// <param name="instructions"> The instructions that the [assistant](/docs/api-reference/assistants) used for this run. </param>
-        /// <param name="tools"> The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. </param>
+        /// <param name="tools">
+        /// The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
+        /// </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <param name="temperature"> The sampling temperature used for this run. If not set, defaults to 1. </param>
@@ -807,9 +798,9 @@ namespace OpenAI
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <returns> A new <see cref="Models.RunObject"/> instance for mocking. </returns>
-        public static RunObject RunObject(string id = null, RunObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, string assistantId = null, RunObjectStatus status = default, RunObjectRequiredAction requiredAction = null, RunObjectLastError lastError = null, DateTimeOffset? expiresAt = null, DateTimeOffset? startedAt = null, DateTimeOffset? cancelledAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? completedAt = null, RunObjectIncompleteDetails incompleteDetails = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IReadOnlyDictionary<string, string> metadata = null, RunCompletionUsage usage = null, float? temperature = null, float? topP = null, int? maxPromptTokens = null, int? maxCompletionTokens = null, TruncationObject truncationStrategy = null, BinaryData toolChoice = null, BinaryData responseFormat = null)
+        public static RunObject RunObject(string id = null, RunObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, string assistantId = null, RunObjectStatus status = default, RunObjectRequiredAction requiredAction = null, RunObjectLastError lastError = null, DateTimeOffset? expiresAt = null, DateTimeOffset? startedAt = null, DateTimeOffset? cancelledAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? completedAt = null, RunObjectIncompleteDetails incompleteDetails = null, string model = null, string instructions = null, IEnumerable<AssistantToolDefinition> tools = null, IReadOnlyDictionary<string, string> metadata = null, RunCompletionUsage usage = null, float? temperature = null, float? topP = null, int? maxPromptTokens = null, int? maxCompletionTokens = null, TruncationObject truncationStrategy = null, BinaryData toolChoice = null, BinaryData responseFormat = null)
         {
-            tools ??= new List<BinaryData>();
+            tools ??= new List<AssistantToolDefinition>();
             metadata ??= new Dictionary<string, string>();
 
             return new RunObject(
@@ -913,7 +904,11 @@ namespace OpenAI
         /// <param name="instructions"> Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
         /// <param name="additionalInstructions"> Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions. </param>
         /// <param name="additionalMessages"> Adds additional messages to the thread before creating the run. </param>
-        /// <param name="tools"> Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="tools">
+        /// Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+        /// Please note <see cref="AssistantToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="AssistantToolsCode"/>, <see cref="AssistantToolsFileSearch"/> and <see cref="AssistantToolsFunction"/>.
+        /// </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
         /// <param name="topP">
@@ -928,10 +923,10 @@ namespace OpenAI
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <returns> A new <see cref="Models.CreateRunRequest"/> instance for mocking. </returns>
-        public static CreateRunRequest CreateRunRequest(string assistantId = null, CreateRunRequestModel? model = null, string instructions = null, string additionalInstructions = null, IEnumerable<CreateMessageRequest> additionalMessages = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, bool? stream = null, int? maxPromptTokens = null, int? maxCompletionTokens = null, TruncationObject truncationStrategy = null, BinaryData toolChoice = null, BinaryData responseFormat = null)
+        public static CreateRunRequest CreateRunRequest(string assistantId = null, CreateRunRequestModel? model = null, string instructions = null, string additionalInstructions = null, IEnumerable<CreateMessageRequest> additionalMessages = null, IEnumerable<AssistantToolDefinition> tools = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, bool? stream = null, int? maxPromptTokens = null, int? maxCompletionTokens = null, TruncationObject truncationStrategy = null, BinaryData toolChoice = null, BinaryData responseFormat = null)
         {
             additionalMessages ??= new List<CreateMessageRequest>();
-            tools ??= new List<BinaryData>();
+            tools ??= new List<AssistantToolDefinition>();
             metadata ??= new Dictionary<string, string>();
 
             return new CreateRunRequest(

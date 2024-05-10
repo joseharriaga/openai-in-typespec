@@ -4301,12 +4301,11 @@ components:
           nullable: true
           description: Adds additional messages to the thread before creating the run.
         tools:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssistantToolDefinition'
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CreateRunRequestTools'
           nullable: true
           description: Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
-          x-oaiExpandable: true
         metadata:
           type: object
           additionalProperties:
@@ -4366,6 +4365,12 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/CreateMessageRequest'
+    CreateRunRequestTools:
+      type: array
+      items:
+        $ref: '#/components/schemas/AssistantToolDefinition'
+      maxItems: 20
+      x-oaiExpandable: true
     CreateSpeechRequest:
       type: object
       required:
@@ -4457,9 +4462,9 @@ components:
           nullable: true
           description: Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
         tools:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssistantToolDefinition'
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CreateThreadAndRunRequestTools'
           nullable: true
           description: Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
         tool_resources:
@@ -4541,6 +4546,11 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
+    CreateThreadAndRunRequestTools:
+      type: array
+      items:
+        $ref: '#/components/schemas/AssistantToolDefinition'
+      maxItems: 20
     CreateThreadRequest:
       type: object
       properties:

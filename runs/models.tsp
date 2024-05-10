@@ -14,6 +14,15 @@ namespace OpenAI;
 // Tool generated type. Extracts CreateRunRequest.additional_messages
 model CreateRunRequestAdditional_messages is CreateMessageRequest[];
 
+// Tool generated type. Extracts CreateRunRequest.tools
+@maxItems(20)
+@extension("x-oaiExpandable", true)
+model CreateRunRequestTools is AssistantToolDefinition[];
+
+// Tool generated type. Extracts CreateThreadAndRunRequest.tools
+@maxItems(20)
+model CreateThreadAndRunRequestTools is AssistantToolDefinition[];
+
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
   assistant_id: string;
@@ -53,9 +62,7 @@ model CreateRunRequest {
 
   // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
-  // !no_nullable! @maxItems(20)
-  @extension("x-oaiExpandable", true)
-  tools?: AssistantToolDefinition[] | null;
+  tools?: CreateRunRequestTools | null;
 
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
@@ -139,8 +146,7 @@ model CreateThreadAndRunRequest {
 
   // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
-  // !no_nullable! @maxItems(20)
-  tools?: AssistantToolDefinition[] | null;
+  tools?: CreateThreadAndRunRequestTools | null;
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.

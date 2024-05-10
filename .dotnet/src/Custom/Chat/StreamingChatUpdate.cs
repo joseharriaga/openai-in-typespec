@@ -1,24 +1,14 @@
 namespace OpenAI.Chat;
 
 using System;
-using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 
 /// <summary>
 /// Represents an incremental item of new data in a streaming response to a chat completion request.
 /// </summary>
 public partial class StreamingChatUpdate
 {
-    //// Note: this is the convenience method approach, maybe we don't need this here 
-    //// in the protocol story.
-    //internal AsyncResultCollection<StreamingChatUpdate> Create(PipelineResponse response, CancellationToken cancellationToken = default)
-    //{
-    //    return new AsyncChatUpdateCollection(response, cancellationToken);
-    //}
-
     /// <summary>
     /// Gets a unique identifier associated with this streamed Chat Completions response.
     /// </summary>

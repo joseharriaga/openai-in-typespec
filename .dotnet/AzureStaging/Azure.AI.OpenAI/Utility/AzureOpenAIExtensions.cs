@@ -24,7 +24,7 @@ public static class AzureOpenAIExtensions
         return BinaryContent.Create(bytes);
     }
 
-    public static AsyncClientResultCollection<BinaryData> FromCompletionEvents(this PipelineResponse response)
+    public static AsyncResultCollection<BinaryData> FromCompletionEvents(this PipelineResponse response)
     {
         throw new NotImplementedException();
     }

@@ -15,7 +15,7 @@ namespace OpenAI.Samples
             ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             AsyncResultCollection<StreamingChatUpdate> result =
-                client.CompleteChatStreaming("How does AI work? Explain it in simple terms.");
+                client.CompleteChatStreamingAsync("How does AI work? Explain it in simple terms.");
 
             Console.WriteLine("[ASSISTANT]: ");
             await foreach (StreamingChatUpdate chatUpdate in result)

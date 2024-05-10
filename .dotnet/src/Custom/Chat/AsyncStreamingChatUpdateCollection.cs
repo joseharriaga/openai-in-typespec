@@ -72,7 +72,6 @@ internal class AsyncStreamingChatUpdateCollection : AsyncResultCollection<Stream
             _events ??= await CreateEventEnumeratorAsync().ConfigureAwait(false);
             _started = true;
 
-            
             if (_updates is not null && _updates.MoveNext())
             {
                 _current = _updates.Current;

@@ -19,7 +19,12 @@ namespace OpenAI
                 throw await ClientResultException.CreateAsync(message.Response).ConfigureAwait(false);
             }
 
-            return message.Response;
+			// TODO: this will need to be updated in the generator
+            PipelineResponse response = message.BufferResponse ?
+                message.Response :
+                message.ExtractResponse();
+
+            return response;
         }
 
         public static PipelineResponse ProcessMessage(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)
@@ -31,7 +36,11 @@ namespace OpenAI
                 throw new ClientResultException(message.Response);
             }
 
-            return message.Response;
+            PipelineResponse response = message.BufferResponse ?
+                message.Response :
+                message.ExtractResponse();
+
+            return response;
         }
 
         public static async ValueTask<ClientResult<bool>> ProcessHeadAsBoolMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)

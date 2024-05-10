@@ -2,6 +2,7 @@
 using OpenAI.Chat;
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -56,7 +57,7 @@ public partial class ChatClientTests
 
         ResultCollection<StreamingChatUpdate> streamingResult
             = client.CompleteChatStreaming("What are the best pizza toppings? Give me a breakdown on the reasons.");
-        Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatUpdate>>());
+        Assert.That(streamingResult, Is.InstanceOf<ResultCollection<StreamingChatUpdate>>());
         int updateCount = 0;
 
         foreach (StreamingChatUpdate chatUpdate in streamingResult)
@@ -68,6 +69,11 @@ public partial class ChatClientTests
         }
         Assert.That(updateCount, Is.GreaterThan(1));
         Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
+
+        // Validate that network stream was disposed - this will show up as the
+        // the raw response holding an empty content stream.
+        PipelineResponse response = streamingResult.GetRawResponse();
+        Assert.That(response.ContentStream.Length, Is.EqualTo(0));
     }
 
     [Test]
@@ -93,6 +99,11 @@ public partial class ChatClientTests
         }
         Assert.That(updateCount, Is.GreaterThan(1));
         Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
+
+        // Validate that network stream was disposed - this will show up as the
+        // the raw response holding an empty content stream.
+        PipelineResponse response = streamingResult.GetRawResponse();
+        Assert.That(response.ContentStream.Length, Is.EqualTo(0));
     }
 
     [Test]

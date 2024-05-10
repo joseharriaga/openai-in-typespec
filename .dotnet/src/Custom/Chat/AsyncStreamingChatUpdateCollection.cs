@@ -130,18 +130,10 @@ internal class AsyncStreamingChatUpdateCollection : AsyncResultCollection<Stream
                 await _events.DisposeAsync().ConfigureAwait(false);
                 _events = null;
 
-                // Dispose the response content stream so we don't leave the
-                // unbuffered network stream open.
+                // Dispose the response so we don't leave the unbuffered
+                // network stream open.
                 PipelineResponse response = _enumerable.GetRawResponse();
-
-                if (response.ContentStream is IAsyncDisposable asyncDisposable)
-                {
-                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                }
-                else if (response.ContentStream is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
+                response.Dispose();
             }
         }
     }

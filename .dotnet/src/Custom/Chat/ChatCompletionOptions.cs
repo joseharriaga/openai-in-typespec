@@ -1,5 +1,5 @@
 using System;
-using System.ClientModel.Primitives;
+
 using System.Collections.Generic;
 using System.Text.Json;
 
@@ -8,7 +8,7 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Request-level options for chat completion.
 /// </summary>
-public partial class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>
+public partial class ChatCompletionOptions
 {
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.FrequencyPenalty" />
     public float? FrequencyPenalty { get; init; }
@@ -109,32 +109,5 @@ public partial class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>
             internalParameters.AdditionalProperties[property.Name] = propertyData;
         }
         return internalParameters;
-    }
-
-    void IJsonModel<ChatCompletionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    ChatCompletionOptions IJsonModel<ChatCompletionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-    {
-        // TODO: Use partial writing 'W*'
-
-        throw new NotImplementedException();
-    }
-
-    BinaryData IPersistableModel<ChatCompletionOptions>.Write(ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    ChatCompletionOptions IPersistableModel<ChatCompletionOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    string IPersistableModel<ChatCompletionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
     }
 }

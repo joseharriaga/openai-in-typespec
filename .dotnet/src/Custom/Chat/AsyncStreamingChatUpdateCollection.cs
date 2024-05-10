@@ -114,7 +114,7 @@ internal class AsyncStreamingChatUpdateCollection : AsyncResultCollection<Stream
 
             if (response.ContentStream is null)
             {
-                throw new InvalidOperationException("Unable to create result from response with null ContentStream", nameof(response));
+                throw new InvalidOperationException("Unable to create result from response with null ContentStream");
             }
 
             AsyncServerSentEventEnumerable enumerable = new(response.ContentStream);

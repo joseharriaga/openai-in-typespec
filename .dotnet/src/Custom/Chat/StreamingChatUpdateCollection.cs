@@ -111,7 +111,7 @@ internal class StreamingChatUpdateCollection : ResultCollection<StreamingChatUpd
 
             if (response.ContentStream is null)
             {
-                throw new InvalidOperationException("Unable to create result from response with null ContentStream", nameof(response));
+                throw new InvalidOperationException("Unable to create result from response with null ContentStream");
             }
 
             ServerSentEventEnumerable enumerable = new(response.ContentStream);

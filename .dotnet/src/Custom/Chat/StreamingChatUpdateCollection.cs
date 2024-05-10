@@ -10,6 +10,9 @@ using System.Text.Json;
 
 namespace OpenAI.Chat;
 
+/// <summary>
+/// Implementation of collection abstraction over streaming chat updates.
+/// </summary>
 internal class StreamingChatUpdateCollection : ResultCollection<StreamingChatUpdate>
 {
     private readonly Func<ClientResult> _getResult;
@@ -46,7 +49,8 @@ internal class StreamingChatUpdateCollection : ResultCollection<StreamingChatUpd
         private StreamingChatUpdate? _current;
         private bool _started;
 
-        public StreamingChatUpdateEnumerator(Func<ClientResult> getResult, StreamingChatUpdateCollection enumerable)
+        public StreamingChatUpdateEnumerator(Func<ClientResult> getResult, 
+            StreamingChatUpdateCollection enumerable)
         {
             Debug.Assert(getResult is not null);
             Debug.Assert(enumerable is not null);
@@ -107,7 +111,7 @@ internal class StreamingChatUpdateCollection : ResultCollection<StreamingChatUpd
 
             if (response.ContentStream is null)
             {
-                throw new ArgumentException("Unable to create result from response with null ContentStream", nameof(response));
+                throw new InvalidOperationException("Unable to create result from response with null ContentStream", nameof(response));
             }
 
             ServerSentEventEnumerable enumerable = new(response.ContentStream);

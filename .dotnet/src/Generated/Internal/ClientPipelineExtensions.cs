@@ -19,7 +19,7 @@ namespace OpenAI
                 throw await ClientResultException.CreateAsync(message.Response).ConfigureAwait(false);
             }
 
-			// TODO: this will need to be updated in the generator
+            // TODO: this will need to be updated in the generator
             PipelineResponse response = message.BufferResponse ?
                 message.Response :
                 message.ExtractResponse();

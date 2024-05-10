@@ -1,6 +1,9 @@
 namespace OpenAI;
 
-// SSE specification: https://html.spec.whatwg.org/multipage/server-sent-events.html
+/// <summary>
+/// The kind of line or field received over an SSE stream.
+/// See SSE specification: https://html.spec.whatwg.org/multipage/server-sent-events.html
+/// </summary>
 internal enum ServerSentEventFieldKind
 {
     Ignore,

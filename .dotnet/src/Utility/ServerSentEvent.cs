@@ -4,7 +4,10 @@ using System;
 
 namespace OpenAI;
 
-// SSE specification: https://html.spec.whatwg.org/multipage/server-sent-events.html
+/// <summary>
+/// Represents an SSE event.
+/// See SSE specification: https://html.spec.whatwg.org/multipage/server-sent-events.html
+/// </summary>
 internal readonly struct ServerSentEvent
 {
     // Gets the value of the SSE "event type" buffer, used to distinguish between event kinds.

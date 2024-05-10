@@ -89,16 +89,22 @@ public partial class ChatClientTests
             = client.CompleteChatStreamingAsync("What are the best pizza toppings? Give me a breakdown on the reasons.");
         Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatUpdate>>());
         int updateCount = 0;
+        ChatTokenUsage usage = null;
 
         await foreach (StreamingChatUpdate chatUpdate in streamingResult)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
+            usage ??= chatUpdate.TokenUsage;
             Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
             updateCount++;
         }
         Assert.That(updateCount, Is.GreaterThan(1));
         Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
+        Assert.That(usage, Is.Not.Null);
+        Assert.That(usage?.InputTokens, Is.GreaterThan(0));
+        Assert.That(usage?.OutputTokens, Is.GreaterThan(0));
+        Assert.That(usage.InputTokens + usage.OutputTokens, Is.EqualTo(usage.TotalTokens));
 
         // Validate that network stream was disposed - this will show up as the
         // the raw response holding an empty content stream.

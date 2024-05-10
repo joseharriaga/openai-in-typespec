@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Chat;
 
+/// <summary>
+/// Implementation of collection abstraction over streaming chat updates.
+/// </summary>
 internal class AsyncStreamingChatUpdateCollection : AsyncResultCollection<StreamingChatUpdate>
 {
     private readonly Func<Task<ClientResult>> _getResultAsync;
@@ -48,7 +51,9 @@ internal class AsyncStreamingChatUpdateCollection : AsyncResultCollection<Stream
         private StreamingChatUpdate? _current;
         private bool _started;
 
-        public AsyncStreamingChatUpdateEnumerator(Func<Task<ClientResult>> getResultAsync, AsyncStreamingChatUpdateCollection enumerable, CancellationToken cancellationToken)
+        public AsyncStreamingChatUpdateEnumerator(Func<Task<ClientResult>> getResultAsync,
+            AsyncStreamingChatUpdateCollection enumerable, 
+            CancellationToken cancellationToken)
         {
             Debug.Assert(getResultAsync is not null);
             Debug.Assert(enumerable is not null);
@@ -109,7 +114,7 @@ internal class AsyncStreamingChatUpdateCollection : AsyncResultCollection<Stream
 
             if (response.ContentStream is null)
             {
-                throw new ArgumentException("Unable to create result from response with null ContentStream", nameof(response));
+                throw new InvalidOperationException("Unable to create result from response with null ContentStream", nameof(response));
             }
 
             AsyncServerSentEventEnumerable enumerable = new(response.ContentStream);

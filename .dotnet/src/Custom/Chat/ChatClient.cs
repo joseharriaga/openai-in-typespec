@@ -188,8 +188,8 @@ public partial class ChatClient
     /// Begins a streaming response for a chat completion request using a single, simple user message as input.
     /// </summary>
     /// <remarks>
-    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
-    /// <see cref="IAsyncEnumerable{T}"/> interface. 
+    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
+    /// <see cref="IEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
     /// <param name="choiceCount">
@@ -233,8 +233,8 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
-    /// <see cref="IAsyncEnumerable{T}"/> interface. 
+    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
+    /// <see cref="IEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="choiceCount">
@@ -308,6 +308,7 @@ public partial class ChatClient
     internal static PipelineMessageClassifier PipelineMessageClassifier200
         => s_pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
+    // TODO:
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(
         IEnumerable<ChatRequestMessage> messages,
         ChatCompletionOptions options = null,

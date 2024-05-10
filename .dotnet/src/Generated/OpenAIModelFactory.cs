@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Embeddings;
 using OpenAI.Images;
@@ -56,7 +57,7 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateAssistantRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Assistants.AssistantCreationOptions"/>. </summary>
         /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
@@ -71,13 +72,13 @@ namespace OpenAI
         /// We generally recommend altering this or temperature but not both.
         /// </param>
         /// <param name="responseFormat"></param>
-        /// <returns> A new <see cref="Models.CreateAssistantRequest"/> instance for mocking. </returns>
-        public static CreateAssistantRequest CreateAssistantRequest(CreateAssistantRequestModel model = default, string name = null, string description = null, string instructions = null, IEnumerable<BinaryData> tools = null, CreateAssistantRequestToolResources toolResources = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, BinaryData responseFormat = null)
+        /// <returns> A new <see cref="Assistants.AssistantCreationOptions"/> instance for mocking. </returns>
+        public static AssistantCreationOptions AssistantCreationOptions(CreateAssistantRequestModel model = default, string name = null, string description = null, string instructions = null, IEnumerable<BinaryData> tools = null, CreateAssistantRequestToolResources toolResources = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, BinaryData responseFormat = null)
         {
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
 
-            return new CreateAssistantRequest(
+            return new AssistantCreationOptions(
                 model,
                 name,
                 description,
@@ -116,7 +117,7 @@ namespace OpenAI
             return new AssistantToolsFunction(type, function, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantObject"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Assistants.Assistant"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `assistant`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the assistant was created. </param>
@@ -134,13 +135,13 @@ namespace OpenAI
         /// We generally recommend altering this or temperature but not both.
         /// </param>
         /// <param name="responseFormat"></param>
-        /// <returns> A new <see cref="Models.AssistantObject"/> instance for mocking. </returns>
-        public static AssistantObject AssistantObject(string id = null, AssistantObjectObject @object = default, DateTimeOffset createdAt = default, string name = null, string description = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, AssistantObjectToolResources toolResources = null, IReadOnlyDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, BinaryData responseFormat = null)
+        /// <returns> A new <see cref="Assistants.Assistant"/> instance for mocking. </returns>
+        public static Assistant Assistant(string id = null, AssistantObjectObject @object = default, DateTimeOffset createdAt = default, string name = null, string description = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, AssistantObjectToolResources toolResources = null, IReadOnlyDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, BinaryData responseFormat = null)
         {
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
 
-            return new AssistantObject(
+            return new Assistant(
                 id,
                 @object,
                 createdAt,
@@ -184,36 +185,6 @@ namespace OpenAI
             vectorStoreIds ??= new List<string>();
 
             return new AssistantObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListAssistantsResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListAssistantsResponse"/> instance for mocking. </returns>
-        public static ListAssistantsResponse ListAssistantsResponse(ListAssistantsResponseObject @object = default, IEnumerable<AssistantObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<AssistantObject>();
-
-            return new ListAssistantsResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteAssistantResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.DeleteAssistantResponse"/> instance for mocking. </returns>
-        public static DeleteAssistantResponse DeleteAssistantResponse(string id = null, bool deleted = default, DeleteAssistantResponseObject @object = default)
-        {
-            return new DeleteAssistantResponse(id, deleted, @object, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestSystemMessage"/>. </summary>
@@ -445,7 +416,7 @@ namespace OpenAI
             return new GeneratedImage(imageBytes, imageUri, revisedPrompt, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateMessageRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Assistants.MessageCreationOptions"/>. </summary>
         /// <param name="role">
         /// The role of the entity that is creating the message. Allowed values include:
         /// - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
@@ -454,13 +425,13 @@ namespace OpenAI
         /// <param name="content"></param>
         /// <param name="attachments"> A list of files attached to the message, and the tools they should be added to. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
-        /// <returns> A new <see cref="Models.CreateMessageRequest"/> instance for mocking. </returns>
-        public static CreateMessageRequest CreateMessageRequest(CreateMessageRequestRole role = default, BinaryData content = null, IEnumerable<CreateMessageRequestAttachment> attachments = null, IDictionary<string, string> metadata = null)
+        /// <returns> A new <see cref="Assistants.MessageCreationOptions"/> instance for mocking. </returns>
+        public static MessageCreationOptions MessageCreationOptions(MessageCreationOptionsRole role = default, BinaryData content = null, IEnumerable<CreateMessageRequestAttachment> attachments = null, IDictionary<string, string> metadata = null)
         {
             attachments ??= new List<CreateMessageRequestAttachment>();
             metadata ??= new Dictionary<string, string>();
 
-            return new CreateMessageRequest(role, content, attachments?.ToList(), metadata, serializedAdditionalRawData: null);
+            return new MessageCreationOptions(role, content, attachments?.ToList(), metadata, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.MessageContentImageFileObject"/>. </summary>
@@ -490,7 +461,7 @@ namespace OpenAI
             return new MessageRequestContentTextObject(type, text, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.MessageObject"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Assistants.ThreadMessage"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `thread.message`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
@@ -505,14 +476,14 @@ namespace OpenAI
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints. </param>
         /// <param name="attachments"> A list of files attached to the message, and the tools they were added to. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
-        /// <returns> A new <see cref="Models.MessageObject"/> instance for mocking. </returns>
-        public static MessageObject MessageObject(string id = null, MessageObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, MessageObjectStatus status = default, MessageObjectIncompleteDetails incompleteDetails = null, DateTimeOffset? completedAt = null, DateTimeOffset? incompleteAt = null, MessageObjectRole role = default, IEnumerable<BinaryData> content = null, string assistantId = null, string runId = null, IEnumerable<MessageObjectAttachment> attachments = null, IReadOnlyDictionary<string, string> metadata = null)
+        /// <returns> A new <see cref="Assistants.ThreadMessage"/> instance for mocking. </returns>
+        public static ThreadMessage ThreadMessage(string id = null, MessageObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, ThreadMessageStatus status = default, MessageObjectIncompleteDetails incompleteDetails = null, DateTimeOffset? completedAt = null, DateTimeOffset? incompleteAt = null, ThreadMessageRole role = default, IEnumerable<BinaryData> content = null, string assistantId = null, string runId = null, IEnumerable<MessageObjectAttachment> attachments = null, IReadOnlyDictionary<string, string> metadata = null)
         {
             content ??= new List<BinaryData>();
             attachments ??= new List<MessageObjectAttachment>();
             metadata ??= new Dictionary<string, string>();
 
-            return new MessageObject(
+            return new ThreadMessage(
                 id,
                 @object,
                 createdAt,
@@ -620,36 +591,6 @@ namespace OpenAI
             tools ??= new List<BinaryData>();
 
             return new MessageObjectAttachment(fileId, tools?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListMessagesResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListMessagesResponse"/> instance for mocking. </returns>
-        public static ListMessagesResponse ListMessagesResponse(ListMessagesResponseObject @object = default, IEnumerable<MessageObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<MessageObject>();
-
-            return new ListMessagesResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteMessageResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.DeleteMessageResponse"/> instance for mocking. </returns>
-        public static DeleteMessageResponse DeleteMessageResponse(string id = null, bool deleted = default, DeleteMessageResponseObject @object = default)
-        {
-            return new DeleteMessageResponse(id, deleted, @object, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCollection"/>. </summary>
@@ -928,9 +869,9 @@ namespace OpenAI
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <returns> A new <see cref="Models.CreateRunRequest"/> instance for mocking. </returns>
-        public static CreateRunRequest CreateRunRequest(string assistantId = null, CreateRunRequestModel? model = null, string instructions = null, string additionalInstructions = null, IEnumerable<CreateMessageRequest> additionalMessages = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, bool? stream = null, int? maxPromptTokens = null, int? maxCompletionTokens = null, TruncationObject truncationStrategy = null, BinaryData toolChoice = null, BinaryData responseFormat = null)
+        public static CreateRunRequest CreateRunRequest(string assistantId = null, CreateRunRequestModel? model = null, string instructions = null, string additionalInstructions = null, IEnumerable<MessageCreationOptions> additionalMessages = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null, float? temperature = null, float? topP = null, bool? stream = null, int? maxPromptTokens = null, int? maxCompletionTokens = null, TruncationObject truncationStrategy = null, BinaryData toolChoice = null, BinaryData responseFormat = null)
         {
-            additionalMessages ??= new List<CreateMessageRequest>();
+            additionalMessages ??= new List<MessageCreationOptions>();
             tools ??= new List<BinaryData>();
             metadata ??= new Dictionary<string, string>();
 

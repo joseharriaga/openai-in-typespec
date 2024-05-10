@@ -5,11 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The ListMessagesResponse. </summary>
-    internal partial class ListMessagesResponse
+    internal partial class InternalListMessagesResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,13 +44,13 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ListMessagesResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalListMessagesResponse"/>. </summary>
         /// <param name="data"></param>
         /// <param name="firstId"></param>
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="data"/>, <paramref name="firstId"/> or <paramref name="lastId"/> is null. </exception>
-        internal ListMessagesResponse(IEnumerable<MessageObject> data, string firstId, string lastId, bool hasMore)
+        internal InternalListMessagesResponse(IEnumerable<ThreadMessage> data, string firstId, string lastId, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
             Argument.AssertNotNull(firstId, nameof(firstId));
@@ -61,14 +62,14 @@ namespace OpenAI.Internal.Models
             HasMore = hasMore;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ListMessagesResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalListMessagesResponse"/>. </summary>
         /// <param name="object"></param>
         /// <param name="data"></param>
         /// <param name="firstId"></param>
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ListMessagesResponse(ListMessagesResponseObject @object, IReadOnlyList<MessageObject> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListMessagesResponse(ListMessagesResponseObject @object, IReadOnlyList<ThreadMessage> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -78,8 +79,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ListMessagesResponse"/> for deserialization. </summary>
-        internal ListMessagesResponse()
+        /// <summary> Initializes a new instance of <see cref="InternalListMessagesResponse"/> for deserialization. </summary>
+        internal InternalListMessagesResponse()
         {
         }
 
@@ -87,7 +88,7 @@ namespace OpenAI.Internal.Models
         public ListMessagesResponseObject Object { get; } = ListMessagesResponseObject.List;
 
         /// <summary> Gets the data. </summary>
-        public IReadOnlyList<MessageObject> Data { get; }
+        public IReadOnlyList<ThreadMessage> Data { get; }
         /// <summary> Gets the first id. </summary>
         public string FirstId { get; }
         /// <summary> Gets the last id. </summary>

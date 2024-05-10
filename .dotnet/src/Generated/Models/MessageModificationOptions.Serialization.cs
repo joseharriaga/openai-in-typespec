@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class ModifyMessageRequest : IJsonModel<ModifyMessageRequest>
+    public partial class MessageModificationOptions : IJsonModel<MessageModificationOptions>
     {
-        void IJsonModel<ModifyMessageRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<MessageModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModifyMessageRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageModificationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ModifyMessageRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageModificationOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -57,19 +57,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        ModifyMessageRequest IJsonModel<ModifyMessageRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        MessageModificationOptions IJsonModel<MessageModificationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModifyMessageRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageModificationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ModifyMessageRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageModificationOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeModifyMessageRequest(document.RootElement, options);
+            return DeserializeMessageModificationOptions(document.RootElement, options);
         }
 
-        internal static ModifyMessageRequest DeserializeModifyMessageRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static MessageModificationOptions DeserializeMessageModificationOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -102,46 +102,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ModifyMessageRequest(metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new MessageModificationOptions(metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ModifyMessageRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<MessageModificationOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModifyMessageRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageModificationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ModifyMessageRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageModificationOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ModifyMessageRequest IPersistableModel<ModifyMessageRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        MessageModificationOptions IPersistableModel<MessageModificationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModifyMessageRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageModificationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeModifyMessageRequest(document.RootElement, options);
+                        return DeserializeMessageModificationOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ModifyMessageRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageModificationOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ModifyMessageRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<MessageModificationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static ModifyMessageRequest FromResponse(PipelineResponse response)
+        internal static MessageModificationOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeModifyMessageRequest(document.RootElement);
+            return DeserializeMessageModificationOptions(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

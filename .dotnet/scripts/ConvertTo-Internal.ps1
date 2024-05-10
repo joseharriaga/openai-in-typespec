@@ -32,12 +32,16 @@ function Edit-GeneratedSubclients {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Exclude "OpenAIClient.cs", "OpenAIClientOptions.cs", "OpenAIModelFactory.cs"
 
     $exclusions = @(
+        "AssistantClient.cs",
         "AudioClient.cs",
         "BatchClient.cs",
         "EmbeddingClient.cs",
         "FileClient.cs",
         "FineTuningClient.cs",
         "ImageClient.cs",
+        "InternalAssistantMessageClient.cs",
+        "InternalAssistantRunClient.cs",
+        "InternalAssistantThreadClient.cs",
         "LegacyCompletionClient.cs",
         "ModelClient.cs",
         "ModerationClient.cs",
@@ -71,6 +75,27 @@ function Edit-GeneratedModels {
     
     $exclusions = @(
         "ListOrder.cs",
+
+        "Assistant.cs",
+        "Assistant.Serialization.cs",
+        "AssistantCreationOptions.cs",
+        "AssistantCreationOptions.Serialization.cs",
+        "AssistantModificationOptions.cs",
+        "AssistantModificationOptions.Serialization.cs",
+        "InternalDeleteAssistantResponse.cs",
+        "InternalDeleteAssistantResponse.Serialization.cs",
+        "InternalDeleteMessageResponse.cs",
+        "InternalDeleteMessageResponse.Serialization.cs",
+        "InternalListAssistantsResponse.cs",
+        "InternalListAssistantsResponse.Serialization.cs",
+        "InternalListMessagesResponse.cs",
+        "InternalListMessagesResponse.Serialization.cs",
+        "MessageCreationOptions.cs",
+        "MessageCreationOptions.Serialization.cs",
+        "MessageModificationOptions.cs",
+        "MessageModificationOptions.Serialization.cs",
+        "ThreadMessage.cs",
+        "ThreadMessage.Serialization.cs",
 
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",

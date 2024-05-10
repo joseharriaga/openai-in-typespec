@@ -7,17 +7,18 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class MessageObject : IJsonModel<MessageObject>
+    public partial class ThreadMessage : IJsonModel<ThreadMessage>
     {
-        void IJsonModel<MessageObject>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ThreadMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ThreadMessage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageObject)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ThreadMessage)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -144,19 +145,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        MessageObject IJsonModel<MessageObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ThreadMessage IJsonModel<ThreadMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ThreadMessage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageObject)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ThreadMessage)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeMessageObject(document.RootElement, options);
+            return DeserializeThreadMessage(document.RootElement, options);
         }
 
-        internal static MessageObject DeserializeMessageObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ThreadMessage DeserializeThreadMessage(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -168,11 +169,11 @@ namespace OpenAI.Internal.Models
             MessageObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string threadId = default;
-            MessageObjectStatus status = default;
+            ThreadMessageStatus status = default;
             MessageObjectIncompleteDetails incompleteDetails = default;
             DateTimeOffset? completedAt = default;
             DateTimeOffset? incompleteAt = default;
-            MessageObjectRole role = default;
+            ThreadMessageRole role = default;
             IReadOnlyList<BinaryData> content = default;
             string assistantId = default;
             string runId = default;
@@ -204,7 +205,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    status = new MessageObjectStatus(property.Value.GetString());
+                    status = new ThreadMessageStatus(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("incomplete_details"u8))
@@ -239,7 +240,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("role"u8))
                 {
-                    role = new MessageObjectRole(property.Value.GetString());
+                    role = new ThreadMessageRole(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("content"u8))
@@ -315,7 +316,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageObject(
+            return new ThreadMessage(
                 id,
                 @object,
                 createdAt,
@@ -333,43 +334,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<MessageObject>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ThreadMessage>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ThreadMessage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(MessageObject)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ThreadMessage)} does not support writing '{options.Format}' format.");
             }
         }
 
-        MessageObject IPersistableModel<MessageObject>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ThreadMessage IPersistableModel<ThreadMessage>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ThreadMessage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeMessageObject(document.RootElement, options);
+                        return DeserializeThreadMessage(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(MessageObject)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ThreadMessage)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<MessageObject>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ThreadMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static MessageObject FromResponse(PipelineResponse response)
+        internal static ThreadMessage FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeMessageObject(document.RootElement);
+            return DeserializeThreadMessage(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

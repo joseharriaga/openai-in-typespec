@@ -6,6 +6,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
+using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Batch;
 using OpenAI.Embeddings;
@@ -36,34 +37,34 @@ namespace OpenAI
         protected OpenAIClient()
         {
         }
-        private OpenAI.Internal.Assistants _cachedAssistants;
+        private OpenAI.Internal.AssistantClient _cachedAssistantClient;
         private OpenAI.Internal.Chat _cachedChat;
-        private OpenAI.Internal.Messages _cachedMessages;
-        private OpenAI.Internal.Runs _cachedRuns;
-        private OpenAI.Internal.Threads _cachedThreads;
+        private OpenAI.Internal.InternalAssistantMessageClient _cachedInternalAssistantMessageClient;
+        private OpenAI.Internal.InternalAssistantRunClient _cachedInternalAssistantRunClient;
+        private OpenAI.Internal.InternalAssistantThreadClient _cachedInternalAssistantThreadClient;
 
-        /// <summary> Initializes a new instance of Assistants. </summary>
-        internal OpenAI.Internal.Assistants GetAssistantsClient()
+        /// <summary> Initializes a new instance of AssistantClient. </summary>
+        internal OpenAI.Internal.AssistantClient GetAssistantClientClient()
         {
-            return Volatile.Read(ref _cachedAssistants) ?? Interlocked.CompareExchange(ref _cachedAssistants, new OpenAI.Internal.Assistants(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAssistants;
+            return Volatile.Read(ref _cachedAssistantClient) ?? Interlocked.CompareExchange(ref _cachedAssistantClient, new OpenAI.Internal.AssistantClient(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAssistantClient;
         }
 
-        /// <summary> Initializes a new instance of Messages. </summary>
-        internal OpenAI.Internal.Messages GetMessagesClient()
+        /// <summary> Initializes a new instance of InternalAssistantMessageClient. </summary>
+        internal OpenAI.Internal.InternalAssistantMessageClient GetInternalAssistantMessageClientClient()
         {
-            return Volatile.Read(ref _cachedMessages) ?? Interlocked.CompareExchange(ref _cachedMessages, new OpenAI.Internal.Messages(_pipeline, _keyCredential, _endpoint), null) ?? _cachedMessages;
+            return Volatile.Read(ref _cachedInternalAssistantMessageClient) ?? Interlocked.CompareExchange(ref _cachedInternalAssistantMessageClient, new OpenAI.Internal.InternalAssistantMessageClient(_pipeline, _keyCredential, _endpoint), null) ?? _cachedInternalAssistantMessageClient;
         }
 
-        /// <summary> Initializes a new instance of Runs. </summary>
-        internal OpenAI.Internal.Runs GetRunsClient()
+        /// <summary> Initializes a new instance of InternalAssistantRunClient. </summary>
+        internal OpenAI.Internal.InternalAssistantRunClient GetInternalAssistantRunClientClient()
         {
-            return Volatile.Read(ref _cachedRuns) ?? Interlocked.CompareExchange(ref _cachedRuns, new OpenAI.Internal.Runs(_pipeline, _keyCredential, _endpoint), null) ?? _cachedRuns;
+            return Volatile.Read(ref _cachedInternalAssistantRunClient) ?? Interlocked.CompareExchange(ref _cachedInternalAssistantRunClient, new OpenAI.Internal.InternalAssistantRunClient(_pipeline, _keyCredential, _endpoint), null) ?? _cachedInternalAssistantRunClient;
         }
 
-        /// <summary> Initializes a new instance of Threads. </summary>
-        internal OpenAI.Internal.Threads GetThreadsClient()
+        /// <summary> Initializes a new instance of InternalAssistantThreadClient. </summary>
+        internal OpenAI.Internal.InternalAssistantThreadClient GetInternalAssistantThreadClientClient()
         {
-            return Volatile.Read(ref _cachedThreads) ?? Interlocked.CompareExchange(ref _cachedThreads, new OpenAI.Internal.Threads(_pipeline, _keyCredential, _endpoint), null) ?? _cachedThreads;
+            return Volatile.Read(ref _cachedInternalAssistantThreadClient) ?? Interlocked.CompareExchange(ref _cachedInternalAssistantThreadClient, new OpenAI.Internal.InternalAssistantThreadClient(_pipeline, _keyCredential, _endpoint), null) ?? _cachedInternalAssistantThreadClient;
         }
     }
 }

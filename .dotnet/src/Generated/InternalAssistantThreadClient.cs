@@ -6,13 +6,13 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
-using OpenAI.Internal.Models;
+using OpenAI.Models;
 
-namespace OpenAI.Internal
+namespace OpenAI.Assistants
 {
     // Data plane generated sub-client.
-    /// <summary> The Threads sub-client. </summary>
-    internal partial class Threads
+    /// <summary> The InternalAssistantThread sub-client. </summary>
+    internal partial class InternalAssistantThreadClient
     {
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
@@ -23,20 +23,9 @@ namespace OpenAI.Internal
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of Threads for mocking. </summary>
-        protected Threads()
+        /// <summary> Initializes a new instance of InternalAssistantThreadClient for mocking. </summary>
+        protected InternalAssistantThreadClient()
         {
-        }
-
-        /// <summary> Initializes a new instance of Threads. </summary>
-        /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
-        /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Threads(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
-        {
-            _pipeline = pipeline;
-            _keyCredential = keyCredential;
-            _endpoint = endpoint;
         }
 
         /// <summary> Create a thread. </summary>

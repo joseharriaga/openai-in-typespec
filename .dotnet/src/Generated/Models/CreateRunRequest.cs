@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -50,7 +51,7 @@ namespace OpenAI.Internal.Models
             Argument.AssertNotNull(assistantId, nameof(assistantId));
 
             AssistantId = assistantId;
-            AdditionalMessages = new ChangeTrackingList<CreateMessageRequest>();
+            AdditionalMessages = new ChangeTrackingList<MessageCreationOptions>();
             Tools = new ChangeTrackingList<BinaryData>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
@@ -76,7 +77,7 @@ namespace OpenAI.Internal.Models
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateRunRequest(string assistantId, CreateRunRequestModel? model, string instructions, string additionalInstructions, IList<CreateMessageRequest> additionalMessages, IList<BinaryData> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateRunRequest(string assistantId, CreateRunRequestModel? model, string instructions, string additionalInstructions, IList<MessageCreationOptions> additionalMessages, IList<BinaryData> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Model = model;
@@ -110,7 +111,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions. </summary>
         public string AdditionalInstructions { get; set; }
         /// <summary> Adds additional messages to the thread before creating the run. </summary>
-        public IList<CreateMessageRequest> AdditionalMessages { get; set; }
+        public IList<MessageCreationOptions> AdditionalMessages { get; set; }
         /// <summary>
         /// Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
         /// <para>

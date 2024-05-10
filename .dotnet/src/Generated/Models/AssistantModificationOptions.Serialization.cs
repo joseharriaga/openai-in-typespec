@@ -7,74 +7,84 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class AssistantObject : IJsonModel<AssistantObject>
+    public partial class AssistantModificationOptions : IJsonModel<AssistantModificationOptions>
     {
-        void IJsonModel<AssistantObject>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AssistantModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AssistantObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantModificationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AssistantObject)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AssistantModificationOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            if (Name != null)
+            if (Optional.IsDefined(Model))
             {
-                writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
             }
-            else
+            if (Optional.IsDefined(Name))
             {
-                writer.WriteNull("name");
-            }
-            if (Description != null)
-            {
-                writer.WritePropertyName("description"u8);
-                writer.WriteStringValue(Description);
-            }
-            else
-            {
-                writer.WriteNull("description");
-            }
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model);
-            if (Instructions != null)
-            {
-                writer.WritePropertyName("instructions"u8);
-                writer.WriteStringValue(Instructions);
-            }
-            else
-            {
-                writer.WriteNull("instructions");
-            }
-            writer.WritePropertyName("tools"u8);
-            writer.WriteStartArray();
-            foreach (var item in Tools)
-            {
-                if (item == null)
+                if (Name != null)
                 {
-                    writer.WriteNullValue();
-                    continue;
+                    writer.WritePropertyName("name"u8);
+                    writer.WriteStringValue(Name);
                 }
+                else
+                {
+                    writer.WriteNull("name");
+                }
+            }
+            if (Optional.IsDefined(Description))
+            {
+                if (Description != null)
+                {
+                    writer.WritePropertyName("description"u8);
+                    writer.WriteStringValue(Description);
+                }
+                else
+                {
+                    writer.WriteNull("description");
+                }
+            }
+            if (Optional.IsDefined(Instructions))
+            {
+                if (Instructions != null)
+                {
+                    writer.WritePropertyName("instructions"u8);
+                    writer.WriteStringValue(Instructions);
+                }
+                else
+                {
+                    writer.WriteNull("instructions");
+                }
+            }
+            if (Optional.IsCollectionDefined(Tools))
+            {
+                writer.WritePropertyName("tools"u8);
+                writer.WriteStartArray();
+                foreach (var item in Tools)
+                {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item);
 #else
-                using (JsonDocument document = JsonDocument.Parse(item))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
+                    using (JsonDocument document = JsonDocument.Parse(item))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
 #endif
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             if (Optional.IsDefined(ToolResources))
             {
                 if (ToolResources != null)
@@ -87,20 +97,23 @@ namespace OpenAI.Internal.Models
                     writer.WriteNull("tool_resources");
                 }
             }
-            if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata))
             {
-                writer.WritePropertyName("metadata"u8);
-                writer.WriteStartObject();
-                foreach (var item in Metadata)
+                if (Metadata != null)
                 {
-                    writer.WritePropertyName(item.Key);
-                    writer.WriteStringValue(item.Value);
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
                 }
-                writer.WriteEndObject();
-            }
-            else
-            {
-                writer.WriteNull("metadata");
+                else
+                {
+                    writer.WriteNull("metadata");
+                }
             }
             if (Optional.IsDefined(Temperature))
             {
@@ -163,19 +176,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        AssistantObject IJsonModel<AssistantObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AssistantModificationOptions IJsonModel<AssistantModificationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AssistantObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantModificationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AssistantObject)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AssistantModificationOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAssistantObject(document.RootElement, options);
+            return DeserializeAssistantModificationOptions(document.RootElement, options);
         }
 
-        internal static AssistantObject DeserializeAssistantObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AssistantModificationOptions DeserializeAssistantModificationOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -183,16 +196,13 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            string id = default;
-            AssistantObjectObject @object = default;
-            DateTimeOffset createdAt = default;
+            string model = default;
             string name = default;
             string description = default;
-            string model = default;
             string instructions = default;
-            IReadOnlyList<BinaryData> tools = default;
-            AssistantObjectToolResources toolResources = default;
-            IReadOnlyDictionary<string, string> metadata = default;
+            IList<BinaryData> tools = default;
+            ModifyAssistantRequestToolResources toolResources = default;
+            IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
             BinaryData responseFormat = default;
@@ -200,19 +210,9 @@ namespace OpenAI.Internal.Models
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
+                if (property.NameEquals("model"u8))
                 {
-                    id = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("object"u8))
-                {
-                    @object = new AssistantObjectObject(property.Value.GetString());
-                    continue;
-                }
-                if (property.NameEquals("created_at"u8))
-                {
-                    createdAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    model = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
@@ -235,11 +235,6 @@ namespace OpenAI.Internal.Models
                     description = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("model"u8))
-                {
-                    model = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("instructions"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -252,6 +247,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("tools"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     List<BinaryData> array = new List<BinaryData>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -274,14 +273,13 @@ namespace OpenAI.Internal.Models
                         toolResources = null;
                         continue;
                     }
-                    toolResources = AssistantObjectToolResources.DeserializeAssistantObjectToolResources(property.Value, options);
+                    toolResources = ModifyAssistantRequestToolResources.DeserializeModifyAssistantRequestToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        metadata = new ChangeTrackingDictionary<string, string>();
                         continue;
                     }
                     Dictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -328,60 +326,57 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AssistantObject(
-                id,
-                @object,
-                createdAt,
+            return new AssistantModificationOptions(
+                model,
                 name,
                 description,
-                model,
                 instructions,
-                tools,
+                tools ?? new ChangeTrackingList<BinaryData>(),
                 toolResources,
-                metadata,
+                metadata ?? new ChangeTrackingDictionary<string, string>(),
                 temperature,
                 topP,
                 responseFormat,
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AssistantObject>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AssistantModificationOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AssistantObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantModificationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AssistantObject)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AssistantModificationOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AssistantObject IPersistableModel<AssistantObject>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AssistantModificationOptions IPersistableModel<AssistantModificationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AssistantObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantModificationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAssistantObject(document.RootElement, options);
+                        return DeserializeAssistantModificationOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AssistantObject)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AssistantModificationOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AssistantObject>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AssistantModificationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AssistantObject FromResponse(PipelineResponse response)
+        internal static AssistantModificationOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAssistantObject(document.RootElement);
+            return DeserializeAssistantModificationOptions(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

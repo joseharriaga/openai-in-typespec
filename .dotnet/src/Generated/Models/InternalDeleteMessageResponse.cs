@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    /// <summary> The ModifyMessageRequest. </summary>
-    internal partial class ModifyMessageRequest
+    /// <summary> The DeleteMessageResponse. </summary>
+    internal partial class InternalDeleteMessageResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,22 +43,41 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ModifyMessageRequest"/>. </summary>
-        public ModifyMessageRequest()
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteMessageResponse"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="deleted"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        internal InternalDeleteMessageResponse(string id, bool deleted)
         {
-            Metadata = new ChangeTrackingDictionary<string, string>();
+            Argument.AssertNotNull(id, nameof(id));
+
+            Id = id;
+            Deleted = deleted;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ModifyMessageRequest"/>. </summary>
-        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteMessageResponse"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="deleted"></param>
+        /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ModifyMessageRequest(IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteMessageResponse(string id, bool deleted, DeleteMessageResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Metadata = metadata;
+            Id = id;
+            Deleted = deleted;
+            Object = @object;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
-        public IDictionary<string, string> Metadata { get; set; }
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteMessageResponse"/> for deserialization. </summary>
+        internal InternalDeleteMessageResponse()
+        {
+        }
+
+        /// <summary> Gets the id. </summary>
+        public string Id { get; }
+        /// <summary> Gets the deleted. </summary>
+        public bool Deleted { get; }
+        /// <summary> Gets the object. </summary>
+        public DeleteMessageResponseObject Object { get; } = DeleteMessageResponseObject.ThreadMessageDeleted;
     }
 }

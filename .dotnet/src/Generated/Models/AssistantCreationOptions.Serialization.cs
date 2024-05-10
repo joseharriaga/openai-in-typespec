@@ -7,17 +7,18 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class CreateAssistantRequest : IJsonModel<CreateAssistantRequest>
+    public partial class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>
     {
-        void IJsonModel<CreateAssistantRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AssistantCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateAssistantRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AssistantCreationOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -172,19 +173,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateAssistantRequest IJsonModel<CreateAssistantRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AssistantCreationOptions IJsonModel<AssistantCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateAssistantRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AssistantCreationOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateAssistantRequest(document.RootElement, options);
+            return DeserializeAssistantCreationOptions(document.RootElement, options);
         }
 
-        internal static CreateAssistantRequest DeserializeCreateAssistantRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AssistantCreationOptions DeserializeAssistantCreationOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -322,7 +323,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateAssistantRequest(
+            return new AssistantCreationOptions(
                 model,
                 name,
                 description,
@@ -336,43 +337,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateAssistantRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AssistantCreationOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateAssistantRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AssistantCreationOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateAssistantRequest IPersistableModel<CreateAssistantRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AssistantCreationOptions IPersistableModel<AssistantCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateAssistantRequest(document.RootElement, options);
+                        return DeserializeAssistantCreationOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateAssistantRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AssistantCreationOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateAssistantRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AssistantCreationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateAssistantRequest FromResponse(PipelineResponse response)
+        internal static AssistantCreationOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateAssistantRequest(document.RootElement);
+            return DeserializeAssistantCreationOptions(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

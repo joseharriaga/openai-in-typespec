@@ -6,13 +6,13 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
-using OpenAI.Internal.Models;
+using OpenAI.Models;
 
-namespace OpenAI.Internal
+namespace OpenAI.Assistants
 {
     // Data plane generated sub-client.
-    /// <summary> The Runs sub-client. </summary>
-    internal partial class Runs
+    /// <summary> The InternalAssistantRun sub-client. </summary>
+    internal partial class InternalAssistantRunClient
     {
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
@@ -23,20 +23,9 @@ namespace OpenAI.Internal
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of Runs for mocking. </summary>
-        protected Runs()
+        /// <summary> Initializes a new instance of InternalAssistantRunClient for mocking. </summary>
+        protected InternalAssistantRunClient()
         {
-        }
-
-        /// <summary> Initializes a new instance of Runs. </summary>
-        /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
-        /// <param name="endpoint"> OpenAI Endpoint. </param>
-        internal Runs(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
-        {
-            _pipeline = pipeline;
-            _keyCredential = keyCredential;
-            _endpoint = endpoint;
         }
 
         /// <summary> Create a thread and run it in one request. </summary>

@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    /// <summary> The ModifyAssistantRequest. </summary>
-    internal partial class ModifyAssistantRequest
+    /// <summary> The CreateAssistantRequest. </summary>
+    public partial class AssistantCreationOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,14 +43,16 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ModifyAssistantRequest"/>. </summary>
-        public ModifyAssistantRequest()
+        /// <summary> Initializes a new instance of <see cref="AssistantCreationOptions"/>. </summary>
+        /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
+        public AssistantCreationOptions(CreateAssistantRequestModel model)
         {
+            Model = model;
             Tools = new ChangeTrackingList<BinaryData>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="ModifyAssistantRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AssistantCreationOptions"/>. </summary>
         /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
@@ -65,7 +68,7 @@ namespace OpenAI.Internal.Models
         /// </param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ModifyAssistantRequest(string model, string name, string description, string instructions, IList<BinaryData> tools, ModifyAssistantRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantCreationOptions(CreateAssistantRequestModel model, string name, string description, string instructions, IList<BinaryData> tools, CreateAssistantRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Name = name;
@@ -80,8 +83,13 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
+        /// <summary> Initializes a new instance of <see cref="AssistantCreationOptions"/> for deserialization. </summary>
+        internal AssistantCreationOptions()
+        {
+        }
+
         /// <summary> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </summary>
-        public string Model { get; set; }
+        public CreateAssistantRequestModel Model { get; }
         /// <summary> The name of the assistant. The maximum length is 256 characters. </summary>
         public string Name { get; set; }
         /// <summary> The description of the assistant. The maximum length is 512 characters. </summary>
@@ -134,7 +142,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         public IList<BinaryData> Tools { get; }
         /// <summary> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </summary>
-        public ModifyAssistantRequestToolResources ToolResources { get; set; }
+        public CreateAssistantRequestToolResources ToolResources { get; set; }
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IDictionary<string, string> Metadata { get; set; }
         /// <summary> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </summary>

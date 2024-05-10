@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -99,7 +100,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            IList<CreateMessageRequest> messages = default;
+            IList<MessageCreationOptions> messages = default;
             CreateThreadRequestToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -112,10 +113,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<CreateMessageRequest> array = new List<CreateMessageRequest>();
+                    List<MessageCreationOptions> array = new List<MessageCreationOptions>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(CreateMessageRequest.DeserializeCreateMessageRequest(item, options));
+                        array.Add(MessageCreationOptions.DeserializeMessageCreationOptions(item, options));
                     }
                     messages = array;
                     continue;
@@ -150,7 +151,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateThreadRequest(messages ?? new ChangeTrackingList<CreateMessageRequest>(), toolResources, metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new CreateThreadRequest(messages ?? new ChangeTrackingList<MessageCreationOptions>(), toolResources, metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateThreadRequest>.Write(ModelReaderWriterOptions options)

@@ -7,17 +7,18 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class DeleteAssistantResponse : IJsonModel<DeleteAssistantResponse>
+    internal partial class InternalDeleteAssistantResponse : IJsonModel<InternalDeleteAssistantResponse>
     {
-        void IJsonModel<DeleteAssistantResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalDeleteAssistantResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteAssistantResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteAssistantResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteAssistantResponse)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalDeleteAssistantResponse)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -45,19 +46,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        DeleteAssistantResponse IJsonModel<DeleteAssistantResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalDeleteAssistantResponse IJsonModel<InternalDeleteAssistantResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteAssistantResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteAssistantResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteAssistantResponse)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalDeleteAssistantResponse)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeDeleteAssistantResponse(document.RootElement, options);
+            return DeserializeInternalDeleteAssistantResponse(document.RootElement, options);
         }
 
-        internal static DeleteAssistantResponse DeserializeDeleteAssistantResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalDeleteAssistantResponse DeserializeInternalDeleteAssistantResponse(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -93,46 +94,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new DeleteAssistantResponse(id, deleted, @object, serializedAdditionalRawData);
+            return new InternalDeleteAssistantResponse(id, deleted, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<DeleteAssistantResponse>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalDeleteAssistantResponse>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteAssistantResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteAssistantResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(DeleteAssistantResponse)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalDeleteAssistantResponse)} does not support writing '{options.Format}' format.");
             }
         }
 
-        DeleteAssistantResponse IPersistableModel<DeleteAssistantResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalDeleteAssistantResponse IPersistableModel<InternalDeleteAssistantResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteAssistantResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteAssistantResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeDeleteAssistantResponse(document.RootElement, options);
+                        return DeserializeInternalDeleteAssistantResponse(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(DeleteAssistantResponse)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalDeleteAssistantResponse)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<DeleteAssistantResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalDeleteAssistantResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static DeleteAssistantResponse FromResponse(PipelineResponse response)
+        internal static InternalDeleteAssistantResponse FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeDeleteAssistantResponse(document.RootElement);
+            return DeserializeInternalDeleteAssistantResponse(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

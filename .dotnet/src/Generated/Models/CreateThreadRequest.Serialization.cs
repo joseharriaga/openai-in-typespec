@@ -31,6 +31,18 @@ namespace OpenAI.Internal.Models
                 }
                 writer.WriteEndArray();
             }
+            if (Optional.IsDefined(ToolResources))
+            {
+                if (ToolResources != null)
+                {
+                    writer.WritePropertyName("tool_resources"u8);
+                    writer.WriteObjectValue(ToolResources, options);
+                }
+                else
+                {
+                    writer.WriteNull("tool_resources");
+                }
+            }
             if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
@@ -88,6 +100,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             IList<CreateMessageRequest> messages = default;
+            CreateThreadRequestToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -105,6 +118,16 @@ namespace OpenAI.Internal.Models
                         array.Add(CreateMessageRequest.DeserializeCreateMessageRequest(item, options));
                     }
                     messages = array;
+                    continue;
+                }
+                if (property.NameEquals("tool_resources"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolResources = null;
+                        continue;
+                    }
+                    toolResources = CreateThreadRequestToolResources.DeserializeCreateThreadRequestToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -127,7 +150,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateThreadRequest(messages ?? new ChangeTrackingList<CreateMessageRequest>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new CreateThreadRequest(messages ?? new ChangeTrackingList<CreateMessageRequest>(), toolResources, metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateThreadRequest>.Write(ModelReaderWriterOptions options)

@@ -23,22 +23,15 @@ namespace OpenAI.LegacyCompletions
             writer.WriteStartObject();
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model.ToString());
-            if (Prompt != null)
-            {
-                writer.WritePropertyName("prompt"u8);
+            writer.WritePropertyName("prompt"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(Prompt);
 #else
-                using (JsonDocument document = JsonDocument.Parse(Prompt))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            else
+            using (JsonDocument document = JsonDocument.Parse(Prompt))
             {
-                writer.WriteNull("prompt");
+                JsonSerializer.Serialize(writer, document.RootElement);
             }
+#endif
             if (Optional.IsDefined(BestOf))
             {
                 if (BestOf != null)
@@ -155,22 +148,15 @@ namespace OpenAI.LegacyCompletions
             }
             if (Optional.IsDefined(Stop))
             {
-                if (Stop != null)
-                {
-                    writer.WritePropertyName("stop"u8);
+                writer.WritePropertyName("stop"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(Stop);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(Stop))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-                else
+                using (JsonDocument document = JsonDocument.Parse(Stop))
                 {
-                    writer.WriteNull("stop");
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             if (Optional.IsDefined(Stream))
             {
@@ -182,6 +168,18 @@ namespace OpenAI.LegacyCompletions
                 else
                 {
                     writer.WriteNull("stream");
+                }
+            }
+            if (Optional.IsDefined(StreamOptions))
+            {
+                if (StreamOptions != null)
+                {
+                    writer.WritePropertyName("stream_options"u8);
+                    writer.WriteObjectValue(StreamOptions, options);
+                }
+                else
+                {
+                    writer.WriteNull("stream_options");
                 }
             }
             if (Optional.IsDefined(Suffix))
@@ -265,20 +263,21 @@ namespace OpenAI.LegacyCompletions
             }
             CreateCompletionRequestModel model = default;
             BinaryData prompt = default;
-            long? bestOf = default;
+            int? bestOf = default;
             bool? echo = default;
-            double? frequencyPenalty = default;
-            IDictionary<string, long> logitBias = default;
-            long? logprobs = default;
-            long? maxTokens = default;
-            long? n = default;
-            double? presencePenalty = default;
+            float? frequencyPenalty = default;
+            IDictionary<string, int> logitBias = default;
+            int? logprobs = default;
+            int? maxTokens = default;
+            int? n = default;
+            float? presencePenalty = default;
             long? seed = default;
             BinaryData stop = default;
             bool? stream = default;
+            InternalChatCompletionStreamOptions streamOptions = default;
             string suffix = default;
-            double? temperature = default;
-            double? topP = default;
+            float? temperature = default;
+            float? topP = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -291,11 +290,6 @@ namespace OpenAI.LegacyCompletions
                 }
                 if (property.NameEquals("prompt"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        prompt = null;
-                        continue;
-                    }
                     prompt = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
@@ -306,7 +300,7 @@ namespace OpenAI.LegacyCompletions
                         bestOf = null;
                         continue;
                     }
-                    bestOf = property.Value.GetInt64();
+                    bestOf = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("echo"u8))
@@ -326,7 +320,7 @@ namespace OpenAI.LegacyCompletions
                         frequencyPenalty = null;
                         continue;
                     }
-                    frequencyPenalty = property.Value.GetDouble();
+                    frequencyPenalty = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("logit_bias"u8))
@@ -335,10 +329,10 @@ namespace OpenAI.LegacyCompletions
                     {
                         continue;
                     }
-                    Dictionary<string, long> dictionary = new Dictionary<string, long>();
+                    Dictionary<string, int> dictionary = new Dictionary<string, int>();
                     foreach (var property0 in property.Value.EnumerateObject())
                     {
-                        dictionary.Add(property0.Name, property0.Value.GetInt64());
+                        dictionary.Add(property0.Name, property0.Value.GetInt32());
                     }
                     logitBias = dictionary;
                     continue;
@@ -350,7 +344,7 @@ namespace OpenAI.LegacyCompletions
                         logprobs = null;
                         continue;
                     }
-                    logprobs = property.Value.GetInt64();
+                    logprobs = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("max_tokens"u8))
@@ -360,7 +354,7 @@ namespace OpenAI.LegacyCompletions
                         maxTokens = null;
                         continue;
                     }
-                    maxTokens = property.Value.GetInt64();
+                    maxTokens = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("n"u8))
@@ -370,7 +364,7 @@ namespace OpenAI.LegacyCompletions
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("presence_penalty"u8))
@@ -380,7 +374,7 @@ namespace OpenAI.LegacyCompletions
                         presencePenalty = null;
                         continue;
                     }
-                    presencePenalty = property.Value.GetDouble();
+                    presencePenalty = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("seed"u8))
@@ -397,7 +391,6 @@ namespace OpenAI.LegacyCompletions
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        stop = null;
                         continue;
                     }
                     stop = BinaryData.FromString(property.Value.GetRawText());
@@ -411,6 +404,16 @@ namespace OpenAI.LegacyCompletions
                         continue;
                     }
                     stream = property.Value.GetBoolean();
+                    continue;
+                }
+                if (property.NameEquals("stream_options"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        streamOptions = null;
+                        continue;
+                    }
+                    streamOptions = InternalChatCompletionStreamOptions.DeserializeInternalChatCompletionStreamOptions(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("suffix"u8))
@@ -430,7 +433,7 @@ namespace OpenAI.LegacyCompletions
                         temperature = null;
                         continue;
                     }
-                    temperature = property.Value.GetDouble();
+                    temperature = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("top_p"u8))
@@ -440,7 +443,7 @@ namespace OpenAI.LegacyCompletions
                         topP = null;
                         continue;
                     }
-                    topP = property.Value.GetDouble();
+                    topP = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("user"u8))
@@ -460,7 +463,7 @@ namespace OpenAI.LegacyCompletions
                 bestOf,
                 echo,
                 frequencyPenalty,
-                logitBias ?? new ChangeTrackingDictionary<string, long>(),
+                logitBias ?? new ChangeTrackingDictionary<string, int>(),
                 logprobs,
                 maxTokens,
                 n,
@@ -468,6 +471,7 @@ namespace OpenAI.LegacyCompletions
                 seed,
                 stop,
                 stream,
+                streamOptions,
                 suffix,
                 temperature,
                 topP,

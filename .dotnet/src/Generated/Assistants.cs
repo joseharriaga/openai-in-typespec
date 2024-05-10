@@ -183,7 +183,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetAssistantsAsync(int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetAssistantsAsync(int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -225,7 +225,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetAssistants(int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetAssistants(int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -519,448 +519,6 @@ namespace OpenAI.Internal
             return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
-        /// <summary>
-        /// Create an assistant file by attaching a [File](/docs/api-reference/files) to a
-        /// [assistant](/docs/api-reference/assistants).
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant for which to create a file. </param>
-        /// <param name="file"> The <see cref="CreateAssistantFileRequest"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="file"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Create assistant file. </remarks>
-        public virtual async Task<ClientResult<AssistantFileObject>> CreateAssistantFileAsync(string assistantId, CreateAssistantFileRequest file)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNull(file, nameof(file));
-
-            using BinaryContent content = file.ToBinaryContent();
-            ClientResult result = await CreateAssistantFileAsync(assistantId, content, null).ConfigureAwait(false);
-            return ClientResult.FromValue(AssistantFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary>
-        /// Create an assistant file by attaching a [File](/docs/api-reference/files) to a
-        /// [assistant](/docs/api-reference/assistants).
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant for which to create a file. </param>
-        /// <param name="file"> The <see cref="CreateAssistantFileRequest"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="file"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Create assistant file. </remarks>
-        public virtual ClientResult<AssistantFileObject> CreateAssistantFile(string assistantId, CreateAssistantFileRequest file)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNull(file, nameof(file));
-
-            using BinaryContent content = file.ToBinaryContent();
-            ClientResult result = CreateAssistantFile(assistantId, content, null);
-            return ClientResult.FromValue(AssistantFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary>
-        /// [Protocol Method] Create an assistant file by attaching a [File](/docs/api-reference/files) to a
-        /// [assistant](/docs/api-reference/assistants).
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="CreateAssistantFileAsync(string,CreateAssistantFileRequest)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant for which to create a file. </param>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="content"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual async Task<ClientResult> CreateAssistantFileAsync(string assistantId, BinaryContent content, RequestOptions options = null)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateCreateAssistantFileRequest(assistantId, content, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        /// <summary>
-        /// [Protocol Method] Create an assistant file by attaching a [File](/docs/api-reference/files) to a
-        /// [assistant](/docs/api-reference/assistants).
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="CreateAssistantFile(string,CreateAssistantFileRequest)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant for which to create a file. </param>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="content"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual ClientResult CreateAssistantFile(string assistantId, BinaryContent content, RequestOptions options = null)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateCreateAssistantFileRequest(assistantId, content, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-        }
-
-        /// <summary> Returns a list of assistant files. </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="limit">
-        /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-        /// default is 20.
-        /// </param>
-        /// <param name="order">
-        /// Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-        /// for descending order.
-        /// </param>
-        /// <param name="after">
-        /// A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include after=obj_foo in order to fetch the next page of the list.
-        /// </param>
-        /// <param name="before">
-        /// A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> List assistant files. </remarks>
-        public virtual async Task<ClientResult<ListAssistantFilesResponse>> GetAssistantFilesAsync(string assistantId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-
-            ClientResult result = await GetAssistantFilesAsync(assistantId, limit, order?.ToString(), after, before, null).ConfigureAwait(false);
-            return ClientResult.FromValue(ListAssistantFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary> Returns a list of assistant files. </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="limit">
-        /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-        /// default is 20.
-        /// </param>
-        /// <param name="order">
-        /// Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-        /// for descending order.
-        /// </param>
-        /// <param name="after">
-        /// A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include after=obj_foo in order to fetch the next page of the list.
-        /// </param>
-        /// <param name="before">
-        /// A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> List assistant files. </remarks>
-        public virtual ClientResult<ListAssistantFilesResponse> GetAssistantFiles(string assistantId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-
-            ClientResult result = GetAssistantFiles(assistantId, limit, order?.ToString(), after, before, null);
-            return ClientResult.FromValue(ListAssistantFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary>
-        /// [Protocol Method] Returns a list of assistant files.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="GetAssistantFilesAsync(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="limit">
-        /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-        /// default is 20.
-        /// </param>
-        /// <param name="order">
-        /// Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-        /// for descending order. Allowed values: "asc" | "desc"
-        /// </param>
-        /// <param name="after">
-        /// A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include after=obj_foo in order to fetch the next page of the list.
-        /// </param>
-        /// <param name="before">
-        /// A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-        /// </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual async Task<ClientResult> GetAssistantFilesAsync(string assistantId, int? limit, string order, string after, string before, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-
-            using PipelineMessage message = CreateGetAssistantFilesRequest(assistantId, limit, order, after, before, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        /// <summary>
-        /// [Protocol Method] Returns a list of assistant files.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="GetAssistantFiles(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="limit">
-        /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-        /// default is 20.
-        /// </param>
-        /// <param name="order">
-        /// Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-        /// for descending order. Allowed values: "asc" | "desc"
-        /// </param>
-        /// <param name="after">
-        /// A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include after=obj_foo in order to fetch the next page of the list.
-        /// </param>
-        /// <param name="before">
-        /// A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-        /// </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual ClientResult GetAssistantFiles(string assistantId, int? limit, string order, string after, string before, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-
-            using PipelineMessage message = CreateGetAssistantFilesRequest(assistantId, limit, order, after, before, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-        }
-
-        /// <summary> Retrieves an assistant file. </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file we're getting. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Get assistant file. </remarks>
-        public virtual async Task<ClientResult<AssistantFileObject>> GetAssistantFileAsync(string assistantId, string fileId)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            ClientResult result = await GetAssistantFileAsync(assistantId, fileId, null).ConfigureAwait(false);
-            return ClientResult.FromValue(AssistantFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary> Retrieves an assistant file. </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file we're getting. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Get assistant file. </remarks>
-        public virtual ClientResult<AssistantFileObject> GetAssistantFile(string assistantId, string fileId)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            ClientResult result = GetAssistantFile(assistantId, fileId, null);
-            return ClientResult.FromValue(AssistantFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary>
-        /// [Protocol Method] Retrieves an assistant file.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="GetAssistantFileAsync(string,string)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file we're getting. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual async Task<ClientResult> GetAssistantFileAsync(string assistantId, string fileId, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            using PipelineMessage message = CreateGetAssistantFileRequest(assistantId, fileId, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        /// <summary>
-        /// [Protocol Method] Retrieves an assistant file.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="GetAssistantFile(string,string)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file we're getting. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual ClientResult GetAssistantFile(string assistantId, string fileId, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            using PipelineMessage message = CreateGetAssistantFileRequest(assistantId, fileId, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-        }
-
-        /// <summary> Delete an assistant file. </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file to delete. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Delete assistant file. </remarks>
-        public virtual async Task<ClientResult<DeleteAssistantFileResponse>> DeleteAssistantFileAsync(string assistantId, string fileId)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            ClientResult result = await DeleteAssistantFileAsync(assistantId, fileId, null).ConfigureAwait(false);
-            return ClientResult.FromValue(DeleteAssistantFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary> Delete an assistant file. </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file to delete. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Delete assistant file. </remarks>
-        public virtual ClientResult<DeleteAssistantFileResponse> DeleteAssistantFile(string assistantId, string fileId)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            ClientResult result = DeleteAssistantFile(assistantId, fileId, null);
-            return ClientResult.FromValue(DeleteAssistantFileResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary>
-        /// [Protocol Method] Delete an assistant file.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="DeleteAssistantFileAsync(string,string)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file to delete. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual async Task<ClientResult> DeleteAssistantFileAsync(string assistantId, string fileId, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            using PipelineMessage message = CreateDeleteAssistantFileRequest(assistantId, fileId, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        /// <summary>
-        /// [Protocol Method] Delete an assistant file.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="DeleteAssistantFile(string,string)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="assistantId"> The ID of the assistant the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file to delete. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual ClientResult DeleteAssistantFile(string assistantId, string fileId, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            using PipelineMessage message = CreateDeleteAssistantFileRequest(assistantId, fileId, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-        }
-
         internal PipelineMessage CreateCreateAssistantRequest(BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
@@ -974,7 +532,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -1005,7 +563,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -1021,7 +579,7 @@ namespace OpenAI.Internal
             uri.AppendPath(assistantId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -1039,7 +597,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -1055,95 +613,7 @@ namespace OpenAI.Internal
             uri.AppendPath(assistantId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
-            return message;
-        }
-
-        internal PipelineMessage CreateCreateAssistantFileRequest(string assistantId, BinaryContent content, RequestOptions options)
-        {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistantId, true);
-            uri.AppendPath("/files", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            if (options != null) { message.Apply(options); }
-            return message;
-        }
-
-        internal PipelineMessage CreateGetAssistantFilesRequest(string assistantId, int? limit, string order, string after, string before, RequestOptions options)
-        {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistantId, true);
-            uri.AppendPath("/files", false);
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            if (order != null)
-            {
-                uri.AppendQuery("order", order, true);
-            }
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (before != null)
-            {
-                uri.AppendQuery("before", before, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
-            return message;
-        }
-
-        internal PipelineMessage CreateGetAssistantFileRequest(string assistantId, string fileId, RequestOptions options)
-        {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistantId, true);
-            uri.AppendPath("/files/", false);
-            uri.AppendPath(fileId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
-            return message;
-        }
-
-        internal PipelineMessage CreateDeleteAssistantFileRequest(string assistantId, string fileId, RequestOptions options)
-        {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "DELETE";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistantId, true);
-            uri.AppendPath("/files/", false);
-            uri.AppendPath(fileId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 

@@ -1,8 +1,10 @@
+using OpenAI.Internal.Models;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -13,34 +15,67 @@ namespace OpenAI.Assistants;
 [Experimental("OPENAI001")]
 public partial class AssistantClient
 {
-    private OpenAIClientConnector _clientConnector;
+    private readonly Uri _endpoint;
+    private readonly ClientPipeline _pipeline;
+
+    /// <inheritdoc cref="OpenAIClient.Pipeline"/>
+    public ClientPipeline Pipeline => _pipeline;
+
+    private readonly OpenAIClientConnector _clientConnector;
     private Internal.Assistants Shim => _clientConnector.InternalClient.GetAssistantsClient();
     private Internal.Threads ThreadShim => _clientConnector.InternalClient.GetThreadsClient();
     private Internal.Messages MessageShim => _clientConnector.InternalClient.GetMessagesClient();
     private Internal.Runs RunShim => _clientConnector.InternalClient.GetRunsClient();
 
     /// <summary>
-    /// Initializes a new instance of <see cref="AssistantClient"/>, used for assistant requests. 
+    /// Initializes a new instance of <see cref="AssistantClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public AssistantClient(ApiKeyCredential credential, OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {}
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="AssistantClient"/> that will use an API key from the OPENAI_API_KEY
+    /// environment variable when authenticating.
     /// </summary>
     /// <remarks>
-    /// <para>
-    ///     If an endpoint is not provided, the client will use the <c>OPENAI_ENDPOINT</c> environment variable if it
-    ///     defined and otherwise use the default OpenAI v1 endpoint.
-    /// </para>
-    /// <para>
-    ///    If an authentication credential is not defined, the client use the <c>OPENAI_API_KEY</c> environment variable
-    ///    if it is defined.
-    /// </para>
+    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
+    /// <see cref="AssistantClient(ApiKeyCredential,OpenAIClientOptions)"/>.
     /// </remarks>
-    /// <param name="credential">The API key used to authenticate with the service endpoint.</param>
-    /// <param name="options">Additional options to customize the client.</param>
-    public AssistantClient(ApiKeyCredential credential = default, OpenAIClientOptions options = default)
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
+    public AssistantClient(OpenAIClientOptions options = default)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
+              OpenAIClient.GetEndpoint(options),
+              options)
+    {}
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="AssistantClient"/>.
+    /// </summary>
+    /// <param name="pipeline"> The <see cref="ClientPipeline"/> instance to use. </param>
+    /// <param name="endpoint"> The endpoint to use. </param>
+    protected internal AssistantClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)
     {
-        options ??= new();
-        options.AddPolicy(
-            new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
-            PipelinePosition.PerCall);
-        _clientConnector = new(model: "none", credential, options);
+        _pipeline = pipeline;
+        _endpoint = endpoint;
+
+        // Temporary pending codegen integration
+        if (options is null)
+        {
+            options = new();
+            options.AddPolicy(
+                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
+                PipelinePosition.PerCall);
+        }
+        _clientConnector = new(model: "none", OpenAIClient.GetApiKey(), options);
     }
 
     public virtual ClientResult<Assistant> CreateAssistant(
@@ -76,13 +111,13 @@ public partial class AssistantClient
 
     public virtual ClientResult<ListQueryPage<Assistant>> GetAssistants(
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousAssistantId = null,
         string subsequentAssistantId = null)
     {
         ClientResult<Internal.Models.ListAssistantsResponse> internalFunc() => Shim.GetAssistants(
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousAssistantId,
             subsequentAssistantId);
         return GetListQueryPage<Assistant, Internal.Models.ListAssistantsResponse>(internalFunc);
@@ -90,13 +125,13 @@ public partial class AssistantClient
 
     public virtual Task<ClientResult<ListQueryPage<Assistant>>> GetAssistantsAsync(
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousAssistantId = null,
         string subsequentAssistantId = null)
     {
         Task<ClientResult<Internal.Models.ListAssistantsResponse>> internalAsyncFunc() => Shim.GetAssistantsAsync(
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousAssistantId,
             subsequentAssistantId);
         return GetListQueryPageAsync<Assistant, Internal.Models.ListAssistantsResponse>(internalAsyncFunc);
@@ -134,89 +169,6 @@ public partial class AssistantClient
         return ClientResult.FromValue(internalResponse.Value.Deleted, internalResponse.GetRawResponse());
     }
 
-    public virtual ClientResult<AssistantFileAssociation> CreateAssistantFileAssociation(
-        string assistantId,
-        string fileId)
-    {
-        ClientResult<Internal.Models.AssistantFileObject> internalResult
-            = Shim.CreateAssistantFile(assistantId, new(fileId));
-        return ClientResult.FromValue(new AssistantFileAssociation(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual async Task<ClientResult<AssistantFileAssociation>> CreateAssistantFileAssociationAsync(
-        string assistantId,
-        string fileId)
-    {
-        ClientResult<Internal.Models.AssistantFileObject> internalResult = await Shim.CreateAssistantFileAsync(assistantId, new(fileId)).ConfigureAwait(false);
-        return ClientResult.FromValue(new AssistantFileAssociation(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual ClientResult<AssistantFileAssociation> GetAssistantFileAssociation(
-        string assistantId,
-        string fileId)
-    {
-        ClientResult<Internal.Models.AssistantFileObject> internalResult = Shim.GetAssistantFile(assistantId, fileId);
-        return ClientResult.FromValue(new AssistantFileAssociation(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual async Task<ClientResult<AssistantFileAssociation>> GetAssistantFileAssociationAsync(
-        string assistantId,
-        string fileId)
-    {
-        ClientResult<Internal.Models.AssistantFileObject> internalResult = await Shim.GetAssistantFileAsync(assistantId, fileId).ConfigureAwait(false);
-        return ClientResult.FromValue(new AssistantFileAssociation(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual ClientResult<ListQueryPage<AssistantFileAssociation>> GetAssistantFileAssociations(
-        string assistantId,
-        int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        ClientResult<Internal.Models.ListAssistantFilesResponse> internalFunc() => Shim.GetAssistantFiles(
-            assistantId,
-            maxResults,
-            ToInternalListOrder(createdSortOrder),
-            previousId,
-            subsequentId);
-        return GetListQueryPage<AssistantFileAssociation, Internal.Models.ListAssistantFilesResponse>(internalFunc);
-    }
-
-    public virtual Task<ClientResult<ListQueryPage<AssistantFileAssociation>>> GetAssistantFileAssociationsAsync(
-        string assistantId,
-        int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        Func<Task<ClientResult<Internal.Models.ListAssistantFilesResponse>>> internalFunc
-            = () => Shim.GetAssistantFilesAsync(
-                assistantId,
-                maxResults,
-                ToInternalListOrder(createdSortOrder),
-                previousId,
-                subsequentId);
-        return GetListQueryPageAsync<AssistantFileAssociation, Internal.Models.ListAssistantFilesResponse>(internalFunc);
-    }
-
-    public virtual ClientResult<bool> RemoveAssistantFileAssociation(
-        string assistantId,
-        string fileId)
-    {
-        ClientResult<Internal.Models.DeleteAssistantFileResponse> internalResult
-            = Shim.DeleteAssistantFile(assistantId, fileId);
-        return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
-    }
-
-    public virtual async Task<ClientResult<bool>> RemoveAssistantFileAssociationAsync(
-        string assistantId,
-        string fileId)
-    {
-        ClientResult<Internal.Models.DeleteAssistantFileResponse> internalResult = await Shim.DeleteAssistantFileAsync(assistantId, fileId).ConfigureAwait(false);
-        return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
-    }
-
     public virtual ClientResult<AssistantThread> CreateThread(
         ThreadCreationOptions options = null)
     {
@@ -251,6 +203,7 @@ public partial class AssistantClient
         ThreadModificationOptions options)
     {
         Internal.Models.ModifyThreadRequest request = new(
+            null, // TODO -- to do: toolResources
             options.Metadata,
             serializedAdditionalRawData: null);
         ClientResult<Internal.Models.ThreadObject> internalResult = ThreadShim.ModifyThread(threadId, request);
@@ -262,6 +215,7 @@ public partial class AssistantClient
         ThreadModificationOptions options)
     {
         Internal.Models.ModifyThreadRequest request = new(
+            null, // TODO -- to do: toolResources
             options.Metadata,
             serializedAdditionalRawData: null);
         ClientResult<Internal.Models.ThreadObject> internalResult = await ThreadShim.ModifyThreadAsync(threadId, request).ConfigureAwait(false);
@@ -288,8 +242,8 @@ public partial class AssistantClient
     {
         Internal.Models.CreateMessageRequest request = new(
             ToInternalRequestRole(role),
-            content,
-            options.FileIds,
+            BinaryData.FromString(content),
+            null, // TODO: to do - attachments
             options.Metadata,
             serializedAdditionalRawData: null);
         ClientResult<Internal.Models.MessageObject> internalResult = MessageShim.CreateMessage(threadId, request);
@@ -304,8 +258,8 @@ public partial class AssistantClient
     {
         Internal.Models.CreateMessageRequest request = new(
             ToInternalRequestRole(role),
-            content,
-            options.FileIds,
+            BinaryData.FromString(content),
+            null, // TODO -- to do: attachments
             options.Metadata,
             serializedAdditionalRawData: null);
         ClientResult<Internal.Models.MessageObject> internalResult = await MessageShim.CreateMessageAsync(threadId, request).ConfigureAwait(false);
@@ -355,14 +309,14 @@ public partial class AssistantClient
     public virtual ClientResult<ListQueryPage<ThreadMessage>> GetMessages(
         string threadId,
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousMessageId = null,
         string subsequentMessageId = null)
     {
         ClientResult<Internal.Models.ListMessagesResponse> internalFunc() => MessageShim.GetMessages(
             threadId,
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousMessageId,
             subsequentMessageId);
         return GetListQueryPage<ThreadMessage, Internal.Models.ListMessagesResponse>(internalFunc);
@@ -371,72 +325,17 @@ public partial class AssistantClient
     public virtual Task<ClientResult<ListQueryPage<ThreadMessage>>> GetMessagesAsync(
         string threadId,
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousMessageId = null,
         string subsequentMessageId = null)
     {
         Func<Task<ClientResult<Internal.Models.ListMessagesResponse>>> internalFunc = () => MessageShim.GetMessagesAsync(
                 threadId,
                 maxResults,
-                ToInternalListOrder(createdSortOrder),
+                listOrder,
                 previousMessageId,
                 subsequentMessageId);
         return GetListQueryPageAsync<ThreadMessage, Internal.Models.ListMessagesResponse>(internalFunc);
-    }
-
-    public virtual ClientResult<MessageFileAssociation> GetMessageFileAssociation(
-        string threadId,
-        string messageId,
-        string fileId)
-    {
-        ClientResult<Internal.Models.MessageFileObject> internalResult
-            = MessageShim.GetMessageFile(threadId, messageId, fileId);
-        return ClientResult.FromValue(new MessageFileAssociation(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual async Task<ClientResult<MessageFileAssociation>> GetMessageFileAssociationAsync(
-        string threadId,
-        string messageId,
-        string fileId)
-    {
-        ClientResult<Internal.Models.MessageFileObject> internalResult = await MessageShim.GetMessageFileAsync(threadId, messageId, fileId).ConfigureAwait(false);
-        return ClientResult.FromValue(new MessageFileAssociation(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual ClientResult<ListQueryPage<MessageFileAssociation>> GetMessageFileAssociations(
-        string threadId,
-        string messageId,
-        int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        ClientResult<Internal.Models.ListMessageFilesResponse> internalFunc() => MessageShim.GetMessageFiles(
-            threadId,
-            messageId,
-            maxResults,
-            ToInternalListOrder(createdSortOrder),
-            previousId,
-            subsequentId);
-        return GetListQueryPage<MessageFileAssociation, Internal.Models.ListMessageFilesResponse>(internalFunc);
-    }
-
-    public virtual Task<ClientResult<ListQueryPage<MessageFileAssociation>>> GetMessageFileAssociationsAsync(
-        string threadId,
-        string messageId,
-        int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        Task<ClientResult<Internal.Models.ListMessageFilesResponse>> internalFunc() => MessageShim.GetMessageFilesAsync(
-            threadId,
-            messageId,
-            maxResults,
-            ToInternalListOrder(createdSortOrder),
-            previousId,
-            subsequentId);
-        return GetListQueryPageAsync<MessageFileAssociation, Internal.Models.ListMessageFilesResponse>(internalFunc);
     }
 
     public virtual ClientResult<ThreadRun> CreateRun(
@@ -496,14 +395,14 @@ public partial class AssistantClient
     public virtual ClientResult<ListQueryPage<ThreadRun>> GetRuns(
         string threadId,
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousRunId = null,
         string subsequentRunId = null)
     {
         ClientResult<Internal.Models.ListRunsResponse> internalFunc() => RunShim.GetRuns(
             threadId,
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousRunId,
             subsequentRunId);
         return GetListQueryPage<ThreadRun, Internal.Models.ListRunsResponse>(internalFunc);
@@ -512,14 +411,14 @@ public partial class AssistantClient
     public virtual Task<ClientResult<ListQueryPage<ThreadRun>>> GetRunsAsync(
         string threadId,
         int? maxResults = null,
-        CreatedAtSortOrder? createdSortOrder = null,
+        ListOrder? listOrder = null,
         string previousRunId = null,
         string subsequentRunId = null)
     {
         Func<Task<ClientResult<Internal.Models.ListRunsResponse>>> internalFunc = () => RunShim.GetRunsAsync(
             threadId,
             maxResults,
-            ToInternalListOrder(createdSortOrder),
+            listOrder,
             previousRunId,
             subsequentRunId);
         return GetListQueryPageAsync<ThreadRun, Internal.Models.ListRunsResponse>(internalFunc);
@@ -560,7 +459,10 @@ public partial class AssistantClient
             requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
         }
 
-        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null);
+        Internal.Models.SubmitToolOutputsRunRequest request = new(
+            requestToolOutputs,
+            stream: null,
+            serializedAdditionalRawData: null);
         ClientResult<Internal.Models.RunObject> internalResult = RunShim.SubmitToolOuputsToRun(threadId, runId, request);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
@@ -574,7 +476,10 @@ public partial class AssistantClient
             requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
         }
 
-        Internal.Models.SubmitToolOutputsRunRequest request = new(requestToolOutputs, null);
+        Internal.Models.SubmitToolOutputsRunRequest request = new(
+            requestToolOutputs,
+            stream: null,
+            serializedAdditionalRawData: null);
         ClientResult<Internal.Models.RunObject> internalResult = await RunShim.SubmitToolOuputsToRunAsync(threadId, runId, request).ConfigureAwait(false);
         return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
     }
@@ -590,8 +495,11 @@ public partial class AssistantClient
             options.Description,
             options.Instructions,
             ToInternalBinaryDataList(options.Tools),
-            options.FileIds,
+            null, // TODO -- to do: toolResources
             options.Metadata,
+            options.Temperature,
+            options.TopP,
+            options.ResponseFormat,
             serializedAdditionalRawData: null);
     }
 
@@ -604,8 +512,11 @@ public partial class AssistantClient
             options.Description,
             options.Instructions,
             ToInternalBinaryDataList(options.Tools),
-            options.FileIds,
+            null, // TODO -- to do: toolResources
             options.Metadata,
+            options.Temperature,
+            options.TopP,
+            options.ResponseFormat,
             serializedAdditionalRawData: null);
     }
 
@@ -615,6 +526,7 @@ public partial class AssistantClient
         options ??= new();
         return new Internal.Models.CreateThreadRequest(
             ToInternalCreateMessageRequestList(options.Messages),
+            null, // TODO -- to do: toolResources
             options.Metadata,
             serializedAdditionalRawData: null);
     }
@@ -629,8 +541,17 @@ public partial class AssistantClient
             options.ModelOverride,
             options.InstructionsOverride,
             options.AdditionalInstructions,
+            null, // TODO -- to do: additional messages
             ToInternalBinaryDataList(options.ToolsOverride),
             options.Metadata,
+            options.Temperature,
+            options.TopP,
+            options.Stream,
+            options.MaxPromptTokens,
+            options.MaxCompletionTokens,
+            options.TruncationStrategy,
+            options.ToolChoice,
+            options.ResponseFormat,
             serializedAdditionalRawData: null);
     }
 
@@ -645,10 +566,19 @@ public partial class AssistantClient
         return new Internal.Models.CreateThreadAndRunRequest(
             assistantId,
             internalThreadOptions,
-            runOptions?.ModelOverride,
+            runOptions.ModelOverride,
             runOptions.InstructionsOverride,
-            ToInternalBinaryDataList(runOptions?.ToolsOverride),
-            runOptions?.Metadata,
+            ToInternalBinaryDataList(runOptions.ToolsOverride),
+            null, // TODO -- to do: toolResources
+            runOptions.Metadata,
+            runOptions.Temperature,
+            runOptions.TopP,
+            runOptions.Stream,
+            runOptions.MaxPromptTokens,
+            runOptions.MaxCompletionTokens,
+            runOptions.TruncationStrategy,
+            runOptions.ToolChoice,
+            runOptions.ResponseFormat,
             serializedAdditionalRawData: null);
     }
 
@@ -661,20 +591,6 @@ public partial class AssistantClient
             internalList.Add(ModelReaderWriter.Write(value));
         }
         return internalList;
-    }
-
-    internal static Internal.Models.ListOrder? ToInternalListOrder(CreatedAtSortOrder? order)
-    {
-        if (order == null)
-        {
-            return null;
-        }
-        return order switch
-        {
-            CreatedAtSortOrder.OldestFirst => Internal.Models.ListOrder.Asc,
-            CreatedAtSortOrder.NewestFirst => Internal.Models.ListOrder.Desc,
-            _ => throw new ArgumentException(nameof(order)),
-        };
     }
 
     internal static Internal.Models.CreateMessageRequestRole ToInternalRequestRole(MessageRole role)
@@ -692,8 +608,8 @@ public partial class AssistantClient
         {
             internalList.Add(new Internal.Models.CreateMessageRequest(
                 ToInternalRequestRole(message.Role),
-                message.Content,
-                message.FileIds,
+                BinaryData.FromString(message.Content),
+                null, // TODO -- to do: attachments
                 message.Metadata,
                 serializedAdditionalRawData: null));
         }
@@ -701,7 +617,7 @@ public partial class AssistantClient
     }
 
     internal virtual ClientResult<ListQueryPage<T>> GetListQueryPage<T, U>(Func<ClientResult<U>> internalFunc)
-        where T : class
+        where T : class, IJsonModel<T>
         where U : class
     {
         ClientResult<U> internalResult = internalFunc.Invoke();
@@ -710,7 +626,7 @@ public partial class AssistantClient
     }
 
     internal virtual async Task<ClientResult<ListQueryPage<T>>> GetListQueryPageAsync<T, U>(Func<Task<ClientResult<U>>> internalAsyncFunc)
-        where T : class
+        where T : class, IJsonModel<T>
         where U : class
     {
         ClientResult<U> internalResult = await internalAsyncFunc.Invoke().ConfigureAwait(false);

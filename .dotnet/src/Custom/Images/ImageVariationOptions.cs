@@ -1,5 +1,4 @@
-﻿using OpenAI.Internal;
-using System;
+﻿using System;
 using System.IO;
 
 namespace OpenAI.Images;

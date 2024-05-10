@@ -1,7 +1,7 @@
 import "@typespec/http";
 import "@typespec/openapi";
 
-import "../common/errors.tsp";
+import "../common";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -64,10 +64,10 @@ interface Files {
   @operationId("downloadFile")
   @tag("Files")
   @summary("Returns the contents of the specified file.")
-  // TODO: The OpenAPI spec says this returns a plain string but that the Content-Type is
-  // application/json and not text/plain.
+  // TODO: The OpenAPI spec says this returns a plain string but in reality it is returning
+  // the file content as bytes.
   downloadFile(
     /** The ID of the file to use for this request. */
     @path file_id: string,
-  ): string | ErrorResponse;
+  ): bytes | ErrorResponse;
 }

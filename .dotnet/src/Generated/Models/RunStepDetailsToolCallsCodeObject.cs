@@ -57,10 +57,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsCodeObject"/>. </summary>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="type">
-        /// The type of tool call. This is always going to be `code_interpreter` for this type of tool
-        /// call.
-        /// </param>
+        /// <param name="type"> The type of tool call. This is always going to be `code_interpreter` for this type of tool call. </param>
         /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDetailsToolCallsCodeObject(string id, RunStepDetailsToolCallsCodeObjectType type, RunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -78,10 +75,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The ID of the tool call. </summary>
         public string Id { get; }
-        /// <summary>
-        /// The type of tool call. This is always going to be `code_interpreter` for this type of tool
-        /// call.
-        /// </summary>
+        /// <summary> The type of tool call. This is always going to be `code_interpreter` for this type of tool call. </summary>
         public RunStepDetailsToolCallsCodeObjectType Type { get; } = RunStepDetailsToolCallsCodeObjectType.CodeInterpreter;
 
         /// <summary> The Code Interpreter tool call definition. </summary>

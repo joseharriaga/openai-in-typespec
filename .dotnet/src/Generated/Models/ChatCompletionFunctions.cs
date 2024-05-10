@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI.Internal.Models
 {
     /// <summary> The ChatCompletionFunctions. </summary>
-    [Obsolete("deprecated")]
+    [Obsolete("This field is marked as deprecated.")]
     internal partial class ChatCompletionFunctions
     {
         /// <summary>
@@ -44,10 +44,7 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionFunctions"/>. </summary>
-        /// <param name="name">
-        /// The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
-        /// dashes, with a maximum length of 64.
-        /// </param>
+        /// <param name="name"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
         public ChatCompletionFunctions(string name)
         {
@@ -57,14 +54,8 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatCompletionFunctions"/>. </summary>
-        /// <param name="description">
-        /// A description of what the function does, used by the model to choose when and how to call the
-        /// function.
-        /// </param>
-        /// <param name="name">
-        /// The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
-        /// dashes, with a maximum length of 64.
-        /// </param>
+        /// <param name="description"> A description of what the function does, used by the model to choose when and how to call the function. </param>
+        /// <param name="name"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
         /// <param name="parameters"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatCompletionFunctions(string description, string name, FunctionParameters parameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -80,15 +71,9 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary>
-        /// A description of what the function does, used by the model to choose when and how to call the
-        /// function.
-        /// </summary>
+        /// <summary> A description of what the function does, used by the model to choose when and how to call the function. </summary>
         public string Description { get; set; }
-        /// <summary>
-        /// The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
-        /// dashes, with a maximum length of 64.
-        /// </summary>
+        /// <summary> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </summary>
         public string Name { get; }
         /// <summary> Gets or sets the parameters. </summary>
         public FunctionParameters Parameters { get; set; }

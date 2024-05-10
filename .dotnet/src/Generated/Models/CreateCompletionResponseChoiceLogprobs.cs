@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenAI.LegacyCompletions
 {
@@ -44,51 +43,36 @@ namespace OpenAI.LegacyCompletions
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionResponseChoiceLogprobs"/>. </summary>
-        /// <param name="tokens"></param>
-        /// <param name="tokenLogprobs"></param>
-        /// <param name="topLogprobs"></param>
-        /// <param name="textOffset"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="tokens"/>, <paramref name="tokenLogprobs"/>, <paramref name="topLogprobs"/> or <paramref name="textOffset"/> is null. </exception>
-        internal CreateCompletionResponseChoiceLogprobs(IEnumerable<string> tokens, IEnumerable<double> tokenLogprobs, IEnumerable<IDictionary<string, long>> topLogprobs, IEnumerable<long> textOffset)
+        internal CreateCompletionResponseChoiceLogprobs()
         {
-            Argument.AssertNotNull(tokens, nameof(tokens));
-            Argument.AssertNotNull(tokenLogprobs, nameof(tokenLogprobs));
-            Argument.AssertNotNull(topLogprobs, nameof(topLogprobs));
-            Argument.AssertNotNull(textOffset, nameof(textOffset));
-
-            Tokens = tokens.ToList();
-            TokenLogprobs = tokenLogprobs.ToList();
-            TopLogprobs = topLogprobs.ToList();
-            TextOffset = textOffset.ToList();
+            TextOffset = new ChangeTrackingList<int>();
+            TokenLogprobs = new ChangeTrackingList<float>();
+            Tokens = new ChangeTrackingList<string>();
+            TopLogprobs = new ChangeTrackingList<IDictionary<string, float>>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateCompletionResponseChoiceLogprobs"/>. </summary>
-        /// <param name="tokens"></param>
-        /// <param name="tokenLogprobs"></param>
-        /// <param name="topLogprobs"></param>
         /// <param name="textOffset"></param>
+        /// <param name="tokenLogprobs"></param>
+        /// <param name="tokens"></param>
+        /// <param name="topLogprobs"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionResponseChoiceLogprobs(IReadOnlyList<string> tokens, IReadOnlyList<double> tokenLogprobs, IReadOnlyList<IDictionary<string, long>> topLogprobs, IReadOnlyList<long> textOffset, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateCompletionResponseChoiceLogprobs(IReadOnlyList<int> textOffset, IReadOnlyList<float> tokenLogprobs, IReadOnlyList<string> tokens, IReadOnlyList<IDictionary<string, float>> topLogprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Tokens = tokens;
-            TokenLogprobs = tokenLogprobs;
-            TopLogprobs = topLogprobs;
             TextOffset = textOffset;
+            TokenLogprobs = tokenLogprobs;
+            Tokens = tokens;
+            TopLogprobs = topLogprobs;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionResponseChoiceLogprobs"/> for deserialization. </summary>
-        internal CreateCompletionResponseChoiceLogprobs()
-        {
-        }
-
+        /// <summary> Gets the text offset. </summary>
+        public IReadOnlyList<int> TextOffset { get; }
+        /// <summary> Gets the token logprobs. </summary>
+        public IReadOnlyList<float> TokenLogprobs { get; }
         /// <summary> Gets the tokens. </summary>
         public IReadOnlyList<string> Tokens { get; }
-        /// <summary> Gets the token logprobs. </summary>
-        public IReadOnlyList<double> TokenLogprobs { get; }
         /// <summary> Gets the top logprobs. </summary>
-        public IReadOnlyList<IDictionary<string, long>> TopLogprobs { get; }
-        /// <summary> Gets the text offset. </summary>
-        public IReadOnlyList<long> TextOffset { get; }
+        public IReadOnlyList<IDictionary<string, float>> TopLogprobs { get; }
     }
 }

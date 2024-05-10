@@ -50,10 +50,9 @@ namespace OpenAI.FineTuning
         /// <param name="trainingFile">
         /// The ID of an uploaded file that contains training data.
         ///
-        /// See [upload file](/docs/api-reference/files/upload) for how to upload a file.
+        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
         ///
-        /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
-        /// the purpose `fine-tune`.
+        /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         /// </param>
@@ -64,6 +63,7 @@ namespace OpenAI.FineTuning
 
             Model = model;
             TrainingFile = trainingFile;
+            Integrations = new ChangeTrackingList<CreateFineTuningJobRequestIntegration>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateFineTuningJobRequest"/>. </summary>
@@ -74,10 +74,9 @@ namespace OpenAI.FineTuning
         /// <param name="trainingFile">
         /// The ID of an uploaded file that contains training data.
         ///
-        /// See [upload file](/docs/api-reference/files/upload) for how to upload a file.
+        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
         ///
-        /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
-        /// the purpose `fine-tune`.
+        /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         /// </param>
@@ -85,29 +84,35 @@ namespace OpenAI.FineTuning
         /// <param name="suffix">
         /// A string of up to 18 characters that will be added to your fine-tuned model name.
         ///
-        /// For example, a `suffix` of "custom-model-name" would produce a model name like
-        /// `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+        /// For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
         /// </param>
         /// <param name="validationFile">
         /// The ID of an uploaded file that contains validation data.
         ///
-        /// If you provide this file, the data is used to generate validation metrics periodically during
-        /// fine-tuning. These metrics can be viewed in the fine-tuning results file. The same data should
-        /// not be present in both train and validation files.
+        /// If you provide this file, the data is used to generate validation
+        /// metrics periodically during fine-tuning. These metrics can be viewed in
+        /// the fine-tuning results file.
+        /// The same data should not be present in both train and validation files.
         ///
-        /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
-        /// `fine-tune`.
+        /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         /// </param>
+        /// <param name="integrations"> A list of integrations to enable for your fine-tuning job. </param>
+        /// <param name="seed">
+        /// The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
+        /// If a seed is not specified, one will be generated for you.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateFineTuningJobRequest(CreateFineTuningJobRequestModel model, string trainingFile, CreateFineTuningJobRequestHyperparameters hyperparameters, string suffix, string validationFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateFineTuningJobRequest(CreateFineTuningJobRequestModel model, string trainingFile, CreateFineTuningJobRequestHyperparameters hyperparameters, string suffix, string validationFile, IList<CreateFineTuningJobRequestIntegration> integrations, int? seed, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             TrainingFile = trainingFile;
             Hyperparameters = hyperparameters;
             Suffix = suffix;
             ValidationFile = validationFile;
+            Integrations = integrations;
+            Seed = seed;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -124,10 +129,9 @@ namespace OpenAI.FineTuning
         /// <summary>
         /// The ID of an uploaded file that contains training data.
         ///
-        /// See [upload file](/docs/api-reference/files/upload) for how to upload a file.
+        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
         ///
-        /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
-        /// the purpose `fine-tune`.
+        /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         /// </summary>
@@ -137,22 +141,28 @@ namespace OpenAI.FineTuning
         /// <summary>
         /// A string of up to 18 characters that will be added to your fine-tuned model name.
         ///
-        /// For example, a `suffix` of "custom-model-name" would produce a model name like
-        /// `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+        /// For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
         /// </summary>
         public string Suffix { get; set; }
         /// <summary>
         /// The ID of an uploaded file that contains validation data.
         ///
-        /// If you provide this file, the data is used to generate validation metrics periodically during
-        /// fine-tuning. These metrics can be viewed in the fine-tuning results file. The same data should
-        /// not be present in both train and validation files.
+        /// If you provide this file, the data is used to generate validation
+        /// metrics periodically during fine-tuning. These metrics can be viewed in
+        /// the fine-tuning results file.
+        /// The same data should not be present in both train and validation files.
         ///
-        /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
-        /// `fine-tune`.
+        /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
         ///
         /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         /// </summary>
         public string ValidationFile { get; set; }
+        /// <summary> A list of integrations to enable for your fine-tuning job. </summary>
+        public IList<CreateFineTuningJobRequestIntegration> Integrations { get; set; }
+        /// <summary>
+        /// The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
+        /// If a seed is not specified, one will be generated for you.
+        /// </summary>
+        public int? Seed { get; set; }
     }
 }

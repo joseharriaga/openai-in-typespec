@@ -24,9 +24,9 @@ namespace OpenAI.Audio
             writer.WritePropertyName("word"u8);
             writer.WriteStringValue(Word);
             writer.WritePropertyName("start"u8);
-            writer.WriteNumberValue(Convert.ToInt32(Start.ToString("%s")));
+            writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.fff")));
             writer.WritePropertyName("end"u8);
-            writer.WriteNumberValue(Convert.ToInt32(End.ToString("%s")));
+            writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.fff")));
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -79,12 +79,12 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("start"u8))
                 {
-                    start = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    start = TimeSpan.FromSeconds(property.Value.GetDouble());
                     continue;
                 }
                 if (property.NameEquals("end"u8))
                 {
-                    end = TimeSpan.FromSeconds(property.Value.GetInt32());
+                    end = TimeSpan.FromSeconds(property.Value.GetDouble());
                     continue;
                 }
                 if (options.Format != "W")

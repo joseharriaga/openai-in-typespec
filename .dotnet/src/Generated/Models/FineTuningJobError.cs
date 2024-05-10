@@ -45,10 +45,7 @@ namespace OpenAI.FineTuning
         /// <summary> Initializes a new instance of <see cref="FineTuningJobError"/>. </summary>
         /// <param name="code"> A machine-readable error code. </param>
         /// <param name="message"> A human-readable error message. </param>
-        /// <param name="param">
-        /// The parameter that was invalid, usually `training_file` or `validation_file`. This field will
-        /// be null if the failure was not parameter-specific.
-        /// </param>
+        /// <param name="param"> The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="code"/> or <paramref name="message"/> is null. </exception>
         internal FineTuningJobError(string code, string message, string param)
         {
@@ -63,10 +60,7 @@ namespace OpenAI.FineTuning
         /// <summary> Initializes a new instance of <see cref="FineTuningJobError"/>. </summary>
         /// <param name="code"> A machine-readable error code. </param>
         /// <param name="message"> A human-readable error message. </param>
-        /// <param name="param">
-        /// The parameter that was invalid, usually `training_file` or `validation_file`. This field will
-        /// be null if the failure was not parameter-specific.
-        /// </param>
+        /// <param name="param"> The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal FineTuningJobError(string code, string message, string param, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -85,10 +79,7 @@ namespace OpenAI.FineTuning
         public string Code { get; }
         /// <summary> A human-readable error message. </summary>
         public string Message { get; }
-        /// <summary>
-        /// The parameter that was invalid, usually `training_file` or `validation_file`. This field will
-        /// be null if the failure was not parameter-specific.
-        /// </summary>
+        /// <summary> The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific. </summary>
         public string Param { get; }
     }
 }

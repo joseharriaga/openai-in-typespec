@@ -57,33 +57,41 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateThreadAndRunRequest"/>. </summary>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
         /// <param name="thread"> If no thread is provided, an empty thread will be created. </param>
-        /// <param name="model">
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is
-        /// provided here, it will override the model associated with the assistant. If not, the model
-        /// associated with the assistant will be used.
+        /// <param name="model"> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </param>
+        /// <param name="instructions"> Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="tools"> Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="toolResources"> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
+        /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
+        /// <param name="topP">
+        /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+        ///
+        /// We generally recommend altering this or temperature but not both.
         /// </param>
-        /// <param name="instructions">
-        /// Override the default system message of the assistant. This is useful for modifying the behavior
-        /// on a per-run basis.
-        /// </param>
-        /// <param name="tools">
-        /// Override the tools the assistant can use for this run. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
+        /// <param name="stream"> If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message. </param>
+        /// <param name="maxPromptTokens"> The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </param>
+        /// <param name="maxCompletionTokens"> The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </param>
+        /// <param name="truncationStrategy"></param>
+        /// <param name="toolChoice"></param>
+        /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateThreadAndRunRequest(string assistantId, CreateThreadRequest thread, string model, string instructions, IList<BinaryData> tools, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateThreadAndRunRequest(string assistantId, CreateThreadRequest thread, CreateThreadAndRunRequestModel? model, string instructions, IList<BinaryData> tools, CreateThreadAndRunRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Thread = thread;
             Model = model;
             Instructions = instructions;
             Tools = tools;
+            ToolResources = toolResources;
             Metadata = metadata;
+            Temperature = temperature;
+            TopP = topP;
+            Stream = stream;
+            MaxPromptTokens = maxPromptTokens;
+            MaxCompletionTokens = maxCompletionTokens;
+            TruncationStrategy = truncationStrategy;
+            ToolChoice = toolChoice;
+            ResponseFormat = responseFormat;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -96,20 +104,12 @@ namespace OpenAI.Internal.Models
         public string AssistantId { get; }
         /// <summary> If no thread is provided, an empty thread will be created. </summary>
         public CreateThreadRequest Thread { get; set; }
-        /// <summary>
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is
-        /// provided here, it will override the model associated with the assistant. If not, the model
-        /// associated with the assistant will be used.
-        /// </summary>
-        public string Model { get; set; }
-        /// <summary>
-        /// Override the default system message of the assistant. This is useful for modifying the behavior
-        /// on a per-run basis.
-        /// </summary>
+        /// <summary> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </summary>
+        public CreateThreadAndRunRequestModel? Model { get; set; }
+        /// <summary> Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. </summary>
         public string Instructions { get; set; }
         /// <summary>
-        /// Override the tools the assistant can use for this run. This is useful for modifying the
-        /// behavior on a per-run basis.
+        /// Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>
@@ -124,7 +124,7 @@ namespace OpenAI.Internal.Models
         /// <description><see cref="AssistantToolsCode"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="AssistantToolsRetrieval"/></description>
+        /// <description><see cref="AssistantToolsFileSearch"/></description>
         /// </item>
         /// <item>
         /// <description><see cref="AssistantToolsFunction"/></description>
@@ -153,11 +153,109 @@ namespace OpenAI.Internal.Models
         /// </para>
         /// </summary>
         public IList<BinaryData> Tools { get; set; }
-        /// <summary>
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </summary>
+        /// <summary> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </summary>
+        public CreateThreadAndRunRequestToolResources ToolResources { get; set; }
+        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IDictionary<string, string> Metadata { get; set; }
+        /// <summary> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </summary>
+        public float? Temperature { get; set; }
+        /// <summary>
+        /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+        ///
+        /// We generally recommend altering this or temperature but not both.
+        /// </summary>
+        public float? TopP { get; set; }
+        /// <summary> If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message. </summary>
+        public bool? Stream { get; set; }
+        /// <summary> The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
+        public int? MaxPromptTokens { get; set; }
+        /// <summary> The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
+        public int? MaxCompletionTokens { get; set; }
+        /// <summary> Gets or sets the truncation strategy. </summary>
+        public TruncationObject TruncationStrategy { get; set; }
+        /// <summary>
+        /// Gets or sets the tool choice
+        /// <para>
+        /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
+        /// </para>
+        /// <para>
+        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
+        /// </para>
+        /// <para>
+        /// <remarks>
+        /// Supported types:
+        /// <list type="bullet">
+        /// <item>
+        /// <description><see cref="BinaryData"/></description>
+        /// </item>
+        /// <item>
+        /// <description><see cref="AssistantsNamedToolChoice"/></description>
+        /// </item>
+        /// </list>
+        /// </remarks>
+        /// Examples:
+        /// <list type="bullet">
+        /// <item>
+        /// <term>BinaryData.FromObjectAsJson("foo")</term>
+        /// <description>Creates a payload of "foo".</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromString("\"foo\"")</term>
+        /// <description>Creates a payload of "foo".</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
+        /// <description>Creates a payload of { "key": "value" }.</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
+        /// <description>Creates a payload of { "key": "value" }.</description>
+        /// </item>
+        /// </list>
+        /// </para>
+        /// </summary>
+        public BinaryData ToolChoice { get; set; }
+        /// <summary>
+        /// Gets or sets the response format
+        /// <para>
+        /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
+        /// </para>
+        /// <para>
+        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
+        /// </para>
+        /// <para>
+        /// <remarks>
+        /// Supported types:
+        /// <list type="bullet">
+        /// <item>
+        /// <description><see cref="BinaryData"/></description>
+        /// </item>
+        /// <item>
+        /// <description><see cref="AssistantsApiResponseFormat"/></description>
+        /// </item>
+        /// </list>
+        /// </remarks>
+        /// Examples:
+        /// <list type="bullet">
+        /// <item>
+        /// <term>BinaryData.FromObjectAsJson("foo")</term>
+        /// <description>Creates a payload of "foo".</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromString("\"foo\"")</term>
+        /// <description>Creates a payload of "foo".</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
+        /// <description>Creates a payload of { "key": "value" }.</description>
+        /// </item>
+        /// <item>
+        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
+        /// <description>Creates a payload of { "key": "value" }.</description>
+        /// </item>
+        /// </list>
+        /// </para>
+        /// </summary>
+        public BinaryData ResponseFormat { get; set; }
     }
 }

@@ -86,76 +86,6 @@ public partial class AssistantClient
         RequestOptions options)
         => await Shim.DeleteAssistantAsync(assistantId, options).ConfigureAwait(false);
 
-    /// <inheritdoc cref="Internal.Assistants.CreateAssistantFile(string, BinaryContent, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult CreateAssistantFileAssociation(
-        string assistantId,
-        BinaryContent content,
-        RequestOptions options = null)
-        => Shim.CreateAssistantFile(assistantId, content, options);
-
-    /// <inheritdoc cref="Internal.Assistants.CreateAssistantFileAsync(string, BinaryContent, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> CreateAssistantFileAssociationAsync(
-        string assistantId,
-        BinaryContent content,
-        RequestOptions options = null)
-        => await Shim.CreateAssistantFileAsync(assistantId, content, options).ConfigureAwait(false);
-
-    /// <inheritdoc cref="Internal.Assistants.GetAssistantFile(string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetAssistantFileAssociation(
-        string assistantId,
-        string fileId,
-        RequestOptions options)
-        => Shim.GetAssistantFile(assistantId, fileId, options);
-
-    /// <inheritdoc cref="Internal.Assistants.GetAssistantFileAsync(string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetAssistantFileAssociationAsync(
-        string assistantId,
-        string fileId,
-        RequestOptions options)
-        => await Shim.GetAssistantFileAsync(assistantId, fileId, options).ConfigureAwait(false);
-
-    /// <inheritdoc cref="Internal.Assistants.GetAssistantFiles(string, int?, string, string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetAssistantFileAssociations(
-        string assistantId,
-        int? maxResults,
-        string createdSortOrder,
-        string previousId,
-        string subsequentId,
-        RequestOptions options)
-        => Shim.GetAssistantFiles(assistantId, maxResults, createdSortOrder, previousId, subsequentId, options);
-
-    /// <inheritdoc cref="Internal.Assistants.GetAssistantFilesAsync(string, int?, string, string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetAssistantFileAssociationsAsync(
-        string assistantId,
-        int? maxResults,
-        string createdSortOrder,
-        string previousId,
-        string subsequentId,
-        RequestOptions options)
-        => await Shim.GetAssistantFilesAsync(assistantId, maxResults, createdSortOrder, previousId, subsequentId, options).ConfigureAwait(false);
-
-    /// <inheritdoc cref="Internal.Assistants.DeleteAssistantFile(string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult RemoveAssistantFileAssociation(
-        string assistantId,
-        string fileId,
-        RequestOptions options)
-        => Shim.DeleteAssistantFile(assistantId, fileId, options);
-
-    /// <inheritdoc cref="Internal.Assistants.DeleteAssistantFileAsync(string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> RemoveAssistantFileAssociationAsync(
-        string assistantId,
-        string fileId,
-        RequestOptions options)
-        => await Shim.DeleteAssistantFileAsync(assistantId, fileId, options).ConfigureAwait(false);
-
     /// <inheritdoc cref="Internal.Threads.CreateThread(BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult CreateThread(
@@ -285,48 +215,6 @@ public partial class AssistantClient
         string subsequentMessageId,
         RequestOptions options)
         => await MessageShim.GetMessagesAsync(threadId, maxResults, createdSortOrder, previousMessageId, subsequentMessageId, options).ConfigureAwait(false);
-
-    /// <inheritdoc cref="Internal.Messages.GetMessageFile(string, string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetMessageFileAssociation(
-        string threadId,
-        string messageId,
-        string fileId,
-        RequestOptions options)
-        => MessageShim.GetMessageFile(threadId, messageId, fileId, options);
-
-    /// <inheritdoc cref="Internal.Messages.GetMessageFileAsync(string, string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetMessageFileAssociationAsync(
-        string threadId,
-        string messageId,
-        string fileId,
-        RequestOptions options)
-        => await MessageShim.GetMessageFileAsync(threadId, messageId, fileId, options).ConfigureAwait(false);
-
-    /// <inheritdoc cref="Internal.Messages.GetMessageFiles(string, string, int?, string, string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetMessageFileAssociations(
-        string threadId,
-        string messageId,
-        int? maxResults,
-        string createdSortOrder,
-        string previousId ,
-        string subsequentId,
-        RequestOptions options)
-        => MessageShim.GetMessageFiles(threadId, messageId, maxResults, createdSortOrder, previousId, subsequentId, options);
-
-    /// <inheritdoc cref="Internal.Messages.GetMessageFilesAsync(string, string, int?, string, string, string, RequestOptions)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetMessageFileAssociationsAsync(
-        string threadId,
-        string messageId,
-        int? maxResults,
-        string createdSortOrder,
-        string previousId,
-        string subsequentId,
-        RequestOptions options)
-        => await MessageShim.GetMessageFilesAsync(threadId, messageId, maxResults, createdSortOrder, previousId, subsequentId, options).ConfigureAwait(false);
 
     /// <inheritdoc cref="Internal.Runs.CreateRun(string, BinaryContent, RequestOptions)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]

@@ -48,6 +48,6 @@ namespace OpenAI.Embeddings
         }
 
         /// <summary> The index of the embedding in the list of embeddings. </summary>
-        public long Index { get; }
+        public int Index { get; }
     }
 }

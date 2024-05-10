@@ -8,17 +8,17 @@ function Edit-GeneratedOpenAIClient {
 
     Write-Output "Editing $($file.FullName)"
 
-    # $content = $content -creplace "public partial class", "internal partial class"
-    # $content = $content -creplace "public readonly partial struct", "internal readonly partial struct"
-    # $content = $content -creplace "public static partial class", "internal static partial class"
-    # $content = $content -creplace "namespace OpenAI", "namespace OpenAI.Internal"
-    # $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
-     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.BatchClient _cachedBatchClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FileClient _cachedFileClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModerationClient _cachedModerationClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.VectorStoreClient _cachedVectorStoreClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
     $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
 
@@ -33,10 +33,15 @@ function Edit-GeneratedSubclients {
 
     $exclusions = @(
         "AudioClient.cs",
+        "BatchClient.cs",
         "EmbeddingClient.cs",
+        "FileClient.cs",
         "FineTuningClient.cs",
         "ImageClient.cs",
-        "LegacyCompletionClient.cs"
+        "LegacyCompletionClient.cs",
+        "ModelClient.cs",
+        "ModerationClient.cs",
+        "VectorStoreClient.cs"
     )
 
     foreach ($file in $files) {
@@ -65,6 +70,8 @@ function Edit-GeneratedModels {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs"
     
     $exclusions = @(
+        "ListOrder.cs",
+
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",
         "AudioTranscriptionFormat.Serialization.cs",
@@ -102,13 +109,44 @@ function Edit-GeneratedModels {
         "EmbeddingTokenUsage.cs",
         "EmbeddingTokenUsage.Serialization.cs",
 
+        "DeleteFileResponse.cs",
+        "DeleteFileResponseObject.cs",
+        "DeleteFileResponse.Serialization.cs",
+        "ListFilesResponseObject.cs",
+        "OpenAIFileInfo.cs",
+        "OpenAIFileInfo.Serialization.cs",
+        "OpenAIFileInfoCollection.cs",
+        "OpenAIFileInfoCollection.Serialization.cs",
+        "OpenAIFileObject.cs",
+        "OpenAIFilePurpose.cs",
+        "OpenAIFileStatus.cs",
+        "UploadFileOptions.cs",
+        "UploadFileOptions.Serialization.cs",
+        "UploadFileOptionsPurpose.cs"
+
         "CreateFineTuningJobRequest.cs",
         "CreateFineTuningJobRequest.Serialization.cs",
         "CreateFineTuningJobRequestHyperparameters.cs",
         "CreateFineTuningJobRequestHyperparameters.Serialization.cs",
+        "CreateFineTuningJobRequestIntegration.cs",
+        "CreateFineTuningJobRequestIntegration.Serialization.cs",
+        "CreateFineTuningJobRequestIntegrationType.cs",
+        "CreateFineTuningJobRequestIntegrationType.Serialization.cs",
+        "CreateFineTuningJobRequestIntegrationWandb.cs",
+        "CreateFineTuningJobRequestIntegrationWandb.Serialization.cs",
         "CreateFineTuningJobRequestModel.cs",
+        "FineTuningIntegration.cs",
+        "FineTuningIntegration.Serialization.cs",
+        "FineTuningIntegrationType.cs",
+        "FineTuningIntegrationWandb.cs",
+        "FineTuningIntegrationWandb.Serialization.cs",
         "FineTuningJob.cs",
         "FineTuningJob.Serialization.cs",
+        "FineTuningJobCheckpoint.cs",
+        "FineTuningJobCheckpoint.Serialization.cs",
+        "FineTuningJobCheckpointMetrics.cs",
+        "FineTuningJobCheckpointMetrics.Serialization.cs",
+        "FineTuningJobCheckpointObject.cs",
         "FineTuningJobError.cs",
         "FineTuningJobError.Serialization.cs",
         "FineTuningJobEvent.cs",
@@ -119,6 +157,12 @@ function Edit-GeneratedModels {
         "FineTuningJobHyperparameters.Serialization.cs",
         "FineTuningJobObject.cs",
         "FineTuningJobStatus.cs",
+        "ListFineTuningJobCheckpointsResponse.cs",
+        "ListFineTuningJobCheckpointsResponse.Serialization.cs",
+        "ListFineTuningJobCheckpointsResponseObject.cs",
+        "ListFineTuningJobEventsResponse.cs",
+        "ListFineTuningJobEventsResponse.Serialization.cs",
+        "ListFineTuningJobEventsResponseObject.cs",
 
         "CreateImageEditRequestModel.cs",
         "CreateImageRequestModel.cs",
@@ -154,7 +198,55 @@ function Edit-GeneratedModels {
         "CreateCompletionResponseChoiceLogprobs.Serialization.cs",
         "CreateCompletionResponseObject.cs",
         "CompletionUsage.cs",
-        "CompletionUsage.Serialization.cs"
+        "CompletionUsage.Serialization.cs",
+
+        "InternalChatCompletionStreamOptions.cs",
+        "InternalChatCompletionStreamOptions.Serialization.cs",
+
+        "DeleteModelResponse.cs",
+        "DeleteModelResponse.Serialization.cs",
+        "DeleteModelResponseObject.cs",
+        "ListModelsResponseObject.cs",
+        "ModelObject.cs",
+        "OpenAIModelInfo.cs",
+        "OpenAIModelInfo.Serialization.cs",
+        "OpenAIModelInfoCollection.cs",
+        "OpenAIModelInfoCollection.Serialization.cs",
+
+        "CreateModerationRequestModel.cs",
+        "Moderation.cs",
+        "Moderation.Serialization.cs",
+        "ModerationCategories.cs",
+        "ModerationCategories.Serialization.cs",
+        "ModerationCategoryScores.cs",
+        "ModerationCategoryScores.Serialization.cs",
+        "ModerationCollection.cs",
+        "ModerationCollection.Serialization.cs",
+        "ModerationOptions.cs",
+        "ModerationOptions.Serialization.cs",
+
+        "InternalBatchCompletionTimeframe.cs",
+        "InternalBatchError.cs",
+        "InternalBatchError.Serialization.cs",
+        "InternalBatchJob.cs",
+        "InternalBatchJob.Serialization.cs",
+        "InternalBatchJobStatus.cs",
+        "InternalBatchObject.cs",
+        "InternalBatchOperationEndpoint.cs",
+        "InternalBatchStatus.cs",
+        "InternalBatchErrors.cs",
+        "InternalBatchErrors.Serialization.cs",
+        "InternalBatchErrorsObject.cs",
+        "InternalBatchRequestCounts.cs",
+        "InternalBatchRequestCounts.Serialization.cs",
+        "InternalCreateBatchRequest.cs",
+        "InternalCreateBatchRequest.Serialization.cs",
+        "InternalListBatchesResponse.cs",
+        "InternalListBatchesResponse.Serialization.cs",
+        "InternalListBatchesResponseObject.cs",
+        "InternalListBatchesResponseObject.Serialization.cs",
+
+        "VectorStoreFileStatusFilter.cs"
     )
 
     foreach ($file in $files) {
@@ -191,15 +283,7 @@ function Edit-GeneratedModelFactory {
     $content | Set-Content -Path $file.FullName -NoNewline
 }
 
-function Remove-GeneratedTests {
-    $root = Split-Path $PSScriptRoot -Parent
-
-    $directory = Join-Path -Path $root -ChildPath "tests\Generated"
-    Remove-Item -LiteralPath $directory -Recurse -Force
-}
-
 Edit-GeneratedOpenAIClient
 Edit-GeneratedSubclients
 Edit-GeneratedModels
 Edit-GeneratedModelFactory
-Remove-GeneratedTests

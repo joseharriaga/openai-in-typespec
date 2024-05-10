@@ -27,7 +27,7 @@ internal static partial class OpenAIModelFactory
     /// listed in the [embedding guide](/docs/guides/embeddings).
     /// </param>
     /// <returns> A new <see cref="Embeddings.Embedding"/> instance for mocking. </returns>
-    public static Embedding Embedding(ReadOnlyMemory<float> vector = default, long index = default)
+    public static Embedding Embedding(ReadOnlyMemory<float> vector = default, int index = default)
     {
         // TODO: Vector must be converted to base64-encoded string.
         return new Embedding(index, BinaryData.FromObjectAsJson(vector), EmbeddingObject.Embedding, serializedAdditionalRawData: null);

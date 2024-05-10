@@ -1,8 +1,7 @@
 import "@typespec/http";
 import "@typespec/openapi";
 
-import "../common/models.tsp";
-import "../common/errors.tsp";
+import "../common";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -31,31 +30,31 @@ interface Messages {
     /** The ID of the [thread](/docs/api-reference/threads) the messages belong to. */
     @path thread_id: string,
 
-    /** 
+    /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
      * default is 20.
      */
-    @query limit?: int32 = 20;
+    @query limit?: int32 = 20,
 
     /**
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc;
+    @query order?: ListOrder = ListOrder.desc,
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include after=obj_foo in order to fetch the next page of the list.
      */
-    @query after?: string;
+    @query after?: string,
 
     /**
      * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
      */
-    @query before?: string;
+    @query before?: string,
   ): ListMessagesResponse | ErrorResponse;
 
   @route("{message_id}")
@@ -86,58 +85,16 @@ interface Messages {
     @body message: ModifyMessageRequest,
   ): MessageObject | ErrorResponse;
 
-  @route("{message_id}/files")
-  @get
-  @operationId("listMessageFiles")
+  @route("{message_id}")
+  @delete
+  @operationId("deleteMessage")
   @tag("Assistants")
-  @summary("Returns a list of message files.")
-  listMessageFiles(
-    /** The ID of the thread that the message and files belong to. */
+  @summary("Deletes a message.")
+  deleteMessage(
+    /** The ID of the thread to which this message belongs. */
     @path thread_id: string,
 
-    /** The ID of the message that the files belongs to. */
+    /** The ID of the message to delete. */
     @path message_id: string,
-
-    /** 
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-     * default is 20.
-     */
-    @query limit?: int32 = 20;
-
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-     * for descending order.
-     */
-    @query order?: ListOrder = ListOrder.desc;
-
-    /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     */
-    @query after?: string;
-
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     */
-    @query before?: string;
-  ): ListMessageFilesResponse | ErrorResponse;
-
-  @route("{message_id}/files/{file_id}")
-  @get
-  @operationId("getMessageFile")
-  @tag("Assistants")
-  @summary("Retrieves a message file.")
-  getMessageFile(
-    /** The ID of the thread to which the message and File belong. */
-    @path thread_id: string,
-
-    /** The ID of the message the file belongs to. */
-    @path message_id: string,
-
-    /** The ID of the file being retrieved. */
-    @path file_id: string,
-  ): MessageFileObject | ErrorResponse;
+  ): DeleteMessageResponse | ErrorResponse;
 }

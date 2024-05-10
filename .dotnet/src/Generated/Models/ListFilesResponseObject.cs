@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
     /// <summary> The ListFilesResponse_object. </summary>
     internal readonly partial struct ListFilesResponseObject : IEquatable<ListFilesResponseObject>

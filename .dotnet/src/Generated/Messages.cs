@@ -205,7 +205,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessagesAsync(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetMessagesAsync(string,int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -252,7 +252,7 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessages(string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="GetMessages(string,int?,global::OpenAI.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -483,74 +483,38 @@ namespace OpenAI.Internal
             return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
-        /// <summary> Returns a list of message files. </summary>
-        /// <param name="threadId"> The ID of the thread that the message and files belong to. </param>
-        /// <param name="messageId"> The ID of the message that the files belongs to. </param>
-        /// <param name="limit">
-        /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-        /// default is 20.
-        /// </param>
-        /// <param name="order">
-        /// Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-        /// for descending order.
-        /// </param>
-        /// <param name="after">
-        /// A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include after=obj_foo in order to fetch the next page of the list.
-        /// </param>
-        /// <param name="before">
-        /// A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-        /// </param>
+        /// <summary> Deletes a message. </summary>
+        /// <param name="threadId"> The ID of the thread to which this message belongs. </param>
+        /// <param name="messageId"> The ID of the message to delete. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> List message files. </remarks>
-        public virtual async Task<ClientResult<ListMessageFilesResponse>> GetMessageFilesAsync(string threadId, string messageId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
+        /// <remarks> Delete message. </remarks>
+        public virtual async Task<ClientResult<DeleteMessageResponse>> DeleteMessageAsync(string threadId, string messageId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
-            ClientResult result = await GetMessageFilesAsync(threadId, messageId, limit, order?.ToString(), after, before, null).ConfigureAwait(false);
-            return ClientResult.FromValue(ListMessageFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            ClientResult result = await DeleteMessageAsync(threadId, messageId, null).ConfigureAwait(false);
+            return ClientResult.FromValue(DeleteMessageResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Returns a list of message files. </summary>
-        /// <param name="threadId"> The ID of the thread that the message and files belong to. </param>
-        /// <param name="messageId"> The ID of the message that the files belongs to. </param>
-        /// <param name="limit">
-        /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-        /// default is 20.
-        /// </param>
-        /// <param name="order">
-        /// Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-        /// for descending order.
-        /// </param>
-        /// <param name="after">
-        /// A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include after=obj_foo in order to fetch the next page of the list.
-        /// </param>
-        /// <param name="before">
-        /// A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-        /// </param>
+        /// <summary> Deletes a message. </summary>
+        /// <param name="threadId"> The ID of the thread to which this message belongs. </param>
+        /// <param name="messageId"> The ID of the message to delete. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> List message files. </remarks>
-        public virtual ClientResult<ListMessageFilesResponse> GetMessageFiles(string threadId, string messageId, int? limit = null, ListOrder? order = null, string after = null, string before = null)
+        /// <remarks> Delete message. </remarks>
+        public virtual ClientResult<DeleteMessageResponse> DeleteMessage(string threadId, string messageId)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
-            ClientResult result = GetMessageFiles(threadId, messageId, limit, order?.ToString(), after, before, null);
-            return ClientResult.FromValue(ListMessageFilesResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            ClientResult result = DeleteMessage(threadId, messageId, null);
+            return ClientResult.FromValue(DeleteMessageResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary>
-        /// [Protocol Method] Returns a list of message files.
+        /// [Protocol Method] Deletes a message.
         /// <list type="bullet">
         /// <item>
         /// <description>
@@ -559,47 +523,29 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessageFilesAsync(string,string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="DeleteMessageAsync(string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
         /// </summary>
-        /// <param name="threadId"> The ID of the thread that the message and files belong to. </param>
-        /// <param name="messageId"> The ID of the message that the files belongs to. </param>
-        /// <param name="limit">
-        /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-        /// default is 20.
-        /// </param>
-        /// <param name="order">
-        /// Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-        /// for descending order. Allowed values: "asc" | "desc"
-        /// </param>
-        /// <param name="after">
-        /// A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include after=obj_foo in order to fetch the next page of the list.
-        /// </param>
-        /// <param name="before">
-        /// A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-        /// </param>
+        /// <param name="threadId"> The ID of the thread to which this message belongs. </param>
+        /// <param name="messageId"> The ID of the message to delete. </param>
         /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
         /// <returns> The response returned from the service. </returns>
-        public virtual async Task<ClientResult> GetMessageFilesAsync(string threadId, string messageId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual async Task<ClientResult> DeleteMessageAsync(string threadId, string messageId, RequestOptions options)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
-            using PipelineMessage message = CreateGetMessageFilesRequest(threadId, messageId, limit, order, after, before, options);
+            using PipelineMessage message = CreateDeleteMessageRequest(threadId, messageId, options);
             return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
         /// <summary>
-        /// [Protocol Method] Returns a list of message files.
+        /// [Protocol Method] Deletes a message.
         /// <list type="bullet">
         /// <item>
         /// <description>
@@ -608,142 +554,24 @@ namespace OpenAI.Internal
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="GetMessageFiles(string,string,int?,global::OpenAI.Models.ListOrder?,string,string)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="DeleteMessage(string,string)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
         /// </summary>
-        /// <param name="threadId"> The ID of the thread that the message and files belong to. </param>
-        /// <param name="messageId"> The ID of the message that the files belongs to. </param>
-        /// <param name="limit">
-        /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-        /// default is 20.
-        /// </param>
-        /// <param name="order">
-        /// Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-        /// for descending order. Allowed values: "asc" | "desc"
-        /// </param>
-        /// <param name="after">
-        /// A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include after=obj_foo in order to fetch the next page of the list.
-        /// </param>
-        /// <param name="before">
-        /// A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-        /// For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-        /// subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-        /// </param>
+        /// <param name="threadId"> The ID of the thread to which this message belongs. </param>
+        /// <param name="messageId"> The ID of the message to delete. </param>
         /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="threadId"/> or <paramref name="messageId"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="messageId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
         /// <returns> The response returned from the service. </returns>
-        public virtual ClientResult GetMessageFiles(string threadId, string messageId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual ClientResult DeleteMessage(string threadId, string messageId, RequestOptions options)
         {
             Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
             Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
-            using PipelineMessage message = CreateGetMessageFilesRequest(threadId, messageId, limit, order, after, before, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-        }
-
-        /// <summary> Retrieves a message file. </summary>
-        /// <param name="threadId"> The ID of the thread to which the message and File belong. </param>
-        /// <param name="messageId"> The ID of the message the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file being retrieved. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Get message file. </remarks>
-        public virtual async Task<ClientResult<MessageFileObject>> GetMessageFileAsync(string threadId, string messageId, string fileId)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            ClientResult result = await GetMessageFileAsync(threadId, messageId, fileId, null).ConfigureAwait(false);
-            return ClientResult.FromValue(MessageFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary> Retrieves a message file. </summary>
-        /// <param name="threadId"> The ID of the thread to which the message and File belong. </param>
-        /// <param name="messageId"> The ID of the message the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file being retrieved. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Get message file. </remarks>
-        public virtual ClientResult<MessageFileObject> GetMessageFile(string threadId, string messageId, string fileId)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            ClientResult result = GetMessageFile(threadId, messageId, fileId, null);
-            return ClientResult.FromValue(MessageFileObject.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary>
-        /// [Protocol Method] Retrieves a message file.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="GetMessageFileAsync(string,string,string)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="threadId"> The ID of the thread to which the message and File belong. </param>
-        /// <param name="messageId"> The ID of the message the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file being retrieved. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual async Task<ClientResult> GetMessageFileAsync(string threadId, string messageId, string fileId, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            using PipelineMessage message = CreateGetMessageFileRequest(threadId, messageId, fileId, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        /// <summary>
-        /// [Protocol Method] Retrieves a message file.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="GetMessageFile(string,string,string)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="threadId"> The ID of the thread to which the message and File belong. </param>
-        /// <param name="messageId"> The ID of the message the file belongs to. </param>
-        /// <param name="fileId"> The ID of the file being retrieved. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="threadId"/>, <paramref name="messageId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
-        public virtual ClientResult GetMessageFile(string threadId, string messageId, string fileId, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
-            Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-            using PipelineMessage message = CreateGetMessageFileRequest(threadId, messageId, fileId, options);
+            using PipelineMessage message = CreateDeleteMessageRequest(threadId, messageId, options);
             return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
@@ -762,7 +590,7 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -795,7 +623,7 @@ namespace OpenAI.Internal
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -813,7 +641,7 @@ namespace OpenAI.Internal
             uri.AppendPath(messageId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
@@ -833,62 +661,25 @@ namespace OpenAI.Internal
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateGetMessageFilesRequest(string threadId, string messageId, int? limit, string order, string after, string before, RequestOptions options)
+        internal PipelineMessage CreateDeleteMessageRequest(string threadId, string messageId, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
             var request = message.Request;
-            request.Method = "GET";
+            request.Method = "DELETE";
             var uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
             uri.AppendPath(threadId, true);
             uri.AppendPath("/messages/", false);
             uri.AppendPath(messageId, true);
-            uri.AppendPath("/files", false);
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            if (order != null)
-            {
-                uri.AppendQuery("order", order, true);
-            }
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (before != null)
-            {
-                uri.AppendQuery("before", before, true);
-            }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
-            return message;
-        }
-
-        internal PipelineMessage CreateGetMessageFileRequest(string threadId, string messageId, string fileId, RequestOptions options)
-        {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/messages/", false);
-            uri.AppendPath(messageId, true);
-            uri.AppendPath("/files/", false);
-            uri.AppendPath(fileId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            if (options != null) { message.Apply(options); }
+            message.Apply(options);
             return message;
         }
 

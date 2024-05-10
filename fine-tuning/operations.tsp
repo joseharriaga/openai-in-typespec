@@ -1,7 +1,7 @@
 import "@typespec/http";
 import "@typespec/openapi";
 
-import "../common/errors.tsp";
+import "../common";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -62,6 +62,22 @@ interface FineTuning {
     /** The ID of the fine-tuning job to cancel. */
     @path fine_tuning_job_id: string,
   ): FineTuningJob | ErrorResponse;
+
+  @route("jobs/{fine_tuning_job_id}/checkpoints")
+  @get
+  @operationId("listFineTuningJobCheckpoints")
+  @tag("Fine-tuning")
+  @summary("List the checkpoints for a fine-tuning job.")
+  listFineTuningJobCheckpoints(
+    /** The ID of the fine-tuning job to get checkpoints for. */
+    @path fine_tuning_job_id: string,
+
+    /** Identifier for the last checkpoint ID from the previous pagination request. */
+    @query after?: string,
+
+    /** Number of checkpoints to retrieve. */
+    @query limit?: int32 = 10,
+  ): ListFineTuningJobCheckpointsResponse | ErrorResponse;
 
   @route("jobs/{fine_tuning_job_id}/events")
   @get

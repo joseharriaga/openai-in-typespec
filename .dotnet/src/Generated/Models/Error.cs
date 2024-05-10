@@ -43,34 +43,34 @@ namespace OpenAI.Internal.Models
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="Error"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="code"></param>
         /// <param name="message"></param>
         /// <param name="param"></param>
-        /// <param name="code"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="type"/> or <paramref name="message"/> is null. </exception>
-        internal Error(string type, string message, string param, string code)
+        /// <param name="type"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="message"/> or <paramref name="type"/> is null. </exception>
+        internal Error(string code, string message, string param, string type)
         {
-            Argument.AssertNotNull(type, nameof(type));
             Argument.AssertNotNull(message, nameof(message));
+            Argument.AssertNotNull(type, nameof(type));
 
-            Type = type;
+            Code = code;
             Message = message;
             Param = param;
-            Code = code;
+            Type = type;
         }
 
         /// <summary> Initializes a new instance of <see cref="Error"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="code"></param>
         /// <param name="message"></param>
         /// <param name="param"></param>
-        /// <param name="code"></param>
+        /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal Error(string type, string message, string param, string code, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal Error(string code, string message, string param, string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Type = type;
+            Code = code;
             Message = message;
             Param = param;
-            Code = code;
+            Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -79,13 +79,13 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Gets the type. </summary>
-        public string Type { get; }
+        /// <summary> Gets the code. </summary>
+        public string Code { get; }
         /// <summary> Gets the message. </summary>
         public string Message { get; }
         /// <summary> Gets the param. </summary>
         public string Param { get; }
-        /// <summary> Gets the code. </summary>
-        public string Code { get; }
+        /// <summary> Gets the type. </summary>
+        public string Type { get; }
     }
 }

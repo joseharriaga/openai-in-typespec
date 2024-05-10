@@ -75,13 +75,18 @@ namespace OpenAI.Internal.Models
 #endif
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("file_ids"u8);
-            writer.WriteStartArray();
-            foreach (var item in FileIds)
+            if (Optional.IsDefined(ToolResources))
             {
-                writer.WriteStringValue(item);
+                if (ToolResources != null)
+                {
+                    writer.WritePropertyName("tool_resources"u8);
+                    writer.WriteObjectValue(ToolResources, options);
+                }
+                else
+                {
+                    writer.WriteNull("tool_resources");
+                }
             }
-            writer.WriteEndArray();
             if (Metadata != null && Optional.IsCollectionDefined(Metadata))
             {
                 writer.WritePropertyName("metadata"u8);
@@ -96,6 +101,49 @@ namespace OpenAI.Internal.Models
             else
             {
                 writer.WriteNull("metadata");
+            }
+            if (Optional.IsDefined(Temperature))
+            {
+                if (Temperature != null)
+                {
+                    writer.WritePropertyName("temperature"u8);
+                    writer.WriteNumberValue(Temperature.Value);
+                }
+                else
+                {
+                    writer.WriteNull("temperature");
+                }
+            }
+            if (Optional.IsDefined(TopP))
+            {
+                if (TopP != null)
+                {
+                    writer.WritePropertyName("top_p"u8);
+                    writer.WriteNumberValue(TopP.Value);
+                }
+                else
+                {
+                    writer.WriteNull("top_p");
+                }
+            }
+            if (Optional.IsDefined(ResponseFormat))
+            {
+                if (ResponseFormat != null)
+                {
+                    writer.WritePropertyName("response_format"u8);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(ResponseFormat);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(ResponseFormat))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
+                }
+                else
+                {
+                    writer.WriteNull("response_format");
+                }
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -143,8 +191,11 @@ namespace OpenAI.Internal.Models
             string model = default;
             string instructions = default;
             IReadOnlyList<BinaryData> tools = default;
-            IReadOnlyList<string> fileIds = default;
+            AssistantObjectToolResources toolResources = default;
             IReadOnlyDictionary<string, string> metadata = default;
+            float? temperature = default;
+            float? topP = default;
+            BinaryData responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -216,14 +267,14 @@ namespace OpenAI.Internal.Models
                     tools = array;
                     continue;
                 }
-                if (property.NameEquals("file_ids"u8))
+                if (property.NameEquals("tool_resources"u8))
                 {
-                    List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        array.Add(item.GetString());
+                        toolResources = null;
+                        continue;
                     }
-                    fileIds = array;
+                    toolResources = AssistantObjectToolResources.DeserializeAssistantObjectToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -241,6 +292,36 @@ namespace OpenAI.Internal.Models
                     metadata = dictionary;
                     continue;
                 }
+                if (property.NameEquals("temperature"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        temperature = null;
+                        continue;
+                    }
+                    temperature = property.Value.GetSingle();
+                    continue;
+                }
+                if (property.NameEquals("top_p"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        topP = null;
+                        continue;
+                    }
+                    topP = property.Value.GetSingle();
+                    continue;
+                }
+                if (property.NameEquals("response_format"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        responseFormat = null;
+                        continue;
+                    }
+                    responseFormat = BinaryData.FromString(property.Value.GetRawText());
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
@@ -256,8 +337,11 @@ namespace OpenAI.Internal.Models
                 model,
                 instructions,
                 tools,
-                fileIds,
+                toolResources,
                 metadata,
+                temperature,
+                topP,
+                responseFormat,
                 serializedAdditionalRawData);
         }
 

@@ -5,10 +5,10 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
-    /// <summary> Enum for purpose in OpenAIFile. </summary>
-    internal readonly partial struct OpenAIFilePurpose : IEquatable<OpenAIFilePurpose>
+    /// <summary> Enum for purpose in OpenAIFileInfo. </summary>
+    public readonly partial struct OpenAIFilePurpose : IEquatable<OpenAIFilePurpose>
     {
         private readonly string _value;
 
@@ -19,19 +19,28 @@ namespace OpenAI.Internal.Models
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        private const string FineTuneValue = "fine-tune";
-        private const string FineTuneResultsValue = "fine-tune-results";
         private const string AssistantsValue = "assistants";
         private const string AssistantsOutputValue = "assistants_output";
+        private const string BatchValue = "batch";
+        private const string BatchOutputValue = "batch_output";
+        private const string FineTuneValue = "fine-tune";
+        private const string FineTuneResultsValue = "fine-tune-results";
+        private const string VisionValue = "vision";
 
-        /// <summary> fine-tune. </summary>
-        public static OpenAIFilePurpose FineTune { get; } = new OpenAIFilePurpose(FineTuneValue);
-        /// <summary> fine-tune-results. </summary>
-        public static OpenAIFilePurpose FineTuneResults { get; } = new OpenAIFilePurpose(FineTuneResultsValue);
         /// <summary> assistants. </summary>
         public static OpenAIFilePurpose Assistants { get; } = new OpenAIFilePurpose(AssistantsValue);
         /// <summary> assistants_output. </summary>
         public static OpenAIFilePurpose AssistantsOutput { get; } = new OpenAIFilePurpose(AssistantsOutputValue);
+        /// <summary> batch. </summary>
+        public static OpenAIFilePurpose Batch { get; } = new OpenAIFilePurpose(BatchValue);
+        /// <summary> batch_output. </summary>
+        public static OpenAIFilePurpose BatchOutput { get; } = new OpenAIFilePurpose(BatchOutputValue);
+        /// <summary> fine-tune. </summary>
+        public static OpenAIFilePurpose FineTune { get; } = new OpenAIFilePurpose(FineTuneValue);
+        /// <summary> fine-tune-results. </summary>
+        public static OpenAIFilePurpose FineTuneResults { get; } = new OpenAIFilePurpose(FineTuneResultsValue);
+        /// <summary> vision. </summary>
+        public static OpenAIFilePurpose Vision { get; } = new OpenAIFilePurpose(VisionValue);
         /// <summary> Determines if two <see cref="OpenAIFilePurpose"/> values are the same. </summary>
         public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right) => left.Equals(right);
         /// <summary> Determines if two <see cref="OpenAIFilePurpose"/> values are not the same. </summary>

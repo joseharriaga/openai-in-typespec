@@ -27,6 +27,7 @@ namespace OpenAI.Internal.Models
         private const string FailedValue = "failed";
         private const string CompletedValue = "completed";
         private const string ExpiredValue = "expired";
+        private const string IncompleteValue = "incomplete";
 
         /// <summary> queued. </summary>
         public static RunObjectStatus Queued { get; } = new RunObjectStatus(QueuedValue);
@@ -44,6 +45,8 @@ namespace OpenAI.Internal.Models
         public static RunObjectStatus Completed { get; } = new RunObjectStatus(CompletedValue);
         /// <summary> expired. </summary>
         public static RunObjectStatus Expired { get; } = new RunObjectStatus(ExpiredValue);
+        /// <summary> incomplete. </summary>
+        public static RunObjectStatus Incomplete { get; } = new RunObjectStatus(IncompleteValue);
         /// <summary> Determines if two <see cref="RunObjectStatus"/> values are the same. </summary>
         public static bool operator ==(RunObjectStatus left, RunObjectStatus right) => left.Equals(right);
         /// <summary> Determines if two <see cref="RunObjectStatus"/> values are not the same. </summary>

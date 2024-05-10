@@ -45,11 +45,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
         /// <param name="input"> The input to the Code Interpreter tool call. </param>
-        /// <param name="outputs">
-        /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
-        /// different object type.
-        /// </param>
+        /// <param name="outputs"> The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="input"/> or <paramref name="outputs"/> is null. </exception>
         internal RunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IEnumerable<BinaryData> outputs)
         {
@@ -62,11 +58,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
         /// <param name="input"> The input to the Code Interpreter tool call. </param>
-        /// <param name="outputs">
-        /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
-        /// different object type.
-        /// </param>
+        /// <param name="outputs"> The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal RunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IReadOnlyList<BinaryData> outputs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -83,9 +75,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The input to the Code Interpreter tool call. </summary>
         public string Input { get; }
         /// <summary>
-        /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
-        /// different object type.
+        /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
         /// <para>
         /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
         /// </para>

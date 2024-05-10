@@ -7,11 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary>
-    /// A citation within the message that points to a specific quote from a specific File associated
-    /// with the assistant or the message. Generated when the assistant uses the "retrieval" tool to
-    /// search files.
-    /// </summary>
+    /// <summary> A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. </summary>
     internal partial class MessageContentTextAnnotationsFileCitationObject
     {
         /// <summary>
@@ -52,7 +48,7 @@ namespace OpenAI.Internal.Models
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="fileCitation"/> is null. </exception>
-        internal MessageContentTextAnnotationsFileCitationObject(string text, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, long startIndex, long endIndex)
+        internal MessageContentTextAnnotationsFileCitationObject(string text, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, int startIndex, int endIndex)
         {
             Argument.AssertNotNull(text, nameof(text));
             Argument.AssertNotNull(fileCitation, nameof(fileCitation));
@@ -70,7 +66,7 @@ namespace OpenAI.Internal.Models
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageContentTextAnnotationsFileCitationObject(MessageContentTextAnnotationsFileCitationObjectType type, string text, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, long startIndex, long endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageContentTextAnnotationsFileCitationObject(MessageContentTextAnnotationsFileCitationObjectType type, string text, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, int startIndex, int endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             Text = text;
@@ -93,8 +89,8 @@ namespace OpenAI.Internal.Models
         /// <summary> Gets the file citation. </summary>
         public MessageContentTextAnnotationsFileCitationObjectFileCitation FileCitation { get; }
         /// <summary> Gets the start index. </summary>
-        public long StartIndex { get; }
+        public int StartIndex { get; }
         /// <summary> Gets the end index. </summary>
-        public long EndIndex { get; }
+        public int EndIndex { get; }
     }
 }

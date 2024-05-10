@@ -8,6 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI.Internal.Models
 {
     /// <summary> The ChatCompletionRequestFunctionMessage. </summary>
+    [Obsolete("This field is marked as deprecated.")]
     internal partial class ChatCompletionRequestFunctionMessage
     {
         /// <summary>

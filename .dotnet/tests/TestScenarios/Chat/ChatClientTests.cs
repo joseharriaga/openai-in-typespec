@@ -74,7 +74,7 @@ public partial class ChatClientTests
     [Test]
     public async Task StreamingChatProtocol()
     {
-        ChatClient client = new("gpt-3.5-turbo");
+        ChatClient client = GetTestClient();
 
         TimeSpan? firstTokenReceiptTime = null;
         TimeSpan? latestTokenReceiptTime = null;
@@ -86,17 +86,22 @@ public partial class ChatClientTests
         ClientResult result = client.CompleteChat(options.ToContent());
 
         int updateCount = 0;
+        ChatTokenUsage usage = null;
 
         var sseReader = AsyncResultCollection<BinaryData>.Create(result.GetRawResponse());
         await foreach (BinaryData eventData in sseReader)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
-            Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
+            usage ??= chatUpdate.TokenUsage;
             updateCount++;
         }
         Assert.That(updateCount, Is.GreaterThan(1));
         Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
+        Assert.That(usage, Is.Not.Null);
+        Assert.That(usage?.InputTokens, Is.GreaterThan(0));
+        Assert.That(usage?.OutputTokens, Is.GreaterThan(0));
+        Assert.That(usage.InputTokens + usage.OutputTokens, Is.EqualTo(usage.TotalTokens));
     }
 
     [Test]

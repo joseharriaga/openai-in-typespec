@@ -4,6 +4,7 @@ import "@typespec/openapi";
 
 import "./audio";
 import "./assistants";
+import "./batch";
 import "./chat";
 import "./completions";
 import "./embeddings";
@@ -15,6 +16,7 @@ import "./models";
 import "./moderations";
 import "./runs";
 import "./threads";
+import "./vector-stores";
 
 using TypeSpec.Http;
 
@@ -29,7 +31,7 @@ using TypeSpec.Http;
   license: {
     name: "MIT",
     url: "https://github.com/openai/openai-openapi/blob/master/LICENSE",
-  }
+  },
 })
 @server("https://api.openai.com/v1", "OpenAI Endpoint")
 @useAuth(BearerAuth)

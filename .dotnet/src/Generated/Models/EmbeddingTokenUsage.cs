@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Embeddings
 {
-    /// <summary> The EmbeddingUsage. </summary>
+    /// <summary> The CreateEmbeddingResponseUsage. </summary>
     public partial class EmbeddingTokenUsage
     {
         /// <summary>
@@ -45,7 +45,7 @@ namespace OpenAI.Embeddings
         /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/>. </summary>
         /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
-        internal EmbeddingTokenUsage(long inputTokens, long totalTokens)
+        internal EmbeddingTokenUsage(int inputTokens, int totalTokens)
         {
             InputTokens = inputTokens;
             TotalTokens = totalTokens;
@@ -55,7 +55,7 @@ namespace OpenAI.Embeddings
         /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal EmbeddingTokenUsage(long inputTokens, long totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal EmbeddingTokenUsage(int inputTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             InputTokens = inputTokens;
             TotalTokens = totalTokens;
@@ -67,6 +67,6 @@ namespace OpenAI.Embeddings
         {
         }
         /// <summary> The total number of tokens used by the request. </summary>
-        public long TotalTokens { get; }
+        public int TotalTokens { get; }
     }
 }

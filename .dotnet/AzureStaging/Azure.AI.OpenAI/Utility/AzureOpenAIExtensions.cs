@@ -7,6 +7,7 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI;
 
+// TODO: add [Experimental]
 public static class AzureOpenAIExtensions
 {
     public static ChatCompletionOptions WithStreaming(this ChatCompletionOptions chatOptions)
@@ -21,6 +22,11 @@ public static class AzureOpenAIExtensions
     {
         BinaryData bytes = ModelReaderWriter.Write(chatOptions, ModelReaderWriterOptions.Json);
         return BinaryContent.Create(bytes);
+    }
+
+    public static AsyncClientResultCollection<BinaryData> FromCompletionEvents(this PipelineResponse response)
+    {
+        throw new NotImplementedException();
     }
 
     internal class StreamingChatCompletionOptions : ChatCompletionOptions, IJsonModel<StreamingChatCompletionOptions>

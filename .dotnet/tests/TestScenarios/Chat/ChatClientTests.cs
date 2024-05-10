@@ -45,63 +45,29 @@ public partial class ChatClientTests
         Assert.That(new string[] { "aye", "arr", "hearty" }.Any(pirateWord => result.Value.Content.ToString().ToLowerInvariant().Contains(pirateWord)));
     }
 
-    // TODO: Add back convenience APIs
-    //[Test]
-    //public async Task StreamingChat()
-    //{
-    //    ChatClient client = new("gpt-3.5-turbo");
-
-    //    TimeSpan? firstTokenReceiptTime = null;
-    //    TimeSpan? latestTokenReceiptTime = null;
-    //    Stopwatch stopwatch = Stopwatch.StartNew();
-
-    //    StreamingClientResult<StreamingChatUpdate> streamingResult
-    //        = client.CompleteChatStreaming("What are the best pizza toppings? Give me a breakdown on the reasons.");
-    //    Assert.That(streamingResult, Is.InstanceOf<StreamingClientResult<StreamingChatUpdate>>());
-    //    int updateCount = 0;
-
-    //    await foreach (StreamingChatUpdate chatUpdate in streamingResult)
-    //    {
-    //        firstTokenReceiptTime ??= stopwatch.Elapsed;
-    //        latestTokenReceiptTime = stopwatch.Elapsed;
-    //        Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
-    //        updateCount++;
-    //    }
-    //    Assert.That(updateCount, Is.GreaterThan(1));
-    //    Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
-    //}
-
-    [Test]
-    public async Task StreamingChatProtocol()
+   [Test]
+    public async Task StreamingChat()
     {
-        ChatClient client = GetTestClient();
+        ChatClient client = new("gpt-3.5-turbo");
 
         TimeSpan? firstTokenReceiptTime = null;
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        string message = "What are the best pizza toppings? Give me a breakdown on the reasons.";
-        ChatCompletionOptions options = new ChatCompletionOptions().WithStreaming();
-
-        ClientResult result = client.CompleteChat(options.ToContent());
-
+        AsyncClientResultCollection<StreamingChatUpdate> streamingResult
+            = client.CompleteChatStreaming("What are the best pizza toppings? Give me a breakdown on the reasons.");
+        Assert.That(streamingResult, Is.InstanceOf<AsyncClientResultCollection<StreamingChatUpdate>>());
         int updateCount = 0;
-        ChatTokenUsage usage = null;
 
-        var sseReader = AsyncResultCollection<BinaryData>.Create(result.GetRawResponse());
-        await foreach (BinaryData eventData in sseReader)
+        await foreach (StreamingChatUpdate chatUpdate in streamingResult)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
-            usage ??= chatUpdate.TokenUsage;
+            Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
             updateCount++;
         }
         Assert.That(updateCount, Is.GreaterThan(1));
         Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
-        Assert.That(usage, Is.Not.Null);
-        Assert.That(usage?.InputTokens, Is.GreaterThan(0));
-        Assert.That(usage?.OutputTokens, Is.GreaterThan(0));
-        Assert.That(usage.InputTokens + usage.OutputTokens, Is.EqualTo(usage.TotalTokens));
     }
 
     [Test]

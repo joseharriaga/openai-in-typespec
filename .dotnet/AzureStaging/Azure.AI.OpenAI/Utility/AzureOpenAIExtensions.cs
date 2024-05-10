@@ -1,14 +1,13 @@
 ﻿using OpenAI.Chat;
-using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
 
 #nullable enable
 
-namespace OpenAI.Tests;
+namespace Azure.AI.OpenAI;
 
-internal static class ProtocolExtensions
+public static class AzureOpenAIExtensions
 {
     public static ChatCompletionOptions WithStreaming(this ChatCompletionOptions chatOptions)
     {

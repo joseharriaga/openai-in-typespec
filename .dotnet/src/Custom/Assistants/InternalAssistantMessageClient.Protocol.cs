@@ -232,5 +232,4 @@ internal partial class InternalAssistantMessageClient
         using PipelineMessage message = CreateDeleteMessageRequest(threadId, messageId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
-
 }

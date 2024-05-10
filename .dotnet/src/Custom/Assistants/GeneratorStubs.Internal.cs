@@ -1,6 +1,5 @@
 ﻿namespace OpenAI.Internal.Models;
 
-
 [CodeGenModel("RunCompletionUsage")]
 public partial class RunTokenUsage { }
 

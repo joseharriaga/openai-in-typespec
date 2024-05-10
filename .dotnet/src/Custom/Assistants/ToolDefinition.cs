@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ClientModel.Primitives;
-using System.Text.Json;
 
 namespace OpenAI.Assistants;
 

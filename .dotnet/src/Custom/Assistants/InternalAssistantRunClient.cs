@@ -3,7 +3,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using OpenAI.Internal.Models;
 
-
 namespace OpenAI.Assistants;
 
 [CodeGenClient("Runs")]

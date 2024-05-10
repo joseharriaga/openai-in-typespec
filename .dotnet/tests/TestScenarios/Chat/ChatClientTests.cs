@@ -54,9 +54,9 @@ public partial class ChatClientTests
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        AsyncClientResultCollection<StreamingChatUpdate> streamingResult
+        AsyncResultCollection<StreamingChatUpdate> streamingResult
             = client.CompleteChatStreaming("What are the best pizza toppings? Give me a breakdown on the reasons.");
-        Assert.That(streamingResult, Is.InstanceOf<AsyncClientResultCollection<StreamingChatUpdate>>());
+        Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatUpdate>>());
         int updateCount = 0;
 
         await foreach (StreamingChatUpdate chatUpdate in streamingResult)

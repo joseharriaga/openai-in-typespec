@@ -6,7 +6,7 @@ namespace OpenAI.Chat;
 
 // TODO: implement
 
-internal class StreamingChatUpdateCollection : ClientResultCollection<StreamingChatUpdate>
+internal class StreamingChatUpdateCollection : ResultCollection<StreamingChatUpdate>
 {
     private readonly Func<ClientResult> _getResult;
     

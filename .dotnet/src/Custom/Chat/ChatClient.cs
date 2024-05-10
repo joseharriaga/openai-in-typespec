@@ -188,7 +188,7 @@ public partial class ChatClient
     /// Begins a streaming response for a chat completion request using a single, simple user message as input.
     /// </summary>
     /// <remarks>
-    /// <see cref="AsyncClientResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="AsyncResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
     /// <see cref="IAsyncEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
@@ -197,7 +197,7 @@ public partial class ChatClient
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncClientResultCollection<StreamingChatUpdate> CompleteChatStreaming(
+    public virtual AsyncResultCollection<StreamingChatUpdate> CompleteChatStreaming(
          string message,
          int? choiceCount = null,
          ChatCompletionOptions options = null)
@@ -210,7 +210,7 @@ public partial class ChatClient
     /// Begins a streaming response for a chat completion request using a single, simple user message as input.
     /// </summary>
     /// <remarks>
-    /// <see cref="AsyncClientResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="AsyncResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
     /// <see cref="IAsyncEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
@@ -219,7 +219,7 @@ public partial class ChatClient
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncClientResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(
+    public virtual AsyncResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(
         string message,
         int? choiceCount = null,
         ChatCompletionOptions options = null)
@@ -233,7 +233,7 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="ClientResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
     /// <see cref="IAsyncEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
@@ -242,7 +242,7 @@ public partial class ChatClient
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual ClientResultCollection<StreamingChatUpdate> CompleteChatStreaming(
+    public virtual ResultCollection<StreamingChatUpdate> CompleteChatStreaming(
         IEnumerable<ChatRequestMessage> messages,
         int? choiceCount = null,
         ChatCompletionOptions options = null)
@@ -260,7 +260,7 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="AsyncClientResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="AsyncResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
     /// <see cref="IAsyncEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
@@ -269,7 +269,7 @@ public partial class ChatClient
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncClientResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(
+    public virtual AsyncResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(
         IEnumerable<ChatRequestMessage> messages,
         int? choiceCount = null,
         ChatCompletionOptions options = null)

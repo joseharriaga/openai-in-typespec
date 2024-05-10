@@ -24,11 +24,19 @@ internal partial class OpenAIError
     public string ToExceptionMessage(int httpStatus)
     {
         StringBuilder messageBuilder = new();
-        messageBuilder.AppendLine($"HTTP {httpStatus} ({Type}: {Code})");
+        messageBuilder.Append($"HTTP {httpStatus}");
+        messageBuilder.Append(!string.IsNullOrEmpty(Type) || !string.IsNullOrEmpty(Code) ? " (" : string.Empty);
+        messageBuilder.Append(Type);
+        messageBuilder.Append(!string.IsNullOrEmpty(Type) ? ": " : string.Empty);
+        messageBuilder.Append(Code);
+        messageBuilder.Append(!string.IsNullOrEmpty(Type) || !string.IsNullOrEmpty(Code) ? ")" : string.Empty);
+        messageBuilder.AppendLine();
+
         if (!string.IsNullOrEmpty(Param))
         {
             messageBuilder.AppendLine($"Parameter: {Param}");
         }
+
         messageBuilder.AppendLine();
         messageBuilder.Append(Message);
         return messageBuilder.ToString();

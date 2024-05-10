@@ -3,15 +3,18 @@
 
 using Azure.AI.OpenAI.Assistants;
 using Azure.AI.OpenAI.Audio;
+using Azure.AI.OpenAI.Batch;
 using Azure.AI.OpenAI.Chat;
 using Azure.AI.OpenAI.Embeddings;
 using Azure.AI.OpenAI.Files;
 using Azure.AI.OpenAI.FineTuning;
 using Azure.AI.OpenAI.Images;
+using Azure.AI.OpenAI.VectorStores;
 using Azure.Core;
 using OpenAI;
 using OpenAI.Assistants;
 using OpenAI.Audio;
+using OpenAI.Batch;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Files;
@@ -19,6 +22,7 @@ using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.Models;
 using OpenAI.Moderations;
+using OpenAI.VectorStores;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
@@ -152,6 +156,21 @@ public partial class AzureOpenAIClient : OpenAIClient
         => new AzureAudioClient(Pipeline, deploymentName, Endpoint, _options);
 
     /// <summary>
+    /// Gets a new <see cref="BatchClient"/> instance configured for batch operation use with the Azure OpenAI service.
+    /// </summary>
+    /// <param name="deploymentName"> The model deployment name to use for the new client's audio operations. </param>
+    /// <returns> A new <see cref="BatchClient"/> instance. </returns>
+    public BatchClient GetBatchClient(string deploymentName)
+        => new AzureBatchClient(Pipeline, deploymentName, Endpoint, _options);
+
+    /// <remarks>
+    /// This method is unsupported for Azure OpenAI. Please use the alternate <see cref="GetBatchClient(string)"/>
+    /// method that accepts a model deployment name, instead.
+    /// </remarks>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override BatchClient GetBatchClient() => GetBatchClient(deploymentName: null);
+
+    /// <summary>
     /// Gets a new <see cref="ChatClient"/> instance configured for chat completion operation use with the Azure OpenAI service.
     /// </summary>
     /// <param name="deploymentName"> The model deployment name to use for the new client's chat completion operations. </param>
@@ -189,16 +208,30 @@ public partial class AzureOpenAIClient : OpenAIClient
     public override ImageClient GetImageClient(string deploymentName)
         => new AzureImageClient(Pipeline, deploymentName, Endpoint, _options);
 
+    /// <remarks>
+    /// Model management operations are not supported with Azure OpenAI.
+    /// </remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ModelClient GetModelClient()
         => throw new NotSupportedException($"Azure OpenAI does not support the OpenAI model management API. Please "
             + "use the Azure AI Services Account Management API to interact with Azure OpenAI model deployments.");
 
+    /// <remarks>
+    /// Moderation operations are not supported with Azure OpenAI.
+    /// </remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ModerationClient GetModerationClient(string _)
         => throw new NotSupportedException($"Azure OpenAI does not support the OpenAI moderations API. Please refer "
             + "to the documentation on Microsoft's Responsible AI embedded content filters to learn more about Azure "
             + "OpenAI's content filter policies and content filter annotations.");
+
+    /// <summary>
+    /// Gets a new <see cref="VectorStoreClient"/> instance configured for vector store operation use with the
+    /// Azure OpenAI service.
+    /// </summary>
+    /// <returns> A new <see cref="VectorStoreClient"/> instance. </returns>
+    public override VectorStoreClient GetVectorStoreClient()
+        => new AzureVectorStoreClient(Pipeline, Endpoint, _options);
 
     private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, OpenAIClientOptions options = null)
         => ClientPipeline.Create(

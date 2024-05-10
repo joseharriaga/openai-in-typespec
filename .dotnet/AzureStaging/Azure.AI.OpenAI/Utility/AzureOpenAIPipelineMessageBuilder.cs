@@ -16,7 +16,7 @@ internal class AzureOpenAIPipelineMessageBuilder
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
     private readonly string _deploymentName;
-    private string _operation;
+    private string[] _pathComponents;
     private readonly List<KeyValuePair<string, string>> _queryStringParameters = [];
     private string _method;
     private BinaryContent _content;
@@ -40,9 +40,9 @@ internal class AzureOpenAIPipelineMessageBuilder
         _queryStringParameters.Add(new KeyValuePair<string, string>("api-version", apiVersion));
     }
 
-    public AzureOpenAIPipelineMessageBuilder WithOperation(string operation)
+    public AzureOpenAIPipelineMessageBuilder WithPath(params string[] pathComponents)
     {
-        _operation = operation;
+        _pathComponents = pathComponents;
         return this;
     }
 
@@ -54,6 +54,10 @@ internal class AzureOpenAIPipelineMessageBuilder
         }
         return this;
     }
+
+    public AzureOpenAIPipelineMessageBuilder WithOptionalQueryParameter<T>(string name, T? value)
+        where T : struct, IConvertible
+            => WithOptionalQueryParameter(name, value.HasValue ? Convert.ChangeType(value.Value, typeof(string)).ToString() : null);
 
     public AzureOpenAIPipelineMessageBuilder WithMethod(string requestMethod)
     {
@@ -122,9 +126,10 @@ internal class AzureOpenAIPipelineMessageBuilder
             uriBuilder.AppendPath(_deploymentName, escape: true);
         }
 
-        if (!string.IsNullOrEmpty(_operation))
+        foreach (string pathComponent in _pathComponents ?? [])
         {
-            uriBuilder.AppendPath(_operation, escape: false);
+            uriBuilder.AppendPath("/", escape: false);
+            uriBuilder.AppendPath(pathComponent, escape: true);
         }
 
         foreach (KeyValuePair<string, string> queryStringPair in _queryStringParameters)

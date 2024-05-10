@@ -2,6 +2,8 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants;
 
@@ -11,10 +13,10 @@ namespace OpenAI.Assistants;
 [Experimental("OPENAI001")]
 [CodeGenClient("Assistants")]
 [CodeGenSuppress("AssistantClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("GetAssistantsAsync", typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
-[CodeGenSuppress("GetAssistants", typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
-[CodeGenSuppress("DeleteAssistantAsync", typeof(string))]
-[CodeGenSuppress("DeleteAssistant", typeof(string))]
+[CodeGenSuppress("CreateAssistantAsync", typeof(AssistantCreationOptions))]
+[CodeGenSuppress("CreateAssistant", typeof(AssistantCreationOptions))]
+[CodeGenSuppress("ModifyAssistantAsync", typeof(string), typeof(AssistantModificationOptions))]
+[CodeGenSuppress("ModifyAssistant", typeof(string), typeof(AssistantModificationOptions))]
 public partial class AssistantClient
 {
     private readonly InternalAssistantMessageClient _messageSubClient;
@@ -62,4 +64,103 @@ public partial class AssistantClient
         _runSubClient = new(_pipeline, _endpoint, options);
         _threadSubClient = new(_pipeline, _endpoint, options);
     }
+
+    /// <summary>
+    /// Returns a list of <see cref="Assistant"/> instances matching the provided constraints. 
+    /// </summary>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual async Task<ClientResult<ListQueryPage<Assistant>>> GetAssistantsAsync(
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
+    {
+        ClientResult protocolResult
+            = await GetAssistantsAsync(maxResults, resultOrder?.ToString(), previousId, subsequentId, options: null).ConfigureAwait(false);
+        InternalListAssistantsResponse internalResponse = InternalListAssistantsResponse.FromResponse(protocolResult.GetRawResponse());
+        ListQueryPage<Assistant> page = new (
+            internalResponse.Data,
+            internalResponse.FirstId,
+            internalResponse.LastId,
+            internalResponse.HasMore);
+        return ClientResult.FromValue(page, protocolResult.GetRawResponse());
+    }
+
+    /// <summary>
+    /// Returns a list of <see cref="Assistant"/> instances matching the provided constraints. 
+    /// </summary>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual ClientResult<ListQueryPage<Assistant>> GetAssistants(
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
+    {
+        ClientResult protocolResult
+            = GetAssistants(maxResults, resultOrder?.ToString(), previousId, subsequentId, options: null);
+        InternalListAssistantsResponse internalResponse = InternalListAssistantsResponse.FromResponse(protocolResult.GetRawResponse());
+        ListQueryPage<Assistant> page = new (
+            internalResponse.Data,
+            internalResponse.FirstId,
+            internalResponse.LastId,
+            internalResponse.HasMore);
+        return ClientResult.FromValue(page, protocolResult.GetRawResponse());
+    }
+
+    /// <summary>
+    /// Deletes an existing <see cref="Assistant"/>. 
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant to delete. </param>
+    /// <returns> A value indicating whether the deletion was successful. </returns>
+    public virtual async Task<ClientResult<bool>> DeleteAssistantAsync(string assistantId)
+    {
+        ClientResult protocolResult = await DeleteAssistantAsync(assistantId).ConfigureAwait(false);
+        InternalDeleteAssistantResponse internalResponse = InternalDeleteAssistantResponse.FromResponse(protocolResult.GetRawResponse());
+        return ClientResult.FromValue(internalResponse.Deleted, protocolResult.GetRawResponse());
+    }
+
+    /// <summary>
+    /// Deletes an existing <see cref="Assistant"/>. 
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant to delete. </param>
+    /// <returns> A value indicating whether the deletion was successful. </returns>
+    public virtual ClientResult<bool> DeleteAssistant(string assistantId)
+    {
+        ClientResult protocolResult = DeleteAssistant(assistantId);
+        InternalDeleteAssistantResponse internalResponse = InternalDeleteAssistantResponse.FromResponse(protocolResult.GetRawResponse());
+        return ClientResult.FromValue(internalResponse.Deleted, protocolResult.GetRawResponse());
+    }
+
 }

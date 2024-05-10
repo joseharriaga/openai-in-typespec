@@ -4,12 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Assistants;
 using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The ModifyAssistantRequest. </summary>
-    public partial class AssistantModificationOptions
+    internal partial class AssistantModificationOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -102,13 +103,13 @@ namespace OpenAI.Assistants
         /// Supported types:
         /// <list type="bullet">
         /// <item>
-        /// <description><see cref="AssistantToolsCode"/></description>
+        /// <description><see cref="CodeInterpreterToolDefinition"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="AssistantToolsFileSearch"/></description>
+        /// <description><see cref="FileSearchToolDefinition"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="AssistantToolsFunction"/></description>
+        /// <description><see cref="FunctionToolDefinition"/></description>
         /// </item>
         /// </list>
         /// </remarks>

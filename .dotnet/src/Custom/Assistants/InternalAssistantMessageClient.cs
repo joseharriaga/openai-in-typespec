@@ -1,13 +1,21 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using OpenAI.Internal.Models;
+
 
 namespace OpenAI.Assistants;
 
 [CodeGenClient("Messages")]
 [CodeGenSuppress("InternalAssistantMessageClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("GetMessagesAsync", typeof(string), typeof(int), typeof(ListOrder?), typeof(string), typeof(string))]
-[CodeGenSuppress("GetMessages", typeof(string), typeof(int), typeof(ListOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("CreateMessageAsync", typeof(string), typeof(MessageCreationOptions))]
+[CodeGenSuppress("CreateMessage", typeof(string), typeof(MessageCreationOptions))]
+[CodeGenSuppress("GetMessagesAsync", typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetMessages", typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetMessageAsync", typeof(string), typeof(string))]
+[CodeGenSuppress("GetMessage", typeof(string), typeof(string))]
+[CodeGenSuppress("ModifyMessageAsync", typeof(string), typeof(string), typeof(MessageModificationOptions))]
+[CodeGenSuppress("ModifyMessage", typeof(string), typeof(string), typeof(MessageModificationOptions))]
 [CodeGenSuppress("DeleteMessageAsync", typeof(string), typeof(string))]
 [CodeGenSuppress("DeleteMessage", typeof(string), typeof(string))]
 internal partial class InternalAssistantMessageClient

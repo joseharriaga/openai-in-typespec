@@ -8,9 +8,9 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
-    public partial class MessageModificationOptions : IJsonModel<MessageModificationOptions>
+    internal partial class MessageModificationOptions : IJsonModel<MessageModificationOptions>
     {
         void IJsonModel<MessageModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {

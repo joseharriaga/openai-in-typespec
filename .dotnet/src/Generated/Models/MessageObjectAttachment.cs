@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -74,10 +75,10 @@ namespace OpenAI.Internal.Models
         /// Supported types:
         /// <list type="bullet">
         /// <item>
-        /// <description><see cref="AssistantToolsCode"/></description>
+        /// <description><see cref="CodeInterpreterToolDefinition"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="AssistantToolsFileSearch"/></description>
+        /// <description><see cref="FileSearchToolDefinition"/></description>
         /// </item>
         /// </list>
         /// </remarks>

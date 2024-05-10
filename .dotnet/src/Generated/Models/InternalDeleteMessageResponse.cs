@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The DeleteMessageResponse. </summary>
     internal partial class InternalDeleteMessageResponse
@@ -60,7 +60,7 @@ namespace OpenAI.Assistants
         /// <param name="deleted"></param>
         /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalDeleteMessageResponse(string id, bool deleted, DeleteMessageResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteMessageResponse(string id, bool deleted, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -77,7 +77,5 @@ namespace OpenAI.Assistants
         public string Id { get; }
         /// <summary> Gets the deleted. </summary>
         public bool Deleted { get; }
-        /// <summary> Gets the object. </summary>
-        public DeleteMessageResponseObject Object { get; } = DeleteMessageResponseObject.ThreadMessageDeleted;
     }
 }

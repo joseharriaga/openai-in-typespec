@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The ListMessagesResponse. </summary>
     internal partial class InternalListMessagesResponse
@@ -69,7 +69,7 @@ namespace OpenAI.Assistants
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalListMessagesResponse(ListMessagesResponseObject @object, IReadOnlyList<ThreadMessage> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListMessagesResponse(object @object, IReadOnlyList<ThreadMessage> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -83,9 +83,6 @@ namespace OpenAI.Assistants
         internal InternalListMessagesResponse()
         {
         }
-
-        /// <summary> Gets the object. </summary>
-        public ListMessagesResponseObject Object { get; } = ListMessagesResponseObject.List;
 
         /// <summary> Gets the data. </summary>
         public IReadOnlyList<ThreadMessage> Data { get; }

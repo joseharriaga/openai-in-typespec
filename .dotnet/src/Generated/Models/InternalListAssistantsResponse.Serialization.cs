@@ -7,9 +7,9 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
+using OpenAI.Assistants;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     internal partial class InternalListAssistantsResponse : IJsonModel<InternalListAssistantsResponse>
     {
@@ -23,7 +23,7 @@ namespace OpenAI.Assistants
 
             writer.WriteStartObject();
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("data"u8);
             writer.WriteStartArray();
             foreach (var item in Data)
@@ -75,7 +75,7 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            ListAssistantsResponseObject @object = default;
+            object @object = default;
             IReadOnlyList<Assistant> data = default;
             string firstId = default;
             string lastId = default;
@@ -86,7 +86,7 @@ namespace OpenAI.Assistants
             {
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new ListAssistantsResponseObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (property.NameEquals("data"u8))

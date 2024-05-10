@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     internal partial class InternalDeleteMessageResponse : IJsonModel<InternalDeleteMessageResponse>
     {
@@ -27,7 +26,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Deleted);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -68,7 +67,7 @@ namespace OpenAI.Assistants
             }
             string id = default;
             bool deleted = default;
-            DeleteMessageResponseObject @object = default;
+            object @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -85,7 +84,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new DeleteMessageResponseObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (options.Format != "W")

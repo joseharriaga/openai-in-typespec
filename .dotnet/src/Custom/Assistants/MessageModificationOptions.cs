@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 
-namespace OpenAI.Assistants;
+// namespace OpenAI.Assistants;
+namespace OpenAI.Internal.Models;
 
 /// <summary>
 /// Represents additional options available when modifying an existing <see cref="ThreadMessage"/>.
 /// </summary>
 [CodeGenModel("ModifyMessageRequest")]
-public partial class MessageModificationOptions
+internal partial class MessageModificationOptions
 {
 }

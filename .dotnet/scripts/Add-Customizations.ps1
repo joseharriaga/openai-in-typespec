@@ -2,7 +2,7 @@ function Edit-RunObjectSerialization {
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
 
-    $file = Get-ChildItem -Path $directory -Filter "RunObject.Serialization.cs"
+    $file = Get-ChildItem -Path $directory -Filter "ThreadRun.Serialization.cs"
     $content = Get-Content -Path $file -Raw
 
     Write-Output "Editing $($file.FullName)"
@@ -16,4 +16,34 @@ function Edit-RunObjectSerialization {
     $content | Set-Content -Path $file.FullName -NoNewline
 }
 
+function Remove-PseudoSuppressedTypes {
+    $root = Split-Path $PSScriptRoot -Parent
+    $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
+    $targets = @(
+        "AssistantObjectObject",
+        "ThreadObjectObject",
+        "MessageObjectObject",
+        "RunObjectObject",
+        "RunStepObjectObject",
+        "DeleteAssistantResponseObject",
+        "DeleteMessageResponseObject",
+        "ListMessagesResponseObject",
+        "ListRunsResponseObject",
+        "ListThreadsResponseObject",
+        "ListAssistantsResponseObject",
+        "ListRunStepsResponseObject",
+        "DeleteThreadResponseObject",
+        "AssistantToolsCodeType",
+        "AssistantToolsFileSearchType",
+        "AssistantToolsFunctionType"
+    )
+    foreach ($target in $targets) {
+        Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {
+            Write-Output "Virtual [CodeGenSuppressType]: Removing $($_.Name)"
+            $_ | Remove-Item
+        }
+    }
+}
+
 Edit-RunObjectSerialization
+Remove-PseudoSuppressedTypes

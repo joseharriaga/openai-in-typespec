@@ -1,23 +1,27 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Assistants;
+// namespace OpenAI.Assistants;
+namespace OpenAI.Internal.Models;
 
 /// <summary>
 /// Represents additional options available when creating a new <see cref="ThreadRun"/>.
 /// </summary>
-public partial class RunCreationOptions
+[CodeGenModel("CreateRunRequest")]
+internal partial class RunCreationOptions
 {
     /// <summary>
     /// A run-specific model name that will override the assistant's defined model. If not provided, the assistant's
     /// selection will be used.
     /// </summary>
+    [CodeGenMember("model")]
     public string ModelOverride { get; init; }
 
     /// <summary>
     /// A run specific replacement for the assistant's default instructions that will override the assistant-level
     /// instructions. If not specified, the assistant's instructions will be used.
     /// </summary>
+    [CodeGenMember("instructions")]
     public string InstructionsOverride { get; init; }
 
     /// <summary>
@@ -25,6 +29,7 @@ public partial class RunCreationOptions
     /// run. Unlike <see cref="InstructionsOverride"/>, the assistant's instructions are preserved and these additional
     /// instructions are concatenated.
     /// </summary>
+    [CodeGenMember("additional_instructions")]
     public string AdditionalInstructions { get; init; }
 
     /// <summary>
@@ -47,33 +52,5 @@ public partial class RunCreationOptions
     /// </list>
     /// </para>
     /// </summary>
-    public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
-
-    /// <summary>
-    /// An optional key/value mapping of additional, supplemental data items to attach to the <see cref="ThreadRun"/>.
-    /// This information may be useful for storing custom details in a structured format.
-    /// </summary>
-    /// <remarks>
-    /// <list type="bullet">
-    ///     <item><b>Keys</b> can be a maximum of 64 characters in length.</item>
-    ///     <item><b>Values</b> can be a maximum of 512 characters in length.</item>
-    /// </list>
-    /// </remarks>
-    public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
-
-    public float? Temperature { get; init; }
-
-    public float? TopP { get; init; }
-
-    internal bool? Stream { get; init; }
-
-    public int? MaxPromptTokens { get; init; }
-
-    public int? MaxCompletionTokens { get; init; }
-
-    internal Internal.Models.TruncationObject TruncationStrategy { get; init; }
-
-    public BinaryData ToolChoice { get; init; }
-
-    public BinaryData ResponseFormat { get; init; }
+    // public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
 }

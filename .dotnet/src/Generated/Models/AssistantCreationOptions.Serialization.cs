@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
-    public partial class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>
+    internal partial class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>
     {
         void IJsonModel<AssistantCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -60,27 +60,10 @@ namespace OpenAI.Assistants
                     writer.WriteNull("instructions");
                 }
             }
-            if (Optional.IsCollectionDefined(Tools))
+            if (Optional.IsCollectionDefined(InternalToolElementRouter))
             {
                 writer.WritePropertyName("tools"u8);
-                writer.WriteStartArray();
-                foreach (var item in Tools)
-                {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-                writer.WriteEndArray();
+                SerializeTools(writer);
             }
             if (Optional.IsDefined(ToolResources))
             {
@@ -197,7 +180,7 @@ namespace OpenAI.Assistants
             string name = default;
             string description = default;
             string instructions = default;
-            IList<BinaryData> tools = default;
+            IList<JsonElement> tools = default;
             CreateAssistantRequestToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
@@ -244,23 +227,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("tools"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    List<BinaryData> array = new List<BinaryData>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
-                    }
-                    tools = array;
+                    DeserializeTools(property, ref tools);
                     continue;
                 }
                 if (property.NameEquals("tool_resources"u8))
@@ -328,7 +295,7 @@ namespace OpenAI.Assistants
                 name,
                 description,
                 instructions,
-                tools ?? new ChangeTrackingList<BinaryData>(),
+                tools ?? new ChangeTrackingList<JsonElement>(),
                 toolResources,
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 temperature,

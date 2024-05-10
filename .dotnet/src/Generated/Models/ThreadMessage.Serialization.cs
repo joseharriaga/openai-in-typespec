@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
-    public partial class ThreadMessage : IJsonModel<ThreadMessage>
+    internal partial class ThreadMessage : IJsonModel<ThreadMessage>
     {
         void IJsonModel<ThreadMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -25,7 +25,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("thread_id"u8);
@@ -166,7 +166,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            MessageObjectObject @object = default;
+            object @object = default;
             DateTimeOffset createdAt = default;
             string threadId = default;
             ThreadMessageStatus status = default;
@@ -190,7 +190,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new MessageObjectObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (property.NameEquals("created_at"u8))

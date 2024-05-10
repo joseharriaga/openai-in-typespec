@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The ModifyMessageRequest. </summary>
-    public partial class MessageModificationOptions
+    internal partial class MessageModificationOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.

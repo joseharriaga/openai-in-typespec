@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The CreateMessageRequest. </summary>
-    public partial class MessageCreationOptions
+    internal partial class MessageCreationOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.

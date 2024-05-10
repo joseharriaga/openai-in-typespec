@@ -89,7 +89,7 @@ namespace OpenAI.Assistants
         /// </param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal Assistant(string id, AssistantObjectObject @object, DateTimeOffset createdAt, string name, string description, string model, string instructions, IReadOnlyList<BinaryData> tools, AssistantObjectToolResources toolResources, IReadOnlyDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal Assistant(string id, object @object, DateTimeOffset createdAt, string name, string description, string model, string instructions, IReadOnlyList<BinaryData> tools, AssistantToolResources toolResources, IReadOnlyDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -114,8 +114,6 @@ namespace OpenAI.Assistants
 
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always `assistant`. </summary>
-        public AssistantObjectObject Object { get; } = AssistantObjectObject.Assistant;
 
         /// <summary> The Unix timestamp (in seconds) for when the assistant was created. </summary>
         public DateTimeOffset CreatedAt { get; }
@@ -140,13 +138,13 @@ namespace OpenAI.Assistants
         /// Supported types:
         /// <list type="bullet">
         /// <item>
-        /// <description><see cref="AssistantToolsCode"/></description>
+        /// <description><see cref="CodeInterpreterToolDefinition"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="AssistantToolsFileSearch"/></description>
+        /// <description><see cref="FileSearchToolDefinition"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="AssistantToolsFunction"/></description>
+        /// <description><see cref="FunctionToolDefinition"/></description>
         /// </item>
         /// </list>
         /// </remarks>
@@ -173,7 +171,7 @@ namespace OpenAI.Assistants
         /// </summary>
         public IReadOnlyList<BinaryData> Tools { get; }
         /// <summary> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </summary>
-        public AssistantObjectToolResources ToolResources { get; }
+        public AssistantToolResources ToolResources { get; }
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
         /// <summary> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </summary>

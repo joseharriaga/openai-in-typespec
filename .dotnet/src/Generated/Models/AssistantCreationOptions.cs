@@ -4,17 +4,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The CreateAssistantRequest. </summary>
-    public partial class AssistantCreationOptions
+    internal partial class AssistantCreationOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
         /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
+        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, JsonSerializerOptions?)"/>.
         /// </para>
         /// <para>
         /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
@@ -48,7 +49,7 @@ namespace OpenAI.Assistants
         public AssistantCreationOptions(CreateAssistantRequestModel model)
         {
             Model = model;
-            Tools = new ChangeTrackingList<BinaryData>();
+            InternalToolElementRouter = new ChangeTrackingList<JsonElement>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
@@ -57,7 +58,7 @@ namespace OpenAI.Assistants
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 256,000 characters. </param>
-        /// <param name="tools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`. </param>
+        /// <param name="internalTools"> A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`. </param>
         /// <param name="toolResources"> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
@@ -68,13 +69,13 @@ namespace OpenAI.Assistants
         /// </param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AssistantCreationOptions(CreateAssistantRequestModel model, string name, string description, string instructions, IList<BinaryData> tools, CreateAssistantRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantCreationOptions(CreateAssistantRequestModel model, string name, string description, string instructions, IList<JsonElement> internalTools, CreateAssistantRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Name = name;
             Description = description;
             Instructions = instructions;
-            Tools = tools;
+            InternalToolElementRouter = internalTools;
             ToolResources = toolResources;
             Metadata = metadata;
             Temperature = temperature;
@@ -96,51 +97,6 @@ namespace OpenAI.Assistants
         public string Description { get; set; }
         /// <summary> The system instructions that the assistant uses. The maximum length is 256,000 characters. </summary>
         public string Instructions { get; set; }
-        /// <summary>
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
-        /// <para>
-        /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// <remarks>
-        /// Supported types:
-        /// <list type="bullet">
-        /// <item>
-        /// <description><see cref="AssistantToolsCode"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="AssistantToolsFileSearch"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="AssistantToolsFunction"/></description>
-        /// </item>
-        /// </list>
-        /// </remarks>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        public IList<BinaryData> Tools { get; }
         /// <summary> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </summary>
         public CreateAssistantRequestToolResources ToolResources { get; set; }
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
@@ -156,7 +112,7 @@ namespace OpenAI.Assistants
         /// <summary>
         /// Gets or sets the response format
         /// <para>
-        /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
+        /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, JsonSerializerOptions?)"/>.
         /// </para>
         /// <para>
         /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.

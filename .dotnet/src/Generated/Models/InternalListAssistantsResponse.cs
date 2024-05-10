@@ -5,9 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Assistants;
 using OpenAI.Models;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The ListAssistantsResponse. </summary>
     internal partial class InternalListAssistantsResponse
@@ -69,7 +70,7 @@ namespace OpenAI.Assistants
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalListAssistantsResponse(ListAssistantsResponseObject @object, IReadOnlyList<Assistant> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListAssistantsResponse(object @object, IReadOnlyList<Assistant> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -83,9 +84,6 @@ namespace OpenAI.Assistants
         internal InternalListAssistantsResponse()
         {
         }
-
-        /// <summary> Gets the object. </summary>
-        public ListAssistantsResponseObject Object { get; } = ListAssistantsResponseObject.List;
 
         /// <summary> Gets the data. </summary>
         public IReadOnlyList<Assistant> Data { get; }

@@ -10,11 +10,15 @@ function Edit-GeneratedOpenAIClient {
 
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AssistantClient _cachedAssistantClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.BatchClient _cachedBatchClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FileClient _cachedFileClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantMessageClient _cachedInternalAssistantMessageClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantRunClient _cachedInternalAssistantRunClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantThreadClient _cachedInternalAssistantThreadClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModerationClient _cachedModerationClient;", ""
@@ -75,6 +79,8 @@ function Edit-GeneratedModels {
     
     $exclusions = @(
         "ListOrder.cs",
+        "FunctionDefinition.cs",
+        "FunctionDefinition.Serialization.cs",
 
         "Assistant.cs",
         "Assistant.Serialization.cs",
@@ -82,20 +88,61 @@ function Edit-GeneratedModels {
         "AssistantCreationOptions.Serialization.cs",
         "AssistantModificationOptions.cs",
         "AssistantModificationOptions.Serialization.cs",
+        "AssistantThread.cs",
+        "AssistantThread.Serialization.cs",
+        "AssistantToolResources.cs",
+        "AssistantToolResources.Serialization.cs",
+        "AssistantFileSearchToolResources.cs",
+        "AssistantFileSearchToolResources.Serialization.cs",
+        "AssistantCodeInterpreterToolResources.cs",
+        "AssistantCodeInterpreterToolResources.Serialization.cs",
+        "CodeInterpreterToolDefinition.cs",
+        "CodeInterpreterToolDefinition.Serialization.cs",
+        "FileSearchToolDefinition.cs",
+        "FileSearchToolDefinition.Serialization.cs",
+        "FunctionToolDefinition.cs",
+        "FunctionToolDefinition.Serialization.cs",
         "InternalDeleteAssistantResponse.cs",
         "InternalDeleteAssistantResponse.Serialization.cs",
         "InternalDeleteMessageResponse.cs",
         "InternalDeleteMessageResponse.Serialization.cs",
+        "InternalDeleteThreadResponse.cs",
+        "InternalDeleteThreadResponse.Serialization.cs",
+        "InternalCreateThreadAndRunRequest.cs",
+        "InternalCreateThreadAndRunRequest.Serialization.cs",
         "InternalListAssistantsResponse.cs",
         "InternalListAssistantsResponse.Serialization.cs",
         "InternalListMessagesResponse.cs",
         "InternalListMessagesResponse.Serialization.cs",
+        "InternalListRunsResponse.cs",
+        "InternalListRunsResponse.Serialization.cs",
+        "InternalListRunStepsResponse.cs",
+        "InternalListRunStepsResponse.Serialization.cs",
+        "InternalListThreadsResponse.cs",
+        "InternalListThreadsResponse.Serialization.cs",
+        "InternalSubmitToolOutputsRunRequest.cs",
+        "InternalSubmitToolOutputsRunRequest.Serialization.cs",
         "MessageCreationOptions.cs",
         "MessageCreationOptions.Serialization.cs",
         "MessageModificationOptions.cs",
         "MessageModificationOptions.Serialization.cs",
         "ThreadMessage.cs",
         "ThreadMessage.Serialization.cs",
+        "ThreadRun.cs",
+        "ThreadRun.Serialization.cs",
+        "RunCreationOptions.cs",
+        "RunCreationOptions.Serialization.cs",
+        "RunModificationOptions.cs",
+        "RunModificationOptions.Serialization.cs",
+        "RunStatus.cs",
+        "RunStep.cs",
+        "RunStep.Serialization.cs",
+        "RunTokenUsage.cs",
+        "RunTokenUsage.Serialization.cs",
+        "ThreadCreationOptions.cs",
+        "ThreadCreationOptions.Serialization.cs",
+        "ThreadModificationOptions.cs",
+        "ThreadModificationOptions.Serialization.cs",
 
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",
@@ -120,6 +167,9 @@ function Edit-GeneratedModels {
         "TranscribedSegment.Serialization.cs",
         "TranscribedWord.cs",
         "TranscribedWord.Serialization.cs",
+
+        "ChatCompletionOptions.cs",
+        "ChatCompletionOptions.Serialization.cs",
 
         "CreateEmbeddingRequestModel.cs",
         "CreateEmbeddingResponseObject.cs",

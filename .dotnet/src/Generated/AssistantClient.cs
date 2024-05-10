@@ -6,6 +6,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
+using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
@@ -25,32 +26,6 @@ namespace OpenAI.Assistants
         /// <summary> Initializes a new instance of AssistantClient for mocking. </summary>
         protected AssistantClient()
         {
-        }
-
-        /// <summary> Create an assistant with a model and instructions. </summary>
-        /// <param name="assistant"> The <see cref="AssistantCreationOptions"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistant"/> is null. </exception>
-        /// <remarks> Create assistant. </remarks>
-        public virtual async Task<ClientResult<Assistant>> CreateAssistantAsync(AssistantCreationOptions assistant)
-        {
-            Argument.AssertNotNull(assistant, nameof(assistant));
-
-            using BinaryContent content = assistant.ToBinaryContent();
-            ClientResult result = await CreateAssistantAsync(content, null).ConfigureAwait(false);
-            return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary> Create an assistant with a model and instructions. </summary>
-        /// <param name="assistant"> The <see cref="AssistantCreationOptions"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistant"/> is null. </exception>
-        /// <remarks> Create assistant. </remarks>
-        public virtual ClientResult<Assistant> CreateAssistant(AssistantCreationOptions assistant)
-        {
-            Argument.AssertNotNull(assistant, nameof(assistant));
-
-            using BinaryContent content = assistant.ToBinaryContent();
-            ClientResult result = CreateAssistant(content, null);
-            return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Retrieves an assistant. </summary>
@@ -76,38 +51,6 @@ namespace OpenAI.Assistants
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
             ClientResult result = GetAssistant(assistantId, null);
-            return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary> Modifies an assistant. </summary>
-        /// <param name="assistantId"> The ID of the assistant to modify. </param>
-        /// <param name="assistant"> The <see cref="AssistantModificationOptions"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="assistant"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Modify assistant. </remarks>
-        public virtual async Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions assistant)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNull(assistant, nameof(assistant));
-
-            using BinaryContent content = assistant.ToBinaryContent();
-            ClientResult result = await ModifyAssistantAsync(assistantId, content, null).ConfigureAwait(false);
-            return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        /// <summary> Modifies an assistant. </summary>
-        /// <param name="assistantId"> The ID of the assistant to modify. </param>
-        /// <param name="assistant"> The <see cref="AssistantModificationOptions"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="assistant"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Modify assistant. </remarks>
-        public virtual ClientResult<Assistant> ModifyAssistant(string assistantId, AssistantModificationOptions assistant)
-        {
-            Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
-            Argument.AssertNotNull(assistant, nameof(assistant));
-
-            using BinaryContent content = assistant.ToBinaryContent();
-            ClientResult result = ModifyAssistant(assistantId, content, null);
             return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 

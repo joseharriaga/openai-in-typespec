@@ -7,7 +7,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -25,7 +24,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             if (Name != null)
@@ -185,14 +184,14 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            AssistantObjectObject @object = default;
+            object @object = default;
             DateTimeOffset createdAt = default;
             string name = default;
             string description = default;
             string model = default;
             string instructions = default;
             IReadOnlyList<BinaryData> tools = default;
-            AssistantObjectToolResources toolResources = default;
+            AssistantToolResources toolResources = default;
             IReadOnlyDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
@@ -208,7 +207,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new AssistantObjectObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (property.NameEquals("created_at"u8))
@@ -275,7 +274,7 @@ namespace OpenAI.Assistants
                         toolResources = null;
                         continue;
                     }
-                    toolResources = AssistantObjectToolResources.DeserializeAssistantObjectToolResources(property.Value, options);
+                    toolResources = AssistantToolResources.DeserializeAssistantToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))

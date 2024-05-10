@@ -1,11 +1,31 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using OpenAI.Internal.Models;
+
 
 namespace OpenAI.Assistants;
 
 [CodeGenClient("Runs")]
 [CodeGenSuppress("InternalAssistantRunClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("CreateThreadAndRunAsync", typeof(InternalCreateThreadAndRunRequest))]
+[CodeGenSuppress("CreateThreadAndRun", typeof(InternalCreateThreadAndRunRequest))]
+[CodeGenSuppress("CreateRunAsync", typeof(string), typeof(RunCreationOptions))]
+[CodeGenSuppress("CreateRun", typeof(string), typeof(RunCreationOptions))]
+[CodeGenSuppress("GetRunsAsync", typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetRuns", typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetRunAsync", typeof(string), typeof(string))]
+[CodeGenSuppress("GetRun", typeof(string), typeof(string))]
+[CodeGenSuppress("ModifyRunAsync", typeof(string), typeof(string), typeof(RunModificationOptions))]
+[CodeGenSuppress("ModifyRun", typeof(string), typeof(string), typeof(RunModificationOptions))]
+[CodeGenSuppress("CancelRunAsync", typeof(string), typeof(string))]
+[CodeGenSuppress("CancelRun", typeof(string), typeof(string))]
+[CodeGenSuppress("SubmitToolOuputsToRunAsync", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest))]
+[CodeGenSuppress("SubmitToolOuputsToRun", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest))]
+[CodeGenSuppress("GetRunStepsAsync", typeof(string), typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetRunSteps", typeof(string), typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetRunStepAsync", typeof(string), typeof(string), typeof(string))]
+[CodeGenSuppress("GetRunStep", typeof(string), typeof(string), typeof(string))]
 internal partial class InternalAssistantRunClient
 {
     /// <summary>

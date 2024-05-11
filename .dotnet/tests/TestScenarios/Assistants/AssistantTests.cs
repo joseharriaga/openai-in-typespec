@@ -116,6 +116,11 @@ public partial class AssistantTests
         newPage = await client.GetMessagesAsync(threadResult.Value.Id, resultOrder: ListOrder.NewestFirst);
         Assert.That(newPage.Count, Is.EqualTo(2));
         Assert.That(newPage[0].CreatedAt, Is.LessThan(newMessage.CreatedAt));
+        Assert.That(newPage[0].Content.Count, Is.EqualTo(2));
+        Assert.That(newPage[0].Content[0], Is.InstanceOf<ResponseMessageTextContent>());
+        Assert.That(newPage[0].Content[0].ToString(), Is.EqualTo("Describe this for me:"));
+        Assert.That(newPage[0].Content[0].AsText().Annotations, Is.Null.Or.Empty);
+        Assert.That(newPage[0].Content[1], Is.InstanceOf<MessageImageUrlContent>());
     }
 
     // [Test]

@@ -177,13 +177,16 @@ model MessageContentTextObject extends MessageContent {
     /** The data that makes up the text. */
     value: string;
 
+    // Tool customization: replace unioned types with a custom, common base
     @extension("x-oaiExpandable", true)
-    annotations: (MessageContentTextAnnotationsFileCitationObject | MessageContentTextAnnotationsFilePathObject)[];
+    annotations: MessageTextContentAnnotation[];
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. */
-model MessageContentTextAnnotationsFileCitationObject {
+model MessageContentTextAnnotationsFileCitationObject
+  extends MessageTextContentAnnotation {
   @doc("""
   Always `file_citation`.
   """)
@@ -207,10 +210,12 @@ model MessageContentTextAnnotationsFileCitationObject {
   end_index: int32;
 }
 
+// Tool customization: apply custom, common base type to union items
 @doc("""
 A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
 """)
-model MessageContentTextAnnotationsFilePathObject {
+model MessageContentTextAnnotationsFilePathObject
+  extends MessageTextContentAnnotation {
   @doc("""
   Always `file_path`.
   """)
@@ -335,8 +340,9 @@ model MessageDeltaContentTextObject extends MessageDeltaContent {
     /** The data that makes up the text. */
     value?: string;
 
+    // Tool customization: replace unioned types with a custom, common base
     @extension("x-oaiExpandable", true)
-    annotations?: (MessageDeltaContentTextAnnotationsFileCitationObject | MessageDeltaContentTextAnnotationsFilePathObject)[];
+    annotations?: MessageDeltaTextContentAnnotation[];
   };
 }
 
@@ -352,8 +358,10 @@ model MessageRequestContentTextObject extends MessageContent {
   text: string;
 }
 
+// Tool customization: apply custom, common base type to union items
 /** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. */
-model MessageDeltaContentTextAnnotationsFileCitationObject {
+model MessageDeltaContentTextAnnotationsFileCitationObject
+  extends MessageDeltaTextContentAnnotation {
   /** The index of the annotation in the text content part. */
   index: int32;
 
@@ -380,10 +388,12 @@ model MessageDeltaContentTextAnnotationsFileCitationObject {
   end_index?: int32;
 }
 
+// Tool customization: apply custom, common base type to union items
 @doc("""
 A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
 """)
-model MessageDeltaContentTextAnnotationsFilePathObject {
+model MessageDeltaContentTextAnnotationsFilePathObject
+  extends MessageDeltaTextContentAnnotation {
   /** The index of the annotation in the text content part. */
   index: int32;
 

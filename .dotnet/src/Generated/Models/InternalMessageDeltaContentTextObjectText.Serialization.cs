@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -32,19 +33,7 @@ namespace OpenAI.Internal.Models
                 writer.WriteStartArray();
                 foreach (var item in Annotations)
                 {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -87,7 +76,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string value = default;
-            IReadOnlyList<BinaryData> annotations = default;
+            IReadOnlyList<MessageDeltaTextContentAnnotation> annotations = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -103,17 +92,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<MessageDeltaTextContentAnnotation> array = new List<MessageDeltaTextContentAnnotation>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(MessageDeltaTextContentAnnotation.DeserializeMessageDeltaTextContentAnnotation(item, options));
                     }
                     annotations = array;
                     continue;
@@ -124,7 +106,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalMessageDeltaContentTextObjectText(value, annotations ?? new ChangeTrackingList<BinaryData>(), serializedAdditionalRawData);
+            return new InternalMessageDeltaContentTextObjectText(value, annotations ?? new ChangeTrackingList<MessageDeltaTextContentAnnotation>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<InternalMessageDeltaContentTextObjectText>.Write(ModelReaderWriterOptions options)

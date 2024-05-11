@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The MessageContentTextAnnotationsFileCitationObjectFileCitation. </summary>
-    internal partial class MessageContentTextAnnotationsFileCitationObjectFileCitation
+    /// <summary> The MessageContentTextAnnotationsFilePathObjectFilePath. </summary>
+    internal partial class InternalMessageContentTextAnnotationsFilePathObjectFilePath
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,38 +42,31 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFileCitationObjectFileCitation"/>. </summary>
-        /// <param name="fileId"> The ID of the specific File the citation is from. </param>
-        /// <param name="quote"> The specific quote in the file. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> or <paramref name="quote"/> is null. </exception>
-        public MessageContentTextAnnotationsFileCitationObjectFileCitation(string fileId, string quote)
+        /// <summary> Initializes a new instance of <see cref="InternalMessageContentTextAnnotationsFilePathObjectFilePath"/>. </summary>
+        /// <param name="fileId"> The ID of the file that was generated. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+        public InternalMessageContentTextAnnotationsFilePathObjectFilePath(string fileId)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
-            Argument.AssertNotNull(quote, nameof(quote));
 
             FileId = fileId;
-            Quote = quote;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFileCitationObjectFileCitation"/>. </summary>
-        /// <param name="fileId"> The ID of the specific File the citation is from. </param>
-        /// <param name="quote"> The specific quote in the file. </param>
+        /// <summary> Initializes a new instance of <see cref="InternalMessageContentTextAnnotationsFilePathObjectFilePath"/>. </summary>
+        /// <param name="fileId"> The ID of the file that was generated. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageContentTextAnnotationsFileCitationObjectFileCitation(string fileId, string quote, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageContentTextAnnotationsFilePathObjectFilePath(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
-            Quote = quote;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFileCitationObjectFileCitation"/> for deserialization. </summary>
-        internal MessageContentTextAnnotationsFileCitationObjectFileCitation()
+        /// <summary> Initializes a new instance of <see cref="InternalMessageContentTextAnnotationsFilePathObjectFilePath"/> for deserialization. </summary>
+        internal InternalMessageContentTextAnnotationsFilePathObjectFilePath()
         {
         }
 
-        /// <summary> The ID of the specific File the citation is from. </summary>
+        /// <summary> The ID of the file that was generated. </summary>
         public string FileId { get; set; }
-        /// <summary> The specific quote in the file. </summary>
-        public string Quote { get; set; }
     }
 }

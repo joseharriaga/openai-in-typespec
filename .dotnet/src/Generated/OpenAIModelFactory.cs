@@ -1012,42 +1012,6 @@ namespace OpenAI
             return new CreateChatCompletionStreamResponseUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentTextAnnotationsFileCitationObject"/>. </summary>
-        /// <param name="type"> Always `file_citation`. </param>
-        /// <param name="text"> The text in the message content that needs to be replaced. </param>
-        /// <param name="fileCitation"></param>
-        /// <param name="startIndex"></param>
-        /// <param name="endIndex"></param>
-        /// <returns> A new <see cref="Models.MessageContentTextAnnotationsFileCitationObject"/> instance for mocking. </returns>
-        public static MessageContentTextAnnotationsFileCitationObject MessageContentTextAnnotationsFileCitationObject(MessageContentTextAnnotationsFileCitationObjectType type = default, string text = null, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation = null, int startIndex = default, int endIndex = default)
-        {
-            return new MessageContentTextAnnotationsFileCitationObject(
-                type,
-                text,
-                fileCitation,
-                startIndex,
-                endIndex,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentTextAnnotationsFilePathObject"/>. </summary>
-        /// <param name="type"> Always `file_path`. </param>
-        /// <param name="text"> The text in the message content that needs to be replaced. </param>
-        /// <param name="filePath"></param>
-        /// <param name="startIndex"></param>
-        /// <param name="endIndex"></param>
-        /// <returns> A new <see cref="Models.MessageContentTextAnnotationsFilePathObject"/> instance for mocking. </returns>
-        public static MessageContentTextAnnotationsFilePathObject MessageContentTextAnnotationsFilePathObject(MessageContentTextAnnotationsFilePathObjectType type = default, string text = null, MessageContentTextAnnotationsFilePathObjectFilePath filePath = null, int startIndex = default, int endIndex = default)
-        {
-            return new MessageContentTextAnnotationsFilePathObject(
-                type,
-                text,
-                filePath,
-                startIndex,
-                endIndex,
-                serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaObject"/>. </summary>
         /// <param name="id"> The identifier of the message, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `thread.message.delta`. </param>
@@ -1071,63 +1035,6 @@ namespace OpenAI
             content ??= new List<MessageDeltaContent>();
 
             return new MessageDeltaObjectDelta(role, content?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFileCitationObject"/>. </summary>
-        /// <param name="index"> The index of the annotation in the text content part. </param>
-        /// <param name="type"> Always `file_citation`. </param>
-        /// <param name="text"> The text in the message content that needs to be replaced. </param>
-        /// <param name="fileCitation"></param>
-        /// <param name="startIndex"></param>
-        /// <param name="endIndex"></param>
-        /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFileCitationObject"/> instance for mocking. </returns>
-        public static MessageDeltaContentTextAnnotationsFileCitationObject MessageDeltaContentTextAnnotationsFileCitationObject(int index = default, string type = null, string text = null, MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation fileCitation = null, int? startIndex = null, int? endIndex = null)
-        {
-            return new MessageDeltaContentTextAnnotationsFileCitationObject(
-                index,
-                type,
-                text,
-                fileCitation,
-                startIndex,
-                endIndex,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation"/>. </summary>
-        /// <param name="fileId"> The ID of the specific File the citation is from. </param>
-        /// <param name="quote"> The specific quote in the file. </param>
-        /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation"/> instance for mocking. </returns>
-        public static MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation(string fileId = null, string quote = null)
-        {
-            return new MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation(fileId, quote, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObject"/>. </summary>
-        /// <param name="index"> The index of the annotation in the text content part. </param>
-        /// <param name="type"> Always `file_path`. </param>
-        /// <param name="text"> The text in the message content that needs to be replaced. </param>
-        /// <param name="filePath"></param>
-        /// <param name="startIndex"></param>
-        /// <param name="endIndex"></param>
-        /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObject"/> instance for mocking. </returns>
-        public static MessageDeltaContentTextAnnotationsFilePathObject MessageDeltaContentTextAnnotationsFilePathObject(int index = default, string type = null, string text = null, MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath = null, int? startIndex = null, int? endIndex = null)
-        {
-            return new MessageDeltaContentTextAnnotationsFilePathObject(
-                index,
-                type,
-                text,
-                filePath,
-                startIndex,
-                endIndex,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObjectFilePath"/>. </summary>
-        /// <param name="fileId"> The ID of the file that was generated. </param>
-        /// <returns> A new <see cref="Models.MessageDeltaContentTextAnnotationsFilePathObjectFilePath"/> instance for mocking. </returns>
-        public static MessageDeltaContentTextAnnotationsFilePathObjectFilePath MessageDeltaContentTextAnnotationsFilePathObjectFilePath(string fileId = null)
-        {
-            return new MessageDeltaContentTextAnnotationsFilePathObjectFilePath(fileId, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaObject"/>. </summary>

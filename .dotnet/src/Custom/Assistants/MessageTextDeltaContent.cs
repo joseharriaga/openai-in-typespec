@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants;
@@ -7,7 +8,7 @@ namespace OpenAI.Assistants;
 public partial class MessageTextDeltaContent
 {
     public string Text => InternalText.Value;
-    public object Annotations => InternalText.Annotations;
+    public IReadOnlyList<MessageDeltaTextContentAnnotation> Annotations => InternalText.Annotations;
 
     [CodeGenMember("Type")]
     private string InternalType { get; }

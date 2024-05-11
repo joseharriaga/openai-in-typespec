@@ -5,10 +5,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    /// <summary> The MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation. </summary>
-    internal partial class MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation
+    /// <summary>
+    /// The MessageDeltaTextContentAnnotation.
+    /// Please note <see cref="MessageDeltaTextContentAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+    /// The available derived classes include <see cref="FileCitationTextDeltaContentAnnotation"/> and <see cref="FilePathTextDeltaContentAnnotation"/>.
+    /// </summary>
+    public abstract partial class MessageDeltaTextContentAnnotation
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,27 +44,23 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation"/>. </summary>
-        internal MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation()
+        /// <summary> Initializes a new instance of <see cref="MessageDeltaTextContentAnnotation"/>. </summary>
+        protected MessageDeltaTextContentAnnotation()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation"/>. </summary>
-        /// <param name="fileId"> The ID of the specific File the citation is from. </param>
-        /// <param name="quote"> The specific quote in the file. </param>
+        /// <summary> Initializes a new instance of <see cref="MessageDeltaTextContentAnnotation"/>. </summary>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation(string fileId, string quote, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaTextContentAnnotation(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            FileId = fileId;
-            Quote = quote;
+            Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The ID of the specific File the citation is from. </summary>
-        public string FileId { get; }
-        /// <summary> The specific quote in the file. </summary>
-        public string Quote { get; }
+        /// <summary> The discriminated type identifier for the content item. </summary>
+        internal string Type { get; set; }
     }
 }

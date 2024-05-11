@@ -7,30 +7,31 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class MessageContentTextAnnotationsFilePathObject : IJsonModel<MessageContentTextAnnotationsFilePathObject>
+    public partial class FilePathTextContentAnnotation : IJsonModel<FilePathTextContentAnnotation>
     {
-        void IJsonModel<MessageContentTextAnnotationsFilePathObject>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<FilePathTextContentAnnotation>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageContentTextAnnotationsFilePathObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FilePathTextContentAnnotation>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageContentTextAnnotationsFilePathObject)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(FilePathTextContentAnnotation)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
             writer.WritePropertyName("file_path"u8);
-            writer.WriteObjectValue(FilePath, options);
+            writer.WriteObjectValue<InternalMessageContentTextAnnotationsFilePathObjectFilePath>(InternalFilePath, options);
             writer.WritePropertyName("start_index"u8);
             writer.WriteNumberValue(StartIndex);
             writer.WritePropertyName("end_index"u8);
             writer.WriteNumberValue(EndIndex);
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -49,19 +50,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        MessageContentTextAnnotationsFilePathObject IJsonModel<MessageContentTextAnnotationsFilePathObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        FilePathTextContentAnnotation IJsonModel<FilePathTextContentAnnotation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageContentTextAnnotationsFilePathObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FilePathTextContentAnnotation>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageContentTextAnnotationsFilePathObject)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(FilePathTextContentAnnotation)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeMessageContentTextAnnotationsFilePathObject(document.RootElement, options);
+            return DeserializeFilePathTextContentAnnotation(document.RootElement, options);
         }
 
-        internal static MessageContentTextAnnotationsFilePathObject DeserializeMessageContentTextAnnotationsFilePathObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static FilePathTextContentAnnotation DeserializeFilePathTextContentAnnotation(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -69,20 +70,15 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            MessageContentTextAnnotationsFilePathObjectType type = default;
             string text = default;
-            MessageContentTextAnnotationsFilePathObjectFilePath filePath = default;
+            InternalMessageContentTextAnnotationsFilePathObjectFilePath filePath = default;
             int startIndex = default;
             int endIndex = default;
+            string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
-                {
-                    type = new MessageContentTextAnnotationsFilePathObjectType(property.Value.GetString());
-                    continue;
-                }
                 if (property.NameEquals("text"u8))
                 {
                     text = property.Value.GetString();
@@ -90,7 +86,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("file_path"u8))
                 {
-                    filePath = MessageContentTextAnnotationsFilePathObjectFilePath.DeserializeMessageContentTextAnnotationsFilePathObjectFilePath(property.Value, options);
+                    filePath = InternalMessageContentTextAnnotationsFilePathObjectFilePath.DeserializeInternalMessageContentTextAnnotationsFilePathObjectFilePath(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("start_index"u8))
@@ -103,62 +99,67 @@ namespace OpenAI.Internal.Models
                     endIndex = property.Value.GetInt32();
                     continue;
                 }
+                if (property.NameEquals("type"u8))
+                {
+                    type = property.Value.GetString();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageContentTextAnnotationsFilePathObject(
+            return new FilePathTextContentAnnotation(
                 type,
+                serializedAdditionalRawData,
                 text,
                 filePath,
                 startIndex,
-                endIndex,
-                serializedAdditionalRawData);
+                endIndex);
         }
 
-        BinaryData IPersistableModel<MessageContentTextAnnotationsFilePathObject>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<FilePathTextContentAnnotation>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageContentTextAnnotationsFilePathObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FilePathTextContentAnnotation>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(MessageContentTextAnnotationsFilePathObject)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FilePathTextContentAnnotation)} does not support writing '{options.Format}' format.");
             }
         }
 
-        MessageContentTextAnnotationsFilePathObject IPersistableModel<MessageContentTextAnnotationsFilePathObject>.Create(BinaryData data, ModelReaderWriterOptions options)
+        FilePathTextContentAnnotation IPersistableModel<FilePathTextContentAnnotation>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageContentTextAnnotationsFilePathObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FilePathTextContentAnnotation>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeMessageContentTextAnnotationsFilePathObject(document.RootElement, options);
+                        return DeserializeFilePathTextContentAnnotation(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(MessageContentTextAnnotationsFilePathObject)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FilePathTextContentAnnotation)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<MessageContentTextAnnotationsFilePathObject>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<FilePathTextContentAnnotation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static MessageContentTextAnnotationsFilePathObject FromResponse(PipelineResponse response)
+        internal static new FilePathTextContentAnnotation FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeMessageContentTextAnnotationsFilePathObject(document.RootElement);
+            return DeserializeFilePathTextContentAnnotation(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

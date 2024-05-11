@@ -5,10 +5,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    /// <summary> The MessageDeltaContentTextAnnotationsFilePathObjectFilePath. </summary>
-    internal partial class MessageDeltaContentTextAnnotationsFilePathObjectFilePath
+    /// <summary>
+    /// The MessageTextContentAnnotation.
+    /// Please note <see cref="MessageTextContentAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+    /// The available derived classes include <see cref="FileCitationTextContentAnnotation"/> and <see cref="FilePathTextContentAnnotation"/>.
+    /// </summary>
+    public abstract partial class MessageTextContentAnnotation
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,23 +44,23 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFilePathObjectFilePath"/>. </summary>
-        internal MessageDeltaContentTextAnnotationsFilePathObjectFilePath()
+        /// <summary> Initializes a new instance of <see cref="MessageTextContentAnnotation"/>. </summary>
+        protected MessageTextContentAnnotation()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFilePathObjectFilePath"/>. </summary>
-        /// <param name="fileId"> The ID of the file that was generated. </param>
+        /// <summary> Initializes a new instance of <see cref="MessageTextContentAnnotation"/>. </summary>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentTextAnnotationsFilePathObjectFilePath(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageTextContentAnnotation(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            FileId = fileId;
+            Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The ID of the file that was generated. </summary>
-        public string FileId { get; }
+        /// <summary> The discriminated type identifier for the content item. </summary>
+        internal string Type { get; set; }
     }
 }

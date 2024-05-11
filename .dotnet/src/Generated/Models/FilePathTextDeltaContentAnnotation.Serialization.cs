@@ -7,33 +7,32 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class MessageDeltaContentTextAnnotationsFilePathObject : IJsonModel<MessageDeltaContentTextAnnotationsFilePathObject>
+    public partial class FilePathTextDeltaContentAnnotation : IJsonModel<FilePathTextDeltaContentAnnotation>
     {
-        void IJsonModel<MessageDeltaContentTextAnnotationsFilePathObject>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<FilePathTextDeltaContentAnnotation>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageDeltaContentTextAnnotationsFilePathObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FilePathTextDeltaContentAnnotation>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageDeltaContentTextAnnotationsFilePathObject)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(FilePathTextDeltaContentAnnotation)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
             if (Optional.IsDefined(Text))
             {
                 writer.WritePropertyName("text"u8);
                 writer.WriteStringValue(Text);
             }
-            if (Optional.IsDefined(FilePath))
+            if (Optional.IsDefined(InternalFilePath))
             {
                 writer.WritePropertyName("file_path"u8);
-                writer.WriteObjectValue(FilePath, options);
+                writer.WriteObjectValue<InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath>(InternalFilePath, options);
             }
             if (Optional.IsDefined(StartIndex))
             {
@@ -45,6 +44,8 @@ namespace OpenAI.Internal.Models
                 writer.WritePropertyName("end_index"u8);
                 writer.WriteNumberValue(EndIndex.Value);
             }
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -63,19 +64,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        MessageDeltaContentTextAnnotationsFilePathObject IJsonModel<MessageDeltaContentTextAnnotationsFilePathObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        FilePathTextDeltaContentAnnotation IJsonModel<FilePathTextDeltaContentAnnotation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageDeltaContentTextAnnotationsFilePathObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FilePathTextDeltaContentAnnotation>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageDeltaContentTextAnnotationsFilePathObject)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(FilePathTextDeltaContentAnnotation)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeMessageDeltaContentTextAnnotationsFilePathObject(document.RootElement, options);
+            return DeserializeFilePathTextDeltaContentAnnotation(document.RootElement, options);
         }
 
-        internal static MessageDeltaContentTextAnnotationsFilePathObject DeserializeMessageDeltaContentTextAnnotationsFilePathObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static FilePathTextDeltaContentAnnotation DeserializeFilePathTextDeltaContentAnnotation(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -84,11 +85,11 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             int index = default;
-            string type = default;
             string text = default;
-            MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath = default;
+            InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath = default;
             int? startIndex = default;
             int? endIndex = default;
+            string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -96,11 +97,6 @@ namespace OpenAI.Internal.Models
                 if (property.NameEquals("index"u8))
                 {
                     index = property.Value.GetInt32();
-                    continue;
-                }
-                if (property.NameEquals("type"u8))
-                {
-                    type = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("text"u8))
@@ -114,7 +110,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    filePath = MessageDeltaContentTextAnnotationsFilePathObjectFilePath.DeserializeMessageDeltaContentTextAnnotationsFilePathObjectFilePath(property.Value, options);
+                    filePath = InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath.DeserializeInternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("start_index"u8))
@@ -135,63 +131,68 @@ namespace OpenAI.Internal.Models
                     endIndex = property.Value.GetInt32();
                     continue;
                 }
+                if (property.NameEquals("type"u8))
+                {
+                    type = property.Value.GetString();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageDeltaContentTextAnnotationsFilePathObject(
-                index,
+            return new FilePathTextDeltaContentAnnotation(
                 type,
+                serializedAdditionalRawData,
+                index,
                 text,
                 filePath,
                 startIndex,
-                endIndex,
-                serializedAdditionalRawData);
+                endIndex);
         }
 
-        BinaryData IPersistableModel<MessageDeltaContentTextAnnotationsFilePathObject>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<FilePathTextDeltaContentAnnotation>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageDeltaContentTextAnnotationsFilePathObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FilePathTextDeltaContentAnnotation>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(MessageDeltaContentTextAnnotationsFilePathObject)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FilePathTextDeltaContentAnnotation)} does not support writing '{options.Format}' format.");
             }
         }
 
-        MessageDeltaContentTextAnnotationsFilePathObject IPersistableModel<MessageDeltaContentTextAnnotationsFilePathObject>.Create(BinaryData data, ModelReaderWriterOptions options)
+        FilePathTextDeltaContentAnnotation IPersistableModel<FilePathTextDeltaContentAnnotation>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageDeltaContentTextAnnotationsFilePathObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FilePathTextDeltaContentAnnotation>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeMessageDeltaContentTextAnnotationsFilePathObject(document.RootElement, options);
+                        return DeserializeFilePathTextDeltaContentAnnotation(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(MessageDeltaContentTextAnnotationsFilePathObject)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FilePathTextDeltaContentAnnotation)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<MessageDeltaContentTextAnnotationsFilePathObject>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<FilePathTextDeltaContentAnnotation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static MessageDeltaContentTextAnnotationsFilePathObject FromResponse(PipelineResponse response)
+        internal static new FilePathTextDeltaContentAnnotation FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeMessageDeltaContentTextAnnotationsFilePathObject(document.RootElement);
+            return DeserializeFilePathTextDeltaContentAnnotation(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

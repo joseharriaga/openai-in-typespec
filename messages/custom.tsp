@@ -22,3 +22,15 @@ model MessageDeltaContent {
   /** The discriminated type identifier for the content item. */
   type: string;
 }
+
+@discriminator("type")
+model MessageTextContentAnnotation {
+  /** The discriminated type identifier for the content item. */
+  type: string;
+}
+
+@discriminator("type")
+model MessageDeltaTextContentAnnotation {
+  /** The discriminated type identifier for the content item. */
+  type: string;
+}

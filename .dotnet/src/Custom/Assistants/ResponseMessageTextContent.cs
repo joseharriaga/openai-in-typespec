@@ -1,4 +1,5 @@
 ﻿using OpenAI.Internal.Models;
+using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
 
@@ -8,6 +9,10 @@ namespace OpenAI.Assistants;
 [CodeGenModel("MessageContentTextObject")]
 public partial class ResponseMessageTextContent
 {
+    public string Text => InternalText.Value;
+
+    public IList<MessageTextContentAnnotation> Annotations => InternalText.Annotations;
+
     [CodeGenMember("Type")]
     private string InternalType { get; }
 
@@ -23,4 +28,6 @@ public partial class ResponseMessageTextContent
 
         InternalText = internalText;
     }
+
+    public override string ToString() => Text;
 }

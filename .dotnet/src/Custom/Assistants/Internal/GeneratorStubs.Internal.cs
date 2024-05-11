@@ -53,3 +53,21 @@ internal partial class InternalUnknownAssistantToolDefinition { }
 
 [CodeGenModel("MessageContentTextObjectText")]
 internal partial class InternalMessageContentTextObjectText { }
+
+[CodeGenModel("UnknownMessageTextContentAnnotation")]
+internal partial class InternalUnknownMessageTextContentAnnotation { }
+
+[CodeGenModel("UnknownMessageDeltaTextContentAnnotation")]
+internal partial class InternalUnknownMessageDeltaTextContentAnnotation { }
+
+[CodeGenModel("MessageContentTextAnnotationsFileCitationObjectFileCitation")]
+internal partial class InternalMessageContentTextAnnotationsFileCitationObjectFileCitation { }
+
+[CodeGenModel("MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation")]
+internal partial class InternalMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation { }
+
+[CodeGenModel("MessageContentTextAnnotationsFilePathObjectFilePath")]
+internal partial class InternalMessageContentTextAnnotationsFilePathObjectFilePath { }
+
+[CodeGenModel("MessageDeltaContentTextAnnotationsFilePathObjectFilePath")]
+internal partial class InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath { }

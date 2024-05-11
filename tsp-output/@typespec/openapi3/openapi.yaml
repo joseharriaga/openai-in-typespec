@@ -5673,6 +5673,8 @@ components:
           type: integer
           format: int32
           minimum: 0
+      allOf:
+        - $ref: '#/components/schemas/MessageTextContentAnnotation'
       description: A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
     MessageContentTextAnnotationsFilePathObject:
       type: object
@@ -5707,6 +5709,8 @@ components:
           type: integer
           format: int32
           minimum: 0
+      allOf:
+        - $ref: '#/components/schemas/MessageTextContentAnnotation'
       description: A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
     MessageContentTextObject:
       type: object
@@ -5728,9 +5732,7 @@ components:
             annotations:
               type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
-                  - $ref: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
+                $ref: '#/components/schemas/MessageTextContentAnnotation'
               x-oaiExpandable: true
           required:
             - value
@@ -5853,6 +5855,8 @@ components:
           type: integer
           format: int32
           minimum: 0
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaTextContentAnnotation'
       description: A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
     MessageDeltaContentTextAnnotationsFilePathObject:
       type: object
@@ -5886,6 +5890,8 @@ components:
           type: integer
           format: int32
           minimum: 0
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaTextContentAnnotation'
       description: A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
     MessageDeltaContentTextObject:
       type: object
@@ -5911,9 +5917,7 @@ components:
             annotations:
               type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFileCitationObject'
-                  - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFilePathObject'
+                $ref: '#/components/schemas/MessageDeltaTextContentAnnotation'
               x-oaiExpandable: true
       allOf:
         - $ref: '#/components/schemas/MessageDeltaContent'
@@ -5950,6 +5954,19 @@ components:
               x-oaiExpandable: true
           description: The delta containing the fields that have changed on the Message.
       description: Represents a message delta i.e. any changed fields on a message during streaming.
+    MessageDeltaTextContentAnnotation:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      discriminator:
+        propertyName: type
+        mapping:
+          file_citation: '#/components/schemas/MessageDeltaContentTextAnnotationsFileCitationObject'
+          file_path: '#/components/schemas/MessageDeltaContentTextAnnotationsFilePathObject'
     MessageObject:
       type: object
       required:
@@ -6083,6 +6100,19 @@ components:
       allOf:
         - $ref: '#/components/schemas/MessageContent'
       description: The text content that is part of a message.
+    MessageTextContentAnnotation:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      discriminator:
+        propertyName: type
+        mapping:
+          file_citation: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
+          file_path: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
     Model:
       type: object
       required:

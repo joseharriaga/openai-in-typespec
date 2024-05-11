@@ -16,6 +16,14 @@ public abstract partial class MessageContent
     public static RequestMessageTextContent FromText(string text)
         => new(text);
 
+
+    public ResponseMessageTextContent AsText() => this as ResponseMessageTextContent;
+
+    public MessageImageUrlContent AsImageUrl() => this as MessageImageUrlContent;
+
+    public MessageImageFileContent AsImageFile() => this as MessageImageFileContent;
+
+
     /// <summary>
     /// The implicit conversion operator that infers an equivalent <see cref="MessageContent"/> 
     /// instance from a plain <see cref="string"/>.

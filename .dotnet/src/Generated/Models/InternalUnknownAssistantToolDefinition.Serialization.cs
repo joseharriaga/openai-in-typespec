@@ -7,8 +7,9 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Assistants;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     internal partial class InternalUnknownAssistantToolDefinition : IJsonModel<ToolDefinition>
     {

@@ -48,7 +48,7 @@ namespace OpenAI.Internal.Models
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="filePath"/> is null. </exception>
-        internal MessageContentTextAnnotationsFilePathObject(string text, MessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex)
+        public MessageContentTextAnnotationsFilePathObject(string text, MessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex)
         {
             Argument.AssertNotNull(text, nameof(text));
             Argument.AssertNotNull(filePath, nameof(filePath));
@@ -85,12 +85,12 @@ namespace OpenAI.Internal.Models
         public MessageContentTextAnnotationsFilePathObjectType Type { get; } = MessageContentTextAnnotationsFilePathObjectType.FilePath;
 
         /// <summary> The text in the message content that needs to be replaced. </summary>
-        public string Text { get; }
-        /// <summary> Gets the file path. </summary>
-        public MessageContentTextAnnotationsFilePathObjectFilePath FilePath { get; }
-        /// <summary> Gets the start index. </summary>
-        public int StartIndex { get; }
-        /// <summary> Gets the end index. </summary>
-        public int EndIndex { get; }
+        public string Text { get; set; }
+        /// <summary> Gets or sets the file path. </summary>
+        public MessageContentTextAnnotationsFilePathObjectFilePath FilePath { get; set; }
+        /// <summary> Gets or sets the start index. </summary>
+        public int StartIndex { get; set; }
+        /// <summary> Gets or sets the end index. </summary>
+        public int EndIndex { get; set; }
     }
 }

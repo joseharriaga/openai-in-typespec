@@ -46,7 +46,7 @@ namespace OpenAI.Internal.Models
         /// <param name="fileId"> The ID of the specific File the citation is from. </param>
         /// <param name="quote"> The specific quote in the file. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> or <paramref name="quote"/> is null. </exception>
-        internal MessageContentTextAnnotationsFileCitationObjectFileCitation(string fileId, string quote)
+        public MessageContentTextAnnotationsFileCitationObjectFileCitation(string fileId, string quote)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
             Argument.AssertNotNull(quote, nameof(quote));
@@ -72,8 +72,8 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> The ID of the specific File the citation is from. </summary>
-        public string FileId { get; }
+        public string FileId { get; set; }
         /// <summary> The specific quote in the file. </summary>
-        public string Quote { get; }
+        public string Quote { get; set; }
     }
 }

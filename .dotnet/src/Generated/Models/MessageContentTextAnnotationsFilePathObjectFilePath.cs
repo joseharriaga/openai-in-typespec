@@ -45,7 +45,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFilePathObjectFilePath"/>. </summary>
         /// <param name="fileId"> The ID of the file that was generated. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
-        internal MessageContentTextAnnotationsFilePathObjectFilePath(string fileId)
+        public MessageContentTextAnnotationsFilePathObjectFilePath(string fileId)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
 
@@ -67,6 +67,6 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> The ID of the file that was generated. </summary>
-        public string FileId { get; }
+        public string FileId { get; set; }
     }
 }

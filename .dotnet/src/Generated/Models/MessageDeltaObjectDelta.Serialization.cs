@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -75,7 +76,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string role = default;
-            IReadOnlyList<MessageDeltaContentItem> content = default;
+            IReadOnlyList<MessageDeltaContent> content = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -91,10 +92,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<MessageDeltaContentItem> array = new List<MessageDeltaContentItem>();
+                    List<MessageDeltaContent> array = new List<MessageDeltaContent>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(MessageDeltaContentItem.DeserializeMessageDeltaContentItem(item, options));
+                        array.Add(MessageDeltaContent.DeserializeMessageDeltaContent(item, options));
                     }
                     content = array;
                     continue;
@@ -105,7 +106,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageDeltaObjectDelta(role, content ?? new ChangeTrackingList<MessageDeltaContentItem>(), serializedAdditionalRawData);
+            return new MessageDeltaObjectDelta(role, content ?? new ChangeTrackingList<MessageDeltaContent>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<MessageDeltaObjectDelta>.Write(ModelReaderWriterOptions options)

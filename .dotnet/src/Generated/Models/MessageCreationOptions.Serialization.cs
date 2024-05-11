@@ -104,7 +104,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             MessageRole role = default;
-            IList<RequestMessageContentItem> content = default;
+            IList<MessageContent> content = default;
             IList<MessageCreationAttachment> attachments = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -118,10 +118,10 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("content"u8))
                 {
-                    List<RequestMessageContentItem> array = new List<RequestMessageContentItem>();
+                    List<MessageContent> array = new List<MessageContent>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(RequestMessageContentItem.DeserializeRequestMessageContentItem(item, options));
+                        array.Add(MessageContent.DeserializeMessageContent(item, options));
                     }
                     content = array;
                     continue;

@@ -40,9 +40,9 @@ model CreateMessageRequest {
   """)
   role: "user" | "assistant";
 
-  // Tool customization: use abstract base model for message content items
+  // Tool customization: use abstract base model for message request content items
   @extension("x-oaiExpandable", true)
-  content: RequestMessageContentItem[];
+  content: MessageContent[];
 
   /** A list of files attached to the message, and the tools they should be added to. */
   attachments?: CreateMessageRequestAttachments | null;
@@ -123,9 +123,10 @@ model MessageObject {
   """)
   role: "user" | "assistant";
 
+  // Tool customization: use abstract base model for message response content items
   /** The content of the message in array of text and/or images. */
   @extension("x-oaiExpandable", true)
-  content: (MessageContentImageFileObject | MessageContentImageUrlObject | MessageContentTextObject)[];
+  content: MessageContent[];
 
   /** If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. */
   assistant_id: string | null;
@@ -143,9 +144,9 @@ model MessageObject {
   metadata: Record<string> | null;
 }
 
-// Tool customization: apply a common model base for assistants message content items
+// Tool customization: apply a common model base for all assistants message content items
 /** References an image [File](/docs/api-reference/files) in the content of a message. */
-model MessageContentImageFileObject extends RequestMessageContentItem {
+model MessageContentImageFileObject extends MessageContent {
   @doc("""
   Always `image_file`.
   """)
@@ -164,8 +165,9 @@ model MessageContentImageFileObject extends RequestMessageContentItem {
   };
 }
 
+// Tool customization: apply a common model base for all assistants message content items
 /** The text content that is part of a message. */
-model MessageContentTextObject {
+model MessageContentTextObject extends MessageContent {
   @doc("""
   Always `text`.
   """)
@@ -231,7 +233,7 @@ model MessageContentTextAnnotationsFilePathObject {
 
 // Tool customization: apply custom, common base type to union items
 /** References an image [File](/docs/api-reference/files) in the content of a message. */
-model MessageDeltaContentImageFileObject extends MessageDeltaContentItem {
+model MessageDeltaContentImageFileObject extends MessageDeltaContent {
   /** The index of the content part in the message. */
   index: int32;
 
@@ -253,9 +255,9 @@ model MessageDeltaContentImageFileObject extends MessageDeltaContentItem {
   };
 }
 
-// Tool customization: apply a common model base for assistants message content items
+// Tool customization: apply a common model base for all assistants message content items
 /** References an image URL in the content of a message. */
-model MessageContentImageUrlObject extends RequestMessageContentItem {
+model MessageContentImageUrlObject extends MessageContent {
   /** The type of the content part. */
   type: "image_url";
 
@@ -273,7 +275,7 @@ model MessageContentImageUrlObject extends RequestMessageContentItem {
 
 // Tool customization: apply custom, common base type to union items
 /** References an image URL in the content of a message. */
-model MessageDeltaContentImageUrlObject extends MessageDeltaContentItem {
+model MessageDeltaContentImageUrlObject extends MessageDeltaContent {
   /** The index of the content part in the message. */
   index: int32;
 
@@ -314,13 +316,13 @@ model MessageDeltaObject {
     // Tool customization: replace unioned types with a custom, common base
     /** The content of the message in array of text and/or images. */
     @extension("x-oaiExpandable", true)
-    content?: MessageDeltaContentItem[];
+    content?: MessageDeltaContent[];
   };
 }
 
 // Tool customization: apply custom, common base type to union items
 /** The text content that is part of a message. */
-model MessageDeltaContentTextObject extends MessageDeltaContentItem {
+model MessageDeltaContentTextObject extends MessageDeltaContent {
   /** The index of the content part in the message. */
   index: int32;
 
@@ -338,9 +340,9 @@ model MessageDeltaContentTextObject extends MessageDeltaContentItem {
   };
 }
 
-// Tool customization: apply a common model base for assistants message content items
+// Tool customization: apply a common model base for all assistants message content items
 /** The text content that is part of a message. */
-model MessageRequestContentTextObject extends RequestMessageContentItem {
+model MessageRequestContentTextObject extends MessageContent {
   @doc("""
   Always `text`.
   """)

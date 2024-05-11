@@ -6,6 +6,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
+using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {

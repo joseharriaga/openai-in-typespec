@@ -74,16 +74,16 @@ public partial class AssistantTests
     [Test]
     public async Task MessagesWork()
     {
-        AssistantClient client = new();
+        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
         ClientResult<AssistantThread> threadResult = await client.CreateThreadAsync(new ThreadCreationOptions()
         {
             Messages =
             {
-                new(MessageRole.User, [new MessageTextContentItem("hello, world")]),
+                new(MessageRole.User, ["hello, world"]),
                 new(MessageRole.User,
                 [
-                    new MessageTextContentItem("Describe this for me:"),
-                    new MessageImageUrlContentItem(new Uri("https://not-a-real-thing.com/image.png")),
+                    "Describe this for me:",
+                    MessageContent.FromImageUrl(new Uri("https://not-a-real-thing.com/image.png")),
                 ]),
             },
             Metadata =
@@ -102,7 +102,7 @@ public partial class AssistantTests
         MessageCreationOptions newMessageOptions = new(
             MessageRole.User,
             [
-                RequestMessageContentItem.FromText("here's another test"),
+                MessageContent.FromText("here's another test"),
             ]);
         // To ensure a timestamp difference (granularity is seconds)
         await Task.Delay(TimeSpan.FromSeconds(1));

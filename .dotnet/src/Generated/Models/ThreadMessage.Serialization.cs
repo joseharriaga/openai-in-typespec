@@ -64,19 +64,7 @@ namespace OpenAI.Assistants
             writer.WriteStartArray();
             foreach (var item in Content)
             {
-                if (item == null)
-                {
-                    writer.WriteNullValue();
-                    continue;
-                }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                using (JsonDocument document = JsonDocument.Parse(item))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
             if (AssistantId != null)
@@ -173,7 +161,7 @@ namespace OpenAI.Assistants
             DateTimeOffset? completedAt = default;
             DateTimeOffset? incompleteAt = default;
             MessageRole role = default;
-            IReadOnlyList<BinaryData> content = default;
+            IReadOnlyList<MessageContent> content = default;
             string assistantId = default;
             string runId = default;
             IReadOnlyList<MessageCreationAttachment> attachments = default;
@@ -244,17 +232,10 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("content"u8))
                 {
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<MessageContent> array = new List<MessageContent>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(MessageContent.DeserializeMessageContent(item, options));
                     }
                     content = array;
                     continue;

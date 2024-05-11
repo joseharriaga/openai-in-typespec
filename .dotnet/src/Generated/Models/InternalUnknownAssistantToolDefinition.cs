@@ -4,8 +4,9 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Assistants;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> Unknown version of AssistantToolDefinition. </summary>
     internal partial class InternalUnknownAssistantToolDefinition : ToolDefinition

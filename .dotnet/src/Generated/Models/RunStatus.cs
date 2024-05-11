@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> Enum for status in ThreadRun. </summary>
     public readonly partial struct RunStatus : IEquatable<RunStatus>

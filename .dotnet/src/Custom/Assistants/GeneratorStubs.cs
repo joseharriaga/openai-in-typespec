@@ -27,8 +27,8 @@ public partial class MessageFailureDetails { }
 [CodeGenModel("MessageFailureDetailsReason")]
 public readonly partial struct MessageFailureReason { }
 
-[CodeGenModel("UnknownRequestMessageContentItem")]
-internal partial class InternalUnknownRequestMessageContentItem { }
+[CodeGenModel("RunCompletionUsage")]
+public partial class RunTokenUsage { }
 
-[CodeGenModel("UnknownAssistantToolDefinition")]
-internal partial class InternalUnknownAssistantToolDefinition { }
+[CodeGenModel("ThreadRunStatus")]
+public readonly partial struct RunStatus { }

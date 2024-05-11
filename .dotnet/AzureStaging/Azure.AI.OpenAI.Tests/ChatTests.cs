@@ -120,6 +120,8 @@ public class ChatTests
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
+        ChatCompletionOptions streamingOptions = new ChatCompletionOptions().WithStreaming();
+
         AsyncResultCollection<StreamingChatUpdate> streamingResult
             = chatClient.CompleteChatStreamingAsync("What are the best pizza toppings? Give me a breakdown on the reasons.");
         Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatUpdate>>());

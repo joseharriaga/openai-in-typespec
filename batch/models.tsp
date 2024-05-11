@@ -176,7 +176,5 @@ model ListBatchesResponse {
   first_id?: string;
   last_id?: string;
   has_more: boolean;
-
-  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }

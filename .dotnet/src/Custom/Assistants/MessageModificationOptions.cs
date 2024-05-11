@@ -1,9 +1,11 @@
-namespace OpenAI.Internal.Models;
+using OpenAI.Assistants;
+
+namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when modifying an existing <see cref="ThreadMessage"/>.
 /// </summary>
 [CodeGenModel("ModifyMessageRequest")]
-internal partial class MessageModificationOptions
+public partial class MessageModificationOptions
 {
 }

@@ -32,19 +32,7 @@ namespace OpenAI.Internal.Models
                 writer.WriteStartArray();
                 foreach (var item in Content)
                 {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -87,7 +75,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string role = default;
-            IReadOnlyList<BinaryData> content = default;
+            IReadOnlyList<MessageDeltaContentItem> content = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -103,17 +91,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<MessageDeltaContentItem> array = new List<MessageDeltaContentItem>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(MessageDeltaContentItem.DeserializeMessageDeltaContentItem(item, options));
                     }
                     content = array;
                     continue;
@@ -124,7 +105,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageDeltaObjectDelta(role, content ?? new ChangeTrackingList<BinaryData>(), serializedAdditionalRawData);
+            return new MessageDeltaObjectDelta(role, content ?? new ChangeTrackingList<MessageDeltaContentItem>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<MessageDeltaObjectDelta>.Write(ModelReaderWriterOptions options)

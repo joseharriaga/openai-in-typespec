@@ -5,16 +5,19 @@ namespace OpenAI.Assistants;
 [CodeGenModel("MessageContentImageFileObject")]
 public partial class MessageImageFileContentItem
 {
+    /// <inheritdoc cref="InternalMessageContentItemFileObjectImageFile.FileId"/>
     public string FileId => InternalImageFile.FileId;
 
-    public MessageImageDetail? Detail => InternalImageFile.Detail;
+    /// <inheritdoc cref="InternalMessageContentItemFileObjectImageFile.InternalDetail"/>
+    public MessageImageDetail? Detail => InternalImageFile.InternalDetail?.ToMessageImageDetail();
 
+    /// <summary> Gets or sets the image file. </summary>
     [CodeGenMember("ImageFile")]
-    internal InternalMessageContentItemFileObjectImageFile InternalImageFile { get; }
+    internal InternalMessageContentItemFileObjectImageFile InternalImageFile { get; set; }
 
     /// <summary> Initializes a new instance of <see cref="MessageImageFileContentItem"/>. </summary>
-    public MessageImageFileContentItem(string imageFileId, MessageImageDetail? detail)
-        : this(new InternalMessageContentItemFileObjectImageFile(imageFileId, detail))
+    public MessageImageFileContentItem(string imageFileId, MessageImageDetail? detail = null)
+        : this(new InternalMessageContentItemFileObjectImageFile(imageFileId, detail?.ToSerialString(), null))
     {}
 
     /// <summary> Initializes a new instance of <see cref="MessageImageFileContentItem"/>. </summary>

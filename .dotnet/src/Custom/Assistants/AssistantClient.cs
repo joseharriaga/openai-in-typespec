@@ -230,4 +230,126 @@ public partial class AssistantClient
             = InternalDeleteThreadResponse.FromResponse(protocolResult?.GetRawResponse());
         return ClientResult.FromValue(internalResponse.Deleted, protocolResult?.GetRawResponse());
     }
+
+    public virtual async Task<ClientResult<ThreadMessage>> CreateMessageAsync(string threadId, MessageCreationOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = await CreateMessageAsync(threadId, options?.ToBinaryContent(), null).ConfigureAwait(false);
+        ThreadMessage threadMessage = ThreadMessage.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(threadMessage, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<ThreadMessage> CreateMessage(string threadId, MessageCreationOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = CreateMessage(threadId, options?.ToBinaryContent(), null);
+        ThreadMessage threadMessage = ThreadMessage.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(threadMessage, protocolResult?.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<ListQueryPage<ThreadMessage>>> GetMessagesAsync(
+        string threadId,
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = await GetMessagesAsync(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null).ConfigureAwait(false);
+        InternalListMessagesResponse internalResponse
+            = InternalListMessagesResponse.FromResponse(protocolResult?.GetRawResponse());
+        ListQueryPage<ThreadMessage> page = new(
+            internalResponse.Data,
+            internalResponse.FirstId,
+            internalResponse.LastId,
+            internalResponse.HasMore);
+        return ClientResult.FromValue(page, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<ListQueryPage<ThreadMessage>> GetMessages(
+        string threadId,
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = GetMessages(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
+        InternalListMessagesResponse internalResponse
+            = InternalListMessagesResponse.FromResponse(protocolResult?.GetRawResponse());
+        ListQueryPage<ThreadMessage> page = new(
+            internalResponse.Data,
+            internalResponse.FirstId,
+            internalResponse.LastId,
+            internalResponse.HasMore);
+        return ClientResult.FromValue(page, protocolResult?.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+        ClientResult protocolResult = await GetMessageAsync(threadId, messageId, null).ConfigureAwait(false);
+        ThreadMessage message = ThreadMessage.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(message, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<ThreadMessage> GetMessage(string threadId, string messageId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+        ClientResult protocolResult = GetMessage(threadId, messageId, null);
+        ThreadMessage message = ThreadMessage.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(message, protocolResult?.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<ThreadMessage>> ModifyMessageAsync(string threadId, string messageId, MessageModificationOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+        Argument.AssertNotNull(options, nameof(options));
+
+        ClientResult protocolResult = await ModifyMessageAsync(threadId, messageId, options?.ToBinaryContent(), null).ConfigureAwait(false);
+        ThreadMessage message = ThreadMessage.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(message, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+        Argument.AssertNotNull(options, nameof(options));
+
+        ClientResult protocolResult = ModifyMessage(threadId, messageId, options?.ToBinaryContent(), null);
+        ThreadMessage message = ThreadMessage.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(message, protocolResult?.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<bool>> DeleteMessageAsync(string threadId, string messageId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+        ClientResult protocolResult = await DeleteMessageAsync(threadId, messageId, null).ConfigureAwait(false);
+        InternalDeleteMessageResponse internalResponse
+            = InternalDeleteMessageResponse.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(internalResponse.Deleted, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<bool> DeleteMessage(string threadId, string messageId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+        ClientResult protocolResult = DeleteMessage(threadId, messageId, null);
+        InternalDeleteMessageResponse internalResponse
+            = InternalDeleteMessageResponse.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(internalResponse.Deleted, protocolResult?.GetRawResponse());
+    }
 }

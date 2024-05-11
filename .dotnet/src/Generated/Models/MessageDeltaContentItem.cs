@@ -7,8 +7,12 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The MessageObjectIncompleteDetails. </summary>
-    internal partial class MessageObjectIncompleteDetails
+    /// <summary>
+    /// Represents a single piece of incremental content in an Assistants API streaming respnse.
+    /// Please note <see cref="MessageDeltaContentItem"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+    /// The available derived classes include <see cref="MessageDeltaContentImageFileObject"/>, <see cref="MessageDeltaContentImageUrlObject"/> and <see cref="MessageDeltaContentTextObject"/>.
+    /// </summary>
+    internal abstract partial class MessageDeltaContentItem
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,30 +44,23 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageObjectIncompleteDetails"/>. </summary>
-        /// <param name="reason"> The reason the message is incomplete. </param>
-        internal MessageObjectIncompleteDetails(MessageObjectIncompleteDetailsReason reason)
+        /// <summary> Initializes a new instance of <see cref="MessageDeltaContentItem"/>. </summary>
+        protected MessageDeltaContentItem()
         {
-            Reason = reason;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageObjectIncompleteDetails"/>. </summary>
-        /// <param name="reason"> The reason the message is incomplete. </param>
+        /// <summary> Initializes a new instance of <see cref="MessageDeltaContentItem"/>. </summary>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageObjectIncompleteDetails(MessageObjectIncompleteDetailsReason reason, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Reason = reason;
+            Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageObjectIncompleteDetails"/> for deserialization. </summary>
-        internal MessageObjectIncompleteDetails()
-        {
-        }
-
-        /// <summary> The reason the message is incomplete. </summary>
-        public MessageObjectIncompleteDetailsReason Reason { get; }
+        /// <summary> The discriminated type identifier for the content item. </summary>
+        internal string Type { get; set; }
     }
 }

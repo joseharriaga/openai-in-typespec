@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class MessageObjectIncompleteDetails : IJsonModel<MessageObjectIncompleteDetails>
+    public partial class MessageFailureDetails : IJsonModel<MessageFailureDetails>
     {
-        void IJsonModel<MessageObjectIncompleteDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<MessageFailureDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObjectIncompleteDetails>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageFailureDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageObjectIncompleteDetails)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageFailureDetails)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -41,19 +41,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        MessageObjectIncompleteDetails IJsonModel<MessageObjectIncompleteDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        MessageFailureDetails IJsonModel<MessageFailureDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObjectIncompleteDetails>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageFailureDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageObjectIncompleteDetails)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageFailureDetails)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeMessageObjectIncompleteDetails(document.RootElement, options);
+            return DeserializeMessageFailureDetails(document.RootElement, options);
         }
 
-        internal static MessageObjectIncompleteDetails DeserializeMessageObjectIncompleteDetails(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static MessageFailureDetails DeserializeMessageFailureDetails(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -61,14 +61,14 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            MessageObjectIncompleteDetailsReason reason = default;
+            MessageFailureReason reason = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("reason"u8))
                 {
-                    reason = new MessageObjectIncompleteDetailsReason(property.Value.GetString());
+                    reason = new MessageFailureReason(property.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")
@@ -77,46 +77,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageObjectIncompleteDetails(reason, serializedAdditionalRawData);
+            return new MessageFailureDetails(reason, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<MessageObjectIncompleteDetails>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<MessageFailureDetails>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObjectIncompleteDetails>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageFailureDetails>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(MessageObjectIncompleteDetails)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageFailureDetails)} does not support writing '{options.Format}' format.");
             }
         }
 
-        MessageObjectIncompleteDetails IPersistableModel<MessageObjectIncompleteDetails>.Create(BinaryData data, ModelReaderWriterOptions options)
+        MessageFailureDetails IPersistableModel<MessageFailureDetails>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObjectIncompleteDetails>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageFailureDetails>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeMessageObjectIncompleteDetails(document.RootElement, options);
+                        return DeserializeMessageFailureDetails(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(MessageObjectIncompleteDetails)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageFailureDetails)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<MessageObjectIncompleteDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<MessageFailureDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static MessageObjectIncompleteDetails FromResponse(PipelineResponse response)
+        internal static MessageFailureDetails FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeMessageObjectIncompleteDetails(document.RootElement);
+            return DeserializeMessageFailureDetails(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

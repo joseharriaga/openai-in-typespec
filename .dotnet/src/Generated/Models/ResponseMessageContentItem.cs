@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
-    /// <summary> The ModifyMessageRequest. </summary>
-    public partial class MessageModificationOptions
+    /// <summary> Represents a single piece of content in an Assistants API response. </summary>
+    internal partial class ResponseMessageContentItem
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,22 +42,31 @@ namespace OpenAI.Assistants
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageModificationOptions"/>. </summary>
-        public MessageModificationOptions()
+        /// <summary> Initializes a new instance of <see cref="ResponseMessageContentItem"/>. </summary>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="type"/> is null. </exception>
+        internal ResponseMessageContentItem(string type)
         {
-            Metadata = new ChangeTrackingDictionary<string, string>();
+            Argument.AssertNotNull(type, nameof(type));
+
+            Type = type;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageModificationOptions"/>. </summary>
-        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
+        /// <summary> Initializes a new instance of <see cref="ResponseMessageContentItem"/>. </summary>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageModificationOptions(IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ResponseMessageContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Metadata = metadata;
+            Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
-        public IDictionary<string, string> Metadata { get; set; }
+        /// <summary> Initializes a new instance of <see cref="ResponseMessageContentItem"/> for deserialization. </summary>
+        internal ResponseMessageContentItem()
+        {
+        }
+
+        /// <summary> The discriminated type identifier for the content item. </summary>
+        public string Type { get; }
     }
 }

@@ -4052,7 +4052,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/MessageContentItem'
+            $ref: '#/components/schemas/RequestMessageContentItem'
           x-oaiExpandable: true
         attachments:
           type: object
@@ -5600,7 +5600,7 @@ components:
           required:
             - file_id
       allOf:
-        - $ref: '#/components/schemas/MessageContentItem'
+        - $ref: '#/components/schemas/RequestMessageContentItem'
       description: References an image [File](/docs/api-reference/files) in the content of a message.
     MessageContentImageUrlObject:
       type: object
@@ -5631,21 +5631,8 @@ components:
           required:
             - url
       allOf:
-        - $ref: '#/components/schemas/MessageContentItem'
+        - $ref: '#/components/schemas/RequestMessageContentItem'
       description: References an image URL in the content of a message.
-    MessageContentItem:
-      type: object
-      required:
-        - type
-      properties:
-        type:
-          type: string
-      discriminator:
-        propertyName: type
-        mapping:
-          image_file: '#/components/schemas/MessageContentImageFileObject'
-          image_url: '#/components/schemas/MessageContentImageUrlObject'
-          text: '#/components/schemas/MessageRequestContentTextObject'
     MessageContentTextAnnotationsFileCitationObject:
       type: object
       required:
@@ -5775,6 +5762,8 @@ components:
                 - high
               description: Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
               default: auto
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaContentItem'
       description: References an image [File](/docs/api-reference/files) in the content of a message.
     MessageDeltaContentImageUrlObject:
       type: object
@@ -5806,7 +5795,24 @@ components:
                 - high
               description: Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`.
               default: auto
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaContentItem'
       description: References an image URL in the content of a message.
+    MessageDeltaContentItem:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      discriminator:
+        propertyName: type
+        mapping:
+          image_file: '#/components/schemas/MessageDeltaContentImageFileObject'
+          image_url: '#/components/schemas/MessageDeltaContentImageUrlObject'
+          text: '#/components/schemas/MessageDeltaContentTextObject'
+      description: Represents a single piece of incremental content in an Assistants API streaming respnse.
     MessageDeltaContentTextAnnotationsFileCitationObject:
       type: object
       required:
@@ -5904,6 +5910,8 @@ components:
                   - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFileCitationObject'
                   - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFilePathObject'
               x-oaiExpandable: true
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaContentItem'
       description: The text content that is part of a message.
     MessageDeltaObject:
       type: object
@@ -5932,10 +5940,7 @@ components:
             content:
               type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageDeltaContentImageFileObject'
-                  - $ref: '#/components/schemas/MessageDeltaContentTextObject'
-                  - $ref: '#/components/schemas/MessageDeltaContentImageUrlObject'
+                $ref: '#/components/schemas/MessageDeltaContentItem'
               description: The content of the message in array of text and/or images.
               x-oaiExpandable: true
           description: The delta containing the fields that have changed on the Message.
@@ -6074,7 +6079,7 @@ components:
           type: string
           description: Text content to be sent to the model
       allOf:
-        - $ref: '#/components/schemas/MessageContentItem'
+        - $ref: '#/components/schemas/RequestMessageContentItem'
       description: The text content that is part of a message.
     Model:
       type: object
@@ -6292,6 +6297,30 @@ components:
           description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
           deprecated: true
       description: The `File` object represents a document that has been uploaded to OpenAI.
+    RequestMessageContentItem:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      discriminator:
+        propertyName: type
+        mapping:
+          image_file: '#/components/schemas/MessageContentImageFileObject'
+          image_url: '#/components/schemas/MessageContentImageUrlObject'
+          text: '#/components/schemas/MessageRequestContentTextObject'
+      description: Represents a single piece of content in an Assistants API request message.
+    ResponseMessageContentItem:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      description: Represents a single piece of content in an Assistants API response.
     RunCompletionUsage:
       type: object
       required:

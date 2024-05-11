@@ -4,26 +4,14 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
     /// <summary> References an image [File](/docs/api-reference/files) in the content of a message. </summary>
-    public partial class MessageImageFileContentItem : MessageContentItem
+    public partial class MessageImageFileContentItem : RequestMessageContentItem
     {
         /// <summary> Initializes a new instance of <see cref="MessageImageFileContentItem"/>. </summary>
-        /// <param name="internalImageFile"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalImageFile"/> is null. </exception>
-        public MessageImageFileContentItem(InternalMessageContentItemFileObjectImageFile internalImageFile)
-        {
-            Argument.AssertNotNull(internalImageFile, nameof(internalImageFile));
-
-            Type = "image_file";
-            InternalImageFile = internalImageFile;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="MessageImageFileContentItem"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="internalImageFile"></param>
         internal MessageImageFileContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalMessageContentItemFileObjectImageFile internalImageFile) : base(type, serializedAdditionalRawData)

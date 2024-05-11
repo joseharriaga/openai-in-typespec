@@ -223,25 +223,25 @@ public partial class AssistantClient
 
     /// <inheritdoc cref="InternalAssistantMessageClient.GetMessageAsync"/>
     public virtual Task<ClientResult> GetMessageAsync(string threadId, string messageId, RequestOptions options)
-        => GetMessageAsync(threadId, messageId, options);
+        => _messageSubClient.GetMessageAsync(threadId, messageId, options);
 
     /// <inheritdoc cref="InternalAssistantMessageClient.GetMessage"/>
     public virtual ClientResult GetMessage(string threadId, string messageId, RequestOptions options)
-        => GetMessage(threadId, messageId, options);
+        => _messageSubClient.GetMessage(threadId, messageId, options);
     /// <inheritdoc cref="InternalAssistantMessageClient.ModifyMessageAsync"/>
     public virtual Task<ClientResult> ModifyMessageAsync(string threadId, string messageId, BinaryContent content, RequestOptions options = null)
-        => ModifyMessageAsync(threadId, messageId, content, options);
+        => _messageSubClient.ModifyMessageAsync(threadId, messageId, content, options);
 
     /// <inheritdoc cref="InternalAssistantMessageClient.ModifyMessage"/>
     public virtual ClientResult ModifyMessage(string threadId, string messageId, BinaryContent content, RequestOptions options = null)
-        => ModifyMessage(threadId, messageId, content, options);
+        => _messageSubClient.ModifyMessage(threadId, messageId, content, options);
     /// <inheritdoc cref="InternalAssistantMessageClient.DeleteMessageAsync"/>
     public virtual Task<ClientResult> DeleteMessageAsync(string threadId, string messageId, RequestOptions options)
-        => DeleteMessageAsync(threadId, messageId, options);
+        => _messageSubClient.DeleteMessageAsync(threadId, messageId, options);
 
     /// <inheritdoc cref="InternalAssistantMessageClient.DeleteMessage"/>
     public virtual ClientResult DeleteMessage(string threadId, string messageId, RequestOptions options)
-        => DeleteMessage(threadId, messageId, options);
+        => _messageSubClient.DeleteMessage(threadId, messageId, options);
 
     /// <inheritdoc cref="InternalAssistantRunClient.CreateThreadAndRunAsync"/>
     public virtual Task<ClientResult> CreateThreadAndRunAsync(BinaryContent content, RequestOptions options = null)

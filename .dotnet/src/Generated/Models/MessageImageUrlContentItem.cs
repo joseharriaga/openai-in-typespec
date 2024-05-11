@@ -4,39 +4,24 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
     /// <summary> References an image URL in the content of a message. </summary>
-    public partial class MessageImageUrlContentItem : MessageContentItem
+    public partial class MessageImageUrlContentItem : RequestMessageContentItem
     {
         /// <summary> Initializes a new instance of <see cref="MessageImageUrlContentItem"/>. </summary>
-        /// <param name="imageUrl"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="imageUrl"/> is null. </exception>
-        public MessageImageUrlContentItem(MessageContentImageUrlObjectImageUrl imageUrl)
-        {
-            Argument.AssertNotNull(imageUrl, nameof(imageUrl));
-
-            Type = "image_url";
-            ImageUrl = imageUrl;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="MessageImageUrlContentItem"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="imageUrl"></param>
-        internal MessageImageUrlContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, MessageContentImageUrlObjectImageUrl imageUrl) : base(type, serializedAdditionalRawData)
+        /// <param name="internalImageUrl"></param>
+        internal MessageImageUrlContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalMessageContentImageUrlObjectImageUrl internalImageUrl) : base(type, serializedAdditionalRawData)
         {
-            ImageUrl = imageUrl;
+            InternalImageUrl = internalImageUrl;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageImageUrlContentItem"/> for deserialization. </summary>
         internal MessageImageUrlContentItem()
         {
         }
-
-        /// <summary> Gets or sets the image url. </summary>
-        public MessageContentImageUrlObjectImageUrl ImageUrl { get; set; }
     }
 }

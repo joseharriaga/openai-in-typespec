@@ -7,11 +7,10 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class ThreadMessage : IJsonModel<ThreadMessage>
+    public partial class ThreadMessage : IJsonModel<ThreadMessage>
     {
         void IJsonModel<ThreadMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -60,7 +59,7 @@ namespace OpenAI.Internal.Models
                 writer.WriteNull("incomplete_at");
             }
             writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role.ToString());
+            writer.WriteStringValue(Role.ToSerialString());
             writer.WritePropertyName("content"u8);
             writer.WriteStartArray();
             foreach (var item in Content)
@@ -104,7 +103,7 @@ namespace OpenAI.Internal.Models
                 writer.WriteStartArray();
                 foreach (var item in Attachments)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<MessageCreationAttachment>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -169,15 +168,15 @@ namespace OpenAI.Internal.Models
             object @object = default;
             DateTimeOffset createdAt = default;
             string threadId = default;
-            ThreadMessageStatus status = default;
-            MessageObjectIncompleteDetails incompleteDetails = default;
+            MessageStatus status = default;
+            MessageFailureDetails incompleteDetails = default;
             DateTimeOffset? completedAt = default;
             DateTimeOffset? incompleteAt = default;
-            ThreadMessageRole role = default;
+            MessageRole role = default;
             IReadOnlyList<BinaryData> content = default;
             string assistantId = default;
             string runId = default;
-            IReadOnlyList<MessageObjectAttachment> attachments = default;
+            IReadOnlyList<MessageCreationAttachment> attachments = default;
             IReadOnlyDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -205,7 +204,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    status = new ThreadMessageStatus(property.Value.GetString());
+                    status = new MessageStatus(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("incomplete_details"u8))
@@ -215,7 +214,7 @@ namespace OpenAI.Internal.Models
                         incompleteDetails = null;
                         continue;
                     }
-                    incompleteDetails = MessageObjectIncompleteDetails.DeserializeMessageObjectIncompleteDetails(property.Value, options);
+                    incompleteDetails = MessageFailureDetails.DeserializeMessageFailureDetails(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("completed_at"u8))
@@ -240,7 +239,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("role"u8))
                 {
-                    role = new ThreadMessageRole(property.Value.GetString());
+                    role = property.Value.GetString().ToMessageRole();
                     continue;
                 }
                 if (property.NameEquals("content"u8))
@@ -284,13 +283,13 @@ namespace OpenAI.Internal.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        attachments = new ChangeTrackingList<MessageObjectAttachment>();
+                        attachments = new ChangeTrackingList<MessageCreationAttachment>();
                         continue;
                     }
-                    List<MessageObjectAttachment> array = new List<MessageObjectAttachment>();
+                    List<MessageCreationAttachment> array = new List<MessageCreationAttachment>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(MessageObjectAttachment.DeserializeMessageObjectAttachment(item, options));
+                        array.Add(MessageCreationAttachment.DeserializeMessageCreationAttachment(item, options));
                     }
                     attachments = array;
                     continue;

@@ -71,34 +71,52 @@ public partial class AssistantTests
         Assert.That(deleted, Is.True);
     }
 
-    // [Test]
-    // public async Task AddingMessagesWorks()
-    // {
-    //     AssistantClient client = new();
-    //     ClientResult<AssistantThread> threadResult = await client.CreateThreadAsync(new ThreadCreationOptions()
-    //     {
-    //         Messages =
-    //         {
-    //             new(MessageRole.User, "this is an initial message on the thread"),
-    //             "this is another one done an easier way"
-    //         },
-    //         Metadata =
-    //         {
-    //             ["test_key"] = "test_value",
-    //             [s_cleanupMetadataKey] = "true",
-    //         }
-    //     });
-    //     ClientResult<ListQueryPage<ThreadMessage>> messagesResult = await client.GetMessagesAsync(threadResult.Value.Id);
-    //     Assert.That(messagesResult.Value?.Count, Is.EqualTo(2));
-    //     ThreadMessage latestMessage = messagesResult.Value[0];
-    //     ThreadMessage oldestMessage = messagesResult.Value[1];
-    //     Assert.That(latestMessage.Role, Is.EqualTo(MessageRole.User));
-    //     Assert.That(latestMessage.ContentItems, Is.Not.Null.Or.Empty);
-    //     MessageTextContent textContent = latestMessage.ContentItems[0] as MessageTextContent;
-    //     Assert.That(textContent, Is.Not.Null);
-    //     Assert.That(textContent.Text, Is.Not.Null.Or.Empty);
-    //     Assert.That(textContent.Text, Contains.Substring("easier way"));
-    // }
+    [Test]
+    public async Task MessagesWork()
+    {
+        AssistantClient client = new();
+        ClientResult<AssistantThread> threadResult = await client.CreateThreadAsync(new ThreadCreationOptions()
+        {
+            Messages =
+            {
+                new(MessageRole.User, [new MessageTextContentItem("hello, world")]),
+                new(MessageRole.User,
+                [
+                    new MessageTextContentItem("Describe this for me:"),
+                    new MessageImageUrlContentItem(new Uri("https://not-a-real-thing.com/image.png")),
+                ]),
+            },
+            Metadata =
+            {
+                ["test_key"] = "test_value",
+                [s_cleanupMetadataKey] = "true",
+            }
+        });
+        Assert.That(threadResult?.Value?.Id, Is.Not.Null.Or.Empty);
+        ClientResult<ListQueryPage<ThreadMessage>> messagesResult = await client.GetMessagesAsync(threadResult.Value.Id);
+        Assert.That(messagesResult.Value?.Count, Is.EqualTo(2));
+        ThreadMessage latestMessage = messagesResult.Value[0];
+        ThreadMessage oldestMessage = messagesResult.Value[1];
+        Assert.That(latestMessage.Role, Is.EqualTo(MessageRole.User));
+        Assert.That(latestMessage.Content, Is.Not.Null.Or.Empty);
+        MessageCreationOptions newMessageOptions = new(
+            MessageRole.User,
+            [
+                RequestMessageContentItem.FromText("here's another test"),
+            ]);
+        // To ensure a timestamp difference (granularity is seconds)
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        ThreadMessage newMessage = await client.CreateMessageAsync(threadResult.Value.Id, newMessageOptions);
+        Assert.That(newMessage?.Id, Is.Not.Null.Or.Empty);
+        ListQueryPage<ThreadMessage> newPage = await client.GetMessagesAsync(threadResult.Value.Id, resultOrder: ListOrder.OldestFirst);
+        Assert.That(newPage.Count, Is.EqualTo(3));
+        Assert.That(newPage[2].CreatedAt, Is.GreaterThan(newPage[1].CreatedAt));
+        bool deleted = await client.DeleteMessageAsync(threadResult.Value.Id, newMessage.Id);
+        Assert.That(deleted, Is.True);
+        newPage = await client.GetMessagesAsync(threadResult.Value.Id, resultOrder: ListOrder.NewestFirst);
+        Assert.That(newPage.Count, Is.EqualTo(2));
+        Assert.That(newPage[0].CreatedAt, Is.LessThan(newMessage.CreatedAt));
+    }
 
     // [Test]
     // public async Task BasicFunctionToolWorks()

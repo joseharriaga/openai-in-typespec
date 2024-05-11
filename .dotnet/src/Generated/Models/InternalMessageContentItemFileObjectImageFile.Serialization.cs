@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentItemFileObjectImageFile : IJsonModel<InternalMessageContentItemFileObjectImageFile>
     {
@@ -24,10 +23,10 @@ namespace OpenAI.Internal.Models
             writer.WriteStartObject();
             writer.WritePropertyName("file_id"u8);
             writer.WriteStringValue(FileId);
-            if (Optional.IsDefined(Detail))
+            if (Optional.IsDefined(InternalDetail))
             {
                 writer.WritePropertyName("detail"u8);
-                writer.WriteStringValue(Detail.Value.ToString());
+                writer.WriteStringValue(InternalDetail);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -68,7 +67,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string fileId = default;
-            InternalMessageContentItemFileObjectImageFileDetail? detail = default;
+            string detail = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -80,11 +79,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("detail"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    detail = new InternalMessageContentItemFileObjectImageFileDetail(property.Value.GetString());
+                    detail = property.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")

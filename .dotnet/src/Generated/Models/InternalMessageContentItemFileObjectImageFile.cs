@@ -4,9 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The MessageContentImageFileObjectImageFile. </summary>
     internal partial class InternalMessageContentItemFileObjectImageFile
@@ -55,12 +54,12 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="InternalMessageContentItemFileObjectImageFile"/>. </summary>
         /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </param>
-        /// <param name="detail"> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </param>
+        /// <param name="internalDetail"> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalMessageContentItemFileObjectImageFile(string fileId, InternalMessageContentItemFileObjectImageFileDetail? detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageContentItemFileObjectImageFile(string fileId, string internalDetail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
-            Detail = detail;
+            InternalDetail = internalDetail;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -71,7 +70,5 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </summary>
         public string FileId { get; set; }
-        /// <summary> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </summary>
-        public InternalMessageContentItemFileObjectImageFileDetail? Detail { get; set; }
     }
 }

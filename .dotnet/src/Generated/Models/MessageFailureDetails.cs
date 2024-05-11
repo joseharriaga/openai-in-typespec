@@ -7,12 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary>
-    /// The MessageContentItem.
-    /// Please note <see cref="MessageContentItem"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-    /// The available derived classes include <see cref="MessageImageFileContentItem"/>, <see cref="MessageImageUrlContentItem"/> and <see cref="MessageTextContentItem"/>.
-    /// </summary>
-    public abstract partial class MessageContentItem
+    /// <summary> The MessageObjectIncompleteDetails. </summary>
+    public partial class MessageFailureDetails
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -44,23 +40,30 @@ namespace OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentItem"/>. </summary>
-        protected MessageContentItem()
+        /// <summary> Initializes a new instance of <see cref="MessageFailureDetails"/>. </summary>
+        /// <param name="reason"> The reason the message is incomplete. </param>
+        internal MessageFailureDetails(MessageFailureReason reason)
         {
+            Reason = reason;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentItem"/>. </summary>
-        /// <param name="type"></param>
+        /// <summary> Initializes a new instance of <see cref="MessageFailureDetails"/>. </summary>
+        /// <param name="reason"> The reason the message is incomplete. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageFailureDetails(MessageFailureReason reason, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Type = type;
+            Reason = reason;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Gets or sets the type. </summary>
-        internal string Type { get; set; }
+        /// <summary> Initializes a new instance of <see cref="MessageFailureDetails"/> for deserialization. </summary>
+        internal MessageFailureDetails()
+        {
+        }
+
+        /// <summary> The reason the message is incomplete. </summary>
+        public MessageFailureReason Reason { get; }
     }
 }

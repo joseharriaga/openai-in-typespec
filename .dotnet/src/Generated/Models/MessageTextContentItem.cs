@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI.Assistants
 {
     /// <summary> The text content that is part of a message. </summary>
-    public partial class MessageTextContentItem : MessageContentItem
+    public partial class MessageTextContentItem : RequestMessageContentItem
     {
         /// <summary> Initializes a new instance of <see cref="MessageTextContentItem"/>. </summary>
         /// <param name="text"> Text content to be sent to the model. </param>
@@ -22,7 +22,7 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageTextContentItem"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="text"> Text content to be sent to the model. </param>
         internal MessageTextContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string text) : base(type, serializedAdditionalRawData)

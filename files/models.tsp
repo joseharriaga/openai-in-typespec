@@ -23,8 +23,6 @@ model CreateFileRequest {
 
 model ListFilesResponse {
   data: OpenAIFile[];
-
-  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }
 

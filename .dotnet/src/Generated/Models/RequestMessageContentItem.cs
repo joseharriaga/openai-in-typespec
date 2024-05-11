@@ -7,8 +7,12 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> The ModifyMessageRequest. </summary>
-    public partial class MessageModificationOptions
+    /// <summary>
+    /// Represents a single piece of content in an Assistants API request message.
+    /// Please note <see cref="RequestMessageContentItem"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+    /// The available derived classes include <see cref="MessageImageFileContentItem"/>, <see cref="MessageImageUrlContentItem"/> and <see cref="MessageTextContentItem"/>.
+    /// </summary>
+    public abstract partial class RequestMessageContentItem
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,24 +44,23 @@ namespace OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageModificationOptions"/>. </summary>
-        public MessageModificationOptions()
+        /// <summary> Initializes a new instance of <see cref="RequestMessageContentItem"/>. </summary>
+        protected RequestMessageContentItem()
         {
-            Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageModificationOptions"/>. </summary>
-        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
+        /// <summary> Initializes a new instance of <see cref="RequestMessageContentItem"/>. </summary>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageModificationOptions(IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RequestMessageContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Metadata = metadata;
+            Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
-        public IDictionary<string, string> Metadata { get; set; }
+        /// <summary> The discriminated type identifier for the content item. </summary>
+        internal string Type { get; set; }
     }
 }

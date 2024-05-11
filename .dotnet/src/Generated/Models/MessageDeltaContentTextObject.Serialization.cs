@@ -23,13 +23,13 @@ namespace OpenAI.Internal.Models
             writer.WriteStartObject();
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
             if (Optional.IsDefined(Text))
             {
                 writer.WritePropertyName("text"u8);
                 writer.WriteObjectValue(Text, options);
             }
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -69,8 +69,8 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             int index = default;
-            string type = default;
             MessageDeltaContentTextObjectText text = default;
+            string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -78,11 +78,6 @@ namespace OpenAI.Internal.Models
                 if (property.NameEquals("index"u8))
                 {
                     index = property.Value.GetInt32();
-                    continue;
-                }
-                if (property.NameEquals("type"u8))
-                {
-                    type = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("text"u8))
@@ -94,13 +89,18 @@ namespace OpenAI.Internal.Models
                     text = MessageDeltaContentTextObjectText.DeserializeMessageDeltaContentTextObjectText(property.Value, options);
                     continue;
                 }
+                if (property.NameEquals("type"u8))
+                {
+                    type = property.Value.GetString();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageDeltaContentTextObject(index, type, text, serializedAdditionalRawData);
+            return new MessageDeltaContentTextObject(type, serializedAdditionalRawData, index, text);
         }
 
         BinaryData IPersistableModel<MessageDeltaContentTextObject>.Write(ModelReaderWriterOptions options)
@@ -136,14 +136,14 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static MessageDeltaContentTextObject FromResponse(PipelineResponse response)
+        internal static new MessageDeltaContentTextObject FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeMessageDeltaContentTextObject(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

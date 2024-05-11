@@ -18,15 +18,17 @@ public partial class AssistantToolResources { }
 [CodeGenModel("AssistantObjectToolResourcesFileSearch")]
 public partial class AssistantFileSearchToolResources { }
 
-[CodeGenModel("UnknownMessageContentItem")]
-internal partial class InternalUnknownMessageContentItem { }
+[CodeGenModel("ThreadMessageStatus")]
+public readonly partial struct MessageStatus { }
+
+[CodeGenModel("MessageObjectIncompleteDetails")]
+public partial class MessageFailureDetails { }
+
+[CodeGenModel("MessageFailureDetailsReason")]
+public readonly partial struct MessageFailureReason { }
+
+[CodeGenModel("UnknownRequestMessageContentItem")]
+internal partial class InternalUnknownRequestMessageContentItem { }
 
 [CodeGenModel("UnknownAssistantToolDefinition")]
 internal partial class InternalUnknownAssistantToolDefinition { }
-
-[CodeGenModel("MessageContentImageFileObjectImageFile")]
-internal partial class InternalMessageContentItemFileObjectImageFile
-{
-    [CodeGenMember("Detail")]
-    public MessageImageDetail? Detail { get; }
-}

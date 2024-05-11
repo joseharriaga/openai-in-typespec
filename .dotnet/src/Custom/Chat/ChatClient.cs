@@ -332,9 +332,12 @@ public partial class ChatClient
             messageDataItems.Add(ModelReaderWriter.Write(message));
         }
         Dictionary<string, BinaryData> additionalData = [];
-        InternalChatCompletionStreamOptions streamOptions = stream == true
-            ? new InternalChatCompletionStreamOptions(includeUsage: stream, serializedAdditionalRawData: null)
-            : null;
+
+        // TODO: Address AOAI versioning
+        InternalChatCompletionStreamOptions streamOptions = null;
+        //stream == true
+        //    ? new InternalChatCompletionStreamOptions(includeUsage: stream, serializedAdditionalRawData: null)
+        //    : null;
         return new Internal.Models.CreateChatCompletionRequest(
             messageDataItems,
             _model,

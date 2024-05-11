@@ -1,7 +1,10 @@
-﻿namespace OpenAI.Internal.Models;
+﻿namespace OpenAI.Assistants;
 
 [CodeGenModel("ThreadObject")]
-internal partial class AssistantThread
+public partial class AssistantThread
 {
     private readonly object Object;
+
+    public AssistantToolResources ToolResources { get; set; }
+     
 }

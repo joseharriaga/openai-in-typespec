@@ -28,14 +28,47 @@ public partial class AssistantTests
     }
 
     [Test]
-    public void CreatingAndDeletingAssistantsWorks()
+    public void CreatingModifyingAndDeletingAssistantsWorks()
     {
         AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
-        ClientResult<Assistant> result = client.CreateAssistant(new AssistantCreationOptions("gpt-3.5-turbo"));
-        Assert.That(result.Value, Is.Not.Null);
-        Assert.That(result.Value.Id, Is.Not.Null.Or.Empty);
-        ClientResult<bool> deletionResult = client.DeleteAssistant(result.Value.Id);
-        Assert.That(deletionResult.Value, Is.True);
+        Assistant assistant = client.CreateAssistant(new AssistantCreationOptions("gpt-3.5-turbo"));
+        Assert.That(assistant?.Id, Is.Not.Null.Or.Empty);
+        Assert.That(assistant.Name, Is.Null.Or.Empty);
+        assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
+        {
+            Name = "test assistant name",
+        });
+        Assert.That(assistant.Name, Is.EqualTo("test assistant name"));
+        bool deleted = client.DeleteAssistant(assistant.Id);
+        Assert.That(deleted, Is.True);
+    }
+
+    [Test]
+    public void CreatingGettingModifyingAndDeletingThreadsWorks()
+    {
+        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
+        ThreadCreationOptions options = new();
+        AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
+        {
+            Metadata =
+            {
+                ["testKey"] = "deleteMe"
+            },
+        });
+        Assert.That(thread?.Id, Is.Not.Null.Or.Empty);
+        Assert.That(thread?.Metadata?.ContainsKey("testKey") == true);
+        thread = client.GetThread(thread.Id);
+        Assert.That(thread?.Id, Is.Not.Null.Or.Empty);
+        thread = client.ModifyThread(thread.Id, new ThreadModificationOptions()
+        {
+            Metadata =
+            {
+                ["testKey"] = "tryAgain"
+            }
+        });
+        Assert.That(thread.Metadata["testKey"] == "tryAgain");
+        bool deleted = client.DeleteThread(thread.Id);
+        Assert.That(deleted, Is.True);
     }
 
     // [Test]

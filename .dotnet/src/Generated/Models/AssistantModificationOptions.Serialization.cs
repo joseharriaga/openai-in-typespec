@@ -7,12 +7,10 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Assistants;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class AssistantModificationOptions : IJsonModel<AssistantModificationOptions>
+    public partial class AssistantModificationOptions : IJsonModel<AssistantModificationOptions>
     {
         void IJsonModel<AssistantModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -70,7 +68,7 @@ namespace OpenAI.Internal.Models
                 writer.WriteStartArray();
                 foreach (var item in Tools)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<ToolDefinition>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -79,7 +77,7 @@ namespace OpenAI.Internal.Models
                 if (ToolResources != null)
                 {
                     writer.WritePropertyName("tool_resources"u8);
-                    writer.WriteObjectValue(ToolResources, options);
+                    writer.WriteObjectValue<ToolResourceDefinitions>(ToolResources, options);
                 }
                 else
                 {
@@ -190,7 +188,7 @@ namespace OpenAI.Internal.Models
             string description = default;
             string instructions = default;
             IList<ToolDefinition> tools = default;
-            ModifyAssistantRequestToolResources toolResources = default;
+            ToolResourceDefinitions toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
@@ -255,7 +253,7 @@ namespace OpenAI.Internal.Models
                         toolResources = null;
                         continue;
                     }
-                    toolResources = ModifyAssistantRequestToolResources.DeserializeModifyAssistantRequestToolResources(property.Value, options);
+                    toolResources = ToolResourceDefinitions.DeserializeToolResourceDefinitions(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))

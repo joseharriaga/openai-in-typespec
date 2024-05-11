@@ -7,11 +7,10 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class MessageCreationOptions : IJsonModel<MessageCreationOptions>
+    public partial class MessageCreationOptions : IJsonModel<MessageCreationOptions>
     {
         void IJsonModel<MessageCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -23,7 +22,7 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role.ToString());
+            writer.WriteStringValue(Role.ToSerialString());
             writer.WritePropertyName("content"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(Content);
@@ -106,9 +105,9 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            MessageCreationOptionsRole role = default;
+            MessageRole role = default;
             BinaryData content = default;
-            IList<CreateMessageRequestAttachment> attachments = default;
+            IList<MessageCreationAttachment> attachments = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -116,7 +115,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("role"u8))
                 {
-                    role = new MessageCreationOptionsRole(property.Value.GetString());
+                    role = property.Value.GetString().ToMessageRole();
                     continue;
                 }
                 if (property.NameEquals("content"u8))
@@ -130,10 +129,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<CreateMessageRequestAttachment> array = new List<CreateMessageRequestAttachment>();
+                    List<MessageCreationAttachment> array = new List<MessageCreationAttachment>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(CreateMessageRequestAttachment.DeserializeCreateMessageRequestAttachment(item, options));
+                        array.Add(MessageCreationAttachment.DeserializeMessageCreationAttachment(item, options));
                     }
                     attachments = array;
                     continue;
@@ -158,7 +157,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageCreationOptions(role, content, attachments ?? new ChangeTrackingList<CreateMessageRequestAttachment>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new MessageCreationOptions(role, content, attachments ?? new ChangeTrackingList<MessageCreationAttachment>(), metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<MessageCreationOptions>.Write(ModelReaderWriterOptions options)

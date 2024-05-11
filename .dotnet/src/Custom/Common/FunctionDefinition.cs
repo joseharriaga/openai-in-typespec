@@ -8,6 +8,6 @@ public partial class FunctionDefinition
     /// <summary>
     /// The parameters to the function, formatting as a JSON Schema object.
     /// </summary>
-    [CodeGenMember("parameters")]
+    [CodeGenMember("Parameters")]
     internal BinaryData Parameters;
 }

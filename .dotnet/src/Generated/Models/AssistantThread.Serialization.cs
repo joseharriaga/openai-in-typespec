@@ -7,11 +7,10 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class AssistantThread : IJsonModel<AssistantThread>
+    public partial class AssistantThread : IJsonModel<AssistantThread>
     {
         void IJsonModel<AssistantThread>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -31,7 +30,7 @@ namespace OpenAI.Internal.Models
             if (ToolResources != null)
             {
                 writer.WritePropertyName("tool_resources"u8);
-                writer.WriteObjectValue(ToolResources, options);
+                writer.WriteObjectValue<AssistantToolResources>(ToolResources, options);
             }
             else
             {
@@ -93,7 +92,7 @@ namespace OpenAI.Internal.Models
             string id = default;
             object @object = default;
             DateTimeOffset createdAt = default;
-            ThreadObjectToolResources toolResources = default;
+            AssistantToolResources toolResources = default;
             IReadOnlyDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -121,7 +120,7 @@ namespace OpenAI.Internal.Models
                         toolResources = null;
                         continue;
                     }
-                    toolResources = ThreadObjectToolResources.DeserializeThreadObjectToolResources(property.Value, options);
+                    toolResources = AssistantToolResources.DeserializeAssistantToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))

@@ -13,8 +13,6 @@ namespace OpenAI.Assistants;
 [Experimental("OPENAI001")]
 [CodeGenClient("Assistants")]
 [CodeGenSuppress("AssistantClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("ModifyAssistantAsync", typeof(string), typeof(AssistantModificationOptions))]
-[CodeGenSuppress("ModifyAssistant", typeof(string), typeof(AssistantModificationOptions))]
 public partial class AssistantClient
 {
     private readonly InternalAssistantMessageClient _messageSubClient;
@@ -157,7 +155,79 @@ public partial class AssistantClient
     public virtual ClientResult<bool> DeleteAssistant(string assistantId)
     {
         ClientResult protocolResult = DeleteAssistant(assistantId, (RequestOptions)null);
-        InternalDeleteAssistantResponse internalResponse = InternalDeleteAssistantResponse.FromResponse(protocolResult.GetRawResponse());
-        return ClientResult.FromValue(internalResponse.Deleted, protocolResult.GetRawResponse());
+        InternalDeleteAssistantResponse internalResponse = InternalDeleteAssistantResponse.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(internalResponse.Deleted, protocolResult?.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null)
+    {
+        ClientResult protocolResult = await CreateThreadAsync(options?.ToBinaryContent()).ConfigureAwait(false);
+        AssistantThread thread = AssistantThread.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(thread, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null)
+    {
+        ClientResult protocolResult = CreateThread(options?.ToBinaryContent());
+        AssistantThread thread = AssistantThread.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(thread, protocolResult?.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<AssistantThread>> GetThreadAsync(string threadId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = await GetThreadAsync(threadId, null).ConfigureAwait(false);
+        AssistantThread thread = AssistantThread.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(thread, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<AssistantThread> GetThread(string threadId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = GetThread(threadId, null);
+        AssistantThread thread = AssistantThread.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(thread, protocolResult?.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<AssistantThread>> ModifyThreadAsync(string threadId, ThreadModificationOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNull(options, nameof(options));
+
+        ClientResult protocolResult = await ModifyThreadAsync(threadId, options?.ToBinaryContent(), null).ConfigureAwait(false);
+        AssistantThread thread = AssistantThread.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(thread, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<AssistantThread> ModifyThread(string threadId, ThreadModificationOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNull(options, nameof(options));
+
+        ClientResult protocolResult = ModifyThread(threadId, options?.ToBinaryContent(), null);
+        AssistantThread thread = AssistantThread.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(thread, protocolResult?.GetRawResponse());
+    }
+
+    public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = await DeleteThreadAsync(threadId, null).ConfigureAwait(false);
+        InternalDeleteThreadResponse internalResponse
+            = InternalDeleteThreadResponse.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(internalResponse.Deleted, protocolResult?.GetRawResponse());
+    }
+
+    public virtual ClientResult<bool> DeleteThread(string threadId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = DeleteThread(threadId, null);
+        InternalDeleteThreadResponse internalResponse
+            = InternalDeleteThreadResponse.FromResponse(protocolResult?.GetRawResponse());
+        return ClientResult.FromValue(internalResponse.Deleted, protocolResult?.GetRawResponse());
     }
 }

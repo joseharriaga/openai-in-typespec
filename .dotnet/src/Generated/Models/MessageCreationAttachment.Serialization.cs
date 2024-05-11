@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class CreateMessageRequestAttachment : IJsonModel<CreateMessageRequestAttachment>
+    public partial class MessageCreationAttachment : IJsonModel<MessageCreationAttachment>
     {
-        void IJsonModel<CreateMessageRequestAttachment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<MessageCreationAttachment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateMessageRequestAttachment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageCreationAttachment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateMessageRequestAttachment)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageCreationAttachment)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -60,19 +60,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateMessageRequestAttachment IJsonModel<CreateMessageRequestAttachment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        MessageCreationAttachment IJsonModel<MessageCreationAttachment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateMessageRequestAttachment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageCreationAttachment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateMessageRequestAttachment)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageCreationAttachment)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateMessageRequestAttachment(document.RootElement, options);
+            return DeserializeMessageCreationAttachment(document.RootElement, options);
         }
 
-        internal static CreateMessageRequestAttachment DeserializeCreateMessageRequestAttachment(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static MessageCreationAttachment DeserializeMessageCreationAttachment(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -114,46 +114,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateMessageRequestAttachment(fileId, tools, serializedAdditionalRawData);
+            return new MessageCreationAttachment(fileId, tools, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateMessageRequestAttachment>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<MessageCreationAttachment>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateMessageRequestAttachment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageCreationAttachment>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateMessageRequestAttachment)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageCreationAttachment)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateMessageRequestAttachment IPersistableModel<CreateMessageRequestAttachment>.Create(BinaryData data, ModelReaderWriterOptions options)
+        MessageCreationAttachment IPersistableModel<MessageCreationAttachment>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateMessageRequestAttachment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageCreationAttachment>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateMessageRequestAttachment(document.RootElement, options);
+                        return DeserializeMessageCreationAttachment(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateMessageRequestAttachment)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageCreationAttachment)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateMessageRequestAttachment>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<MessageCreationAttachment>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateMessageRequestAttachment FromResponse(PipelineResponse response)
+        internal static MessageCreationAttachment FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateMessageRequestAttachment(document.RootElement);
+            return DeserializeMessageCreationAttachment(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

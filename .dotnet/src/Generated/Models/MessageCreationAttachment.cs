@@ -5,12 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Assistants;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The CreateMessageRequestAttachment. </summary>
-    internal partial class CreateMessageRequestAttachment
+    public partial class MessageCreationAttachment
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -44,11 +43,11 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateMessageRequestAttachment"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="MessageCreationAttachment"/>. </summary>
         /// <param name="fileId"> The ID of the file to attach to the message. </param>
         /// <param name="tools"> The tools to add this file to. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> or <paramref name="tools"/> is null. </exception>
-        public CreateMessageRequestAttachment(string fileId, IEnumerable<BinaryData> tools)
+        public MessageCreationAttachment(string fileId, IEnumerable<BinaryData> tools)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
             Argument.AssertNotNull(tools, nameof(tools));
@@ -57,19 +56,19 @@ namespace OpenAI.Internal.Models
             Tools = tools.ToList();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateMessageRequestAttachment"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="MessageCreationAttachment"/>. </summary>
         /// <param name="fileId"> The ID of the file to attach to the message. </param>
         /// <param name="tools"> The tools to add this file to. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateMessageRequestAttachment(string fileId, IList<BinaryData> tools, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageCreationAttachment(string fileId, IList<BinaryData> tools, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Tools = tools;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateMessageRequestAttachment"/> for deserialization. </summary>
-        internal CreateMessageRequestAttachment()
+        /// <summary> Initializes a new instance of <see cref="MessageCreationAttachment"/> for deserialization. </summary>
+        internal MessageCreationAttachment()
         {
         }
 

@@ -38,7 +38,9 @@ function Remove-PseudoSuppressedTypes {
         "AssistantToolsFunctionType",
         "InternalThreadObjectToolResources",
         "ModifyAssistantRequestToolResources",
-        "ModifyThreadRequestToolResources"
+        "CreateThreadRequestToolResources",
+        "ModifyThreadRequestToolResources",
+        "MessageContentImageUrlObjectImageUrlDetail"
     )
     foreach ($target in $targets) {
         Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {

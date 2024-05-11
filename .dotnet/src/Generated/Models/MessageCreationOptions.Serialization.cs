@@ -24,14 +24,12 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("role"u8);
             writer.WriteStringValue(Role.ToSerialString());
             writer.WritePropertyName("content"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(Content);
-#else
-            using (JsonDocument document = JsonDocument.Parse(Content))
+            writer.WriteStartArray();
+            foreach (var item in Content)
             {
-                JsonSerializer.Serialize(writer, document.RootElement);
+                writer.WriteObjectValue(item, options);
             }
-#endif
+            writer.WriteEndArray();
             if (Optional.IsCollectionDefined(Attachments))
             {
                 if (Attachments != null)
@@ -106,7 +104,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             MessageRole role = default;
-            BinaryData content = default;
+            IList<MessageContentItem> content = default;
             IList<MessageCreationAttachment> attachments = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -120,7 +118,12 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("content"u8))
                 {
-                    content = BinaryData.FromString(property.Value.GetRawText());
+                    List<MessageContentItem> array = new List<MessageContentItem>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(MessageContentItem.DeserializeMessageContentItem(item, options));
+                    }
+                    content = array;
                     continue;
                 }
                 if (property.NameEquals("attachments"u8))

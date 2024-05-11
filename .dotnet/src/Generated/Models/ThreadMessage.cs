@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Assistants;
 using OpenAI.Models;
 
 namespace OpenAI.Internal.Models
@@ -150,10 +151,10 @@ namespace OpenAI.Internal.Models
         /// Supported types:
         /// <list type="bullet">
         /// <item>
-        /// <description><see cref="MessageContentImageFileObject"/></description>
+        /// <description><see cref="MessageImageFileContentItem"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="MessageContentImageUrlObject"/></description>
+        /// <description><see cref="MessageImageUrlContentItem"/></description>
         /// </item>
         /// <item>
         /// <description><see cref="MessageContentTextObject"/></description>

@@ -4,6 +4,7 @@
  */
 
 import "../assistants";
+import "./custom.tsp";
 
 using TypeSpec.OpenAPI;
 
@@ -39,8 +40,9 @@ model CreateMessageRequest {
   """)
   role: "user" | "assistant";
 
+  // Tool customization: use abstract base model for message content items
   @extension("x-oaiExpandable", true)
-  content: string | (MessageContentImageFileObject | MessageContentImageUrlObject | MessageRequestContentTextObject)[];
+  content: MessageContentItem[];
 
   /** A list of files attached to the message, and the tools they should be added to. */
   attachments?: CreateMessageRequestAttachments | null;
@@ -141,8 +143,9 @@ model MessageObject {
   metadata: Record<string> | null;
 }
 
+// Tool customization: apply a common model base for assistants message content items
 /** References an image [File](/docs/api-reference/files) in the content of a message. */
-model MessageContentImageFileObject {
+model MessageContentImageFileObject extends MessageContentItem {
   @doc("""
   Always `image_file`.
   """)
@@ -249,8 +252,9 @@ model MessageDeltaContentImageFileObject {
   };
 }
 
+// Tool customization: apply a common model base for assistants message content items
 /** References an image URL in the content of a message. */
-model MessageContentImageUrlObject {
+model MessageContentImageUrlObject extends MessageContentItem {
   /** The type of the content part. */
   type: "image_url";
 
@@ -330,8 +334,9 @@ model MessageDeltaContentTextObject {
   };
 }
 
+// Tool customization: apply a common model base for assistants message content items
 /** The text content that is part of a message. */
-model MessageRequestContentTextObject {
+model MessageRequestContentTextObject extends MessageContentItem {
   @doc("""
   Always `text`.
   """)

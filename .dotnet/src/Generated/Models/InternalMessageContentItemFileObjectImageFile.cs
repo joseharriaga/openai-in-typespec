@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
 namespace OpenAI.Internal.Models
 {
     /// <summary> The MessageContentImageFileObjectImageFile. </summary>
-    internal partial class MessageContentImageFileObjectImageFile
+    internal partial class InternalMessageContentItemFileObjectImageFile
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,35 +43,35 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentImageFileObjectImageFile"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalMessageContentItemFileObjectImageFile"/>. </summary>
         /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
-        public MessageContentImageFileObjectImageFile(string fileId)
+        public InternalMessageContentItemFileObjectImageFile(string fileId)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
 
             FileId = fileId;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentImageFileObjectImageFile"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalMessageContentItemFileObjectImageFile"/>. </summary>
         /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </param>
         /// <param name="detail"> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageContentImageFileObjectImageFile(string fileId, MessageContentImageFileObjectImageFileDetail? detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageContentItemFileObjectImageFile(string fileId, InternalMessageContentItemFileObjectImageFileDetail? detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Detail = detail;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentImageFileObjectImageFile"/> for deserialization. </summary>
-        internal MessageContentImageFileObjectImageFile()
+        /// <summary> Initializes a new instance of <see cref="InternalMessageContentItemFileObjectImageFile"/> for deserialization. </summary>
+        internal InternalMessageContentItemFileObjectImageFile()
         {
         }
 
         /// <summary> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </summary>
         public string FileId { get; set; }
         /// <summary> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </summary>
-        public MessageContentImageFileObjectImageFileDetail? Detail { get; set; }
+        public InternalMessageContentItemFileObjectImageFileDetail? Detail { get; set; }
     }
 }

@@ -47,3 +47,4 @@ internal partial class InternalThreadObjectToolResourcesCodeInterpreter { }
 
 [CodeGenModel("ThreadObjectToolResourcesFileSearch")]
 internal partial class InternalThreadObjectToolResourcesFileSearch { }
+

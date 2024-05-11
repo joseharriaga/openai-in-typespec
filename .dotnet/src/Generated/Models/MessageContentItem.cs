@@ -5,10 +5,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    /// <summary> The CreateThreadRequestToolResourcesFileSearchBase. </summary>
-    internal partial class CreateThreadRequestToolResourcesFileSearchBase
+    /// <summary>
+    /// The MessageContentItem.
+    /// Please note <see cref="MessageContentItem"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+    /// The available derived classes include <see cref="MessageImageFileContentItem"/>, <see cref="MessageImageUrlContentItem"/> and <see cref="MessageTextContentItem"/>.
+    /// </summary>
+    public abstract partial class MessageContentItem
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,18 +44,23 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearchBase"/>. </summary>
-        internal CreateThreadRequestToolResourcesFileSearchBase()
+        /// <summary> Initializes a new instance of <see cref="MessageContentItem"/>. </summary>
+        protected MessageContentItem()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateThreadRequestToolResourcesFileSearchBase"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="MessageContentItem"/>. </summary>
+        /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateThreadRequestToolResourcesFileSearchBase(IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageContentItem(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
+            Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
+
+        /// <summary> Gets or sets the type. </summary>
+        internal string Type { get; set; }
     }
 }

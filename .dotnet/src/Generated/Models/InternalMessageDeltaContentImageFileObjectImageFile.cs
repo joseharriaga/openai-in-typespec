@@ -49,12 +49,12 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="InternalMessageDeltaContentImageFileObjectImageFile"/>. </summary>
         /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. Set `purpose="vision"` when uploading the File if you need to later display the file content. </param>
-        /// <param name="internalDetail"> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </param>
+        /// <param name="detail"> Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalMessageDeltaContentImageFileObjectImageFile(string fileId, string internalDetail, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageDeltaContentImageFileObjectImageFile(string fileId, string detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
-            InternalDetail = internalDetail;
+            Detail = detail;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 

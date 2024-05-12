@@ -45,6 +45,7 @@ function Remove-PseudoSuppressedTypes {
         "AssistantToolsFunctionType",
         "InternalThreadObjectToolResources",
         "InternalMessageContentItemFileObjectImageFileDetail",
+        "InternalMessageDeltaObjectDeltaRole",
         "ModifyAssistantRequestToolResources",
         "CreateThreadRequestToolResources",
         "ModifyThreadRequestToolResources",

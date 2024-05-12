@@ -353,20 +353,32 @@ public partial class AssistantTests
         Stopwatch stopwatch = Stopwatch.StartNew();
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
-        ClientResult<IAsyncEnumerable<StreamingRunUpdate>> streamingResult
+        ClientResult<IAsyncEnumerable<StreamingUpdate>> streamingResult
             = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
         
         Print(">>> Connected <<<");
 
-        await foreach (StreamingRunUpdate runUpdate in streamingResult.Value)
+        await foreach (StreamingUpdate update in streamingResult.Value)
         {
-            string message = $"{runUpdate.UpdateKind} ";
-            if (runUpdate is StreamingRunUpdate<StreamingRunMessageDelta> streamingRunMessageDelta)
+            string message = $"{update.UpdateKind} ";
+            if (update is RunUpdate runUpdate)
             {
-                foreach (MessageTextDeltaContent textContent in streamingRunMessageDelta.Value.DeltaContent)
+                message += $"at {update.UpdateKind switch
                 {
-                    message += $"{textContent.Text} // ";
-                }
+                    StreamingUpdateKind.RunCreated => runUpdate.Value.CreatedAt,
+                    StreamingUpdateKind.RunQueued => runUpdate.Value.StartedAt,
+                    StreamingUpdateKind.RunInProgress => runUpdate.Value.StartedAt,
+                    StreamingUpdateKind.RunCompleted => runUpdate.Value.CompletedAt,
+                    _ => "???",
+                }}";
+            }
+            if (update is MessageTextUpdate textUpdate)
+            {
+                message += textUpdate.Text;
+            }
+            if (update.UpdateKind == StreamingUpdateKind.RunCompleted)
+            {
+                message += "";
             }
             Print(message);
         }

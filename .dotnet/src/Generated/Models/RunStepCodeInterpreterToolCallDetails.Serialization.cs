@@ -25,7 +25,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("code_interpreter"u8);
-            writer.WriteObjectValue<InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter>(_internalDetails, options);
+            writer.WriteObjectValue<InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter>(_codeInterpreter, options);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)

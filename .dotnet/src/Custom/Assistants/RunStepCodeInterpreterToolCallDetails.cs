@@ -11,11 +11,11 @@ namespace OpenAI.Assistants;
 public partial class RunStepCodeInterpreterToolCallDetails
 {
     /// <inheritdoc cref="InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter.Input"/>
-    public string Input => _internalDetails.Input;
+    public string Input => _codeInterpreter.Input;
     
     /// <inheritdoc cref="InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter.Outputs"/>
-    public IReadOnlyList<RunStepCodeInterpreterOutput> Outputs => _internalDetails.Outputs;
+    public IReadOnlyList<RunStepCodeInterpreterOutput> Outputs => _codeInterpreter.Outputs;
 
     [CodeGenMember("CodeInterpreter")]
-    internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter _internalDetails;
+    internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter _codeInterpreter;
 }

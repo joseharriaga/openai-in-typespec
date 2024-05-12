@@ -5754,7 +5754,7 @@ components:
           image_file: '#/components/schemas/MessageDeltaContentImageFileObject'
           image_url: '#/components/schemas/MessageDeltaContentImageUrlObject'
           text: '#/components/schemas/MessageDeltaContentTextObject'
-      description: Represents a single piece of incremental content in an Assistants API streaming respnse.
+      description: Represents a single piece of incremental content in an Assistants API streaming response.
     MessageDeltaContentImageFileObject:
       type: object
       required:

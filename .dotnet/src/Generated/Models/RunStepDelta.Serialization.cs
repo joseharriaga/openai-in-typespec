@@ -7,26 +7,27 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class RunStepDeltaObject : IJsonModel<RunStepDeltaObject>
+    public partial class RunStepDelta : IJsonModel<RunStepDelta>
     {
-        void IJsonModel<RunStepDeltaObject>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<RunStepDelta>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepDeltaObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepDelta>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RunStepDeltaObject)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(RunStepDelta)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object);
+            writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("delta"u8);
-            writer.WriteObjectValue(Delta, options);
+            writer.WriteObjectValue<InternalRunStepDeltaObjectDelta>(_delta, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -45,19 +46,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        RunStepDeltaObject IJsonModel<RunStepDeltaObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        RunStepDelta IJsonModel<RunStepDelta>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepDeltaObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepDelta>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RunStepDeltaObject)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(RunStepDelta)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeRunStepDeltaObject(document.RootElement, options);
+            return DeserializeRunStepDelta(document.RootElement, options);
         }
 
-        internal static RunStepDeltaObject DeserializeRunStepDeltaObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static RunStepDelta DeserializeRunStepDelta(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -66,8 +67,8 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string id = default;
-            string @object = default;
-            RunStepDeltaObjectDelta delta = default;
+            object @object = default;
+            InternalRunStepDeltaObjectDelta delta = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -79,12 +80,12 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetString();
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (property.NameEquals("delta"u8))
                 {
-                    delta = RunStepDeltaObjectDelta.DeserializeRunStepDeltaObjectDelta(property.Value, options);
+                    delta = InternalRunStepDeltaObjectDelta.DeserializeInternalRunStepDeltaObjectDelta(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -93,46 +94,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new RunStepDeltaObject(id, @object, delta, serializedAdditionalRawData);
+            return new RunStepDelta(id, @object, delta, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<RunStepDeltaObject>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<RunStepDelta>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepDeltaObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepDelta>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(RunStepDeltaObject)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(RunStepDelta)} does not support writing '{options.Format}' format.");
             }
         }
 
-        RunStepDeltaObject IPersistableModel<RunStepDeltaObject>.Create(BinaryData data, ModelReaderWriterOptions options)
+        RunStepDelta IPersistableModel<RunStepDelta>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepDeltaObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepDelta>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeRunStepDeltaObject(document.RootElement, options);
+                        return DeserializeRunStepDelta(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(RunStepDeltaObject)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(RunStepDelta)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<RunStepDeltaObject>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<RunStepDelta>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static RunStepDeltaObject FromResponse(PipelineResponse response)
+        internal static RunStepDelta FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeRunStepDeltaObject(document.RootElement);
+            return DeserializeRunStepDelta(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

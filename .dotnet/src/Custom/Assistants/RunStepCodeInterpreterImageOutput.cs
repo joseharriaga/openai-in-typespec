@@ -11,9 +11,8 @@ namespace OpenAI.Assistants;
 public partial class RunStepCodeInterpreterImageOutput
 {
     /// <inheritdoc cref="InternalRunStepDetailsToolCallsCodeOutputImageObjectImage.FileId"/>
-
-    public string FileId => _internalDetails.FileId;
+    public string FileId => _image.FileId;
 
     [CodeGenMember("Image")]
-    internal InternalRunStepDetailsToolCallsCodeOutputImageObjectImage _internalDetails;
+    internal InternalRunStepDetailsToolCallsCodeOutputImageObjectImage _image;
 }

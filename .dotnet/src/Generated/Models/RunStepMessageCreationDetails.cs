@@ -12,23 +12,23 @@ namespace OpenAI.Assistants
     public partial class RunStepMessageCreationDetails : RunStepDetails
     {
         /// <summary> Initializes a new instance of <see cref="RunStepMessageCreationDetails"/>. </summary>
-        /// <param name="internalDetails"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalDetails"/> is null. </exception>
-        internal RunStepMessageCreationDetails(InternalRunStepDetailsMessageCreationObjectMessageCreation internalDetails)
+        /// <param name="messageCreation"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="messageCreation"/> is null. </exception>
+        internal RunStepMessageCreationDetails(InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation)
         {
-            Argument.AssertNotNull(internalDetails, nameof(internalDetails));
+            Argument.AssertNotNull(messageCreation, nameof(messageCreation));
 
             Type = "message_creation";
-            _internalDetails = internalDetails;
+            _messageCreation = messageCreation;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepMessageCreationDetails"/>. </summary>
         /// <param name="type"> The discriminated type identifier for the details object. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="internalDetails"></param>
-        internal RunStepMessageCreationDetails(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRunStepDetailsMessageCreationObjectMessageCreation internalDetails) : base(type, serializedAdditionalRawData)
+        /// <param name="messageCreation"></param>
+        internal RunStepMessageCreationDetails(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation) : base(type, serializedAdditionalRawData)
         {
-            _internalDetails = internalDetails;
+            _messageCreation = messageCreation;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepMessageCreationDetails"/> for deserialization. </summary>

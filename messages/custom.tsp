@@ -15,7 +15,7 @@ namespace OpenAI;
 model MessageContent {}
 
 /**
- * Represents a single piece of incremental content in an Assistants API streaming respnse.
+ * Represents a single piece of incremental content in an Assistants API streaming response.
  */
 @discriminator("type")
 model MessageDeltaContent {

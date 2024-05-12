@@ -13,27 +13,27 @@ namespace OpenAI.Assistants
     {
         /// <summary> Initializes a new instance of <see cref="RunStepCodeInterpreterToolCallDetails"/>. </summary>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="internalDetails"> The Code Interpreter tool call definition. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="internalDetails"/> is null. </exception>
-        internal RunStepCodeInterpreterToolCallDetails(string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter internalDetails)
+        /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="codeInterpreter"/> is null. </exception>
+        internal RunStepCodeInterpreterToolCallDetails(string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter)
         {
             Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(internalDetails, nameof(internalDetails));
+            Argument.AssertNotNull(codeInterpreter, nameof(codeInterpreter));
 
             Type = "code_interpreter";
             Id = id;
-            _internalDetails = internalDetails;
+            _codeInterpreter = codeInterpreter;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepCodeInterpreterToolCallDetails"/>. </summary>
         /// <param name="type"> The discriminated type identifier for the details object. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="internalDetails"> The Code Interpreter tool call definition. </param>
-        internal RunStepCodeInterpreterToolCallDetails(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter internalDetails) : base(type, serializedAdditionalRawData)
+        /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
+        internal RunStepCodeInterpreterToolCallDetails(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter) : base(type, serializedAdditionalRawData)
         {
             Id = id;
-            _internalDetails = internalDetails;
+            _codeInterpreter = codeInterpreter;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepCodeInterpreterToolCallDetails"/> for deserialization. </summary>

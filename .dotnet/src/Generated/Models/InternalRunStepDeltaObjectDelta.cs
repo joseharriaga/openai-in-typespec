@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
 namespace OpenAI.Internal.Models
 {
     /// <summary> The RunStepDeltaObjectDelta. </summary>
-    internal partial class RunStepDeltaObjectDelta
+    internal partial class InternalRunStepDeltaObjectDelta
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,15 +43,15 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDeltaObjectDelta"/>. </summary>
-        internal RunStepDeltaObjectDelta()
+        /// <summary> Initializes a new instance of <see cref="InternalRunStepDeltaObjectDelta"/>. </summary>
+        internal InternalRunStepDeltaObjectDelta()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDeltaObjectDelta"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalRunStepDeltaObjectDelta"/>. </summary>
         /// <param name="stepDetails"> The details of the run step. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepDeltaObjectDelta(BinaryData stepDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRunStepDeltaObjectDelta(BinaryData stepDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             StepDetails = stepDetails;
             _serializedAdditionalRawData = serializedAdditionalRawData;

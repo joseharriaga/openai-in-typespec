@@ -12,23 +12,23 @@ namespace OpenAI.Assistants
     public partial class RunStepCodeInterpreterImageOutput : RunStepCodeInterpreterOutput
     {
         /// <summary> Initializes a new instance of <see cref="RunStepCodeInterpreterImageOutput"/>. </summary>
-        /// <param name="internalDetails"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalDetails"/> is null. </exception>
-        internal RunStepCodeInterpreterImageOutput(InternalRunStepDetailsToolCallsCodeOutputImageObjectImage internalDetails)
+        /// <param name="image"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="image"/> is null. </exception>
+        internal RunStepCodeInterpreterImageOutput(InternalRunStepDetailsToolCallsCodeOutputImageObjectImage image)
         {
-            Argument.AssertNotNull(internalDetails, nameof(internalDetails));
+            Argument.AssertNotNull(image, nameof(image));
 
             Type = "image";
-            _internalDetails = internalDetails;
+            _image = image;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepCodeInterpreterImageOutput"/>. </summary>
         /// <param name="type"> The discriminated type identifier for the details object. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="internalDetails"></param>
-        internal RunStepCodeInterpreterImageOutput(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRunStepDetailsToolCallsCodeOutputImageObjectImage internalDetails) : base(type, serializedAdditionalRawData)
+        /// <param name="image"></param>
+        internal RunStepCodeInterpreterImageOutput(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRunStepDetailsToolCallsCodeOutputImageObjectImage image) : base(type, serializedAdditionalRawData)
         {
-            _internalDetails = internalDetails;
+            _image = image;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepCodeInterpreterImageOutput"/> for deserialization. </summary>

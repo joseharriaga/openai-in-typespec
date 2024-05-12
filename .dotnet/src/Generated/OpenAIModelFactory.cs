@@ -881,24 +881,6 @@ namespace OpenAI
             return new RunStepFileSearchToolCallDetails("file_search", serializedAdditionalRawData: null, id, fileSearch);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaObject"/>. </summary>
-        /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `thread.run.step.delta`. </param>
-        /// <param name="delta"> The delta containing the fields that have changed on the run step. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaObject"/> instance for mocking. </returns>
-        public static RunStepDeltaObject RunStepDeltaObject(string id = null, string @object = null, RunStepDeltaObjectDelta delta = null)
-        {
-            return new RunStepDeltaObject(id, @object, delta, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaObjectDelta"/>. </summary>
-        /// <param name="stepDetails"> The details of the run step. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaObjectDelta"/> instance for mocking. </returns>
-        public static RunStepDeltaObjectDelta RunStepDeltaObjectDelta(BinaryData stepDetails = null)
-        {
-            return new RunStepDeltaObjectDelta(stepDetails, serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsMessageCreationObject"/>. </summary>
         /// <param name="type"> Always `message_creation`. </param>
         /// <param name="messageCreation"></param>

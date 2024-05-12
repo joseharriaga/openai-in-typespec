@@ -9,8 +9,8 @@ namespace OpenAI.Assistants;
 public partial class RunStepMessageCreationDetails
 {
     /// <inheritdoc cref="InternalRunStepDetailsMessageCreationObjectMessageCreation.MessageId"/>
-    public string MessageId => _internalDetails.MessageId;
+    public string MessageId => _messageCreation.MessageId;
 
     [CodeGenMember("MessageCreation")]
-    internal readonly InternalRunStepDetailsMessageCreationObjectMessageCreation _internalDetails;
+    internal readonly InternalRunStepDetailsMessageCreationObjectMessageCreation _messageCreation;
 }

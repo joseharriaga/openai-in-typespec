@@ -15,15 +15,16 @@ namespace OpenAI.Assistants;
 public partial class MessageImageUrlContent
 {
     [CodeGenMember("Type")]
-    private string InternalType { get; } = "image_url";
-
-    /// <inheritdoc cref="InternalMessageContentImageUrlObjectImageUrl.Url"/>
-    public Uri Url => InternalImageUrl.Url;
-
-    public MessageImageDetail? Detail => InternalImageUrl.InternalDetail?.ToMessageImageDetail();
+    private string _type = "image_url";
 
     [CodeGenMember("ImageUrl")]
-    internal InternalMessageContentImageUrlObjectImageUrl InternalImageUrl { get; }
+    internal InternalMessageContentImageUrlObjectImageUrl _imageUrl { get; }
+
+    /// <inheritdoc cref="InternalMessageContentImageUrlObjectImageUrl.Url"/>
+    public Uri Url => _imageUrl.Url;
+
+    /// <inheritdoc cref="InternalMessageContentImageUrlObjectImageUrl.Detail"/>
+    public MessageImageDetail? Detail => _imageUrl.Detail?.ToMessageImageDetail();
 
     /// <summary> Initializes a new instance of <see cref="MessageImageUrlContent"/>. </summary>
     internal MessageImageUrlContent(Uri url, MessageImageDetail? detail = null)
@@ -36,8 +37,6 @@ public partial class MessageImageUrlContent
     internal MessageImageUrlContent(InternalMessageContentImageUrlObjectImageUrl imageUrl)
     {
         Argument.AssertNotNull(imageUrl, nameof(imageUrl));
-
-        InternalType = "image_url";
-        InternalImageUrl = imageUrl;
+        _imageUrl = imageUrl;
     }
 }

@@ -39,28 +39,28 @@ internal partial class InternalThreadObjectToolResourcesFileSearch { }
 internal partial class InternalMessageContentImageUrlObjectImageUrl
 {
     [CodeGenMember("Detail")]
-    internal string InternalDetail { get; }
+    internal string Detail { get; }
 }
 
 [CodeGenModel("MessageContentImageFileObjectImageFile")]
 internal partial class InternalMessageContentItemFileObjectImageFile
 {
     [CodeGenMember("Detail")]
-    internal string InternalDetail { get; set; }
+    internal string Detail { get; set; }
 }
 
 [CodeGenModel("MessageDeltaContentImageFileObjectImageFile")]
 internal partial class InternalMessageDeltaContentImageFileObjectImageFile
 {
     [CodeGenMember("Detail")]
-    internal string InternalDetail { get; set; }
+    internal string Detail { get; set; }
 }
 
 [CodeGenModel("MessageDeltaContentImageUrlObjectImageUrl")]
 internal partial class InternalMessageDeltaContentImageUrlObjectImageUrl
 {
     [CodeGenMember("Detail")]
-    internal string InternalDetail { get; }
+    internal string Detail { get; }
 }
 
 [CodeGenModel("MessageDeltaContentTextObjectText")]
@@ -127,7 +127,14 @@ internal partial class InternalRunObjectRequiredActionSubmitToolOutputs { privat
 internal partial class InternalRunToolCallObjectFunction { }
 
 [CodeGenModel("MessageDeltaObjectDelta")]
-internal partial class InternalMessageDeltaObjectDelta { }
+internal partial class InternalMessageDeltaObjectDelta
+{
+    [CodeGenMember("Role")]
+    internal MessageRole Role { get; }
+}
+
+[CodeGenModel("RunStepDeltaObjectDelta")]
+internal partial class InternalRunStepDeltaObjectDelta { }
 
 internal interface IInternalListResponse<T>
 {

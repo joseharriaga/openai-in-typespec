@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> Represents a run step delta i.e. any changed fields on a run step during streaming. </summary>
-    internal partial class RunStepDeltaObject
+    public partial class RunStepDelta
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,43 +43,38 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDeltaObject"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="RunStepDelta"/>. </summary>
         /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>
         /// <param name="delta"> The delta containing the fields that have changed on the run step. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="delta"/> is null. </exception>
-        internal RunStepDeltaObject(string id, RunStepDeltaObjectDelta delta)
+        internal RunStepDelta(string id, InternalRunStepDeltaObjectDelta delta)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(delta, nameof(delta));
 
             Id = id;
-            Delta = delta;
+            _delta = delta;
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDeltaObject"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="RunStepDelta"/>. </summary>
         /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `thread.run.step.delta`. </param>
         /// <param name="delta"> The delta containing the fields that have changed on the run step. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepDeltaObject(string id, string @object, RunStepDeltaObjectDelta delta, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepDelta(string id, object @object, InternalRunStepDeltaObjectDelta delta, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
-            Delta = delta;
+            _delta = delta;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDeltaObject"/> for deserialization. </summary>
-        internal RunStepDeltaObject()
+        /// <summary> Initializes a new instance of <see cref="RunStepDelta"/> for deserialization. </summary>
+        internal RunStepDelta()
         {
         }
 
         /// <summary> The identifier of the run step, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always `thread.run.step.delta`. </summary>
-        public string Object { get; } = "thread.run.step.delta";
-
-        /// <summary> The delta containing the fields that have changed on the run step. </summary>
-        public RunStepDeltaObjectDelta Delta { get; }
     }
 }

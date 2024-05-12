@@ -23,10 +23,10 @@ namespace OpenAI.Internal.Models
             writer.WriteStartObject();
             writer.WritePropertyName("url"u8);
             writer.WriteStringValue(Url.AbsoluteUri);
-            if (Optional.IsDefined(InternalDetail))
+            if (Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
-                writer.WriteStringValue(InternalDetail);
+                writer.WriteStringValue(Detail);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {

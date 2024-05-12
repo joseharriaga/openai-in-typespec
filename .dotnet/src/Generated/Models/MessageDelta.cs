@@ -9,7 +9,7 @@ using OpenAI.Internal.Models;
 namespace OpenAI.Assistants
 {
     /// <summary> Represents a message delta i.e. any changed fields on a message during streaming. </summary>
-    public partial class StreamingRunMessageDelta
+    public partial class MessageDelta
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,34 +43,34 @@ namespace OpenAI.Assistants
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="StreamingRunMessageDelta"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="MessageDelta"/>. </summary>
         /// <param name="id"> The identifier of the message, which can be referenced in API endpoints. </param>
-        /// <param name="internalDelta"> The delta containing the fields that have changed on the Message. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="internalDelta"/> is null. </exception>
-        internal StreamingRunMessageDelta(string id, InternalMessageDeltaObjectDelta internalDelta)
+        /// <param name="delta"> The delta containing the fields that have changed on the Message. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="delta"/> is null. </exception>
+        internal MessageDelta(string id, InternalMessageDeltaObjectDelta delta)
         {
             Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(internalDelta, nameof(internalDelta));
+            Argument.AssertNotNull(delta, nameof(delta));
 
             Id = id;
-            _internalDelta = internalDelta;
+            _delta = delta;
         }
 
-        /// <summary> Initializes a new instance of <see cref="StreamingRunMessageDelta"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="MessageDelta"/>. </summary>
         /// <param name="id"> The identifier of the message, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `thread.message.delta`. </param>
-        /// <param name="internalDelta"> The delta containing the fields that have changed on the Message. </param>
+        /// <param name="delta"> The delta containing the fields that have changed on the Message. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal StreamingRunMessageDelta(string id, string @object, InternalMessageDeltaObjectDelta internalDelta, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDelta(string id, string @object, InternalMessageDeltaObjectDelta delta, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
-            _internalDelta = internalDelta;
+            _delta = delta;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="StreamingRunMessageDelta"/> for deserialization. </summary>
-        internal StreamingRunMessageDelta()
+        /// <summary> Initializes a new instance of <see cref="MessageDelta"/> for deserialization. </summary>
+        internal MessageDelta()
         {
         }
 

@@ -14,12 +14,12 @@ namespace OpenAI.Assistants
     {
         /// <summary> Initializes a new instance of <see cref="MessageImageFileContent"/>. </summary>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="internalType"> Always `image_file`. </param>
-        /// <param name="internalImageFile"></param>
-        internal MessageImageFileContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string internalType, InternalMessageContentItemFileObjectImageFile internalImageFile) : base(serializedAdditionalRawData)
+        /// <param name="type"> Always `image_file`. </param>
+        /// <param name="imageFile"></param>
+        internal MessageImageFileContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string type, InternalMessageContentItemFileObjectImageFile imageFile) : base(serializedAdditionalRawData)
         {
-            InternalType = internalType;
-            InternalImageFile = internalImageFile;
+            _type = type;
+            _imageFile = imageFile;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageImageFileContent"/> for deserialization. </summary>

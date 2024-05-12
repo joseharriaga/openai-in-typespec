@@ -239,9 +239,7 @@ namespace OpenAI.Assistants
                         continue;
                     }
                     // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // // BUG: https://github.com/Azure/autorest.csharp/issues/4296
                     // cancelledAt = property.Value.GetDateTimeOffset("O");
-                    cancelledAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     cancelledAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
@@ -253,9 +251,7 @@ namespace OpenAI.Assistants
                         continue;
                     }
                     // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // // BUG: https://github.com/Azure/autorest.csharp/issues/4296
                     // failedAt = property.Value.GetDateTimeOffset("O");
-                    failedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     failedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
@@ -267,9 +263,7 @@ namespace OpenAI.Assistants
                         continue;
                     }
                     // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // // BUG: https://github.com/Azure/autorest.csharp/issues/4296
                     // completedAt = property.Value.GetDateTimeOffset("O");
-                    completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }

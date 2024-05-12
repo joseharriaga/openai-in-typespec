@@ -23,9 +23,9 @@ namespace OpenAI.Assistants
 
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(InternalType);
+            writer.WriteStringValue(_type);
             writer.WritePropertyName("image_url"u8);
-            writer.WriteObjectValue<InternalMessageContentImageUrlObjectImageUrl>(InternalImageUrl, options);
+            writer.WriteObjectValue<InternalMessageContentImageUrlObjectImageUrl>(_imageUrl, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)

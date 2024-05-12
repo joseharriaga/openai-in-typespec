@@ -7,15 +7,16 @@ namespace OpenAI.Assistants;
 public partial class MessageImageUrlDeltaContent
 {
     [CodeGenMember("Type")]
-    private string InternalType { get; } = "image_url";
+    private string _type = "image_url";
 
     /// <inheritdoc cref="InternalMessageContentImageUrlObjectImageUrl.Url"/>
-    public Uri Url => InternalImageUrl.Url;
+    public Uri Url => _imageUrl.Url;
 
-    public MessageImageDetail? Detail => InternalImageUrl.InternalDetail?.ToMessageImageDetail();
+    /// <inheritdoc cref="InternalMessageContentImageUrlObjectImageUrl.Detail"/>
+    public MessageImageDetail? Detail => _imageUrl.Detail?.ToMessageImageDetail();
 
     [CodeGenMember("ImageUrl")]
-    internal InternalMessageDeltaContentImageUrlObjectImageUrl InternalImageUrl { get; }
+    internal InternalMessageDeltaContentImageUrlObjectImageUrl _imageUrl { get; }
 
     /// <summary> Initializes a new instance of <see cref="MessageImageUrlContent"/>. </summary>
     internal MessageImageUrlDeltaContent(Uri url, MessageImageDetail? detail = null)
@@ -28,8 +29,6 @@ public partial class MessageImageUrlDeltaContent
     internal MessageImageUrlDeltaContent(InternalMessageDeltaContentImageUrlObjectImageUrl imageUrl)
     {
         Argument.AssertNotNull(imageUrl, nameof(imageUrl));
-
-        InternalType = "image_url";
-        InternalImageUrl = imageUrl;
+        _imageUrl = imageUrl;
     }
 }

@@ -7,17 +7,16 @@ namespace OpenAI.Assistants;
 public partial class MessageImageFileDeltaContent
 {
     [CodeGenMember("Type")]
-    private string InternalType { get; } = "image_file";
+    private string _type = "image_file";
 
     /// <inheritdoc cref="InternalMessageDeltaContentImageFileObjectImageFile.FileId"/>
-    public string FileId => InternalImageFile.FileId;
+    public string FileId => _imageFile.FileId;
 
     /// <inheritdoc cref="InternalMessageDeltaContentImageFileObjectImageFile.Detail"/>
-    public MessageImageDetail? Detail => InternalImageFile.InternalDetail?.ToMessageImageDetail();
+    public MessageImageDetail? Detail => _imageFile.Detail?.ToMessageImageDetail();
 
-    /// <summary> Gets or sets the image file. </summary>
     [CodeGenMember("ImageFile")]
-    internal InternalMessageDeltaContentImageFileObjectImageFile InternalImageFile { get; set; }
+    internal InternalMessageDeltaContentImageFileObjectImageFile _imageFile;
 
     /// <summary> Initializes a new instance of <see cref="MessageImageFileContent"/>. </summary>
     internal MessageImageFileDeltaContent(string imageFileId, MessageImageDetail? detail = null)
@@ -25,13 +24,11 @@ public partial class MessageImageFileDeltaContent
     {}
 
     /// <summary> Initializes a new instance of <see cref="MessageImageFileContent"/>. </summary>
-    /// <param name="internalImageFile"></param>
-    /// <exception cref="ArgumentNullException"> <paramref name="internalImageFile"/> is null. </exception>
-    internal MessageImageFileDeltaContent(InternalMessageDeltaContentImageFileObjectImageFile internalImageFile)
+    /// <param name="imageFile"></param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFile"/> is null. </exception>
+    internal MessageImageFileDeltaContent(InternalMessageDeltaContentImageFileObjectImageFile imageFile)
     {
-        Argument.AssertNotNull(internalImageFile, nameof(internalImageFile));
-
-        InternalType = "image_file";
-        InternalImageFile = internalImageFile;
+        Argument.AssertNotNull(imageFile, nameof(imageFile));
+        _imageFile = imageFile;
     }
 }

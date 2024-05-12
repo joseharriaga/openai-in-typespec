@@ -24,10 +24,10 @@ namespace OpenAI.Assistants
             writer.WriteStartObject();
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(InternalImageFile))
+            if (Optional.IsDefined(_imageFile))
             {
                 writer.WritePropertyName("image_file"u8);
-                writer.WriteObjectValue<InternalMessageDeltaContentImageFileObjectImageFile>(InternalImageFile, options);
+                writer.WriteObjectValue<InternalMessageDeltaContentImageFileObjectImageFile>(_imageFile, options);
             }
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);

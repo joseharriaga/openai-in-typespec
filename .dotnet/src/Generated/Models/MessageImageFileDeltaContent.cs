@@ -23,11 +23,11 @@ namespace OpenAI.Assistants
         /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="index"> The index of the content part in the message. </param>
-        /// <param name="internalImageFile"></param>
-        internal MessageImageFileDeltaContent(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, int index, InternalMessageDeltaContentImageFileObjectImageFile internalImageFile) : base(type, serializedAdditionalRawData)
+        /// <param name="imageFile"></param>
+        internal MessageImageFileDeltaContent(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, int index, InternalMessageDeltaContentImageFileObjectImageFile imageFile) : base(type, serializedAdditionalRawData)
         {
             Index = index;
-            InternalImageFile = internalImageFile;
+            _imageFile = imageFile;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageImageFileDeltaContent"/> for deserialization. </summary>

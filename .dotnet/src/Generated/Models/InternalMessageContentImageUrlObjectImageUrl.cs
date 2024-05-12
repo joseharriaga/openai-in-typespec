@@ -54,12 +54,12 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="InternalMessageContentImageUrlObjectImageUrl"/>. </summary>
         /// <param name="url"> The external URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp. </param>
-        /// <param name="internalDetail"> Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`. </param>
+        /// <param name="detail"> Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. Default value is `auto`. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalMessageContentImageUrlObjectImageUrl(Uri url, string internalDetail, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageContentImageUrlObjectImageUrl(Uri url, string detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Url = url;
-            InternalDetail = internalDetail;
+            Detail = detail;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 

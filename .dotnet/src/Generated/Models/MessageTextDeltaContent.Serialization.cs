@@ -24,10 +24,10 @@ namespace OpenAI.Assistants
             writer.WriteStartObject();
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(InternalText))
+            if (Optional.IsDefined(_text))
             {
                 writer.WritePropertyName("text"u8);
-                writer.WriteObjectValue<InternalMessageDeltaContentTextObjectText>(InternalText, options);
+                writer.WriteObjectValue<InternalMessageDeltaContentTextObjectText>(_text, options);
             }
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);

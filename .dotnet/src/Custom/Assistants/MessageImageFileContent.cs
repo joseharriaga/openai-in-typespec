@@ -15,17 +15,16 @@ namespace OpenAI.Assistants;
 public partial class MessageImageFileContent
 {
     [CodeGenMember("Type")]
-    private string InternalType { get; } = "image_file";
+    private string _type = "image_file";
+
+    [CodeGenMember("ImageFile")]
+    internal InternalMessageContentItemFileObjectImageFile _imageFile;
 
     /// <inheritdoc cref="InternalMessageContentItemFileObjectImageFile.FileId"/>
-    public string FileId => InternalImageFile.FileId;
+    public string FileId => _imageFile.FileId;
 
-    /// <inheritdoc cref="InternalMessageContentItemFileObjectImageFile.InternalDetail"/>
-    public MessageImageDetail? Detail => InternalImageFile.InternalDetail?.ToMessageImageDetail();
-
-    /// <summary> Gets or sets the image file. </summary>
-    [CodeGenMember("ImageFile")]
-    internal InternalMessageContentItemFileObjectImageFile InternalImageFile { get; set; }
+    /// <inheritdoc cref="InternalMessageContentItemFileObjectImageFile.Detail"/>
+    public MessageImageDetail? Detail => _imageFile.Detail?.ToMessageImageDetail();
 
     /// <summary> Initializes a new instance of <see cref="MessageImageFileContent"/>. </summary>
     internal MessageImageFileContent(string imageFileId, MessageImageDetail? detail = null)
@@ -33,13 +32,11 @@ public partial class MessageImageFileContent
     {}
 
     /// <summary> Initializes a new instance of <see cref="MessageImageFileContent"/>. </summary>
-    /// <param name="internalImageFile"></param>
-    /// <exception cref="ArgumentNullException"> <paramref name="internalImageFile"/> is null. </exception>
-    internal MessageImageFileContent(InternalMessageContentItemFileObjectImageFile internalImageFile)
+    /// <param name="imageFile"></param>
+    /// <exception cref="ArgumentNullException"> <paramref name="imageFile"/> is null. </exception>
+    internal MessageImageFileContent(InternalMessageContentItemFileObjectImageFile imageFile)
     {
-        Argument.AssertNotNull(internalImageFile, nameof(internalImageFile));
-
-        InternalType = "image_file";
-        InternalImageFile = internalImageFile;
+        Argument.AssertNotNull(imageFile, nameof(imageFile));
+        _imageFile = imageFile;
     }
 }

@@ -14,26 +14,9 @@ public readonly partial struct RunStatus
     /// https://platform.openai.com/docs/assistants/how-it-works/run-lifecycle
     /// </remarks>
     public bool IsTerminal
-    {
-        get
-        {
-            foreach (RunStatus terminalStatus in s_terminalStatuses)
-            {
-                if (_value == terminalStatus._value)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    private static List<RunStatus> s_terminalStatuses =
-    [
-        Expired,
-        Completed,
-        Failed,
-        Incomplete,
-        Cancelled,
-    ];
+        => _value == CompletedValue
+        || _value == ExpiredValue
+        || _value == FailedValue
+        || _value == IncompleteValue
+        || _value == CancelledValue;
 }

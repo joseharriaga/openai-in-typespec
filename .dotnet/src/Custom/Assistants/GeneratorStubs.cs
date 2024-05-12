@@ -78,3 +78,33 @@ public readonly partial struct RunTruncationStrategyType { }
 
 [CodeGenModel("RunIncompleteDetailsReason")]
 public readonly partial struct RunIncompleteReason { }
+
+[CodeGenModel("RunStepType")]
+public readonly partial struct RunStepType { }
+
+[CodeGenModel("RunStepStatus")]
+public readonly partial struct RunStepStatus { }
+
+[CodeGenModel("RunStepObjectLastError")]
+public partial class RunStepError { }
+
+[CodeGenModel("RunStepObjectLastErrorCode")]
+public readonly partial struct RunStepErrorCode { }
+
+[CodeGenModel("RunStepCompletionUsage")]
+public partial class RunStepTokenUsage { }
+
+[CodeGenModel("RunStepObjectStepDetails")]
+public abstract partial class RunStepDetails { }
+
+[CodeGenModel("RunStepDetailsToolCallsObjectToolCallsObject")]
+public partial class RunStepToolCallDetails { }
+
+[CodeGenModel("RunStepDetailsToolCallsFileSearchObject")]
+public partial class RunStepFileSearchToolCallDetails { }
+
+[CodeGenModel("RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]
+public partial class RunStepCodeInterpreterOutput { }
+
+[CodeGenModel("RunStepDetailsToolCallsCodeOutputLogsObject")]
+public partial class RunStepCodeInterpreterLogOutput { }

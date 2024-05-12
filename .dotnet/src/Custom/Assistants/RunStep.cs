@@ -2,10 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models;
+namespace OpenAI.Assistants;
 
 [CodeGenModel("RunStepObject")]
-internal partial class RunStep
+public partial class RunStep
 {
     private object Object;
+
+    /// <summary>
+    /// The <c>step_details</c> associated with this run step.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Please note <see cref="RunStepDetails"/> is the base class.
+    /// </para>
+    /// <para>
+    /// According to the scenario, a derived class of the base class might need to be assigned here, or this property
+    /// needs to be casted to one of the possible derived classes.
+    /// </para>
+    /// <para>
+    /// The available derived classes include <see cref="RunStepMessageCreationDetails"/> and <see cref="RunStepToolCallDetailsCollection"/>.
+    /// </para>
+    /// </remarks>
+    [CodeGenMember("StepDetails")]
+    public RunStepDetails Details { get; }
 }

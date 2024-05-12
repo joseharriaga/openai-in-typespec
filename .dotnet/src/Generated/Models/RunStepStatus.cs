@@ -5,10 +5,10 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> Enum for status in RunStep. </summary>
-    internal readonly partial struct RunStepStatus : IEquatable<RunStepStatus>
+    public readonly partial struct RunStepStatus : IEquatable<RunStepStatus>
     {
         private readonly string _value;
 

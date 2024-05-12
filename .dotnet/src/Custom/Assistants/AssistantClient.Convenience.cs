@@ -1,3 +1,4 @@
+using OpenAI.Internal.Models;
 using System.ClientModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -396,4 +397,62 @@ public partial class AssistantClient
     /// <returns> An updated <see cref="ThreadRun"/> instance, reflecting the new status of the run. </returns>
     public virtual ClientResult<ThreadRun> CancelRun(ThreadRun run)
         => CancelRun(run?.ThreadId, run?.Id);
+
+    /// <summary>
+    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    /// </summary>
+    /// <param name="run"> The run to list run steps from. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual Task<ClientResult<ListQueryPage<RunStep>>> GetRunStepsAsync(
+        ThreadRun run,
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
+            => GetRunStepsAsync(run?.ThreadId, run?.Id, maxResults, resultOrder, previousId, subsequentId);
+
+    /// <summary>
+    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    /// </summary>
+    /// <param name="run"> The run to list run steps from. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual ClientResult<ListQueryPage<RunStep>> GetRunSteps(
+        ThreadRun run,
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
+            => GetRunSteps(run?.ThreadId, run?.Id, maxResults, resultOrder, previousId, subsequentId);
 }

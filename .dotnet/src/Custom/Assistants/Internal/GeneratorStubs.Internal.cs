@@ -81,6 +81,30 @@ internal partial class InternalUnknownMessageTextContentAnnotation { }
 [CodeGenModel("UnknownMessageDeltaTextContentAnnotation")]
 internal partial class InternalUnknownMessageDeltaTextContentAnnotation { }
 
+[CodeGenModel("UnknownRunStepDetails")]
+internal partial class InternalUnknownRunStepDetails { }
+
+[CodeGenModel("UnknownRunStepObjectStepDetails")]
+internal partial class InternalUnknownRunStepObjectStepDetails { }
+
+[CodeGenModel("UnknownRunStepDetailsToolCallsObjectToolCallsObject")]
+internal partial class InternalUnknownRunStepDetailsToolCallsObjectToolCallsObject { }
+
+[CodeGenModel("UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]
+internal partial class InternalUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject { }
+
+[CodeGenModel("RunStepDetailsMessageCreationObjectMessageCreation")]
+internal partial class InternalRunStepDetailsMessageCreationObjectMessageCreation { }
+
+[CodeGenModel("RunStepDetailsToolCallsFunctionObjectFunction")]
+internal partial class InternalRunStepDetailsToolCallsFunctionObjectFunction { }
+
+[CodeGenModel("RunStepDetailsToolCallsCodeObjectCodeInterpreter")]
+internal partial class InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter { }
+
+[CodeGenModel("RunStepDetailsToolCallsCodeOutputImageObjectImage")]
+internal partial class InternalRunStepDetailsToolCallsCodeOutputImageObjectImage { }
+
 [CodeGenModel("MessageContentTextAnnotationsFileCitationObjectFileCitation")]
 internal partial class InternalMessageContentTextAnnotationsFileCitationObjectFileCitation { }
 

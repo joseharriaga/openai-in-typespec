@@ -213,6 +213,54 @@ public partial class AssistantTests
     }
 
     [Test]
+    public void BasicRunStepFunctionalityWorks()
+    {
+        AssistantClient client = GetTestClient();
+        Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+        {
+            Tools = { new CodeInterpreterToolDefinition() },
+            Instructions = "Call the code interpreter tool when asked to visualize mathematical concepts.",
+        });
+        Validate(assistant);
+
+        AssistantThread thread = client.CreateThread(new()
+        {
+            InitialMessages = { new(["Please graph the equation y = 3x + 4"]), },
+        });
+        Validate(thread);
+
+        ThreadRun run = client.CreateRun(thread, assistant);
+        Validate(run);
+
+        while (!run.Status.IsTerminal)
+        {
+            Thread.Sleep(1000);
+            run = client.GetRun(run);
+        }
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+        Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
+
+        ListQueryPage<RunStep> runSteps = client.GetRunSteps(run, maxResults: 100);
+        Assert.That(runSteps.Count, Is.GreaterThan(1));
+        Assert.That(runSteps[0].AssistantId, Is.EqualTo(assistant.Id));
+        Assert.That(runSteps[0].ThreadId, Is.EqualTo(thread.Id));
+        Assert.That(runSteps[0].RunId, Is.EqualTo(run.Id));
+        Assert.That(runSteps[0].CreatedAt, Is.GreaterThan(s_2024));
+        Assert.That(runSteps[0].CompletedAt, Is.GreaterThan(s_2024));
+
+        RunStepMessageCreationDetails messageDetails = runSteps[0].Details as RunStepMessageCreationDetails;
+        Assert.That(messageDetails?.MessageId, Is.Not.Null.Or.Empty);
+
+        RunStepToolCallDetailsCollection toolCallDetails = runSteps[1].Details as RunStepToolCallDetailsCollection;
+        Assert.That(toolCallDetails?.Count, Is.GreaterThan(0));
+        RunStepCodeInterpreterToolCallDetails codeInterpreterDetails = toolCallDetails[0] as RunStepCodeInterpreterToolCallDetails;
+        Assert.That(codeInterpreterDetails?.Id, Is.Not.Null.Or.Empty);
+        Assert.That(codeInterpreterDetails.Input, Is.Not.Null.Or.Empty);
+        RunStepCodeInterpreterImageOutput imageOutput = codeInterpreterDetails.Outputs?[0] as RunStepCodeInterpreterImageOutput;
+        Assert.That(imageOutput?.FileId, Is.Not.Null.Or.Empty);
+    }
+
+    [Test]
     public void FunctionToolsWork()
     {
         AssistantClient client = GetTestClient();

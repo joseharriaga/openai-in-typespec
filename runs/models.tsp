@@ -6,6 +6,7 @@
 import "../assistants";
 import "../messages";
 import "../threads";
+import "./custom.tsp";
 
 using TypeSpec.OpenAPI;
 
@@ -244,8 +245,9 @@ model ListRunStepsResponse {
   has_more: boolean;
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the message creation by the run step. */
-model RunStepDetailsMessageCreationObject {
+model RunStepDetailsMessageCreationObject extends RunStepObjectStepDetails {
   @doc("""
   Always `message_creation`.
   """)
@@ -257,22 +259,26 @@ model RunStepDetailsMessageCreationObject {
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the tool call. */
-model RunStepDetailsToolCallsObject {
+model RunStepDetailsToolCallsObject extends RunStepObjectStepDetails {
   @doc("""
   Always `tool_calls`.
   """)
   type: "tool_calls";
 
+  // Tool customization: replace unioned types with a custom, common base
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
   """)
   @extension("x-oaiExpandable", true)
-  tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsFileSearchObject | RunStepDetailsToolCallsFunctionObject)[];
+  tool_calls: RunStepDetailsToolCallsObjectToolCallsObject[];
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the Code Interpreter tool call the run step was involved in. */
-model RunStepDetailsToolCallsCodeObject {
+model RunStepDetailsToolCallsCodeObject
+  extends RunStepDetailsToolCallsObjectToolCallsObject {
   /** The ID of the tool call. */
   id: string;
 
@@ -286,16 +292,19 @@ model RunStepDetailsToolCallsCodeObject {
     /** The input to the Code Interpreter tool call. */
     input: string;
 
+    // Tool customization: replace unioned types with a custom, common base
     @doc("""
     The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
     """)
     @extension("x-oaiExpandable", true)
-    outputs: (RunStepDetailsToolCallsCodeOutputLogsObject | RunStepDetailsToolCallsCodeOutputImageObject)[];
+    outputs: RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject[];
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Text output from the Code Interpreter tool call as part of a run step. */
-model RunStepDetailsToolCallsCodeOutputLogsObject {
+model RunStepDetailsToolCallsCodeOutputLogsObject
+  extends RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject {
   @doc("""
   Always `logs`.
   """)
@@ -305,7 +314,9 @@ model RunStepDetailsToolCallsCodeOutputLogsObject {
   logs: string;
 }
 
-model RunStepDetailsToolCallsCodeOutputImageObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDetailsToolCallsCodeOutputImageObject
+  extends RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject {
   @doc("""
   Always `image`.
   """)
@@ -317,7 +328,9 @@ model RunStepDetailsToolCallsCodeOutputImageObject {
   };
 }
 
-model RunStepDetailsToolCallsFileSearchObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDetailsToolCallsFileSearchObject
+  extends RunStepDetailsToolCallsObjectToolCallsObject {
   /** The ID of the tool call object. */
   id: string;
 
@@ -331,7 +344,9 @@ model RunStepDetailsToolCallsFileSearchObject {
   file_search: Record<string>;
 }
 
-model RunStepDetailsToolCallsFunctionObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDetailsToolCallsFunctionObject
+  extends RunStepDetailsToolCallsObjectToolCallsObject {
   /** The ID of the tool call object. */
   id: string;
 
@@ -552,9 +567,10 @@ model RunStepObject {
   """)
   status: "in_progress" | "cancelled" | "failed" | "completed" | "expired";
 
+  // Tool customization: replace unioned types with a custom, common base
   /** The details of the run step. */
   @extension("x-oaiExpandable", true)
-  step_details: RunStepDetailsMessageCreationObject | RunStepDetailsToolCallsObject;
+  step_details: RunStepObjectStepDetails;
 
   @doc("""
   The last error associated with this run step. Will be `null` if there are no errors.

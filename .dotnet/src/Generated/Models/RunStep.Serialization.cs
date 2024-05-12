@@ -7,11 +7,10 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class RunStep : IJsonModel<RunStep>
+    public partial class RunStep : IJsonModel<RunStep>
     {
         void IJsonModel<RunStep>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -39,14 +38,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
             writer.WritePropertyName("step_details"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(StepDetails);
-#else
-            using (JsonDocument document = JsonDocument.Parse(StepDetails))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
+            writer.WriteObjectValue<RunStepDetails>(Details, options);
             if (LastError != null)
             {
                 writer.WritePropertyName("last_error"u8);
@@ -162,14 +154,14 @@ namespace OpenAI.Internal.Models
             string runId = default;
             RunStepType type = default;
             RunStepStatus status = default;
-            BinaryData stepDetails = default;
-            RunStepObjectLastError lastError = default;
+            RunStepDetails stepDetails = default;
+            RunStepError lastError = default;
             DateTimeOffset? expiredAt = default;
             DateTimeOffset? cancelledAt = default;
             DateTimeOffset? failedAt = default;
             DateTimeOffset? completedAt = default;
             IReadOnlyDictionary<string, string> metadata = default;
-            RunStepCompletionUsage usage = default;
+            RunStepTokenUsage usage = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -216,7 +208,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("step_details"u8))
                 {
-                    stepDetails = BinaryData.FromString(property.Value.GetRawText());
+                    stepDetails = RunStepDetails.DeserializeRunStepDetails(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("last_error"u8))
@@ -226,7 +218,7 @@ namespace OpenAI.Internal.Models
                         lastError = null;
                         continue;
                     }
-                    lastError = RunStepObjectLastError.DeserializeRunStepObjectLastError(property.Value, options);
+                    lastError = RunStepError.DeserializeRunStepError(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("expired_at"u8))
@@ -246,7 +238,9 @@ namespace OpenAI.Internal.Models
                         cancelledAt = null;
                         continue;
                     }
-                    cancelledAt = property.Value.GetDateTimeOffset("O");
+                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
+                    // cancelledAt = property.Value.GetDateTimeOffset("O");
+                    cancelledAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
                 if (property.NameEquals("failed_at"u8))
@@ -256,7 +250,9 @@ namespace OpenAI.Internal.Models
                         failedAt = null;
                         continue;
                     }
-                    failedAt = property.Value.GetDateTimeOffset("O");
+                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
+                    // failedAt = property.Value.GetDateTimeOffset("O");
+                    failedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
                 if (property.NameEquals("completed_at"u8))
@@ -266,7 +262,9 @@ namespace OpenAI.Internal.Models
                         completedAt = null;
                         continue;
                     }
-                    completedAt = property.Value.GetDateTimeOffset("O");
+                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
+                    // completedAt = property.Value.GetDateTimeOffset("O");
+                    completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -291,7 +289,7 @@ namespace OpenAI.Internal.Models
                         usage = null;
                         continue;
                     }
-                    usage = RunStepCompletionUsage.DeserializeRunStepCompletionUsage(property.Value, options);
+                    usage = RunStepTokenUsage.DeserializeRunStepTokenUsage(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

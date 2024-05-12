@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> Represents a step in execution of a run. </summary>
-    internal partial class RunStep
+    public partial class RunStep
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -51,7 +51,11 @@ namespace OpenAI.Internal.Models
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
         /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
         /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
-        /// <param name="stepDetails"> The details of the run step. </param>
+        /// <param name="details">
+        /// The details of the run step.
+        /// Please note <see cref="RunStepDetails"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="RunStepMessageCreationDetails"/> and <see cref="RunStepToolCallDetailsCollection"/>.
+        /// </param>
         /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
         /// <param name="expiredAt"> The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run step was cancelled. </param>
@@ -59,14 +63,14 @@ namespace OpenAI.Internal.Models
         /// <param name="completedAt"> The Unix timestamp (in seconds) for when the run step completed. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="assistantId"/>, <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="stepDetails"/> is null. </exception>
-        internal RunStep(string id, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, BinaryData stepDetails, RunStepObjectLastError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepCompletionUsage usage)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="assistantId"/>, <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="details"/> is null. </exception>
+        internal RunStep(string id, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(assistantId, nameof(assistantId));
             Argument.AssertNotNull(threadId, nameof(threadId));
             Argument.AssertNotNull(runId, nameof(runId));
-            Argument.AssertNotNull(stepDetails, nameof(stepDetails));
+            Argument.AssertNotNull(details, nameof(details));
 
             Id = id;
             CreatedAt = createdAt;
@@ -75,7 +79,7 @@ namespace OpenAI.Internal.Models
             RunId = runId;
             Type = type;
             Status = status;
-            StepDetails = stepDetails;
+            Details = details;
             LastError = lastError;
             ExpiredAt = expiredAt;
             CancelledAt = cancelledAt;
@@ -94,7 +98,11 @@ namespace OpenAI.Internal.Models
         /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
         /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
         /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
-        /// <param name="stepDetails"> The details of the run step. </param>
+        /// <param name="details">
+        /// The details of the run step.
+        /// Please note <see cref="RunStepDetails"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="RunStepMessageCreationDetails"/> and <see cref="RunStepToolCallDetailsCollection"/>.
+        /// </param>
         /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
         /// <param name="expiredAt"> The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. </param>
         /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run step was cancelled. </param>
@@ -103,7 +111,7 @@ namespace OpenAI.Internal.Models
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStep(string id, object @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, BinaryData stepDetails, RunStepObjectLastError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepCompletionUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStep(string id, object @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -113,7 +121,7 @@ namespace OpenAI.Internal.Models
             RunId = runId;
             Type = type;
             Status = status;
-            StepDetails = stepDetails;
+            Details = details;
             LastError = lastError;
             ExpiredAt = expiredAt;
             CancelledAt = cancelledAt;
@@ -144,50 +152,8 @@ namespace OpenAI.Internal.Models
         public RunStepType Type { get; }
         /// <summary> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </summary>
         public RunStepStatus Status { get; }
-        /// <summary>
-        /// The details of the run step.
-        /// <para>
-        /// To assign an object to this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// <remarks>
-        /// Supported types:
-        /// <list type="bullet">
-        /// <item>
-        /// <description><see cref="RunStepDetailsMessageCreationObject"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="RunStepDetailsToolCallsObject"/></description>
-        /// </item>
-        /// </list>
-        /// </remarks>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        public BinaryData StepDetails { get; }
         /// <summary> The last error associated with this run step. Will be `null` if there are no errors. </summary>
-        public RunStepObjectLastError LastError { get; }
+        public RunStepError LastError { get; }
         /// <summary> The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. </summary>
         public DateTimeOffset? ExpiredAt { get; }
         /// <summary> The Unix timestamp (in seconds) for when the run step was cancelled. </summary>
@@ -199,6 +165,6 @@ namespace OpenAI.Internal.Models
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
         /// <summary> Gets the usage. </summary>
-        public RunStepCompletionUsage Usage { get; }
+        public RunStepTokenUsage Usage { get; }
     }
 }

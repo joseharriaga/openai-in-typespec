@@ -41,7 +41,7 @@ namespace OpenAI;
 public partial class OpenAIClient
 {
     private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
-    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v1";
+    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v2";
     private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
     private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
     private const string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";

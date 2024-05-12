@@ -3,7 +3,6 @@ using OpenAI.Chat;
 using System;
 using System.ClientModel;
 using System.IO;
-using System.Net.Mime;
 using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Chat;
@@ -13,16 +12,18 @@ public partial class ChatWithVision
     [Test]
     public void DescribeAnImage()
     {
+        string mediaType = "image/png";
         string stopSignPath = Path.Combine("Assets", "stop_sign.png");
         using Stream stopSignStream = File.OpenRead(stopSignPath);
+        BinaryData imageData = BinaryData.FromStream(stopSignStream);
 
         ChatClient client = GetTestClient<ChatClient>(TestScenario.VisionChat);
 
         ClientResult<ChatCompletion> result = client.CompleteChat(
             [
-                new ChatRequestUserMessage(
-                    "Describe this image for me",
-                    ChatMessageContent.FromImage(stopSignStream, "image/png")),
+                new UserChatMessage(
+                    ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me"),
+                    ChatMessageContentPart.CreateImageMessageContentPart(imageData, mediaType)),
             ], new ChatCompletionOptions()
             {
                 MaxTokens = 2048,

@@ -13,10 +13,10 @@ namespace OpenAI.Samples
         {
             ChatClient client = new("gpt-4-vision-preview", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            List<ChatRequestMessage> messages = [
-                new ChatRequestUserMessage(
-                    "Describe this image for me",
-                    ChatMessageContent.FromImage(imageUri))
+            List<ChatMessage> messages = [
+                new UserChatMessage(
+                    ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me"),
+                    ChatMessageContentPart.CreateImageMessageContentPart(imageUri))
             ];
 
             ChatCompletion chatCompletion = client.CompleteChat(messages);

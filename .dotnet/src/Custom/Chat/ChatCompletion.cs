@@ -3,76 +3,55 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat;
 
-/// <inheritdoc cref="Internal.Models.CreateChatCompletionResponse"/>
-public class ChatCompletion
+[CodeGenModel("CreateChatCompletionResponse")]
+public partial class ChatCompletion
 {
-    private Internal.Models.CreateChatCompletionResponse _internalResponse;
-    private int _internalChoiceIndex;
+    // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
+    /// <summary> The object type, which is always `chat.completion`. </summary>
+    private InternalCreateChatCompletionResponseObject Object { get; } = InternalCreateChatCompletionResponseObject.ChatCompletion;
 
-    /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponse.Id"/>
-    public string Id => _internalResponse.Id;
-    /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponse.SystemFingerprint"/>
-    public string SystemFingerprint => _internalResponse.SystemFingerprint;
-    /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponse.Created"/>
-    public DateTimeOffset CreatedAt => _internalResponse.Created;
-    /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponse.Usage"/>
-    public ChatTokenUsage Usage { get; }
-    /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.FinishReason"/>
-    public ChatFinishReason FinishReason { get; }
-    /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.Content"/>
-    public ChatMessageContent Content { get; }
-    /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.ToolCalls"/>
-    public IReadOnlyList<ChatToolCall> ToolCalls { get; }
-    /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.FunctionCall"/>
-    public ChatFunctionCall FunctionCall { get; }
-    /// <inheritdoc cref="Internal.Models.ChatCompletionResponseMessage.Role"/>
-    public ChatRole Role { get; }
-    /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Logprobs"/>
-    public ChatLogProbabilityCollection LogProbabilities { get; }
-    /// <inheritdoc cref="Internal.Models.CreateChatCompletionResponseChoice.Index"/>
-    public int Index => (int)_internalResponse.Choices[(int)_internalChoiceIndex].Index;
+    // CUSTOM: Made internal. We only get back a single choice, and instead we flatten the structure for usability.
+    /// <summary> A list of chat completion choices. Can be more than one if `n` is greater than 1. </summary>
+    internal IReadOnlyList<InternalCreateChatCompletionResponseChoice> Choices { get; }
 
-    internal ChatCompletion(Internal.Models.CreateChatCompletionResponse internalResponse, int internalChoiceIndex)
-    {
-        Internal.Models.CreateChatCompletionResponseChoice internalChoice = internalResponse.Choices[(int)internalChoiceIndex];
-        _internalResponse = internalResponse;
-        _internalChoiceIndex = internalChoiceIndex;
-        Role = internalChoice.Message.Role.ToString() switch
-        {
-            "system" => ChatRole.System,
-            "user" => ChatRole.User,
-            "assistant" => ChatRole.Assistant,
-            "tool" => ChatRole.Tool,
-            "function" => ChatRole.Function,
-            _ => throw new ArgumentException(nameof(internalChoice.Message.Role)),
-        };
-        Usage = new(_internalResponse.Usage);
-        FinishReason = internalChoice.FinishReason.ToString() switch
-        {
-            "stop" => ChatFinishReason.Stopped,
-            "length" => ChatFinishReason.Length,
-            "tool_calls" => ChatFinishReason.ToolCalls,
-            "function_call" => ChatFinishReason.FunctionCall,
-            "content_filter" => ChatFinishReason.ContentFilter,
-            _ => throw new ArgumentException(nameof(internalChoice.FinishReason)),
-        };
-        Content = internalChoice.Message.Content;
-        ChangeTrackingList<ChatToolCall> toolCalls = [];
-        if (internalChoice.Message.ToolCalls != null)
-        {
-            foreach (Internal.Models.ChatCompletionMessageToolCall internalToolCall in internalChoice.Message.ToolCalls)
-            {
-                if (internalToolCall.Type == "function")
-                {
-                    toolCalls.Add(new ChatFunctionToolCall(internalToolCall.Id, internalToolCall.Function.Name, internalToolCall.Function.Arguments));
-                }
-            }
-        }
-        ToolCalls = toolCalls;
-        if (internalChoice.Message.FunctionCall != null)
-        {
-            FunctionCall = new(internalChoice.Message.FunctionCall.Name, internalChoice.Message.FunctionCall.Arguments);
-        }
-        LogProbabilities = ChatLogProbabilityCollection.FromInternalData(internalChoice.Logprobs);
-    }
+    // CUSTOM: Renamed.
+    /// <summary> The Unix timestamp (in seconds) of when the chat completion was created. </summary>
+    [CodeGenMember("Created")]
+    public DateTimeOffset CreatedAt { get; }
+
+    // CUSTOM: Flattened choice property.
+    /// <summary>
+    /// The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+    /// `length` if the maximum number of tokens specified in the request was reached,
+    /// `content_filter` if content was omitted due to a flag from our content filters,
+    /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+    /// </summary>
+    public ChatFinishReason FinishReason => Choices[0].FinishReason;
+
+    // CUSTOM: Flattened choice property.
+    /// <summary>
+    /// Log probability information.
+    /// </summary>
+    public ChatLogProbabilityInfo LogProbabilityInfo => Choices[0].Logprobs;
+
+    // CUSTOM: Flattened choice message property.
+    /// <summary>
+    /// The role of the author of this message.
+    /// </summary>
+    public ChatMessageRole Role => Choices[0].Message.Role;
+
+    // CUSTOM: Flattened choice message property.
+    /// <summary>
+    /// The contents of the message.
+    /// </summary>
+    public IReadOnlyList<ChatMessageContentPart> Content => Choices[0].Message.Content;
+
+    // CUSTOM: Flattened choice message property.
+    /// <summary>
+    /// The tool calls.
+    /// </summary>
+    public IReadOnlyList<ChatToolCall> ToolCalls => Choices[0].Message.ToolCalls;
+
+    // CUSTOM: Flattened choice message property.
+    public ChatFunctionCall FunctionCall => Choices[0].Message.FunctionCall;
 }

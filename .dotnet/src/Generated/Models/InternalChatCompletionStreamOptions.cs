@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI
+namespace OpenAI.Chat
 {
     /// <summary> Options for streaming response. Only set this when you set `stream: true`. </summary>
     internal partial class InternalChatCompletionStreamOptions

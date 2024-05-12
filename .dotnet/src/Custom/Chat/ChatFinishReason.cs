@@ -9,7 +9,7 @@ namespace OpenAI.Chat;
 ///     <cond>Condition</cond>
 /// </listheader>
 /// <item>
-///     <member><see cref="Stopped"/></member>
+///     <member><see cref="Stop"/></member>
 ///     <rest><c>stop</c></rest>
 ///     <cond>The model encountered a natural stop point or provided stop sequence.</cond>
 /// </item>
@@ -37,20 +37,27 @@ namespace OpenAI.Chat;
 /// </item>
 /// </list>
 /// </summary>
+[CodeGenModel("InternalCreateChatCompletionResponseChoiceFinishReason")]
 public enum ChatFinishReason
 {
     /// <summary>
     /// Indicates that the model encountered a natural stop point or provided stop sequence.
     /// </summary>
-    Stopped,
+    [CodeGenMember("Stop")]
+    Stop,
+
     /// <summary>
     /// Indicates that the model reached the maximum number of tokens allowed for the request.
     /// </summary>
+    [CodeGenMember("Length")]
     Length,
+
     /// <summary>
     /// Indicates that content was omitted due to a triggered content filter rule.
     /// </summary>
+    [CodeGenMember("ContentFilter")]
     ContentFilter,
+
     /// <summary>
     /// Indicates that the model called a function that was defined in the request.
     /// </summary>
@@ -61,10 +68,12 @@ public enum ChatFinishReason
     /// <para>
     /// <b>Note</b>: <see cref="ToolCalls"/> is <i>not</i> provided as the <c>finish_reason</c> if the model calls a
     /// tool in response to an explicit <c>tool_choice</c> via <see cref="ChatCompletionOptions.ToolConstraint"/>.
-    /// In that case, calling the specified tool is assumed and the expected reason is <see cref="Stopped"/>.
+    /// In that case, calling the specified tool is assumed and the expected reason is <see cref="Stop"/>.
     /// </para>
     /// </remarks>
+    [CodeGenMember("ToolCalls")]
     ToolCalls,
+
     /// <summary>
     /// Indicates that the model called a function that was defined in the request.
     /// </summary>
@@ -73,5 +82,6 @@ public enum ChatFinishReason
     /// <see cref="ChatRequestFunctionMessage"/> with the appropriate name and arguments, then perform another chat
     /// completion with the combined set of messages.
     /// </remarks>
+    [CodeGenMember("FunctionCall")]
     FunctionCall,
 }

@@ -4,6 +4,7 @@
  */
 
 import "../common";
+import "./custom.tsp";
 
 using TypeSpec.OpenAPI;
 
@@ -320,16 +321,7 @@ model ChatCompletionMessageToolCall {
   };
 }
 
-@extension("x-oaiExpandable", true)
-union ChatCompletionRequestMessage {
-  ChatCompletionRequestSystemMessage,
-  ChatCompletionRequestUserMessage,
-  ChatCompletionRequestAssistantMessage,
-  ChatCompletionRequestToolMessage,
-  ChatCompletionRequestFunctionMessage,
-}
-
-model ChatCompletionRequestSystemMessage {
+model ChatCompletionRequestSystemMessage extends ChatCompletionRequestMessage {
   /** The contents of the system message. */
   content: string;
 
@@ -342,7 +334,7 @@ model ChatCompletionRequestSystemMessage {
   name?: string;
 }
 
-model ChatCompletionRequestUserMessage {
+model ChatCompletionRequestUserMessage extends ChatCompletionRequestMessage {
   /** The contents of the user message. */
   @extension("x-oaiExpandable", true)
   content: string | ChatCompletionRequestMessageContentPart[];
@@ -356,7 +348,7 @@ model ChatCompletionRequestUserMessage {
   name?: string;
 }
 
-model ChatCompletionRequestAssistantMessage {
+model ChatCompletionRequestAssistantMessage extends ChatCompletionRequestMessage {
   @doc("""
   The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
   """)
@@ -385,7 +377,7 @@ model ChatCompletionRequestAssistantMessage {
   };
 }
 
-model ChatCompletionRequestToolMessage {
+model ChatCompletionRequestToolMessage extends ChatCompletionRequestMessage {
   @doc("""
   The role of the messages author, in this case `tool`.
   """)
@@ -399,7 +391,7 @@ model ChatCompletionRequestToolMessage {
 }
 
 #deprecated "This field is marked as deprecated."
-model ChatCompletionRequestFunctionMessage {
+model ChatCompletionRequestFunctionMessage extends ChatCompletionRequestMessage {
   @doc("""
   The role of the messages author, in this case `function`.
   """)
@@ -416,12 +408,13 @@ model ChatCompletionRequestFunctionMessage {
 model ChatCompletionMessageToolCalls is ChatCompletionMessageToolCall[];
 
 /** The role of the author of a message */
-alias ChatCompletionRole =
-  | "system"
-  | "user"
-  | "assistant"
-  | "tool"
-  | "function";
+enum ChatCompletionRole {
+  "system",
+  "user",
+  "assistant",
+  "tool",
+  "function"
+}
 
 /** Represents a chat completion response returned by model, based on the provided input. */
 model CreateChatCompletionFunctionResponse {

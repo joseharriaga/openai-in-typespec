@@ -36,7 +36,7 @@ public partial class AudioClient
               model,
               OpenAIClient.GetEndpoint(options),
               options)
-    {}
+    { }
 
     /// <summary>
     /// Initializes a new instance of <see cref="AudioClient"/> that will use an API key from the OPENAI_API_KEY

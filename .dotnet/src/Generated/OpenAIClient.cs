@@ -9,6 +9,7 @@ using System.Threading;
 using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Batch;
+using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuning;
@@ -37,6 +38,5 @@ namespace OpenAI
         protected OpenAIClient()
         {
         }
-        private OpenAI.Internal.Chat _cachedChat;
     }
 }

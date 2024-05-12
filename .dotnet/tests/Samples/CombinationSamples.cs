@@ -30,19 +30,21 @@ namespace OpenAI.Samples.Miscellaneous
 
             // Now, we'll ask a cranky art critic to evaluate the image using gpt-4-vision-preview:
             ChatClient chatClient = new("gpt-4-vision-preview");
-            ClientResult<ChatCompletion> chatResult = chatClient.CompleteChat(
+            ChatCompletion chatCompletion = chatClient.CompleteChat(
                 [
-                    new ChatRequestSystemMessage("Assume the role of a cranky art critic. When asked to describe or "
-                    + "evaluate imagery, focus on criticizing elements of subject, composition, and other details."),
-                new ChatRequestUserMessage(
-                    "describe the following image in a few sentences",
-                    ChatMessageContent.FromImage(imageGeneration.ImageUri)),
-            ],
+                    new SystemChatMessage("Assume the role of a cranky art critic. When asked to describe or "
+                        + "evaluate imagery, focus on criticizing elements of subject, composition, and other details."),
+                    new UserChatMessage(
+                        ChatMessageContentPart.CreateTextMessageContentPart("describe the following image in a few sentences"),
+                        ChatMessageContentPart.CreateImageMessageContentPart(imageGeneration.ImageUri)),
+                ],
                 new ChatCompletionOptions()
                 {
                     MaxTokens = 2048,
-                });
-            string chatResponseText = (string)chatResult.Value.Content;
+                }
+                );
+
+            string chatResponseText = chatCompletion.Content[0].Text;
             Console.WriteLine($"Art critique of majestic alpaca:\n{chatResponseText}");
 
             // Finally, we'll get some text-to-speech for that critical evaluation using tts-1-hd:
@@ -55,7 +57,7 @@ namespace OpenAI.Samples.Miscellaneous
                     Speed = 0.9f,
                     ResponseFormat = GeneratedSpeechFormat.Opus,
                 });
-            FileInfo ttsFileInfo = new($"{chatResult.Value.Id}.opus");
+            FileInfo ttsFileInfo = new($"{chatCompletion.Id}.opus");
             using (FileStream ttsFileStream = ttsFileInfo.Create())
             using (BinaryWriter ttsFileWriter = new(ttsFileStream))
             {
@@ -72,14 +74,14 @@ namespace OpenAI.Samples.Miscellaneous
             ChatClient creativeWriterClient = new("gpt-4");
             ClientResult<ChatCompletion> creativeWriterResult = creativeWriterClient.CompleteChat(
                 [
-                    new ChatRequestSystemMessage("You're a creative helper that specializes in brainstorming designs for concepts that fuse ordinary, mundane items with a fantastical touch. In particular, you can provide good one-paragraph descriptions of concept images."),
-                new ChatRequestUserMessage("Imagine a household pet. Now add in a subtle touch of magic or 'different'. What do you imagine? Provide a one-paragraph description of a picture of this new creature, focusing on the details of the imagery such that it'd be suitable for creating a picture."),
-            ],
+                    new SystemChatMessage("You're a creative helper that specializes in brainstorming designs for concepts that fuse ordinary, mundane items with a fantastical touch. In particular, you can provide good one-paragraph descriptions of concept images."),
+                    new UserChatMessage("Imagine a household pet. Now add in a subtle touch of magic or 'different'. What do you imagine? Provide a one-paragraph description of a picture of this new creature, focusing on the details of the imagery such that it'd be suitable for creating a picture."),
+                ],
                 new ChatCompletionOptions()
                 {
                     MaxTokens = 2048,
                 });
-            string description = creativeWriterResult.Value.Content.ToText();
+            string description = creativeWriterResult.Value.Content[0].Text;
             Console.WriteLine($"Creative helper's creature description:\n{description}");
 
             // Asynchronously, in parallel to the next steps, we'll get the creative description in the voice of Onyx
@@ -118,16 +120,16 @@ namespace OpenAI.Samples.Miscellaneous
             ChatClient imageCriticClient = new("gpt-4-vision-preview");
             ClientResult<ChatCompletion> criticalAppraisalResult = await imageCriticClient.CompleteChatAsync(
                 [
-                    new ChatRequestSystemMessage("Assume the role of an art critic. Although usually cranky and occasionally even referred to as a 'curmudgeon', you're somehow entirely smitten with the subject presented to you and, despite your best efforts, can't help but lavish praise when you're asked to appraise a provided image."),
-                new ChatRequestUserMessage(
-                    "Evaluate this image for me. What is it, and what do you think of it?",
-                    ChatMessageContent.FromImage(imageLocation)),
-            ],
+                    new SystemChatMessage("Assume the role of an art critic. Although usually cranky and occasionally even referred to as a 'curmudgeon', you're somehow entirely smitten with the subject presented to you and, despite your best efforts, can't help but lavish praise when you're asked to appraise a provided image."),
+                    new UserChatMessage(
+                        ChatMessageContentPart.CreateTextMessageContentPart("Evaluate this image for me. What is it, and what do you think of it?"),
+                        ChatMessageContentPart.CreateImageMessageContentPart(imageLocation)),
+                ],
                 new ChatCompletionOptions()
                 {
                     MaxTokens = 2048,
                 });
-            string appraisal = (string)criticalAppraisalResult.Value.Content;
+            string appraisal = criticalAppraisalResult.Value.Content[0].Text;
             Console.WriteLine($"Critic's appraisal:\n{appraisal}");
 
             // Finally, we'll get that art expert's laudations in the voice of Fable

@@ -5,13 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Assistants;
+using OpenAI.Internal.Models;
 using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> Represents an execution run on a [thread](/docs/api-reference/threads). </summary>
-    internal partial class ThreadRun
+    public partial class ThreadRun
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -51,7 +51,7 @@ namespace OpenAI.Internal.Models
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run. </param>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. </param>
         /// <param name="status"> The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`. </param>
-        /// <param name="requiredAction"> Details on the action required to continue the run. Will be `null` if no action is required. </param>
+        /// <param name="internalRequiredAction"> Details on the action required to continue the run. Will be `null` if no action is required. </param>
         /// <param name="lastError"> The last error associated with this run. Will be `null` if there are no errors. </param>
         /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the run will expire. </param>
         /// <param name="startedAt"> The Unix timestamp (in seconds) for when the run was started. </param>
@@ -74,7 +74,7 @@ namespace OpenAI.Internal.Models
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="threadId"/>, <paramref name="assistantId"/>, <paramref name="model"/>, <paramref name="instructions"/> or <paramref name="tools"/> is null. </exception>
-        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, RunObjectRequiredAction requiredAction, RunObjectLastError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunObjectIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<ToolDefinition> tools, IReadOnlyDictionary<string, string> metadata, RunTokenUsage usage, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat)
+        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction internalRequiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<ToolDefinition> tools, IReadOnlyDictionary<string, string> metadata, RunTokenUsage usage, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, BinaryData responseFormat)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(threadId, nameof(threadId));
@@ -88,7 +88,7 @@ namespace OpenAI.Internal.Models
             ThreadId = threadId;
             AssistantId = assistantId;
             Status = status;
-            RequiredAction = requiredAction;
+            _internalRequiredAction = internalRequiredAction;
             LastError = lastError;
             ExpiresAt = expiresAt;
             StartedAt = startedAt;
@@ -115,7 +115,7 @@ namespace OpenAI.Internal.Models
         /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run. </param>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. </param>
         /// <param name="status"> The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`. </param>
-        /// <param name="requiredAction"> Details on the action required to continue the run. Will be `null` if no action is required. </param>
+        /// <param name="internalRequiredAction"> Details on the action required to continue the run. Will be `null` if no action is required. </param>
         /// <param name="lastError"> The last error associated with this run. Will be `null` if there are no errors. </param>
         /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the run will expire. </param>
         /// <param name="startedAt"> The Unix timestamp (in seconds) for when the run was started. </param>
@@ -140,15 +140,15 @@ namespace OpenAI.Internal.Models
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ThreadRun(string id, object @object, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, RunObjectRequiredAction requiredAction, RunObjectLastError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunObjectIncompleteDetails incompleteDetails, string model, string instructions, IReadOnlyList<ToolDefinition> tools, IReadOnlyDictionary<string, string> metadata, RunTokenUsage usage, float? temperature, float? topP, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ThreadRun(string id, object @object, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction internalRequiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IReadOnlyList<ToolDefinition> tools, IReadOnlyDictionary<string, string> metadata, RunTokenUsage usage, float? temperature, float? topP, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
-            Object = @object;
+            _object = @object;
             CreatedAt = createdAt;
             ThreadId = threadId;
             AssistantId = assistantId;
             Status = status;
-            RequiredAction = requiredAction;
+            _internalRequiredAction = internalRequiredAction;
             LastError = lastError;
             ExpiresAt = expiresAt;
             StartedAt = startedAt;
@@ -187,10 +187,8 @@ namespace OpenAI.Internal.Models
         public string AssistantId { get; }
         /// <summary> The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`. </summary>
         public RunStatus Status { get; }
-        /// <summary> Details on the action required to continue the run. Will be `null` if no action is required. </summary>
-        public RunObjectRequiredAction RequiredAction { get; }
         /// <summary> The last error associated with this run. Will be `null` if there are no errors. </summary>
-        public RunObjectLastError LastError { get; }
+        public RunError LastError { get; }
         /// <summary> The Unix timestamp (in seconds) for when the run will expire. </summary>
         public DateTimeOffset? ExpiresAt { get; }
         /// <summary> The Unix timestamp (in seconds) for when the run was started. </summary>
@@ -202,7 +200,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The Unix timestamp (in seconds) for when the run was completed. </summary>
         public DateTimeOffset? CompletedAt { get; }
         /// <summary> Details on why the run is incomplete. Will be `null` if the run is not incomplete. </summary>
-        public RunObjectIncompleteDetails IncompleteDetails { get; }
+        public RunIncompleteDetails IncompleteDetails { get; }
         /// <summary> The model that the [assistant](/docs/api-reference/assistants) used for this run. </summary>
         public string Model { get; }
         /// <summary> The instructions that the [assistant](/docs/api-reference/assistants) used for this run. </summary>
@@ -226,7 +224,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The maximum number of completion tokens specified to have been used over the course of the run. </summary>
         public int? MaxCompletionTokens { get; }
         /// <summary> Gets the truncation strategy. </summary>
-        public TruncationObject TruncationStrategy { get; }
+        public RunTruncationStrategy TruncationStrategy { get; }
         /// <summary>
         /// Gets the tool choice
         /// <para>

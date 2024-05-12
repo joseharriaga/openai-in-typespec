@@ -11,31 +11,14 @@ namespace OpenAI.Assistants
     public partial class FunctionToolDefinition : ToolDefinition
     {
         /// <summary> Initializes a new instance of <see cref="FunctionToolDefinition"/>. </summary>
-        /// <param name="function"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="function"/> is null. </exception>
-        public FunctionToolDefinition(FunctionDefinition function)
+        /// <param name="internalFunction"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="internalFunction"/> is null. </exception>
+        public FunctionToolDefinition(FunctionDefinition internalFunction)
         {
-            Argument.AssertNotNull(function, nameof(function));
+            Argument.AssertNotNull(internalFunction, nameof(internalFunction));
 
             Type = "function";
-            Function = function;
+            _internalFunction = internalFunction;
         }
-
-        /// <summary> Initializes a new instance of <see cref="FunctionToolDefinition"/>. </summary>
-        /// <param name="type"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="function"></param>
-        internal FunctionToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, FunctionDefinition function) : base(type, serializedAdditionalRawData)
-        {
-            Function = function;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="FunctionToolDefinition"/> for deserialization. </summary>
-        internal FunctionToolDefinition()
-        {
-        }
-
-        /// <summary> Gets or sets the function. </summary>
-        public FunctionDefinition Function { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants;
 
@@ -10,6 +11,7 @@ namespace OpenAI.Assistants;
 /// create an instance of this type.
 /// </remarks>
 [CodeGenModel("MessageContentImageFileObject")]
+[CodeGenSuppress("MessageImageFileContent", typeof(InternalMessageContentItemFileObjectImageFile))]
 public partial class MessageImageFileContent
 {
     [CodeGenMember("Type")]

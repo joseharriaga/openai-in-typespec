@@ -7,12 +7,10 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Assistants;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class RunCreationOptions : IJsonModel<RunCreationOptions>
+    public partial class RunCreationOptions : IJsonModel<RunCreationOptions>
     {
         void IJsonModel<RunCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -25,24 +23,24 @@ namespace OpenAI.Internal.Models
             writer.WriteStartObject();
             writer.WritePropertyName("assistant_id"u8);
             writer.WriteStringValue(AssistantId);
-            if (Optional.IsDefined(Model))
+            if (Optional.IsDefined(ModelOverride))
             {
-                if (Model != null)
+                if (ModelOverride != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteStringValue(Model.Value.ToString());
+                    writer.WriteStringValue(ModelOverride);
                 }
                 else
                 {
                     writer.WriteNull("model");
                 }
             }
-            if (Optional.IsDefined(Instructions))
+            if (Optional.IsDefined(InstructionsOverride))
             {
-                if (Instructions != null)
+                if (InstructionsOverride != null)
                 {
                     writer.WritePropertyName("instructions"u8);
-                    writer.WriteStringValue(Instructions);
+                    writer.WriteStringValue(InstructionsOverride);
                 }
                 else
                 {
@@ -262,7 +260,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string assistantId = default;
-            CreateRunRequestModel? model = default;
+            string model = default;
             string instructions = default;
             string additionalInstructions = default;
             IList<MessageCreationOptions> additionalMessages = default;
@@ -273,7 +271,7 @@ namespace OpenAI.Internal.Models
             bool? stream = default;
             int? maxPromptTokens = default;
             int? maxCompletionTokens = default;
-            TruncationObject truncationStrategy = default;
+            RunTruncationStrategy truncationStrategy = default;
             BinaryData toolChoice = default;
             BinaryData responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -292,7 +290,7 @@ namespace OpenAI.Internal.Models
                         model = null;
                         continue;
                     }
-                    model = new CreateRunRequestModel(property.Value.GetString());
+                    model = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("instructions"u8))
@@ -414,7 +412,7 @@ namespace OpenAI.Internal.Models
                         truncationStrategy = null;
                         continue;
                     }
-                    truncationStrategy = TruncationObject.DeserializeTruncationObject(property.Value, options);
+                    truncationStrategy = RunTruncationStrategy.DeserializeRunTruncationStrategy(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("tool_choice"u8))

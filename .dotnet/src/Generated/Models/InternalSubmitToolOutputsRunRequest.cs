@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Models;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -47,7 +47,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="InternalSubmitToolOutputsRunRequest"/>. </summary>
         /// <param name="toolOutputs"> A list of tools for which the outputs are being submitted. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="toolOutputs"/> is null. </exception>
-        public InternalSubmitToolOutputsRunRequest(IEnumerable<SubmitToolOutputsRunRequestToolOutput> toolOutputs)
+        public InternalSubmitToolOutputsRunRequest(IEnumerable<ToolOutput> toolOutputs)
         {
             Argument.AssertNotNull(toolOutputs, nameof(toolOutputs));
 
@@ -58,7 +58,7 @@ namespace OpenAI.Internal.Models
         /// <param name="toolOutputs"> A list of tools for which the outputs are being submitted. </param>
         /// <param name="stream"> If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalSubmitToolOutputsRunRequest(IList<SubmitToolOutputsRunRequestToolOutput> toolOutputs, bool? stream, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalSubmitToolOutputsRunRequest(IList<ToolOutput> toolOutputs, bool? stream, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             ToolOutputs = toolOutputs;
             Stream = stream;
@@ -71,7 +71,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> A list of tools for which the outputs are being submitted. </summary>
-        public IList<SubmitToolOutputsRunRequestToolOutput> ToolOutputs { get; }
+        public IList<ToolOutput> ToolOutputs { get; }
         /// <summary> If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message. </summary>
         public bool? Stream { get; set; }
     }

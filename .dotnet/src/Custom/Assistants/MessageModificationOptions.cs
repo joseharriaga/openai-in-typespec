@@ -1,5 +1,3 @@
-using OpenAI.Assistants;
-
 namespace OpenAI.Assistants;
 
 /// <summary>

@@ -25,7 +25,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
             writer.WritePropertyName("file_citation"u8);
-            writer.WriteObjectValue<InternalMessageContentTextAnnotationsFileCitationObjectFileCitation>(InternalFileCitation, options);
+            writer.WriteObjectValue<InternalMessageContentTextAnnotationsFileCitationObjectFileCitation>(_internalFileCitation, options);
             writer.WritePropertyName("start_index"u8);
             writer.WriteNumberValue(StartIndex);
             writer.WritePropertyName("end_index"u8);

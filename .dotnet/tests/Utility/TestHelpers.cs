@@ -29,7 +29,10 @@ internal static class TestHelpers
         Models,
         LegacyCompletions,
         Moderations,
+        TopLevel,
     }
+
+    public static OpenAIClient GetTestTopLevelClient() => GetTestClient<OpenAIClient>(TestScenario.TopLevel);
 
     public static T GetTestClient<T>(TestScenario scenario, string overrideModel = null)
     {
@@ -46,6 +49,7 @@ internal static class TestHelpers
             TestScenario.Images => new ImageClient(overrideModel ?? "dall-e-3", options),
             TestScenario.Transcription => new AudioClient(overrideModel ?? "whisper-1", options),
             TestScenario.VisionChat => new ChatClient(overrideModel ?? "gpt-4-vision-preview", options),
+            TestScenario.TopLevel => new OpenAIClient(options),
             _ => throw new NotImplementedException(),
         };
         return (T)clientObject;

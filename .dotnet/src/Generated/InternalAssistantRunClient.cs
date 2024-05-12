@@ -154,7 +154,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateSubmitToolOuputsToRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateSubmitToolOutputsToRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;

@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The MessageContentImageUrlObjectImageUrl. </summary>
     internal partial class InternalMessageContentImageUrlObjectImageUrl

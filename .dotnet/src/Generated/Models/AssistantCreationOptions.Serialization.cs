@@ -65,7 +65,7 @@ namespace OpenAI.Assistants
                 writer.WriteStartArray();
                 foreach (var item in Tools)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<ToolDefinition>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -74,7 +74,7 @@ namespace OpenAI.Assistants
                 if (ToolResources != null)
                 {
                     writer.WritePropertyName("tool_resources"u8);
-                    writer.WriteObjectValue(ToolResources, options);
+                    writer.WriteObjectValue<ToolResourceDefinitions>(ToolResources, options);
                 }
                 else
                 {

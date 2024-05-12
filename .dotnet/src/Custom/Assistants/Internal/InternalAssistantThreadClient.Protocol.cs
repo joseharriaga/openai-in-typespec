@@ -17,8 +17,6 @@ internal partial class InternalAssistantThreadClient
     /// <returns> The response returned from the service. </returns>
     public virtual async Task<ClientResult> CreateThreadAsync(BinaryContent content, RequestOptions options = null)
     {
-        Argument.AssertNotNull(content, nameof(content));
-
         using PipelineMessage message = CreateCreateThreadRequest(content, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
@@ -33,8 +31,6 @@ internal partial class InternalAssistantThreadClient
     /// <returns> The response returned from the service. </returns>
     public virtual ClientResult CreateThread(BinaryContent content, RequestOptions options = null)
     {
-        Argument.AssertNotNull(content, nameof(content));
-
         using PipelineMessage message = CreateCreateThreadRequest(content, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }

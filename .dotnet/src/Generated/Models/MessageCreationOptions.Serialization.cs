@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             writer.WriteStartArray();
             foreach (var item in Content)
             {
-                writer.WriteObjectValue(item, options);
+                writer.WriteObjectValue<MessageContent>(item, options);
             }
             writer.WriteEndArray();
             if (Optional.IsCollectionDefined(Attachments))

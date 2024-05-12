@@ -8,7 +8,6 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Assistants;
-using OpenAI.Models;
 
 namespace OpenAI.Internal.Models
 {
@@ -35,7 +34,7 @@ namespace OpenAI.Internal.Models
                 if (Model != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteStringValue(Model.Value.ToString());
+                    writer.WriteStringValue(Model);
                 }
                 else
                 {
@@ -76,7 +75,7 @@ namespace OpenAI.Internal.Models
                 if (ToolResources != null)
                 {
                     writer.WritePropertyName("tool_resources"u8);
-                    writer.WriteObjectValue(ToolResources, options);
+                    writer.WriteObjectValue<ToolResourceDefinitions>(ToolResources, options);
                 }
                 else
                 {
@@ -251,17 +250,17 @@ namespace OpenAI.Internal.Models
             }
             string assistantId = default;
             ThreadCreationOptions thread = default;
-            CreateThreadAndRunRequestModel? model = default;
+            string model = default;
             string instructions = default;
             IList<ToolDefinition> tools = default;
-            CreateThreadAndRunRequestToolResources toolResources = default;
+            ToolResourceDefinitions toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
             bool? stream = default;
             int? maxPromptTokens = default;
             int? maxCompletionTokens = default;
-            TruncationObject truncationStrategy = default;
+            RunTruncationStrategy truncationStrategy = default;
             BinaryData toolChoice = default;
             BinaryData responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -289,7 +288,7 @@ namespace OpenAI.Internal.Models
                         model = null;
                         continue;
                     }
-                    model = new CreateThreadAndRunRequestModel(property.Value.GetString());
+                    model = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("instructions"u8))
@@ -323,7 +322,7 @@ namespace OpenAI.Internal.Models
                         toolResources = null;
                         continue;
                     }
-                    toolResources = CreateThreadAndRunRequestToolResources.DeserializeCreateThreadAndRunRequestToolResources(property.Value, options);
+                    toolResources = ToolResourceDefinitions.DeserializeToolResourceDefinitions(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -397,7 +396,7 @@ namespace OpenAI.Internal.Models
                         truncationStrategy = null;
                         continue;
                     }
-                    truncationStrategy = TruncationObject.DeserializeTruncationObject(property.Value, options);
+                    truncationStrategy = RunTruncationStrategy.DeserializeRunTruncationStrategy(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("tool_choice"u8))

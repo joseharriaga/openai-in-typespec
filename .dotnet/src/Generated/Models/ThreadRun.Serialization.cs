@@ -7,12 +7,11 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Assistants;
-using OpenAI.Models;
+using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class ThreadRun : IJsonModel<ThreadRun>
+    public partial class ThreadRun : IJsonModel<ThreadRun>
     {
         void IJsonModel<ThreadRun>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -26,7 +25,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<object>(Object, options);
+            writer.WriteObjectValue<object>(_object, options);
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("thread_id"u8);
@@ -35,10 +34,10 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(AssistantId);
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
-            if (RequiredAction != null)
+            if (_internalRequiredAction != null)
             {
                 writer.WritePropertyName("required_action"u8);
-                writer.WriteObjectValue(RequiredAction, options);
+                writer.WriteObjectValue<InternalRunRequiredAction>(_internalRequiredAction, options);
             }
             else
             {
@@ -269,14 +268,14 @@ namespace OpenAI.Internal.Models
             string threadId = default;
             string assistantId = default;
             RunStatus status = default;
-            RunObjectRequiredAction requiredAction = default;
-            RunObjectLastError lastError = default;
+            InternalRunRequiredAction requiredAction = default;
+            RunError lastError = default;
             DateTimeOffset? expiresAt = default;
             DateTimeOffset? startedAt = default;
             DateTimeOffset? cancelledAt = default;
             DateTimeOffset? failedAt = default;
             DateTimeOffset? completedAt = default;
-            RunObjectIncompleteDetails incompleteDetails = default;
+            RunIncompleteDetails incompleteDetails = default;
             string model = default;
             string instructions = default;
             IReadOnlyList<ToolDefinition> tools = default;
@@ -286,7 +285,7 @@ namespace OpenAI.Internal.Models
             float? topP = default;
             int? maxPromptTokens = default;
             int? maxCompletionTokens = default;
-            TruncationObject truncationStrategy = default;
+            RunTruncationStrategy truncationStrategy = default;
             BinaryData toolChoice = default;
             BinaryData responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -330,7 +329,7 @@ namespace OpenAI.Internal.Models
                         requiredAction = null;
                         continue;
                     }
-                    requiredAction = RunObjectRequiredAction.DeserializeRunObjectRequiredAction(property.Value, options);
+                    requiredAction = InternalRunRequiredAction.DeserializeInternalRunRequiredAction(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("last_error"u8))
@@ -340,7 +339,7 @@ namespace OpenAI.Internal.Models
                         lastError = null;
                         continue;
                     }
-                    lastError = RunObjectLastError.DeserializeRunObjectLastError(property.Value, options);
+                    lastError = RunError.DeserializeRunError(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("expires_at"u8))
@@ -410,7 +409,7 @@ namespace OpenAI.Internal.Models
                         incompleteDetails = null;
                         continue;
                     }
-                    incompleteDetails = RunObjectIncompleteDetails.DeserializeRunObjectIncompleteDetails(property.Value, options);
+                    incompleteDetails = RunIncompleteDetails.DeserializeRunIncompleteDetails(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("model"u8))
@@ -505,7 +504,7 @@ namespace OpenAI.Internal.Models
                         truncationStrategy = null;
                         continue;
                     }
-                    truncationStrategy = TruncationObject.DeserializeTruncationObject(property.Value, options);
+                    truncationStrategy = RunTruncationStrategy.DeserializeRunTruncationStrategy(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("tool_choice"u8))

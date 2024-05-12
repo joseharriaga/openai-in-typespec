@@ -11,14 +11,20 @@ public partial class CodeInterpreterToolResourceDefinitions { }
 [CodeGenModel("CreateAssistantRequestToolResourcesFileSearch")]
 public partial class FileSearchToolResourceDefinitions { }
 
-[CodeGenModel("AssistantObjectToolResourcesCodeInterpreter")]
-public partial class AssistantCodeInterpreterToolResources { }
-
 [CodeGenModel("AssistantObjectToolResources")]
-public partial class AssistantToolResources { }
+public partial class ToolResources { }
+
+[CodeGenModel("AssistantObjectToolResourcesCodeInterpreter")]
+public partial class CodeInterpreterToolResources { }
+
+[CodeGenModel("AssistantToolsCode")]
+public partial class CodeInterpreterToolDefinition : ToolDefinition { }
 
 [CodeGenModel("AssistantObjectToolResourcesFileSearch")]
-public partial class AssistantFileSearchToolResources { }
+public partial class FileSearchToolResources { }
+
+[CodeGenModel("AssistantToolsFileSearch")]
+public partial class FileSearchToolDefinition : ToolDefinition { }
 
 [CodeGenModel("ThreadMessageStatus")]
 public readonly partial struct MessageStatus { }
@@ -26,14 +32,14 @@ public readonly partial struct MessageStatus { }
 [CodeGenModel("MessageObjectIncompleteDetails")]
 public partial class MessageFailureDetails { }
 
+[CodeGenModel("CreateMessageRequestAttachment")]
+public partial class MessageCreationAttachment { }
+
 [CodeGenModel("MessageFailureDetailsReason")]
 public readonly partial struct MessageFailureReason { }
 
 [CodeGenModel("RunCompletionUsage")]
 public partial class RunTokenUsage { }
-
-[CodeGenModel("ThreadRunStatus")]
-public readonly partial struct RunStatus { }
 
 [CodeGenModel("MessageTextContentAnnotation")]
 public partial class MessageTextContentAnnotation { }
@@ -41,49 +47,11 @@ public partial class MessageTextContentAnnotation { }
 [CodeGenModel("MessageDeltaTextContentAnnotation")]
 public partial class MessageDeltaTextContentAnnotation { }
 
-[CodeGenModel("MessageContentTextAnnotationsFileCitationObject")]
-public partial class FileCitationTextContentAnnotation
-{
-    [CodeGenMember("FileCitation")]
-    internal InternalMessageContentTextAnnotationsFileCitationObjectFileCitation InternalFileCitation { get; set; }
-
-    internal FileCitationTextContentAnnotation(string text, InternalMessageContentTextAnnotationsFileCitationObjectFileCitation internalFileCitation, int startIndex, int endIndex)
-    {
-        Argument.AssertNotNull(text, nameof(text));
-        Argument.AssertNotNull(internalFileCitation, nameof(internalFileCitation));
-
-        Type = "file_citation";
-        Text = text;
-        InternalFileCitation = internalFileCitation;
-        StartIndex = startIndex;
-        EndIndex = endIndex;
-    }
-}
-
 [CodeGenModel("MessageDeltaContentTextAnnotationsFileCitationObject")]
 public partial class FileCitationTextDeltaContentAnnotation
 {
     [CodeGenMember("FileCitation")]
     internal InternalMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation InternalFileCitation { get; set; }
-}
-
-[CodeGenModel("MessageContentTextAnnotationsFilePathObject")]
-public partial class FilePathTextContentAnnotation
-{
-    [CodeGenMember("FilePath")]
-    internal InternalMessageContentTextAnnotationsFilePathObjectFilePath InternalFilePath { get; set; }
-
-    internal FilePathTextContentAnnotation(string text, InternalMessageContentTextAnnotationsFilePathObjectFilePath internalFilePath, int startIndex, int endIndex)
-    {
-        Argument.AssertNotNull(text, nameof(text));
-        Argument.AssertNotNull(internalFilePath, nameof(internalFilePath));
-
-        Type = "file_path";
-        Text = text;
-        InternalFilePath = internalFilePath;
-        StartIndex = startIndex;
-        EndIndex = endIndex;
-    }
 }
 
 [CodeGenModel("MessageDeltaContentTextAnnotationsFilePathObject")]
@@ -93,4 +61,20 @@ public partial class FilePathTextDeltaContentAnnotation
     internal InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath InternalFilePath { get; set; }
 }
 
+[CodeGenModel("RunObjectLastError")]
+public partial class RunError { }
 
+[CodeGenModel("RunObjectLastErrorCode")]
+public readonly partial struct RunErrorCode { }
+
+[CodeGenModel("RunObjectIncompleteDetails")]
+public partial class RunIncompleteDetails { }
+
+[CodeGenModel("TruncationObject")]
+public partial class RunTruncationStrategy { }
+
+[CodeGenModel("TruncationObjectType")]
+public readonly partial struct RunTruncationStrategyType { }
+
+[CodeGenModel("RunIncompleteDetailsReason")]
+public readonly partial struct RunIncompleteReason { }

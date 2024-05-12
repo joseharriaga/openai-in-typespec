@@ -1,5 +1,9 @@
 ﻿namespace OpenAI.Assistants;
 
+/// <summary>
+/// The available detail settings to use when processing an image.
+/// These settings balance token consumption and the resolution of evaluation performed.
+/// </summary>
 public enum MessageImageDetail
 {
     /// <summary> Default. Allows the model to automatically select detail. </summary>

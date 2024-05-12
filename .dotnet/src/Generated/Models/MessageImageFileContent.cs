@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Internal.Models;
 using OpenAI.Models;
 
 namespace OpenAI.Assistants

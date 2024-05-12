@@ -1,34 +1,27 @@
-﻿namespace OpenAI.Internal.Models;
+﻿using System.Collections.Generic;
+using OpenAI.Assistants;
 
-[CodeGenModel("ListAssistantsResponse")]
-internal partial class InternalListAssistantsResponse { private readonly object Object; }
+namespace OpenAI.Internal.Models;
 
 [CodeGenModel("DeleteAssistantResponse")]
 internal partial class InternalDeleteAssistantResponse { private readonly object Object; }
 
-[CodeGenModel("ListMessagesResponse")]
-internal partial class InternalListMessagesResponse { private readonly object Object; }
+[CodeGenModel("DeleteThreadResponse")]
+internal partial class InternalDeleteThreadResponse { private readonly object Object; }
 
 [CodeGenModel("DeleteMessageResponse")]
 internal partial class InternalDeleteMessageResponse { private readonly object Object; }
 
 [CodeGenModel("CreateThreadAndRunRequest")]
-internal partial class InternalCreateThreadAndRunRequest { }
-
-[CodeGenModel("ListRunsResponse")]
-internal partial class InternalListRunsResponse { private readonly object Object; }
-
-[CodeGenModel("ListThreadsResponse")]
-internal partial class InternalListThreadsResponse { private readonly object Object; }
+internal partial class InternalCreateThreadAndRunRequest
+{
+    public string Model { get; set; }
+    public ToolResourceDefinitions ToolResources { get; set; }
+}
 
 [CodeGenModel("SubmitToolOutputsRunRequest")]
 internal partial class InternalSubmitToolOutputsRunRequest { }
 
-[CodeGenModel("ListRunStepsResponse")]
-internal partial class InternalListRunStepsResponse { private readonly object Object; }
-
-[CodeGenModel("DeleteThreadResponse")]
-internal partial class InternalDeleteThreadResponse { private readonly object Object; }
 
 [CodeGenModel("CreateAssistantRequestModel")]
 internal readonly partial struct InternalCreateAssistantRequestModel { }
@@ -41,6 +34,34 @@ internal partial class InternalThreadObjectToolResourcesCodeInterpreter { }
 
 [CodeGenModel("ThreadObjectToolResourcesFileSearch")]
 internal partial class InternalThreadObjectToolResourcesFileSearch { }
+
+[CodeGenModel("MessageContentImageUrlObjectImageUrl")]
+internal partial class InternalMessageContentImageUrlObjectImageUrl
+{
+    [CodeGenMember("Detail")]
+    internal string InternalDetail { get; }
+}
+
+[CodeGenModel("MessageContentImageFileObjectImageFile")]
+internal partial class InternalMessageContentItemFileObjectImageFile
+{
+    [CodeGenMember("Detail")]
+    internal string InternalDetail { get; set; }
+}
+
+[CodeGenModel("MessageDeltaContentImageFileObjectImageFile")]
+internal partial class InternalMessageDeltaContentImageFileObjectImageFile
+{
+    [CodeGenMember("Detail")]
+    internal string InternalDetail { get; set; }
+}
+
+[CodeGenModel("MessageDeltaContentImageUrlObjectImageUrl")]
+internal partial class InternalMessageDeltaContentImageUrlObjectImageUrl
+{
+    [CodeGenMember("Detail")]
+    internal string InternalDetail { get; }
+}
 
 [CodeGenModel("MessageDeltaContentTextObjectText")]
 internal partial class InternalMessageDeltaContentTextObjectText { }
@@ -71,3 +92,35 @@ internal partial class InternalMessageContentTextAnnotationsFilePathObjectFilePa
 
 [CodeGenModel("MessageDeltaContentTextAnnotationsFilePathObjectFilePath")]
 internal partial class InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath { }
+
+[CodeGenModel("RunObjectRequiredAction")]
+internal partial class InternalRunRequiredAction { private readonly object Object; }
+
+[CodeGenModel("RunObjectRequiredActionSubmitToolOutputs")]
+internal partial class InternalRunObjectRequiredActionSubmitToolOutputs { private readonly object Type; }
+
+[CodeGenModel("RunToolCallObjectFunction")]
+internal partial class InternalRunToolCallObjectFunction { }
+
+internal interface IInternalListResponse<T>
+{
+    IReadOnlyList<T> Data { get; }
+    string FirstId { get; }
+    string LastId { get; }
+    bool HasMore { get; }
+}
+
+[CodeGenModel("ListAssistantsResponse")]
+internal partial class InternalListAssistantsResponse : IInternalListResponse<Assistant> { private readonly object Object; }
+
+[CodeGenModel("ListThreadsResponse")]
+internal partial class InternalListThreadsResponse : IInternalListResponse<AssistantThread> { private readonly object Object; }
+
+[CodeGenModel("ListMessagesResponse")]
+internal partial class InternalListMessagesResponse : IInternalListResponse<ThreadMessage> { private readonly object Object; }
+
+[CodeGenModel("ListRunsResponse")]
+internal partial class InternalListRunsResponse : IInternalListResponse<ThreadRun> { private readonly object Object; }
+
+[CodeGenModel("ListRunStepsResponse")]
+internal partial class InternalListRunStepsResponse : IInternalListResponse<RunStep> { private readonly object Object; }

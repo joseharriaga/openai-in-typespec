@@ -179,7 +179,7 @@ namespace OpenAI.Assistants
             string model = default;
             string instructions = default;
             IReadOnlyList<ToolDefinition> tools = default;
-            AssistantToolResources toolResources = default;
+            ToolResources toolResources = default;
             IReadOnlyDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
@@ -255,7 +255,7 @@ namespace OpenAI.Assistants
                         toolResources = null;
                         continue;
                     }
-                    toolResources = AssistantToolResources.DeserializeAssistantToolResources(property.Value, options);
+                    toolResources = ToolResources.DeserializeToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))

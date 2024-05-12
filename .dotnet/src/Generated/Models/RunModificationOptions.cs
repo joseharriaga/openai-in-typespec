@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI.Internal.Models
 {
     /// <summary> The ModifyRunRequest. </summary>
-    internal partial class RunModificationOptions
+    public partial class RunModificationOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.

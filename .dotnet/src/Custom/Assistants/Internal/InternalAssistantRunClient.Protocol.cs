@@ -278,13 +278,13 @@ internal partial class InternalAssistantRunClient
     /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> SubmitToolOuputsToRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null)
+    public virtual async Task<ClientResult> SubmitToolOutputsToRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
         Argument.AssertNotNull(content, nameof(content));
 
-        using PipelineMessage message = CreateSubmitToolOuputsToRunRequest(threadId, runId, content, options);
+        using PipelineMessage message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
@@ -301,13 +301,13 @@ internal partial class InternalAssistantRunClient
     /// <exception cref="ArgumentException"> <paramref name="threadId"/> or <paramref name="runId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult SubmitToolOuputsToRun(string threadId, string runId, BinaryContent content, RequestOptions options = null)
+    public virtual ClientResult SubmitToolOutputsToRun(string threadId, string runId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
         Argument.AssertNotNull(content, nameof(content));
 
-        using PipelineMessage message = CreateSubmitToolOuputsToRunRequest(threadId, runId, content, options);
+        using PipelineMessage message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 

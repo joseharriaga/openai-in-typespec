@@ -19,8 +19,8 @@ namespace OpenAI.Assistants;
 [CodeGenSuppress("ModifyRun", typeof(string), typeof(string), typeof(RunModificationOptions))]
 [CodeGenSuppress("CancelRunAsync", typeof(string), typeof(string))]
 [CodeGenSuppress("CancelRun", typeof(string), typeof(string))]
-[CodeGenSuppress("SubmitToolOuputsToRunAsync", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest))]
-[CodeGenSuppress("SubmitToolOuputsToRun", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest))]
+[CodeGenSuppress("SubmitToolOutputsToRunAsync", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest))]
+[CodeGenSuppress("SubmitToolOutputsToRun", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest))]
 [CodeGenSuppress("GetRunStepsAsync", typeof(string), typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
 [CodeGenSuppress("GetRunSteps", typeof(string), typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
 [CodeGenSuppress("GetRunStepAsync", typeof(string), typeof(string), typeof(string))]
@@ -60,6 +60,7 @@ internal partial class InternalAssistantRunClient
     /// <summary> Initializes a new instance of <see cref="InternalAssistantRunClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>
+    /// <param name="options"> Client-wide options to propagate settings from. </param>
     protected internal InternalAssistantRunClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)
     {
         _pipeline = pipeline;

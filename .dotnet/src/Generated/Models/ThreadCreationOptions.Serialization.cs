@@ -21,13 +21,13 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (Optional.IsCollectionDefined(Messages))
+            if (Optional.IsCollectionDefined(InternalMessages))
             {
                 writer.WritePropertyName("messages"u8);
                 writer.WriteStartArray();
-                foreach (var item in Messages)
+                foreach (var item in InternalMessages)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<MessageCreationOptions>(item, options);
                 }
                 writer.WriteEndArray();
             }

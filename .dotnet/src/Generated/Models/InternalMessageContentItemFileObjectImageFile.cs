@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> The MessageContentImageFileObjectImageFile. </summary>
     internal partial class InternalMessageContentItemFileObjectImageFile

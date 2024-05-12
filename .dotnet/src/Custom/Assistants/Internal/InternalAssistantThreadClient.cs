@@ -50,6 +50,7 @@ internal partial class InternalAssistantThreadClient
     /// <summary> Initializes a new instance of <see cref="InternalAssistantThreadClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>
+    /// <param name="options"> Client-wide options to propagate settings from. </param>
     protected internal InternalAssistantThreadClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)
     {
         _pipeline = pipeline;

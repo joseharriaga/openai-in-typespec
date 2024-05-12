@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.Internal.Models
 {
-    internal partial class RunModificationOptions : IJsonModel<RunModificationOptions>
+    public partial class RunModificationOptions : IJsonModel<RunModificationOptions>
     {
         void IJsonModel<RunModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {

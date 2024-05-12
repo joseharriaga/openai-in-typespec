@@ -4,13 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Assistants;
 using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The CreateRunRequest. </summary>
-    internal partial class RunCreationOptions
+    public partial class RunCreationOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -46,21 +45,8 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="RunCreationOptions"/>. </summary>
         /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
-        public RunCreationOptions(string assistantId)
-        {
-            Argument.AssertNotNull(assistantId, nameof(assistantId));
-
-            AssistantId = assistantId;
-            AdditionalMessages = new ChangeTrackingList<MessageCreationOptions>();
-            Tools = new ChangeTrackingList<ToolDefinition>();
-            Metadata = new ChangeTrackingDictionary<string, string>();
-        }
-
-        /// <summary> Initializes a new instance of <see cref="RunCreationOptions"/>. </summary>
-        /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
-        /// <param name="model"> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </param>
-        /// <param name="instructions"> Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
+        /// <param name="modelOverride"> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </param>
+        /// <param name="instructionsOverride"> Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. </param>
         /// <param name="additionalInstructions"> Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions. </param>
         /// <param name="additionalMessages"> Adds additional messages to the thread before creating the run. </param>
         /// <param name="tools">
@@ -82,11 +68,11 @@ namespace OpenAI.Internal.Models
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunCreationOptions(string assistantId, CreateRunRequestModel? model, string instructions, string additionalInstructions, IList<MessageCreationOptions> additionalMessages, IList<ToolDefinition> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunCreationOptions(string assistantId, string modelOverride, string instructionsOverride, string additionalInstructions, IList<MessageCreationOptions> additionalMessages, IList<ToolDefinition> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
-            Model = model;
-            Instructions = instructions;
+            ModelOverride = modelOverride;
+            InstructionsOverride = instructionsOverride;
             AdditionalInstructions = additionalInstructions;
             AdditionalMessages = additionalMessages;
             Tools = tools;
@@ -101,18 +87,6 @@ namespace OpenAI.Internal.Models
             ResponseFormat = responseFormat;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> Initializes a new instance of <see cref="RunCreationOptions"/> for deserialization. </summary>
-        internal RunCreationOptions()
-        {
-        }
-
-        /// <summary> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </summary>
-        public string AssistantId { get; }
-        /// <summary> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </summary>
-        public CreateRunRequestModel? Model { get; set; }
-        /// <summary> Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis. </summary>
-        public string Instructions { get; set; }
         /// <summary> Adds additional messages to the thread before creating the run. </summary>
         public IList<MessageCreationOptions> AdditionalMessages { get; set; }
         /// <summary>
@@ -138,7 +112,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
         public int? MaxCompletionTokens { get; set; }
         /// <summary> Gets or sets the truncation strategy. </summary>
-        public TruncationObject TruncationStrategy { get; set; }
+        public RunTruncationStrategy TruncationStrategy { get; set; }
         /// <summary>
         /// Gets or sets the tool choice
         /// <para>

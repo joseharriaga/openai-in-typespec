@@ -81,7 +81,7 @@ namespace OpenAI.Internal.Models
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, CreateThreadAndRunRequestModel? model, string instructions, IList<ToolDefinition> tools, CreateThreadAndRunRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, TruncationObject truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, string model, string instructions, IList<ToolDefinition> tools, ToolResourceDefinitions toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, BinaryData responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Thread = thread;
@@ -110,8 +110,6 @@ namespace OpenAI.Internal.Models
         public string AssistantId { get; }
         /// <summary> If no thread is provided, an empty thread will be created. </summary>
         public ThreadCreationOptions Thread { get; set; }
-        /// <summary> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </summary>
-        public CreateThreadAndRunRequestModel? Model { get; set; }
         /// <summary> Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. </summary>
         public string Instructions { get; set; }
         /// <summary>
@@ -120,8 +118,6 @@ namespace OpenAI.Internal.Models
         /// The available derived classes include <see cref="CodeInterpreterToolDefinition"/>, <see cref="FileSearchToolDefinition"/> and <see cref="FunctionToolDefinition"/>.
         /// </summary>
         public IList<ToolDefinition> Tools { get; set; }
-        /// <summary> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </summary>
-        public CreateThreadAndRunRequestToolResources ToolResources { get; set; }
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IDictionary<string, string> Metadata { get; set; }
         /// <summary> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </summary>
@@ -139,7 +135,7 @@ namespace OpenAI.Internal.Models
         /// <summary> The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
         public int? MaxCompletionTokens { get; set; }
         /// <summary> Gets or sets the truncation strategy. </summary>
-        public TruncationObject TruncationStrategy { get; set; }
+        public RunTruncationStrategy TruncationStrategy { get; set; }
         /// <summary>
         /// Gets or sets the tool choice
         /// <para>

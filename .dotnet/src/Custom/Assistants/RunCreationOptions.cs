@@ -1,23 +1,30 @@
-namespace OpenAI.Internal.Models;
+using System.Collections.Generic;
+
+namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when creating a new <see cref="ThreadRun"/>.
 /// </summary>
 [CodeGenModel("CreateRunRequest")]
-internal partial class RunCreationOptions
+[CodeGenSuppress("RunCreationOptions", typeof(string))]
+public partial class RunCreationOptions
 {
+    // CUSTOM: assistantId visibility is hidden so that it can be promoted to a required method parameter
+    [CodeGenMember("AssistantId")]
+    internal string AssistantId { get; set; }
+
     /// <summary>
     /// A run-specific model name that will override the assistant's defined model. If not provided, the assistant's
     /// selection will be used.
     /// </summary>
-    [CodeGenMember("model")]
+    [CodeGenMember("Model")]
     public string ModelOverride { get; init; }
 
     /// <summary>
     /// A run specific replacement for the assistant's default instructions that will override the assistant-level
     /// instructions. If not specified, the assistant's instructions will be used.
     /// </summary>
-    [CodeGenMember("instructions")]
+    [CodeGenMember("Instructions")]
     public string InstructionsOverride { get; init; }
 
     /// <summary>
@@ -25,7 +32,7 @@ internal partial class RunCreationOptions
     /// run. Unlike <see cref="InstructionsOverride"/>, the assistant's instructions are preserved and these additional
     /// instructions are concatenated.
     /// </summary>
-    [CodeGenMember("additional_instructions")]
+    [CodeGenMember("AdditionalInstructions")]
     public string AdditionalInstructions { get; init; }
 
     /// <summary>
@@ -38,8 +45,8 @@ internal partial class RunCreationOptions
     ///     - works with data, math, and computer code
     /// </item>
     /// <item>
-    ///     <c>retrieval</c> - <see cref="RetrievalToolDefinition"/> 
-    ///     - dynamically enriches an Run's context with content from uploaded, indexed files
+    ///     <c>file_search</c> - <see cref="FileSearchToolDefinition"/> 
+    ///     - dynamically enriches an Run's context with content from vector stores
     /// </item>
     /// <item>
     ///     <c>function</c> - <see cref="FunctionToolDefinition"/>
@@ -48,5 +55,12 @@ internal partial class RunCreationOptions
     /// </list>
     /// </para>
     /// </summary>
-    // public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
+    public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
+
+    public RunCreationOptions()
+    {
+        AdditionalMessages = new ChangeTrackingList<MessageCreationOptions>();
+        Tools = new ChangeTrackingList<ToolDefinition>();
+        Metadata = new ChangeTrackingDictionary<string, string>();
+    }
 }

@@ -7,7 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -79,7 +79,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            IList<SubmitToolOutputsRunRequestToolOutput> toolOutputs = default;
+            IList<ToolOutput> toolOutputs = default;
             bool? stream = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -87,10 +87,10 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("tool_outputs"u8))
                 {
-                    List<SubmitToolOutputsRunRequestToolOutput> array = new List<SubmitToolOutputsRunRequestToolOutput>();
+                    List<ToolOutput> array = new List<ToolOutput>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(SubmitToolOutputsRunRequestToolOutput.DeserializeSubmitToolOutputsRunRequestToolOutput(item, options));
+                        array.Add(ToolOutput.DeserializeToolOutput(item, options));
                     }
                     toolOutputs = array;
                     continue;

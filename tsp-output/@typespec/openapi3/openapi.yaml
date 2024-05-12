@@ -1440,7 +1440,7 @@ paths:
     post:
       tags:
         - Assistants
-      operationId: submitToolOuputsToRun
+      operationId: submitToolOutputsToRun
       summary: |-
         When a run has the `status: "requires_action"` and `required_action.type` is
         `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once

@@ -4,6 +4,6 @@ namespace OpenAI.Internal.Models;
 /// Represents additional options available when modifying an existing <see cref="ThreadRun"/>.
 /// </summary>
 [CodeGenModel("ModifyRunRequest")]
-internal partial class RunModificationOptions
+public partial class RunModificationOptions
 {
 }

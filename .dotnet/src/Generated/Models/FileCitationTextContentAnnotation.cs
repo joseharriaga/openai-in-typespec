@@ -21,7 +21,7 @@ namespace OpenAI.Assistants
         internal FileCitationTextContentAnnotation(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string text, InternalMessageContentTextAnnotationsFileCitationObjectFileCitation internalFileCitation, int startIndex, int endIndex) : base(type, serializedAdditionalRawData)
         {
             Text = text;
-            InternalFileCitation = internalFileCitation;
+            _internalFileCitation = internalFileCitation;
             StartIndex = startIndex;
             EndIndex = endIndex;
         }

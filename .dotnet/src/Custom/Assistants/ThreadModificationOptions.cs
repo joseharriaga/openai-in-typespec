@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OpenAI.Assistants;
 
 /// <summary>
@@ -8,6 +6,9 @@ namespace OpenAI.Assistants;
 [CodeGenModel("ModifyThreadRequest")]
 public partial class ThreadModificationOptions
 {
+    // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
+    //          response models (which do not contain resource initialization helpers).
+
     [CodeGenMember("ToolResources")]
-    public ToolResourceDefinitions ToolResources { get; set; }
+    public ToolResources ToolResources { get; set; }
 }

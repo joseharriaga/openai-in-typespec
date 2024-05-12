@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI
+namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionStreamOptions : IJsonModel<InternalChatCompletionStreamOptions>
     {

@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Chat;
 
 namespace OpenAI.Internal.Models
 {
@@ -73,7 +74,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            IReadOnlyList<ChatCompletionTokenLogprob> content = default;
+            IReadOnlyList<ChatTokenLogProbabilityInfo> content = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -82,13 +83,13 @@ namespace OpenAI.Internal.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        content = new ChangeTrackingList<ChatCompletionTokenLogprob>();
+                        content = new ChangeTrackingList<ChatTokenLogProbabilityInfo>();
                         continue;
                     }
-                    List<ChatCompletionTokenLogprob> array = new List<ChatCompletionTokenLogprob>();
+                    List<ChatTokenLogProbabilityInfo> array = new List<ChatTokenLogProbabilityInfo>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(ChatCompletionTokenLogprob.DeserializeChatCompletionTokenLogprob(item, options));
+                        array.Add(ChatTokenLogProbabilityInfo.DeserializeChatTokenLogProbabilityInfo(item, options));
                     }
                     content = array;
                     continue;

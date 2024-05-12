@@ -26,7 +26,7 @@ namespace OpenAI;
 [CodeGenSuppress("GetAssistantClientClient")]
 [CodeGenSuppress("GetAudioClientClient")]
 [CodeGenSuppress("GetBatchClientClient")]
-[CodeGenSuppress("GetChatClient")]
+[CodeGenSuppress("GetChatClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
 [CodeGenSuppress("GetFileClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
@@ -138,7 +138,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ChatClient"/>. </returns>
-    public virtual ChatClient GetChatClient(string model) => new(Pipeline, model, _endpoint, _options);
+    public virtual ChatClient GetChatClient(string model) => new(_pipeline, model, _endpoint, _options);
 
     /// <summary>
     /// Gets a new instance of <see cref="EmbeddingClient"/> that reuses the client configuration details provided to

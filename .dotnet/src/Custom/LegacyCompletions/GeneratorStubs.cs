@@ -22,6 +22,3 @@ internal partial class CreateCompletionResponseChoiceLogprobs {  }
 
 [CodeGenModel("CreateCompletionResponseObject")]
 internal readonly partial struct CreateCompletionResponseObject { }
-
-[CodeGenModel("CompletionUsage")]
-internal partial class CompletionUsage { }

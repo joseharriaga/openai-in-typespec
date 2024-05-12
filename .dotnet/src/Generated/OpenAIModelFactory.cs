@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenAI.Assistants;
 using OpenAI.Audio;
+using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
@@ -87,203 +88,60 @@ namespace OpenAI
             return new AssistantFileSearchToolResources(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestSystemMessage"/>. </summary>
-        /// <param name="content"> The contents of the system message. </param>
-        /// <param name="role"> The role of the messages author, in this case `system`. </param>
-        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionRequestSystemMessage"/> instance for mocking. </returns>
-        public static ChatCompletionRequestSystemMessage ChatCompletionRequestSystemMessage(string content = null, ChatCompletionRequestSystemMessageRole role = default, string name = null)
-        {
-            return new ChatCompletionRequestSystemMessage(content, role, name, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestUserMessage"/>. </summary>
-        /// <param name="content"> The contents of the user message. </param>
-        /// <param name="role"> The role of the messages author, in this case `user`. </param>
-        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionRequestUserMessage"/> instance for mocking. </returns>
-        public static ChatCompletionRequestUserMessage ChatCompletionRequestUserMessage(BinaryData content = null, ChatCompletionRequestUserMessageRole role = default, string name = null)
-        {
-            return new ChatCompletionRequestUserMessage(content, role, name, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestMessageContentPartText"/>. </summary>
-        /// <param name="type"> The type of the content part. </param>
-        /// <param name="text"> The text content. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionRequestMessageContentPartText"/> instance for mocking. </returns>
-        public static ChatCompletionRequestMessageContentPartText ChatCompletionRequestMessageContentPartText(ChatCompletionRequestMessageContentPartTextType type = default, string text = null)
-        {
-            return new ChatCompletionRequestMessageContentPartText(type, text, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestMessageContentPartImage"/>. </summary>
-        /// <param name="type"> The type of the content part. </param>
-        /// <param name="imageUrl"></param>
-        /// <returns> A new <see cref="Models.ChatCompletionRequestMessageContentPartImage"/> instance for mocking. </returns>
-        public static ChatCompletionRequestMessageContentPartImage ChatCompletionRequestMessageContentPartImage(ChatCompletionRequestMessageContentPartImageType type = default, ChatCompletionRequestMessageContentPartImageImageUrl imageUrl = null)
-        {
-            return new ChatCompletionRequestMessageContentPartImage(type, imageUrl, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestMessageContentPartImageImageUrl"/>. </summary>
-        /// <param name="url"> Either a URL of the image or the base64 encoded image data. </param>
-        /// <param name="detail"> Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding). </param>
-        /// <returns> A new <see cref="Models.ChatCompletionRequestMessageContentPartImageImageUrl"/> instance for mocking. </returns>
-        public static ChatCompletionRequestMessageContentPartImageImageUrl ChatCompletionRequestMessageContentPartImageImageUrl(Uri url = null, ChatCompletionRequestMessageContentPartImageImageUrlDetail? detail = null)
-        {
-            return new ChatCompletionRequestMessageContentPartImageImageUrl(url, detail, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestAssistantMessage"/>. </summary>
-        /// <param name="content"> The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified. </param>
-        /// <param name="role"> The role of the messages author, in this case `assistant`. </param>
-        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
-        /// <param name="toolCalls"></param>
-        /// <param name="functionCall"> Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionRequestAssistantMessage"/> instance for mocking. </returns>
-        public static ChatCompletionRequestAssistantMessage ChatCompletionRequestAssistantMessage(string content = null, ChatCompletionRequestAssistantMessageRole role = default, string name = null, IEnumerable<ChatCompletionMessageToolCall> toolCalls = null, ChatCompletionRequestAssistantMessageFunctionCall functionCall = null)
-        {
-            toolCalls ??= new List<ChatCompletionMessageToolCall>();
-
-            return new ChatCompletionRequestAssistantMessage(
-                content,
-                role,
-                name,
-                toolCalls?.ToList(),
-                functionCall,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionMessageToolCall"/>. </summary>
-        /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
-        /// <param name="function"> The function that the model called. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionMessageToolCall"/> instance for mocking. </returns>
-        public static ChatCompletionMessageToolCall ChatCompletionMessageToolCall(string id = null, ChatCompletionMessageToolCallType type = default, ChatCompletionMessageToolCallFunction function = null)
-        {
-            return new ChatCompletionMessageToolCall(id, type, function, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestToolMessage"/>. </summary>
-        /// <param name="role"> The role of the messages author, in this case `tool`. </param>
-        /// <param name="content"> The contents of the tool message. </param>
-        /// <param name="toolCallId"> Tool call that this message is responding to. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionRequestToolMessage"/> instance for mocking. </returns>
-        public static ChatCompletionRequestToolMessage ChatCompletionRequestToolMessage(ChatCompletionRequestToolMessageRole role = default, string content = null, string toolCallId = null)
-        {
-            return new ChatCompletionRequestToolMessage(role, content, toolCallId, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestFunctionMessage"/>. </summary>
-        /// <param name="role"> The role of the messages author, in this case `function`. </param>
-        /// <param name="content"> The contents of the function message. </param>
-        /// <param name="name"> The name of the function to call. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionRequestFunctionMessage"/> instance for mocking. </returns>
-        public static ChatCompletionRequestFunctionMessage ChatCompletionRequestFunctionMessage(ChatCompletionRequestFunctionMessageRole role = default, string content = null, string name = null)
-        {
-            return new ChatCompletionRequestFunctionMessage(role, content, name, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionTool"/>. </summary>
-        /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
-        /// <param name="function"></param>
-        /// <returns> A new <see cref="Models.ChatCompletionTool"/> instance for mocking. </returns>
-        public static ChatCompletionTool ChatCompletionTool(ChatCompletionToolType type = default, FunctionDefinition function = null)
-        {
-            return new ChatCompletionTool(type, function, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionNamedToolChoice"/>. </summary>
-        /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
-        /// <param name="function"></param>
-        /// <returns> A new <see cref="Models.ChatCompletionNamedToolChoice"/> instance for mocking. </returns>
-        public static ChatCompletionNamedToolChoice ChatCompletionNamedToolChoice(ChatCompletionNamedToolChoiceType type = default, ChatCompletionNamedToolChoiceFunction function = null)
-        {
-            return new ChatCompletionNamedToolChoice(type, function, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionFunctions"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Chat.ChatFunction"/>. </summary>
         /// <param name="description"> A description of what the function does, used by the model to choose when and how to call the function. </param>
-        /// <param name="name"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
+        /// <param name="functionName"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
         /// <param name="parameters"></param>
-        /// <returns> A new <see cref="Models.ChatCompletionFunctions"/> instance for mocking. </returns>
-        public static ChatCompletionFunctions ChatCompletionFunctions(string description = null, string name = null, FunctionParameters parameters = null)
+        /// <returns> A new <see cref="Chat.ChatFunction"/> instance for mocking. </returns>
+        public static ChatFunction ChatFunction(string description = null, string functionName = null, BinaryData parameters = null)
         {
-            return new ChatCompletionFunctions(description, name, parameters, serializedAdditionalRawData: null);
+            return new ChatFunction(description, functionName, parameters, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionResponseChoice"/>. </summary>
-        /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-        /// `length` if the maximum number of tokens specified in the request was reached,
-        /// `content_filter` if content was omitted due to a flag from our content filters,
-        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-        /// </param>
-        /// <param name="index"> The index of the choice in the list of choices. </param>
-        /// <param name="message"></param>
-        /// <param name="logprobs"> Log probability information for the choice. </param>
-        /// <returns> A new <see cref="Models.CreateChatCompletionResponseChoice"/> instance for mocking. </returns>
-        public static CreateChatCompletionResponseChoice CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason = default, int index = default, ChatCompletionResponseMessage message = null, CreateChatCompletionResponseChoiceLogprobs logprobs = null)
+        /// <summary> Initializes a new instance of <see cref="Chat.ChatLogProbabilityInfo"/>. </summary>
+        /// <param name="contentTokenLogProbabilities"> A list of message content tokens with log probability information. </param>
+        /// <returns> A new <see cref="Chat.ChatLogProbabilityInfo"/> instance for mocking. </returns>
+        public static ChatLogProbabilityInfo ChatLogProbabilityInfo(IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null)
         {
-            return new CreateChatCompletionResponseChoice(finishReason, index, message, logprobs, serializedAdditionalRawData: null);
+            contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
+
+            return new ChatLogProbabilityInfo(contentTokenLogProbabilities?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionResponseMessage"/>. </summary>
-        /// <param name="content"> The contents of the message. </param>
-        /// <param name="toolCalls"></param>
-        /// <param name="role"> The role of the author of this message. </param>
-        /// <param name="functionCall"> Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionResponseMessage"/> instance for mocking. </returns>
-        public static ChatCompletionResponseMessage ChatCompletionResponseMessage(string content = null, IEnumerable<ChatCompletionMessageToolCall> toolCalls = null, ChatCompletionResponseMessageRole role = default, ChatCompletionResponseMessageFunctionCall functionCall = null)
-        {
-            toolCalls ??= new List<ChatCompletionMessageToolCall>();
-
-            return new ChatCompletionResponseMessage(content, toolCalls?.ToList(), role, functionCall, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionResponseMessageFunctionCall"/>. </summary>
-        /// <param name="arguments"> The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. </param>
-        /// <param name="name"> The name of the function to call. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionResponseMessageFunctionCall"/> instance for mocking. </returns>
-        public static ChatCompletionResponseMessageFunctionCall ChatCompletionResponseMessageFunctionCall(string arguments = null, string name = null)
-        {
-            return new ChatCompletionResponseMessageFunctionCall(arguments, name, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionResponseChoiceLogprobs"/>. </summary>
-        /// <param name="content"> A list of message content tokens with log probability information. </param>
-        /// <returns> A new <see cref="Models.CreateChatCompletionResponseChoiceLogprobs"/> instance for mocking. </returns>
-        public static CreateChatCompletionResponseChoiceLogprobs CreateChatCompletionResponseChoiceLogprobs(IEnumerable<ChatCompletionTokenLogprob> content = null)
-        {
-            content ??= new List<ChatCompletionTokenLogprob>();
-
-            return new CreateChatCompletionResponseChoiceLogprobs(content?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionTokenLogprob"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Chat.ChatTokenLogProbabilityInfo"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
-        /// <param name="bytes"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
-        /// <param name="topLogprobs"> List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionTokenLogprob"/> instance for mocking. </returns>
-        public static ChatCompletionTokenLogprob ChatCompletionTokenLogprob(string token = null, float logprob = default, IEnumerable<int> bytes = null, IEnumerable<ChatCompletionTokenLogprobTopLogprob> topLogprobs = null)
+        /// <param name="logProbability"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
+        /// <param name="utf8ByteValues"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
+        /// <param name="topLogProbabilities"> List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned. </param>
+        /// <returns> A new <see cref="Chat.ChatTokenLogProbabilityInfo"/> instance for mocking. </returns>
+        public static ChatTokenLogProbabilityInfo ChatTokenLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null, IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = null)
         {
-            bytes ??= new List<int>();
-            topLogprobs ??= new List<ChatCompletionTokenLogprobTopLogprob>();
+            utf8ByteValues ??= new List<int>();
+            topLogProbabilities ??= new List<ChatTokenTopLogProbabilityInfo>();
 
-            return new ChatCompletionTokenLogprob(token, logprob, bytes?.ToList(), topLogprobs?.ToList(), serializedAdditionalRawData: null);
+            return new ChatTokenLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), topLogProbabilities?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionTokenLogprobTopLogprob"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Chat.ChatTokenTopLogProbabilityInfo"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
-        /// <param name="bytes"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
-        /// <returns> A new <see cref="Models.ChatCompletionTokenLogprobTopLogprob"/> instance for mocking. </returns>
-        public static ChatCompletionTokenLogprobTopLogprob ChatCompletionTokenLogprobTopLogprob(string token = null, float logprob = default, IEnumerable<int> bytes = null)
+        /// <param name="logProbability"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
+        /// <param name="utf8ByteValues"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
+        /// <returns> A new <see cref="Chat.ChatTokenTopLogProbabilityInfo"/> instance for mocking. </returns>
+        public static ChatTokenTopLogProbabilityInfo ChatTokenTopLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null)
         {
-            bytes ??= new List<int>();
+            utf8ByteValues ??= new List<int>();
 
-            return new ChatCompletionTokenLogprobTopLogprob(token, logprob, bytes?.ToList(), serializedAdditionalRawData: null);
+            return new ChatTokenTopLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Chat.ChatTokenUsage"/>. </summary>
+        /// <param name="outputTokens"> Number of tokens in the generated completion. </param>
+        /// <param name="inputTokens"> Number of tokens in the prompt. </param>
+        /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
+        /// <returns> A new <see cref="Chat.ChatTokenUsage"/> instance for mocking. </returns>
+        public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default)
+        {
+            return new ChatTokenUsage(outputTokens, inputTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Embeddings.EmbeddingTokenUsage"/>. </summary>
@@ -968,14 +826,26 @@ namespace OpenAI
             return new BatchRequestOutputError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionFunctionResponseChoice"/>. </summary>
-        /// <param name="finishReason"> The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function. </param>
-        /// <param name="index"> The index of the choice in the list of choices. </param>
-        /// <param name="message"></param>
-        /// <returns> A new <see cref="Models.CreateChatCompletionFunctionResponseChoice"/> instance for mocking. </returns>
-        public static CreateChatCompletionFunctionResponseChoice CreateChatCompletionFunctionResponseChoice(string finishReason = null, int index = default, ChatCompletionResponseMessage message = null)
+        /// <summary> Initializes a new instance of <see cref="Chat.ToolChatMessage"/>. </summary>
+        /// <param name="content"></param>
+        /// <param name="toolCallId"> Tool call that this message is responding to. </param>
+        /// <returns> A new <see cref="Chat.ToolChatMessage"/> instance for mocking. </returns>
+        public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)
         {
-            return new CreateChatCompletionFunctionResponseChoice(finishReason, index, message, serializedAdditionalRawData: null);
+            content ??= new List<ChatMessageContentPart>();
+
+            return new ToolChatMessage("tool", content?.ToList(), serializedAdditionalRawData: null, toolCallId);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Chat.FunctionChatMessage"/>. </summary>
+        /// <param name="content"></param>
+        /// <param name="functionName"> The name of the function to call. </param>
+        /// <returns> A new <see cref="Chat.FunctionChatMessage"/> instance for mocking. </returns>
+        public static FunctionChatMessage FunctionChatMessage(IEnumerable<ChatMessageContentPart> content = null, string functionName = null)
+        {
+            content ??= new List<ChatMessageContentPart>();
+
+            return new FunctionChatMessage("function", content?.ToList(), serializedAdditionalRawData: null, functionName);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionStreamResponseDelta"/>. </summary>
@@ -1072,9 +942,9 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionStreamResponseChoiceLogprobs"/>. </summary>
         /// <param name="content"> A list of message content tokens with log probability information. </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponseChoiceLogprobs"/> instance for mocking. </returns>
-        public static CreateChatCompletionStreamResponseChoiceLogprobs CreateChatCompletionStreamResponseChoiceLogprobs(IEnumerable<ChatCompletionTokenLogprob> content = null)
+        public static CreateChatCompletionStreamResponseChoiceLogprobs CreateChatCompletionStreamResponseChoiceLogprobs(IEnumerable<ChatTokenLogProbabilityInfo> content = null)
         {
-            content ??= new List<ChatCompletionTokenLogprob>();
+            content ??= new List<ChatTokenLogProbabilityInfo>();
 
             return new CreateChatCompletionStreamResponseChoiceLogprobs(content?.ToList(), serializedAdditionalRawData: null);
         }

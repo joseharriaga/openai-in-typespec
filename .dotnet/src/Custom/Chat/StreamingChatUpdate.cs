@@ -47,7 +47,7 @@ public partial class StreamingChatUpdate
     /// choice and the value should be considered to be persist for all subsequent updates without a
     /// <see cref="ChatRole"/> that bear the same <see cref="ChoiceIndex"/>.
     /// </remarks>
-    public ChatRole? Role { get; }
+    public ChatMessageRole? Role { get; }
 
     /// <summary>
     /// Gets the content fragment associated with this update.
@@ -135,7 +135,7 @@ public partial class StreamingChatUpdate
     /// </para>
     /// <para>
     /// Unless a value greater than <c>1</c> was provided as the <c>choiceCount</c> to
-    /// <see cref="ChatClient.CompleteChatStreaming(IEnumerable{ChatRequestMessage}, int?, ChatCompletionOptions)"/>,
+    /// <see cref="ChatClient.CompleteChatStreaming(IEnumerable{ChatMessage}, int?, ChatCompletionOptions)"/>,
     /// only one choice will be generated. In that case, this value will always be 0 and may not need to be considered.
     /// </para>
     /// <para>
@@ -153,11 +153,12 @@ public partial class StreamingChatUpdate
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionStreamResponseUsage"/>
     public ChatTokenUsage TokenUsage { get; }
 
+    // TODO
     /// <summary>
     /// The log probability information for choices in the chat completion response, as requested via
     /// <see cref="ChatCompletionOptions.IncludeLogProbabilities"/>.
     /// </summary>
-    public ChatLogProbabilityCollection LogProbabilities { get; }
+    // public ChatLogProbabilityCollection LogProbabilities { get; }
 
     internal StreamingChatUpdate(
         string id,
@@ -165,13 +166,12 @@ public partial class StreamingChatUpdate
         string systemFingerprint = null,
         ChatTokenUsage usage = null,
         int? choiceIndex = null,
-        ChatRole? role = null,
+        ChatMessageRole? role = null,
         string contentUpdate = null,
         ChatFinishReason? finishReason = null,
         string functionName = null,
         string functionArgumentsUpdate = null,
-        StreamingToolCallUpdate toolCallUpdate = null,
-        ChatLogProbabilityCollection logProbabilities = null)
+        StreamingToolCallUpdate toolCallUpdate = null)
     {
         Id = id;
         Created = created;
@@ -184,7 +184,7 @@ public partial class StreamingChatUpdate
         FunctionName = functionName;
         FunctionArgumentsUpdate = functionArgumentsUpdate;
         ToolCallUpdate = toolCallUpdate;
-        LogProbabilities = logProbabilities;
+        // LogProbabilities = logProbabilities;
     }
 
     internal static List<StreamingChatUpdate> DeserializeStreamingChatUpdates(JsonElement element)
@@ -227,14 +227,14 @@ public partial class StreamingChatUpdate
             {
                 foreach (JsonElement choiceElement in property.Value.EnumerateArray())
                 {
-                    ChatRole? role = null;
+                    ChatMessageRole? role = null;
                     string contentUpdate = null;
                     string functionName = null;
                     string functionArgumentsUpdate = null;
                     int choiceIndex = 0;
                     ChatFinishReason? finishReason = null;
                     List<StreamingToolCallUpdate> toolCallUpdates = [];
-                    ChatLogProbabilityCollection logProbabilities = new([]);
+                    // ChatLogProbabilityCollection logProbabilities = new([]);
 
                     foreach (JsonProperty choiceProperty in choiceElement.EnumerateObject())
                     {
@@ -252,7 +252,7 @@ public partial class StreamingChatUpdate
                             }
                             finishReason = choiceProperty.Value.GetString() switch
                             {
-                                "stop" => ChatFinishReason.Stopped,
+                                "stop" => ChatFinishReason.Stop,
                                 "length" => ChatFinishReason.Length,
                                 "tool_calls" => ChatFinishReason.ToolCalls,
                                 "function_call" => ChatFinishReason.FunctionCall,
@@ -269,11 +269,11 @@ public partial class StreamingChatUpdate
                                 {
                                     role = deltaProperty.Value.GetString() switch
                                     {
-                                        "system" => ChatRole.System,
-                                        "user" => ChatRole.User,
-                                        "assistant" => ChatRole.Assistant,
-                                        "tool" => ChatRole.Tool,
-                                        "function" => ChatRole.Function,
+                                        "system" => ChatMessageRole.System,
+                                        "user" => ChatMessageRole.User,
+                                        "assistant" => ChatMessageRole.Assistant,
+                                        "tool" => ChatMessageRole.Tool,
+                                        "function" => ChatMessageRole.Function,
                                         _ => throw new ArgumentException(nameof(role)),
                                     };
                                     continue;
@@ -308,13 +308,13 @@ public partial class StreamingChatUpdate
                                 }
                             }
                         }
-                        if (choiceProperty.NameEquals("logprobs"u8))
-                        {
-                            Internal.Models.CreateChatCompletionResponseChoiceLogprobs internalLogprobs
-                                = Internal.Models.CreateChatCompletionResponseChoiceLogprobs.DeserializeCreateChatCompletionResponseChoiceLogprobs(
-                                    choiceProperty.Value);
-                            logProbabilities = ChatLogProbabilityCollection.FromInternalData(internalLogprobs);
-                        }
+                        //if (choiceProperty.NameEquals("logprobs"u8))
+                        //{
+                        //    Internal.Models.CreateChatCompletionResponseChoiceLogprobs internalLogprobs
+                        //        = Internal.Models.CreateChatCompletionResponseChoiceLogprobs.DeserializeCreateChatCompletionResponseChoiceLogprobs(
+                        //            choiceProperty.Value);
+                        //    logProbabilities = ChatLogProbabilityCollection.FromInternalData(internalLogprobs);
+                        //}
                     }
                     // In the unlikely event that more than one tool call arrives on a single chunk, we'll generate
                     // separate updates just like for choices. Adding a "null" if empty lets us avoid a separate loop.
@@ -335,8 +335,7 @@ public partial class StreamingChatUpdate
                             finishReason,
                             functionName,
                             functionArgumentsUpdate,
-                            toolCallUpdate,
-                            logProbabilities));
+                            toolCallUpdate));
                     }
                 }
                 continue;

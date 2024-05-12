@@ -10,22 +10,21 @@ public partial class ChatToolConstraintTests
     [Test]
     public void BasicTypeManipulationWorks()
     {
-        Assert.That(ChatToolConstraint.Auto.ToString(), Is.EqualTo("\"auto\""));
-        Assert.That(ChatToolConstraint.None.ToString(), Is.EqualTo("\"none\""));
-        Assert.That(ChatToolConstraint.Auto, Is.Not.EqualTo(ChatToolConstraint.None));
+        Assert.That(ChatToolChoice.Auto.ToString(), Is.EqualTo("\"auto\""));
+        Assert.That(ChatToolChoice.None.ToString(), Is.EqualTo("\"none\""));
+        Assert.That(ChatToolChoice.Auto, Is.Not.EqualTo(ChatToolChoice.None));
 
-        ChatFunctionToolDefinition functionTool = new()
-        {
-            FunctionName = "test_function_tool",
-            Description = "description isn't applicable",
-        };
+        ChatTool functionTool = ChatTool.CreateFunctionTool(
+            "test_function_tool",
+            "description isn't applicable"
+        );
 
-        ChatToolConstraint constraintFromDefinition = new(functionTool);
-        Assert.That(constraintFromDefinition.ToString(), Is.EqualTo(@$"{{""type"":""function"",""function"":{{""name"":""{functionTool.FunctionName}""}}}}"));
+        ChatToolChoice choiceFromTool = new(functionTool);
+        Assert.That(choiceFromTool.ToString(), Is.EqualTo(@$"{{""type"":""function"",""function"":{{""name"":""{functionTool.FunctionName}""}}}}"));
 
-        ChatToolConstraint otherConstraint = new(new ChatFunctionToolDefinition("test_function_tool"));
-        Assert.That(constraintFromDefinition, Is.EqualTo(otherConstraint));
-        Assert.That(otherConstraint, Is.Not.EqualTo(ChatToolConstraint.Auto));
+        ChatToolChoice otherChoice = new(ChatTool.CreateFunctionTool("test_function_tool"));
+        Assert.That(choiceFromTool, Is.EqualTo(otherChoice));
+        Assert.That(otherChoice, Is.Not.EqualTo(ChatToolChoice.Auto));
     }
 
     [Test]
@@ -33,38 +32,37 @@ public partial class ChatToolConstraintTests
     {
         ChatClient client = new("gpt-3.5-turbo");
 
-        foreach (var (constraint, reason) in new (ChatToolConstraint?, ChatFinishReason)[]
+        foreach (var (choice, reason) in new (ChatToolChoice, ChatFinishReason)[]
         {
             (null, ChatFinishReason.ToolCalls),
-            (ChatToolConstraint.None, ChatFinishReason.Stopped),
-            (new ChatToolConstraint(s_numberForWordTool), ChatFinishReason.Stopped),
-            (ChatToolConstraint.Auto, ChatFinishReason.ToolCalls),
+            (ChatToolChoice.None, ChatFinishReason.Stop),
+            (new ChatToolChoice(s_numberForWordTool), ChatFinishReason.Stop),
+            (ChatToolChoice.Auto, ChatFinishReason.ToolCalls),
+            // TODO: Add test for ChatToolChoice.Required
         })
         {
             ChatCompletionOptions options = new()
             {
                 Tools = { s_numberForWordTool },
-                ToolConstraint = constraint,
+                ToolChoice = choice,
             };
-            ClientResult<ChatCompletion> result = client.CompleteChat("What's the number for the word 'banana'?", options);
+            ClientResult<ChatCompletion> result = client.CompleteChat([new UserChatMessage("What's the number for the word 'banana'?")], options);
             Assert.That(result.Value.FinishReason, Is.EqualTo(reason));
         }
     }
 
-    private static ChatFunctionToolDefinition s_numberForWordTool = new()
-    {
-        FunctionName = "get_number_for_word",
-        Description = "gets an arbitrary number assigned to a given word",
-        Parameters = BinaryData.FromObjectAsJson(new
-        {
-            type = "object",
-            properties = new
+    private static ChatTool s_numberForWordTool = ChatTool.CreateFunctionTool(
+        "get_number_for_word",
+        "gets an arbitrary number assigned to a given word",
+        BinaryData.FromString("""
             {
-                word = new
-                {
-                    type = "string"
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string"
+                    }
                 }
             }
-        }),
-    };
+            """)
+        );
 }

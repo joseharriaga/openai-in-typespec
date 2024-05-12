@@ -27,17 +27,15 @@ namespace OpenAI.Samples
 
         private const string GetCurrentWeatherFunctionName = "get_current_weather";
 
-        private static readonly ChatFunctionToolDefinition getCurrentLocationFunction = new()
-        {
-            FunctionName = GetCurrentLocationFunctionName,
-            Description = "Get the user's current location"
-        };
+        private static readonly ChatTool getCurrentLocationFunction = ChatTool.CreateFunctionTool(
+            GetCurrentLocationFunctionName,
+            "Get the user's current location"
+        );
 
-        private static readonly ChatFunctionToolDefinition getCurrentWeatherFunction = new()
-        {
-            FunctionName = GetCurrentWeatherFunctionName,
-            Description = "Get the current weather in a given location",
-            Parameters = BinaryData.FromString("""
+        private static readonly ChatTool getCurrentWeatherFunction = ChatTool.CreateFunctionTool(
+            GetCurrentWeatherFunctionName,
+            "Get the current weather in a given location",
+            BinaryData.FromString("""
                 {
                     "type": "object",
                     "properties": {
@@ -53,22 +51,22 @@ namespace OpenAI.Samples
                     },
                     "required": [ "location" ]
                 }
-                """),
-        };
+                """)
+        );
         #endregion
 
         [Test]
-        [Ignore("Compilation validation only")]
+        // [Ignore("Compilation validation only")]
         public void Sample03_FunctionCalling()
         {
             ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             #region
-            List<ChatRequestMessage> messages = [
-                new ChatRequestSystemMessage(
+            List<ChatMessage> messages = [
+                new SystemChatMessage(
                    "Don't make assumptions about what values to plug into functions."
                    + " Ask for clarification if a user request is ambiguous."),
-                new ChatRequestUserMessage("What's the weather like today?"),
+                new UserChatMessage("What's the weather like today?"),
             ];
 
             ChatCompletionOptions options = new()
@@ -87,29 +85,27 @@ namespace OpenAI.Samples
 
                 switch (chatCompletion.FinishReason)
                 {
-                    case ChatFinishReason.Stopped:
+                    case ChatFinishReason.Stop:
                         {
                             // Add the assistant message to the conversation history.
-                            messages.Add(new ChatRequestAssistantMessage(chatCompletion));
+                            messages.Add(new AssistantChatMessage(chatCompletion));
                             break;
                         }
 
                     case ChatFinishReason.ToolCalls:
                         {
                             // First, add the assistant message with tool calls to the conversation history.
-                            messages.Add(new ChatRequestAssistantMessage(chatCompletion));
+                            messages.Add(new AssistantChatMessage(chatCompletion));
 
                             // Then, add a new tool message for each tool call that is resolved.
                             foreach (ChatToolCall toolCall in chatCompletion.ToolCalls)
                             {
-                                ChatFunctionToolCall functionToolCall = toolCall as ChatFunctionToolCall;
-
-                                switch (functionToolCall?.Name)
+                                switch (toolCall.FunctionName)
                                 {
                                     case GetCurrentLocationFunctionName:
                                         {
                                             string toolResult = GetCurrentLocation();
-                                            messages.Add(new ChatRequestToolMessage(toolCall.Id, toolResult));
+                                            messages.Add(new ToolChatMessage(toolCall.Id, toolResult));
                                             break;
                                         }
 
@@ -119,7 +115,7 @@ namespace OpenAI.Samples
                                             // stringified JSON object based on the schema defined in the tool definition. Note that
                                             // the model may hallucinate arguments too. Consequently, it is important to do the
                                             // appropriate parsing and validation before calling the function.
-                                            using JsonDocument argumentsJson = JsonDocument.Parse(functionToolCall.Arguments);
+                                            using JsonDocument argumentsJson = JsonDocument.Parse(toolCall.FunctionArguments);
                                             bool hasLocation = argumentsJson.RootElement.TryGetProperty("location", out JsonElement location);
                                             bool hasUnit = argumentsJson.RootElement.TryGetProperty("unit", out JsonElement unit);
 
@@ -131,7 +127,7 @@ namespace OpenAI.Samples
                                             string toolResult = hasUnit
                                                 ? GetCurrentWeather(location.GetString(), unit.GetString())
                                                 : GetCurrentWeather(location.GetString());
-                                            messages.Add(new ChatRequestToolMessage(toolCall.Id, toolResult));
+                                            messages.Add(new ToolChatMessage(toolCall.Id, toolResult));
                                             break;
                                         }
 
@@ -163,29 +159,29 @@ namespace OpenAI.Samples
             #endregion
 
             #region
-            foreach (ChatRequestMessage requestMessage in messages)
+            foreach (ChatMessage requestMessage in messages)
             {
                 switch (requestMessage)
                 {
-                    case ChatRequestSystemMessage systemMessage:
+                    case SystemChatMessage systemMessage:
                         Console.WriteLine($"[SYSTEM]:");
-                        Console.WriteLine($"{systemMessage.Content.Span[0].ToText()}");
+                        Console.WriteLine($"{systemMessage.Content[0].Text}");
                         Console.WriteLine();
                         break;
 
-                    case ChatRequestUserMessage userMessage:
+                    case UserChatMessage userMessage:
                         Console.WriteLine($"[USER]:");
-                        Console.WriteLine($"{userMessage.Content.Span[0].ToText()}");
+                        Console.WriteLine($"{userMessage.Content[0].Text}");
                         Console.WriteLine();
                         break;
 
-                    case ChatRequestAssistantMessage assistantMessage when assistantMessage.Content.Span[0].ToText() is not null:
+                    case AssistantChatMessage assistantMessage when assistantMessage.Content.Count > 0:
                         Console.WriteLine($"[ASSISTANT]:");
-                        Console.WriteLine($"{assistantMessage.Content.Span[0].ToText()}");
+                        Console.WriteLine($"{assistantMessage.Content[0].Text}");
                         Console.WriteLine();
                         break;
 
-                    case ChatRequestToolMessage:
+                    case ToolChatMessage:
                         // Do not print any tool messages; let the assistant summarize the tool results instead.
                         break;
 

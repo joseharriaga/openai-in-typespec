@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Chat;
 
 namespace OpenAI.Internal.Models
 {
@@ -45,7 +46,7 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionStreamResponseChoiceLogprobs"/>. </summary>
         /// <param name="content"> A list of message content tokens with log probability information. </param>
-        internal CreateChatCompletionStreamResponseChoiceLogprobs(IEnumerable<ChatCompletionTokenLogprob> content)
+        internal CreateChatCompletionStreamResponseChoiceLogprobs(IEnumerable<ChatTokenLogProbabilityInfo> content)
         {
             Content = content?.ToList();
         }
@@ -53,7 +54,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateChatCompletionStreamResponseChoiceLogprobs"/>. </summary>
         /// <param name="content"> A list of message content tokens with log probability information. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateChatCompletionStreamResponseChoiceLogprobs(IReadOnlyList<ChatCompletionTokenLogprob> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateChatCompletionStreamResponseChoiceLogprobs(IReadOnlyList<ChatTokenLogProbabilityInfo> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Content = content;
             _serializedAdditionalRawData = serializedAdditionalRawData;
@@ -65,6 +66,6 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> A list of message content tokens with log probability information. </summary>
-        public IReadOnlyList<ChatCompletionTokenLogprob> Content { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityInfo> Content { get; }
     }
 }

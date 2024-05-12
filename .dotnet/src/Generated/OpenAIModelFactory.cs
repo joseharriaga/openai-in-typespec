@@ -848,31 +848,6 @@ namespace OpenAI
             return new CreateChatCompletionStreamResponseUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaObject"/>. </summary>
-        /// <param name="id"> The identifier of the message, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `thread.message.delta`. </param>
-        /// <param name="delta"> The delta containing the fields that have changed on the Message. </param>
-        /// <returns> A new <see cref="Models.MessageDeltaObject"/> instance for mocking. </returns>
-        public static MessageDeltaObject MessageDeltaObject(string id = null, string @object = null, MessageDeltaObjectDelta delta = null)
-        {
-            return new MessageDeltaObject(id, @object, delta, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageDeltaObjectDelta"/>. </summary>
-        /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
-        /// <param name="content">
-        /// The content of the message in array of text and/or images.
-        /// Please note <see cref="MessageDeltaContent"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="MessageImageFileDeltaContent"/>, <see cref="MessageImageUrlDeltaContent"/> and <see cref="MessageTextDeltaContent"/>.
-        /// </param>
-        /// <returns> A new <see cref="Models.MessageDeltaObjectDelta"/> instance for mocking. </returns>
-        public static MessageDeltaObjectDelta MessageDeltaObjectDelta(string role = null, IEnumerable<MessageDeltaContent> content = null)
-        {
-            content ??= new List<MessageDeltaContent>();
-
-            return new MessageDeltaObjectDelta(role, content?.ToList(), serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Assistants.RunStepToolCallDetailsCollection"/>. </summary>
         /// <param name="toolCalls">
         /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.

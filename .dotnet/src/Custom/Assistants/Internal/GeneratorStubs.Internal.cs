@@ -126,6 +126,9 @@ internal partial class InternalRunObjectRequiredActionSubmitToolOutputs { privat
 [CodeGenModel("RunToolCallObjectFunction")]
 internal partial class InternalRunToolCallObjectFunction { }
 
+[CodeGenModel("MessageDeltaObjectDelta")]
+internal partial class InternalMessageDeltaObjectDelta { }
+
 internal interface IInternalListResponse<T>
 {
     IReadOnlyList<T> Data { get; }

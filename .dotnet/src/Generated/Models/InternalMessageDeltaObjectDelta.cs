@@ -9,7 +9,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Internal.Models
 {
     /// <summary> The MessageDeltaObjectDelta. </summary>
-    internal partial class MessageDeltaObjectDelta
+    internal partial class InternalMessageDeltaObjectDelta
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,13 +43,13 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageDeltaObjectDelta"/>. </summary>
-        internal MessageDeltaObjectDelta()
+        /// <summary> Initializes a new instance of <see cref="InternalMessageDeltaObjectDelta"/>. </summary>
+        internal InternalMessageDeltaObjectDelta()
         {
             Content = new ChangeTrackingList<MessageDeltaContent>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageDeltaObjectDelta"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalMessageDeltaObjectDelta"/>. </summary>
         /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
         /// <param name="content">
         /// The content of the message in array of text and/or images.
@@ -57,7 +57,7 @@ namespace OpenAI.Internal.Models
         /// The available derived classes include <see cref="MessageImageFileDeltaContent"/>, <see cref="MessageImageUrlDeltaContent"/> and <see cref="MessageTextDeltaContent"/>.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaObjectDelta(string role, IReadOnlyList<MessageDeltaContent> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageDeltaObjectDelta(string role, IReadOnlyList<MessageDeltaContent> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Role = role;
             Content = content;

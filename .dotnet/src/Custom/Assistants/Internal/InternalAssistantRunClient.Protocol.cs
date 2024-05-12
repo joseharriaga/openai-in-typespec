@@ -54,7 +54,7 @@ internal partial class InternalAssistantRunClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNull(content, nameof(content));
 
-        using PipelineMessage message = CreateCreateRunRequest(threadId, content, options);
+        PipelineMessage message = CreateCreateRunRequest(threadId, content, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 

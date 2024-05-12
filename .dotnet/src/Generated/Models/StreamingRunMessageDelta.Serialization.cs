@@ -7,17 +7,18 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class MessageDeltaObject : IJsonModel<MessageDeltaObject>
+    public partial class StreamingRunMessageDelta : IJsonModel<StreamingRunMessageDelta>
     {
-        void IJsonModel<MessageDeltaObject>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<StreamingRunMessageDelta>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageDeltaObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingRunMessageDelta>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageDeltaObject)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(StreamingRunMessageDelta)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -26,7 +27,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("object"u8);
             writer.WriteStringValue(Object);
             writer.WritePropertyName("delta"u8);
-            writer.WriteObjectValue(Delta, options);
+            writer.WriteObjectValue<InternalMessageDeltaObjectDelta>(_internalDelta, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -45,19 +46,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        MessageDeltaObject IJsonModel<MessageDeltaObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        StreamingRunMessageDelta IJsonModel<StreamingRunMessageDelta>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageDeltaObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingRunMessageDelta>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageDeltaObject)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(StreamingRunMessageDelta)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeMessageDeltaObject(document.RootElement, options);
+            return DeserializeStreamingRunMessageDelta(document.RootElement, options);
         }
 
-        internal static MessageDeltaObject DeserializeMessageDeltaObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static StreamingRunMessageDelta DeserializeStreamingRunMessageDelta(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -67,7 +68,7 @@ namespace OpenAI.Internal.Models
             }
             string id = default;
             string @object = default;
-            MessageDeltaObjectDelta delta = default;
+            InternalMessageDeltaObjectDelta delta = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -84,7 +85,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("delta"u8))
                 {
-                    delta = MessageDeltaObjectDelta.DeserializeMessageDeltaObjectDelta(property.Value, options);
+                    delta = InternalMessageDeltaObjectDelta.DeserializeInternalMessageDeltaObjectDelta(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -93,46 +94,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageDeltaObject(id, @object, delta, serializedAdditionalRawData);
+            return new StreamingRunMessageDelta(id, @object, delta, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<MessageDeltaObject>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<StreamingRunMessageDelta>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageDeltaObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingRunMessageDelta>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(MessageDeltaObject)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StreamingRunMessageDelta)} does not support writing '{options.Format}' format.");
             }
         }
 
-        MessageDeltaObject IPersistableModel<MessageDeltaObject>.Create(BinaryData data, ModelReaderWriterOptions options)
+        StreamingRunMessageDelta IPersistableModel<StreamingRunMessageDelta>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageDeltaObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingRunMessageDelta>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeMessageDeltaObject(document.RootElement, options);
+                        return DeserializeStreamingRunMessageDelta(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(MessageDeltaObject)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StreamingRunMessageDelta)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<MessageDeltaObject>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<StreamingRunMessageDelta>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static MessageDeltaObject FromResponse(PipelineResponse response)
+        internal static StreamingRunMessageDelta FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeMessageDeltaObject(document.RootElement);
+            return DeserializeStreamingRunMessageDelta(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

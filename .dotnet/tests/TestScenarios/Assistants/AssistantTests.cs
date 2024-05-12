@@ -4,6 +4,8 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -333,6 +335,42 @@ public partial class AssistantTests
         Assert.That(messages[0].Role, Is.EqualTo(MessageRole.Assistant));
         Assert.That(messages[0].Content?[0], Is.InstanceOf<ResponseMessageTextContent>());
         Assert.That(messages[0].Content[0].AsText().Text, Does.Contain("tacos"));
+    }
+
+    [Test]
+    public async Task StreamingRunWorks()
+    {
+        AssistantClient client = new();
+        Assistant assistant = await client.CreateAssistantAsync("gpt-3.5-turbo");
+        Validate(assistant);
+
+        AssistantThread thread = await client.CreateThreadAsync(new()
+        {
+            InitialMessages = { new(["Hello there, assistant! How are you today?"]), },
+        });
+        Validate(thread);
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
+
+        ClientResult<IAsyncEnumerable<StreamingRunUpdate>> streamingResult
+            = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        
+        Print(">>> Connected <<<");
+
+        await foreach (StreamingRunUpdate runUpdate in streamingResult.Value)
+        {
+            string message = $"{runUpdate.UpdateKind} ";
+            if (runUpdate is StreamingRunUpdate<StreamingRunMessageDelta> streamingRunMessageDelta)
+            {
+                foreach (MessageTextDeltaContent textContent in streamingRunMessageDelta.Value.DeltaContent)
+                {
+                    message += $"{textContent.Text} // ";
+                }
+            }
+            Print(message);
+        }
+        Print(">>> Done <<<");
     }
 
     [TearDown]

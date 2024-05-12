@@ -3,8 +3,9 @@ function Edit-RunObjectSerialization {
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
 
     $targets = @(
-        "ThreadRun.Serialization.cs",
         "RunStep.Serialization.cs"
+        "ThreadMessage.Serialization.cs",
+        "ThreadRun.Serialization.cs"
     )
     foreach ($target in $targets) {
         $file = Get-ChildItem -Path $directory -Filter $target

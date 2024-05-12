@@ -4,6 +4,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -560,7 +561,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual async Task<ClientResult<ThreadRun>> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null)
+    public virtual async Task<ClientResult<IAsyncEnumerable<StreamingRunUpdate>>> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
@@ -574,7 +575,21 @@ public partial class AssistantClient
         };
         ClientResult protocolResult = await CreateRunAsync(threadId, options.ToBinaryContent(), requestOptions)
             .ConfigureAwait(false);
-        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+
+        // NOTE: This is entirely temporary! Just for prototyping and discussion.
+
+        async IAsyncEnumerable<StreamingRunUpdate> TemporaryEnumerate(PipelineResponse response)
+        {
+            using StreamReader reader = new(response.ContentStream);
+            while (true)
+            {
+                StreamingRunUpdate nextUpdate = await StreamingRunUpdate.TemporaryCreateFromReaderAsync(reader);
+                if (nextUpdate == null) break;
+                yield return nextUpdate;
+            }
+        }
+
+        return CreateResultFromProtocol(protocolResult, response => TemporaryEnumerate(response));
     }
 
     /// <summary>

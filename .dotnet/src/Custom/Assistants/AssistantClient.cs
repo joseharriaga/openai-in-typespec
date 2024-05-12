@@ -525,6 +525,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
         options ??= new();
         options.AssistantId = assistantId;
+        options.Stream = null;
 
         ClientResult protocolResult = await CreateRunAsync(threadId, options.ToBinaryContent(), null)
             .ConfigureAwait(false);
@@ -545,8 +546,34 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
         options ??= new();
         options.AssistantId = assistantId;
+        options.Stream = null;
 
         ClientResult protocolResult = CreateRun(threadId, options.ToBinaryContent(), null);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Begins a new <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
+    /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
+    public virtual async Task<ClientResult<ThreadRun>> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+        options ??= new();
+        options.AssistantId = assistantId;
+        options.Stream = true;
+
+        RequestOptions requestOptions = new()
+        {
+            BufferResponse = false,
+        };
+        ClientResult protocolResult = await CreateRunAsync(threadId, options.ToBinaryContent(), requestOptions)
+            .ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 

@@ -13,6 +13,9 @@ public partial class RunCreationOptions
     [CodeGenMember("AssistantId")]
     internal string AssistantId { get; set; }
 
+    [CodeGenMember("Stream")]
+    internal bool? Stream { get; set; }
+
     /// <summary>
     /// A run-specific model name that will override the assistant's defined model. If not provided, the assistant's
     /// selection will be used.

@@ -170,35 +170,52 @@ public partial class AssistantClient
         return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
     }
 
-    ///// <summary>
-    ///// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
-    ///// matching any optional constraints provided.
-    ///// </summary>
-    ///// <param name="thread"> The thread to list messages from. </param>
-    ///// <param name="maxResults">
-    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    ///// a default of 20 if not otherwise specified.
-    ///// </param>
-    ///// <param name="resultOrder">
-    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    ///// timestamp.
-    ///// </param>
-    ///// <param name="previousId">
-    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
-    ///// <c>after</c> this ID according to the specified order.
-    ///// </param>
-    ///// <param name="subsequentId">
-    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    ///// this ID according to the specified order.
-    ///// </param>
-    ///// <returns> A page of results matching any constraints provided. </returns>
-    //public virtual Task<ClientResult<ListQueryPage<ThreadMessage>>> GetMessagesAsync(
-    //    AssistantThread thread,
-    //    int? maxResults = null,
-    //    ListOrder? resultOrder = null,
-    //    string previousId = null,
-    //    string subsequentId = null)
-    //        => GetMessagesAsync(thread?.Id, maxResults, resultOrder, previousId, subsequentId);
+    /// <summary>
+    /// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
+    /// matching any optional constraints provided.
+    /// </summary>
+    /// <param name="thread"> The thread to list messages from. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(
+        AssistantThread thread,
+        ListOrder? resultOrder = default)
+    {
+        Argument.AssertNotNull(thread, nameof(thread));
+
+        async Task<ClientPage<ThreadMessage>> firstPageFunc(int? pageSize)
+        {
+            ClientResult result = await GetMessagesAsync(thread.Id, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null).ConfigureAwait(false);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
+            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
+        }
+
+        async Task<ClientPage<ThreadMessage>> nextPageFunc(string? continuationToken, int? pageSize)
+        {
+            ClientResult result = await GetMessagesAsync(thread.Id, limit: pageSize, order: null, after: continuationToken, before: null, options: null).ConfigureAwait(false);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
+            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
+        }
+
+        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+    }
 
     /// <summary>
     /// Gets an updated instance of an existing <see cref="ThreadMessage"/>.

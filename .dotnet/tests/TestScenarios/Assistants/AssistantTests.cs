@@ -335,6 +335,58 @@ public partial class AssistantTests
         Assert.That(messages[0].Content[0].AsText().Text, Does.Contain("tacos"));
     }
 
+    [Test]
+    public void CanPageThroughAssistantCollection()
+    {
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.Null.Or.Empty);
+        }
+
+        //List<Assistant> allAssistants = new();
+
+        // Page through collection
+
+        int count = 0;
+        int pageCount = 0;
+
+        string lastSeenId = null;
+
+        bool continueQuery = true;
+        while (continueQuery)
+        {
+            ListQueryPage<Assistant> assistants = client.GetAssistants(maxResults: 2, previousId: lastSeenId);
+            pageCount++;
+
+            foreach (Assistant assistant in assistants)
+            {
+                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
+
+                lastSeenId = assistant.Id;
+                count++;
+
+                //allAssistants.Add(assistant);
+            }
+
+            continueQuery = assistants.HasMore;
+        }
+
+        //// Clean up
+        //foreach (Assistant assistant in  allAssistants)
+        //{
+        //    client.DeleteAssistant(assistant.Id);
+        //}
+
+        Assert.AreEqual(10, count);
+        Assert.AreEqual(5, pageCount);
+    }
+
+
     [TearDown]
     protected void Cleanup()
     {

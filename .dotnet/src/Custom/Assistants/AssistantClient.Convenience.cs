@@ -337,7 +337,6 @@ public partial class AssistantClient
         AssistantThread thread,
         ListOrder? resultOrder = default)
     {
-
         Argument.AssertNotNull(thread, nameof(thread));
 
         return GetRuns(thread.Id, resultOrder);

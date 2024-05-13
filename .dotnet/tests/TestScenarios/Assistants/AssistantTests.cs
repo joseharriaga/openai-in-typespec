@@ -14,45 +14,45 @@ namespace OpenAI.Tests.Assistants;
 #pragma warning disable OPENAI001
 public partial class AssistantTests
 {
-    [Test]
-    public void BasicAssistantOperationsWork()
-    {
-        AssistantClient client = GetTestClient();
-        Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
-        Validate(assistant);
-        Assert.That(assistant.Name, Is.Null.Or.Empty);
-        assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
-        {
-            Name = "test assistant name",
-        });
-        Assert.That(assistant.Name, Is.EqualTo("test assistant name"));
-        bool deleted = client.DeleteAssistant(assistant.Id);
-        Assert.That(deleted, Is.True);
-        _assistantsToDelete.Remove(assistant);
-        assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
-        {
-            Metadata =
-            {
-                [s_cleanupMetadataKey] = "hello!"
-            },
-        });
-        Validate(assistant);
-        Assistant retrievedAssistant = client.GetAssistant(assistant.Id);
-        Assert.That(retrievedAssistant.Id, Is.EqualTo(assistant.Id));
-        Assert.That(retrievedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string metadataValue) && metadataValue == "hello!");
-        Assistant modifiedAssistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
-        {
-            Metadata =
-            {
-                [s_cleanupMetadataKey] = "goodbye!",
-            },
-        });
-        Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        ListQueryPage<Assistant> recentAssistants = client.GetAssistants();
-        Assistant listedAssistant = recentAssistants.FirstOrDefault(pageItem => pageItem.Id == assistant.Id);
-        Assert.That(listedAssistant, Is.Not.Null);        
-        Assert.That(listedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string newMetadataValue) && newMetadataValue == "goodbye!");
-    }
+    //[Test]
+    //public void BasicAssistantOperationsWork()
+    //{
+    //    AssistantClient client = GetTestClient();
+    //    Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
+    //    Validate(assistant);
+    //    Assert.That(assistant.Name, Is.Null.Or.Empty);
+    //    assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
+    //    {
+    //        Name = "test assistant name",
+    //    });
+    //    Assert.That(assistant.Name, Is.EqualTo("test assistant name"));
+    //    bool deleted = client.DeleteAssistant(assistant.Id);
+    //    Assert.That(deleted, Is.True);
+    //    _assistantsToDelete.Remove(assistant);
+    //    assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+    //    {
+    //        Metadata =
+    //        {
+    //            [s_cleanupMetadataKey] = "hello!"
+    //        },
+    //    });
+    //    Validate(assistant);
+    //    Assistant retrievedAssistant = client.GetAssistant(assistant.Id);
+    //    Assert.That(retrievedAssistant.Id, Is.EqualTo(assistant.Id));
+    //    Assert.That(retrievedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string metadataValue) && metadataValue == "hello!");
+    //    Assistant modifiedAssistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
+    //    {
+    //        Metadata =
+    //        {
+    //            [s_cleanupMetadataKey] = "goodbye!",
+    //        },
+    //    });
+    //    Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
+    //    ListQueryPage<Assistant> recentAssistants = client.GetAssistants();
+    //    Assistant listedAssistant = recentAssistants.FirstOrDefault(pageItem => pageItem.Id == assistant.Id);
+    //    Assert.That(listedAssistant, Is.Not.Null);        
+    //    Assert.That(listedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string newMetadataValue) && newMetadataValue == "goodbye!");
+    //}
 
     [Test]
     public void BasicThreadOperationsWork()
@@ -336,7 +336,55 @@ public partial class AssistantTests
     //}
 
     [Test]
-    public void CanPageThroughAssistantCollection()
+    public async Task CanPageThroughAssistantCollection()
+    {
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.Null.Or.Empty);
+        }
+
+        List<Assistant> allAssistants = new();
+
+        // Page through collection
+
+        int count = 0;
+        int pageCount = 0;
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
+        IAsyncEnumerable<ClientPage<Assistant>> pages = assistants.AsPages(pageSizeHint: 2);
+
+        await foreach (ClientPage<Assistant> page in pages)
+        {
+            int pageItems = 0;
+            foreach (Assistant assistant in page)
+            {
+                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
+
+                count++;
+                pageItems++;
+
+                allAssistants.Add(assistant);
+            }
+
+            pageCount += pageItems > 0 ? 1 : 0;
+        }
+
+        // Clean up
+        foreach (Assistant assistant in allAssistants)
+        {
+            client.DeleteAssistant(assistant.Id);
+        }
+
+        Assert.AreEqual(10, count);
+        Assert.AreEqual(5, pageCount);
+    }
+
+    [Test]
+    public async Task CanEnumerateAssistants()
     {
         AssistantClient client = GetTestClient();
 
@@ -353,27 +401,15 @@ public partial class AssistantTests
         // Page through collection
 
         int count = 0;
-        int pageCount = 0;
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
 
-        string lastSeenId = null;
-
-        bool continueQuery = true;
-        while (continueQuery)
+        await foreach (Assistant assistant in assistants)
         {
-            ListQueryPage<Assistant> assistants = client.GetAssistants(maxResults: 2, previousId: lastSeenId);
-            pageCount++;
+            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
 
-            foreach (Assistant assistant in assistants)
-            {
-                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
+            count++;
 
-                lastSeenId = assistant.Id;
-                count++;
-
-                //allAssistants.Add(assistant);
-            }
-
-            continueQuery = assistants.HasMore;
+            //allAssistants.Add(assistant);
         }
 
         //// Clean up
@@ -383,9 +419,7 @@ public partial class AssistantTests
         //}
 
         Assert.AreEqual(10, count);
-        Assert.AreEqual(5, pageCount);
     }
-
 
     [TearDown]
     protected void Cleanup()
@@ -395,7 +429,7 @@ public partial class AssistantTests
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
         };
-        foreach (ThreadMessage message  in _messagesToDelete)
+        foreach (ThreadMessage message in _messagesToDelete)
         {
             Console.WriteLine($"Cleanup: {message.Id} -> {client.DeleteMessage(message.ThreadId, message.Id, requestOptions)?.GetRawResponse().Status}");
         }

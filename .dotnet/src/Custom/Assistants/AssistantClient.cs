@@ -114,16 +114,25 @@ public partial class AssistantClient
     /// this ID according to the specified order.
     /// </param>
     /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual async Task<ClientResult<ListQueryPage<Assistant>>> GetAssistantsAsync(
-        int? maxResults = null,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
+    public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync()
     {
-        ClientResult protocolResult
-            = await GetAssistantsAsync(maxResults, resultOrder?.ToString(), previousId, subsequentId, options: null)
-                .ConfigureAwait(false);
-        return CreateListResultFromProtocol(protocolResult, InternalListAssistantsResponse.FromResponse);
+        async Task<ClientPage<Assistant>> firstPageFunc(int? pageSize)
+        {
+            ClientResult result = await GetAssistantsAsync(limit: pageSize, order: null, after: null, before: null, options: null).ConfigureAwait(false);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
+            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
+        }
+
+        async Task<ClientPage<Assistant>> nextPageFunc(string? continuationToken, int? pageSize)
+        {
+            ClientResult result = await GetAssistantsAsync(limit: pageSize, order: null, after: continuationToken, before: null, options: null).ConfigureAwait(false);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
+            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
+        }
+
+        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
     }
 
     /// <summary>
@@ -146,15 +155,25 @@ public partial class AssistantClient
     /// this ID according to the specified order.
     /// </param>
     /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual ClientResult<ListQueryPage<Assistant>> GetAssistants(
-        int? maxResults = null,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
+    public virtual PageableCollection<Assistant> GetAssistants()
     {
-        ClientResult protocolResult
-            = GetAssistants(maxResults, resultOrder?.ToString(), previousId, subsequentId, options: null);
-        return CreateListResultFromProtocol(protocolResult, InternalListAssistantsResponse.FromResponse);
+        ClientPage<Assistant> firstPageFunc(int? pageSize)
+        {
+            ClientResult result = GetAssistants(limit: pageSize, order: null, after: null, before: null, options: null);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
+            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
+        }
+
+        ClientPage<Assistant> nextPageFunc(string? continuationToken, int? pageSize)
+        {
+            ClientResult result = GetAssistants(limit: pageSize, order: null, after: continuationToken, before: null, options: null);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
+            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
+        }
+
+        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
     }
 
     /// <summary>
@@ -890,21 +909,5 @@ public partial class AssistantClient
         PipelineResponse pipelineResponse = protocolResult?.GetRawResponse();
         T deserializedResultValue = responseDeserializer.Invoke(pipelineResponse);
         return ClientResult.FromValue(deserializedResultValue, pipelineResponse);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ClientResult<ListQueryPage<T>> CreateListResultFromProtocol<T>(
-        ClientResult protocolResult,
-        Func<PipelineResponse, IInternalListResponse<T>> responseDeserializer)
-            where T : class, IJsonModel<T>
-    {
-        PipelineResponse pipelineResponse = protocolResult?.GetRawResponse();
-        IInternalListResponse<T> deserializedInternalResponse = responseDeserializer.Invoke(pipelineResponse);
-        ListQueryPage<T> page = new(
-            deserializedInternalResponse.Data,
-            deserializedInternalResponse.FirstId,
-            deserializedInternalResponse.LastId,
-            deserializedInternalResponse.HasMore);
-        return ClientResult.FromValue(page, pipelineResponse);
     }
 }

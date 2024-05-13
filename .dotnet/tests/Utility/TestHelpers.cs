@@ -9,6 +9,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace OpenAI.Tests;
 
@@ -59,20 +60,18 @@ internal static class TestHelpers
     {
         return new TestPipelinePolicy((message) =>
         {
-            if (message.Request?.Uri != null)
-            {
-                Console.WriteLine($"--- Request URI: ---");
-                Console.WriteLine(message.Request.Uri.AbsoluteUri);
-            }
+            Console.WriteLine($"--- New request ---");
+            IEnumerable<string> headerPairs = message?.Request?.Headers?.Select(header => $"{header.Key}={(header.Key.ToLower().Contains("auth") ? "***" : header.Value)}");
+            string headers = string.Join(',', headerPairs);
+            Console.WriteLine($"Headers: {headers}");
+            Console.WriteLine($"{message?.Request?.Method} URI: {message?.Request?.Uri}");
             if (message.Request?.Content != null)
             {
-                Console.WriteLine($"--- Begin request content ---");
                 using MemoryStream stream = new();
                 message.Request.Content.WriteTo(stream, default);
                 stream.Position = 0;
                 using StreamReader reader = new(stream);
                 Console.WriteLine(reader.ReadToEnd());
-                Console.WriteLine("--- End of request content ---");
             }
             if (message.Response != null)
             {

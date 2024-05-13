@@ -62,7 +62,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <param name="options"> Additional options for the client. </param>
     public AzureOpenAIClient(Uri endpoint, ApiKeyCredential credential, AzureOpenAIClientOptions options = null)
         : this(
-            CreatePipeline(GetApiKey(credential, requireExplicitCredential: true)),
+            CreatePipeline(GetApiKey(credential, requireExplicitCredential: true), options),
             GetEndpoint(endpoint, requireExplicitEndpoint: true),
             options)
     {}
@@ -233,7 +233,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     public override VectorStoreClient GetVectorStoreClient()
         => new AzureVectorStoreClient(Pipeline, Endpoint, _options);
 
-    private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, OpenAIClientOptions options = null)
+    private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, OpenAIClientOptions options)
         => ClientPipeline.Create(
             options ?? new(),
             perCallPolicies: [],

@@ -30,7 +30,7 @@ public class AssistantTests
     public void BasicAssistantOperationsWork()
     {
         AssistantClient client = GetTestClient();
-        Assistant assistant = client.CreateAssistant("gpt-35-turbo");
+        Assistant assistant = client.CreateAssistant("gpt-35-turbo-latest");
         Validate(assistant);
         Assert.That(assistant.Name, Is.Null.Or.Empty);
         assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
@@ -41,7 +41,7 @@ public class AssistantTests
         bool deleted = client.DeleteAssistant(assistant.Id);
         Assert.That(deleted, Is.True);
         _assistantsToDelete.Remove(assistant);
-        assistant = client.CreateAssistant("gpt-35-turbo", new AssistantCreationOptions()
+        assistant = client.CreateAssistant("gpt-35-turbo-latest", new AssistantCreationOptions()
         {
             Metadata =
             {
@@ -186,7 +186,7 @@ public class AssistantTests
     public void BasicRunOperationsWork()
     {
         AssistantClient client = GetTestClient();
-        Assistant assistant = client.CreateAssistant("gpt-35-turbo");
+        Assistant assistant = client.CreateAssistant("gpt-35-turbo-latest");
         Validate(assistant);
         AssistantThread thread = client.CreateThread();
         Validate(thread);
@@ -194,6 +194,7 @@ public class AssistantTests
         Assert.That(runPage.Count, Is.EqualTo(0));
         ThreadMessage message = client.CreateMessage(thread.Id, ["Hello, assistant!"]);
         Validate(message);
+        Thread.Sleep(3000);
         ThreadRun run = client.CreateRun(thread.Id, assistant.Id);
         Validate(run);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Queued));
@@ -231,7 +232,7 @@ public class AssistantTests
     public void BasicRunStepFunctionalityWorks()
     {
         AssistantClient client = GetTestClient();
-        Assistant assistant = client.CreateAssistant("gpt-35-turbo", new AssistantCreationOptions()
+        Assistant assistant = client.CreateAssistant("gpt-35-turbo-latest", new AssistantCreationOptions()
         {
             Tools = { new CodeInterpreterToolDefinition() },
             Instructions = "Call the code interpreter tool when asked to visualize mathematical concepts.",
@@ -279,7 +280,7 @@ public class AssistantTests
     public void FunctionToolsWork()
     {
         AssistantClient client = GetTestClient();
-        Assistant assistant = client.CreateAssistant("gpt-35-turbo", new AssistantCreationOptions()
+        Assistant assistant = client.CreateAssistant("gpt-35-turbo-latest", new AssistantCreationOptions()
         {
             Tools =
             {
@@ -320,7 +321,7 @@ public class AssistantTests
                 AdditionalInstructions = "Call provided tools when appropriate.",
             });
         Validate(run);
-
+        Console.WriteLine($" Run status right after creation: {run.Status}");
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
         {
             Thread.Sleep(500);
@@ -354,7 +355,7 @@ public class AssistantTests
     public async Task StreamingRunWorks()
     {
         AssistantClient client = GetTestClient();
-        Assistant assistant = await client.CreateAssistantAsync("gpt-35-turbo");
+        Assistant assistant = await client.CreateAssistantAsync("gpt-35-turbo-latest");
         Validate(assistant);
 
         AssistantThread thread = await client.CreateThreadAsync(new()
@@ -467,21 +468,23 @@ public class AssistantTests
         AzureOpenAIClientOptions options = new();
         options.AddPolicy(new TestPipelinePolicy((m) =>
         {
-            Console.WriteLine($"Request URI: {m?.Request?.Uri}");
+            Console.WriteLine($"--- New request ---");
+            IEnumerable<string> headerPairs = m?.Request?.Headers?.Select(header => $"{header.Key}={(header.Key.ToLower().Contains("auth") ? "***" : header.Value)}");
+            string headers = string.Join(',', headerPairs);
+            Console.WriteLine($"Headers: {headers}");
+            Console.WriteLine($"{m?.Request?.Method} URI: {m?.Request?.Uri}");
             if (m.Request?.Content != null)
             {
-                Console.WriteLine($"--- Begin request content ---");
                 using MemoryStream stream = new();
                 m.Request.Content.WriteTo(stream, default);
                 stream.Position = 0;
                 using StreamReader reader = new(stream);
                 Console.WriteLine(reader.ReadToEnd());
-                Console.WriteLine("--- End of request content ---");
             }
-        }), PipelinePosition.BeforeTransport);
+        }), PipelinePosition.PerCall);
         AzureOpenAIClient azureClient = new(
-            new Uri("https://sdk8428.openai.azure.com/"),
-            new DefaultAzureCredential(),
+            new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_TIP_ENDPOINT")),
+            new ApiKeyCredential(Environment.GetEnvironmentVariable("AZURE_OPENAI_TIP_API_KEY")),
             options);
         return azureClient.GetAssistantClient();
     }

@@ -19,7 +19,7 @@ internal partial class InternalAssistantRunClient
     {
         Argument.AssertNotNull(content, nameof(content));
 
-        using PipelineMessage message = CreateCreateThreadAndRunRequest(content, options);
+        /* using */ PipelineMessage message = CreateCreateThreadAndRunRequest(content, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
@@ -35,7 +35,7 @@ internal partial class InternalAssistantRunClient
     {
         Argument.AssertNotNull(content, nameof(content));
 
-        using PipelineMessage message = CreateCreateThreadAndRunRequest(content, options);
+        /* using */ PipelineMessage message = CreateCreateThreadAndRunRequest(content, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
@@ -54,7 +54,7 @@ internal partial class InternalAssistantRunClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNull(content, nameof(content));
 
-        PipelineMessage message = CreateCreateRunRequest(threadId, content, options);
+        /* using */ PipelineMessage message = CreateCreateRunRequest(threadId, content, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
@@ -73,7 +73,7 @@ internal partial class InternalAssistantRunClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNull(content, nameof(content));
 
-        using PipelineMessage message = CreateCreateRunRequest(threadId, content, options);
+        /* using */ PipelineMessage message = CreateCreateRunRequest(threadId, content, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
@@ -284,7 +284,7 @@ internal partial class InternalAssistantRunClient
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
         Argument.AssertNotNull(content, nameof(content));
 
-        using PipelineMessage message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
+        /* using */ PipelineMessage message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
@@ -307,7 +307,7 @@ internal partial class InternalAssistantRunClient
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
         Argument.AssertNotNull(content, nameof(content));
 
-        using PipelineMessage message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
+        /* using */ PipelineMessage message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 

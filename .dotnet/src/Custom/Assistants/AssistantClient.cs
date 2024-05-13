@@ -340,79 +340,79 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, ThreadMessage.FromResponse);
     }
 
-    /// <summary>
-    /// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
-    /// matching any optional constraints provided.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread to list messages from. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
-    /// <param name="resultOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
+    ///// <summary>
+    ///// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
+    ///// matching any optional constraints provided.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread to list messages from. </param>
+    ///// <param name="maxResults">
+    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    ///// a default of 20 if not otherwise specified.
+    ///// </param>
+    ///// <param name="resultOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <param name="previousId">
+    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
+    ///// <c>after</c> this ID according to the specified order.
+    ///// </param>
+    ///// <param name="subsequentId">
+    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    ///// this ID according to the specified order.
+    ///// </param>
+    ///// <returns> A page of results matching any constraints provided. </returns>
 
-    public virtual async Task<ClientResult<ListQueryPage<ThreadMessage>>> GetMessagesAsync(
-        string threadId,
-        int? maxResults = null,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    //public virtual async Task<ClientResult<ListQueryPage<ThreadMessage>>> GetMessagesAsync(
+    //    string threadId,
+    //    int? maxResults = null,
+    //    ListOrder? resultOrder = null,
+    //    string previousId = null,
+    //    string subsequentId = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ClientResult protocolResult
-            = await GetMessagesAsync(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
-                .ConfigureAwait(false);
-        return CreateListResultFromProtocol(protocolResult, InternalListMessagesResponse.FromResponse);
-    }
+    //    ClientResult protocolResult
+    //        = await GetMessagesAsync(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
+    //            .ConfigureAwait(false);
+    //    return CreateListResultFromProtocol(protocolResult, InternalListMessagesResponse.FromResponse);
+    //}
 
-    /// <summary>
-    /// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
-    /// matching any optional constraints provided.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread to list messages from. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
-    /// <param name="resultOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual ClientResult<ListQueryPage<ThreadMessage>> GetMessages(
-        string threadId,
-        int? maxResults = null,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    ///// <summary>
+    ///// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
+    ///// matching any optional constraints provided.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread to list messages from. </param>
+    ///// <param name="maxResults">
+    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    ///// a default of 20 if not otherwise specified.
+    ///// </param>
+    ///// <param name="resultOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <param name="previousId">
+    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
+    ///// <c>after</c> this ID according to the specified order.
+    ///// </param>
+    ///// <param name="subsequentId">
+    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    ///// this ID according to the specified order.
+    ///// </param>
+    ///// <returns> A page of results matching any constraints provided. </returns>
+    //public virtual ClientResult<ListQueryPage<ThreadMessage>> GetMessages(
+    //    string threadId,
+    //    int? maxResults = null,
+    //    ListOrder? resultOrder = null,
+    //    string previousId = null,
+    //    string subsequentId = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ClientResult protocolResult
-            = GetMessages(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
-        return CreateListResultFromProtocol(protocolResult, InternalListMessagesResponse.FromResponse);
-    }
+    //    ClientResult protocolResult
+    //        = GetMessages(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
+    //    return CreateListResultFromProtocol(protocolResult, InternalListMessagesResponse.FromResponse);
+    //}
 
     /// <summary>
     /// Gets an existing <see cref="ThreadMessage"/> from a known <see cref="AssistantThread"/>.
@@ -584,78 +584,78 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 
-    /// <summary>
-    /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
-    /// matching any optional constraints provided.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
-    /// <param name="resultOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual async Task<ClientResult<ListQueryPage<ThreadRun>>> GetRunsAsync(
-        string threadId,
-        int? maxResults = null,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    ///// <summary>
+    ///// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
+    ///// matching any optional constraints provided.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
+    ///// <param name="maxResults">
+    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    ///// a default of 20 if not otherwise specified.
+    ///// </param>
+    ///// <param name="resultOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <param name="previousId">
+    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
+    ///// <c>after</c> this ID according to the specified order.
+    ///// </param>
+    ///// <param name="subsequentId">
+    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    ///// this ID according to the specified order.
+    ///// </param>
+    ///// <returns> A page of results matching any constraints provided. </returns>
+    //public virtual async Task<ClientResult<ListQueryPage<ThreadRun>>> GetRunsAsync(
+    //    string threadId,
+    //    int? maxResults = null,
+    //    ListOrder? resultOrder = null,
+    //    string previousId = null,
+    //    string subsequentId = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ClientResult protocolResult
-            = await GetRunsAsync(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
-                .ConfigureAwait(false);
-        return CreateListResultFromProtocol(protocolResult, InternalListRunsResponse.FromResponse);
-    }
+    //    ClientResult protocolResult
+    //        = await GetRunsAsync(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
+    //            .ConfigureAwait(false);
+    //    return CreateListResultFromProtocol(protocolResult, InternalListRunsResponse.FromResponse);
+    //}
 
-    /// <summary>
-    /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
-    /// matching any optional constraints provided.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
-    /// <param name="resultOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual ClientResult<ListQueryPage<ThreadRun>> GetRuns(
-        string threadId,
-        int? maxResults = null,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    ///// <summary>
+    ///// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
+    ///// matching any optional constraints provided.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
+    ///// <param name="maxResults">
+    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    ///// a default of 20 if not otherwise specified.
+    ///// </param>
+    ///// <param name="resultOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <param name="previousId">
+    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
+    ///// <c>after</c> this ID according to the specified order.
+    ///// </param>
+    ///// <param name="subsequentId">
+    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    ///// this ID according to the specified order.
+    ///// </param>
+    ///// <returns> A page of results matching any constraints provided. </returns>
+    //public virtual ClientResult<ListQueryPage<ThreadRun>> GetRuns(
+    //    string threadId,
+    //    int? maxResults = null,
+    //    ListOrder? resultOrder = null,
+    //    string previousId = null,
+    //    string subsequentId = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ClientResult protocolResult
-            = GetRuns(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
-        return CreateListResultFromProtocol(protocolResult, InternalListRunsResponse.FromResponse);
-    }
+    //    ClientResult protocolResult
+    //        = GetRuns(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
+    //    return CreateListResultFromProtocol(protocolResult, InternalListRunsResponse.FromResponse);
+    //}
 
     /// <summary>
     /// Gets an existing <see cref="ThreadRun"/> from a known <see cref="AssistantThread"/>.
@@ -762,74 +762,74 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 
-    /// <summary>
-    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread associated with the run. </param>
-    /// <param name="runId"> The ID of the run to list run steps from. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
-    /// <param name="resultOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual async Task<ClientResult<ListQueryPage<RunStep>>> GetRunStepsAsync(
-        string threadId,
-        string runId,
-        int? maxResults = null,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        ClientResult protocolResult = await GetRunStepsAsync(threadId, runId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
-            .ConfigureAwait(false);
-        return CreateListResultFromProtocol(protocolResult, InternalListRunStepsResponse.FromResponse);
-    }
+    ///// <summary>
+    ///// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread associated with the run. </param>
+    ///// <param name="runId"> The ID of the run to list run steps from. </param>
+    ///// <param name="maxResults">
+    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    ///// a default of 20 if not otherwise specified.
+    ///// </param>
+    ///// <param name="resultOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <param name="previousId">
+    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
+    ///// <c>after</c> this ID according to the specified order.
+    ///// </param>
+    ///// <param name="subsequentId">
+    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    ///// this ID according to the specified order.
+    ///// </param>
+    ///// <returns> A page of results matching any constraints provided. </returns>
+    //public virtual async Task<ClientResult<ListQueryPage<RunStep>>> GetRunStepsAsync(
+    //    string threadId,
+    //    string runId,
+    //    int? maxResults = null,
+    //    ListOrder? resultOrder = null,
+    //    string previousId = null,
+    //    string subsequentId = null)
+    //{
+    //    ClientResult protocolResult = await GetRunStepsAsync(threadId, runId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
+    //        .ConfigureAwait(false);
+    //    return CreateListResultFromProtocol(protocolResult, InternalListRunStepsResponse.FromResponse);
+    //}
 
-    /// <summary>
-    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread associated with the run. </param>
-    /// <param name="runId"> The ID of the run to list run steps from. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
-    /// <param name="resultOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual ClientResult<ListQueryPage<RunStep>> GetRunSteps(
-        string threadId,
-        string runId,
-        int? maxResults = null,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
-    {
-        ClientResult protocolResult = GetRunSteps(threadId, runId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
-        return CreateListResultFromProtocol(protocolResult, InternalListRunStepsResponse.FromResponse);
-    }
+    ///// <summary>
+    ///// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread associated with the run. </param>
+    ///// <param name="runId"> The ID of the run to list run steps from. </param>
+    ///// <param name="maxResults">
+    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    ///// a default of 20 if not otherwise specified.
+    ///// </param>
+    ///// <param name="resultOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <param name="previousId">
+    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
+    ///// <c>after</c> this ID according to the specified order.
+    ///// </param>
+    ///// <param name="subsequentId">
+    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    ///// this ID according to the specified order.
+    ///// </param>
+    ///// <returns> A page of results matching any constraints provided. </returns>
+    //public virtual ClientResult<ListQueryPage<RunStep>> GetRunSteps(
+    //    string threadId,
+    //    string runId,
+    //    int? maxResults = null,
+    //    ListOrder? resultOrder = null,
+    //    string previousId = null,
+    //    string subsequentId = null)
+    //{
+    //    ClientResult protocolResult = GetRunSteps(threadId, runId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
+    //    return CreateListResultFromProtocol(protocolResult, InternalListRunStepsResponse.FromResponse);
+    //}
 
     /// <summary>
     /// Gets a single run step from a run.

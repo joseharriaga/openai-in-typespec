@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using OpenAI.Assistants;
-
 namespace OpenAI;
 
 public abstract partial class ListQueryPage

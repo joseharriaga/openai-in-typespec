@@ -14,45 +14,45 @@ namespace OpenAI.Tests.Assistants;
 #pragma warning disable OPENAI001
 public partial class AssistantTests
 {
-    //[Test]
-    //public void BasicAssistantOperationsWork()
-    //{
-    //    AssistantClient client = GetTestClient();
-    //    Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
-    //    Validate(assistant);
-    //    Assert.That(assistant.Name, Is.Null.Or.Empty);
-    //    assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
-    //    {
-    //        Name = "test assistant name",
-    //    });
-    //    Assert.That(assistant.Name, Is.EqualTo("test assistant name"));
-    //    bool deleted = client.DeleteAssistant(assistant.Id);
-    //    Assert.That(deleted, Is.True);
-    //    _assistantsToDelete.Remove(assistant);
-    //    assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
-    //    {
-    //        Metadata =
-    //        {
-    //            [s_cleanupMetadataKey] = "hello!"
-    //        },
-    //    });
-    //    Validate(assistant);
-    //    Assistant retrievedAssistant = client.GetAssistant(assistant.Id);
-    //    Assert.That(retrievedAssistant.Id, Is.EqualTo(assistant.Id));
-    //    Assert.That(retrievedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string metadataValue) && metadataValue == "hello!");
-    //    Assistant modifiedAssistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
-    //    {
-    //        Metadata =
-    //        {
-    //            [s_cleanupMetadataKey] = "goodbye!",
-    //        },
-    //    });
-    //    Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-    //    ListQueryPage<Assistant> recentAssistants = client.GetAssistants();
-    //    Assistant listedAssistant = recentAssistants.FirstOrDefault(pageItem => pageItem.Id == assistant.Id);
-    //    Assert.That(listedAssistant, Is.Not.Null);        
-    //    Assert.That(listedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string newMetadataValue) && newMetadataValue == "goodbye!");
-    //}
+    [Test]
+    public void BasicAssistantOperationsWork()
+    {
+        AssistantClient client = GetTestClient();
+        Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
+        Validate(assistant);
+        Assert.That(assistant.Name, Is.Null.Or.Empty);
+        assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
+        {
+            Name = "test assistant name",
+        });
+        Assert.That(assistant.Name, Is.EqualTo("test assistant name"));
+        bool deleted = client.DeleteAssistant(assistant.Id);
+        Assert.That(deleted, Is.True);
+        _assistantsToDelete.Remove(assistant);
+        assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+        {
+            Metadata =
+            {
+                [s_cleanupMetadataKey] = "hello!"
+            },
+        });
+        Validate(assistant);
+        Assistant retrievedAssistant = client.GetAssistant(assistant.Id);
+        Assert.That(retrievedAssistant.Id, Is.EqualTo(assistant.Id));
+        Assert.That(retrievedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string metadataValue) && metadataValue == "hello!");
+        Assistant modifiedAssistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
+        {
+            Metadata =
+            {
+                [s_cleanupMetadataKey] = "goodbye!",
+            },
+        });
+        Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
+        PageableCollection<Assistant> recentAssistants = client.GetAssistants();
+        Assistant listedAssistant = recentAssistants.FirstOrDefault(pageItem => pageItem.Id == assistant.Id);
+        Assert.That(listedAssistant, Is.Not.Null);
+        Assert.That(listedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string newMetadataValue) && newMetadataValue == "goodbye!");
+    }
 
     [Test]
     public void BasicThreadOperationsWork()
@@ -87,49 +87,49 @@ public partial class AssistantTests
         Assert.That(thread.Metadata.TryGetValue("threadMetadata", out threadMetadataValue) && threadMetadataValue == "newThreadMetadataValue");
     }
 
-    //[Test]
-    //public void BasicMessageOperationsWork()
-    //{
-    //    AssistantClient client = GetTestClient();
-    //    AssistantThread thread = client.CreateThread();
-    //    Validate(thread);
-    //    ThreadMessage message = client.CreateMessage(thread, ["Hello, world!"]);
-    //    Validate(message);
-    //    Assert.That(message.CreatedAt, Is.GreaterThan(s_2024));
-    //    Assert.That(message.Content?.Count, Is.EqualTo(1));
-    //    Assert.That(message.Content[0], Is.InstanceOf<ResponseMessageTextContent>());
-    //    Assert.That(message.Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
-    //    bool deleted = client.DeleteMessage(message);
-    //    Assert.That(deleted, Is.True);
-    //    _messagesToDelete.Remove(message);
+    [Test]
+    public void BasicMessageOperationsWork()
+    {
+        AssistantClient client = GetTestClient();
+        AssistantThread thread = client.CreateThread();
+        Validate(thread);
+        ThreadMessage message = client.CreateMessage(thread, ["Hello, world!"]);
+        Validate(message);
+        Assert.That(message.CreatedAt, Is.GreaterThan(s_2024));
+        Assert.That(message.Content?.Count, Is.EqualTo(1));
+        Assert.That(message.Content[0], Is.InstanceOf<ResponseMessageTextContent>());
+        Assert.That(message.Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
+        bool deleted = client.DeleteMessage(message);
+        Assert.That(deleted, Is.True);
+        _messagesToDelete.Remove(message);
 
-    //    message = client.CreateMessage(thread, ["Goodbye, world!"], new MessageCreationOptions()
-    //    {
-    //        Metadata =
-    //        {
-    //            ["messageMetadata"] = "messageMetadataValue",
-    //        },
-    //    });
-    //    Validate(message);
-    //    Assert.That(message.Metadata.TryGetValue("messageMetadata", out string metadataValue) && metadataValue == "messageMetadataValue");
+        message = client.CreateMessage(thread, ["Goodbye, world!"], new MessageCreationOptions()
+        {
+            Metadata =
+            {
+                ["messageMetadata"] = "messageMetadataValue",
+            },
+        });
+        Validate(message);
+        Assert.That(message.Metadata.TryGetValue("messageMetadata", out string metadataValue) && metadataValue == "messageMetadataValue");
 
-    //    ThreadMessage retrievedMessage = client.GetMessage(thread.Id, message.Id);
-    //    Assert.That(retrievedMessage.Id, Is.EqualTo(message.Id));
+        ThreadMessage retrievedMessage = client.GetMessage(thread.Id, message.Id);
+        Assert.That(retrievedMessage.Id, Is.EqualTo(message.Id));
 
-    //    message = client.ModifyMessage(message, new MessageModificationOptions()
-    //    {
-    //        Metadata =
-    //        {
-    //            ["messageMetadata"] = "newValue",
-    //        }
-    //    });
-    //    Assert.That(message.Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
+        message = client.ModifyMessage(message, new MessageModificationOptions()
+        {
+            Metadata =
+            {
+                ["messageMetadata"] = "newValue",
+            }
+        });
+        Assert.That(message.Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
 
-    //    ListQueryPage<ThreadMessage> messagePage = client.GetMessages(thread);
-    //    Assert.That(messagePage.Count, Is.EqualTo(1));
-    //    Assert.That(messagePage[0].Id, Is.EqualTo(message.Id));
-    //    Assert.That(messagePage[0].Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
-    //}
+        PageableCollection<ThreadMessage> messagePage = client.GetMessages(thread);
+        Assert.That(messagePage.Count, Is.EqualTo(1));
+        Assert.That(messagePage.First().Id, Is.EqualTo(message.Id));
+        Assert.That(messagePage.First().Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
+    }
 
     //[Test]
     //public void ThreadWithInitialMessagesWorks()
@@ -155,16 +155,16 @@ public partial class AssistantTests
     //    };
     //    AssistantThread thread = client.CreateThread(options);
     //    Validate(thread);
-    //    ListQueryPage<ThreadMessage> messagePage = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
-    //    Assert.That(messagePage.Count, Is.EqualTo(2));
-    //    Assert.That(messagePage[0].Role, Is.EqualTo(MessageRole.User));
-    //    Assert.That(messagePage[0].Content?.Count, Is.EqualTo(1));
-    //    Assert.That(messagePage[0].Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
-    //    Assert.That(messagePage[1].Content?.Count, Is.EqualTo(2));
-    //    Assert.That(messagePage[1].Content[0], Is.InstanceOf<ResponseMessageTextContent>());
-    //    Assert.That(messagePage[1].Content[0].AsText().Text, Is.EqualTo("Can you describe this image for me?"));
-    //    Assert.That(messagePage[1].Content[1], Is.InstanceOf<MessageImageUrlContent>());
-    //    Assert.That(messagePage[1].Content[1].AsImageUrl().Url.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
+    //    PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
+    //    Assert.That(messages.Count, Is.EqualTo(2));
+    //    Assert.That(messages.First().Role, Is.EqualTo(MessageRole.User));
+    //    Assert.That(messages.First().Content?.Count, Is.EqualTo(1));
+    //    Assert.That(messages.First().Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
+    //    Assert.That(messages.ElementAt(1).Content?.Count, Is.EqualTo(2));
+    //    Assert.That(messages.ElementAt(1).Content[0], Is.InstanceOf<ResponseMessageTextContent>());
+    //    Assert.That(messages.ElementAt(1).Content[0].AsText().Text, Is.EqualTo("Can you describe this image for me?"));
+    //    Assert.That(messages.ElementAt(1).Content[1], Is.InstanceOf<MessageImageUrlContent>());
+    //    Assert.That(messages.ElementAt(1).Content[1].AsImageUrl().Url.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
     //}
 
     //[Test]

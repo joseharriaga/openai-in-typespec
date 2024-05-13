@@ -26,8 +26,6 @@ internal partial class AzureAssistantClient : AssistantClient
         options ??= new();
         _endpoint = endpoint;
         _apiVersion = options.Version;
-
-        throw new NotImplementedException($"Protocol support not yet implemented");
     }
 
     protected AzureAssistantClient()

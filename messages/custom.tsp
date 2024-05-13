@@ -24,7 +24,7 @@ model MessageDeltaContent {
 }
 
 @discriminator("type")
-model MessageTextContentAnnotation {
+model MessageContentTextObjectAnnotation {
   /** The discriminated type identifier for the content item. */
   type: string;
 }

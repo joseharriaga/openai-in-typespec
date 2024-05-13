@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The DeleteAssistantResponse. </summary>
     internal partial class InternalDeleteAssistantResponse

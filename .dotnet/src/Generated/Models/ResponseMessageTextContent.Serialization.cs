@@ -7,7 +7,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
@@ -23,9 +22,9 @@ namespace OpenAI.Assistants
 
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(InternalType);
+            writer.WriteStringValue(_type);
             writer.WritePropertyName("text"u8);
-            writer.WriteObjectValue<InternalMessageContentTextObjectText>(InternalText, options);
+            writer.WriteObjectValue<MessageContentTextObjectText>(_text, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -65,7 +64,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string type = default;
-            InternalMessageContentTextObjectText text = default;
+            MessageContentTextObjectText text = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -77,7 +76,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("text"u8))
                 {
-                    text = InternalMessageContentTextObjectText.DeserializeInternalMessageContentTextObjectText(property.Value, options);
+                    text = MessageContentTextObjectText.DeserializeMessageContentTextObjectText(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

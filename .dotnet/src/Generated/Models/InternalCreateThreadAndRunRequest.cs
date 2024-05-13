@@ -4,10 +4,9 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Assistants;
 using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The CreateThreadAndRunRequest. </summary>
     internal partial class InternalCreateThreadAndRunRequest

@@ -9,25 +9,38 @@ namespace OpenAI.Assistants;
 [CodeGenModel("MessageContentTextObject")]
 public partial class ResponseMessageTextContent
 {
-    public string Text => InternalText.Value;
+    /// <inheritdoc cref="MessageContentTextObjectText.Value"/>
+    public string Text => _text.Value;
 
-    public IList<MessageTextContentAnnotation> Annotations => InternalText.Annotations;
+    public IReadOnlyList<MessageTextContentAnnotation> Annotations => _annotations ??= WrapAnnotations();
 
     [CodeGenMember("Type")]
-    private string InternalType { get; }
+    private readonly string _type;
 
     [CodeGenMember("Text")]
-    internal InternalMessageContentTextObjectText InternalText { get; set; }
+    private readonly MessageContentTextObjectText _text;
+
+    private IReadOnlyList<MessageTextContentAnnotation> _annotations;
 
     /// <summary> Initializes a new instance of <see cref="ResponseMessageTextContent"/>. </summary>
     /// <param name="internalText"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="internalText"/> is null. </exception>
-    internal ResponseMessageTextContent(InternalMessageContentTextObjectText internalText)
+    internal ResponseMessageTextContent(MessageContentTextObjectText internalText)
     {
         Argument.AssertNotNull(internalText, nameof(internalText));
 
-        InternalText = internalText;
+        _text = internalText;
     }
 
     public override string ToString() => Text;
+
+    private IReadOnlyList<MessageTextContentAnnotation> WrapAnnotations()
+    {
+        List<MessageTextContentAnnotation> annotations = [];
+        foreach (MessageContentTextObjectAnnotation internalAnnotation in _text?.Annotations ?? [])
+        {
+            annotations.Add(new(internalAnnotation));
+        }
+        return annotations;
+    }
 }

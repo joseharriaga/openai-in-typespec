@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -45,7 +44,7 @@ namespace OpenAI.Assistants
 
         /// <summary> Initializes a new instance of <see cref="RunTruncationStrategy"/>. </summary>
         /// <param name="type"> The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`. </param>
-        public RunTruncationStrategy(Models.RunTruncationStrategyType type)
+        public RunTruncationStrategy(RunTruncationStrategyType type)
         {
             Type = type;
         }
@@ -54,7 +53,7 @@ namespace OpenAI.Assistants
         /// <param name="type"> The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`. </param>
         /// <param name="lastMessages"> The number of most recent messages from the thread when constructing the context for the run. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunTruncationStrategy(Models.RunTruncationStrategyType type, int? lastMessages, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunTruncationStrategy(RunTruncationStrategyType type, int? lastMessages, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             LastMessages = lastMessages;
@@ -67,7 +66,7 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> The truncation strategy to use for the thread. The default is `auto`. If set to `last_messages`, the thread will be truncated to the n most recent messages in the thread. When set to `auto`, messages in the middle of the thread will be dropped to fit the context length of the model, `max_prompt_tokens`. </summary>
-        public Models.RunTruncationStrategyType Type { get; set; }
+        public RunTruncationStrategyType Type { get; set; }
         /// <summary> The number of most recent messages from the thread when constructing the context for the run. </summary>
         public int? LastMessages { get; set; }
     }

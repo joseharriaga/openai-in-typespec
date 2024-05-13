@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Internal.Models;
 using OpenAI.Models;
 
 namespace OpenAI.Assistants
@@ -14,12 +13,12 @@ namespace OpenAI.Assistants
     {
         /// <summary> Initializes a new instance of <see cref="ResponseMessageTextContent"/>. </summary>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="internalType"> Always `text`. </param>
-        /// <param name="internalText"></param>
-        internal ResponseMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string internalType, InternalMessageContentTextObjectText internalText) : base(serializedAdditionalRawData)
+        /// <param name="type"> Always `text`. </param>
+        /// <param name="text"></param>
+        internal ResponseMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string type, MessageContentTextObjectText text) : base(serializedAdditionalRawData)
         {
-            InternalType = internalType;
-            InternalText = internalText;
+            _type = type;
+            _text = text;
         }
 
         /// <summary> Initializes a new instance of <see cref="ResponseMessageTextContent"/> for deserialization. </summary>

@@ -365,20 +365,20 @@ public partial class AssistantTests
             {
                 message += $"at {update.UpdateKind switch
                 {
-                    StreamingUpdateKind.RunCreated => runUpdate.Value.CreatedAt,
-                    StreamingUpdateKind.RunQueued => runUpdate.Value.StartedAt,
-                    StreamingUpdateKind.RunInProgress => runUpdate.Value.StartedAt,
-                    StreamingUpdateKind.RunCompleted => runUpdate.Value.CompletedAt,
+                    StreamingUpdateReason.RunCreated => runUpdate.Value.CreatedAt,
+                    StreamingUpdateReason.RunQueued => runUpdate.Value.StartedAt,
+                    StreamingUpdateReason.RunInProgress => runUpdate.Value.StartedAt,
+                    StreamingUpdateReason.RunCompleted => runUpdate.Value.CompletedAt,
                     _ => "???",
                 }}";
             }
-            if (update is MessageTextUpdate textUpdate)
+            if (update is MessageContentUpdate contentUpdate)
             {
-                message += textUpdate.Text;
-            }
-            if (update.UpdateKind == StreamingUpdateKind.RunCompleted)
-            {
-                message += "";
+                if (contentUpdate.Role.HasValue)
+                {
+                    message += $"[{contentUpdate.Role}]";
+                }
+                message += $"[{contentUpdate.ContentIndex}] {contentUpdate.Text}";
             }
             Print(message);
         }

@@ -6,11 +6,10 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
-    [PersistableModelProxy(typeof(InternalUnknownAssistantToolDefinition))]
+    [PersistableModelProxy(typeof(UnknownAssistantToolDefinition))]
     public partial class ToolDefinition : IJsonModel<ToolDefinition>
     {
         void IJsonModel<ToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -71,7 +70,7 @@ namespace OpenAI.Assistants
                     case "function": return FunctionToolDefinition.DeserializeFunctionToolDefinition(element, options);
                 }
             }
-            return InternalUnknownAssistantToolDefinition.DeserializeInternalUnknownAssistantToolDefinition(element, options);
+            return UnknownAssistantToolDefinition.DeserializeUnknownAssistantToolDefinition(element, options);
         }
 
         BinaryData IPersistableModel<ToolDefinition>.Write(ModelReaderWriterOptions options)

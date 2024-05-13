@@ -10,9 +10,9 @@ namespace OpenAI.Assistants
     /// <summary>
     /// Represents a single piece of incremental content in an Assistants API streaming response.
     /// Please note <see cref="MessageDeltaContent"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-    /// The available derived classes include <see cref="MessageImageFileDeltaContent"/>, <see cref="MessageImageUrlDeltaContent"/> and <see cref="MessageTextDeltaContent"/>.
+    /// The available derived classes include <see cref="MessageDeltaContentImageFileObject"/>, <see cref="MessageDeltaContentImageUrlObject"/> and <see cref="MessageDeltaContentTextObject"/>.
     /// </summary>
-    public abstract partial class MessageDeltaContent
+    internal abstract partial class MessageDeltaContent
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The RunObjectRequiredAction. </summary>
     internal partial class InternalRunRequiredAction
@@ -57,7 +57,7 @@ namespace OpenAI.Internal.Models
         /// <param name="type"> For now, this is always `submit_tool_outputs`. </param>
         /// <param name="submitToolOutputs"> Details on the tool outputs needed for this run to continue. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalRunRequiredAction(RunObjectRequiredActionType type, InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRunRequiredAction(object type, InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             SubmitToolOutputs = submitToolOutputs;
@@ -68,9 +68,6 @@ namespace OpenAI.Internal.Models
         internal InternalRunRequiredAction()
         {
         }
-
-        /// <summary> For now, this is always `submit_tool_outputs`. </summary>
-        public RunObjectRequiredActionType Type { get; } = RunObjectRequiredActionType.SubmitToolOutputs;
 
         /// <summary> Details on the tool outputs needed for this run to continue. </summary>
         public InternalRunObjectRequiredActionSubmitToolOutputs SubmitToolOutputs { get; }

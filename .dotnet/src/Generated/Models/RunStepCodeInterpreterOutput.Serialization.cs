@@ -6,11 +6,10 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
-    [PersistableModelProxy(typeof(InternalUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject))]
+    [PersistableModelProxy(typeof(UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject))]
     public partial class RunStepCodeInterpreterOutput : IJsonModel<RunStepCodeInterpreterOutput>
     {
         void IJsonModel<RunStepCodeInterpreterOutput>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -70,7 +69,7 @@ namespace OpenAI.Assistants
                     case "logs": return RunStepCodeInterpreterLogOutput.DeserializeRunStepCodeInterpreterLogOutput(element, options);
                 }
             }
-            return InternalUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject.DeserializeInternalUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject(element, options);
+            return UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject.DeserializeUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject(element, options);
         }
 
         BinaryData IPersistableModel<RunStepCodeInterpreterOutput>.Write(ModelReaderWriterOptions options)

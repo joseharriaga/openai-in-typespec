@@ -6,11 +6,10 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
-    [PersistableModelProxy(typeof(InternalUnknownRunStepDetailsToolCallsObjectToolCallsObject))]
+    [PersistableModelProxy(typeof(UnknownRunStepDetailsToolCallsObjectToolCallsObject))]
     public partial class RunStepToolCallDetails : IJsonModel<RunStepToolCallDetails>
     {
         void IJsonModel<RunStepToolCallDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -71,7 +70,7 @@ namespace OpenAI.Assistants
                     case "function": return RunStepFunctionToolCallDetails.DeserializeRunStepFunctionToolCallDetails(element, options);
                 }
             }
-            return InternalUnknownRunStepDetailsToolCallsObjectToolCallsObject.DeserializeInternalUnknownRunStepDetailsToolCallsObjectToolCallsObject(element, options);
+            return UnknownRunStepDetailsToolCallsObjectToolCallsObject.DeserializeUnknownRunStepDetailsToolCallsObjectToolCallsObject(element, options);
         }
 
         BinaryData IPersistableModel<RunStepToolCallDetails>.Write(ModelReaderWriterOptions options)

@@ -1,0 +1,84 @@
+using OpenAI.Internal.Models;
+using System.ClientModel.Primitives;
+using System.Collections.Generic;
+using System.Text.Json;
+
+namespace OpenAI.Assistants;
+
+/// <summary>
+/// Represents a streaming update to message content as part of the Assistants API.
+/// </summary>
+public partial class MessageContentUpdate : StreamingUpdate
+{
+    /// <inheritdoc cref="MessageDeltaObject.Id"/>
+    public string MessageId => _delta.Id;
+
+    /// <inheritdoc cref="MessageDeltaObjectDelta.Role"/>
+    public MessageRole? Role => _delta.Delta?.Role;
+
+    /// <inheritdoc cref="MessageDeltaContentImageFileObject.Index"/>
+    public int ContentIndex => _textContent?.Index
+        ?? _imageFileContent?.Index
+        ?? _imageUrlContent?.Index
+        ?? TextAnnotation?.ContentIndex
+        ?? 0;
+
+    /// <inheritdoc cref="MessageDeltaContentImageFileObjectImageFile.FileId"/>
+    public string ImageFileId => _imageFileContent?.ImageFile?.FileId;
+
+    /// <inheritdoc cref="MessageImageDetail"/>
+    public MessageImageDetail? ImageDetail => _imageFileContent?.ImageFile?.Detail?.ToMessageImageDetail()
+        ?? _imageUrlContent?.ImageUrl?.Detail?.ToMessageImageDetail();
+
+    /// <inheritdoc cref="MessageDeltaContentTextObjectText.Value"/>
+    public string Text => _textContent?.Text?.Value;
+
+    /// <summary>
+    /// An update to an annotation associated with a specific content item in the message's content items collection.
+    /// </summary>
+    public MessageTextAnnotationUpdate TextAnnotation { get; }
+
+    private readonly MessageDeltaContentImageFileObject _imageFileContent;
+    private readonly MessageDeltaContentTextObject _textContent;
+    private readonly MessageDeltaContentImageUrlObject _imageUrlContent;
+    private readonly MessageDeltaObject _delta;
+
+    internal MessageContentUpdate(MessageDeltaObject delta, MessageDeltaContent content)
+        : base(StreamingUpdateReason.MessageUpdated)
+    {
+        _delta = delta;
+        _textContent = content as MessageDeltaContentTextObject;
+        _imageFileContent = content as MessageDeltaContentImageFileObject;
+        _imageUrlContent = content as MessageDeltaContentImageUrlObject;
+    }
+
+    internal MessageContentUpdate(MessageDeltaObject delta, MessageTextAnnotationUpdate annotation)
+        : base(StreamingUpdateReason.MessageUpdated)
+    {
+        _delta = delta;
+        TextAnnotation = annotation;
+    }
+
+    internal static IEnumerable<MessageContentUpdate> DeserializeMessageContentUpdates(
+        JsonElement element,
+        StreamingUpdateReason _,
+        ModelReaderWriterOptions options = null)
+    {
+        MessageDeltaObject deltaObject = MessageDeltaObject.DeserializeMessageDeltaObject(element, options);
+        List<MessageContentUpdate> updates = [];
+        foreach (MessageDeltaContent deltaContent in deltaObject.Delta.Content ?? [])
+        {
+            updates.Add(new(deltaObject, deltaContent));
+            if (deltaContent is MessageDeltaContentTextObject textContent)
+            {
+                foreach (MessageDeltaTextContentAnnotation internalAnnotation in textContent.Text.Annotations)
+                {
+                    MessageTextAnnotationUpdate annotation = new(internalAnnotation);
+                    updates.Add(new(deltaObject, annotation));
+                }
+            }
+        }
+        return updates;
+    }
+}
+

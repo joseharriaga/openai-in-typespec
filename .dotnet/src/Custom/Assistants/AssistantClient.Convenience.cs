@@ -255,6 +255,32 @@ public partial class AssistantClient
         => CreateRun(thread?.Id, assistant?.Id, options);
 
     /// <summary>
+    /// Begins a new streaming <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="thread"> The thread that the run should evaluate. </param>
+    /// <param name="assistant"> The assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    public virtual Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> CreateRunStreamingAsync(
+        AssistantThread thread,
+        Assistant assistant,
+        RunCreationOptions options = null)
+            => CreateRunStreamingAsync(thread?.Id, assistant?.Id, options);
+
+    /// <summary>
+    /// Begins a new streaming <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="thread"> The thread that the run should evaluate. </param>
+    /// <param name="assistant"> The assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateRunStreaming(
+        AssistantThread thread,
+        Assistant assistant,
+        RunCreationOptions options = null)
+            => CreateRunStreaming(thread?.Id, assistant?.Id, options);
+
+    /// <summary>
     /// Creates a new thread and immediately begins a run against it using the specified <see cref="Assistant"/>.
     /// </summary>
     /// <param name="assistant"> The assistant that the new run should use. </param>
@@ -279,6 +305,30 @@ public partial class AssistantClient
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
             => CreateThreadAndRun(assistant?.Id, threadOptions, runOptions);
+
+    /// <summary>
+    /// Creates a new thread and immediately begins a streaming run against it using the specified <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="assistant"> The assistant that the new run should use. </param>
+    /// <param name="threadOptions"> Options for the new thread that will be created. </param>
+    /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
+    public virtual Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> CreateThreadAndRunStreamingAsync(
+        Assistant assistant,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+            => CreateThreadAndRunStreamingAsync(assistant?.Id, threadOptions, runOptions);
+
+    /// <summary>
+    /// Creates a new thread and immediately begins a streaming run against it using the specified <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="assistant"> The assistant that the new run should use. </param>
+    /// <param name="threadOptions"> Options for the new thread that will be created. </param>
+    /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
+    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateThreadAndRunStreaming(
+        Assistant assistant,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+            => CreateThreadAndRunStreaming(assistant?.Id, threadOptions, runOptions);
 
     /// <summary>
     /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
@@ -381,6 +431,30 @@ public partial class AssistantClient
         ThreadRun run,
         IEnumerable<ToolOutput> toolOutputs)
             => SubmitToolOutputsToRun(run?.ThreadId, run?.Id, toolOutputs);
+
+    /// <summary>
+    /// Submits a collection of required tool call outputs to a run and resumes the run with streaming enabled.
+    /// </summary>
+    /// <param name="run"> The run that reached a <c>requires_action</c> status. </param>
+    /// <param name="toolOutputs">
+    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// </param>
+    public virtual Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> SubmitToolOutputsToRunStreamingAsync(
+        ThreadRun run,
+        IEnumerable<ToolOutput> toolOutputs)
+            => SubmitToolOutputsToRunStreamingAsync(run?.ThreadId, run?.Id, toolOutputs);
+
+    /// <summary>
+    /// Submits a collection of required tool call outputs to a run and resumes the run with streaming enabled.
+    /// </summary>
+    /// <param name="run"> The run that reached a <c>requires_action</c> status. </param>
+    /// <param name="toolOutputs">
+    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// </param>
+    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> SubmitToolOutputsToRunStreaming(
+        ThreadRun run,
+        IEnumerable<ToolOutput> toolOutputs)
+            => SubmitToolOutputsToRunStreaming(run?.ThreadId, run?.Id, toolOutputs);
 
     /// <summary>
     /// Cancels an in-progress <see cref="ThreadRun"/>.

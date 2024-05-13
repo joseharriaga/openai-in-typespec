@@ -5,9 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Assistants;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The RunObjectRequiredActionSubmitToolOutputs. </summary>
     internal partial class InternalRunObjectRequiredActionSubmitToolOutputs

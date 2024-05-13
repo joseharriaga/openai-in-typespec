@@ -179,14 +179,14 @@ model MessageContentTextObject extends MessageContent {
 
     // Tool customization: replace unioned types with a custom, common base
     @extension("x-oaiExpandable", true)
-    annotations: MessageTextContentAnnotation[];
+    annotations: MessageContentTextObjectAnnotation[];
   };
 }
 
 // Tool customization: apply custom, common base type to union items
 /** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. */
 model MessageContentTextAnnotationsFileCitationObject
-  extends MessageTextContentAnnotation {
+  extends MessageContentTextObjectAnnotation {
   @doc("""
   Always `file_citation`.
   """)
@@ -215,7 +215,7 @@ model MessageContentTextAnnotationsFileCitationObject
 A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
 """)
 model MessageContentTextAnnotationsFilePathObject
-  extends MessageTextContentAnnotation {
+  extends MessageContentTextObjectAnnotation {
   @doc("""
   Always `file_path`.
   """)

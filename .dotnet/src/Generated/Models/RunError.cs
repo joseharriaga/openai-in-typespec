@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -47,7 +46,7 @@ namespace OpenAI.Assistants
         /// <param name="code"> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
-        internal RunError(Models.RunErrorCode code, string message)
+        internal RunError(RunErrorCode code, string message)
         {
             Argument.AssertNotNull(message, nameof(message));
 
@@ -59,7 +58,7 @@ namespace OpenAI.Assistants
         /// <param name="code"> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunError(Models.RunErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunError(RunErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             Message = message;
@@ -72,7 +71,7 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </summary>
-        public Models.RunErrorCode Code { get; }
+        public RunErrorCode Code { get; }
         /// <summary> A human-readable description of the error. </summary>
         public string Message { get; }
     }

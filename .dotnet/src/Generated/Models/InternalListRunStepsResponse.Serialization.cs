@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Assistants;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class InternalListRunStepsResponse : IJsonModel<InternalListRunStepsResponse>
     {

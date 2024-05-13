@@ -171,14 +171,12 @@ public partial class AssistantSamples
                         // Include annotations, if any.
                         foreach (MessageTextContentAnnotation annotation in textContent.Annotations)
                         {
-                            if (annotation is FileCitationTextContentAnnotation citationAnnotation)
-                            {
-                                Console.WriteLine($"* File citation, file ID: {citationAnnotation.FileId}");
-                            }
-                            else if (annotation is FilePathTextContentAnnotation pathAnnotation)
-                            {
-                                Console.WriteLine($"* File path, file ID: {pathAnnotation.FileId}");
-                            }
+                            Console.WriteLine($"*** Annotation: ***");
+                            Console.WriteLine($"* Message content index range: {annotation.StartIndex}-{annotation.EndIndex}");
+                            Console.WriteLine($"* Text to replace: {annotation.TextToReplace}");
+                            Console.WriteLine($"* File ID used by file_search: {annotation.InputFileId}");
+                            Console.WriteLine($"* file_search quote from file: {annotation.InputQuote}");
+                            Console.WriteLine($"* File ID created by code_interpreter: {annotation.OutputFileId}");
                         }
                     }
                 }

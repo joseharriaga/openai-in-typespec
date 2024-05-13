@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The RunStepDetailsToolCallsCodeOutputImageObjectImage. </summary>
     internal partial class InternalRunStepDetailsToolCallsCodeOutputImageObjectImage

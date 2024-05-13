@@ -4,12 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
     /// <summary> Represents a run step delta i.e. any changed fields on a run step during streaming. </summary>
-    public partial class RunStepDelta
+    internal partial class RunStepDelta
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -47,13 +46,13 @@ namespace OpenAI.Assistants
         /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>
         /// <param name="delta"> The delta containing the fields that have changed on the run step. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="delta"/> is null. </exception>
-        internal RunStepDelta(string id, InternalRunStepDeltaObjectDelta delta)
+        internal RunStepDelta(string id, RunStepDeltaObjectDelta delta)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(delta, nameof(delta));
 
             Id = id;
-            _delta = delta;
+            Delta = delta;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunStepDelta"/>. </summary>
@@ -61,11 +60,11 @@ namespace OpenAI.Assistants
         /// <param name="object"> The object type, which is always `thread.run.step.delta`. </param>
         /// <param name="delta"> The delta containing the fields that have changed on the run step. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepDelta(string id, object @object, InternalRunStepDeltaObjectDelta delta, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepDelta(string id, object @object, RunStepDeltaObjectDelta delta, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
-            _delta = delta;
+            Delta = delta;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -76,5 +75,8 @@ namespace OpenAI.Assistants
 
         /// <summary> The identifier of the run step, which can be referenced in API endpoints. </summary>
         public string Id { get; }
+
+        /// <summary> The delta containing the fields that have changed on the run step. </summary>
+        public RunStepDeltaObjectDelta Delta { get; }
     }
 }

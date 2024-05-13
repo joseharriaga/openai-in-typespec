@@ -420,7 +420,7 @@ namespace OpenAI
         /// <param name="code"> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <returns> A new <see cref="Assistants.RunError"/> instance for mocking. </returns>
-        public static RunError RunError(Models.RunErrorCode code = default, string message = null)
+        public static RunError RunError(RunErrorCode code = default, string message = null)
         {
             return new RunError(code, message, serializedAdditionalRawData: null);
         }
@@ -447,7 +447,7 @@ namespace OpenAI
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <returns> A new <see cref="Assistants.RunStepError"/> instance for mocking. </returns>
-        public static RunStepError RunStepError(Models.RunStepErrorCode code = default, string message = null)
+        public static RunStepError RunStepError(RunStepErrorCode code = default, string message = null)
         {
             return new RunStepError(code, message, serializedAdditionalRawData: null);
         }

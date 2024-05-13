@@ -7,11 +7,10 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
-    public partial class RunStepDelta : IJsonModel<RunStepDelta>
+    internal partial class RunStepDelta : IJsonModel<RunStepDelta>
     {
         void IJsonModel<RunStepDelta>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -27,7 +26,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("object"u8);
             writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("delta"u8);
-            writer.WriteObjectValue<InternalRunStepDeltaObjectDelta>(_delta, options);
+            writer.WriteObjectValue(Delta, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -68,7 +67,7 @@ namespace OpenAI.Assistants
             }
             string id = default;
             object @object = default;
-            InternalRunStepDeltaObjectDelta delta = default;
+            RunStepDeltaObjectDelta delta = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -85,7 +84,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("delta"u8))
                 {
-                    delta = InternalRunStepDeltaObjectDelta.DeserializeInternalRunStepDeltaObjectDelta(property.Value, options);
+                    delta = RunStepDeltaObjectDelta.DeserializeRunStepDeltaObjectDelta(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

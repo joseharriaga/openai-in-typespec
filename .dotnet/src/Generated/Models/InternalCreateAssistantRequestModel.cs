@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The CreateAssistantRequestModel. </summary>
     internal readonly partial struct InternalCreateAssistantRequestModel : IEquatable<InternalCreateAssistantRequestModel>

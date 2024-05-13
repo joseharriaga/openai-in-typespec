@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Models
+namespace OpenAI.Assistants
 {
     /// <summary> Enum for type in RunTruncationStrategy. </summary>
     public readonly partial struct RunTruncationStrategyType : IEquatable<RunTruncationStrategyType>

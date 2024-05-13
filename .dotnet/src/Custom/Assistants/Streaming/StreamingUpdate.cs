@@ -1,9 +1,11 @@
 using OpenAI.Internal.Models;
 using System;
+using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -23,15 +25,14 @@ namespace OpenAI.Assistants;
 /// Please note that this is the abstract base type. To access data, downcast an instance of this type to an
 /// appropriate, derived update type:
 /// <para>
-/// For messages: <see cref="MessageUpdate"/>, <see cref="MessageTextUpdate"/>, <see cref="MessageImageFileUpdate"/>,
-/// <see cref="MessageImageUrlUpdate"/>, <see cref="MessageStatusUpdate"/>
+/// For messages: <see cref="MessageStatusUpdate"/>, <see cref="MessageContentUpdate"/>
 /// </para>
 /// <para>
 /// For runs and run steps: <see cref="RunUpdate"/>, <see cref="RunStepUpdate"/>, <see cref="RunStepDetailsUpdate"/>,
-/// <see cref="RunRequiredActionUpdate"/>
+/// <see cref="RequiredActionUpdate"/>
 /// </para>
 /// <para>
-/// For threads, <see cref="ThreadCreationUpdate"/>
+/// For threads, <see cref="ThreadUpdate"/>
 /// </para>
 /// </remarks>
 public abstract partial class StreamingUpdate
@@ -40,22 +41,22 @@ public abstract partial class StreamingUpdate
     /// A value indicating what type of event this update represents.
     /// </summary>
     /// <remarks>
-    /// Many events share the same response type. For example, <see cref="StreamingUpdateKind.RunCreated"/> and
-    /// <see cref="StreamingUpdateKind.RunCompleted"/> are both associated with a <see cref="ThreadRun"/> instance.
+    /// Many events share the same response type. For example, <see cref="StreamingUpdateReason.RunCreated"/> and
+    /// <see cref="StreamingUpdateReason.RunCompleted"/> are both associated with a <see cref="ThreadRun"/> instance.
     /// You can use the value of <see cref="UpdateKind"/> to differentiate between these events when the type is not
     /// sufficient to do so.
     /// </remarks>
-    public StreamingUpdateKind UpdateKind { get; }
+    public StreamingUpdateReason UpdateKind { get; }
 
-    internal StreamingUpdate(StreamingUpdateKind updateKind)
+    internal StreamingUpdate(StreamingUpdateReason updateKind)
     {
         UpdateKind = updateKind;
     }
 
-    internal static async Task<IEnumerable<StreamingUpdate>> TemporaryCreateFromReaderAsync(StreamReader reader)
+    private static async Task<IEnumerable<StreamingUpdate>> TemporaryCreateFromReaderAsync(StreamReader reader)
         => TemporaryCreateFromLines(await reader.ReadLineAsync(), await reader.ReadLineAsync(), await reader.ReadLineAsync());
 
-    internal static IEnumerable<StreamingUpdate> TemporaryCreateFromReader(StreamReader reader)
+    private static IEnumerable<StreamingUpdate> TemporaryCreateFromReader(StreamReader reader)
         => TemporaryCreateFromLines(reader.ReadLine(), reader.ReadLine(), reader.ReadLine());
 
     private static IEnumerable<StreamingUpdate> TemporaryCreateFromLines(string eventLine, string dataLine, string emptyLine)
@@ -72,34 +73,57 @@ public abstract partial class StreamingUpdate
         JsonDocument dataDocument = JsonDocument.Parse(data);
         JsonElement e = dataDocument.RootElement;
 
-        StreamingUpdateKind updateKind = StreamingUpdateKindExtensions.FromSseEventLabel(eventName);
+        StreamingUpdateReason updateKind = StreamingUpdateReasonExtensions.FromSseEventLabel(eventName);
 
         return updateKind switch
         {
-            StreamingUpdateKind.ThreadCreated => ThreadCreationUpdate.DeserializeThreadCreationUpdates(e, updateKind),
-            StreamingUpdateKind.RunCreated
-            or StreamingUpdateKind.RunQueued
-            or StreamingUpdateKind.RunInProgress
-            or StreamingUpdateKind.RunRequiresAction
-            or StreamingUpdateKind.RunCompleted
-            or StreamingUpdateKind.RunFailed
-            or StreamingUpdateKind.RunCancelling
-            or StreamingUpdateKind.RunCancelled
-            or StreamingUpdateKind.RunExpired => RunUpdate.DeserializeRunUpdates(e, updateKind),
-            StreamingUpdateKind.RunStepCreated
-            or StreamingUpdateKind.RunStepInProgress
-            or StreamingUpdateKind.RunStepCompleted
-            or StreamingUpdateKind.RunStepFailed
-            or StreamingUpdateKind.RunStepCancelled
-            or StreamingUpdateKind.RunStepExpired => RunStepUpdate.DeserializeRunStepUpdates(e, updateKind),
-            StreamingUpdateKind.MessageCreated
-            or StreamingUpdateKind.MessageInProgress
-            or StreamingUpdateKind.MessageCompleted
-            or StreamingUpdateKind.MessageFailed => MessageStatusUpdate.DeserializeMessageStatusUpdates(e, updateKind),
-            StreamingUpdateKind.RunStepUpdated => RunStepDetailsUpdate.DeserializeRunStepDetailsUpdates(e, updateKind),
-            StreamingUpdateKind.MessageUpdated => MessageUpdate.DeserializeMessageUpdates(e, updateKind),
+            StreamingUpdateReason.ThreadCreated => ThreadUpdate.DeserializeThreadCreationUpdates(e, updateKind),
+            StreamingUpdateReason.RunCreated
+            or StreamingUpdateReason.RunQueued
+            or StreamingUpdateReason.RunInProgress
+            or StreamingUpdateReason.RunCompleted
+            or StreamingUpdateReason.RunFailed
+            or StreamingUpdateReason.RunCancelling
+            or StreamingUpdateReason.RunCancelled
+            or StreamingUpdateReason.RunExpired => RunUpdate.DeserializeRunUpdates(e, updateKind),
+            StreamingUpdateReason.RunRequiresAction => RequiredActionUpdate.DeserializeRequiredActionUpdates(e),
+            StreamingUpdateReason.RunStepCreated
+            or StreamingUpdateReason.RunStepInProgress
+            or StreamingUpdateReason.RunStepCompleted
+            or StreamingUpdateReason.RunStepFailed
+            or StreamingUpdateReason.RunStepCancelled
+            or StreamingUpdateReason.RunStepExpired => RunStepUpdate.DeserializeRunStepUpdates(e, updateKind),
+            StreamingUpdateReason.MessageCreated
+            or StreamingUpdateReason.MessageInProgress
+            or StreamingUpdateReason.MessageCompleted
+            or StreamingUpdateReason.MessageFailed => MessageStatusUpdate.DeserializeMessageStatusUpdates(e, updateKind),
+            StreamingUpdateReason.RunStepUpdated => RunStepDetailsUpdate.DeserializeRunStepDetailsUpdates(e, updateKind),
+            StreamingUpdateReason.MessageUpdated => MessageContentUpdate.DeserializeMessageContentUpdates(e, updateKind),
             _ => null,
         };
+    }
+
+    internal static ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateTemporaryResult(ClientResult protocolResult)
+    {
+        // NOTE: This is entirely temporary! Just for prototyping and discussion.
+
+        async IAsyncEnumerable<StreamingUpdate> TemporaryEnumerateAsync(PipelineResponse response)
+        {
+            using StreamReader reader = new(response.ContentStream);
+            while (true)
+            {
+                IEnumerable<StreamingUpdate> nextUpdates = await TemporaryCreateFromReaderAsync(reader);
+                if (nextUpdates == null) break;
+                foreach (StreamingUpdate update in nextUpdates)
+                {
+                    yield return update;
+                }
+            }
+        }
+
+        PipelineResponse response = protocolResult.GetRawResponse();
+        IAsyncEnumerable<StreamingUpdate> asyncEnumerable = TemporaryEnumerateAsync(response);
+        return ClientResult.FromValue(asyncEnumerable, response);
     }
 }
 
@@ -111,238 +135,13 @@ public partial class StreamingUpdate<T> : StreamingUpdate
     where T : class
 {
     /// <summary>
-    /// The underlying response value received with the streaming event. Use this value to access the full detail of
-    /// the event if a specific derived type does not provide it.
+    /// The underlying response value received with the streaming event.
     /// </summary>
     public T Value { get; }
 
-    internal StreamingUpdate(T value, StreamingUpdateKind updateKind)
+    internal StreamingUpdate(T value, StreamingUpdateReason updateKind)
         : base(updateKind)
     {
         Value = value;
-    }
-}
-
-/// <summary>
-/// The update type presented when a streamed event indicates a thread was created.
-/// </summary>
-public class ThreadCreationUpdate : StreamingUpdate<AssistantThread>
-{
-    /// <see cref="AssistantThread.Id"/>
-    public string Id => Value.Id;
-    /// <see cref="AssistantThread.Metadata"/>
-    public IReadOnlyDictionary<string, string> Metadata => Value.Metadata;
-    /// <see cref="AssistantThread.CreatedAt"/>
-    public DateTimeOffset CreatedAt => Value.CreatedAt;
-    /// <see cref="AssistantThread.ToolResources"/>
-    public ToolResources ToolResources => Value.ToolResources;
-
-    internal ThreadCreationUpdate(AssistantThread thread) : base(thread, StreamingUpdateKind.ThreadCreated)
-    { }
-
-    internal static IEnumerable<StreamingUpdate<AssistantThread>> DeserializeThreadCreationUpdates(
-        JsonElement element,
-        StreamingUpdateKind updateKind,
-        ModelReaderWriterOptions options = null)
-    {
-        AssistantThread thread = AssistantThread.DeserializeAssistantThread(element, options);
-        return updateKind switch
-        {
-            StreamingUpdateKind.ThreadCreated => [new ThreadCreationUpdate(thread)],
-            _ => [new StreamingUpdate<AssistantThread>(thread, updateKind)],
-        };
-    }
-}
-
-/// <summary>
-/// The update type presented when the status of a run changed.
-/// </summary>
-public class RunUpdate : StreamingUpdate<ThreadRun>
-{
-    internal RunUpdate(ThreadRun run, StreamingUpdateKind updateKind) : base(run, updateKind)
-    { }
-
-    internal static IEnumerable<StreamingUpdate<ThreadRun>> DeserializeRunUpdates(
-        JsonElement element,
-        StreamingUpdateKind updateKind,
-        ModelReaderWriterOptions options = null)
-    {
-        ThreadRun run = ThreadRun.DeserializeThreadRun(element, options);
-        return updateKind switch
-        {
-            StreamingUpdateKind.RunRequiresAction => [new RunRequiredActionUpdate(run)],
-            _ => [new RunUpdate(run, updateKind)],
-        };
-    }
-}
-
-/// <summary>
-/// The update type presented when the status of a run changed to <c>requires_action</c>, indicating tool output
-/// submission or other intervention is needed for the run to continue.
-/// </summary>
-public class RunRequiredActionUpdate : RunUpdate
-{
-    /// <inheritdoc cref="ThreadRun.RequiredActions"/>
-    public IReadOnlyList<RequiredAction> RequiredActions => Value.RequiredActions;
-
-    internal RunRequiredActionUpdate(ThreadRun value) : base(value, StreamingUpdateKind.RunRequiresAction)
-    { }
-}
-
-/// <summary>
-/// The update type presented when the status of a run step changes.
-/// </summary>
-public class RunStepUpdate : StreamingUpdate<RunStep>
-{
-    internal RunStepUpdate(RunStep runStep, StreamingUpdateKind updateKind)
-        : base(runStep, updateKind)
-    { }
-
-    internal static IEnumerable<StreamingUpdate<RunStep>> DeserializeRunStepUpdates(
-        JsonElement element,
-        StreamingUpdateKind updateKind,
-        ModelReaderWriterOptions options = null)
-    {
-        RunStep runStep = RunStep.DeserializeRunStep(element, options);
-        return updateKind switch
-        {
-            _ => [new RunStepUpdate(runStep, updateKind)],
-        };
-    }
-}
-
-/// <summary>
-/// The update type presented when run step details, including tool call progress, have changed.
-/// </summary>
-public class RunStepDetailsUpdate : StreamingUpdate<RunStepDelta>
-{
-    /// <inheritdoc cref="RunStepDelta.StepDetails"/>
-    public BinaryData StepDetails => Value.StepDetails;
-
-    internal RunStepDetailsUpdate(RunStepDelta stepDelta, StreamingUpdateKind updateKind)
-        : base(stepDelta, updateKind)
-    { }
-
-    internal static IEnumerable<StreamingUpdate<RunStepDelta>> DeserializeRunStepDetailsUpdates(
-        JsonElement element,
-        StreamingUpdateKind updateKind,
-        ModelReaderWriterOptions options = null)
-    {
-        RunStepDelta stepDelta = RunStepDelta.DeserializeRunStepDelta(element, options);
-        return updateKind switch
-        {
-            _ => [new RunStepDetailsUpdate(stepDelta, updateKind)],
-        };
-    }
-}
-
-/// <summary>
-/// The update type presented when the status of a message changes.
-/// </summary>
-public class MessageStatusUpdate : StreamingUpdate<ThreadMessage>
-{
-    internal MessageStatusUpdate(ThreadMessage message, StreamingUpdateKind updateKind)
-        : base(message, updateKind)
-    { }
-
-    internal static IEnumerable<MessageStatusUpdate> DeserializeMessageStatusUpdates(
-        JsonElement element,
-        StreamingUpdateKind updateKind,
-        ModelReaderWriterOptions options = null)
-    {
-        ThreadMessage message = ThreadMessage.DeserializeThreadMessage(element, options);
-        return updateKind switch
-        {
-            _ => [new MessageStatusUpdate(message, updateKind)],
-        };
-    }
-}
-
-/// <summary>
-/// The update type presented when the content of a role changes.
-/// </summary>
-public class MessageUpdate : StreamingUpdate<MessageDelta>
-{
-    /// <inheritdoc cref="MessageDelta.Id"/>
-    public string Id => Value.Id;
-    /// <inheritdoc cref="MessageDelta.Role"/>
-    public MessageRole Role => Value.Role;
-
-    internal MessageUpdate(MessageDelta value)
-        : base(value, StreamingUpdateKind.MessageUpdated)
-    { }
-
-    internal static IEnumerable<MessageUpdate> DeserializeMessageUpdates(
-        JsonElement element,
-        StreamingUpdateKind updateKind,
-        ModelReaderWriterOptions options = null)
-    {
-        MessageDelta delta = MessageDelta.DeserializeMessageDelta(element, options);
-        List<MessageUpdate> result = [];
-        foreach (MessageDeltaContent content in delta.Content)
-        {
-            result.Add(content switch
-            {
-                MessageTextDeltaContent textContent => new MessageTextUpdate(delta, textContent),
-                MessageImageFileDeltaContent imageFileContent => new MessageImageFileUpdate(delta, imageFileContent),
-                MessageImageUrlDeltaContent imageUrlContent => new MessageImageUrlUpdate(delta, imageUrlContent),
-                _ => new MessageUpdate(delta)
-            });
-        }
-        return result;
-    }
-}
-
-public class MessageTextUpdate : MessageUpdate
-{
-    /// <inheritdoc cref="MessageTextDeltaContent.Text"/>
-    public string Text => _internalContent.Text;
-    /// <inheritdoc cref="MessageTextDeltaContent.Annotations"/>
-    public IReadOnlyList<MessageDeltaTextContentAnnotation> Annotations => _internalContent.Annotations;
-    /// <inheritdoc cref="MessageTextDeltaContent.Index"/>
-    public int ContentIndex => _internalContent.Index;
-
-    private readonly MessageTextDeltaContent _internalContent;
-
-    internal MessageTextUpdate(MessageDelta value, MessageTextDeltaContent content)
-        : base(value)
-    {
-        _internalContent = content;
-    }
-}
-
-public partial class MessageImageFileUpdate : MessageUpdate
-{
-    /// <inheritdoc cref="MessageImageFileDeltaContent.Index"/>
-    public int ContentIndex => _internalContent.Index;
-    /// <inheritdoc cref="MessageImageFileDeltaContent.FileId"/>
-    public string FileId => _internalContent.FileId;
-    /// <inheritdoc cref="MessageImageFileDeltaContent.Detail"/>
-    public MessageImageDetail? Detail => _internalContent.Detail;
-
-    private readonly MessageImageFileDeltaContent _internalContent;
-
-    internal MessageImageFileUpdate(MessageDelta value, MessageImageFileDeltaContent content)
-        : base(value)
-    {
-        _internalContent = content;
-    }
-}
-
-public partial class MessageImageUrlUpdate : MessageUpdate
-{
-    /// <inheritdoc cref="MessageImageUrlDeltaContent.Index"/>
-    public int ContentIndex => _internalContent.Index;
-    /// <inheritdoc cref="MessageImageUrlDeltaContent.Url"/>
-    public Uri Url => _internalContent.Url;
-    /// <inheritdoc cref="MessageImageUrlDeltaContent.Detail"/>
-    public MessageImageDetail? Detail => _internalContent.Detail;
-
-    private readonly MessageImageUrlDeltaContent _internalContent;
-
-    internal MessageImageUrlUpdate(MessageDelta value, MessageImageUrlDeltaContent content)
-        : base(value)
-    {
-        _internalContent = content;
     }
 }

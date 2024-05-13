@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Models
+namespace OpenAI.Assistants
 {
     /// <summary> Enum for code in RunError. </summary>
     public readonly partial struct RunErrorCode : IEquatable<RunErrorCode>

@@ -1,8 +1,5 @@
-using OpenAI.Internal.Models;
 using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -151,23 +148,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(thread, nameof(thread));
 
-        ClientPage<ThreadMessage> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = GetMessages(thread.Id, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
-            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
-        }
-
-        ClientPage<ThreadMessage> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = GetMessages(thread.Id, limit: pageSize, order: null, after: continuationToken, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
-            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return GetMessages(thread.Id, resultOrder);
     }
 
     /// <summary>
@@ -198,23 +179,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(thread, nameof(thread));
 
-        async Task<ClientPage<ThreadMessage>> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = await GetMessagesAsync(thread.Id, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
-            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
-        }
-
-        async Task<ClientPage<ThreadMessage>> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = await GetMessagesAsync(thread.Id, limit: pageSize, order: null, after: continuationToken, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
-            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return GetMessagesAsync(thread.Id, resultOrder);
     }
 
     /// <summary>
@@ -315,35 +280,36 @@ public partial class AssistantClient
         RunCreationOptions runOptions = null)
             => CreateThreadAndRun(assistant?.Id, threadOptions, runOptions);
 
-    ///// <summary>
-    ///// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
-    ///// matching any optional constraints provided.
-    ///// </summary>
-    ///// <param name="thread"> The thread that runs in the list should be associated with. </param>
-    ///// <param name="maxResults">
-    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    ///// a default of 20 if not otherwise specified.
-    ///// </param>
-    ///// <param name="resultOrder">
-    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    ///// timestamp.
-    ///// </param>
-    ///// <param name="previousId">
-    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
-    ///// <c>after</c> this ID according to the specified order.
-    ///// </param>
-    ///// <param name="subsequentId">
-    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    ///// this ID according to the specified order.
-    ///// </param>
-    ///// <returns> A page of results matching any constraints provided. </returns>
-    //public virtual Task<ClientResult<ListQueryPage<ThreadRun>>> GetRunsAsync(
-    //    AssistantThread thread,
-    //    int? maxResults = null,
-    //    ListOrder? resultOrder = null,
-    //    string previousId = null,
-    //    string subsequentId = null)
-    //        => GetRunsAsync(thread?.Id, maxResults, resultOrder, previousId, subsequentId);
+    /// <summary>
+    /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
+    /// matching any optional constraints provided.
+    /// </summary>
+    /// <param name="thread"> The thread that runs in the list should be associated with. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(
+        AssistantThread thread,
+        ListOrder? resultOrder = default)
+    {
+        Argument.AssertNotNull(thread, nameof(thread));
+
+        return GetRunsAsync(thread.Id, resultOrder);
+    }
 
     /// <summary>
     /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
@@ -371,25 +337,10 @@ public partial class AssistantClient
         AssistantThread thread,
         ListOrder? resultOrder = default)
     {
+
         Argument.AssertNotNull(thread, nameof(thread));
 
-        ClientPage<ThreadRun> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = GetMessages(thread.Id, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunsResponse values = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content);
-            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
-        }
-
-        ClientPage<ThreadRun> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = GetMessages(thread.Id, limit: pageSize, order: null, after: continuationToken, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunsResponse values = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content);
-            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return GetRuns(thread.Id, resultOrder);
     }
 
     /// <summary>
@@ -477,51 +428,36 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(run, nameof(run));
 
-        ClientPage<RunStep> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = GetMessages(run.Id, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunStepsResponse values = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content);
-            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
-        }
-
-        ClientPage<RunStep> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = GetMessages(run.Id, limit: pageSize, order: null, after: continuationToken, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunStepsResponse values = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content);
-            return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return GetRunSteps(run.ThreadId, run.Id, resultOrder);
     }
 
-    ///// <summary>
-    ///// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
-    ///// </summary>
-    ///// <param name="run"> The run to list run steps from. </param>
-    ///// <param name="maxResults">
-    ///// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    ///// a default of 20 if not otherwise specified.
-    ///// </param>
-    ///// <param name="resultOrder">
-    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    ///// timestamp.
-    ///// </param>
-    ///// <param name="previousId">
-    ///// A cursor for use in pagination. If provided, results in the list will begin immediately
-    ///// <c>after</c> this ID according to the specified order.
-    ///// </param>
-    ///// <param name="subsequentId">
-    ///// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    ///// this ID according to the specified order.
-    ///// </param>
-    ///// <returns> A page of results matching any constraints provided. </returns>
-    //public virtual ClientResult<ListQueryPage<RunStep>> GetRunStepsAsync(
-    //    ThreadRun run,
-    //    int? maxResults = null,
-    //    ListOrder? resultOrder = null,
-    //    string previousId = null,
-    //    string subsequentId = null)
-    //        => GetRunSteps(run?.ThreadId, run?.Id, maxResults, resultOrder, previousId, subsequentId);
+    /// <summary>
+    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    /// </summary>
+    /// <param name="run"> The run to list run steps from. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(
+        ThreadRun run,
+        ListOrder? resultOrder = default)
+    {
+        Argument.AssertNotNull(run, nameof(run));
+
+        return GetRunStepsAsync(run.ThreadId, run.Id, resultOrder);
+    }
 }

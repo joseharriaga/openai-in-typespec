@@ -688,7 +688,7 @@ namespace OpenAI
         /// <summary> Initializes a new instance of <see cref="Models.BatchRequestInput"/>. </summary>
         /// <param name="customId"> A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch. </param>
         /// <param name="method"> The HTTP method to be used for the request. Currently only `POST` is supported. </param>
-        /// <param name="url"> The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions` and `/v1/embeddings` are supported. </param>
+        /// <param name="url"> The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported. </param>
         /// <returns> A new <see cref="Models.BatchRequestInput"/> instance for mocking. </returns>
         public static BatchRequestInput BatchRequestInput(string customId = null, string method = null, Uri url = null)
         {

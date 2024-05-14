@@ -32,6 +32,8 @@ model CreateRunRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`?:
     | string
+    | "gpt-4o"
+    | "gpt-4o-2024-05-13"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"
@@ -122,6 +124,8 @@ model CreateThreadAndRunRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`?:
     | string
+    | "gpt-4o"
+    | "gpt-4o-2024-05-13"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"
@@ -419,9 +423,8 @@ model RunObject {
   /** The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. */
   assistant_id: string;
 
-  // Tool customization: manually add missing 'incomplete' to enum
   @doc("""
-  The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`.
+  The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
   """)
   status:
     | "queued"
@@ -431,8 +434,8 @@ model RunObject {
     | "cancelled"
     | "failed"
     | "completed"
-    | "expired"
-    | "incomplete";
+    | "incomplete"
+    | "expired";
 
   @doc("""
   Details on the action required to continue the run. Will be `null` if no action is required.

@@ -400,7 +400,7 @@ public partial class AssistantClient
 
         async Task<ClientPage<ThreadMessage>> nextPageFunc(string? continuationToken, int? pageSize)
         {
-            ClientResult result = await GetMessagesAsync(threadId, limit: pageSize, order: null, after: continuationToken, before: null, options: null).ConfigureAwait(false);
+            ClientResult result = await GetMessagesAsync(threadId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
             return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
@@ -446,7 +446,7 @@ public partial class AssistantClient
 
         ClientPage<ThreadMessage> nextPageFunc(string? continuationToken, int? pageSize)
         {
-            ClientResult result = GetMessages(threadId, limit: pageSize, order: null, after: continuationToken, before: null, options: null);
+            ClientResult result = GetMessages(threadId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null);
             PipelineResponse response = result.GetRawResponse();
             InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
             return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
@@ -663,7 +663,7 @@ public partial class AssistantClient
 
         async Task<ClientPage<ThreadRun>> nextPageFunc(string? continuationToken, int? pageSize)
         {
-            ClientResult result = await GetRunsAsync(threadId, limit: pageSize, order: null, after: continuationToken, before: null, options: null).ConfigureAwait(false);
+            ClientResult result = await GetRunsAsync(threadId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListRunsResponse values = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content);
             return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
@@ -710,7 +710,7 @@ public partial class AssistantClient
 
         ClientPage<ThreadRun> nextPageFunc(string? continuationToken, int? pageSize)
         {
-            ClientResult result = GetRuns(threadId, limit: pageSize, order: null, after: continuationToken, before: null, options: null);
+            ClientResult result = GetRuns(threadId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null);
             PipelineResponse response = result.GetRawResponse();
             InternalListRunsResponse values = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content);
             return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
@@ -864,7 +864,7 @@ public partial class AssistantClient
 
         async Task<ClientPage<RunStep>> nextPageFunc(string? continuationToken, int? pageSize)
         {
-            ClientResult result = await GetRunStepsAsync(threadId, runId, limit: pageSize, order: null, after: continuationToken, before: null, options: null).ConfigureAwait(false);
+            ClientResult result = await GetRunStepsAsync(threadId, runId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListRunStepsResponse values = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content);
             return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);
@@ -913,7 +913,7 @@ public partial class AssistantClient
 
         ClientPage<RunStep> nextPageFunc(string? continuationToken, int? pageSize)
         {
-            ClientResult result = GetRunSteps(threadId, runId, limit: pageSize, order: null, after: continuationToken, before: null, options: null);
+            ClientResult result = GetRunSteps(threadId, runId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null);
             PipelineResponse response = result.GetRawResponse();
             InternalListRunStepsResponse values = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content);
             return PageableResultHelpers.CreatePage(values.Data, values.LastId, response);

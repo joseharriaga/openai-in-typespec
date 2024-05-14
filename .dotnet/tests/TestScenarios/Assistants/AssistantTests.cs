@@ -157,7 +157,6 @@ public partial class AssistantTests
         Validate(thread);
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
 
-        // TODO: Fix
         Assert.That(messages.Count, Is.EqualTo(2));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.User));
         Assert.That(messages.First().Content?.Count, Is.EqualTo(1));

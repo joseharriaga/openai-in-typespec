@@ -171,7 +171,7 @@ public partial class AssistantSamples
                     if (contentItem.TextAnnotations.Count > 0)
                     {
                         Console.WriteLine();
-                        foreach (TextContentAnnotation annotation in contentItem.TextAnnotations)
+                        foreach (TextAnnotation annotation in contentItem.TextAnnotations)
                         {
                             Console.WriteLine($"* File ID used by file_search: {annotation.InputFileId}");
                             Console.WriteLine($"* file_search quote from file: {annotation.InputQuote}");

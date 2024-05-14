@@ -39,7 +39,7 @@ public abstract partial class MessageContent
     public string ImageFileId => AsInternalImageFile?.InternalFileId;
     public MessageImageDetail? ImageDetail => AsInternalImageFile?.InternalDetail ?? AsInternalImageUrl?.InternalDetail;
     public string Text => AsInternalRequestText?.InternalText ?? AsInternalResponseText?.InternalText;
-    public IReadOnlyList<TextContentAnnotation> TextAnnotations => AsInternalResponseText?.InternalAnnotations ?? [];
+    public IReadOnlyList<TextAnnotation> TextAnnotations => AsInternalResponseText?.InternalAnnotations ?? [];
 
     private InternalMessageImageFileContent AsInternalImageFile => this as InternalMessageImageFileContent;
     private InternalMessageImageUrlContent AsInternalImageUrl => this as InternalMessageImageUrlContent;

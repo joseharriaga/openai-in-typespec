@@ -12,7 +12,7 @@ internal partial class InternalResponseMessageTextContent
     /// <inheritdoc cref="MessageContentTextObjectText.Value"/>
     public string InternalText => _text.Value;
 
-    public IReadOnlyList<TextContentAnnotation> InternalAnnotations => _annotations ??= WrapAnnotations();
+    public IReadOnlyList<TextAnnotation> InternalAnnotations => _annotations ??= WrapAnnotations();
 
     [CodeGenMember("Type")]
     private readonly string _type;
@@ -20,7 +20,7 @@ internal partial class InternalResponseMessageTextContent
     [CodeGenMember("Text")]
     private readonly MessageContentTextObjectText _text;
 
-    private IReadOnlyList<TextContentAnnotation> _annotations;
+    private IReadOnlyList<TextAnnotation> _annotations;
 
     /// <summary> Initializes a new instance of <see cref="InternalResponseMessageTextContent"/>. </summary>
     /// <param name="internalText"></param>
@@ -34,9 +34,9 @@ internal partial class InternalResponseMessageTextContent
 
     public override string ToString() => Text;
 
-    private IReadOnlyList<TextContentAnnotation> WrapAnnotations()
+    private IReadOnlyList<TextAnnotation> WrapAnnotations()
     {
-        List<TextContentAnnotation> annotations = [];
+        List<TextAnnotation> annotations = [];
         foreach (MessageContentTextObjectAnnotation internalAnnotation in _text?.Annotations ?? [])
         {
             annotations.Add(new(internalAnnotation));

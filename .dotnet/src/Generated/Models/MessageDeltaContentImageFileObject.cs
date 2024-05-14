@@ -5,61 +5,28 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> References an image [File](/docs/api-reference/files) in the content of a message. </summary>
-    internal partial class MessageDeltaContentImageFileObject
+    internal partial class MessageDeltaContentImageFileObject : MessageDeltaContent
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentImageFileObject"/>. </summary>
         /// <param name="index"> The index of the content part in the message. </param>
         internal MessageDeltaContentImageFileObject(int index)
         {
+            Type = "image_file";
             Index = index;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentImageFileObject"/>. </summary>
-        /// <param name="index"> The index of the content part in the message. </param>
-        /// <param name="type"> Always `image_file`. </param>
-        /// <param name="imageFile"></param>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentImageFileObject(int index, string type, MessageDeltaContentImageFileObjectImageFile imageFile, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <param name="index"> The index of the content part in the message. </param>
+        /// <param name="imageFile"></param>
+        internal MessageDeltaContentImageFileObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, int index, MessageDeltaContentImageFileObjectImageFile imageFile) : base(type, serializedAdditionalRawData)
         {
             Index = index;
-            Type = type;
             ImageFile = imageFile;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentImageFileObject"/> for deserialization. </summary>
@@ -69,9 +36,6 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The index of the content part in the message. </summary>
         public int Index { get; }
-        /// <summary> Always `image_file`. </summary>
-        public string Type { get; } = "image_file";
-
         /// <summary> Gets the image file. </summary>
         public MessageDeltaContentImageFileObjectImageFile ImageFile { get; }
     }

@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class MessageDeltaObjectDelta : IJsonModel<MessageDeltaObjectDelta>
     {
@@ -21,30 +21,15 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Role))
-            {
-                writer.WritePropertyName("role"u8);
-                writer.WriteStringValue(Role);
-            }
+            writer.WritePropertyName("role"u8);
+            writer.WriteStringValue(Role.ToSerialString());
             if (Optional.IsCollectionDefined(Content))
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
                 foreach (var item in Content)
                 {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -86,15 +71,19 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            string role = default;
-            IReadOnlyList<BinaryData> content = default;
+            MessageRole role = default;
+            IReadOnlyList<MessageDeltaContent> content = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("role"u8))
                 {
-                    role = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    role = property.Value.GetString().ToMessageRole();
                     continue;
                 }
                 if (property.NameEquals("content"u8))
@@ -103,17 +92,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<MessageDeltaContent> array = new List<MessageDeltaContent>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(MessageDeltaContent.DeserializeMessageDeltaContent(item, options));
                     }
                     content = array;
                     continue;
@@ -124,7 +106,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageDeltaObjectDelta(role, content ?? new ChangeTrackingList<BinaryData>(), serializedAdditionalRawData);
+            return new MessageDeltaObjectDelta(role, content ?? new ChangeTrackingList<MessageDeltaContent>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<MessageDeltaObjectDelta>.Write(ModelReaderWriterOptions options)

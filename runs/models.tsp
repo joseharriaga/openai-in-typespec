@@ -6,6 +6,7 @@
 import "../assistants";
 import "../messages";
 import "../threads";
+import "./custom.tsp";
 
 using TypeSpec.OpenAPI;
 
@@ -17,13 +18,11 @@ model CreateRunRequestAdditional_messages is CreateMessageRequest[];
 // Tool generated type. Extracts CreateRunRequest.tools
 @maxItems(20)
 @extension("x-oaiExpandable", true)
-model CreateRunRequestTools
-  is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
+model CreateRunRequestTools is AssistantToolDefinition[];
 
 // Tool generated type. Extracts CreateThreadAndRunRequest.tools
 @maxItems(20)
-model CreateThreadAndRunRequestTools
-  is (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[];
+model CreateThreadAndRunRequestTools is AssistantToolDefinition[];
 
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
@@ -33,6 +32,8 @@ model CreateRunRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`?:
     | string
+    | "gpt-4o"
+    | "gpt-4o-2024-05-13"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"
@@ -62,6 +63,7 @@ model CreateRunRequest {
   /** Adds additional messages to the thread before creating the run. */
   additional_messages?: CreateRunRequestAdditional_messages | null;
 
+  // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
   tools?: CreateRunRequestTools | null;
 
@@ -122,6 +124,8 @@ model CreateThreadAndRunRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`?:
     | string
+    | "gpt-4o"
+    | "gpt-4o-2024-05-13"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"
@@ -145,6 +149,7 @@ model CreateThreadAndRunRequest {
   /** Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. */
   instructions?: string | null;
 
+  // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
   tools?: CreateThreadAndRunRequestTools | null;
 
@@ -244,8 +249,9 @@ model ListRunStepsResponse {
   has_more: boolean;
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the message creation by the run step. */
-model RunStepDetailsMessageCreationObject {
+model RunStepDetailsMessageCreationObject extends RunStepObjectStepDetails {
   @doc("""
   Always `message_creation`.
   """)
@@ -257,22 +263,26 @@ model RunStepDetailsMessageCreationObject {
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the tool call. */
-model RunStepDetailsToolCallsObject {
+model RunStepDetailsToolCallsObject extends RunStepObjectStepDetails {
   @doc("""
   Always `tool_calls`.
   """)
   type: "tool_calls";
 
+  // Tool customization: replace unioned types with a custom, common base
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
   """)
   @extension("x-oaiExpandable", true)
-  tool_calls: (RunStepDetailsToolCallsCodeObject | RunStepDetailsToolCallsFileSearchObject | RunStepDetailsToolCallsFunctionObject)[];
+  tool_calls: RunStepDetailsToolCallsObjectToolCallsObject[];
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the Code Interpreter tool call the run step was involved in. */
-model RunStepDetailsToolCallsCodeObject {
+model RunStepDetailsToolCallsCodeObject
+  extends RunStepDetailsToolCallsObjectToolCallsObject {
   /** The ID of the tool call. */
   id: string;
 
@@ -286,16 +296,19 @@ model RunStepDetailsToolCallsCodeObject {
     /** The input to the Code Interpreter tool call. */
     input: string;
 
+    // Tool customization: replace unioned types with a custom, common base
     @doc("""
     The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
     """)
     @extension("x-oaiExpandable", true)
-    outputs: (RunStepDetailsToolCallsCodeOutputLogsObject | RunStepDetailsToolCallsCodeOutputImageObject)[];
+    outputs: RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject[];
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Text output from the Code Interpreter tool call as part of a run step. */
-model RunStepDetailsToolCallsCodeOutputLogsObject {
+model RunStepDetailsToolCallsCodeOutputLogsObject
+  extends RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject {
   @doc("""
   Always `logs`.
   """)
@@ -305,7 +318,9 @@ model RunStepDetailsToolCallsCodeOutputLogsObject {
   logs: string;
 }
 
-model RunStepDetailsToolCallsCodeOutputImageObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDetailsToolCallsCodeOutputImageObject
+  extends RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject {
   @doc("""
   Always `image`.
   """)
@@ -317,7 +332,9 @@ model RunStepDetailsToolCallsCodeOutputImageObject {
   };
 }
 
-model RunStepDetailsToolCallsFileSearchObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDetailsToolCallsFileSearchObject
+  extends RunStepDetailsToolCallsObjectToolCallsObject {
   /** The ID of the tool call object. */
   id: string;
 
@@ -331,7 +348,9 @@ model RunStepDetailsToolCallsFileSearchObject {
   file_search: Record<string>;
 }
 
-model RunStepDetailsToolCallsFunctionObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDetailsToolCallsFunctionObject
+  extends RunStepDetailsToolCallsObjectToolCallsObject {
   /** The ID of the tool call object. */
   id: string;
 
@@ -404,9 +423,8 @@ model RunObject {
   /** The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. */
   assistant_id: string;
 
-  // Tool customization: manually add missing 'incomplete' to enum
   @doc("""
-  The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`.
+  The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
   """)
   status:
     | "queued"
@@ -416,8 +434,8 @@ model RunObject {
     | "cancelled"
     | "failed"
     | "completed"
-    | "expired"
-    | "incomplete";
+    | "incomplete"
+    | "expired";
 
   @doc("""
   Details on the action required to continue the run. Will be `null` if no action is required.
@@ -487,11 +505,11 @@ model RunObject {
   /** The instructions that the [assistant](/docs/api-reference/assistants) used for this run. */
   instructions: string;
 
+  // Tool customization: use common model base for tool definitions
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
   @maxItems(20)
   @extension("x-oaiExpandable", true)
-  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
-  ];
+  tools: AssistantToolDefinition[] = [];
 
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
@@ -552,9 +570,10 @@ model RunStepObject {
   """)
   status: "in_progress" | "cancelled" | "failed" | "completed" | "expired";
 
+  // Tool customization: replace unioned types with a custom, common base
   /** The details of the run step. */
   @extension("x-oaiExpandable", true)
-  step_details: RunStepDetailsMessageCreationObject | RunStepDetailsToolCallsObject;
+  step_details: RunStepObjectStepDetails;
 
   @doc("""
   The last error associated with this run step. Will be `null` if there are no errors.

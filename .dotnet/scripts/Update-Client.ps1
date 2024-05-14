@@ -10,6 +10,7 @@ function Invoke([scriptblock]$script) {
 Push-Location $repoRoot
 try {
   Invoke { npm ci }
+  Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile main.tsp --emit @typespec/openapi3 }
   Invoke { npm exec --no -- tsp compile main.tsp --emit @azure-tools/typespec-csharp --option @azure-tools/typespec-csharp.emitter-output-dir="$dotnetFolder" }
   Invoke { .dotnet\scripts\Update-ClientModel.ps1 }

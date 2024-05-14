@@ -4,6 +4,7 @@
  */
 
 import "../assistants";
+import "./custom.tsp";
 
 using TypeSpec.OpenAPI;
 
@@ -39,8 +40,9 @@ model CreateMessageRequest {
   """)
   role: "user" | "assistant";
 
+  // Tool customization: use abstract base model for message request content items
   @extension("x-oaiExpandable", true)
-  content: string | (MessageContentImageFileObject | MessageContentImageUrlObject | MessageRequestContentTextObject)[];
+  content: MessageContent[];
 
   /** A list of files attached to the message, and the tools they should be added to. */
   attachments?: CreateMessageRequestAttachments | null;
@@ -121,9 +123,10 @@ model MessageObject {
   """)
   role: "user" | "assistant";
 
+  // Tool customization: use abstract base model for message response content items
   /** The content of the message in array of text and/or images. */
   @extension("x-oaiExpandable", true)
-  content: (MessageContentImageFileObject | MessageContentImageUrlObject | MessageContentTextObject)[];
+  content: MessageContent[];
 
   /** If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message. */
   assistant_id: string | null;
@@ -141,8 +144,9 @@ model MessageObject {
   metadata: Record<string> | null;
 }
 
+// Tool customization: apply a common model base for all assistants message content items
 /** References an image [File](/docs/api-reference/files) in the content of a message. */
-model MessageContentImageFileObject {
+model MessageContentImageFileObject extends MessageContent {
   @doc("""
   Always `image_file`.
   """)
@@ -161,8 +165,9 @@ model MessageContentImageFileObject {
   };
 }
 
+// Tool customization: apply a common model base for all assistants message content items
 /** The text content that is part of a message. */
-model MessageContentTextObject {
+model MessageContentTextObject extends MessageContent {
   @doc("""
   Always `text`.
   """)
@@ -172,13 +177,16 @@ model MessageContentTextObject {
     /** The data that makes up the text. */
     value: string;
 
+    // Tool customization: replace unioned types with a custom, common base
     @extension("x-oaiExpandable", true)
-    annotations: (MessageContentTextAnnotationsFileCitationObject | MessageContentTextAnnotationsFilePathObject)[];
+    annotations: MessageContentTextObjectAnnotation[];
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. */
-model MessageContentTextAnnotationsFileCitationObject {
+model MessageContentTextAnnotationsFileCitationObject
+  extends MessageContentTextObjectAnnotation {
   @doc("""
   Always `file_citation`.
   """)
@@ -202,10 +210,12 @@ model MessageContentTextAnnotationsFileCitationObject {
   end_index: int32;
 }
 
+// Tool customization: apply custom, common base type to union items
 @doc("""
 A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
 """)
-model MessageContentTextAnnotationsFilePathObject {
+model MessageContentTextAnnotationsFilePathObject
+  extends MessageContentTextObjectAnnotation {
   @doc("""
   Always `file_path`.
   """)
@@ -226,8 +236,9 @@ model MessageContentTextAnnotationsFilePathObject {
   end_index: int32;
 }
 
+// Tool customization: apply custom, common base type to union items
 /** References an image [File](/docs/api-reference/files) in the content of a message. */
-model MessageDeltaContentImageFileObject {
+model MessageDeltaContentImageFileObject extends MessageDeltaContent {
   /** The index of the content part in the message. */
   index: int32;
 
@@ -249,8 +260,9 @@ model MessageDeltaContentImageFileObject {
   };
 }
 
+// Tool customization: apply a common model base for all assistants message content items
 /** References an image URL in the content of a message. */
-model MessageContentImageUrlObject {
+model MessageContentImageUrlObject extends MessageContent {
   /** The type of the content part. */
   type: "image_url";
 
@@ -266,8 +278,9 @@ model MessageContentImageUrlObject {
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** References an image URL in the content of a message. */
-model MessageDeltaContentImageUrlObject {
+model MessageDeltaContentImageUrlObject extends MessageDeltaContent {
   /** The index of the content part in the message. */
   index: int32;
 
@@ -305,14 +318,16 @@ model MessageDeltaObject {
     """)
     role?: "user" | "assistant";
 
+    // Tool customization: replace unioned types with a custom, common base
     /** The content of the message in array of text and/or images. */
     @extension("x-oaiExpandable", true)
-    content?: (MessageDeltaContentImageFileObject | MessageDeltaContentTextObject | MessageDeltaContentImageUrlObject)[];
+    content?: MessageDeltaContent[];
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** The text content that is part of a message. */
-model MessageDeltaContentTextObject {
+model MessageDeltaContentTextObject extends MessageDeltaContent {
   /** The index of the content part in the message. */
   index: int32;
 
@@ -325,13 +340,15 @@ model MessageDeltaContentTextObject {
     /** The data that makes up the text. */
     value?: string;
 
+    // Tool customization: replace unioned types with a custom, common base
     @extension("x-oaiExpandable", true)
-    annotations?: (MessageDeltaContentTextAnnotationsFileCitationObject | MessageDeltaContentTextAnnotationsFilePathObject)[];
+    annotations?: MessageDeltaTextContentAnnotation[];
   };
 }
 
+// Tool customization: apply a common model base for all assistants message content items
 /** The text content that is part of a message. */
-model MessageRequestContentTextObject {
+model MessageRequestContentTextObject extends MessageContent {
   @doc("""
   Always `text`.
   """)
@@ -341,8 +358,10 @@ model MessageRequestContentTextObject {
   text: string;
 }
 
+// Tool customization: apply custom, common base type to union items
 /** A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. */
-model MessageDeltaContentTextAnnotationsFileCitationObject {
+model MessageDeltaContentTextAnnotationsFileCitationObject
+  extends MessageDeltaTextContentAnnotation {
   /** The index of the annotation in the text content part. */
   index: int32;
 
@@ -369,10 +388,12 @@ model MessageDeltaContentTextAnnotationsFileCitationObject {
   end_index?: int32;
 }
 
+// Tool customization: apply custom, common base type to union items
 @doc("""
 A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
 """)
-model MessageDeltaContentTextAnnotationsFilePathObject {
+model MessageDeltaContentTextAnnotationsFilePathObject
+  extends MessageDeltaTextContentAnnotation {
   /** The index of the annotation in the text content part. */
   index: int32;
 

@@ -5,67 +5,34 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file. </summary>
-    internal partial class MessageDeltaContentTextAnnotationsFilePathObject
+    internal partial class MessageDeltaContentTextAnnotationsFilePathObject : MessageDeltaTextContentAnnotation
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFilePathObject"/>. </summary>
         /// <param name="index"> The index of the annotation in the text content part. </param>
         internal MessageDeltaContentTextAnnotationsFilePathObject(int index)
         {
+            Type = "file_path";
             Index = index;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFilePathObject"/>. </summary>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="index"> The index of the annotation in the text content part. </param>
-        /// <param name="type"> Always `file_path`. </param>
         /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="filePath"></param>
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentTextAnnotationsFilePathObject(int index, string type, string text, MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath, int? startIndex, int? endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaContentTextAnnotationsFilePathObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, int index, string text, MessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath, int? startIndex, int? endIndex) : base(type, serializedAdditionalRawData)
         {
             Index = index;
-            Type = type;
             Text = text;
             FilePath = filePath;
             StartIndex = startIndex;
             EndIndex = endIndex;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFilePathObject"/> for deserialization. </summary>
@@ -75,9 +42,6 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The index of the annotation in the text content part. </summary>
         public int Index { get; }
-        /// <summary> Always `file_path`. </summary>
-        public string Type { get; } = "file_path";
-
         /// <summary> The text in the message content that needs to be replaced. </summary>
         public string Text { get; }
         /// <summary> Gets the file path. </summary>

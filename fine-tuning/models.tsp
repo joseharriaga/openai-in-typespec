@@ -122,24 +122,17 @@ model CreateFineTuningJobRequest {
 model ListPaginatedFineTuningJobsResponse {
   data: FineTuningJob[];
   has_more: boolean;
-
-  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }
 
 model ListFineTuningJobEventsResponse {
   data: FineTuningJobEvent[];
-
-  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }
 
 model ListFineTuningJobCheckpointsResponse {
   data: FineTuningJobCheckpoint[];
-
-  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
-
   first_id?: string | null;
   last_id?: string | null;
   has_more: boolean;

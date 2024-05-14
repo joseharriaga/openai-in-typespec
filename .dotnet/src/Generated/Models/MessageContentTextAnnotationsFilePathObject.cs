@@ -5,54 +5,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file. </summary>
-    internal partial class MessageContentTextAnnotationsFilePathObject
+    internal partial class MessageContentTextAnnotationsFilePathObject : MessageContentTextObjectAnnotation
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
         /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFilePathObject"/>. </summary>
         /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="filePath"></param>
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="filePath"/> is null. </exception>
-        internal MessageContentTextAnnotationsFilePathObject(string text, MessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex)
+        public MessageContentTextAnnotationsFilePathObject(string text, InternalMessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex)
         {
             Argument.AssertNotNull(text, nameof(text));
             Argument.AssertNotNull(filePath, nameof(filePath));
 
+            Type = "file_path";
             Text = text;
             FilePath = filePath;
             StartIndex = startIndex;
@@ -60,20 +29,18 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFilePathObject"/>. </summary>
-        /// <param name="type"> Always `file_path`. </param>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="filePath"></param>
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageContentTextAnnotationsFilePathObject(MessageContentTextAnnotationsFilePathObjectType type, string text, MessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageContentTextAnnotationsFilePathObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string text, InternalMessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex) : base(type, serializedAdditionalRawData)
         {
-            Type = type;
             Text = text;
             FilePath = filePath;
             StartIndex = startIndex;
             EndIndex = endIndex;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFilePathObject"/> for deserialization. </summary>
@@ -81,16 +48,13 @@ namespace OpenAI.Internal.Models
         {
         }
 
-        /// <summary> Always `file_path`. </summary>
-        public MessageContentTextAnnotationsFilePathObjectType Type { get; } = MessageContentTextAnnotationsFilePathObjectType.FilePath;
-
         /// <summary> The text in the message content that needs to be replaced. </summary>
-        public string Text { get; }
-        /// <summary> Gets the file path. </summary>
-        public MessageContentTextAnnotationsFilePathObjectFilePath FilePath { get; }
-        /// <summary> Gets the start index. </summary>
-        public int StartIndex { get; }
-        /// <summary> Gets the end index. </summary>
-        public int EndIndex { get; }
+        public string Text { get; set; }
+        /// <summary> Gets or sets the file path. </summary>
+        public InternalMessageContentTextAnnotationsFilePathObjectFilePath FilePath { get; set; }
+        /// <summary> Gets or sets the start index. </summary>
+        public int StartIndex { get; set; }
+        /// <summary> Gets or sets the end index. </summary>
+        public int EndIndex { get; set; }
     }
 }

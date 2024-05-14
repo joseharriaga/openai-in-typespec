@@ -5,67 +5,34 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files. </summary>
-    internal partial class MessageDeltaContentTextAnnotationsFileCitationObject
+    internal partial class MessageDeltaContentTextAnnotationsFileCitationObject : MessageDeltaTextContentAnnotation
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFileCitationObject"/>. </summary>
         /// <param name="index"> The index of the annotation in the text content part. </param>
         internal MessageDeltaContentTextAnnotationsFileCitationObject(int index)
         {
+            Type = "file_citation";
             Index = index;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFileCitationObject"/>. </summary>
+        /// <param name="type"> The discriminated type identifier for the content item. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="index"> The index of the annotation in the text content part. </param>
-        /// <param name="type"> Always `file_citation`. </param>
         /// <param name="text"> The text in the message content that needs to be replaced. </param>
         /// <param name="fileCitation"></param>
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaContentTextAnnotationsFileCitationObject(int index, string type, string text, MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation fileCitation, int? startIndex, int? endIndex, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaContentTextAnnotationsFileCitationObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, int index, string text, MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation fileCitation, int? startIndex, int? endIndex) : base(type, serializedAdditionalRawData)
         {
             Index = index;
-            Type = type;
             Text = text;
             FileCitation = fileCitation;
             StartIndex = startIndex;
             EndIndex = endIndex;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaContentTextAnnotationsFileCitationObject"/> for deserialization. </summary>
@@ -75,9 +42,6 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The index of the annotation in the text content part. </summary>
         public int Index { get; }
-        /// <summary> Always `file_citation`. </summary>
-        public string Type { get; } = "file_citation";
-
         /// <summary> The text in the message content that needs to be replaced. </summary>
         public string Text { get; }
         /// <summary> Gets the file citation. </summary>

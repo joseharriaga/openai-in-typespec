@@ -1,10 +1,10 @@
-using OpenAI.Internal.Models;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -13,19 +13,15 @@ namespace OpenAI.Assistants;
 /// The service client for OpenAI assistants.
 /// </summary>
 [Experimental("OPENAI001")]
+[CodeGenClient("Assistants")]
+[CodeGenSuppress("AssistantClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("CreateAssistantAsync", typeof(AssistantCreationOptions))]
+[CodeGenSuppress("CreateAssistant", typeof(AssistantCreationOptions))]
 public partial class AssistantClient
 {
-    private readonly Uri _endpoint;
-    private readonly ClientPipeline _pipeline;
-
-    /// <inheritdoc cref="OpenAIClient.Pipeline"/>
-    public ClientPipeline Pipeline => _pipeline;
-
-    private readonly OpenAIClientConnector _clientConnector;
-    private Internal.Assistants Shim => _clientConnector.InternalClient.GetAssistantsClient();
-    private Internal.Threads ThreadShim => _clientConnector.InternalClient.GetThreadsClient();
-    private Internal.Messages MessageShim => _clientConnector.InternalClient.GetMessagesClient();
-    private Internal.Runs RunShim => _clientConnector.InternalClient.GetRunsClient();
+    private readonly InternalAssistantMessageClient _messageSubClient;
+    private readonly InternalAssistantRunClient _runSubClient;
+    private readonly InternalAssistantThreadClient _threadSubClient;
 
     /// <summary>
     /// Initializes a new instance of <see cref="AssistantClient"/> that will use an API key when authenticating.
@@ -38,7 +34,7 @@ public partial class AssistantClient
               OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
               OpenAIClient.GetEndpoint(options),
               options)
-    {}
+    { }
 
     /// <summary>
     /// Initializes a new instance of <see cref="AssistantClient"/> that will use an API key from the OPENAI_API_KEY
@@ -55,521 +51,965 @@ public partial class AssistantClient
               OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
               OpenAIClient.GetEndpoint(options),
               options)
-    {}
+    { }
 
-    /// <summary>
-    /// Initializes a new instance of <see cref="AssistantClient"/>.
-    /// </summary>
-    /// <param name="pipeline"> The <see cref="ClientPipeline"/> instance to use. </param>
-    /// <param name="endpoint"> The endpoint to use. </param>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
+    /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
+    /// <param name="endpoint"> OpenAI Endpoint. </param>
+    /// <param name="options"> Client-wide options to propagate settings from. </param>
     protected internal AssistantClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)
     {
         _pipeline = pipeline;
         _endpoint = endpoint;
-
-        // Temporary pending codegen integration
-        if (options is null)
-        {
-            options = new();
-            options.AddPolicy(
-                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set("OpenAI-Beta", "assistants=v1")),
-                PipelinePosition.PerCall);
-        }
-        _clientConnector = new(model: "none", OpenAIClient.GetApiKey(), options);
+        _messageSubClient = new(_pipeline, _endpoint, options);
+        _runSubClient = new(_pipeline, _endpoint, options);
+        _threadSubClient = new(_pipeline, _endpoint, options);
     }
 
-    public virtual ClientResult<Assistant> CreateAssistant(
-        string modelName,
-        AssistantCreationOptions options = null)
+    /// <summary> Creates a new assistant. </summary>
+    /// <param name="model"> The default model that the assistant should use. </param>
+    /// <param name="options"> The additional <see cref="AssistantCreationOptions"/> to use. </param>
+    /// <exception cref="ArgumentException"> <paramref name="model"/> is null or empty. </exception>
+    public virtual async Task<ClientResult<Assistant>> CreateAssistantAsync(string model, AssistantCreationOptions options = null)
     {
-        Internal.Models.CreateAssistantRequest request = CreateInternalCreateAssistantRequest(modelName, options);
-        ClientResult<Internal.Models.AssistantObject> internalResult = Shim.CreateAssistant(request);
-        return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(model, nameof(model));
+        options ??= new();
+        options.Model = model;
+
+        ClientResult protocolResult = await CreateAssistantAsync(options?.ToBinaryContent(), null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);
     }
 
-    public virtual async Task<ClientResult<Assistant>> CreateAssistantAsync(
-        string modelName,
-        AssistantCreationOptions options = null)
+    /// <summary> Creates a new assistant. </summary>
+    /// <param name="model"> The default model that the assistant should use. </param>
+    /// <param name="options"> The additional <see cref="AssistantCreationOptions"/> to use. </param>
+    /// <exception cref="ArgumentException"> <paramref name="model"/> is null or empty. </exception>
+    public virtual ClientResult<Assistant> CreateAssistant(string model, AssistantCreationOptions options = null)
     {
-        Internal.Models.CreateAssistantRequest request = CreateInternalCreateAssistantRequest(modelName, options);
-        ClientResult<Internal.Models.AssistantObject> internalResult = await Shim.CreateAssistantAsync(request).ConfigureAwait(false);
-        return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(model, nameof(model));
+        options ??= new();
+        options.Model = model;
+
+        ClientResult protocolResult = CreateAssistant(options?.ToBinaryContent(), null);
+        return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);
     }
 
-    public virtual ClientResult<Assistant> GetAssistant(string assistantId)
+    /// <summary>
+    /// Returns a list of <see cref="Assistant"/> instances matching the provided constraints. 
+    /// </summary>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual async Task<ClientResult<ListQueryPage<Assistant>>> GetAssistantsAsync(
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
     {
-        ClientResult<Internal.Models.AssistantObject> internalResult = Shim.GetAssistant(assistantId);
-        return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
+        ClientResult protocolResult
+            = await GetAssistantsAsync(maxResults, resultOrder?.ToString(), previousId, subsequentId, options: null)
+                .ConfigureAwait(false);
+        return CreateListResultFromProtocol(protocolResult, InternalListAssistantsResponse.FromResponse);
     }
 
-    public virtual async Task<ClientResult<Assistant>> GetAssistantAsync(
-        string assistantId)
-    {
-        ClientResult<Internal.Models.AssistantObject> internalResult = await Shim.GetAssistantAsync(assistantId).ConfigureAwait(false);
-        return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
-    }
-
+    /// <summary>
+    /// Returns a list of <see cref="Assistant"/> instances matching the provided constraints. 
+    /// </summary>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
     public virtual ClientResult<ListQueryPage<Assistant>> GetAssistants(
         int? maxResults = null,
-        ListOrder? listOrder = null,
-        string previousAssistantId = null,
-        string subsequentAssistantId = null)
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
     {
-        ClientResult<Internal.Models.ListAssistantsResponse> internalFunc() => Shim.GetAssistants(
-            maxResults,
-            listOrder,
-            previousAssistantId,
-            subsequentAssistantId);
-        return GetListQueryPage<Assistant, Internal.Models.ListAssistantsResponse>(internalFunc);
+        ClientResult protocolResult
+            = GetAssistants(maxResults, resultOrder?.ToString(), previousId, subsequentId, options: null);
+        return CreateListResultFromProtocol(protocolResult, InternalListAssistantsResponse.FromResponse);
     }
 
-    public virtual Task<ClientResult<ListQueryPage<Assistant>>> GetAssistantsAsync(
-        int? maxResults = null,
-        ListOrder? listOrder = null,
-        string previousAssistantId = null,
-        string subsequentAssistantId = null)
+    /// <summary>
+    /// Deletes an existing <see cref="Assistant"/>. 
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant to delete. </param>
+    /// <returns> A value indicating whether the deletion was successful. </returns>
+    public virtual async Task<ClientResult<bool>> DeleteAssistantAsync(string assistantId)
     {
-        Task<ClientResult<Internal.Models.ListAssistantsResponse>> internalAsyncFunc() => Shim.GetAssistantsAsync(
-            maxResults,
-            listOrder,
-            previousAssistantId,
-            subsequentAssistantId);
-        return GetListQueryPageAsync<Assistant, Internal.Models.ListAssistantsResponse>(internalAsyncFunc);
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+
+        ClientResult protocolResult = await DeleteAssistantAsync(assistantId, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, response
+            => InternalDeleteAssistantResponse.FromResponse(response).Deleted);
     }
 
-    public virtual ClientResult<Assistant> ModifyAssistant(
-        string assistantId,
-        AssistantModificationOptions options)
+    /// <summary>
+    /// Deletes an existing <see cref="Assistant"/>. 
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant to delete. </param>
+    /// <returns> A value indicating whether the deletion was successful. </returns>
+    public virtual ClientResult<bool> DeleteAssistant(string assistantId)
     {
-        ClientResult<Internal.Models.AssistantObject> internalResult
-            = Shim.ModifyAssistant(assistantId, CreateInternalModifyAssistantRequest(options));
-        return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+
+        ClientResult protocolResult = DeleteAssistant(assistantId, (RequestOptions)null);
+        return CreateResultFromProtocol(protocolResult, response
+            => InternalDeleteAssistantResponse.FromResponse(response).Deleted);
     }
 
-    public virtual async Task<ClientResult<Assistant>> ModifyAssistantAsync(
-        string assistantId,
-        AssistantModificationOptions options)
+    /// <summary>
+    /// Creates a new <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="options"> Additional options to use when creating the thread. </param>
+    /// <returns> A new thread. </returns>
+    public virtual async Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null)
     {
-        Internal.Models.ModifyAssistantRequest request = CreateInternalModifyAssistantRequest(options);
-        ClientResult<Internal.Models.AssistantObject> internalResult = await Shim.ModifyAssistantAsync(assistantId, request).ConfigureAwait(false);
-        return ClientResult.FromValue(new Assistant(internalResult.Value), internalResult.GetRawResponse());
+        ClientResult protocolResult = await CreateThreadAsync(options?.ToBinaryContent(), null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, AssistantThread.FromResponse);
     }
 
-    public virtual ClientResult<bool> DeleteAssistant(
-        string assistantId)
+    /// <summary>
+    /// Creates a new <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="options"> Additional options to use when creating the thread. </param>
+    /// <returns> A new thread. </returns>
+    public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null)
     {
-        ClientResult<Internal.Models.DeleteAssistantResponse> internalResponse = Shim.DeleteAssistant(assistantId);
-        return ClientResult.FromValue(internalResponse.Value.Deleted, internalResponse.GetRawResponse());
+        ClientResult protocolResult = CreateThread(options?.ToBinaryContent(), null);
+        return CreateResultFromProtocol(protocolResult, AssistantThread.FromResponse);
     }
 
-    public virtual async Task<ClientResult<bool>> DeleteAssistantAsync(
-        string assistantId)
+    /// <summary>
+    /// Gets an existing <see cref="AssistantThread"/>, retrieved via a known ID.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to retrieve. </param>
+    /// <returns> The existing thread instance. </returns>
+    public virtual async Task<ClientResult<AssistantThread>> GetThreadAsync(string threadId)
     {
-        ClientResult<Internal.Models.DeleteAssistantResponse> internalResponse = await Shim.DeleteAssistantAsync(assistantId).ConfigureAwait(false);
-        return ClientResult.FromValue(internalResponse.Value.Deleted, internalResponse.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = await GetThreadAsync(threadId, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, AssistantThread.FromResponse);
     }
 
-    public virtual ClientResult<AssistantThread> CreateThread(
-        ThreadCreationOptions options = null)
+    /// <summary>
+    /// Gets an existing <see cref="AssistantThread"/>, retrieved via a known ID.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to retrieve. </param>
+    /// <returns> The existing thread instance. </returns>
+    public virtual ClientResult<AssistantThread> GetThread(string threadId)
     {
-        Internal.Models.CreateThreadRequest request = CreateInternalCreateThreadRequest(options);
-        ClientResult<Internal.Models.ThreadObject> internalResult = ThreadShim.CreateThread(request);
-        return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = GetThread(threadId, null);
+        return CreateResultFromProtocol(protocolResult, AssistantThread.FromResponse);
     }
 
-    public virtual async Task<ClientResult<AssistantThread>> CreateThreadAsync(
-        ThreadCreationOptions options = null)
+    /// <summary>
+    /// Modifies an existing <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to modify. </param>
+    /// <param name="options"> The modifications to apply to the thread. </param>
+    /// <returns> The updated <see cref="AssistantThread"/> instance. </returns>
+    public virtual async Task<ClientResult<AssistantThread>> ModifyThreadAsync(string threadId, ThreadModificationOptions options)
     {
-        Internal.Models.CreateThreadRequest request = CreateInternalCreateThreadRequest(options);
-        ClientResult<Internal.Models.ThreadObject> internalResult = await ThreadShim.CreateThreadAsync(request).ConfigureAwait(false);
-        return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNull(options, nameof(options));
+
+        ClientResult protocolResult = await ModifyThreadAsync(threadId, options?.ToBinaryContent(), null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, AssistantThread.FromResponse);
     }
 
-     public virtual ClientResult<AssistantThread> GetThread(string threadId)
+    /// <summary>
+    /// Modifies an existing <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to modify. </param>
+    /// <param name="options"> The modifications to apply to the thread. </param>
+    /// <returns> The updated <see cref="AssistantThread"/> instance. </returns>
+    public virtual ClientResult<AssistantThread> ModifyThread(string threadId, ThreadModificationOptions options)
     {
-        ClientResult<Internal.Models.ThreadObject> internalResult = ThreadShim.GetThread(threadId);
-        return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNull(options, nameof(options));
+
+        ClientResult protocolResult = ModifyThread(threadId, options?.ToBinaryContent(), null);
+        return CreateResultFromProtocol(protocolResult, AssistantThread.FromResponse);
     }
 
-    public virtual async Task<ClientResult<AssistantThread>> GetThreadAsync(
-        string threadId)
+    /// <summary>
+    /// Deletes an existing <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to delete. </param>
+    /// <returns> A value indicating whether the deletion was successful. </returns>
+    public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId)
     {
-        ClientResult<Internal.Models.ThreadObject> internalResult = await ThreadShim.GetThreadAsync(threadId).ConfigureAwait(false);
-        return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = await DeleteThreadAsync(threadId, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, response
+            => InternalDeleteThreadResponse.FromResponse(response).Deleted);
     }
 
-    public virtual ClientResult<AssistantThread> ModifyThread(
-        string threadId,
-        ThreadModificationOptions options)
+    /// <summary>
+    /// Deletes an existing <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to delete. </param>
+    /// <returns> A value indicating whether the deletion was successful. </returns>
+    public virtual ClientResult<bool> DeleteThread(string threadId)
     {
-        Internal.Models.ModifyThreadRequest request = new(
-            null, // TODO -- to do: toolResources
-            options.Metadata,
-            serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.ThreadObject> internalResult = ThreadShim.ModifyThread(threadId, request);
-        return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult = DeleteThread(threadId, null);
+        return CreateResultFromProtocol(protocolResult, response
+            => InternalDeleteThreadResponse.FromResponse(response).Deleted);
     }
 
-    public virtual async Task<ClientResult<AssistantThread>> ModifyThreadAsync(
-        string threadId,
-        ThreadModificationOptions options)
-    {
-        Internal.Models.ModifyThreadRequest request = new(
-            null, // TODO -- to do: toolResources
-            options.Metadata,
-            serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.ThreadObject> internalResult = await ThreadShim.ModifyThreadAsync(threadId, request).ConfigureAwait(false);
-        return ClientResult.FromValue(new AssistantThread(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-     public virtual ClientResult<bool> DeleteThread(string threadId)
-    {
-        ClientResult<Internal.Models.DeleteThreadResponse> internalResult = ThreadShim.DeleteThread(threadId);
-        return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
-    }
-
-     public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId)
-    {
-        ClientResult<Internal.Models.DeleteThreadResponse> internalResult = await ThreadShim.DeleteThreadAsync(threadId).ConfigureAwait(false);
-        return ClientResult.FromValue(internalResult.Value.Deleted, internalResult.GetRawResponse());
-    }
-
-    public virtual ClientResult<ThreadMessage> CreateMessage(
-        string threadId,
-        MessageRole role,
-        string content,
-        MessageCreationOptions options = null)
-    {
-        Internal.Models.CreateMessageRequest request = new(
-            ToInternalRequestRole(role),
-            BinaryData.FromString(content),
-            null, // TODO: to do - attachments
-            options.Metadata,
-            serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.MessageObject> internalResult = MessageShim.CreateMessage(threadId, request);
-        return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
-    }
-
+    /// <summary>
+    /// Creates a new <see cref="ThreadMessage"/> on an existing <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to associate the new message with. </param>
+    /// <param name="content"> The collection of <see cref="MessageContent"/> items for the message. </param>
+    /// <param name="options"> Additional options to apply to the new message. </param>
+    /// <returns> A new <see cref="ThreadMessage"/>. </returns>
     public virtual async Task<ClientResult<ThreadMessage>> CreateMessageAsync(
         string threadId,
-        MessageRole role,
-        string content,
+        IEnumerable<MessageContent> content,
         MessageCreationOptions options = null)
     {
-        Internal.Models.CreateMessageRequest request = new(
-            ToInternalRequestRole(role),
-            BinaryData.FromString(content),
-            null, // TODO -- to do: attachments
-            options.Metadata,
-            serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.MessageObject> internalResult = await MessageShim.CreateMessageAsync(threadId, request).ConfigureAwait(false);
-        return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        options ??= new();
+        options.Content.Clear();
+        foreach (MessageContent contentItem in content)
+        {
+            options.Content.Add(contentItem);
+        }
+
+        ClientResult protocolResult = await CreateMessageAsync(threadId, options?.ToBinaryContent(), null)
+            .ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, ThreadMessage.FromResponse);
     }
 
-    public virtual ClientResult<ThreadMessage> GetMessage(
+    /// <summary>
+    /// Creates a new <see cref="ThreadMessage"/> on an existing <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to associate the new message with. </param>
+    /// <param name="content"> The collection of <see cref="MessageContent"/> items for the message. </param>
+    /// <param name="options"> Additional options to apply to the new message. </param>
+    /// <returns> A new <see cref="ThreadMessage"/>. </returns>
+    public virtual ClientResult<ThreadMessage> CreateMessage(
         string threadId,
-        string messageId)
+        IEnumerable<MessageContent> content,
+        MessageCreationOptions options = null)
     {
-        ClientResult<Internal.Models.MessageObject> internalResult = MessageShim.GetMessage(threadId, messageId);
-        return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        options ??= new();
+        options.Content.Clear();
+        foreach (MessageContent contentItem in content)
+        {
+            options.Content.Add(contentItem);
+        }
+
+        ClientResult protocolResult = CreateMessage(threadId, options?.ToBinaryContent(), null);
+        return CreateResultFromProtocol(protocolResult, ThreadMessage.FromResponse);
     }
 
-    public virtual async Task<ClientResult<ThreadMessage>> GetMessageAsync(
+    /// <summary>
+    /// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
+    /// matching any optional constraints provided.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to list messages from. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+
+    public virtual async Task<ClientResult<ListQueryPage<ThreadMessage>>> GetMessagesAsync(
         string threadId,
-        string messageId)
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
     {
-        ClientResult<Internal.Models.MessageObject> internalResult = await MessageShim.GetMessageAsync(threadId, messageId).ConfigureAwait(false);
-        return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult
+            = await GetMessagesAsync(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
+                .ConfigureAwait(false);
+        return CreateListResultFromProtocol(protocolResult, InternalListMessagesResponse.FromResponse);
     }
 
-    public virtual ClientResult<ThreadMessage> ModifyMessage(
-        string threadId,
-        string messageId,
-        MessageModificationOptions options)
-    {
-        Internal.Models.ModifyMessageRequest request = new(
-            options.Metadata,
-            serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.MessageObject> internalResult = MessageShim.ModifyMessage(threadId, messageId, request);
-        return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual async Task<ClientResult<ThreadMessage>> ModifyMessageAsync(
-        string threadId,
-        string messageId,
-        MessageModificationOptions options)
-    {
-        Internal.Models.ModifyMessageRequest request = new(
-            options.Metadata,
-            serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.MessageObject> internalResult = await MessageShim.ModifyMessageAsync(threadId, messageId, request).ConfigureAwait(false);
-        return ClientResult.FromValue(new ThreadMessage(internalResult.Value), internalResult.GetRawResponse());
-    }
-
+    /// <summary>
+    /// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
+    /// matching any optional constraints provided.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to list messages from. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
     public virtual ClientResult<ListQueryPage<ThreadMessage>> GetMessages(
         string threadId,
         int? maxResults = null,
-        ListOrder? listOrder = null,
-        string previousMessageId = null,
-        string subsequentMessageId = null)
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
     {
-        ClientResult<Internal.Models.ListMessagesResponse> internalFunc() => MessageShim.GetMessages(
-            threadId,
-            maxResults,
-            listOrder,
-            previousMessageId,
-            subsequentMessageId);
-        return GetListQueryPage<ThreadMessage, Internal.Models.ListMessagesResponse>(internalFunc);
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult
+            = GetMessages(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
+        return CreateListResultFromProtocol(protocolResult, InternalListMessagesResponse.FromResponse);
     }
 
-    public virtual Task<ClientResult<ListQueryPage<ThreadMessage>>> GetMessagesAsync(
-        string threadId,
-        int? maxResults = null,
-        ListOrder? listOrder = null,
-        string previousMessageId = null,
-        string subsequentMessageId = null)
+    /// <summary>
+    /// Gets an existing <see cref="ThreadMessage"/> from a known <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to retrieve the message from. </param>
+    /// <param name="messageId"> The ID of the message to retrieve. </param>
+    /// <returns> The existing <see cref="ThreadMessage"/> instance. </returns>
+    public virtual async Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId)
     {
-        Func<Task<ClientResult<Internal.Models.ListMessagesResponse>>> internalFunc = () => MessageShim.GetMessagesAsync(
-                threadId,
-                maxResults,
-                listOrder,
-                previousMessageId,
-                subsequentMessageId);
-        return GetListQueryPageAsync<ThreadMessage, Internal.Models.ListMessagesResponse>(internalFunc);
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+        ClientResult protocolResult = await GetMessageAsync(threadId, messageId, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, ThreadMessage.FromResponse);
     }
 
-    public virtual ClientResult<ThreadRun> CreateRun(
+    /// <summary>
+    /// Gets an existing <see cref="ThreadMessage"/> from a known <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to retrieve the message from. </param>
+    /// <param name="messageId"> The ID of the message to retrieve. </param>
+    /// <returns> The existing <see cref="ThreadMessage"/> instance. </returns>
+    public virtual ClientResult<ThreadMessage> GetMessage(string threadId, string messageId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+        ClientResult protocolResult = GetMessage(threadId, messageId, null);
+        return CreateResultFromProtocol(protocolResult, ThreadMessage.FromResponse);
+    }
+
+    /// <summary>
+    /// Modifies an existing <see cref="ThreadMessage"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the message to modify. </param>
+    /// <param name="messageId"> The ID of the message to modify. </param>
+    /// <param name="options"> The changes to apply to the message. </param>
+    /// <returns> The updated <see cref="ThreadMessage"/>. </returns>
+    public virtual async Task<ClientResult<ThreadMessage>> ModifyMessageAsync(string threadId, string messageId, MessageModificationOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+        Argument.AssertNotNull(options, nameof(options));
+
+        ClientResult protocolResult = await ModifyMessageAsync(threadId, messageId, options?.ToBinaryContent(), null)
+            .ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, ThreadMessage.FromResponse);
+    }
+
+    /// <summary>
+    /// Modifies an existing <see cref="ThreadMessage"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the message to modify. </param>
+    /// <param name="messageId"> The ID of the message to modify. </param>
+    /// <param name="options"> The changes to apply to the message. </param>
+    /// <returns> The updated <see cref="ThreadMessage"/>. </returns>
+    public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+        Argument.AssertNotNull(options, nameof(options));
+
+        ClientResult protocolResult = ModifyMessage(threadId, messageId, options?.ToBinaryContent(), null);
+        return CreateResultFromProtocol(protocolResult, ThreadMessage.FromResponse);
+    }
+
+    /// <summary>
+    /// Deletes an existing <see cref="ThreadMessage"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the message. </param>
+    /// <param name="messageId"> The ID of the message. </param>
+    /// <returns> A value indicating whether the deletion was successful. </returns>
+    public virtual async Task<ClientResult<bool>> DeleteMessageAsync(string threadId, string messageId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+        ClientResult protocolResult = await DeleteMessageAsync(threadId, messageId, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, response =>
+            InternalDeleteMessageResponse.FromResponse(response).Deleted);
+    }
+
+    /// <summary>
+    /// Deletes an existing <see cref="ThreadMessage"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the message. </param>
+    /// <param name="messageId"> The ID of the message. </param>
+    /// <returns> A value indicating whether the deletion was successful. </returns>
+    public virtual ClientResult<bool> DeleteMessage(string threadId, string messageId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
+
+        ClientResult protocolResult = DeleteMessage(threadId, messageId, null);
+        return CreateResultFromProtocol(protocolResult, response =>
+            InternalDeleteMessageResponse.FromResponse(response).Deleted);
+    }
+
+    /// <summary>
+    /// Begins a new <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
+    /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
+    public virtual async Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+        options ??= new();
+        options.AssistantId = assistantId;
+        options.Stream = null;
+
+        ClientResult protocolResult = await CreateRunAsync(threadId, options.ToBinaryContent(), null)
+            .ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Begins a new <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
+    /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
+    public virtual ClientResult<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+        options ??= new();
+        options.AssistantId = assistantId;
+        options.Stream = null;
+
+        ClientResult protocolResult = CreateRun(threadId, options.ToBinaryContent(), null);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Begins a new streaming <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
+    /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    public virtual async Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> CreateRunStreamingAsync(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
     {
-        Internal.Models.CreateRunRequest request = CreateInternalCreateRunRequest(assistantId, options);
-        ClientResult<Internal.Models.RunObject> internalResult = RunShim.CreateRun(threadId, request);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+        options ??= new();
+        options.AssistantId = assistantId;
+        options.Stream = true;
+
+        ClientResult protocolResult = await CreateRunAsync(threadId, options.ToBinaryContent(), StreamRequestOptions)
+            .ConfigureAwait(false);
+
+        return StreamingUpdate.CreateTemporaryResult(protocolResult);
     }
 
-    public virtual async Task<ClientResult<ThreadRun>> CreateRunAsync(
+    /// <summary>
+    /// Begins a new streaming <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
+    /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateRunStreaming(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
     {
-        Internal.Models.CreateRunRequest request = CreateInternalCreateRunRequest(assistantId, options);
-        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.CreateRunAsync(threadId, request).ConfigureAwait(false);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+        options ??= new();
+        options.AssistantId = assistantId;
+        options.Stream = true;
+
+        ClientResult protocolResult = CreateRun(threadId, options.ToBinaryContent(), StreamRequestOptions);
+
+        return StreamingUpdate.CreateTemporaryResult(protocolResult);
     }
 
-    public virtual ClientResult<ThreadRun> CreateThreadAndRun(
-        string assistantId,
-        ThreadCreationOptions threadOptions = null,
-        RunCreationOptions runOptions = null)
-    {
-        Internal.Models.CreateThreadAndRunRequest request
-            = CreateInternalCreateThreadAndRunRequest(assistantId, threadOptions, runOptions);
-        ClientResult<Internal.Models.RunObject> internalResult = RunShim.CreateThreadAndRun(request);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
-    }
-
+    /// <summary>
+    /// Creates a new thread and immediately begins a run against it using the specified <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
+    /// <param name="threadOptions"> Options for the new thread that will be created. </param>
+    /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
+    /// <returns> A new <see cref="ThreadRun"/>. </returns>
     public virtual async Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
     {
-        Internal.Models.CreateThreadAndRunRequest request
-            = CreateInternalCreateThreadAndRunRequest(assistantId, threadOptions, runOptions);
-        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.CreateThreadAndRunAsync(request).ConfigureAwait(false);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+        runOptions ??= new();
+        runOptions.Stream = null;
+        BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
+        ClientResult protocolResult = await CreateThreadAndRunAsync(protocolContent, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 
-    public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId)
+    /// <summary>
+    /// Creates a new thread and immediately begins a run against it using the specified <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
+    /// <param name="threadOptions"> Options for the new thread that will be created. </param>
+    /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
+    /// <returns> A new <see cref="ThreadRun"/>. </returns>
+    public virtual ClientResult<ThreadRun> CreateThreadAndRun(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
     {
-        ClientResult<Internal.Models.RunObject> internalResult = RunShim.GetRun(threadId, runId);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+        runOptions ??= new();
+        runOptions.Stream = null;
+        BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
+        ClientResult protocolResult = CreateThreadAndRun(protocolContent, null);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 
-    public virtual async Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId)
+    /// <summary>
+    /// Creates a new thread and immediately begins a streaming run against it using the specified <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
+    /// <param name="threadOptions"> Options for the new thread that will be created. </param>
+    /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
+    public virtual async Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> CreateThreadAndRunStreamingAsync(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
     {
-        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.GetRunAsync(threadId, runId).ConfigureAwait(false);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+        runOptions ??= new();
+        runOptions.Stream = true;
+        BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
+        ClientResult protocolResult = await CreateThreadAndRunAsync(protocolContent, StreamRequestOptions)
+            .ConfigureAwait(false);
+
+        return StreamingUpdate.CreateTemporaryResult(protocolResult);
     }
 
+    /// <summary>
+    /// Creates a new thread and immediately begins a streaming run against it using the specified <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
+    /// <param name="threadOptions"> Options for the new thread that will be created. </param>
+    /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
+    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateThreadAndRunStreaming(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+    {
+        runOptions ??= new();
+        runOptions.Stream = true;
+        BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
+        ClientResult protocolResult = CreateThreadAndRun(protocolContent, StreamRequestOptions);
+
+        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+    }
+
+    /// <summary>
+    /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
+    /// matching any optional constraints provided.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual async Task<ClientResult<ListQueryPage<ThreadRun>>> GetRunsAsync(
+        string threadId,
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult
+            = await GetRunsAsync(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
+                .ConfigureAwait(false);
+        return CreateListResultFromProtocol(protocolResult, InternalListRunsResponse.FromResponse);
+    }
+
+    /// <summary>
+    /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
+    /// matching any optional constraints provided.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
     public virtual ClientResult<ListQueryPage<ThreadRun>> GetRuns(
         string threadId,
         int? maxResults = null,
-        ListOrder? listOrder = null,
-        string previousRunId = null,
-        string subsequentRunId = null)
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
     {
-        ClientResult<Internal.Models.ListRunsResponse> internalFunc() => RunShim.GetRuns(
-            threadId,
-            maxResults,
-            listOrder,
-            previousRunId,
-            subsequentRunId);
-        return GetListQueryPage<ThreadRun, Internal.Models.ListRunsResponse>(internalFunc);
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+
+        ClientResult protocolResult
+            = GetRuns(threadId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
+        return CreateListResultFromProtocol(protocolResult, InternalListRunsResponse.FromResponse);
     }
 
-    public virtual Task<ClientResult<ListQueryPage<ThreadRun>>> GetRunsAsync(
+    /// <summary>
+    /// Gets an existing <see cref="ThreadRun"/> from a known <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to retrieve the run from. </param>
+    /// <param name="runId"> The ID of the run to retrieve. </param>
+    /// <returns> The existing <see cref="ThreadRun"/> instance. </returns>
+    public virtual async Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+
+        ClientResult protocolResult = await GetRunAsync(threadId, runId, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Gets an existing <see cref="ThreadRun"/> from a known <see cref="AssistantThread"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread to retrieve the run from. </param>
+    /// <param name="runId"> The ID of the run to retrieve. </param>
+    /// <returns> The existing <see cref="ThreadRun"/> instance. </returns>
+    public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+
+        ClientResult protocolResult = GetRun(threadId, runId, null);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Submits a collection of required tool call outputs to a run and resumes the run.
+    /// </summary>
+    /// <param name="threadId"> The thread ID of the thread being run. </param>
+    /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
+    /// <param name="toolOutputs">
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
+    /// </param>
+    /// <returns> The <see cref="ThreadRun"/>, updated after the submission was processed. </returns>
+    public virtual async Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(
         string threadId,
+        string runId,
+        IEnumerable<ToolOutput> toolOutputs)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+
+        BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs).ToBinaryContent();
+        ClientResult protocolResult = await SubmitToolOutputsToRunAsync(threadId, runId, content, null)
+            .ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Submits a collection of required tool call outputs to a run and resumes the run.
+    /// </summary>
+    /// <param name="threadId"> The thread ID of the thread being run. </param>
+    /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
+    /// <param name="toolOutputs">
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
+    /// </param>
+    /// <returns> The <see cref="ThreadRun"/>, updated after the submission was processed. </returns>
+    public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(
+        string threadId,
+        string runId,
+        IEnumerable<ToolOutput> toolOutputs)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+
+        BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs).ToBinaryContent();
+        ClientResult protocolResult = SubmitToolOutputsToRun(threadId, runId, content, null);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Submits a collection of required tool call outputs to a run and resumes the run with streaming enabled.
+    /// </summary>
+    /// <param name="threadId"> The thread ID of the thread being run. </param>
+    /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
+    /// <param name="toolOutputs">
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
+    /// </param>
+    public virtual async Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> SubmitToolOutputsToRunStreamingAsync(
+        string threadId,
+        string runId,
+        IEnumerable<ToolOutput> toolOutputs)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+
+        BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
+            .ToBinaryContent();
+        ClientResult protocolResult = await SubmitToolOutputsToRunAsync(threadId, runId, content, StreamRequestOptions)
+            .ConfigureAwait(false);
+
+        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+    }
+
+    /// <summary>
+    /// Submits a collection of required tool call outputs to a run and resumes the run with streaming enabled.
+    /// </summary>
+    /// <param name="threadId"> The thread ID of the thread being run. </param>
+    /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
+    /// <param name="toolOutputs">
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
+    /// </param>
+    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> SubmitToolOutputsToRunStreaming(
+        string threadId,
+        string runId,
+        IEnumerable<ToolOutput> toolOutputs)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+
+        BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
+            .ToBinaryContent();
+        ClientResult protocolResult = SubmitToolOutputsToRun(threadId, runId, content, StreamRequestOptions);
+
+        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+    }
+
+    /// <summary>
+    /// Cancels an in-progress <see cref="ThreadRun"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the run. </param>
+    /// <param name="runId"> The ID of the run to cancel. </param>
+    /// <returns> An updated <see cref="ThreadRun"/> instance, reflecting the new status of the run. </returns>
+    public virtual async Task<ClientResult<ThreadRun>> CancelRunAsync(string threadId, string runId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+
+        ClientResult protocolResult = await CancelRunAsync(threadId, runId, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Cancels an in-progress <see cref="ThreadRun"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the run. </param>
+    /// <param name="runId"> The ID of the run to cancel. </param>
+    /// <returns> An updated <see cref="ThreadRun"/> instance, reflecting the new status of the run. </returns>
+    public virtual ClientResult<ThreadRun> CancelRun(string threadId, string runId)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+
+        ClientResult protocolResult = CancelRun(threadId, runId, null);
+        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+    }
+
+    /// <summary>
+    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the run. </param>
+    /// <param name="runId"> The ID of the run to list run steps from. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual async Task<ClientResult<ListQueryPage<RunStep>>> GetRunStepsAsync(
+        string threadId,
+        string runId,
         int? maxResults = null,
-        ListOrder? listOrder = null,
-        string previousRunId = null,
-        string subsequentRunId = null)
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
     {
-        Func<Task<ClientResult<Internal.Models.ListRunsResponse>>> internalFunc = () => RunShim.GetRunsAsync(
-            threadId,
-            maxResults,
-            listOrder,
-            previousRunId,
-            subsequentRunId);
-        return GetListQueryPageAsync<ThreadRun, Internal.Models.ListRunsResponse>(internalFunc);
+        ClientResult protocolResult = await GetRunStepsAsync(threadId, runId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null)
+            .ConfigureAwait(false);
+        return CreateListResultFromProtocol(protocolResult, InternalListRunStepsResponse.FromResponse);
     }
 
-    public virtual ClientResult<ThreadRun> ModifyRun(string threadId, string runId, RunModificationOptions options)
+    /// <summary>
+    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the run. </param>
+    /// <param name="runId"> The ID of the run to list run steps from. </param>
+    /// <param name="maxResults">
+    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
+    /// a default of 20 if not otherwise specified.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="previousId">
+    /// A cursor for use in pagination. If provided, results in the list will begin immediately
+    /// <c>after</c> this ID according to the specified order.
+    /// </param>
+    /// <param name="subsequentId">
+    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
+    /// this ID according to the specified order.
+    /// </param>
+    /// <returns> A page of results matching any constraints provided. </returns>
+    public virtual ClientResult<ListQueryPage<RunStep>> GetRunSteps(
+        string threadId,
+        string runId,
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
     {
-        Internal.Models.ModifyRunRequest request = new(options.Metadata, serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.RunObject> internalResult = RunShim.ModifyRun(threadId, runId, request);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+        ClientResult protocolResult = GetRunSteps(threadId, runId, maxResults, resultOrder?.ToString(), previousId, subsequentId, null);
+        return CreateListResultFromProtocol(protocolResult, InternalListRunStepsResponse.FromResponse);
     }
 
-    public virtual async Task<ClientResult<ThreadRun>> ModifyRunAsync(string threadId, string runId, RunModificationOptions options)
+    /// <summary>
+    /// Gets a single run step from a run.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the run. </param>
+    /// <param name="runId"> The ID of the run. </param>
+    /// <param name="stepId"> The ID of the run step. </param>
+    /// <returns> A <see cref="RunStep"/> instance corresponding to the specified step. </returns>
+    public virtual async Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId)
     {
-        Internal.Models.ModifyRunRequest request = new(options.Metadata, serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.ModifyRunAsync(threadId, runId, request).ConfigureAwait(false);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
+        ClientResult protocolResult = await GetRunStepAsync(threadId, runId, stepId, null).ConfigureAwait(false);
+        return CreateResultFromProtocol(protocolResult, RunStep.FromResponse);
     }
 
-    public virtual ClientResult<bool> CancelRun(string threadId, string runId)
+    /// <summary>
+    /// Gets a single run step from a run.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread associated with the run. </param>
+    /// <param name="runId"> The ID of the run. </param>
+    /// <param name="stepId"> The ID of the run step. </param>
+    /// <returns> A <see cref="RunStep"/> instance corresponding to the specified step. </returns>
+    public virtual ClientResult<RunStep> GetRunStep(string threadId, string runId, string stepId)
     {
-        ClientResult<Internal.Models.RunObject> internalResult = RunShim.CancelRun(threadId, runId);
-        return ClientResult.FromValue(true, internalResult.GetRawResponse());
+        ClientResult protocolResult = GetRunStep(threadId, runId, stepId, null);
+        return CreateResultFromProtocol(protocolResult, RunStep.FromResponse);
     }
 
-    public virtual async Task<ClientResult<bool>> CancelRunAsync(string threadId, string runId)
-    {
-        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.CancelRunAsync(threadId, runId).ConfigureAwait(false);
-        return ClientResult.FromValue(true, internalResult.GetRawResponse());
-    }
-
-    public virtual ClientResult<ThreadRun> SubmitToolOutputs(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
-    {
-        List<Internal.Models.SubmitToolOutputsRunRequestToolOutput> requestToolOutputs = [];
-
-        foreach (ToolOutput toolOutput in toolOutputs)
-        {
-            requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
-        }
-
-        Internal.Models.SubmitToolOutputsRunRequest request = new(
-            requestToolOutputs,
-            stream: null,
-            serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.RunObject> internalResult = RunShim.SubmitToolOuputsToRun(threadId, runId, request);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    public virtual async Task<ClientResult<ThreadRun>> SubmitToolOutputsAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs)
-    {
-        List<Internal.Models.SubmitToolOutputsRunRequestToolOutput> requestToolOutputs = [];
-
-        foreach (ToolOutput toolOutput in toolOutputs)
-        {
-            requestToolOutputs.Add(new(toolOutput.Id, toolOutput.Output, null));
-        }
-
-        Internal.Models.SubmitToolOutputsRunRequest request = new(
-            requestToolOutputs,
-            stream: null,
-            serializedAdditionalRawData: null);
-        ClientResult<Internal.Models.RunObject> internalResult = await RunShim.SubmitToolOuputsToRunAsync(threadId, runId, request).ConfigureAwait(false);
-        return ClientResult.FromValue(new ThreadRun(internalResult.Value), internalResult.GetRawResponse());
-    }
-
-    internal static Internal.Models.CreateAssistantRequest CreateInternalCreateAssistantRequest(
-        string modelName,
-        AssistantCreationOptions options)
-    {
-        options ??= new();
-        return new Internal.Models.CreateAssistantRequest(
-            modelName,
-            options.Name,
-            options.Description,
-            options.Instructions,
-            ToInternalBinaryDataList(options.Tools),
-            null, // TODO -- to do: toolResources
-            options.Metadata,
-            options.Temperature,
-            options.TopP,
-            options.ResponseFormat,
-            serializedAdditionalRawData: null);
-    }
-
-    internal static Internal.Models.ModifyAssistantRequest CreateInternalModifyAssistantRequest(
-        AssistantModificationOptions options)
-    {
-        return new Internal.Models.ModifyAssistantRequest(
-            options.Model,
-            options.Name,
-            options.Description,
-            options.Instructions,
-            ToInternalBinaryDataList(options.Tools),
-            null, // TODO -- to do: toolResources
-            options.Metadata,
-            options.Temperature,
-            options.TopP,
-            options.ResponseFormat,
-            serializedAdditionalRawData: null);
-    }
-
-    internal static Internal.Models.CreateThreadRequest CreateInternalCreateThreadRequest(
-        ThreadCreationOptions options)
-    {
-        options ??= new();
-        return new Internal.Models.CreateThreadRequest(
-            ToInternalCreateMessageRequestList(options.Messages),
-            null, // TODO -- to do: toolResources
-            options.Metadata,
-            serializedAdditionalRawData: null);
-    }
-
-    internal static Internal.Models.CreateRunRequest CreateInternalCreateRunRequest(
-        string assistantId,
-        RunCreationOptions options = null)
-    {
-        options ??= new();
-        return new(
-            assistantId,
-            options.ModelOverride,
-            options.InstructionsOverride,
-            options.AdditionalInstructions,
-            null, // TODO -- to do: additional messages
-            ToInternalBinaryDataList(options.ToolsOverride),
-            options.Metadata,
-            options.Temperature,
-            options.TopP,
-            options.Stream,
-            options.MaxPromptTokens,
-            options.MaxCompletionTokens,
-            options.TruncationStrategy,
-            options.ToolChoice,
-            options.ResponseFormat,
-            serializedAdditionalRawData: null);
-    }
-
-    internal static Internal.Models.CreateThreadAndRunRequest CreateInternalCreateThreadAndRunRequest(
+    private static BinaryContent CreateThreadAndRunProtocolContent(
         string assistantId,
         ThreadCreationOptions threadOptions,
         RunCreationOptions runOptions)
     {
-        threadOptions ??= new();
-        runOptions ??= new();
-        Internal.Models.CreateThreadRequest internalThreadOptions = CreateInternalCreateThreadRequest(threadOptions);
-        return new Internal.Models.CreateThreadAndRunRequest(
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+        InternalCreateThreadAndRunRequest internalRequest = new(
             assistantId,
-            internalThreadOptions,
+            threadOptions,
             runOptions.ModelOverride,
             runOptions.InstructionsOverride,
-            ToInternalBinaryDataList(runOptions.ToolsOverride),
-            null, // TODO -- to do: toolResources
+            runOptions.Tools,
+            // TODO: reconcile exposure of the the two different tool_resources, if needed
+            threadOptions?.ToolResources,
             runOptions.Metadata,
             runOptions.Temperature,
             runOptions.TopP,
@@ -580,57 +1020,33 @@ public partial class AssistantClient
             runOptions.ToolChoice,
             runOptions.ResponseFormat,
             serializedAdditionalRawData: null);
+        return internalRequest.ToBinaryContent();
     }
 
-    internal static ChangeTrackingList<BinaryData> ToInternalBinaryDataList<T>(IEnumerable<T> values)
-        where T : IPersistableModel<T>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ClientResult<T> CreateResultFromProtocol<T>(ClientResult protocolResult, Func<PipelineResponse, T> responseDeserializer)
     {
-        ChangeTrackingList<BinaryData> internalList = [];
-        foreach (T value in values)
-        {
-            internalList.Add(ModelReaderWriter.Write(value));
-        }
-        return internalList;
+        PipelineResponse pipelineResponse = protocolResult?.GetRawResponse();
+        T deserializedResultValue = responseDeserializer.Invoke(pipelineResponse);
+        return ClientResult.FromValue(deserializedResultValue, pipelineResponse);
     }
 
-    internal static Internal.Models.CreateMessageRequestRole ToInternalRequestRole(MessageRole role)
-    => role switch
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ClientResult<ListQueryPage<T>> CreateListResultFromProtocol<T>(
+        ClientResult protocolResult,
+        Func<PipelineResponse, IInternalListResponse<T>> responseDeserializer)
+            where T : class, IJsonModel<T>
     {
-        MessageRole.User => Internal.Models.CreateMessageRequestRole.User,
-        _ => throw new ArgumentException(nameof(role)),
-    };
-
-    internal static ChangeTrackingList<Internal.Models.CreateMessageRequest> ToInternalCreateMessageRequestList(
-        IEnumerable<ThreadInitializationMessage> messages)
-    {
-        ChangeTrackingList<Internal.Models.CreateMessageRequest> internalList = [];
-        foreach (ThreadInitializationMessage message in messages)
-        {
-            internalList.Add(new Internal.Models.CreateMessageRequest(
-                ToInternalRequestRole(message.Role),
-                BinaryData.FromString(message.Content),
-                null, // TODO -- to do: attachments
-                message.Metadata,
-                serializedAdditionalRawData: null));
-        }
-        return internalList;
+        PipelineResponse pipelineResponse = protocolResult?.GetRawResponse();
+        IInternalListResponse<T> deserializedInternalResponse = responseDeserializer.Invoke(pipelineResponse);
+        ListQueryPage<T> page = new(
+            deserializedInternalResponse.Data,
+            deserializedInternalResponse.FirstId,
+            deserializedInternalResponse.LastId,
+            deserializedInternalResponse.HasMore);
+        return ClientResult.FromValue(page, pipelineResponse);
     }
 
-    internal virtual ClientResult<ListQueryPage<T>> GetListQueryPage<T, U>(Func<ClientResult<U>> internalFunc)
-        where T : class, IJsonModel<T>
-        where U : class
-    {
-        ClientResult<U> internalResult = internalFunc.Invoke();
-        ListQueryPage<T> convertedValue = ListQueryPage.Create(internalResult.Value) as ListQueryPage<T>;
-        return ClientResult.FromValue(convertedValue, internalResult.GetRawResponse());
-    }
-
-    internal virtual async Task<ClientResult<ListQueryPage<T>>> GetListQueryPageAsync<T, U>(Func<Task<ClientResult<U>>> internalAsyncFunc)
-        where T : class, IJsonModel<T>
-        where U : class
-    {
-        ClientResult<U> internalResult = await internalAsyncFunc.Invoke().ConfigureAwait(false);
-        ListQueryPage<T> convertedValue = ListQueryPage.Create(internalResult.Value) as ListQueryPage<T>;
-        return ClientResult.FromValue(convertedValue, internalResult.GetRawResponse());
-    }
+    private RequestOptions StreamRequestOptions => _streamRequestOptions ??= new() { BufferResponse = false };
+    private RequestOptions _streamRequestOptions;
 }

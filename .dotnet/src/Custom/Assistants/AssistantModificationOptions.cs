@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
@@ -6,68 +5,31 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// Represents additional options available when modifying an existing <see cref="Assistant"/>.
 /// </summary>
+[CodeGenModel("ModifyAssistantRequest")]
 public partial class AssistantModificationOptions
 {
     /// <summary>
-    /// The new model that the assistant should use when creating messages.
+    /// The replacement model that the assistant should use.
     /// </summary>
-    public string Model { get; init; }
+    public string Model { get; set; }
 
     /// <summary>
-    /// A new, friendly name for the assistant. Its <see cref="Assistant.Id"/> will remain unchanged.
-    /// </summary>
-    public string Name { get; init; }
-
-    /// <summary>
-    /// A new description to associate with the assistant.
-    /// </summary>
-    public string Description { get; init; }
-
-    /// <summary>
-    /// New, default instructions for the assistant to use when creating messages.
-    /// </summary>
-    public string Instructions { get; init; }
-
-    /// <summary>
-    /// A new collection of default tool definitions to enable for the assistant. Available tools include:
     /// <para>
-    /// <list type="bullet">
-    /// <item>
-    ///     <c>code_interpreter</c> - <see cref="CodeInterpreterToolDefinition"/> 
-    ///     - works with data, math, and computer code
-    /// </item>
-    /// <item>
-    ///     <c>retrieval</c> - <see cref="RetrievalToolDefinition"/> 
-    ///     - dynamically enriches an assistant's context with content from uploaded, indexed files
-    /// </item>
-    /// <item>
-    ///     <c>function</c> - <see cref="FunctionToolDefinition"/>
-    ///     - enables caller-provided custom functions for actions and enrichment
-    /// </item>
-    /// </list>
+    /// A list of tool enabled on the assistant.
     /// </para>
+    /// There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
     /// </summary>
-    public IList<ToolDefinition> Tools { get; } = new ChangeTrackingList<ToolDefinition>();
+    [CodeGenMember("Tools")]
+    public IList<ToolDefinition> DefaultTools { get; } = new ChangeTrackingList<ToolDefinition>();
+
+    // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
+    //          response models (which do not contain resource initialization helpers).
 
     /// <summary>
-    /// A new collection of IDs for previously uploaded files that are made accessible to the assistant. These IDs are
-    /// the basis for the functionality of file-based tools like <c>retrieval</c>.
+    /// A replacement set of resources that are made available to the assistant's tools.
+    /// The resources are specific to the type of tool.
+    /// For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
     /// </summary>
-    public IList<string> FileIds { get; } = new ChangeTrackingList<string>();
-
-    /// <summary>
-    /// A replacement for the optional key/value mapping of additional, supplemental data items to attach to the
-    /// <see cref="Assistant"/>. This information may be useful for storing custom details in a structured format.
-    /// </summary>
-    /// <remarks>
-    /// <list type="bullet">
-    ///     <item><b>Keys</b> can be a maximum of 64 characters in length.</item>
-    ///     <item><b>Values</b> can be a maximum of 512 characters in length.</item>
-    /// </list>
-    /// </remarks>
-    public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
-
-    public float? Temperature { get; init; }
-    public float? TopP { get; init; }
-    public BinaryData ResponseFormat { get; init; }
+    [CodeGenMember("ToolResources")]
+    public ToolResources ToolResources { get; set; }
 }

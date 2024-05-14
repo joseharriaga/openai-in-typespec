@@ -23,6 +23,7 @@ namespace OpenAI;
 [CodeGenModel("OpenAIClient")]
 [CodeGenSuppress("OpenAIClient", typeof(ApiKeyCredential))]
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
+[CodeGenSuppress("GetAssistantClientClient")]
 [CodeGenSuppress("GetAudioClientClient")]
 [CodeGenSuppress("GetBatchClientClient")]
 [CodeGenSuppress("GetChatClient")]
@@ -30,18 +31,17 @@ namespace OpenAI;
 [CodeGenSuppress("GetFileClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
+[CodeGenSuppress("GetInternalAssistantMessageClientClient")]
+[CodeGenSuppress("GetInternalAssistantRunClientClient")]
+[CodeGenSuppress("GetInternalAssistantThreadClientClient")]
 [CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetModelClientClient")]
 [CodeGenSuppress("GetModerationClientClient")]
-// [CodeGenSuppress("GetAssistantsClient")]
-// [CodeGenSuppress("GetMessagesClient")]
-// [CodeGenSuppress("GetRunsClient")]
-// [CodeGenSuppress("GetThreadsClient")]
 [CodeGenSuppress("GetVectorStoreClientClient")]
 public partial class OpenAIClient
 {
     private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
-    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v1";
+    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v2";
     private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
     private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
     private const string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";

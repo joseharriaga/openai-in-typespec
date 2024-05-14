@@ -1440,7 +1440,7 @@ paths:
     post:
       tags:
         - Assistants
-      operationId: submitToolOuputsToRun
+      operationId: submitToolOutputsToRun
       summary: |-
         When a run has the `status: "requires_action"` and `required_action.type` is
         `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once
@@ -1969,10 +1969,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsFileSearch'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
+            $ref: '#/components/schemas/AssistantToolDefinition'
           maxItems: 128
           description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
           x-oaiExpandable: true
@@ -2032,6 +2029,19 @@ components:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
       description: Represents an `assistant` that can call the model and use tools.
+    AssistantToolDefinition:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          code_interpreter: '#/components/schemas/AssistantToolsCode'
+          file_search: '#/components/schemas/AssistantToolsFileSearch'
+          function: '#/components/schemas/AssistantToolsFunction'
     AssistantToolsCode:
       type: object
       required:
@@ -2042,6 +2052,8 @@ components:
           enum:
             - code_interpreter
           description: 'The type of tool being defined: `code_interpreter`'
+      allOf:
+        - $ref: '#/components/schemas/AssistantToolDefinition'
     AssistantToolsFileSearch:
       type: object
       required:
@@ -2052,6 +2064,8 @@ components:
           enum:
             - file_search
           description: 'The type of tool being defined: `file_search`'
+      allOf:
+        - $ref: '#/components/schemas/AssistantToolDefinition'
     AssistantToolsFunction:
       type: object
       required:
@@ -2065,6 +2079,8 @@ components:
           description: 'The type of tool being defined: `function`'
         function:
           $ref: '#/components/schemas/FunctionObject'
+      allOf:
+        - $ref: '#/components/schemas/AssistantToolDefinition'
     AssistantsApiResponseFormat:
       type: object
       properties:
@@ -2084,7 +2100,7 @@ components:
             - auto
         - $ref: '#/components/schemas/AssistantsApiResponseFormat'
       description: |-
-        Specifies the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+        Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
         Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
 
@@ -2276,7 +2292,7 @@ components:
         url:
           type: string
           format: uri
-          description: The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions` and `/v1/embeddings` are supported.
+          description: The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported.
       description: The per-line object of the batch input file
     BatchRequestOutput:
       type: object
@@ -2761,6 +2777,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -2799,10 +2817,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsFileSearch'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
+            $ref: '#/components/schemas/AssistantToolDefinition'
           maxItems: 128
           description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
           x-oaiExpandable: true
@@ -2973,6 +2988,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4037,14 +4054,9 @@ components:
             - `user`: Indicates the message is sent by an actual user and should be used in most cases to represent user-generated messages.
             - `assistant`: Indicates the message is generated by the assistant. Use this value to insert messages from the assistant into the conversation.
         content:
-          anyOf:
-            - type: string
-            - type: array
-              items:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageContentImageFileObject'
-                  - $ref: '#/components/schemas/MessageContentImageUrlObject'
-                  - $ref: '#/components/schemas/MessageRequestContentTextObject'
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageContent'
           x-oaiExpandable: true
         attachments:
           type: object
@@ -4252,6 +4264,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4355,10 +4369,7 @@ components:
     CreateRunRequestTools:
       type: array
       items:
-        anyOf:
-          - $ref: '#/components/schemas/AssistantToolsCode'
-          - $ref: '#/components/schemas/AssistantToolsFileSearch'
-          - $ref: '#/components/schemas/AssistantToolsFunction'
+        $ref: '#/components/schemas/AssistantToolDefinition'
       maxItems: 20
       x-oaiExpandable: true
     CreateSpeechRequest:
@@ -4426,6 +4437,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4539,10 +4552,7 @@ components:
     CreateThreadAndRunRequestTools:
       type: array
       items:
-        anyOf:
-          - $ref: '#/components/schemas/AssistantToolsCode'
-          - $ref: '#/components/schemas/AssistantToolsFileSearch'
-          - $ref: '#/components/schemas/AssistantToolsFunction'
+        $ref: '#/components/schemas/AssistantToolDefinition'
       maxItems: 20
     CreateThreadRequest:
       type: object
@@ -5570,6 +5580,9 @@ components:
           type: string
         has_more:
           type: boolean
+    MessageContent:
+      type: object
+      description: Represents a single piece of content in an Assistants API message.
     MessageContentImageFileObject:
       type: object
       required:
@@ -5597,6 +5610,8 @@ components:
               default: auto
           required:
             - file_id
+      allOf:
+        - $ref: '#/components/schemas/MessageContent'
       description: References an image [File](/docs/api-reference/files) in the content of a message.
     MessageContentImageUrlObject:
       type: object
@@ -5626,6 +5641,8 @@ components:
               default: auto
           required:
             - url
+      allOf:
+        - $ref: '#/components/schemas/MessageContent'
       description: References an image URL in the content of a message.
     MessageContentTextAnnotationsFileCitationObject:
       type: object
@@ -5664,6 +5681,8 @@ components:
           type: integer
           format: int32
           minimum: 0
+      allOf:
+        - $ref: '#/components/schemas/MessageContentTextObjectAnnotation'
       description: A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
     MessageContentTextAnnotationsFilePathObject:
       type: object
@@ -5698,6 +5717,8 @@ components:
           type: integer
           format: int32
           minimum: 0
+      allOf:
+        - $ref: '#/components/schemas/MessageContentTextObjectAnnotation'
       description: A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
     MessageContentTextObject:
       type: object
@@ -5719,14 +5740,42 @@ components:
             annotations:
               type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
-                  - $ref: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
+                $ref: '#/components/schemas/MessageContentTextObjectAnnotation'
               x-oaiExpandable: true
           required:
             - value
             - annotations
+      allOf:
+        - $ref: '#/components/schemas/MessageContent'
       description: The text content that is part of a message.
+    MessageContentTextObjectAnnotation:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      discriminator:
+        propertyName: type
+        mapping:
+          file_citation: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
+          file_path: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
+    MessageDeltaContent:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      discriminator:
+        propertyName: type
+        mapping:
+          image_file: '#/components/schemas/MessageDeltaContentImageFileObject'
+          image_url: '#/components/schemas/MessageDeltaContentImageUrlObject'
+          text: '#/components/schemas/MessageDeltaContentTextObject'
+      description: Represents a single piece of incremental content in an Assistants API streaming response.
     MessageDeltaContentImageFileObject:
       type: object
       required:
@@ -5756,6 +5805,8 @@ components:
                 - high
               description: Specifies the detail level of the image if specified by the user. `low` uses fewer tokens, you can opt in to high resolution using `high`.
               default: auto
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaContent'
       description: References an image [File](/docs/api-reference/files) in the content of a message.
     MessageDeltaContentImageUrlObject:
       type: object
@@ -5787,6 +5838,8 @@ components:
                 - high
               description: Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`.
               default: auto
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaContent'
       description: References an image URL in the content of a message.
     MessageDeltaContentTextAnnotationsFileCitationObject:
       type: object
@@ -5823,6 +5876,8 @@ components:
           type: integer
           format: int32
           minimum: 0
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaTextContentAnnotation'
       description: A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
     MessageDeltaContentTextAnnotationsFilePathObject:
       type: object
@@ -5856,6 +5911,8 @@ components:
           type: integer
           format: int32
           minimum: 0
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaTextContentAnnotation'
       description: A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
     MessageDeltaContentTextObject:
       type: object
@@ -5881,10 +5938,10 @@ components:
             annotations:
               type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFileCitationObject'
-                  - $ref: '#/components/schemas/MessageDeltaContentTextAnnotationsFilePathObject'
+                $ref: '#/components/schemas/MessageDeltaTextContentAnnotation'
               x-oaiExpandable: true
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaContent'
       description: The text content that is part of a message.
     MessageDeltaObject:
       type: object
@@ -5913,14 +5970,24 @@ components:
             content:
               type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageDeltaContentImageFileObject'
-                  - $ref: '#/components/schemas/MessageDeltaContentTextObject'
-                  - $ref: '#/components/schemas/MessageDeltaContentImageUrlObject'
+                $ref: '#/components/schemas/MessageDeltaContent'
               description: The content of the message in array of text and/or images.
               x-oaiExpandable: true
           description: The delta containing the fields that have changed on the Message.
       description: Represents a message delta i.e. any changed fields on a message during streaming.
+    MessageDeltaTextContentAnnotation:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      discriminator:
+        propertyName: type
+        mapping:
+          file_citation: '#/components/schemas/MessageDeltaContentTextAnnotationsFileCitationObject'
+          file_path: '#/components/schemas/MessageDeltaContentTextAnnotationsFilePathObject'
     MessageObject:
       type: object
       required:
@@ -5996,10 +6063,7 @@ components:
         content:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/MessageContentImageFileObject'
-              - $ref: '#/components/schemas/MessageContentImageUrlObject'
-              - $ref: '#/components/schemas/MessageContentTextObject'
+            $ref: '#/components/schemas/MessageContent'
           description: The content of the message in array of text and/or images.
           x-oaiExpandable: true
         assistant_id:
@@ -6054,6 +6118,8 @@ components:
         text:
           type: string
           description: Text content to be sent to the model
+      allOf:
+        - $ref: '#/components/schemas/MessageContent'
       description: The text content that is part of a message.
     Model:
       type: object
@@ -6103,10 +6169,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsFileSearch'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
+            $ref: '#/components/schemas/AssistantToolDefinition'
           maxItems: 128
           description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
           x-oaiExpandable: true
@@ -6350,9 +6413,9 @@ components:
             - cancelled
             - failed
             - completed
-            - expired
             - incomplete
-          description: The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`.
+            - expired
+          description: The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
         required_action:
           type: object
           properties:
@@ -6440,10 +6503,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/AssistantToolsCode'
-              - $ref: '#/components/schemas/AssistantToolsFileSearch'
-              - $ref: '#/components/schemas/AssistantToolsFunction'
+            $ref: '#/components/schemas/AssistantToolDefinition'
           maxItems: 20
           description: The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
           x-oaiExpandable: true
@@ -6729,6 +6789,8 @@ components:
               description: The ID of the message that was created by this run step.
           required:
             - message_id
+      allOf:
+        - $ref: '#/components/schemas/RunStepObjectStepDetails'
       description: Details of the message creation by the run step.
     RunStepDetailsToolCallsCodeObject:
       type: object
@@ -6754,16 +6816,30 @@ components:
             outputs:
               type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputLogsObject'
-                  - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeOutputImageObject'
+                $ref: '#/components/schemas/RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject'
               description: The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
               x-oaiExpandable: true
           required:
             - input
             - outputs
           description: The Code Interpreter tool call definition.
+      allOf:
+        - $ref: '#/components/schemas/RunStepDetailsToolCallsObjectToolCallsObject'
       description: Details of the Code Interpreter tool call the run step was involved in.
+    RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the details object.
+      discriminator:
+        propertyName: type
+        mapping:
+          logs: '#/components/schemas/RunStepDetailsToolCallsCodeOutputLogsObject'
+          image: '#/components/schemas/RunStepDetailsToolCallsCodeOutputImageObject'
+      description: Abstractly represents a run step tool call details code interpreter output.
     RunStepDetailsToolCallsCodeOutputImageObject:
       type: object
       required:
@@ -6783,6 +6859,8 @@ components:
               description: The [file](/docs/api-reference/files) ID of the image.
           required:
             - file_id
+      allOf:
+        - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject'
     RunStepDetailsToolCallsCodeOutputLogsObject:
       type: object
       required:
@@ -6797,6 +6875,8 @@ components:
         logs:
           type: string
           description: The text output from the Code Interpreter tool call.
+      allOf:
+        - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject'
       description: Text output from the Code Interpreter tool call as part of a run step.
     RunStepDetailsToolCallsFileSearchObject:
       type: object
@@ -6819,6 +6899,8 @@ components:
             type: string
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
+      allOf:
+        - $ref: '#/components/schemas/RunStepDetailsToolCallsObjectToolCallsObject'
     RunStepDetailsToolCallsFunctionObject:
       type: object
       required:
@@ -6852,6 +6934,8 @@ components:
             - arguments
             - output
           description: The definition of the function that was called.
+      allOf:
+        - $ref: '#/components/schemas/RunStepDetailsToolCallsObjectToolCallsObject'
     RunStepDetailsToolCallsObject:
       type: object
       required:
@@ -6866,13 +6950,27 @@ components:
         tool_calls:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/RunStepDetailsToolCallsCodeObject'
-              - $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchObject'
-              - $ref: '#/components/schemas/RunStepDetailsToolCallsFunctionObject'
+            $ref: '#/components/schemas/RunStepDetailsToolCallsObjectToolCallsObject'
           description: 'An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.'
           x-oaiExpandable: true
+      allOf:
+        - $ref: '#/components/schemas/RunStepObjectStepDetails'
       description: Details of the tool call.
+    RunStepDetailsToolCallsObjectToolCallsObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the details object.
+      discriminator:
+        propertyName: type
+        mapping:
+          code_interpreter: '#/components/schemas/RunStepDetailsToolCallsCodeObject'
+          file_search: '#/components/schemas/RunStepDetailsToolCallsFileSearchObject'
+          function: '#/components/schemas/RunStepDetailsToolCallsFunctionObject'
+      description: Abstractly represents a run step tool call details inner object.
     RunStepObject:
       type: object
       required:
@@ -6930,9 +7028,8 @@ components:
             - expired
           description: The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
         step_details:
-          anyOf:
-            - $ref: '#/components/schemas/RunStepDetailsMessageCreationObject'
-            - $ref: '#/components/schemas/RunStepDetailsToolCallsObject'
+          allOf:
+            - $ref: '#/components/schemas/RunStepObjectStepDetails'
           description: The details of the run step.
           x-oaiExpandable: true
         last_error:
@@ -6985,6 +7082,20 @@ components:
             - $ref: '#/components/schemas/RunStepCompletionUsage'
           nullable: true
       description: Represents a step in execution of a run.
+    RunStepObjectStepDetails:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the details object.
+      discriminator:
+        propertyName: type
+        mapping:
+          message_creation: '#/components/schemas/RunStepDetailsMessageCreationObject'
+          tool_calls: '#/components/schemas/RunStepDetailsToolCallsObject'
+      description: Abstractly represents a run step details object.
     RunToolCallObject:
       type: object
       required:

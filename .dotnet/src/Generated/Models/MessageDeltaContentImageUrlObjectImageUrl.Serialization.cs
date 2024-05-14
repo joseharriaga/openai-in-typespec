@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class MessageDeltaContentImageUrlObjectImageUrl : IJsonModel<MessageDeltaContentImageUrlObjectImageUrl>
     {

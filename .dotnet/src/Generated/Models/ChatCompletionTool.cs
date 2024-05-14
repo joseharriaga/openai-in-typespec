@@ -45,7 +45,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="ChatCompletionTool"/>. </summary>
         /// <param name="function"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="function"/> is null. </exception>
-        public ChatCompletionTool(FunctionObject function)
+        public ChatCompletionTool(FunctionDefinition function)
         {
             Argument.AssertNotNull(function, nameof(function));
 
@@ -56,7 +56,7 @@ namespace OpenAI.Internal.Models
         /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
         /// <param name="function"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ChatCompletionTool(ChatCompletionToolType type, FunctionObject function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatCompletionTool(ChatCompletionToolType type, FunctionDefinition function, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             Function = function;
@@ -72,6 +72,6 @@ namespace OpenAI.Internal.Models
         public ChatCompletionToolType Type { get; } = ChatCompletionToolType.Function;
 
         /// <summary> Gets the function. </summary>
-        public FunctionObject Function { get; }
+        public FunctionDefinition Function { get; }
     }
 }

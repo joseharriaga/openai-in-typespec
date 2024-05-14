@@ -8,9 +8,7 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model ListModelsResponse {
-  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
-
   data: Model[];
 }
 

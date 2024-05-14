@@ -1,54 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿namespace OpenAI.Assistants;
 
-namespace OpenAI.Assistants;
-
+[CodeGenModel("AssistantObject")]
 public partial class Assistant
 {
-    public string Id { get; }
-    public DateTimeOffset CreatedAt { get; }
-    public string Name { get; }
-    public string Description { get; }
-    public string DefaultModel { get; }
-    public string DefaultInstructions { get; }
-    public IReadOnlyList<ToolDefinition> DefaultTools { get; }
-    /// <summary>
-    /// An optional key/value mapping of additional, supplemental data items to attach to the <see cref="Assistant"/>.
-    /// This information may be useful for storing custom details in a structured format.
-    /// </summary>
-    /// <remarks>
-    /// <list type="bullet">
-    ///     <item><b>Keys</b> can be a maximum of 64 characters in length.</item>
-    ///     <item><b>Values</b> can be a maximum of 512 characters in length.</item>
-    /// </list>
-    /// </remarks>
-    public IReadOnlyDictionary<string, string> Metadata { get; }
-
-    internal Assistant(Internal.Models.AssistantObject internalAssistant)
-    {
-        Id = internalAssistant.Id;
-        CreatedAt = internalAssistant.CreatedAt;
-        Name = internalAssistant.Name;
-        Description = internalAssistant.Description;
-        DefaultModel = internalAssistant.Model;
-        DefaultInstructions = internalAssistant.Instructions;
-        DefaultTools = GetToolsFromInternalTools(internalAssistant.Tools);
-        Metadata = internalAssistant.Metadata ?? new Dictionary<string, string>();
-    }
-
-    private static IReadOnlyList<ToolDefinition> GetToolsFromInternalTools(IReadOnlyList<BinaryData>? internalTools)
-    {
-        if (internalTools is not null)
-        {
-            List<ToolDefinition> tools = [];
-            foreach (BinaryData unionToolDefinitionData in internalTools)
-            {
-                using JsonDocument toolDocument = JsonDocument.Parse(unionToolDefinitionData);
-                tools.Add(ToolDefinition.DeserializeToolDefinition(toolDocument.RootElement));
-            }
-            return tools;
-        }
-        return [];
-    }
+    // CUSTOM: hide non-discriminated object/type labels, as they're not necessary in the context of strongly typed
+    //          representations
+    private readonly object Object;
 }

@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The MessageDeltaContentImageUrlObjectImageUrl. </summary>
     internal partial class MessageDeltaContentImageUrlObjectImageUrl
@@ -60,7 +60,5 @@ namespace OpenAI.Internal.Models
 
         /// <summary> The URL of the image, must be a supported image types: jpeg, jpg, png, gif, webp. </summary>
         public Uri Url { get; }
-        /// <summary> Specifies the detail level of the image. `low` uses fewer tokens, you can opt in to high resolution using `high`. </summary>
-        public string Detail { get; }
     }
 }

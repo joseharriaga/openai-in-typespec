@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class MessageContentTextObjectText : IJsonModel<MessageContentTextObjectText>
     {
@@ -27,19 +27,7 @@ namespace OpenAI.Internal.Models
             writer.WriteStartArray();
             foreach (var item in Annotations)
             {
-                if (item == null)
-                {
-                    writer.WriteNullValue();
-                    continue;
-                }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                using (JsonDocument document = JsonDocument.Parse(item))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -81,7 +69,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string value = default;
-            IReadOnlyList<BinaryData> annotations = default;
+            IList<MessageContentTextObjectAnnotation> annotations = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -93,17 +81,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("annotations"u8))
                 {
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<MessageContentTextObjectAnnotation> array = new List<MessageContentTextObjectAnnotation>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(MessageContentTextObjectAnnotation.DeserializeMessageContentTextObjectAnnotation(item, options));
                     }
                     annotations = array;
                     continue;

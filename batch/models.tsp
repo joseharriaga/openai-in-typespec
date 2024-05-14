@@ -137,7 +137,7 @@ model BatchRequestInput {
 
   // Tool customization: url uses the url type
   @doc("""
-  The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions` and `/v1/embeddings` are supported.
+  The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported.
   """)
   url?: url;
 }
@@ -176,7 +176,5 @@ model ListBatchesResponse {
   first_id?: string;
   last_id?: string;
   has_more: boolean;
-
-  // Tool customization: add a clear enum enforcement of constrained 'object' label
   object: "list";
 }

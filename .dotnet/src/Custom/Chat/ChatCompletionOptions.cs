@@ -69,10 +69,10 @@ public partial class ChatCompletionOptions
         {
             if (tool is ChatFunctionToolDefinition functionTool)
             {
-                Internal.Models.FunctionObject functionObject = new(
+                FunctionDefinition functionObject = new(
                     functionTool.Description,
                     functionTool.FunctionName,
-                    CreateInternalFunctionParameters(functionTool.Parameters),
+                    functionTool.Parameters,
                     serializedAdditionalRawData: null);
                 internalTools.Add(new(functionObject));
             }

@@ -111,14 +111,14 @@ interface Runs {
 
   @route("{thread_id}/runs/{run_id}/submit_tool_outputs")
   @post
-  @operationId("submitToolOuputsToRun")
+  @operationId("submitToolOutputsToRun")
   @tag("Assistants")
   @summary("""
   When a run has the `status: "requires_action"` and `required_action.type` is
   `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once
   they're all completed. All outputs must be submitted in a single request.
   """)
-  submitToolOuputsToRun(
+  submitToolOutputsToRun(
     /** The ID of the [thread](/docs/api-reference/threads) to which this run belongs. */
     @path thread_id: string,
 

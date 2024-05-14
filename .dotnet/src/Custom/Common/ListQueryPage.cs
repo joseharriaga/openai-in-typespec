@@ -20,49 +20,6 @@ public abstract partial class ListQueryPage
         LastId = lastId;
         HasMore = hasMore;
     }
-
-    internal static ListQueryPage<Assistant> Create(Internal.Models.ListAssistantsResponse internalResponse)
-    {
-        ChangeTrackingList<Assistant> assistants = new();
-        foreach (Internal.Models.AssistantObject internalAssistant in internalResponse.Data)
-        {
-            assistants.Add(new(internalAssistant));
-        }
-        return new(assistants, internalResponse.FirstId, internalResponse.LastId, internalResponse.HasMore);
-    }
-
-    internal static ListQueryPage<ThreadMessage> Create(Internal.Models.ListMessagesResponse internalResponse)
-    {
-        ChangeTrackingList<ThreadMessage> messages = new();
-        foreach (Internal.Models.MessageObject internalMessage in internalResponse.Data)
-        {
-            messages.Add(new(internalMessage));
-        }
-        return new(messages, internalResponse.FirstId, internalResponse.LastId, internalResponse.HasMore);
-    }
-
-    internal static ListQueryPage<ThreadRun> Create(Internal.Models.ListRunsResponse internalResponse)
-    {
-        ChangeTrackingList<ThreadRun> runs = new();
-        foreach (Internal.Models.RunObject internalRun in internalResponse.Data)
-        {
-            runs.Add(new(internalRun));
-        }
-        return new(runs, internalResponse.FirstId, internalResponse.LastId, internalResponse.HasMore);
-    }
-
-    internal static ListQueryPage Create<T>(T internalResponse)
-        where T : class
-    {
-        return internalResponse switch
-        {
-            Internal.Models.ListAssistantsResponse internalAssistantsResponse => Create(internalAssistantsResponse),
-            Internal.Models.ListMessagesResponse internalMessagesResponse => Create(internalMessagesResponse),
-            Internal.Models.ListRunsResponse internalRunsResponse => Create(internalRunsResponse),
-            _ => throw new ArgumentException(
-                $"Unknown type for generic {nameof(ListQueryPage)} conversion: {internalResponse.GetType()}"),
-        };
-    }
 }
 
 public partial class ListQueryPage<T> : ListQueryPage, IReadOnlyList<T>

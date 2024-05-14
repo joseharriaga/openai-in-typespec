@@ -11,7 +11,7 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 @doc("""
-Specifies the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
 Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
 
@@ -38,6 +38,8 @@ model CreateAssistantRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
+    | "gpt-4o"
+    | "gpt-4o-2024-05-13"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"
@@ -69,13 +71,13 @@ model CreateAssistantRequest {
   @maxLength(256000)
   instructions?: string | null;
 
+  // Tool customization: use common model base for tool definitions
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
   """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
-  ];
+  tools?: AssistantToolDefinition[] = [];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -130,13 +132,13 @@ model ModifyAssistantRequest {
   @maxLength(256000)
   instructions?: string | null;
 
+  // Tool customization: use common model base for tool definitions
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
   """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools?: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
-  ];
+  tools?: AssistantToolDefinition[] = [];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -193,21 +195,24 @@ model DeleteAssistantResponse {
   object: "assistant.deleted";
 }
 
-model AssistantToolsCode {
+// Tool customization: apply a common model base for tool definitions
+model AssistantToolsCode extends AssistantToolDefinition {
   @doc("""
   The type of tool being defined: `code_interpreter`
   """)
   type: "code_interpreter";
 }
 
-model AssistantToolsFileSearch {
+// Tool customization: apply a common model base for tool definitions
+model AssistantToolsFileSearch extends AssistantToolDefinition {
   @doc("""
   The type of tool being defined: `file_search`
   """)
   type: "file_search";
 }
 
-model AssistantToolsFunction {
+// Tool customization: apply a common model base for tool definitions
+model AssistantToolsFunction extends AssistantToolDefinition {
   @doc("""
   The type of tool being defined: `function`
   """)
@@ -248,13 +253,13 @@ model AssistantObject {
   @maxLength(256000)
   instructions: string | null;
 
+  // Tool customization: use common model base for tool definitions
   @doc("""
   A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
   """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools: (AssistantToolsCode | AssistantToolsFileSearch | AssistantToolsFunction)[] = [
-  ];
+  tools: AssistantToolDefinition[] = [];
 
   @doc("""
   A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.

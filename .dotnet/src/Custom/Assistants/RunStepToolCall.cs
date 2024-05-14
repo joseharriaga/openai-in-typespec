@@ -13,6 +13,11 @@ public partial class RunStepToolCall
     public string ToolCallId => AsCodeInterpreter?.Id ?? AsFunction?.Id ?? AsFileSearch?.Id;
     public string CodeInterpreterInput => AsCodeInterpreter?.Input;
     public IReadOnlyList<RunStepCodeInterpreterOutput> CodeInterpreterOutputs => AsCodeInterpreter?.Outputs;
+
+    public string FunctionName => AsFunction?.InternalName;
+    public string FunctionArguments => AsFunction?.InternalArguments;
+    public string FunctionOutput => AsFunction?.InternalOutput;
+
     public RunStepToolCallKind ToolKind
         => AsCodeInterpreter is not null ? RunStepToolCallKind.CodeInterpreter
         : AsFileSearch is not null ? RunStepToolCallKind.FileSearch

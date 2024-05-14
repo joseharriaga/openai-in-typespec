@@ -308,7 +308,6 @@ public partial class ChatClient
     internal static PipelineMessageClassifier PipelineMessageClassifier200
         => s_pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
-    // TODO:
     private Internal.Models.CreateChatCompletionRequest CreateInternalRequest(
         IEnumerable<ChatRequestMessage> messages,
         ChatCompletionOptions options = null,
@@ -333,11 +332,9 @@ public partial class ChatClient
         }
         Dictionary<string, BinaryData> additionalData = [];
 
-        // TODO: Address AOAI versioning
-        InternalChatCompletionStreamOptions streamOptions = null;
-        //stream == true
-        //    ? new InternalChatCompletionStreamOptions(includeUsage: stream, serializedAdditionalRawData: null)
-        //    : null;
+        InternalChatCompletionStreamOptions streamOptions = stream == true
+            ? new InternalChatCompletionStreamOptions(includeUsage: stream, serializedAdditionalRawData: null)
+            : null;
         return new Internal.Models.CreateChatCompletionRequest(
             messageDataItems,
             _model,

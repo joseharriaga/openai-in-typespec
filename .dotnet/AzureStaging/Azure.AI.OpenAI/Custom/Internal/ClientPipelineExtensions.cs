@@ -22,11 +22,7 @@ internal static partial class ClientPipelineExtensions
             };
         }
 
-        PipelineResponse response = message.BufferResponse ?
-            message.Response :
-            message.ExtractResponse();
-
-        return response;
+        return message.Response;
     }
 
     public static PipelineResponse ProcessMessage(
@@ -46,11 +42,7 @@ internal static partial class ClientPipelineExtensions
             };
         }
 
-        PipelineResponse response = message.BufferResponse ?
-            message.Response :
-            message.ExtractResponse();
-
-        return response;
+        return message.Response;
     }
 
     private static string TryBufferResponseAndCreateError(PipelineMessage message)

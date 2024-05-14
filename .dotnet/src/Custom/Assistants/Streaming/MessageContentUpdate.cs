@@ -13,15 +13,15 @@ public partial class MessageContentUpdate : StreamingUpdate
     /// <inheritdoc cref="MessageDeltaObject.Id"/>
     public string MessageId => _delta.Id;
 
-    /// <inheritdoc cref="MessageDeltaObjectDelta.Role"/>
-    public MessageRole? Role => _delta.Delta?.Role;
-
     /// <inheritdoc cref="MessageDeltaContentImageFileObject.Index"/>
-    public int ContentIndex => _textContent?.Index
+    public int MessageIndex => _textContent?.Index
         ?? _imageFileContent?.Index
         ?? _imageUrlContent?.Index
         ?? TextAnnotation?.ContentIndex
         ?? 0;
+
+    /// <inheritdoc cref="MessageDeltaObjectDelta.Role"/>
+    public MessageRole? Role => _delta.Delta?.Role;
 
     /// <inheritdoc cref="MessageDeltaContentImageFileObjectImageFile.FileId"/>
     public string ImageFileId => _imageFileContent?.ImageFile?.FileId;

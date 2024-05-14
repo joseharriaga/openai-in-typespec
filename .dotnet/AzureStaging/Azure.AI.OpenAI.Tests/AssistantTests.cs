@@ -397,7 +397,7 @@ public class AssistantTests
                 {
                     message += $"[{contentUpdate.Role}]";
                 }
-                message += $"[{contentUpdate.ContentIndex}] {contentUpdate.Text}";
+                message += $"[{contentUpdate.MessageIndex}] {contentUpdate.Text}";
             }
             Print(message);
         }

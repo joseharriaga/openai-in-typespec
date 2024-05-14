@@ -6,7 +6,7 @@ namespace OpenAI.Assistants;
 /// A requested invocation of a defined function tool, needed by an Assistants API run to continue.
 /// </summary>
 [CodeGenModel("RunToolCallObject")]
-public partial class RequiredFunctionToolCall : RequiredToolCall
+internal partial class InternalRequiredFunctionToolCall : InternalRequiredToolCall
 {
     // CUSTOM:
     //  - 'Type' is hidden, as the object discriminator does not carry additional value to the caller in the context
@@ -19,9 +19,9 @@ public partial class RequiredFunctionToolCall : RequiredToolCall
     internal readonly InternalRunToolCallObjectFunction _internalFunction;
 
     /// <inheritdoc cref="InternalRunToolCallObjectFunction.Name"/>
-    public string FunctionName => _internalFunction.Name;
+    public string InternalName => _internalFunction.Name;
 
     /// <inheritdoc cref="InternalRunToolCallObjectFunction.Arguments"/>
-    public string FunctionArguments => _internalFunction.Arguments;
+    public string InternalArguments => _internalFunction.Arguments;
 
 }

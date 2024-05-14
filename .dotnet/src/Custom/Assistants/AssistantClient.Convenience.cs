@@ -411,7 +411,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="run"> The run that reached a <c>requires_action</c> status. </param>
     /// <param name="toolOutputs">
-    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
     /// <returns> The <see cref="ThreadRun"/>, updated after the submission was processed. </returns>
     public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(
@@ -424,7 +424,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="run"> The run that reached a <c>requires_action</c> status. </param>
     /// <param name="toolOutputs">
-    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
     /// <returns> The <see cref="ThreadRun"/>, updated after the submission was processed. </returns>
     public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(
@@ -437,7 +437,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="run"> The run that reached a <c>requires_action</c> status. </param>
     /// <param name="toolOutputs">
-    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
     public virtual Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> SubmitToolOutputsToRunStreamingAsync(
         ThreadRun run,
@@ -449,7 +449,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="run"> The run that reached a <c>requires_action</c> status. </param>
     /// <param name="toolOutputs">
-    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
     public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> SubmitToolOutputsToRunStreaming(
         ThreadRun run,

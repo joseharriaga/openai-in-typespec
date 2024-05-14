@@ -334,12 +334,11 @@ public class AssistantTests
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.RequiresAction));
         Assert.That(run.RequiredActions?.Count, Is.EqualTo(1));
-        RequiredFunctionToolCall requiredFunctionToolCall = run.RequiredActions[0] as RequiredFunctionToolCall;
-        Assert.That(requiredFunctionToolCall?.Id, Is.Not.Null.Or.Empty);
-        Assert.That(requiredFunctionToolCall.FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
-        Assert.That(requiredFunctionToolCall.FunctionArguments, Is.Not.Null.Or.Empty);
+        Assert.That(run.RequiredActions[0].ToolCallId, Is.Not.Null.Or.Empty);
+        Assert.That(run.RequiredActions[0].FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
+        Assert.That(run.RequiredActions[0].FunctionArguments, Is.Not.Null.Or.Empty);
 
-        run = client.SubmitToolOutputsToRun(run, [new(requiredFunctionToolCall.Id, "tacos")]);
+        run = client.SubmitToolOutputsToRun(run, [new(run.RequiredActions[0].ToolCallId, "tacos")]);
         Assert.That(run.Status.IsTerminal, Is.False);
 
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)

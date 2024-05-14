@@ -5,13 +5,10 @@ namespace OpenAI.Assistants;
 /// from in order to continue.
 /// </summary>
 /// <remarks>
-/// <see cref="RequiredToolCall"/> is the abstract base type for all required tool calls. Its
+/// <see cref="InternalRequiredToolCall"/> is the abstract base type for all required tool calls. Its
 /// concrete type can be one of:
 /// <list type="bullet">
-/// <item> <see cref="RequiredFunctionToolCall"/> </item> 
+/// <item> <see cref="InternalRequiredFunctionToolCall"/> </item> 
 /// </list>
 /// </remarks>
-public abstract partial class RequiredToolCall : RequiredAction
-{
-
-}
+internal abstract partial class InternalRequiredToolCall : RequiredAction { }

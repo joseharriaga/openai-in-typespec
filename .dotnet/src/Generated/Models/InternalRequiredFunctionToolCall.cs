@@ -9,7 +9,7 @@ using OpenAI.Models;
 namespace OpenAI.Assistants
 {
     /// <summary> Tool call objects. </summary>
-    public partial class RequiredFunctionToolCall
+    internal partial class InternalRequiredFunctionToolCall
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,11 +43,11 @@ namespace OpenAI.Assistants
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="RequiredFunctionToolCall"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalRequiredFunctionToolCall"/>. </summary>
         /// <param name="id"> The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint. </param>
         /// <param name="internalFunction"> The function definition. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="internalFunction"/> is null. </exception>
-        internal RequiredFunctionToolCall(string id, InternalRunToolCallObjectFunction internalFunction)
+        internal InternalRequiredFunctionToolCall(string id, InternalRunToolCallObjectFunction internalFunction)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(internalFunction, nameof(internalFunction));
@@ -56,12 +56,12 @@ namespace OpenAI.Assistants
             _internalFunction = internalFunction;
         }
 
-        /// <summary> Initializes a new instance of <see cref="RequiredFunctionToolCall"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalRequiredFunctionToolCall"/>. </summary>
         /// <param name="id"> The ID of the tool call. This ID must be referenced when you submit the tool outputs in using the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint. </param>
         /// <param name="type"> The type of tool call the output is required for. For now, this is always `function`. </param>
         /// <param name="internalFunction"> The function definition. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RequiredFunctionToolCall(string id, object type, InternalRunToolCallObjectFunction internalFunction, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRequiredFunctionToolCall(string id, object type, InternalRunToolCallObjectFunction internalFunction, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             _type = type;
@@ -69,8 +69,8 @@ namespace OpenAI.Assistants
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="RequiredFunctionToolCall"/> for deserialization. </summary>
-        internal RequiredFunctionToolCall()
+        /// <summary> Initializes a new instance of <see cref="InternalRequiredFunctionToolCall"/> for deserialization. </summary>
+        internal InternalRequiredFunctionToolCall()
         {
         }
 

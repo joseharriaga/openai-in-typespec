@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants
 {
-    public partial class RequiredFunctionToolCall : IJsonModel<RequiredFunctionToolCall>
+    internal partial class InternalRequiredFunctionToolCall : IJsonModel<InternalRequiredFunctionToolCall>
     {
-        void IJsonModel<RequiredFunctionToolCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalRequiredFunctionToolCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RequiredFunctionToolCall>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRequiredFunctionToolCall>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RequiredFunctionToolCall)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalRequiredFunctionToolCall)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -45,19 +45,19 @@ namespace OpenAI.Assistants
             writer.WriteEndObject();
         }
 
-        RequiredFunctionToolCall IJsonModel<RequiredFunctionToolCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRequiredFunctionToolCall IJsonModel<InternalRequiredFunctionToolCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RequiredFunctionToolCall>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRequiredFunctionToolCall>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RequiredFunctionToolCall)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalRequiredFunctionToolCall)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeRequiredFunctionToolCall(document.RootElement, options);
+            return DeserializeInternalRequiredFunctionToolCall(document.RootElement, options);
         }
 
-        internal static RequiredFunctionToolCall DeserializeRequiredFunctionToolCall(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRequiredFunctionToolCall DeserializeInternalRequiredFunctionToolCall(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -93,46 +93,46 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new RequiredFunctionToolCall(id, type, function, serializedAdditionalRawData);
+            return new InternalRequiredFunctionToolCall(id, type, function, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<RequiredFunctionToolCall>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalRequiredFunctionToolCall>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RequiredFunctionToolCall>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRequiredFunctionToolCall>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(RequiredFunctionToolCall)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalRequiredFunctionToolCall)} does not support writing '{options.Format}' format.");
             }
         }
 
-        RequiredFunctionToolCall IPersistableModel<RequiredFunctionToolCall>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalRequiredFunctionToolCall IPersistableModel<InternalRequiredFunctionToolCall>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RequiredFunctionToolCall>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRequiredFunctionToolCall>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeRequiredFunctionToolCall(document.RootElement, options);
+                        return DeserializeInternalRequiredFunctionToolCall(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(RequiredFunctionToolCall)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalRequiredFunctionToolCall)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<RequiredFunctionToolCall>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalRequiredFunctionToolCall>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static RequiredFunctionToolCall FromResponse(PipelineResponse response)
+        internal static InternalRequiredFunctionToolCall FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeRequiredFunctionToolCall(document.RootElement);
+            return DeserializeInternalRequiredFunctionToolCall(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

@@ -36,7 +36,7 @@ public partial class MessageContentUpdate : StreamingUpdate
     /// <summary>
     /// An update to an annotation associated with a specific content item in the message's content items collection.
     /// </summary>
-    public MessageTextAnnotationUpdate TextAnnotation { get; }
+    public TextAnnotationUpdate TextAnnotation { get; }
 
     private readonly MessageDeltaContentImageFileObject _imageFileContent;
     private readonly MessageDeltaContentTextObject _textContent;
@@ -52,7 +52,7 @@ public partial class MessageContentUpdate : StreamingUpdate
         _imageUrlContent = content as MessageDeltaContentImageUrlObject;
     }
 
-    internal MessageContentUpdate(MessageDeltaObject delta, MessageTextAnnotationUpdate annotation)
+    internal MessageContentUpdate(MessageDeltaObject delta, TextAnnotationUpdate annotation)
         : base(StreamingUpdateReason.MessageUpdated)
     {
         _delta = delta;
@@ -73,7 +73,7 @@ public partial class MessageContentUpdate : StreamingUpdate
             {
                 foreach (MessageDeltaTextContentAnnotation internalAnnotation in textContent.Text.Annotations)
                 {
-                    MessageTextAnnotationUpdate annotation = new(internalAnnotation);
+                    TextAnnotationUpdate annotation = new(internalAnnotation);
                     updates.Add(new(deltaObject, annotation));
                 }
             }

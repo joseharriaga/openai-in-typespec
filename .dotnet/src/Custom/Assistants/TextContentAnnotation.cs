@@ -3,7 +3,7 @@
 
 namespace OpenAI.Assistants;
 
-public class MessageTextContentAnnotation
+public class TextContentAnnotation
 {
     private readonly MessageContentTextAnnotationsFileCitationObject _fileSearchCitation;
     private readonly MessageContentTextAnnotationsFilePathObject _codeCitation;
@@ -39,7 +39,7 @@ public class MessageTextContentAnnotation
     /// </summary>
     public string TextToReplace => _fileSearchCitation?.Text ?? _codeCitation?.Text;
 
-    internal MessageTextContentAnnotation(MessageContentTextObjectAnnotation internalAnnotation)
+    internal TextContentAnnotation(MessageContentTextObjectAnnotation internalAnnotation)
     {
         _fileSearchCitation = internalAnnotation as MessageContentTextAnnotationsFileCitationObject;
         _codeCitation = internalAnnotation as MessageContentTextAnnotationsFilePathObject; ;

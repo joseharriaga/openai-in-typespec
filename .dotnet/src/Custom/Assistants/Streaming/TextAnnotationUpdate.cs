@@ -3,7 +3,7 @@
 
 namespace OpenAI.Assistants;
 
-public class MessageTextAnnotationUpdate
+public class TextAnnotationUpdate
 {
     /// <summary>
     /// The index of the content item that this annotation applies to.
@@ -44,7 +44,7 @@ public class MessageTextAnnotationUpdate
     private readonly MessageDeltaContentTextAnnotationsFileCitationObject _fileSearchCitation;
     private readonly MessageDeltaContentTextAnnotationsFilePathObject _codeCitation;
 
-    internal MessageTextAnnotationUpdate(MessageDeltaTextContentAnnotation internalAnnotation)
+    internal TextAnnotationUpdate(MessageDeltaTextContentAnnotation internalAnnotation)
     {
         _fileSearchCitation = internalAnnotation as MessageDeltaContentTextAnnotationsFileCitationObject;
         _codeCitation = internalAnnotation as MessageDeltaContentTextAnnotationsFilePathObject;

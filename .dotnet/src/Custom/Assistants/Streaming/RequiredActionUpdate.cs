@@ -10,16 +10,16 @@ namespace OpenAI.Assistants;
 /// </summary>
 public class RequiredActionUpdate : StreamingUpdate
 {
-    /// <inheritdoc cref="RequiredFunctionToolCall.FunctionName"/>
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.FunctionName"/>
     public string FunctionName => AsFunctionCall?.FunctionName;
 
-    /// <inheritdoc cref="RequiredFunctionToolCall.FunctionArguments"/>
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.FunctionArguments"/>
     public string FunctionArguments => AsFunctionCall?.FunctionArguments;
 
-    /// <inheritdoc cref="RequiredFunctionToolCall.Id"/>
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.Id"/>
     public string ToolCallId => AsFunctionCall?.Id;
 
-    private RequiredFunctionToolCall AsFunctionCall => _requiredAction as RequiredFunctionToolCall;
+    private InternalRequiredFunctionToolCall AsFunctionCall => _requiredAction as InternalRequiredFunctionToolCall;
 
     private readonly ThreadRun _run;
     private readonly RequiredAction _requiredAction;

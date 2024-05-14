@@ -785,7 +785,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The thread ID of the thread being run. </param>
     /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
     /// <param name="toolOutputs">
-    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
     /// <returns> The <see cref="ThreadRun"/>, updated after the submission was processed. </returns>
     public virtual async Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(
@@ -808,7 +808,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The thread ID of the thread being run. </param>
     /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
     /// <param name="toolOutputs">
-    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
     /// <returns> The <see cref="ThreadRun"/>, updated after the submission was processed. </returns>
     public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(
@@ -830,7 +830,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The thread ID of the thread being run. </param>
     /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
     /// <param name="toolOutputs">
-    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
     public virtual async Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> SubmitToolOutputsToRunStreamingAsync(
         string threadId,
@@ -854,7 +854,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The thread ID of the thread being run. </param>
     /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
     /// <param name="toolOutputs">
-    /// The tool outputs, corresponding to <see cref="RequiredToolCall"/> instances from the run.
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
     public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> SubmitToolOutputsToRunStreaming(
         string threadId,

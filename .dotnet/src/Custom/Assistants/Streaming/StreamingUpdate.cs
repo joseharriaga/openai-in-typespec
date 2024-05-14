@@ -144,4 +144,11 @@ public partial class StreamingUpdate<T> : StreamingUpdate
     {
         Value = value;
     }
+
+    /// <summary>
+    /// Implicit operator that allows the underlying value type of the <see cref="StreamingUpdate{T}"/> to be used
+    /// directly.
+    /// </summary>
+    /// <param name="update"></param>
+    public static implicit operator T(StreamingUpdate<T> update) => update.Value;
 }

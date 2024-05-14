@@ -188,15 +188,37 @@ internal partial class AzureAssistantClient : AssistantClient
     /// <inheritdoc cref="InternalAssistantRunClient.CreateThreadAndRunAsync"/>
     public override async Task<ClientResult> CreateThreadAndRunAsync(BinaryContent content, RequestOptions options = null)
     {
-        /* using */ PipelineMessage message = CreateCreateThreadAndRunRequest(content, options);
-        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        PipelineMessage message = null;
+        try
+        {
+            message = CreateCreateThreadAndRunRequest(content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+        finally
+        {
+            if (options?.BufferResponse != false)
+            {
+                message.Dispose();
+            }
+        }
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.CreateThreadAndRun"/>
     public override ClientResult CreateThreadAndRun(BinaryContent content, RequestOptions options = null)
     {
-        /* using */ PipelineMessage message = CreateCreateThreadAndRunRequest(content, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        PipelineMessage message = null;
+        try
+        {
+            message = CreateCreateThreadAndRunRequest(content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+        finally
+        {
+            if (options?.BufferResponse != false)
+            {
+                message.Dispose();
+            }
+        }
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.CreateRunAsync"/>
@@ -204,8 +226,19 @@ internal partial class AzureAssistantClient : AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        /* using */ PipelineMessage message = CreateCreateRunRequest(threadId, content, options);
-        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        PipelineMessage message = null;
+        try
+        {
+            message = CreateCreateRunRequest(threadId, content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+        finally
+        {
+            if (options?.BufferResponse != false)
+            {
+                message.Dispose();
+            }
+        }
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.CreateRun"/>
@@ -213,8 +246,19 @@ internal partial class AzureAssistantClient : AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        /* using */ PipelineMessage message = CreateCreateRunRequest(threadId, content, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        PipelineMessage message = null;
+        try
+        {
+            message = CreateCreateRunRequest(threadId, content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+        finally
+        {
+            if (options?.BufferResponse != false)
+            {
+                message.Dispose();
+            }
+        }
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunsAsync"/>
@@ -301,8 +345,19 @@ internal partial class AzureAssistantClient : AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        /* using */ PipelineMessage message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
-        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        PipelineMessage message = null;
+        try
+        {
+            message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+        finally
+        {
+            if (options?.BufferResponse != false)
+            {
+                message.Dispose();
+            }
+        }
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.SubmitToolOutputsToRun"/>
@@ -311,8 +366,19 @@ internal partial class AzureAssistantClient : AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        /* using */ PipelineMessage message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        PipelineMessage message = null;
+        try
+        {
+            message = CreateSubmitToolOutputsToRunRequest(threadId, runId, content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+        finally
+        {
+            if (options?.BufferResponse != false)
+            {
+                message.Dispose();
+            }
+        }
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunStepsAsync"/>

@@ -1,69 +1,72 @@
 ﻿using NUnit.Framework;
 using OpenAI.Assistants;
 using System;
+using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace OpenAI.Samples;
 public partial class AssistantSamples
 {
     [Test]
-    [Ignore("Compilation validation only")]
-    public void Sample02_FunctionCalling()
+    [Ignore("Compilation verification only")]
+    public async Task Sample02b_FunctionCallingStreaming()
     {
-        #region
-        string GetCurrentLocation()
+        // This sample parallels the content at the following location:
+        // https://platform.openai.com/docs/assistants/tools/function-calling/function-calling-beta
+        #region Step 1 - Define Functions
+        
+        // First, define the functions that the assistant will use in its defined tools.
+
+        FunctionToolDefinition getTemperatureTool = new()
         {
-            // Call a location API here.
-            return "San Francisco";
-        }
-
-        const string GetCurrentLocationFunctionName = "get_current_location";
-
-        FunctionToolDefinition getLocationTool = new()
-        {
-            FunctionName = GetCurrentLocationFunctionName,
-            Description = "Get the user's current location"
-        };
-
-        string GetCurrentWeather(string location, string unit = "celsius")
-        {
-            // Call a weather API here.
-            return $"31 {unit}";
-        }
-
-        const string GetCurrentWeatherFunctionName = "get_current_weather";
-
-        FunctionToolDefinition getWeatherTool = new()
-        {
-            FunctionName = GetCurrentWeatherFunctionName,
-            Description = "Get the current weather in a given location",
+            FunctionName = "get_current_temperature",
+            Description = "Gets the current temperature at a specific location.",
             Parameters = BinaryData.FromString("""
             {
-                "type": "object",
-                "properties": {
-                    "location": {
-                        "type": "string",
-                        "description": "The city and state, e.g. Boston, MA"
-                    },
-                    "unit": {
-                        "type": "string",
-                        "enum": [ "celsius", "fahrenheit" ],
-                        "description": "The temperature unit to use. Infer this from the specified location."
-                    }
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "The city and state, e.g., San Francisco, CA"
                 },
-                "required": [ "location" ]
+                "unit": {
+                  "type": "string",
+                  "enum": ["Celsius", "Fahrenheit"],
+                  "description": "The temperature unit to use. Infer this from the user's location."
+                }
+              }
             }
             """),
         };
+
+        FunctionToolDefinition getRainProbabilityTool = new()
+        {
+            FunctionName = "get_current_rain_probability",
+            Description = "Gets the current forecasted probability of rain at a specific location,"
+                + " represented as a percent chance in the range of 0 to 100.",
+            Parameters = BinaryData.FromString("""
+            {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "The city and state, e.g., San Francisco, CA"
+                }
+              },
+              "required": ["location"]
+            }
+            """),
+        };
+
         #endregion
 
         // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
 #pragma warning disable OPENAI001
         AssistantClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-        #region
+        #region Create a new assistant with function tools
         // Create an assistant that can call the function tools.
         AssistantCreationOptions assistantOptions = new()
         {
@@ -71,120 +74,63 @@ public partial class AssistantSamples
             Instructions =
                 "Don't make assumptions about what values to plug into functions."
                 + " Ask for clarification if a user request is ambiguous.",
-            Tools = { getLocationTool, getWeatherTool },
+            Tools = { getTemperatureTool, getRainProbabilityTool },
         };
 
-        Assistant assistant = client.CreateAssistant("gpt-4-turbo", assistantOptions);
+        Assistant assistant = await client.CreateAssistantAsync("gpt-4-turbo", assistantOptions);
         #endregion
 
-        #region
-        // Create a thread with an initial user message and run it.
-        ThreadCreationOptions threadOptions = new()
-        {
-            InitialMessages = { new ThreadInitializationMessage(["What's the weather like today?"]), },
-        };
-
-        ThreadRun run = client.CreateThreadAndRun(assistant.Id, threadOptions);
+        #region Step 2 - Create a thread and add messages
+        AssistantThread thread = await client.CreateThreadAsync();
+        ThreadMessage message = await client.CreateMessageAsync(
+            thread,
+            [
+                "What's the weather in San Francisco today and the likelihood it'll rain?"
+            ]);
         #endregion
 
-        #region
-        // Poll the run until it is no longer queued or in progress.
-        while (!run.Status.IsTerminal)
-        {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-            run = client.GetRun(run.ThreadId, run.Id);
+        #region Step 3 - Initiate a streaming run
+        // TODO: replace this with finalized enumerable result pattern
+        ClientResult<IAsyncEnumerable<StreamingUpdate>> asyncUpdates
+            = await client.CreateRunStreamingAsync(thread, assistant);
 
-            // If the run requires action, resolve them.
-            if (run.Status == RunStatus.RequiresAction)
+        ThreadRun currentRun = null;
+        do
+        {
+            currentRun = null;
+            List<ToolOutput> outputsToSubmit = [];
+            await foreach (StreamingUpdate update in asyncUpdates.Value)
             {
-                List<ToolOutput> toolOutputs = [];
-
-                foreach (RequiredAction action in run.RequiredActions)
+                if (update is RunUpdate runUpdate)
                 {
-                    switch (action?.FunctionName)
+                    currentRun = runUpdate;
+                }
+                else if (update is RequiredActionUpdate requiredActionUpdate)
+                {
+                    if (requiredActionUpdate.FunctionName == getTemperatureTool.FunctionName)
                     {
-                        case GetCurrentLocationFunctionName:
-                            {
-                                string toolResult = GetCurrentLocation();
-                                toolOutputs.Add(new ToolOutput(action.ToolCallId, toolResult));
-                                break;
-                            }
-
-                        case GetCurrentWeatherFunctionName:
-                            {
-                                // The arguments that the model wants to use to call the function are specified as a
-                                // stringified JSON object based on the schema defined in the tool definition. Note that
-                                // the model may hallucinate arguments too. Consequently, it is important to do the
-                                // appropriate parsing and validation before calling the function.
-                                using JsonDocument argumentsJson = JsonDocument.Parse(action.FunctionArguments);
-                                bool hasLocation = argumentsJson.RootElement.TryGetProperty("location", out JsonElement location);
-                                bool hasUnit = argumentsJson.RootElement.TryGetProperty("unit", out JsonElement unit);
-
-                                if (!hasLocation)
-                                {
-                                    throw new ArgumentNullException(nameof(location), "The location argument is required.");
-                                }
-
-                                string toolResult = hasUnit
-                                    ? GetCurrentWeather(location.GetString(), unit.GetString())
-                                    : GetCurrentWeather(location.GetString());
-                                toolOutputs.Add(new ToolOutput(action.ToolCallId, toolResult));
-                                break;
-                            }
-
-                        default:
-                            {
-                                // Handle other or unexpected calls.
-                                throw new NotImplementedException();
-                            }
+                        outputsToSubmit.Add(new ToolOutput(requiredActionUpdate.ToolCallId, "57"));
+                    }
+                    else if (requiredActionUpdate.FunctionName == getRainProbabilityTool.FunctionName)
+                    {
+                        outputsToSubmit.Add(new ToolOutput(requiredActionUpdate.ToolCallId, "25%"));
                     }
                 }
-
-                // Submit the tool outputs to the assistant, which returns the run to the queued state.
-                run = client.SubmitToolOutputsToRun(run.ThreadId, run.Id, toolOutputs);
-            }
-        }
-        #endregion
-
-        #region
-        // With the run complete, list the messages and display their content
-        if (run.Status == RunStatus.Completed)
-        {
-            ListQueryPage<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.OldestFirst);
-
-            foreach (ThreadMessage message in messages)
-            {
-                Console.WriteLine($"[{message.Role.ToString().ToUpper()}]: ");
-                foreach (MessageContent contentItem in message.Content)
+                else if (update is MessageContentUpdate contentUpdate)
                 {
-                    Console.WriteLine($"{contentItem.Text}");
-
-                    if (contentItem.ImageFileId is not null)
-                    {
-                        Console.WriteLine($" <Image File ID> {contentItem.ImageFileId}");
-                    }
-
-                    // Include annotations, if any.
-                    if (contentItem.TextAnnotations.Count > 0)
-                    {
-                        Console.WriteLine();
-                        foreach (TextAnnotation annotation in contentItem.TextAnnotations)
-                        {
-                            Console.WriteLine($"* File ID used by file_search: {annotation.InputFileId}");
-                            Console.WriteLine($"* file_search quote from file: {annotation.InputQuote}");
-                            Console.WriteLine($"* File ID created by code_interpreter: {annotation.OutputFileId}");
-                            Console.WriteLine($"* Text to replace: {annotation.TextToReplace}");
-                            Console.WriteLine($"* Message content index range: {annotation.StartIndex}-{annotation.EndIndex}");
-                        }
-                    }
+                    Console.Write(contentUpdate.Text);
                 }
-                Console.WriteLine();
             }
-        }
-        else
-        {
-            throw new NotImplementedException(run.Status.ToString());
-        }
+            if (outputsToSubmit.Count > 0)
+            {
+                asyncUpdates = await client.SubmitToolOutputsToRunStreamingAsync(currentRun, outputsToSubmit);
+            }
+        } while (currentRun?.Status.IsTerminal == false);
         #endregion
+
+        // Optionally, delete the resources for tidiness if no longer needed.
+        RequestOptions noThrowOptions = new() { ErrorOptions = ClientErrorBehaviors.NoThrow };
+        _ = await client.DeleteThreadAsync(thread.Id, noThrowOptions);
+        _ = await client.DeleteAssistantAsync(assistant.Id, noThrowOptions);
     }
 }

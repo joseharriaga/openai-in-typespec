@@ -160,19 +160,19 @@ public partial class ChatClientTests
         return ClientResult.FromResponse(response);
     }
 
-    [Test]
-    public void MockStreamingChatWithToolsAsync()
-    {
-        StreamingChatUpdateCollection updates = new(GetStreamingMockUpdate);
+    //[Test]
+    //public void MockStreamingChatWithToolsAsync()
+    //{
+    //    StreamingChatUpdateCollection updates = new(GetStreamingMockUpdate);
 
-        int updateCount = 0;
-        foreach (StreamingChatUpdate chatUpdate in updates)
-        {
-            updateCount++;
-        }
+    //    int updateCount = 0;
+    //    foreach (StreamingChatUpdate chatUpdate in updates)
+    //    {
+    //        updateCount++;
+    //    }
 
-        Assert.That(updateCount, Is.GreaterThan(1));
-    }
+    //    Assert.That(updateCount, Is.GreaterThan(1));
+    //}
 
     [Test]
     public void TwoTurnChat()

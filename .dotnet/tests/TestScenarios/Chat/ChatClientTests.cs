@@ -112,6 +112,68 @@ public partial class ChatClientTests
         Assert.That(response.ContentStream.Length, Is.EqualTo(0));
     }
 
+    #region Tools
+    private const string GetCurrentLocationFunctionName = "get_current_location";
+
+    private const string GetCurrentWeatherFunctionName = "get_current_weather";
+
+    private static readonly ChatFunctionToolDefinition getCurrentLocationFunction = new()
+    {
+        FunctionName = GetCurrentLocationFunctionName,
+        Description = "Get the user's current location"
+    };
+
+    private static readonly ChatFunctionToolDefinition getCurrentWeatherFunction = new()
+    {
+        FunctionName = GetCurrentWeatherFunctionName,
+        Description = "Get the current weather in a given location",
+        Parameters = BinaryData.FromString("""
+                {
+                    "type": "object",
+                    "properties": {
+                        "location": {
+                            "type": "string",
+                            "description": "The city and state, e.g. Boston, MA"
+                        },
+                        "unit": {
+                            "type": "string",
+                            "enum": [ "celsius", "fahrenheit" ],
+                            "description": "The temperature unit to use. Infer this from the specified location."
+                        }
+                    },
+                    "required": [ "location" ]
+                }
+                """),
+    };
+    #endregion
+
+    private ClientResult GetStreamingMockUpdate()
+    {
+        MockPipelineResponse response = new();
+        response.SetContent("""
+            data: {"id":"chatcmpl-9OrT0Ib1h95fQhtdfsMC1Pn8arrXk", "object":"chat.completion.chunk", "created":1715712426, "model":"gpt-3.5-turbo-0125", "system_fingerprint":null, "choices":[ { "index":0, "delta":{ "role":"assistant", "content":null, "tool_calls":[ { "index":0, "id":"call_KTeiNDFMuy7BO18eMZnaXdpn", "type":"function", "function":{ "name":"get_current_weather", "arguments":"" } }, { "index":0, "id":"call_KTeiNDFMuy7BO18eMZnaXdpn", "type":"function", "function":{ "name":"get_current_weather", "arguments":"" } }, { "index":0, "id":"call_KTeiNDFMuy7BO18eMZnaXdpn", "type":"function", "function":{ "name":"get_current_weather", "arguments":"" } } ] }, "logprobs":null, "finish_reason":null } ], "usage":null }
+
+            data: [DONE]
+
+
+            """);
+        return ClientResult.FromResponse(response);
+    }
+
+    [Test]
+    public void MockStreamingChatWithToolsAsync()
+    {
+        StreamingChatUpdateCollection updates = new(GetStreamingMockUpdate);
+
+        int updateCount = 0;
+        foreach (StreamingChatUpdate chatUpdate in updates)
+        {
+            updateCount++;
+        }
+
+        Assert.That(updateCount, Is.GreaterThan(1));
+    }
+
     [Test]
     public void TwoTurnChat()
     {

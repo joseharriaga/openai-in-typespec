@@ -19,7 +19,7 @@ namespace OpenAI
                 throw await ClientResultException.CreateAsync(message.Response).ConfigureAwait(false);
             }
 
-            // TODO: this will need to be updated in the generator
+            // Tracking generator update for this with https://github.com/Azure/autorest.csharp/issues/4709
             PipelineResponse response = message.BufferResponse ?
                 message.Response :
                 message.ExtractResponse();
@@ -36,6 +36,7 @@ namespace OpenAI
                 throw new ClientResultException(message.Response);
             }
 
+            // Tracking generator update for this with https://github.com/Azure/autorest.csharp/issues/4709
             PipelineResponse response = message.BufferResponse ?
                 message.Response :
                 message.ExtractResponse();

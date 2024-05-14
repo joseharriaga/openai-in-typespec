@@ -6,8 +6,13 @@ using System.Text.Json;
 namespace OpenAI.Assistants;
 
 /// <summary>
-/// Represents a streaming update to message content as part of the Assistants API.
+/// Represents a streaming update to <see cref="ThreadMessage"/> content as part of the Assistants API.
 /// </summary>
+/// <remarks>
+/// Distinct <see cref="MessageContentUpdate"/> instances will be generated for each <see cref="MessageContent"/> part
+/// and each content subcomponent, such as <see cref="TextAnnotationUpdate"/> instances, even if this information
+/// arrived in the same response chunk.
+/// </remarks>
 public partial class MessageContentUpdate : StreamingUpdate
 {
     /// <inheritdoc cref="MessageDeltaObject.Id"/>

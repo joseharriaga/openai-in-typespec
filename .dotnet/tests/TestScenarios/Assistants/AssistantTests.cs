@@ -430,6 +430,7 @@ public partial class AssistantTests
                 if (update is RequiredActionUpdate requiredActionUpdate)
                 {
                     Assert.That(requiredActionUpdate.FunctionName, Is.EqualTo(getWeatherTool.FunctionName));
+                    Assert.That(requiredActionUpdate.GetThreadRun().Status, Is.EqualTo(RunStatus.RequiresAction));
                     message += $" {requiredActionUpdate.FunctionName}";
                     toolOutputs.Add(new(requiredActionUpdate.ToolCallId, "warm and sunny"));
                 }

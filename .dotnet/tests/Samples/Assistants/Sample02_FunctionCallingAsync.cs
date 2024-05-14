@@ -162,17 +162,18 @@ public partial class AssistantSamples
                 Console.WriteLine($"[{message.Role.ToString().ToUpper()}]: ");
                 foreach (MessageContent contentItem in message.Content)
                 {
-                    if (contentItem is ResponseMessageTextContent textContent)
+                    Console.WriteLine($"{contentItem.Text}");
+
+                    if (contentItem.ImageFileId is not null)
                     {
-                        Console.WriteLine($"{textContent.Text}");
+                        Console.WriteLine($" <Image File ID> {contentItem.ImageFileId}");
+                    }
 
-                        if (textContent.Annotations.Count > 0)
-                        {
-                            Console.WriteLine();
-                        }
-
-                        // Include annotations, if any.
-                        foreach (MessageTextContentAnnotation annotation in textContent.Annotations)
+                    // Include annotations, if any.
+                    if (contentItem.TextAnnotations.Count > 0)
+                    {
+                        Console.WriteLine();
+                        foreach (MessageTextContentAnnotation annotation in contentItem.TextAnnotations)
                         {
                             Console.WriteLine($"* File ID used by file_search: {annotation.InputFileId}");
                             Console.WriteLine($"* file_search quote from file: {annotation.InputQuote}");
@@ -181,6 +182,7 @@ public partial class AssistantSamples
                             Console.WriteLine($"* Message content index range: {annotation.StartIndex}-{annotation.EndIndex}");
                         }
                     }
+
                 }
                 Console.WriteLine();
             }

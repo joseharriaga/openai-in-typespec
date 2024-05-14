@@ -99,8 +99,8 @@ public partial class AssistantTests
         Validate(message);
         Assert.That(message.CreatedAt, Is.GreaterThan(s_2024));
         Assert.That(message.Content?.Count, Is.EqualTo(1));
-        Assert.That(message.Content[0], Is.InstanceOf<ResponseMessageTextContent>());
-        Assert.That(message.Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
+        Assert.That(message.Content[0], Is.Not.Null);
+        Assert.That(message.Content[0].Text, Is.EqualTo("Hello, world!"));
         bool deleted = client.DeleteMessage(message);
         Assert.That(deleted, Is.True);
         _messagesToDelete.Remove(message);
@@ -161,12 +161,12 @@ public partial class AssistantTests
         Assert.That(messagePage.Count, Is.EqualTo(2));
         Assert.That(messagePage[0].Role, Is.EqualTo(MessageRole.User));
         Assert.That(messagePage[0].Content?.Count, Is.EqualTo(1));
-        Assert.That(messagePage[0].Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
+        Assert.That(messagePage[0].Content[0].Text, Is.EqualTo("Hello, world!"));
         Assert.That(messagePage[1].Content?.Count, Is.EqualTo(2));
-        Assert.That(messagePage[1].Content[0], Is.InstanceOf<ResponseMessageTextContent>());
-        Assert.That(messagePage[1].Content[0].AsText().Text, Is.EqualTo("Can you describe this image for me?"));
-        Assert.That(messagePage[1].Content[1], Is.InstanceOf<MessageImageUrlContent>());
-        Assert.That(messagePage[1].Content[1].AsImageUrl().Url.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
+        Assert.That(messagePage[1].Content[0], Is.Not.Null);
+        Assert.That(messagePage[1].Content[0].Text, Is.EqualTo("Can you describe this image for me?"));
+        Assert.That(messagePage[1].Content[1], Is.Not.Null);
+        Assert.That(messagePage[1].Content[1].ImageUrl.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
     }
 
     [Test]
@@ -243,23 +243,28 @@ public partial class AssistantTests
         Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
 
         ListQueryPage<RunStep> runSteps = client.GetRunSteps(run, maxResults: 100);
-        Assert.That(runSteps.Count, Is.GreaterThan(1));
-        Assert.That(runSteps[0].AssistantId, Is.EqualTo(assistant.Id));
-        Assert.That(runSteps[0].ThreadId, Is.EqualTo(thread.Id));
-        Assert.That(runSteps[0].RunId, Is.EqualTo(run.Id));
-        Assert.That(runSteps[0].CreatedAt, Is.GreaterThan(s_2024));
-        Assert.That(runSteps[0].CompletedAt, Is.GreaterThan(s_2024));
+        Assert.That(runSteps, Has.Count.GreaterThan(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(runSteps[0].AssistantId, Is.EqualTo(assistant.Id));
+            Assert.That(runSteps[0].ThreadId, Is.EqualTo(thread.Id));
+            Assert.That(runSteps[0].RunId, Is.EqualTo(run.Id));
+            Assert.That(runSteps[0].CreatedAt, Is.GreaterThan(s_2024));
+            Assert.That(runSteps[0].CompletedAt, Is.GreaterThan(s_2024));
+        });
+        RunStepDetails details = runSteps[0].Details;
+        Assert.That(details?.CreatedMessageId, Is.Not.Null.Or.Empty);
 
-        RunStepMessageCreationDetails messageDetails = runSteps[0].Details as RunStepMessageCreationDetails;
-        Assert.That(messageDetails?.MessageId, Is.Not.Null.Or.Empty);
-
-        RunStepToolCallDetailsCollection toolCallDetails = runSteps[1].Details as RunStepToolCallDetailsCollection;
-        Assert.That(toolCallDetails?.Count, Is.GreaterThan(0));
-        RunStepCodeInterpreterToolCallDetails codeInterpreterDetails = toolCallDetails[0] as RunStepCodeInterpreterToolCallDetails;
-        Assert.That(codeInterpreterDetails?.Id, Is.Not.Null.Or.Empty);
-        Assert.That(codeInterpreterDetails.Input, Is.Not.Null.Or.Empty);
-        RunStepCodeInterpreterImageOutput imageOutput = codeInterpreterDetails.Outputs?[0] as RunStepCodeInterpreterImageOutput;
-        Assert.That(imageOutput?.FileId, Is.Not.Null.Or.Empty);
+        details = runSteps[1].Details;
+        Assert.Multiple(() =>
+        {
+            Assert.That(details?.ToolCalls.Count, Is.GreaterThan(0));
+            Assert.That(details.ToolCalls[0].ToolKind, Is.EqualTo(RunStepToolCallKind.CodeInterpreter));
+            Assert.That(details.ToolCalls[0].ToolCallId, Is.Not.Null.Or.Empty);
+            Assert.That(details.ToolCalls[0].CodeInterpreterInput, Is.Not.Null.Or.Empty);
+            Assert.That(details.ToolCalls[0].CodeInterpreterOutputs?.Count, Is.GreaterThan(0));
+            Assert.That(details.ToolCalls[0].CodeInterpreterOutputs[0].ImageFileId, Is.Not.Null.Or.Empty);
+        });
     }
 
     [Test]
@@ -333,8 +338,8 @@ public partial class AssistantTests
         ListQueryPage<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
         Assert.That(messages.Count, Is.GreaterThan(1));
         Assert.That(messages[0].Role, Is.EqualTo(MessageRole.Assistant));
-        Assert.That(messages[0].Content?[0], Is.InstanceOf<ResponseMessageTextContent>());
-        Assert.That(messages[0].Content[0].AsText().Text, Does.Contain("tacos"));
+        Assert.That(messages[0].Content?[0], Is.Not.Null);
+        Assert.That(messages[0].Content[0].Text, Does.Contain("tacos"));
     }
 
     [Test]

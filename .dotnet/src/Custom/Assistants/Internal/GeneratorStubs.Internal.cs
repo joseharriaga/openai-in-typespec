@@ -198,3 +198,13 @@ internal partial class InternalListRunsResponse : IInternalListResponse<ThreadRu
 
 [CodeGenModel("ListRunStepsResponse")]
 internal partial class InternalListRunStepsResponse : IInternalListResponse<RunStep> { private readonly object Object; }
+
+[CodeGenModel("RunStepDetailsToolCallsFileSearchObject")]
+internal partial class InternalRunStepFileSearchToolCallDetails { }
+
+[CodeGenModel("RunStepDetailsToolCallsCodeOutputLogsObject")]
+internal partial class InternalRunStepDetailsToolCallsCodeOutputLogsObject
+{
+    [CodeGenMember("Logs")]
+    internal string InternalLogs { get; }
+}

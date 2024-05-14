@@ -18,9 +18,9 @@ public partial class MessageContent : IJsonModel<MessageContent>
             {
                 switch (discriminator.GetString())
                 {
-                    case "image_file": return MessageImageFileContent.DeserializeMessageImageFileContent(element, options);
-                    case "image_url": return MessageImageUrlContent.DeserializeMessageImageUrlContent(element, options);
-                    case "text": return ResponseMessageTextContent.DeserializeResponseMessageTextContent(element, options);
+                    case "image_file": return InternalMessageImageFileContent.DeserializeInternalMessageImageFileContent(element, options);
+                    case "image_url": return InternalMessageImageUrlContent.DeserializeInternalMessageImageUrlContent(element, options);
+                    case "text": return InternalResponseMessageTextContent.DeserializeInternalResponseMessageTextContent(element, options);
                     default: return null;
                 }
             }

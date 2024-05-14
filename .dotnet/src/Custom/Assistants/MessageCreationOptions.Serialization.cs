@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
     {
         private void SerializeContent(Utf8JsonWriter writer, ModelReaderWriterOptions options = null)
         {
-            if (Content.Count == 1 && Content[0] is RequestMessageTextContent textContent)
+            if (Content.Count == 1 && Content[0] is InternalRequestMessageTextContent textContent)
             {
                 writer.WriteStringValue(textContent.Text);
             }

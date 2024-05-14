@@ -5,12 +5,12 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace OpenAI.Assistants
 {
-    internal partial class UnknownRunStepDetailsToolCallsObjectToolCallsObject : IJsonModel<RunStepToolCall>
+    [PersistableModelProxy(typeof(UnknownRunStepDetailsToolCallsObjectToolCallsObject))]
+    public partial class RunStepToolCall : IJsonModel<RunStepToolCall>
     {
         void IJsonModel<RunStepToolCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -53,7 +53,7 @@ namespace OpenAI.Assistants
             return DeserializeRunStepToolCall(document.RootElement, options);
         }
 
-        internal static UnknownRunStepDetailsToolCallsObjectToolCallsObject DeserializeUnknownRunStepDetailsToolCallsObjectToolCallsObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static RunStepToolCall DeserializeRunStepToolCall(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -61,23 +61,16 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            string type = "Unknown";
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            if (element.TryGetProperty("type", out JsonElement discriminator))
             {
-                if (property.NameEquals("type"u8))
+                switch (discriminator.GetString())
                 {
-                    type = property.Value.GetString();
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    case "code_interpreter": return InternalRunStepCodeInterpreterToolCallDetails.DeserializeInternalRunStepCodeInterpreterToolCallDetails(element, options);
+                    case "file_search": return InternalRunStepFileSearchToolCallDetails.DeserializeInternalRunStepFileSearchToolCallDetails(element, options);
+                    case "function": return InternalRunStepFunctionToolCallDetails.DeserializeInternalRunStepFunctionToolCallDetails(element, options);
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new UnknownRunStepDetailsToolCallsObjectToolCallsObject(type, serializedAdditionalRawData);
+            return UnknownRunStepDetailsToolCallsObjectToolCallsObject.DeserializeUnknownRunStepDetailsToolCallsObjectToolCallsObject(element, options);
         }
 
         BinaryData IPersistableModel<RunStepToolCall>.Write(ModelReaderWriterOptions options)
@@ -113,16 +106,16 @@ namespace OpenAI.Assistants
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new UnknownRunStepDetailsToolCallsObjectToolCallsObject FromResponse(PipelineResponse response)
+        internal static RunStepToolCall FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeUnknownRunStepDetailsToolCallsObjectToolCallsObject(document.RootElement);
+            return DeserializeRunStepToolCall(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal override BinaryContent ToBinaryContent()
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create<RunStepToolCall>(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -8,10 +8,10 @@ using System.Collections.Generic;
 namespace OpenAI.Assistants
 {
     /// <summary>
-    /// Abstractly represents a run step details object.
-    /// Please note <see cref="RunStepDetails"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
+    /// Abstractly represents a run step tool call details inner object.
+    /// Please note <see cref="RunStepToolCall"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
     /// </summary>
-    public abstract partial class RunStepDetails
+    public abstract partial class RunStepToolCall
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -45,15 +45,15 @@ namespace OpenAI.Assistants
         /// </summary>
         private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDetails"/>. </summary>
-        protected RunStepDetails()
+        /// <summary> Initializes a new instance of <see cref="RunStepToolCall"/>. </summary>
+        protected RunStepToolCall()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunStepDetails"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="RunStepToolCall"/>. </summary>
         /// <param name="type"> The discriminated type identifier for the details object. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepDetails(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepToolCall(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;

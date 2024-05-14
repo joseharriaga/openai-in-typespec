@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using OpenAI.Assistants;
-namespace OpenAI.Assistants;
+﻿namespace OpenAI.Assistants;
 
 /*
  * This file stubs and performs minimal customization to generated public types for the OpenAI.Assistants namespace
@@ -79,17 +77,5 @@ public readonly partial struct RunStepErrorCode { }
 [CodeGenModel("RunStepCompletionUsage")]
 public partial class RunStepTokenUsage { }
 
-[CodeGenModel("RunStepObjectStepDetails")]
-public abstract partial class RunStepDetails { }
-
-[CodeGenModel("RunStepDetailsToolCallsObjectToolCallsObject")]
-public partial class RunStepToolCallDetails { }
-
-[CodeGenModel("RunStepDetailsToolCallsFileSearchObject")]
-public partial class RunStepFileSearchToolCallDetails { }
-
 [CodeGenModel("RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]
 public partial class RunStepCodeInterpreterOutput { }
-
-[CodeGenModel("RunStepDetailsToolCallsCodeOutputLogsObject")]
-public partial class RunStepCodeInterpreterLogOutput { }

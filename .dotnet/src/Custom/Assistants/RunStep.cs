@@ -7,7 +7,7 @@ namespace OpenAI.Assistants;
 [CodeGenModel("RunStepObject")]
 public partial class RunStep
 {
-    private object Object;
+    private readonly object Object;
 
     /// <summary>
     /// The <c>step_details</c> associated with this run step.
@@ -21,7 +21,7 @@ public partial class RunStep
     /// needs to be casted to one of the possible derived classes.
     /// </para>
     /// <para>
-    /// The available derived classes include <see cref="RunStepMessageCreationDetails"/> and <see cref="RunStepToolCallDetailsCollection"/>.
+    /// The available derived classes include <see cref="InternalRunStepMessageCreationDetails"/> and <see cref="InternalRunStepToolCallDetailsCollection"/>.
     /// </para>
     /// </remarks>
     [CodeGenMember("StepDetails")]

@@ -848,39 +848,6 @@ namespace OpenAI
             return new CreateChatCompletionStreamResponseUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunStepToolCallDetailsCollection"/>. </summary>
-        /// <param name="toolCalls">
-        /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-        /// Please note <see cref="RunStepToolCallDetails"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="RunStepCodeInterpreterToolCallDetails"/>, <see cref="Assistants.RunStepFileSearchToolCallDetails"/> and <see cref="RunStepFunctionToolCallDetails"/>.
-        /// </param>
-        /// <returns> A new <see cref="Assistants.RunStepToolCallDetailsCollection"/> instance for mocking. </returns>
-        public static RunStepToolCallDetailsCollection RunStepToolCallDetailsCollection(IEnumerable<RunStepToolCallDetails> toolCalls = null)
-        {
-            toolCalls ??= new List<RunStepToolCallDetails>();
-
-            return new RunStepToolCallDetailsCollection("tool_calls", serializedAdditionalRawData: null, toolCalls?.ToList());
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunStepCodeInterpreterLogOutput"/>. </summary>
-        /// <param name="logs"> The text output from the Code Interpreter tool call. </param>
-        /// <returns> A new <see cref="Assistants.RunStepCodeInterpreterLogOutput"/> instance for mocking. </returns>
-        public static RunStepCodeInterpreterLogOutput RunStepCodeInterpreterLogOutput(string logs = null)
-        {
-            return new RunStepCodeInterpreterLogOutput("logs", serializedAdditionalRawData: null, logs);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunStepFileSearchToolCallDetails"/>. </summary>
-        /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="fileSearch"> For now, this is always going to be an empty object. </param>
-        /// <returns> A new <see cref="Assistants.RunStepFileSearchToolCallDetails"/> instance for mocking. </returns>
-        public static RunStepFileSearchToolCallDetails RunStepFileSearchToolCallDetails(string id = null, IReadOnlyDictionary<string, string> fileSearch = null)
-        {
-            fileSearch ??= new Dictionary<string, string>();
-
-            return new RunStepFileSearchToolCallDetails("file_search", serializedAdditionalRawData: null, id, fileSearch);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsMessageCreationObject"/>. </summary>
         /// <param name="type"> Always `message_creation`. </param>
         /// <param name="messageCreation"></param>

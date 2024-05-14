@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI.Assistants
 {
     /// <summary> Unknown version of RunStepDetailsToolCallsObjectToolCallsObject. </summary>
-    internal partial class UnknownRunStepDetailsToolCallsObjectToolCallsObject : RunStepToolCallDetails
+    internal partial class UnknownRunStepDetailsToolCallsObjectToolCallsObject : RunStepToolCall
     {
         /// <summary> Initializes a new instance of <see cref="UnknownRunStepDetailsToolCallsObjectToolCallsObject"/>. </summary>
         /// <param name="type"> The discriminated type identifier for the details object. </param>

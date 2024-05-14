@@ -1,0 +1,26 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using OpenAI.Internal.Models;
+
+namespace OpenAI.Assistants;
+
+[CodeGenModel("RunStepDetailsToolCallsObjectToolCallsObject")]
+public partial class RunStepToolCall
+{
+    public string ToolCallId => AsCodeInterpreter?.Id ?? AsFunction?.Id ?? AsFileSearch?.Id;
+    public string CodeInterpreterInput => AsCodeInterpreter?.Input;
+    public IReadOnlyList<RunStepCodeInterpreterOutput> CodeInterpreterOutputs => AsCodeInterpreter?.Outputs;
+    public RunStepToolCallKind ToolKind
+        => AsCodeInterpreter is not null ? RunStepToolCallKind.CodeInterpreter
+        : AsFileSearch is not null ? RunStepToolCallKind.FileSearch
+        : AsFunction is not null ? RunStepToolCallKind.Function
+        : RunStepToolCallKind.Unknown;
+
+    private InternalRunStepCodeInterpreterToolCallDetails AsCodeInterpreter
+        => this as InternalRunStepCodeInterpreterToolCallDetails;
+    private InternalRunStepFunctionToolCallDetails AsFunction => this as InternalRunStepFunctionToolCallDetails;
+    private InternalRunStepFileSearchToolCallDetails AsFileSearch => this as InternalRunStepFileSearchToolCallDetails;
+}

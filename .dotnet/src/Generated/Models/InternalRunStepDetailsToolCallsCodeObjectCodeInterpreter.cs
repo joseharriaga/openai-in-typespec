@@ -47,8 +47,7 @@ namespace OpenAI.Assistants
         /// <param name="input"> The input to the Code Interpreter tool call. </param>
         /// <param name="outputs">
         /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-        /// Please note <see cref="RunStepCodeInterpreterOutput"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="RunStepCodeInterpreterImageOutput"/> and <see cref="RunStepCodeInterpreterLogOutput"/>.
+        /// Please note <see cref="RunStepCodeInterpreterOutput"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="input"/> or <paramref name="outputs"/> is null. </exception>
         internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IEnumerable<RunStepCodeInterpreterOutput> outputs)
@@ -64,8 +63,7 @@ namespace OpenAI.Assistants
         /// <param name="input"> The input to the Code Interpreter tool call. </param>
         /// <param name="outputs">
         /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-        /// Please note <see cref="RunStepCodeInterpreterOutput"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="RunStepCodeInterpreterImageOutput"/> and <see cref="RunStepCodeInterpreterLogOutput"/>.
+        /// Please note <see cref="RunStepCodeInterpreterOutput"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IReadOnlyList<RunStepCodeInterpreterOutput> outputs, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -84,8 +82,7 @@ namespace OpenAI.Assistants
         public string Input { get; }
         /// <summary>
         /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
-        /// Please note <see cref="RunStepCodeInterpreterOutput"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="RunStepCodeInterpreterImageOutput"/> and <see cref="RunStepCodeInterpreterLogOutput"/>.
+        /// Please note <see cref="RunStepCodeInterpreterOutput"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </summary>
         public IReadOnlyList<RunStepCodeInterpreterOutput> Outputs { get; }
     }

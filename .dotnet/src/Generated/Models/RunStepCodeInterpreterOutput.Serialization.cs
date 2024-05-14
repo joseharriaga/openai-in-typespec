@@ -65,8 +65,8 @@ namespace OpenAI.Assistants
             {
                 switch (discriminator.GetString())
                 {
-                    case "image": return RunStepCodeInterpreterImageOutput.DeserializeRunStepCodeInterpreterImageOutput(element, options);
-                    case "logs": return RunStepCodeInterpreterLogOutput.DeserializeRunStepCodeInterpreterLogOutput(element, options);
+                    case "image": return InternalRunStepCodeInterpreterImageOutput.DeserializeInternalRunStepCodeInterpreterImageOutput(element, options);
+                    case "logs": return InternalRunStepDetailsToolCallsCodeOutputLogsObject.DeserializeInternalRunStepDetailsToolCallsCodeOutputLogsObject(element, options);
                 }
             }
             return UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject.DeserializeUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject(element, options);

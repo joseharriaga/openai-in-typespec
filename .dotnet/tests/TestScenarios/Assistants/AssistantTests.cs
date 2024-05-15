@@ -365,6 +365,54 @@ public partial class AssistantTests
         Assert.That(messages.First().Content[0].AsText().Text, Does.Contain("tacos"));
     }
 
+    [Test]
+    public async Task StreamingRunWorks()
+    {
+        AssistantClient client = new();
+        Assistant assistant = await client.CreateAssistantAsync("gpt-3.5-turbo");
+        Validate(assistant);
+
+        AssistantThread thread = await client.CreateThreadAsync(new()
+        {
+            InitialMessages = { new(["Hello there, assistant! How are you today?"]), },
+        });
+        Validate(thread);
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
+
+        ClientResult<IAsyncEnumerable<StreamingUpdate>> streamingResult
+            = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+
+        Print(">>> Connected <<<");
+
+        await foreach (StreamingUpdate update in streamingResult.Value)
+        {
+            string message = $"{update.UpdateKind} ";
+            if (update is RunUpdate runUpdate)
+            {
+                message += $"at {update.UpdateKind switch
+                {
+                    StreamingUpdateReason.RunCreated => runUpdate.Value.CreatedAt,
+                    StreamingUpdateReason.RunQueued => runUpdate.Value.StartedAt,
+                    StreamingUpdateReason.RunInProgress => runUpdate.Value.StartedAt,
+                    StreamingUpdateReason.RunCompleted => runUpdate.Value.CompletedAt,
+                    _ => "???",
+                }}";
+            }
+            if (update is MessageContentUpdate contentUpdate)
+            {
+                if (contentUpdate.Role.HasValue)
+                {
+                    message += $"[{contentUpdate.Role}]";
+                }
+                message += $"[{contentUpdate.MessageIndex}] {contentUpdate.Text}";
+            }
+            Print(message);
+        }
+        Print(">>> Done <<<");
+    }
+
     [TestCase]
     public async Task StreamingToolCall()
     {

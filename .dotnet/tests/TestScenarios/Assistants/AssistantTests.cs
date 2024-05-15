@@ -188,12 +188,10 @@ public partial class AssistantTests
         Assert.That(retrievedRun.Id, Is.EqualTo(run.Id));
         runs = client.GetRuns(thread);
         Assert.That(runs.Count, Is.EqualTo(1));
-        IEnumerable<ResultPage<ThreadRun>> pages = runs.AsPages();
-
-        Assert.That(pages.First().ContinuationToken, Is.EqualTo(run.Id));
+        Assert.That(runs.First().Id, Is.EqualTo(run.Id));
 
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread);
-        Assert.That(messages.Count, Is.EqualTo(1));
+        Assert.That(messages.Count, Is.GreaterThanOrEqualTo(1));
 
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
         {

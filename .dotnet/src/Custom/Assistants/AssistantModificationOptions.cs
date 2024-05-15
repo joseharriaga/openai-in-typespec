@@ -25,13 +25,9 @@ public partial class AssistantModificationOptions
     // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
     //          response models (which do not contain resource initialization helpers).
 
-    /// <summary>
-    /// A replacement set of resources that are made available to the assistant's tools.
-    /// The resources are specific to the type of tool.
-    /// For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-    /// </summary>
+    /// <inheritdoc cref="ToolResourceDefinitionCollection"/>
     [CodeGenMember("ToolResources")]
-    public ToolResources ToolResources { get; init; }
+    public ToolResourceDefinitionCollection ToolResources { get; init; }
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     [CodeGenMember("ResponseFormat")]

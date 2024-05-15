@@ -14,7 +14,7 @@ namespace OpenAI.Assistants;
 /// {
 ///     <see cref="ToolResourceDefinition.FromCodeInterpreterFileIds(IEnumerable{string})"/>,
 ///     <see cref="ToolResourceDefinition.FromFileSearchVectorStoreIds(IEnumerable{string})"/>,
-///     <see cref="ToolResourceDefinition.CreateNewFileSearchVectorStore(IEnumerable{string}, IDictionary{string, string})"/>,
+///     <see cref="ToolResourceDefinition.FromNewFileSearchVectorStore(IEnumerable{string}, IDictionary{string, string})"/>,
 /// }
 /// </code>
 /// </remarks>

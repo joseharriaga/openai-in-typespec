@@ -46,12 +46,12 @@ public partial class ToolResourceDefinition
     /// <param name="fileIds"></param>
     /// <param name="metadata"></param>
     /// <returns></returns>
-    public static ToolResourceDefinition CreateNewFileSearchVectorStore(
+    public static ToolResourceDefinition FromNewFileSearchVectorStore(
         IEnumerable<string> fileIds,
         IDictionary<string, string> metadata = null)
-            => CreateFileSearchVectorStores([new(fileIds, metadata)]);
+            => FromNewFileSearchVectorStores([new(fileIds, metadata)]);
 
-    internal static ToolResourceDefinition CreateFileSearchVectorStores(
+    internal static ToolResourceDefinition FromNewFileSearchVectorStores(
         IEnumerable<ToolResourceDefinitionVectorStoreCreationRequest> vectorStoreCreationRequests)
             => new(null, null, vectorStoreCreationRequests);
 

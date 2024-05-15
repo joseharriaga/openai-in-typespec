@@ -496,7 +496,7 @@ public partial class AssistantTests
         Assistant assistant = client.CreateAssistant("gpt-4-turbo", new()
         {
             Tools = { new FileSearchToolDefinition() },
-            ToolResources = { ToolResourceDefinition.CreateNewFileSearchVectorStore([testFile.Id]) },
+            ToolResources = { ToolResourceDefinition.FromNewFileSearchVectorStore([testFile.Id]) },
         });
         Validate(assistant);
         AssistantThread thread = client.CreateThread(new ThreadCreationOptions()

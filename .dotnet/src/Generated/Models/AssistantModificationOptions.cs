@@ -69,7 +69,7 @@ namespace OpenAI.Assistants
         /// </param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<ToolDefinition> defaultTools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<ToolDefinition> defaultTools, ToolResourceDefinitionCollection toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Name = name;

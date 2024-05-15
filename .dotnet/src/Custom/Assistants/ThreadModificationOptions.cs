@@ -9,6 +9,7 @@ public partial class ThreadModificationOptions
     // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
     //          response models (which do not contain resource initialization helpers).
 
+    /// <inheritdoc cref="ToolResourceDefinitionCollection"/>
     [CodeGenMember("ToolResources")]
-    public ToolResources ToolResources { get; set; }
+    public ToolResourceDefinitionCollection ToolResources { get; set; }
 }

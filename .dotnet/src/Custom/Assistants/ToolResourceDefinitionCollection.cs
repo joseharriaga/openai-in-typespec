@@ -6,6 +6,18 @@ using OpenAI.Models;
 namespace OpenAI.Assistants;
 
 /// <inheritdoc cref="Assistant.ToolResources"/>
+/// <remarks>
+/// Add resources to this collection via an initializer list and use the <see cref="ToolResourceDefinition"/> static
+/// creation methods to define resources.
+/// <code>
+/// ToolResources =
+/// {
+///     <see cref="ToolResourceDefinition.FromCodeInterpreterFileIds(IEnumerable{string})"/>,
+///     <see cref="ToolResourceDefinition.FromFileSearchVectorStoreIds(IEnumerable{string})"/>,
+///     <see cref="ToolResourceDefinition.CreateNewFileSearchVectorStore(IEnumerable{string}, IDictionary{string, string})"/>,
+/// }
+/// </code>
+/// </remarks>
 [CodeGenModel("CreateAssistantRequestToolResources")]
 public partial class ToolResourceDefinitionCollection : IList<ToolResourceDefinition>
 {

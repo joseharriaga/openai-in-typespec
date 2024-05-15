@@ -99,6 +99,7 @@ internal partial class InternalCreateThreadAndRunRequest
     public string Model { get; set; }
     public ToolResources ToolResources { get; set; }
     public AssistantResponseFormat ResponseFormat { get; set; }
+    public ToolConstraint ToolChoice { get; set; }
 }
 
 [CodeGenModel("MessageContentImageUrlObjectImageUrl")]
@@ -195,3 +196,9 @@ internal partial class InternalRunStepDetailsToolCallsCodeOutputLogsObject
     [CodeGenMember("Logs")]
     internal string InternalLogs { get; }
 }
+
+[CodeGenModel("RunTruncationStrategyType")]
+internal readonly partial struct InternalRunTruncationStrategyType { }
+
+[CodeGenModel("AssistantsNamedToolChoiceType")]
+internal readonly partial struct InternalAssistantsNamedToolChoiceType { }

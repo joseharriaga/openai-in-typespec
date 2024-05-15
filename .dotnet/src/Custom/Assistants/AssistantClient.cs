@@ -1007,17 +1007,17 @@ public partial class AssistantClient
             threadOptions,
             runOptions.ModelOverride,
             runOptions.InstructionsOverride,
-            runOptions.Tools,
+            runOptions.ToolsOverride,
             // TODO: reconcile exposure of the the two different tool_resources, if needed
             threadOptions?.ToolResources,
             runOptions.Metadata,
             runOptions.Temperature,
-            runOptions.TopP,
+            runOptions.NucleusSamplingFactor,
             runOptions.Stream,
             runOptions.MaxPromptTokens,
             runOptions.MaxCompletionTokens,
             runOptions.TruncationStrategy,
-            runOptions.ToolChoice,
+            runOptions.ToolConstraint,
             runOptions.ResponseFormat,
             serializedAdditionalRawData: null);
         return internalRequest.ToBinaryContent();

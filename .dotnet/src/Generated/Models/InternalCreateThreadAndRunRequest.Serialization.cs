@@ -176,14 +176,7 @@ namespace OpenAI.Assistants
                 if (ToolChoice != null)
                 {
                     writer.WritePropertyName("tool_choice"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(ToolChoice);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(ToolChoice))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteObjectValue<ToolConstraint>(ToolChoice, options);
                 }
                 else
                 {
@@ -253,7 +246,7 @@ namespace OpenAI.Assistants
             int? maxPromptTokens = default;
             int? maxCompletionTokens = default;
             RunTruncationStrategy truncationStrategy = default;
-            BinaryData toolChoice = default;
+            ToolConstraint toolChoice = default;
             AssistantResponseFormat responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -398,7 +391,7 @@ namespace OpenAI.Assistants
                         toolChoice = null;
                         continue;
                     }
-                    toolChoice = BinaryData.FromString(property.Value.GetRawText());
+                    toolChoice = ToolConstraint.DeserializeToolConstraint(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))

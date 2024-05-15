@@ -35,12 +35,6 @@ public readonly partial struct RunErrorCode { }
 [CodeGenModel("RunObjectIncompleteDetails")]
 public partial class RunIncompleteDetails { }
 
-[CodeGenModel("TruncationObject")]
-public partial class RunTruncationStrategy { }
-
-[CodeGenModel("RunTruncationStrategyType")]
-public readonly partial struct RunTruncationStrategyType { }
-
 [CodeGenModel("RunIncompleteDetailsReason")]
 public readonly partial struct RunIncompleteReason { }
 

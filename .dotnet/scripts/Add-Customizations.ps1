@@ -54,7 +54,7 @@ function Remove-PseudoSuppressedTypes {
         "RunStepObjectObject",
         "ThreadObjectObject",
         "MessageRequestContentTextObjectType",
-        "ToolResourceDefinitionCollection"
+        "ToolConstraint"
     )
     foreach ($target in $targets) {
         Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {

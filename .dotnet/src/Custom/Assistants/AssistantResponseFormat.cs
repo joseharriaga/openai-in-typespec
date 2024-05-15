@@ -52,9 +52,9 @@ public partial class AssistantResponseFormat
     /// <remarks>
     /// Consider using one of the static properties available on <see cref="AssistantResponseFormat"/>, instead.
     /// </remarks>
-    /// <param name="rawResponseFormat"></param>
-    public AssistantResponseFormat(string rawResponseFormat)
-        : this(rawResponseFormat, isStringLiteral: true)
+    /// <param name="value"></param>
+    public AssistantResponseFormat(string value)
+        : this(value, isStringLiteral: true)
     {}
 
     internal AssistantResponseFormat(string value, bool isStringLiteral)

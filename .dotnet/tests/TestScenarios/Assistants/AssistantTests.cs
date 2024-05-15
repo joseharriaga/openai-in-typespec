@@ -188,7 +188,7 @@ public partial class AssistantTests
         Assert.That(retrievedRun.Id, Is.EqualTo(run.Id));
         runs = client.GetRuns(thread);
         Assert.That(runs.Count, Is.EqualTo(1));
-        IEnumerable<ClientPage<ThreadRun>> pages = runs.AsPages();
+        IEnumerable<ResultPage<ThreadRun>> pages = runs.AsPages();
 
         // TODO: fix
         Assert.That(pages.First().ContinuationToken, Is.EqualTo(run.Id));
@@ -359,9 +359,9 @@ public partial class AssistantTests
         int count = 0;
         int pageCount = 0;
         AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
-        IAsyncEnumerable<ClientPage<Assistant>> pages = assistants.AsPages(pageSizeHint: 2);
+        IAsyncEnumerable<ResultPage<Assistant>> pages = assistants.AsPages(pageSizeHint: 2);
 
-        await foreach (ClientPage<Assistant> page in pages)
+        await foreach (ResultPage<Assistant> page in pages)
         {
             int pageItems = 0;
             foreach (Assistant assistant in page)

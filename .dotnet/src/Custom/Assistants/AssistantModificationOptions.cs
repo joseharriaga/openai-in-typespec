@@ -25,9 +25,9 @@ public partial class AssistantModificationOptions
     // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
     //          response models (which do not contain resource initialization helpers).
 
-    /// <inheritdoc cref="ToolResourceDefinitionCollection"/>
+    /// <inheritdoc cref="ToolResources"/>
     [CodeGenMember("ToolResources")]
-    public ToolResourceDefinitionCollection ToolResources { get; init; }
+    public ToolResources ToolResources { get; init; }
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     [CodeGenMember("ResponseFormat")]

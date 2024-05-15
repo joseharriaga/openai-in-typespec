@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -69,7 +70,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            IList<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> vectorStores = default;
+            IList<VectorStoreCreationHelper> vectorStores = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -80,10 +81,10 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    List<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> array = new List<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>();
+                    List<VectorStoreCreationHelper> array = new List<VectorStoreCreationHelper>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore.DeserializeCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore(item, options));
+                        array.Add(VectorStoreCreationHelper.DeserializeVectorStoreCreationHelper(item, options));
                     }
                     vectorStores = array;
                     continue;
@@ -94,7 +95,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers(vectorStores ?? new ChangeTrackingList<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>(), serializedAdditionalRawData);
+            return new CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers(vectorStores ?? new ChangeTrackingList<VectorStoreCreationHelper>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers>.Write(ModelReaderWriterOptions options)

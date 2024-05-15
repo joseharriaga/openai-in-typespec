@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenAI.Assistants;
 using OpenAI.Files;
+using OpenAI.VectorStores;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -493,17 +494,75 @@ public partial class AssistantTests
         Validate(testFile);
 
         AssistantClient client = GetTestClient();
+
+        // Create an assistant, using the creation helper to make a new vector store
         Assistant assistant = client.CreateAssistant("gpt-4-turbo", new()
         {
             Tools = { new FileSearchToolDefinition() },
-            ToolResources = { ToolResourceDefinition.FromNewFileSearchVectorStore([testFile.Id]) },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([testFile.Id]),
+                    }
+                }
+            }
         });
         Validate(assistant);
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        string createdVectorStoreId = assistant.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(createdVectorStoreId);
+
+        // Modify an assistant to use the existing vector store
+        assistant = client.ModifyAssistant(assistant, new AssistantModificationOptions()
+        {
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    VectorStoreIds = { assistant.ToolResources.FileSearch.VectorStoreIds[0] },
+                },
+            },
+        });
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        Assert.That(assistant.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
+
+        // Create a thread with an override vector store
         AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
         {
             InitialMessages = { new(["Using the files you have available, what's Filip's favorite food?"]) },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([testFile.Id])
+                    }
+                }
+            }
         });
         Validate(thread);
+        Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        createdVectorStoreId = thread.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(createdVectorStoreId);
+
+        // Ensure that modifying the thread with an existing vector store works
+        thread = client.ModifyThread(thread, new ThreadModificationOptions()
+        {
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    VectorStoreIds = { createdVectorStoreId },
+                }
+            }
+        });
+        Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        Assert.That(thread.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
+
         ThreadRun run = client.CreateRun(thread, assistant);
         Validate(run);
         do
@@ -534,6 +593,7 @@ public partial class AssistantTests
     {
         AssistantClient client = new();
         FileClient fileClient = new();
+        VectorStoreClient vectorStoreClient = new();
         RequestOptions requestOptions = new()
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
@@ -553,6 +613,10 @@ public partial class AssistantTests
         foreach (OpenAIFileInfo file in _filesToDelete)
         {
             Console.WriteLine($"Cleanup: {file.Id} -> {fileClient.DeleteFile(file.Id, requestOptions)?.GetRawResponse().Status}");
+        }
+        foreach (string vectorStoreId in _vectorStoreIdsToDelete)
+        {
+            Console.WriteLine($"Cleanup: {vectorStoreId} => {vectorStoreClient.DeleteVectorStore(vectorStoreId, requestOptions)?.GetRawResponse().Status}");
         }
         _messagesToDelete.Clear();
         _assistantsToDelete.Clear();
@@ -603,6 +667,7 @@ public partial class AssistantTests
     private readonly List<AssistantThread> _threadsToDelete = [];
     private readonly List<ThreadMessage> _messagesToDelete = [];
     private readonly List<OpenAIFileInfo> _filesToDelete = [];
+    private readonly List<string> _vectorStoreIdsToDelete = [];
 
     private static AssistantClient GetTestClient() => GetTestClient<AssistantClient>(TestScenario.Assistants);
 

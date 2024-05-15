@@ -65,7 +65,16 @@ public partial class AssistantSamples
             Instructions = "Use functions to resolve family relations into the names of people. Use file search to "
                 + " look up the favorite numbers of people. Use code interpreter to create graphs of lines.",
             Tools = { getNameOfFamilyMemberTool, new FileSearchToolDefinition(), new CodeInterpreterToolDefinition() },
-            ToolResources = { ToolResourceDefinition.FromNewFileSearchVectorStore([favoriteNumberFile.Id]) },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([favoriteNumberFile.Id]),
+                    },
+                },
+            },
         });
         #endregion
 

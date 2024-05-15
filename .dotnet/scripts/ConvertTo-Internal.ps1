@@ -292,6 +292,8 @@ function Edit-GeneratedModels {
         "UnknownRunStepDetailsToolCallsObjectToolCallsObject.Serialization.cs",
         "UnknownRunStepObjectStepDetails.cs",
         "UnknownRunStepObjectStepDetails.Serialization.cs",
+        "VectorStoreCreationHelper.cs",
+        "VectorStoreCreationHelper.Serialization.cs",
 
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",

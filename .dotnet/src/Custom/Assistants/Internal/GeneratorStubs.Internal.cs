@@ -12,15 +12,6 @@ internal partial class InternalSubmitToolOutputsRunRequest { }
 [CodeGenModel("CreateAssistantRequestModel")]
 internal readonly partial struct InternalCreateAssistantRequestModel { }
 
-[CodeGenModel("ThreadObjectToolResources")]
-internal partial class InternalThreadObjectToolResources { }
-
-[CodeGenModel("ThreadObjectToolResourcesCodeInterpreter")]
-internal partial class InternalThreadObjectToolResourcesCodeInterpreter { }
-
-[CodeGenModel("ThreadObjectToolResourcesFileSearch")]
-internal partial class InternalThreadObjectToolResourcesFileSearch { }
-
 [CodeGenModel("MessageContentTextObjectAnnotation")]
 internal partial class MessageContentTextObjectAnnotation { }
 
@@ -106,7 +97,7 @@ internal partial class InternalDeleteMessageResponse { private readonly object O
 internal partial class InternalCreateThreadAndRunRequest
 {
     public string Model { get; set; }
-    public ToolResourceDefinitionCollection ToolResources { get; set; }
+    public ToolResources ToolResources { get; set; }
     public AssistantResponseFormat ResponseFormat { get; set; }
 }
 

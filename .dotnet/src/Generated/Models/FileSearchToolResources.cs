@@ -43,21 +43,14 @@ namespace OpenAI.Assistants
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="FileSearchToolResources"/>. </summary>
-        internal FileSearchToolResources()
-        {
-            VectorStoreIds = new ChangeTrackingList<string>();
-        }
-
-        /// <summary> Initializes a new instance of <see cref="FileSearchToolResources"/>. </summary>
         /// <param name="vectorStoreIds"> The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. </param>
+        /// <param name="newVectorStores"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal FileSearchToolResources(IReadOnlyList<string> vectorStoreIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FileSearchToolResources(IList<string> vectorStoreIds, IList<VectorStoreCreationHelper> newVectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             VectorStoreIds = vectorStoreIds;
+            NewVectorStores = newVectorStores;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. </summary>
-        public IReadOnlyList<string> VectorStoreIds { get; }
     }
 }

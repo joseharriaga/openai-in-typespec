@@ -21,9 +21,9 @@ public partial class AssistantCreationOptions
     [CodeGenMember("Tools")]
     public IList<ToolDefinition> Tools { get; } = new ChangeTrackingList<ToolDefinition>();
 
-    /// <inheritdoc cref="ToolResourceDefinitionCollection"/>
+    /// <inheritdoc cref="ToolResources"/>
     [CodeGenMember("ToolResources")]
-    public ToolResourceDefinitionCollection ToolResources { get; init; }
+    public ToolResources ToolResources { get; init; }
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     [CodeGenMember("ResponseFormat")]

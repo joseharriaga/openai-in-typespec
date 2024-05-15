@@ -74,7 +74,7 @@ namespace OpenAI.Assistants
                 if (ToolResources != null)
                 {
                     writer.WritePropertyName("tool_resources"u8);
-                    writer.WriteObjectValue<ToolResourceDefinitionCollection>(ToolResources, options);
+                    writer.WriteObjectValue<ToolResources>(ToolResources, options);
                 }
                 else
                 {
@@ -178,7 +178,7 @@ namespace OpenAI.Assistants
             string description = default;
             string instructions = default;
             IList<ToolDefinition> tools = default;
-            ToolResourceDefinitionCollection toolResources = default;
+            ToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
@@ -243,7 +243,7 @@ namespace OpenAI.Assistants
                         toolResources = null;
                         continue;
                     }
-                    toolResources = ToolResourceDefinitionCollection.DeserializeToolResourceDefinitionCollection(property.Value, options);
+                    toolResources = Assistants.ToolResources.DeserializeToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))

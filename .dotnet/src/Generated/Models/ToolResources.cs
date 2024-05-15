@@ -43,11 +43,6 @@ namespace OpenAI.Assistants
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ToolResources"/>. </summary>
-        internal ToolResources()
-        {
-        }
-
-        /// <summary> Initializes a new instance of <see cref="ToolResources"/>. </summary>
         /// <param name="codeInterpreter"></param>
         /// <param name="fileSearch"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -57,10 +52,5 @@ namespace OpenAI.Assistants
             FileSearch = fileSearch;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> Gets the code interpreter. </summary>
-        public CodeInterpreterToolResources CodeInterpreter { get; }
-        /// <summary> Gets the file search. </summary>
-        public FileSearchToolResources FileSearch { get; }
     }
 }

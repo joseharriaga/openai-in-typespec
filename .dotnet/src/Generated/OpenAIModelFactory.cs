@@ -57,35 +57,6 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.ToolResources"/>. </summary>
-        /// <param name="codeInterpreter"></param>
-        /// <param name="fileSearch"></param>
-        /// <returns> A new <see cref="Assistants.ToolResources"/> instance for mocking. </returns>
-        public static ToolResources ToolResources(CodeInterpreterToolResources codeInterpreter = null, FileSearchToolResources fileSearch = null)
-        {
-            return new ToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Assistants.CodeInterpreterToolResources"/>. </summary>
-        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool. </param>
-        /// <returns> A new <see cref="Assistants.CodeInterpreterToolResources"/> instance for mocking. </returns>
-        public static CodeInterpreterToolResources CodeInterpreterToolResources(IEnumerable<string> fileIds = null)
-        {
-            fileIds ??= new List<string>();
-
-            return new CodeInterpreterToolResources(fileIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Assistants.FileSearchToolResources"/>. </summary>
-        /// <param name="vectorStoreIds"> The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. </param>
-        /// <returns> A new <see cref="Assistants.FileSearchToolResources"/> instance for mocking. </returns>
-        public static FileSearchToolResources FileSearchToolResources(IEnumerable<string> vectorStoreIds = null)
-        {
-            vectorStoreIds ??= new List<string>();
-
-            return new FileSearchToolResources(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestSystemMessage"/>. </summary>
         /// <param name="content"> The contents of the system message. </param>
         /// <param name="role"> The role of the messages author, in this case `system`. </param>
@@ -460,6 +431,35 @@ namespace OpenAI
         public static RunStepTokenUsage RunStepTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
             return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResources"/>. </summary>
+        /// <param name="codeInterpreter"></param>
+        /// <param name="fileSearch"></param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResources"/> instance for mocking. </returns>
+        public static ThreadObjectToolResources ThreadObjectToolResources(ThreadObjectToolResourcesCodeInterpreter codeInterpreter = null, ThreadObjectToolResourcesFileSearch fileSearch = null)
+        {
+            return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/>. </summary>
+        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool. </param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/> instance for mocking. </returns>
+        public static ThreadObjectToolResourcesCodeInterpreter ThreadObjectToolResourcesCodeInterpreter(IEnumerable<string> fileIds = null)
+        {
+            fileIds ??= new List<string>();
+
+            return new ThreadObjectToolResourcesCodeInterpreter(fileIds?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesFileSearch"/>. </summary>
+        /// <param name="vectorStoreIds"> The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. </param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesFileSearch"/> instance for mocking. </returns>
+        public static ThreadObjectToolResourcesFileSearch ThreadObjectToolResourcesFileSearch(IEnumerable<string> vectorStoreIds = null)
+        {
+            vectorStoreIds ??= new List<string>();
+
+            return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ListVectorStoresResponse"/>. </summary>

@@ -11,9 +11,9 @@ public partial class ThreadCreationOptions
 {
     // CUSTOM: reuse a common type for request/response model representations of tool resources
 
-    /// <inheritdoc cref="ToolResourceDefinitionCollection"/>
+    /// <inheritdoc cref="ToolResources"/>
     [CodeGenMember("ToolResources")]
-    public ToolResourceDefinitionCollection ToolResources { get; } = new();
+    public ToolResources ToolResources { get; init; }
 
     // CUSTOM: the wire-oriented messages type list is hidden so that we can propagate top-level required semantics
     //          of message creation into the collection.

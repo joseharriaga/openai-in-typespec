@@ -5,17 +5,8 @@
  * that are not otherwise attributed elsewhere.
  */
 
-[CodeGenModel("AssistantObjectToolResources")]
-public partial class ToolResources { }
-
-[CodeGenModel("AssistantObjectToolResourcesCodeInterpreter")]
-public partial class CodeInterpreterToolResources { }
-
 [CodeGenModel("AssistantToolsCode")]
 public partial class CodeInterpreterToolDefinition : ToolDefinition { }
-
-[CodeGenModel("AssistantObjectToolResourcesFileSearch")]
-public partial class FileSearchToolResources { }
 
 [CodeGenModel("AssistantToolsFileSearch")]
 public partial class FileSearchToolDefinition : ToolDefinition { }

@@ -18,7 +18,7 @@ public partial class ThreadCreationOptions
     /// The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
     /// </summary>
     [CodeGenMember("ToolResources")]
-    public ToolResourceDefinitions ToolResources { get; set; }
+    public ToolResourceDefinitionCollection ToolResources { get; } = new();
 
     // CUSTOM: the wire-oriented messages type list is hidden so that we can propagate top-level required semantics
     //          of message creation into the collection.

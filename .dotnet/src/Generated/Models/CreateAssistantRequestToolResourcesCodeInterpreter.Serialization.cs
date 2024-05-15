@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
-    public partial class CodeInterpreterToolResourceDefinitions : IJsonModel<CodeInterpreterToolResourceDefinitions>
+    internal partial class CreateAssistantRequestToolResourcesCodeInterpreter : IJsonModel<CreateAssistantRequestToolResourcesCodeInterpreter>
     {
-        void IJsonModel<CodeInterpreterToolResourceDefinitions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<CreateAssistantRequestToolResourcesCodeInterpreter>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterToolResourceDefinitions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesCodeInterpreter>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CodeInterpreterToolResourceDefinitions)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesCodeInterpreter)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -49,19 +49,19 @@ namespace OpenAI.Assistants
             writer.WriteEndObject();
         }
 
-        CodeInterpreterToolResourceDefinitions IJsonModel<CodeInterpreterToolResourceDefinitions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        CreateAssistantRequestToolResourcesCodeInterpreter IJsonModel<CreateAssistantRequestToolResourcesCodeInterpreter>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterToolResourceDefinitions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesCodeInterpreter>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CodeInterpreterToolResourceDefinitions)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesCodeInterpreter)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCodeInterpreterToolResourceDefinitions(document.RootElement, options);
+            return DeserializeCreateAssistantRequestToolResourcesCodeInterpreter(document.RootElement, options);
         }
 
-        internal static CodeInterpreterToolResourceDefinitions DeserializeCodeInterpreterToolResourceDefinitions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static CreateAssistantRequestToolResourcesCodeInterpreter DeserializeCreateAssistantRequestToolResourcesCodeInterpreter(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -94,46 +94,46 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CodeInterpreterToolResourceDefinitions(fileIds ?? new ChangeTrackingList<string>(), serializedAdditionalRawData);
+            return new CreateAssistantRequestToolResourcesCodeInterpreter(fileIds ?? new ChangeTrackingList<string>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CodeInterpreterToolResourceDefinitions>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<CreateAssistantRequestToolResourcesCodeInterpreter>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterToolResourceDefinitions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesCodeInterpreter>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CodeInterpreterToolResourceDefinitions)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesCodeInterpreter)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CodeInterpreterToolResourceDefinitions IPersistableModel<CodeInterpreterToolResourceDefinitions>.Create(BinaryData data, ModelReaderWriterOptions options)
+        CreateAssistantRequestToolResourcesCodeInterpreter IPersistableModel<CreateAssistantRequestToolResourcesCodeInterpreter>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterToolResourceDefinitions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResourcesCodeInterpreter>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCodeInterpreterToolResourceDefinitions(document.RootElement, options);
+                        return DeserializeCreateAssistantRequestToolResourcesCodeInterpreter(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CodeInterpreterToolResourceDefinitions)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CreateAssistantRequestToolResourcesCodeInterpreter)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CodeInterpreterToolResourceDefinitions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<CreateAssistantRequestToolResourcesCodeInterpreter>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CodeInterpreterToolResourceDefinitions FromResponse(PipelineResponse response)
+        internal static CreateAssistantRequestToolResourcesCodeInterpreter FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCodeInterpreterToolResourceDefinitions(document.RootElement);
+            return DeserializeCreateAssistantRequestToolResourcesCodeInterpreter(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

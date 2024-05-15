@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
                 if (ToolResources != null)
                 {
                     writer.WritePropertyName("tool_resources"u8);
-                    writer.WriteObjectValue<ToolResourceDefinitions>(ToolResources, options);
+                    writer.WriteObjectValue<ToolResourceDefinitionCollection>(ToolResources, options);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             IList<MessageCreationOptions> messages = default;
-            ToolResourceDefinitions toolResources = default;
+            ToolResourceDefinitionCollection toolResources = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -127,7 +127,7 @@ namespace OpenAI.Assistants
                         toolResources = null;
                         continue;
                     }
-                    toolResources = ToolResourceDefinitions.DeserializeToolResourceDefinitions(property.Value, options);
+                    toolResources = ToolResourceDefinitionCollection.DeserializeToolResourceDefinitionCollection(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))

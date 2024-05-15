@@ -80,7 +80,7 @@ namespace OpenAI.Assistants
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, string model, string instructions, IList<ToolDefinition> tools, ToolResourceDefinitions toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, string model, string instructions, IList<ToolDefinition> tools, ToolResourceDefinitionCollection toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Thread = thread;

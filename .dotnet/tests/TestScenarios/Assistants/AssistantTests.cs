@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenAI.Assistants;
+using OpenAI.Files;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -474,10 +475,65 @@ public partial class AssistantTests
         } while (run?.Status.IsTerminal == false);
     }
 
+    [Test]
+    public void BasicFileSearchWorks()
+    {
+        // First, we need to upload a simple test file.
+        FileClient fileClient = new();
+        OpenAIFileInfo testFile = fileClient.UploadFile(
+            BinaryData.FromString("""
+            This file describes the favorite foods of several people.
+
+            Summanus Ferdinand: tacos
+            Tekakwitha Effie: pizza
+            Filip Carola: cake
+            """).ToStream(),
+            "favorite_foods.txt",
+            OpenAIFilePurpose.Assistants);
+        Validate(testFile);
+
+        AssistantClient client = GetTestClient();
+        Assistant assistant = client.CreateAssistant("gpt-4-turbo", new()
+        {
+            Tools = { new FileSearchToolDefinition() },
+            ToolResources = { ToolResourceDefinition.CreateNewFileSearchVectorStore([testFile.Id]) },
+        });
+        Validate(assistant);
+        AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
+        {
+            InitialMessages = { new(["Using the files you have available, what's Filip's favorite food?"]) },
+        });
+        Validate(thread);
+        ThreadRun run = client.CreateRun(thread, assistant);
+        Validate(run);
+        do
+        {
+            Thread.Sleep(1000);
+            run = client.GetRun(run);
+        } while (run?.Status.IsTerminal == false);
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+
+        ListQueryPage<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
+        foreach (ThreadMessage message in messages)
+        {
+            foreach (MessageContent content in message.Content)
+            {
+                Console.WriteLine(content.Text);
+                foreach (TextAnnotation annotation in content.TextAnnotations)
+                {
+                    Console.WriteLine($"  --> From file: {annotation.InputFileId}, quote: {annotation.InputQuote}, replacement: {annotation.TextToReplace}");
+                }
+            }
+        }
+        Assert.That(messages.Count > 1);
+        Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("cake"))));
+    }
+
     [TearDown]
     protected void Cleanup()
     {
         AssistantClient client = new();
+        FileClient fileClient = new();
         RequestOptions requestOptions = new()
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
@@ -494,9 +550,14 @@ public partial class AssistantTests
         {
             Console.WriteLine($"Cleanup: {thread.Id} -> {client.DeleteThread(thread.Id, requestOptions)?.GetRawResponse().Status}");
         }
+        foreach (OpenAIFileInfo file in _filesToDelete)
+        {
+            Console.WriteLine($"Cleanup: {file.Id} -> {fileClient.DeleteFile(file.Id, requestOptions)?.GetRawResponse().Status}");
+        }
         _messagesToDelete.Clear();
         _assistantsToDelete.Clear();
         _threadsToDelete.Clear();
+        _filesToDelete.Clear();
     }
 
     /// <summary>
@@ -527,6 +588,11 @@ public partial class AssistantTests
         {
             Assert.That(run?.Id, Is.Not.Null);
         }
+        else if (target is OpenAIFileInfo file)
+        {
+            Assert.That(file?.Id, Is.Not.Null);
+            _filesToDelete.Add(file);
+        }
         else
         {
             throw new NotImplementedException($"{nameof(Validate)} helper not implemented for: {typeof(T)}");
@@ -536,6 +602,7 @@ public partial class AssistantTests
     private readonly List<Assistant> _assistantsToDelete = [];
     private readonly List<AssistantThread> _threadsToDelete = [];
     private readonly List<ThreadMessage> _messagesToDelete = [];
+    private readonly List<OpenAIFileInfo> _filesToDelete = [];
 
     private static AssistantClient GetTestClient() => GetTestClient<AssistantClient>(TestScenario.Assistants);
 

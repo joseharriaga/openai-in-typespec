@@ -106,7 +106,7 @@ internal partial class InternalDeleteMessageResponse { private readonly object O
 internal partial class InternalCreateThreadAndRunRequest
 {
     public string Model { get; set; }
-    public ToolResourceDefinitions ToolResources { get; set; }
+    public ToolResourceDefinitionCollection ToolResources { get; set; }
     public AssistantResponseFormat ResponseFormat { get; set; }
 }
 

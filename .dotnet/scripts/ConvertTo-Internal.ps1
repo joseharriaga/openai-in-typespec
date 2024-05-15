@@ -78,6 +78,7 @@ function Edit-GeneratedModels {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs"
     
     $exclusions = @(
+        # Project common
         "ListOrder.cs",
         "FunctionDefinition.cs",
         "FunctionDefinition.Serialization.cs",
@@ -89,14 +90,10 @@ function Edit-GeneratedModels {
         "AssistantCreationOptions.Serialization.cs",
         "AssistantModificationOptions.cs",
         "AssistantModificationOptions.Serialization.cs",
-        # "AssistantResponseFormat.cs",
-        # "AssistantResponseFormat.Serialization.cs",
         "AssistantThread.cs",
         "AssistantThread.Serialization.cs",
         "CodeInterpreterToolDefinition.cs",
         "CodeInterpreterToolDefinition.Serialization.cs",
-        "CodeInterpreterToolResourceDefinitions.cs",
-        "CodeInterpreterToolResourceDefinitions.Serialization.cs",
         "CodeInterpreterToolResources.cs",
         "CodeInterpreterToolResources.Serialization.cs",
         "FileCitationTextContentAnnotation.cs",
@@ -279,8 +276,6 @@ function Edit-GeneratedModels {
         "ToolDefinition.Serialization.cs",
         "ToolOutput.cs",
         "ToolOutput.Serialization.cs",
-        "ToolResourceDefinitions.cs",
-        "ToolResourceDefinitions.Serialization.cs",
         "ToolResources.cs",
         "ToolResources.Serialization.cs",
         "UnknownAssistantToolDefinition.cs",

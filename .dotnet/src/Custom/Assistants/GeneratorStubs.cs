@@ -5,20 +5,6 @@
  * that are not otherwise attributed elsewhere.
  */
 
-/*
- * This file stubs and performs minimal customization to generated public types for the OpenAI.Assistants namespace
- * that are not otherwise attributed elsewhere.
- */
-
-[CodeGenModel("CreateAssistantRequestToolResources")]
-public partial class ToolResourceDefinitions { }
-
-[CodeGenModel("CreateAssistantRequestToolResourcesCodeInterpreter")]
-public partial class CodeInterpreterToolResourceDefinitions { }
-
-[CodeGenModel("CreateAssistantRequestToolResourcesFileSearch")]
-public partial class FileSearchToolResourceDefinitions { }
-
 [CodeGenModel("AssistantObjectToolResources")]
 public partial class ToolResources { }
 

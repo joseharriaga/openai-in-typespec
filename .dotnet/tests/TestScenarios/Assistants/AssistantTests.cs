@@ -191,7 +191,6 @@ public partial class AssistantTests
         Assert.That(runs.Count, Is.EqualTo(1));
         IEnumerable<ResultPage<ThreadRun>> pages = runs.AsPages();
 
-        // TODO: fix
         Assert.That(pages.First().ContinuationToken, Is.EqualTo(run.Id));
 
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread);
@@ -366,54 +365,6 @@ public partial class AssistantTests
         Assert.That(messages.First().Content[0].AsText().Text, Does.Contain("tacos"));
     }
 
-    [Test]
-    public async Task CanPageThroughAssistantCollection()
-    {
-        AssistantClient client = GetTestClient();
-
-        // Create assistant collection
-        for (int i = 0; i < 10; i++)
-        {
-            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
-            Validate(assistant);
-            Assert.That(assistant.Name, Is.Null.Or.Empty);
-        }
-
-        List<Assistant> allAssistants = new();
-
-        // Page through collection
-
-        int count = 0;
-        int pageCount = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
-        IAsyncEnumerable<ResultPage<Assistant>> pages = assistants.AsPages(pageSizeHint: 2);
-
-        await foreach (ResultPage<Assistant> page in pages)
-        {
-            int pageItems = 0;
-            foreach (Assistant assistant in page)
-            {
-                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-
-                count++;
-                pageItems++;
-
-                allAssistants.Add(assistant);
-            }
-
-            pageCount += pageItems > 0 ? 1 : 0;
-        }
-
-        // Clean up
-        foreach (Assistant assistant in allAssistants)
-        {
-            client.DeleteAssistant(assistant.Id);
-        }
-
-        Assert.AreEqual(10, count);
-        Assert.AreEqual(5, pageCount);
-    }
-
     [TestCase]
     public async Task StreamingToolCall()
     {
@@ -485,7 +436,7 @@ public partial class AssistantTests
             Assert.That(assistant.Name, Is.Null.Or.Empty);
         }
 
-        //List<Assistant> allAssistants = new();
+        List<Assistant> allAssistants = new();
 
         // Page through collection
 
@@ -498,16 +449,64 @@ public partial class AssistantTests
 
             count++;
 
-            //allAssistants.Add(assistant);
+            allAssistants.Add(assistant);
         }
 
-        //// Clean up
-        //foreach (Assistant assistant in  allAssistants)
-        //{
-        //    client.DeleteAssistant(assistant.Id);
-        //}
+        // Clean up
+        foreach (Assistant assistant in allAssistants)
+        {
+            client.DeleteAssistant(assistant.Id);
+        }
 
         Assert.AreEqual(10, count);
+    }
+
+    [Test]
+    public async Task CanPageThroughAssistantCollection()
+    {
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.Null.Or.Empty);
+        }
+
+        List<Assistant> allAssistants = new();
+
+        // Page through collection
+
+        int count = 0;
+        int pageCount = 0;
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
+        IAsyncEnumerable<ResultPage<Assistant>> pages = assistants.AsPages(pageSizeHint: 2);
+
+        await foreach (ResultPage<Assistant> page in pages)
+        {
+            int pageItems = 0;
+            foreach (Assistant assistant in page)
+            {
+                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
+
+                count++;
+                pageItems++;
+
+                allAssistants.Add(assistant);
+            }
+
+            pageCount += pageItems > 0 ? 1 : 0;
+        }
+
+        // Clean up
+        foreach (Assistant assistant in allAssistants)
+        {
+            client.DeleteAssistant(assistant.Id);
+        }
+
+        Assert.AreEqual(10, count);
+        Assert.AreEqual(5, pageCount);
     }
 
     [TearDown]

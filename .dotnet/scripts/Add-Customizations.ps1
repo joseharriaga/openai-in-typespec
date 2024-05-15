@@ -28,7 +28,9 @@ function Remove-PseudoSuppressedTypes {
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
     $targets = @(
         # "Unknown",
+        "AssistantApiResponseFormat",
         "AssistantObjectObject",
+        "AssistantResponseFormat",
         "AssistantToolsCodeType",
         "AssistantToolsFileSearchType",
         "AssistantToolsFunctionType",

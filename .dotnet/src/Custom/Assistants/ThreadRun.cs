@@ -26,4 +26,8 @@ public partial class ThreadRun
     /// </list>
     /// </remarks>
     public IReadOnlyList<RequiredAction> RequiredActions => _internalRequiredAction?.SubmitToolOutputs?.ToolCalls ?? [];
+
+    /// <inheritdoc cref="AssistantResponseFormat"/>
+    [CodeGenMember("ResponseFormat")]
+    public AssistantResponseFormat ResponseFormat { get; init; }
 }

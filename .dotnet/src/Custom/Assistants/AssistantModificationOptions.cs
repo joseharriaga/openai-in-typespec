@@ -11,7 +11,7 @@ public partial class AssistantModificationOptions
     /// <summary>
     /// The replacement model that the assistant should use.
     /// </summary>
-    public string Model { get; set; }
+    public string Model { get; init; }
 
     /// <summary>
     /// <para>
@@ -20,7 +20,7 @@ public partial class AssistantModificationOptions
     /// There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
     /// </summary>
     [CodeGenMember("Tools")]
-    public IList<ToolDefinition> DefaultTools { get; } = new ChangeTrackingList<ToolDefinition>();
+    public IList<ToolDefinition> DefaultTools { get; init; } = new ChangeTrackingList<ToolDefinition>();
 
     // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
     //          response models (which do not contain resource initialization helpers).
@@ -31,5 +31,9 @@ public partial class AssistantModificationOptions
     /// For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
     /// </summary>
     [CodeGenMember("ToolResources")]
-    public ToolResources ToolResources { get; set; }
+    public ToolResources ToolResources { get; init; }
+
+    /// <inheritdoc cref="AssistantResponseFormat"/>
+    [CodeGenMember("ResponseFormat")]
+    public AssistantResponseFormat ResponseFormat { get; init; }
 }

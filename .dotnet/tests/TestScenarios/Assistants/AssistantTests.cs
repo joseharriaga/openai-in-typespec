@@ -268,6 +268,33 @@ public partial class AssistantTests
     }
 
     [Test]
+    public void SettingResponseFormatWorks()
+    {
+        AssistantClient client = GetTestClient();
+        Assistant assistant = client.CreateAssistant("gpt-4-turbo", new()
+        {
+            ResponseFormat = AssistantResponseFormat.JsonObject,
+        });
+        Validate(assistant);
+        Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        assistant = client.ModifyAssistant(assistant, new()
+        {
+            ResponseFormat = AssistantResponseFormat.Text,
+        });
+        Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.Text));
+        AssistantThread thread = client.CreateThread();
+        Validate(thread);
+        ThreadMessage message = client.CreateMessage(thread, ["Write some JSON for me!"]);
+        Validate(message);
+        ThreadRun run = client.CreateRun(thread, assistant, new()
+        {
+            ResponseFormat = AssistantResponseFormat.JsonObject,
+        });
+        Validate(run);
+        Assert.That(run.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+    }
+
+    [Test]
     public void FunctionToolsWork()
     {
         AssistantClient client = GetTestClient();

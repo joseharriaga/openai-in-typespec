@@ -207,14 +207,7 @@ namespace OpenAI.Assistants
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(ResponseFormat);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(ResponseFormat))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
                 }
                 else
                 {
@@ -273,7 +266,7 @@ namespace OpenAI.Assistants
             int? maxCompletionTokens = default;
             RunTruncationStrategy truncationStrategy = default;
             BinaryData toolChoice = default;
-            BinaryData responseFormat = default;
+            AssistantResponseFormat responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -432,7 +425,7 @@ namespace OpenAI.Assistants
                         responseFormat = null;
                         continue;
                     }
-                    responseFormat = BinaryData.FromString(property.Value.GetRawText());
+                    responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

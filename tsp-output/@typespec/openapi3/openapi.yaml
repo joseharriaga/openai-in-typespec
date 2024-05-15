@@ -2029,6 +2029,8 @@ components:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
       description: Represents an `assistant` that can call the model and use tools.
+    AssistantResponseFormat:
+      type: object
     AssistantToolDefinition:
       type: object
       required:

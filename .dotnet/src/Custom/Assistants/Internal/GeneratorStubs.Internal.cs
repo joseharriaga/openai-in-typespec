@@ -93,11 +93,6 @@ internal partial class UnknownAssistantToolDefinition { }
 [CodeGenModel("MessageDeltaContent")]
 internal partial class MessageDeltaContent { }
 
-
-
-
-
-
 [CodeGenModel("DeleteAssistantResponse")]
 internal partial class InternalDeleteAssistantResponse { private readonly object Object; }
 
@@ -112,6 +107,7 @@ internal partial class InternalCreateThreadAndRunRequest
 {
     public string Model { get; set; }
     public ToolResourceDefinitions ToolResources { get; set; }
+    public AssistantResponseFormat ResponseFormat { get; set; }
 }
 
 [CodeGenModel("MessageContentImageUrlObjectImageUrl")]

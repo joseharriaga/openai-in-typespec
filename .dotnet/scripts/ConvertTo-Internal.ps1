@@ -89,6 +89,8 @@ function Edit-GeneratedModels {
         "AssistantCreationOptions.Serialization.cs",
         "AssistantModificationOptions.cs",
         "AssistantModificationOptions.Serialization.cs",
+        # "AssistantResponseFormat.cs",
+        # "AssistantResponseFormat.Serialization.cs",
         "AssistantThread.cs",
         "AssistantThread.Serialization.cs",
         "CodeInterpreterToolDefinition.cs",

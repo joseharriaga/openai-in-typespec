@@ -95,30 +95,18 @@ public partial class AssistantClient
     }
 
     /// <summary>
-    /// Returns a list of <see cref="Assistant"/> instances matching the provided constraints. 
+    /// Returns a collection of <see cref="Assistant"/> instances.
     /// </summary>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
     /// <param name="resultOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync()
+    /// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
+    public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null)
     {
         async Task<ResultPage<Assistant>> firstPageFunc(int? pageSize)
         {
-            ClientResult result = await GetAssistantsAsync(limit: pageSize, order: null, after: null, before: null, options: null).ConfigureAwait(false);
+            ClientResult result = await GetAssistantsAsync(limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
             return new ResultPage<Assistant>(values.Data, values.HasMore ? values.LastId : null, response);
@@ -126,7 +114,7 @@ public partial class AssistantClient
 
         async Task<ResultPage<Assistant>> nextPageFunc(string? continuationToken, int? pageSize)
         {
-            ClientResult result = await GetAssistantsAsync(limit: pageSize, order: null, after: continuationToken, before: null, options: null).ConfigureAwait(false);
+            ClientResult result = await GetAssistantsAsync(limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
             return new ResultPage<Assistant>(values.Data, values.HasMore ? values.LastId : null, response);
@@ -135,31 +123,20 @@ public partial class AssistantClient
         return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
     }
 
+
     /// <summary>
-    /// Returns a list of <see cref="Assistant"/> instances matching the provided constraints. 
+    /// Returns a collection of <see cref="Assistant"/> instances.
     /// </summary>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
     /// <param name="resultOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
-    public virtual PageableCollection<Assistant> GetAssistants()
+    /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
+    public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null)
     {
         ResultPage<Assistant> firstPageFunc(int? pageSize)
         {
-            ClientResult result = GetAssistants(limit: pageSize, order: null, after: null, before: null, options: null);
+            ClientResult result = GetAssistants(limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null);
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
             return new ResultPage<Assistant>(values.Data, values.HasMore ? values.LastId : null, response);
@@ -167,7 +144,7 @@ public partial class AssistantClient
 
         ResultPage<Assistant> nextPageFunc(string? continuationToken, int? pageSize)
         {
-            ClientResult result = GetAssistants(limit: pageSize, order: null, after: continuationToken, before: null, options: null);
+            ClientResult result = GetAssistants(limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null);
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
             return new ResultPage<Assistant>(values.Data, values.HasMore ? values.LastId : null, response);
@@ -360,33 +337,16 @@ public partial class AssistantClient
     }
 
     /// <summary>
-    /// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
-    /// matching any optional constraints provided.
+    /// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
     /// </summary>
     /// <param name="threadId"> The ID of the thread to list messages from. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
     /// <param name="resultOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
-
-    public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(
-        string threadId,
-        ListOrder? resultOrder = null,
-        string previousId = null,
-        string subsequentId = null)
+    /// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
+    public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(string threadId,
+        ListOrder? resultOrder = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
@@ -410,27 +370,14 @@ public partial class AssistantClient
     }
 
     /// <summary>
-    /// Returns a list of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>,
-    /// matching any optional constraints provided.
+    /// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
     /// </summary>
     /// <param name="threadId"> The ID of the thread to list messages from. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
     /// <param name="resultOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
+    /// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
     public virtual PageableCollection<ThreadMessage> GetMessages(string threadId,
         ListOrder? resultOrder = null)
     {
@@ -718,27 +665,14 @@ public partial class AssistantClient
     }
 
     /// <summary>
-    /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
-    /// matching any optional constraints provided.
+    /// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
     /// </summary>
     /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
     /// <param name="resultOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
+    /// <returns> A collection of runs that can be enumerated using <c>await foreach</c>. </returns>
     public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(
         string threadId,
         ListOrder? resultOrder = default)
@@ -765,27 +699,14 @@ public partial class AssistantClient
     }
 
     /// <summary>
-    /// Returns a list of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>,
-    /// matching any optional constraints provided.
+    /// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
     /// </summary>
     /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
     /// <param name="resultOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
+    /// <returns> A collection of runs that can be enumerated using <c>foreach</c>. </returns>
     public virtual PageableCollection<ThreadRun> GetRuns(
         string threadId,
         ListOrder? resultOrder = default)
@@ -968,23 +889,11 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="threadId"> The ID of the thread associated with the run. </param>
     /// <param name="runId"> The ID of the run to list run steps from. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
     /// <param name="resultOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
+    /// <returns> A collection of run steps that can be enumerated using <c>await foreach</c>. </returns>
     public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(
         string threadId,
         string runId,
@@ -1017,23 +926,11 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="threadId"> The ID of the thread associated with the run. </param>
     /// <param name="runId"> The ID of the run to list run steps from. </param>
-    /// <param name="maxResults">
-    /// A <c>limit</c> for the number of results in the list. Valid in the range of 1 to 100 with
-    /// a default of 20 if not otherwise specified.
-    /// </param>
     /// <param name="resultOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
-    /// <param name="previousId">
-    /// A cursor for use in pagination. If provided, results in the list will begin immediately
-    /// <c>after</c> this ID according to the specified order.
-    /// </param>
-    /// <param name="subsequentId">
-    /// A cursor for use in pagination. If provided, results in the list will end just <c>before</c>
-    /// this ID according to the specified order.
-    /// </param>
-    /// <returns> A page of results matching any constraints provided. </returns>
+    /// <returns> A collection of run steps that can be enumerated using <c>foreach</c>. </returns>
     public virtual PageableCollection<RunStep> GetRunSteps(
         string threadId,
         string runId,

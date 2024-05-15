@@ -5,8 +5,9 @@ namespace OpenAI.Assistants;
 [CodeGenModel("MessageObject")]
 public partial class ThreadMessage
 {
-    private object Object;
+    private readonly object Object;
 
+    /// <inheritdoc cref="MessageRole"/>
     [CodeGenMember("Role")]
     public MessageRole Role { get; }
 

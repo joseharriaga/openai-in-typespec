@@ -3,8 +3,9 @@ function Edit-RunObjectSerialization {
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
 
     $targets = @(
-        "ThreadRun.Serialization.cs",
         "RunStep.Serialization.cs"
+        "ThreadMessage.Serialization.cs",
+        "ThreadRun.Serialization.cs"
     )
     foreach ($target in $targets) {
         $file = Get-ChildItem -Path $directory -Filter $target
@@ -26,28 +27,37 @@ function Remove-PseudoSuppressedTypes {
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
     $targets = @(
+        # "Unknown",
+        "AssistantApiResponseFormat",
         "AssistantObjectObject",
-        "ThreadObjectObject",
-        "MessageObjectObject",
-        "RunObjectObject",
-        "RunStepObjectObject",
-        "DeleteAssistantResponseObject",
-        "DeleteMessageResponseObject",
-        "ListMessagesResponseObject",
-        "ListRunsResponseObject",
-        "ListThreadsResponseObject",
-        "ListAssistantsResponseObject",
-        "ListRunStepsResponseObject",
-        "DeleteThreadResponseObject",
+        "AssistantResponseFormat",
         "AssistantToolsCodeType",
         "AssistantToolsFileSearchType",
         "AssistantToolsFunctionType",
-        "InternalThreadObjectToolResources",
-        "InternalMessageContentItemFileObjectImageFileDetail",
-        "ModifyAssistantRequestToolResources",
         "CreateThreadRequestToolResources",
+        "DeleteAssistantResponseObject",
+        "DeleteMessageResponseObject",
+        "DeleteThreadResponseObject",
+        "InternalMessageContentImageUrlObjectImageUrlDetail",
+        "InternalMessageContentItemFileObjectImageFileDetail",
+        "MessageDeltaContentImageFileObjectImageFileDetail",
+        "MessageDeltaContentImageUrlObjectImageUrlDetail",
+        "MessageDeltaObjectDeltaRole",
+        "InternalThreadObjectToolResources",
+        "ListBatchesResponseObject",
+        "ListAssistantsResponseObject",
+        "ListMessagesResponseObject",
+        "ListRunsResponseObject",
+        "ListRunStepsResponseObject",
+        "ListThreadsResponseObject",
+        "MessageContentImageUrlObjectImageUrlDetail",
+        "MessageObjectObject",
+        "ModifyAssistantRequestToolResources",
         "ModifyThreadRequestToolResources",
-        "MessageContentImageUrlObjectImageUrlDetail"
+        "RunObjectObject",
+        "RunStepObjectObject",
+        "ThreadObjectObject",
+        "MessageRequestContentTextObjectType"
     )
     foreach ($target in $targets) {
         Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {

@@ -55,3 +55,5 @@ alias CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelper = {
 model AssistantToolDefinition {
   type: string;
 }
+
+model AssistantResponseFormat {}

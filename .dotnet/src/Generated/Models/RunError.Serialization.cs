@@ -7,7 +7,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -64,7 +63,7 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            Models.RunErrorCode code = default;
+            RunErrorCode code = default;
             string message = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -72,7 +71,7 @@ namespace OpenAI.Assistants
             {
                 if (property.NameEquals("code"u8))
                 {
-                    code = new Models.RunErrorCode(property.Value.GetString());
+                    code = new RunErrorCode(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("message"u8))

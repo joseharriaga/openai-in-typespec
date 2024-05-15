@@ -6,12 +6,11 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
-    [PersistableModelProxy(typeof(InternalUnknownMessageDeltaContent))]
-    public partial class MessageDeltaContent : IJsonModel<MessageDeltaContent>
+    [PersistableModelProxy(typeof(UnknownMessageDeltaContent))]
+    internal partial class MessageDeltaContent : IJsonModel<MessageDeltaContent>
     {
         void IJsonModel<MessageDeltaContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -66,12 +65,12 @@ namespace OpenAI.Assistants
             {
                 switch (discriminator.GetString())
                 {
-                    case "image_file": return MessageImageFileDeltaContent.DeserializeMessageImageFileDeltaContent(element, options);
-                    case "image_url": return MessageImageUrlDeltaContent.DeserializeMessageImageUrlDeltaContent(element, options);
-                    case "text": return MessageTextDeltaContent.DeserializeMessageTextDeltaContent(element, options);
+                    case "image_file": return MessageDeltaContentImageFileObject.DeserializeMessageDeltaContentImageFileObject(element, options);
+                    case "image_url": return MessageDeltaContentImageUrlObject.DeserializeMessageDeltaContentImageUrlObject(element, options);
+                    case "text": return MessageDeltaContentTextObject.DeserializeMessageDeltaContentTextObject(element, options);
                 }
             }
-            return InternalUnknownMessageDeltaContent.DeserializeInternalUnknownMessageDeltaContent(element, options);
+            return UnknownMessageDeltaContent.DeserializeUnknownMessageDeltaContent(element, options);
         }
 
         BinaryData IPersistableModel<MessageDeltaContent>.Write(ModelReaderWriterOptions options)

@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Assistants;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class InternalRunObjectRequiredActionSubmitToolOutputs : IJsonModel<InternalRunObjectRequiredActionSubmitToolOutputs>
     {
@@ -67,17 +66,17 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            IReadOnlyList<RequiredFunctionToolCall> toolCalls = default;
+            IReadOnlyList<InternalRequiredFunctionToolCall> toolCalls = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("tool_calls"u8))
                 {
-                    List<RequiredFunctionToolCall> array = new List<RequiredFunctionToolCall>();
+                    List<InternalRequiredFunctionToolCall> array = new List<InternalRequiredFunctionToolCall>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(RequiredFunctionToolCall.DeserializeRequiredFunctionToolCall(item, options));
+                        array.Add(InternalRequiredFunctionToolCall.DeserializeInternalRequiredFunctionToolCall(item, options));
                     }
                     toolCalls = array;
                     continue;

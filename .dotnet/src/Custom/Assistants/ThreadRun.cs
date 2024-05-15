@@ -22,8 +22,12 @@ public partial class ThreadRun
     /// <see cref="Assistants.RequiredAction"/> is the abstract base type for all required actions. Its
     /// concrete type can be one of:
     /// <list type="bullet">
-    /// <item> <see cref="RequiredFunctionToolCall"/> </item> 
+    /// <item> <see cref="InternalRequiredFunctionToolCall"/> </item> 
     /// </list>
     /// </remarks>
     public IReadOnlyList<RequiredAction> RequiredActions => _internalRequiredAction?.SubmitToolOutputs?.ToolCalls ?? [];
+
+    /// <inheritdoc cref="AssistantResponseFormat"/>
+    [CodeGenMember("ResponseFormat")]
+    public AssistantResponseFormat ResponseFormat { get; init; }
 }

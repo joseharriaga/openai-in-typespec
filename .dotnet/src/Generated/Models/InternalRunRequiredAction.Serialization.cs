@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class InternalRunRequiredAction : IJsonModel<InternalRunRequiredAction>
     {
@@ -23,7 +22,7 @@ namespace OpenAI.Internal.Models
 
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
+            writer.WriteObjectValue<object>(Type, options);
             writer.WritePropertyName("submit_tool_outputs"u8);
             writer.WriteObjectValue(SubmitToolOutputs, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -64,7 +63,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            RunObjectRequiredActionType type = default;
+            object type = default;
             InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -72,7 +71,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("type"u8))
                 {
-                    type = new RunObjectRequiredActionType(property.Value.GetString());
+                    type = property.Value.GetObject();
                     continue;
                 }
                 if (property.NameEquals("submit_tool_outputs"u8))

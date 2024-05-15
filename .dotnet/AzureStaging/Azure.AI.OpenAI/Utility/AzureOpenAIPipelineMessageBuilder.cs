@@ -20,8 +20,7 @@ internal class AzureOpenAIPipelineMessageBuilder
     private readonly List<KeyValuePair<string, string>> _queryStringParameters = [];
     private string _method;
     private BinaryContent _content;
-    private string _contentTypeHeader;
-    private string _acceptHeader;
+    private readonly Dictionary<string, string> _headers = [];
     private RequestOptions _options;
     private bool? _bufferResponse;
 
@@ -68,15 +67,18 @@ internal class AzureOpenAIPipelineMessageBuilder
     public AzureOpenAIPipelineMessageBuilder WithContent(BinaryContent content, string contentType)
     {
         _content = content;
-        _contentTypeHeader = contentType;
+        _headers["Content-Type"] = contentType;
+        return this;
+    }
+
+    public AzureOpenAIPipelineMessageBuilder WithHeader(string name, string value)
+    {
+        _headers[name] = value;
         return this;
     }
 
     public AzureOpenAIPipelineMessageBuilder WithAccept(string acceptHeaderValue)
-    {
-        _acceptHeader = acceptHeaderValue;
-        return this;
-    }
+        => WithHeader("Accept", acceptHeaderValue);
 
     public AzureOpenAIPipelineMessageBuilder WithOptions(RequestOptions requestOptions)
     {
@@ -103,7 +105,10 @@ internal class AzureOpenAIPipelineMessageBuilder
         PipelineRequest request = message.Request;
         request.Method = _method;
         SetUri(request);
-        SetHeaders(request);
+        foreach ((string name, string value) in _headers)
+        {
+            request.Headers.Set(name, value);
+        }
         request.Content = _content;
         if (_options is not null)
         {
@@ -138,17 +143,5 @@ internal class AzureOpenAIPipelineMessageBuilder
         }
 
         request.Uri = uriBuilder.ToUri();
-    }
-
-    private void SetHeaders(PipelineRequest request)
-    {
-        if (!string.IsNullOrEmpty(_acceptHeader))
-        {
-            request.Headers.Set("Accept", _acceptHeader);
-        }
-        if (!string.IsNullOrEmpty(_contentTypeHeader))
-        {
-            request.Headers.Set("Content-Type", _contentTypeHeader);
-        }
     }
 }

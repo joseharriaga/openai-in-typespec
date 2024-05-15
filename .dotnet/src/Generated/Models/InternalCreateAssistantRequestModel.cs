@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The CreateAssistantRequestModel. </summary>
     internal readonly partial struct InternalCreateAssistantRequestModel : IEquatable<InternalCreateAssistantRequestModel>
@@ -19,6 +19,8 @@ namespace OpenAI.Internal.Models
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
+        private const string Gpt4oValue = "gpt-4o";
+        private const string Gpt4o20240513Value = "gpt-4o-2024-05-13";
         private const string Gpt4TurboValue = "gpt-4-turbo";
         private const string Gpt4Turbo20240409Value = "gpt-4-turbo-2024-04-09";
         private const string Gpt40125PreviewValue = "gpt-4-0125-preview";
@@ -38,6 +40,10 @@ namespace OpenAI.Internal.Models
         private const string Gpt35Turbo0125Value = "gpt-3.5-turbo-0125";
         private const string Gpt35Turbo16k0613Value = "gpt-3.5-turbo-16k-0613";
 
+        /// <summary> gpt-4o. </summary>
+        public static InternalCreateAssistantRequestModel Gpt4o { get; } = new InternalCreateAssistantRequestModel(Gpt4oValue);
+        /// <summary> gpt-4o-2024-05-13. </summary>
+        public static InternalCreateAssistantRequestModel Gpt4o20240513 { get; } = new InternalCreateAssistantRequestModel(Gpt4o20240513Value);
         /// <summary> gpt-4-turbo. </summary>
         public static InternalCreateAssistantRequestModel Gpt4Turbo { get; } = new InternalCreateAssistantRequestModel(Gpt4TurboValue);
         /// <summary> gpt-4-turbo-2024-04-09. </summary>

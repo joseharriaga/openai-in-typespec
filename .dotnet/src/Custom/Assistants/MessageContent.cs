@@ -1,27 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
 
 [CodeGenModel("MessageContent")]
 public abstract partial class MessageContent
 {
-    public static MessageImageFileContent FromImageFile(
+    /// <summary>
+    /// Creates a new <see cref="MessageContent"/> instance that refers to an uploaded image with a known file ID.
+    /// </summary>
+    /// <param name="imageFileId"></param>
+    /// <param name="detail"></param>
+    /// <returns></returns>
+    public static MessageContent FromImageFileId(
         string imageFileId,
         MessageImageDetail? detail = null)
-            => new(imageFileId, detail);
+            => new InternalMessageImageFileContent(imageFileId, detail);
 
-    public static MessageImageUrlContent FromImageUrl(Uri imageUri, MessageImageDetail? detail = null)
-        => new(imageUri, detail);
+    /// <summary>
+    /// Creates a new instance of <see cref="MessageContent"/> that refers to an image at a model-accessible
+    /// internet location.
+    /// </summary>
+    /// <param name="imageUri"></param>
+    /// <param name="detail"></param>
+    /// <returns></returns>
+    public static MessageContent FromImageUrl(Uri imageUri, MessageImageDetail? detail = null)
+        => new InternalMessageImageUrlContent(imageUri, detail);
 
-    public static RequestMessageTextContent FromText(string text)
-        => new(text);
+    /// <summary>
+    /// Creates a new <see cref="MessageContent"/> instance that encapsulates a simple string input.
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    public static MessageContent FromText(string text)
+        => new InternalRequestMessageTextContent(text);
 
-    public ResponseMessageTextContent AsText() => this as ResponseMessageTextContent;
+    public Uri ImageUrl => AsInternalImageUrl?.InternalUrl;
+    public string ImageFileId => AsInternalImageFile?.InternalFileId;
+    public MessageImageDetail? ImageDetail => AsInternalImageFile?.InternalDetail ?? AsInternalImageUrl?.InternalDetail;
+    public string Text => AsInternalRequestText?.InternalText ?? AsInternalResponseText?.InternalText;
+    public IReadOnlyList<TextAnnotation> TextAnnotations => AsInternalResponseText?.InternalAnnotations ?? [];
 
-    public MessageImageUrlContent AsImageUrl() => this as MessageImageUrlContent;
-
-    public MessageImageFileContent AsImageFile() => this as MessageImageFileContent;
-
+    private InternalMessageImageFileContent AsInternalImageFile => this as InternalMessageImageFileContent;
+    private InternalMessageImageUrlContent AsInternalImageUrl => this as InternalMessageImageUrlContent;
+    private InternalResponseMessageTextContent AsInternalResponseText => this as InternalResponseMessageTextContent;
+    private InternalRequestMessageTextContent AsInternalRequestText => this as InternalRequestMessageTextContent;
 
     /// <summary>
     /// The implicit conversion operator that infers an equivalent <see cref="MessageContent"/> 
@@ -29,5 +52,4 @@ public abstract partial class MessageContent
     /// </summary>
     /// <param name="value"> The text for the message content. </param>
     public static implicit operator MessageContent(string value) => FromText(value);
-
 }

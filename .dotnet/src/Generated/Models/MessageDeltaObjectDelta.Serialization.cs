@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Assistants;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class MessageDeltaObjectDelta : IJsonModel<MessageDeltaObjectDelta>
     {
@@ -22,11 +21,8 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Role))
-            {
-                writer.WritePropertyName("role"u8);
-                writer.WriteStringValue(Role);
-            }
+            writer.WritePropertyName("role"u8);
+            writer.WriteStringValue(Role.ToSerialString());
             if (Optional.IsCollectionDefined(Content))
             {
                 writer.WritePropertyName("content"u8);
@@ -75,7 +71,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            string role = default;
+            MessageRole role = default;
             IReadOnlyList<MessageDeltaContent> content = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -83,7 +79,11 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("role"u8))
                 {
-                    role = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    role = property.Value.GetString().ToMessageRole();
                     continue;
                 }
                 if (property.NameEquals("content"u8))

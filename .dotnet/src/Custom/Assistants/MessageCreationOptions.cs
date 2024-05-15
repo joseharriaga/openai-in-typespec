@@ -8,6 +8,7 @@ namespace OpenAI.Assistants;
 /// </summary>
 [CodeGenModel("CreateMessageRequest")]
 [CodeGenSuppress("MessageCreationOptions", typeof(MessageRole), typeof(IEnumerable<MessageContent>))]
+[CodeGenSerialization(nameof(Content), SerializationValueHook=nameof(SerializeContent))]
 public partial class MessageCreationOptions
 {
     // CUSTOM: content is hidden to allow the promotion of required request information into top-level

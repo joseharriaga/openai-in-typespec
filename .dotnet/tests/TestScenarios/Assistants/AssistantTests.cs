@@ -4,6 +4,8 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -97,8 +99,8 @@ public partial class AssistantTests
         Validate(message);
         Assert.That(message.CreatedAt, Is.GreaterThan(s_2024));
         Assert.That(message.Content?.Count, Is.EqualTo(1));
-        Assert.That(message.Content[0], Is.InstanceOf<ResponseMessageTextContent>());
-        Assert.That(message.Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
+        Assert.That(message.Content[0], Is.Not.Null);
+        Assert.That(message.Content[0].Text, Is.EqualTo("Hello, world!"));
         bool deleted = client.DeleteMessage(message);
         Assert.That(deleted, Is.True);
         _messagesToDelete.Remove(message);
@@ -160,12 +162,12 @@ public partial class AssistantTests
         Assert.That(messages.Count, Is.EqualTo(2));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.User));
         Assert.That(messages.First().Content?.Count, Is.EqualTo(1));
-        Assert.That(messages.First().Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
+        Assert.That(messagePage[0].Content[0].AsText().Text, Is.EqualTo("Hello, world!"));
         Assert.That(messages.ElementAt(1).Content?.Count, Is.EqualTo(2));
-        Assert.That(messages.ElementAt(1).Content[0], Is.InstanceOf<ResponseMessageTextContent>());
-        Assert.That(messages.ElementAt(1).Content[0].AsText().Text, Is.EqualTo("Can you describe this image for me?"));
-        Assert.That(messages.ElementAt(1).Content[1], Is.InstanceOf<MessageImageUrlContent>());
-        Assert.That(messages.ElementAt(1).Content[1].AsImageUrl().Url.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
+        Assert.That(messagePage[1].Content[0], Is.InstanceOf<ResponseMessageTextContent>());
+        Assert.That(messagePage[1].Content[0].AsText().Text, Is.EqualTo("Can you describe this image for me?"));
+        Assert.That(messagePage[1].Content[1], Is.InstanceOf<MessageImageUrlContent>());
+        Assert.That(messagePage[1].Content[1].AsImageUrl().Url.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
     }
 
     [Test]
@@ -317,12 +319,11 @@ public partial class AssistantTests
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.RequiresAction));
         Assert.That(run.RequiredActions?.Count, Is.EqualTo(1));
-        RequiredFunctionToolCall requiredFunctionToolCall = run.RequiredActions[0] as RequiredFunctionToolCall;
-        Assert.That(requiredFunctionToolCall?.Id, Is.Not.Null.Or.Empty);
-        Assert.That(requiredFunctionToolCall.FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
-        Assert.That(requiredFunctionToolCall.FunctionArguments, Is.Not.Null.Or.Empty);
+        Assert.That(run.RequiredActions[0].ToolCallId, Is.Not.Null.Or.Empty);
+        Assert.That(run.RequiredActions[0].FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
+        Assert.That(run.RequiredActions[0].FunctionArguments, Is.Not.Null.Or.Empty);
 
-        run = client.SubmitToolOutputsToRun(run, [new(requiredFunctionToolCall.Id, "tacos")]);
+        run = client.SubmitToolOutputsToRun(run, [new(run.RequiredActions[0].ToolCallId, "tacos")]);
         Assert.That(run.Status.IsTerminal, Is.False);
 
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)

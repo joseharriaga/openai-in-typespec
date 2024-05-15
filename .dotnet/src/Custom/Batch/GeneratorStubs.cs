@@ -22,10 +22,7 @@ internal readonly partial struct InternalBatchErrorsObject {}
 internal readonly partial struct InternalBatchRequestCounts {}
 
 [CodeGenModel("ListBatchesResponse")]
-internal partial class InternalListBatchesResponse {}
-
-[CodeGenModel("ListBatchesResponseObject")]
-internal readonly partial struct InternalListBatchesResponseObject {}
+internal partial class InternalListBatchesResponse { private readonly object Object; }
 
 [CodeGenModel("CreateBatchRequestCompletionWindow")]
 internal readonly partial struct InternalBatchCompletionTimeframe {}

@@ -11,7 +11,7 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 @doc("""
-Specifies the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
 Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
 
@@ -38,6 +38,8 @@ model CreateAssistantRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
+    | "gpt-4o"
+    | "gpt-4o-2024-05-13"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"

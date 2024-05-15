@@ -1,6 +1,14 @@
-﻿using OpenAI.Internal.Models;
+﻿namespace OpenAI.Assistants;
 
-namespace OpenAI.Assistants;
+/*
+ * This file stubs and performs minimal customization to generated public types for the OpenAI.Assistants namespace
+ * that are not otherwise attributed elsewhere.
+ */
+
+/*
+ * This file stubs and performs minimal customization to generated public types for the OpenAI.Assistants namespace
+ * that are not otherwise attributed elsewhere.
+ */
 
 [CodeGenModel("CreateAssistantRequestToolResources")]
 public partial class ToolResourceDefinitions { }
@@ -41,30 +49,10 @@ public readonly partial struct MessageFailureReason { }
 [CodeGenModel("RunCompletionUsage")]
 public partial class RunTokenUsage { }
 
-[CodeGenModel("MessageTextContentAnnotation")]
-public partial class MessageTextContentAnnotation { }
-
-[CodeGenModel("MessageDeltaTextContentAnnotation")]
-public partial class MessageDeltaTextContentAnnotation { }
-
-[CodeGenModel("MessageDeltaContentTextAnnotationsFileCitationObject")]
-public partial class FileCitationTextDeltaContentAnnotation
-{
-    [CodeGenMember("FileCitation")]
-    internal InternalMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation InternalFileCitation { get; set; }
-}
-
-[CodeGenModel("MessageDeltaContentTextAnnotationsFilePathObject")]
-public partial class FilePathTextDeltaContentAnnotation
-{
-    [CodeGenMember("FilePath")]
-    internal InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath InternalFilePath { get; set; }
-}
-
 [CodeGenModel("RunObjectLastError")]
 public partial class RunError { }
 
-[CodeGenModel("RunObjectLastErrorCode")]
+[CodeGenModel("RunErrorCode")]
 public readonly partial struct RunErrorCode { }
 
 [CodeGenModel("RunObjectIncompleteDetails")]
@@ -73,7 +61,7 @@ public partial class RunIncompleteDetails { }
 [CodeGenModel("TruncationObject")]
 public partial class RunTruncationStrategy { }
 
-[CodeGenModel("TruncationObjectType")]
+[CodeGenModel("RunTruncationStrategyType")]
 public readonly partial struct RunTruncationStrategyType { }
 
 [CodeGenModel("RunIncompleteDetailsReason")]
@@ -88,23 +76,11 @@ public readonly partial struct RunStepStatus { }
 [CodeGenModel("RunStepObjectLastError")]
 public partial class RunStepError { }
 
-[CodeGenModel("RunStepObjectLastErrorCode")]
+[CodeGenModel("RunStepErrorCode")]
 public readonly partial struct RunStepErrorCode { }
 
 [CodeGenModel("RunStepCompletionUsage")]
 public partial class RunStepTokenUsage { }
 
-[CodeGenModel("RunStepObjectStepDetails")]
-public abstract partial class RunStepDetails { }
-
-[CodeGenModel("RunStepDetailsToolCallsObjectToolCallsObject")]
-public partial class RunStepToolCallDetails { }
-
-[CodeGenModel("RunStepDetailsToolCallsFileSearchObject")]
-public partial class RunStepFileSearchToolCallDetails { }
-
 [CodeGenModel("RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]
 public partial class RunStepCodeInterpreterOutput { }
-
-[CodeGenModel("RunStepDetailsToolCallsCodeOutputLogsObject")]
-public partial class RunStepCodeInterpreterLogOutput { }

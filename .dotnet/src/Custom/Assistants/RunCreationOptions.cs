@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
@@ -7,11 +8,19 @@ namespace OpenAI.Assistants;
 /// </summary>
 [CodeGenModel("CreateRunRequest")]
 [CodeGenSuppress("RunCreationOptions", typeof(string))]
+// [CodeGenSerialization(nameof(ResponseFormat), SerializationValueHook=nameof(SerializeResponseValue), DeserializationValueHook=nameof(DeserializeResponseValue))]
 public partial class RunCreationOptions
 {
-    // CUSTOM: assistantId visibility is hidden so that it can be promoted to a required method parameter
+    // CUSTOM: assistant_id/stream visibility hidden so that they can be promoted to required method parameters
     [CodeGenMember("AssistantId")]
     internal string AssistantId { get; set; }
+
+    [CodeGenMember("Stream")]
+    internal bool? Stream { get; set; }
+
+    /// <inheritdoc cref="AssistantResponseFormat"/>
+    [CodeGenMember("ResponseFormat")]
+    public AssistantResponseFormat ResponseFormat { get; init; }
 
     /// <summary>
     /// A run-specific model name that will override the assistant's defined model. If not provided, the assistant's
@@ -63,4 +72,8 @@ public partial class RunCreationOptions
         Tools = new ChangeTrackingList<ToolDefinition>();
         Metadata = new ChangeTrackingDictionary<string, string>();
     }
+
+    private void SerializeResponseValue(Utf8JsonWriter writer) => writer.WriteObjectValue(ResponseFormat);
+    private void DeserializeResponseValue(JsonProperty property, ref AssistantResponseFormat responseFormat)
+        => responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value);
 }

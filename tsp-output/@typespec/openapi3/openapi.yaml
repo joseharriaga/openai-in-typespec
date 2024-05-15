@@ -2029,6 +2029,8 @@ components:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
       description: Represents an `assistant` that can call the model and use tools.
+    AssistantResponseFormat:
+      type: object
     AssistantToolDefinition:
       type: object
       required:
@@ -2100,7 +2102,7 @@ components:
             - auto
         - $ref: '#/components/schemas/AssistantsApiResponseFormat'
       description: |-
-        Specifies the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+        Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
         Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
 
@@ -2292,7 +2294,7 @@ components:
         url:
           type: string
           format: uri
-          description: The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions` and `/v1/embeddings` are supported.
+          description: The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported.
       description: The per-line object of the batch input file
     BatchRequestOutput:
       type: object
@@ -2777,6 +2779,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -2986,6 +2990,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4260,6 +4266,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4431,6 +4439,8 @@ components:
             - type: string
             - type: string
               enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -5674,7 +5684,7 @@ components:
           format: int32
           minimum: 0
       allOf:
-        - $ref: '#/components/schemas/MessageTextContentAnnotation'
+        - $ref: '#/components/schemas/MessageContentTextObjectAnnotation'
       description: A citation within the message that points to a specific quote from a specific File associated with the assistant or the message. Generated when the assistant uses the "file_search" tool to search files.
     MessageContentTextAnnotationsFilePathObject:
       type: object
@@ -5710,7 +5720,7 @@ components:
           format: int32
           minimum: 0
       allOf:
-        - $ref: '#/components/schemas/MessageTextContentAnnotation'
+        - $ref: '#/components/schemas/MessageContentTextObjectAnnotation'
       description: A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file.
     MessageContentTextObject:
       type: object
@@ -5732,7 +5742,7 @@ components:
             annotations:
               type: array
               items:
-                $ref: '#/components/schemas/MessageTextContentAnnotation'
+                $ref: '#/components/schemas/MessageContentTextObjectAnnotation'
               x-oaiExpandable: true
           required:
             - value
@@ -5740,6 +5750,19 @@ components:
       allOf:
         - $ref: '#/components/schemas/MessageContent'
       description: The text content that is part of a message.
+    MessageContentTextObjectAnnotation:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the content item.
+      discriminator:
+        propertyName: type
+        mapping:
+          file_citation: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
+          file_path: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
     MessageDeltaContent:
       type: object
       required:
@@ -5754,7 +5777,7 @@ components:
           image_file: '#/components/schemas/MessageDeltaContentImageFileObject'
           image_url: '#/components/schemas/MessageDeltaContentImageUrlObject'
           text: '#/components/schemas/MessageDeltaContentTextObject'
-      description: Represents a single piece of incremental content in an Assistants API streaming respnse.
+      description: Represents a single piece of incremental content in an Assistants API streaming response.
     MessageDeltaContentImageFileObject:
       type: object
       required:
@@ -6100,19 +6123,6 @@ components:
       allOf:
         - $ref: '#/components/schemas/MessageContent'
       description: The text content that is part of a message.
-    MessageTextContentAnnotation:
-      type: object
-      required:
-        - type
-      properties:
-        type:
-          type: string
-          description: The discriminated type identifier for the content item.
-      discriminator:
-        propertyName: type
-        mapping:
-          file_citation: '#/components/schemas/MessageContentTextAnnotationsFileCitationObject'
-          file_path: '#/components/schemas/MessageContentTextAnnotationsFilePathObject'
     Model:
       type: object
       required:
@@ -6405,9 +6415,9 @@ components:
             - cancelled
             - failed
             - completed
-            - expired
             - incomplete
-          description: The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `expired`, or `incomplete`.
+            - expired
+          description: The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
         required_action:
           type: object
           properties:

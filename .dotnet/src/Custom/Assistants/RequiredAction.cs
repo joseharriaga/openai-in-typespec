@@ -12,10 +12,19 @@ namespace OpenAI.Assistants;
 /// <see cref="RequiredAction"/> is the abstract base type for all required actions. Its
 /// concrete type can be one of:
 /// <list type="bullet">
-/// <item> <see cref="RequiredFunctionToolCall"/> </item> 
+/// <item> <see cref="InternalRequiredFunctionToolCall"/> </item> 
 /// </list>
 /// </remarks>
 public abstract partial class RequiredAction
 {
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.InternalName"/>
+    public string FunctionName => AsFunction?.InternalName;
 
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.InternalArguments"/>
+    public string FunctionArguments => AsFunction?.InternalArguments;
+
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.Id"/>
+    public string ToolCallId => AsFunction?.Id;
+
+    private InternalRequiredFunctionToolCall AsFunction => this as InternalRequiredFunctionToolCall;
 }

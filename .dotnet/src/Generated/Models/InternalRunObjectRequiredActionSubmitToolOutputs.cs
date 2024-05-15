@@ -5,9 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Assistants;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The RunObjectRequiredActionSubmitToolOutputs. </summary>
     internal partial class InternalRunObjectRequiredActionSubmitToolOutputs
@@ -47,7 +46,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="InternalRunObjectRequiredActionSubmitToolOutputs"/>. </summary>
         /// <param name="toolCalls"> A list of the relevant tool calls. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="toolCalls"/> is null. </exception>
-        internal InternalRunObjectRequiredActionSubmitToolOutputs(IEnumerable<RequiredFunctionToolCall> toolCalls)
+        internal InternalRunObjectRequiredActionSubmitToolOutputs(IEnumerable<InternalRequiredFunctionToolCall> toolCalls)
         {
             Argument.AssertNotNull(toolCalls, nameof(toolCalls));
 
@@ -57,7 +56,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="InternalRunObjectRequiredActionSubmitToolOutputs"/>. </summary>
         /// <param name="toolCalls"> A list of the relevant tool calls. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalRunObjectRequiredActionSubmitToolOutputs(IReadOnlyList<RequiredFunctionToolCall> toolCalls, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRunObjectRequiredActionSubmitToolOutputs(IReadOnlyList<InternalRequiredFunctionToolCall> toolCalls, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             ToolCalls = toolCalls;
             _serializedAdditionalRawData = serializedAdditionalRawData;
@@ -69,6 +68,6 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> A list of the relevant tool calls. </summary>
-        public IReadOnlyList<RequiredFunctionToolCall> ToolCalls { get; }
+        public IReadOnlyList<InternalRequiredFunctionToolCall> ToolCalls { get; }
     }
 }

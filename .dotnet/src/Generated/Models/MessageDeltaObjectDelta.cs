@@ -4,9 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Assistants;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The MessageDeltaObjectDelta. </summary>
     internal partial class MessageDeltaObjectDelta
@@ -54,22 +53,19 @@ namespace OpenAI.Internal.Models
         /// <param name="content">
         /// The content of the message in array of text and/or images.
         /// Please note <see cref="MessageDeltaContent"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="MessageImageFileDeltaContent"/>, <see cref="MessageImageUrlDeltaContent"/> and <see cref="MessageTextDeltaContent"/>.
+        /// The available derived classes include <see cref="MessageDeltaContentImageFileObject"/>, <see cref="MessageDeltaContentImageUrlObject"/> and <see cref="MessageDeltaContentTextObject"/>.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageDeltaObjectDelta(string role, IReadOnlyList<MessageDeltaContent> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeltaObjectDelta(MessageRole role, IReadOnlyList<MessageDeltaContent> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Role = role;
             Content = content;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> The entity that produced the message. One of `user` or `assistant`. </summary>
-        public string Role { get; }
         /// <summary>
         /// The content of the message in array of text and/or images.
         /// Please note <see cref="MessageDeltaContent"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="MessageImageFileDeltaContent"/>, <see cref="MessageImageUrlDeltaContent"/> and <see cref="MessageTextDeltaContent"/>.
+        /// The available derived classes include <see cref="MessageDeltaContentImageFileObject"/>, <see cref="MessageDeltaContentImageUrlObject"/> and <see cref="MessageDeltaContentTextObject"/>.
         /// </summary>
         public IReadOnlyList<MessageDeltaContent> Content { get; }
     }

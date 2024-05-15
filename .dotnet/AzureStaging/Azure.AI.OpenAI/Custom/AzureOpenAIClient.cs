@@ -62,7 +62,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <param name="options"> Additional options for the client. </param>
     public AzureOpenAIClient(Uri endpoint, ApiKeyCredential credential, AzureOpenAIClientOptions options = null)
         : this(
-            CreatePipeline(GetApiKey(credential, requireExplicitCredential: true)),
+            CreatePipeline(GetApiKey(credential, requireExplicitCredential: true), options),
             GetEndpoint(endpoint, requireExplicitEndpoint: true),
             options)
     {}
@@ -233,14 +233,13 @@ public partial class AzureOpenAIClient : OpenAIClient
     public override VectorStoreClient GetVectorStoreClient()
         => new AzureVectorStoreClient(Pipeline, Endpoint, _options);
 
-    private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, OpenAIClientOptions options = null)
+    private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, OpenAIClientOptions options)
         => ClientPipeline.Create(
             options ?? new(),
             perCallPolicies: [],
             perTryPolicies:
             [
                 authenticationPolicy,
-                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set(s_OpenAIBetaFeatureHeader, s_OpenAIBetaAssistantsV1HeaderValue)),
             ],
             beforeTransportPolicies: []);
 
@@ -310,8 +309,6 @@ public partial class AzureOpenAIClient : OpenAIClient
         }
     }
 
-    private static readonly string s_OpenAIBetaFeatureHeader = "OpenAI-Beta";
-    private static readonly string s_OpenAIBetaAssistantsV1HeaderValue = "assistants=v1";
     private static readonly string s_aoaiEndpointEnvironmentVariable = "AZURE_OPENAI_ENDPOINT";
     private static readonly string s_aoaiApiKeyEnvironmentVariable = "AZURE_OPENAI_API_KEY";
     private static PipelineMessageClassifier _pipelineMessageClassifier200;

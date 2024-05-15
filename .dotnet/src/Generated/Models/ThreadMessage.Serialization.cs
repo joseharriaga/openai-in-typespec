@@ -212,7 +212,9 @@ namespace OpenAI.Assistants
                         completedAt = null;
                         continue;
                     }
-                    completedAt = property.Value.GetDateTimeOffset("O");
+                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
+                    // completedAt = property.Value.GetDateTimeOffset("O");
+                    completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
                 if (property.NameEquals("incomplete_at"u8))

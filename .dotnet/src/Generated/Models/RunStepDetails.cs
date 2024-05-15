@@ -9,8 +9,7 @@ namespace OpenAI.Assistants
 {
     /// <summary>
     /// Abstractly represents a run step details object.
-    /// Please note <see cref="RunStepDetails"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-    /// The available derived classes include <see cref="RunStepMessageCreationDetails"/> and <see cref="RunStepToolCallDetailsCollection"/>.
+    /// Please note <see cref="RunStepDetails"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
     /// </summary>
     public abstract partial class RunStepDetails
     {

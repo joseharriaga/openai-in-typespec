@@ -6,11 +6,10 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants
 {
-    [PersistableModelProxy(typeof(InternalUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject))]
+    [PersistableModelProxy(typeof(UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject))]
     public partial class RunStepCodeInterpreterOutput : IJsonModel<RunStepCodeInterpreterOutput>
     {
         void IJsonModel<RunStepCodeInterpreterOutput>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -66,11 +65,11 @@ namespace OpenAI.Assistants
             {
                 switch (discriminator.GetString())
                 {
-                    case "image": return RunStepCodeInterpreterImageOutput.DeserializeRunStepCodeInterpreterImageOutput(element, options);
-                    case "logs": return RunStepCodeInterpreterLogOutput.DeserializeRunStepCodeInterpreterLogOutput(element, options);
+                    case "image": return InternalRunStepCodeInterpreterImageOutput.DeserializeInternalRunStepCodeInterpreterImageOutput(element, options);
+                    case "logs": return InternalRunStepDetailsToolCallsCodeOutputLogsObject.DeserializeInternalRunStepDetailsToolCallsCodeOutputLogsObject(element, options);
                 }
             }
-            return InternalUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject.DeserializeInternalUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject(element, options);
+            return UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject.DeserializeUnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject(element, options);
         }
 
         BinaryData IPersistableModel<RunStepCodeInterpreterOutput>.Write(ModelReaderWriterOptions options)

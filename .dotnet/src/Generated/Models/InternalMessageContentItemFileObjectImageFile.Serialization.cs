@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentItemFileObjectImageFile : IJsonModel<InternalMessageContentItemFileObjectImageFile>
     {
@@ -23,10 +23,10 @@ namespace OpenAI.Internal.Models
             writer.WriteStartObject();
             writer.WritePropertyName("file_id"u8);
             writer.WriteStringValue(FileId);
-            if (Optional.IsDefined(InternalDetail))
+            if (Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
-                writer.WriteStringValue(InternalDetail);
+                writer.WriteStringValue(Detail);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {

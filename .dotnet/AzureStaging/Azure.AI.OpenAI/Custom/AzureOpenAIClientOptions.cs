@@ -10,14 +10,7 @@ namespace Azure.AI.OpenAI;
 /// </summary>
 public partial class AzureOpenAIClientOptions : OpenAIClientOptions
 {
-    internal string Version
-    {
-        get
-        {
-            AssertNotFrozen();
-            return _version;
-        }
-    }
+    internal string Version => _version;
     private readonly string _version;
 
     /// <summary>
@@ -31,6 +24,7 @@ public partial class AzureOpenAIClientOptions : OpenAIClientOptions
         _version = version switch
         {
             ServiceVersion.V2024_04_01_Preview => "2024-04-01-preview",
+            ServiceVersion.V2024_05_01_Preview => "2024-05-01-preview",
             _ => throw new NotSupportedException()
         };
     }
@@ -40,7 +34,8 @@ public partial class AzureOpenAIClientOptions : OpenAIClientOptions
     {
         /// <summary> Service version "2024-04-01-preview". </summary>
         V2024_04_01_Preview = 7,
+        V2024_05_01_Preview = 8,
     }
 
-    private const ServiceVersion LatestVersion = ServiceVersion.V2024_04_01_Preview;
+    private const ServiceVersion LatestVersion = ServiceVersion.V2024_05_01_Preview;
 }

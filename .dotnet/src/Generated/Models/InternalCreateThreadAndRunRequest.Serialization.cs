@@ -74,7 +74,7 @@ namespace OpenAI.Assistants
                 if (ToolResources != null)
                 {
                     writer.WritePropertyName("tool_resources"u8);
-                    writer.WriteObjectValue<ToolResourceDefinitions>(ToolResources, options);
+                    writer.WriteObjectValue<ToolResources>(ToolResources, options);
                 }
                 else
                 {
@@ -176,14 +176,7 @@ namespace OpenAI.Assistants
                 if (ToolChoice != null)
                 {
                     writer.WritePropertyName("tool_choice"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(ToolChoice);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(ToolChoice))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteObjectValue<ToolConstraint>(ToolChoice, options);
                 }
                 else
                 {
@@ -245,7 +238,7 @@ namespace OpenAI.Assistants
             string model = default;
             string instructions = default;
             IList<ToolDefinition> tools = default;
-            ToolResourceDefinitions toolResources = default;
+            ToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
@@ -253,7 +246,7 @@ namespace OpenAI.Assistants
             int? maxPromptTokens = default;
             int? maxCompletionTokens = default;
             RunTruncationStrategy truncationStrategy = default;
-            BinaryData toolChoice = default;
+            ToolConstraint toolChoice = default;
             AssistantResponseFormat responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -314,7 +307,7 @@ namespace OpenAI.Assistants
                         toolResources = null;
                         continue;
                     }
-                    toolResources = ToolResourceDefinitions.DeserializeToolResourceDefinitions(property.Value, options);
+                    toolResources = Assistants.ToolResources.DeserializeToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -398,7 +391,7 @@ namespace OpenAI.Assistants
                         toolChoice = null;
                         continue;
                     }
-                    toolChoice = BinaryData.FromString(property.Value.GetRawText());
+                    toolChoice = ToolConstraint.DeserializeToolConstraint(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))

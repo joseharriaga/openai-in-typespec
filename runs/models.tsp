@@ -647,14 +647,17 @@ model RunStepDeltaObject {
 
   /** The delta containing the fields that have changed on the run step. */
   delta: {
+    // Tool customization: replace unioned types with a custom, common base
     /** The details of the run step. */
     @extension("x-oaiExpandable", true)
-    step_details?: RunStepDeltaStepDetailsMessageCreationObject | RunStepDeltaStepDetailsToolCallsObject;
+    step_details?: RunStepDeltaStepDetails;
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the message creation by the run step. */
-model RunStepDeltaStepDetailsMessageCreationObject {
+model RunStepDeltaStepDetailsMessageCreationObject
+  extends RunStepDeltaStepDetails {
   @doc("""
   Always `message_creation`.
   """)
@@ -666,22 +669,26 @@ model RunStepDeltaStepDetailsMessageCreationObject {
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the tool call. */
-model RunStepDeltaStepDetailsToolCallsObject {
+model RunStepDeltaStepDetailsToolCallsObject extends RunStepDeltaStepDetails {
   @doc("""
   Always `tool_calls`.
   """)
   type: "tool_calls";
 
+  // Tool customization: replace unioned types with a custom, common base
   @doc("""
   An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
   """)
   @extension("x-oaiExpandable", true)
-  tool_calls?: (RunStepDeltaStepDetailsToolCallsCodeObject | RunStepDeltaStepDetailsToolCallsFileSearchObject | RunStepDeltaStepDetailsToolCallsFunctionObject)[];
+  tool_calls?: RunStepDeltaStepDetailsToolCallsObjectToolCallsObject[];
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Details of the Code Interpreter tool call the run step was involved in. */
-model RunStepDeltaStepDetailsToolCallsCodeObject {
+model RunStepDeltaStepDetailsToolCallsCodeObject
+  extends RunStepDeltaStepDetailsToolCallsObjectToolCallsObject {
   /** The index of the tool call in the tool calls array. */
   index: int32;
 
@@ -698,16 +705,19 @@ model RunStepDeltaStepDetailsToolCallsCodeObject {
     /** The input to the Code Interpreter tool call. */
     input?: string;
 
+    // Tool customization: replace unioned types with a custom, common base
     @doc("""
     The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
     """)
     @extension("x-oaiExpandable", true)
-    outputs?: (RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject | RunStepDeltaStepDetailsToolCallsCodeOutputImageObject)[];
+    outputs?: RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject[];
   };
 }
 
+// Tool customization: apply custom, common base type to union items
 /** Text output from the Code Interpreter tool call as part of a run step. */
-model RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject {
+model RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject
+  extends RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject {
   /** The index of the output in the outputs array. */
   index: int32;
 
@@ -720,7 +730,9 @@ model RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject {
   logs?: string;
 }
 
-model RunStepDeltaStepDetailsToolCallsCodeOutputImageObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDeltaStepDetailsToolCallsCodeOutputImageObject
+  extends RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject {
   /** The index of the output in the outputs array. */
   index: int32;
 
@@ -735,7 +747,9 @@ model RunStepDeltaStepDetailsToolCallsCodeOutputImageObject {
   };
 }
 
-model RunStepDeltaStepDetailsToolCallsFileSearchObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDeltaStepDetailsToolCallsFileSearchObject
+  extends RunStepDeltaStepDetailsToolCallsObjectToolCallsObject {
   /** The index of the tool call in the tool calls array. */
   index: int32;
 
@@ -752,7 +766,9 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject {
   file_search: Record<string>;
 }
 
-model RunStepDeltaStepDetailsToolCallsFunctionObject {
+// Tool customization: apply custom, common base type to union items
+model RunStepDeltaStepDetailsToolCallsFunctionObject
+  extends RunStepDeltaStepDetailsToolCallsObjectToolCallsObject {
   /** The index of the tool call in the tool calls array. */
   index: int32;
 

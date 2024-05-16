@@ -39,11 +39,10 @@ public partial class VectorStoreClient
     /// <summary>
     /// Initializes a new instance of <see cref="VectorStoreClient"/> that will use an API key when authenticating.
     /// </summary>
-    /// <param name="model"> The model name to use for moderation operations. </param>
     /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
     /// <param name="options"> Additional options to customize the client. </param>
     /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
-    public VectorStoreClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null)
+    public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
         : this(
               OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
               OpenAIClient.GetEndpoint(options),
@@ -58,10 +57,9 @@ public partial class VectorStoreClient
     /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
     /// <see cref="VectorStoreClient(string, ApiKeyCredential,OpenAIClientOptions)"/>.
     /// </remarks>
-    /// <param name="model"> The model name to use for moderation operations. </param>
     /// <param name="options"> Additional options to customize the client. </param>
     /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
-    public VectorStoreClient(string model, OpenAIClientOptions options = null)
+    public VectorStoreClient(OpenAIClientOptions options = null)
         : this(
               OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
               OpenAIClient.GetEndpoint(options),

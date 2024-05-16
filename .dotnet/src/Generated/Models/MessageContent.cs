@@ -43,11 +43,6 @@ namespace OpenAI.Assistants
         private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="MessageContent"/>. </summary>
-        public MessageContent()
-        {
-        }
-
-        /// <summary> Initializes a new instance of <see cref="MessageContent"/>. </summary>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal MessageContent(IDictionary<string, BinaryData> serializedAdditionalRawData)
         {

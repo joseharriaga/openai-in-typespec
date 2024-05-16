@@ -57,35 +57,6 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.ToolResources"/>. </summary>
-        /// <param name="codeInterpreter"></param>
-        /// <param name="fileSearch"></param>
-        /// <returns> A new <see cref="Assistants.ToolResources"/> instance for mocking. </returns>
-        public static ToolResources ToolResources(CodeInterpreterToolResources codeInterpreter = null, FileSearchToolResources fileSearch = null)
-        {
-            return new ToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Assistants.CodeInterpreterToolResources"/>. </summary>
-        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool. </param>
-        /// <returns> A new <see cref="Assistants.CodeInterpreterToolResources"/> instance for mocking. </returns>
-        public static CodeInterpreterToolResources CodeInterpreterToolResources(IEnumerable<string> fileIds = null)
-        {
-            fileIds ??= new List<string>();
-
-            return new CodeInterpreterToolResources(fileIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Assistants.FileSearchToolResources"/>. </summary>
-        /// <param name="vectorStoreIds"> The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. </param>
-        /// <returns> A new <see cref="Assistants.FileSearchToolResources"/> instance for mocking. </returns>
-        public static FileSearchToolResources FileSearchToolResources(IEnumerable<string> vectorStoreIds = null)
-        {
-            vectorStoreIds ??= new List<string>();
-
-            return new FileSearchToolResources(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestSystemMessage"/>. </summary>
         /// <param name="content"> The contents of the system message. </param>
         /// <param name="role"> The role of the messages author, in this case `system`. </param>
@@ -460,6 +431,35 @@ namespace OpenAI
         public static RunStepTokenUsage RunStepTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
             return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResources"/>. </summary>
+        /// <param name="codeInterpreter"></param>
+        /// <param name="fileSearch"></param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResources"/> instance for mocking. </returns>
+        public static ThreadObjectToolResources ThreadObjectToolResources(ThreadObjectToolResourcesCodeInterpreter codeInterpreter = null, ThreadObjectToolResourcesFileSearch fileSearch = null)
+        {
+            return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/>. </summary>
+        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool. </param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/> instance for mocking. </returns>
+        public static ThreadObjectToolResourcesCodeInterpreter ThreadObjectToolResourcesCodeInterpreter(IEnumerable<string> fileIds = null)
+        {
+            fileIds ??= new List<string>();
+
+            return new ThreadObjectToolResourcesCodeInterpreter(fileIds?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesFileSearch"/>. </summary>
+        /// <param name="vectorStoreIds"> The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. </param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesFileSearch"/> instance for mocking. </returns>
+        public static ThreadObjectToolResourcesFileSearch ThreadObjectToolResourcesFileSearch(IEnumerable<string> vectorStoreIds = null)
+        {
+            vectorStoreIds ??= new List<string>();
+
+            return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ListVectorStoresResponse"/>. </summary>
@@ -846,118 +846,6 @@ namespace OpenAI
         public static CreateChatCompletionStreamResponseUsage CreateChatCompletionStreamResponseUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
             return new CreateChatCompletionStreamResponseUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsMessageCreationObject"/>. </summary>
-        /// <param name="type"> Always `message_creation`. </param>
-        /// <param name="messageCreation"></param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsMessageCreationObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsMessageCreationObject RunStepDeltaStepDetailsMessageCreationObject(string type = null, RunStepDeltaStepDetailsMessageCreationObjectMessageCreation messageCreation = null)
-        {
-            return new RunStepDeltaStepDetailsMessageCreationObject(type, messageCreation, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsMessageCreationObjectMessageCreation"/>. </summary>
-        /// <param name="messageId"> The ID of the message that was created by this run step. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsMessageCreationObjectMessageCreation"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsMessageCreationObjectMessageCreation RunStepDeltaStepDetailsMessageCreationObjectMessageCreation(string messageId = null)
-        {
-            return new RunStepDeltaStepDetailsMessageCreationObjectMessageCreation(messageId, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsObject"/>. </summary>
-        /// <param name="type"> Always `tool_calls`. </param>
-        /// <param name="toolCalls"> An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsObject RunStepDeltaStepDetailsToolCallsObject(string type = null, IEnumerable<BinaryData> toolCalls = null)
-        {
-            toolCalls ??= new List<BinaryData>();
-
-            return new RunStepDeltaStepDetailsToolCallsObject(type, toolCalls?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObject"/>. </summary>
-        /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="type"> The type of tool call. This is always going to be `code_interpreter` for this type of tool call. </param>
-        /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsCodeObject RunStepDeltaStepDetailsToolCallsCodeObject(int index = default, string id = null, string type = null, RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = null)
-        {
-            return new RunStepDeltaStepDetailsToolCallsCodeObject(index, id, type, codeInterpreter, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
-        /// <param name="input"> The input to the Code Interpreter tool call. </param>
-        /// <param name="outputs"> The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(string input = null, IEnumerable<BinaryData> outputs = null)
-        {
-            outputs ??= new List<BinaryData>();
-
-            return new RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(input, outputs?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject"/>. </summary>
-        /// <param name="index"> The index of the output in the outputs array. </param>
-        /// <param name="type"> Always `logs`. </param>
-        /// <param name="logs"> The text output from the Code Interpreter tool call. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(int index = default, string type = null, string logs = null)
-        {
-            return new RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(index, type, logs, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputImageObject"/>. </summary>
-        /// <param name="index"> The index of the output in the outputs array. </param>
-        /// <param name="type"> Always `image`. </param>
-        /// <param name="image"></param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputImageObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsCodeOutputImageObject RunStepDeltaStepDetailsToolCallsCodeOutputImageObject(int index = default, string type = null, RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage image = null)
-        {
-            return new RunStepDeltaStepDetailsToolCallsCodeOutputImageObject(index, type, image, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage"/>. </summary>
-        /// <param name="fileId"> The [file](/docs/api-reference/files) ID of the image. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage(string fileId = null)
-        {
-            return new RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage(fileId, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsFileSearchObject"/>. </summary>
-        /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="type"> The type of tool call. This is always going to be `file_search` for this type of tool call. </param>
-        /// <param name="fileSearch"> For now, this is always going to be an empty object. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsFileSearchObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsFileSearchObject RunStepDeltaStepDetailsToolCallsFileSearchObject(int index = default, string id = null, string type = null, IReadOnlyDictionary<string, string> fileSearch = null)
-        {
-            fileSearch ??= new Dictionary<string, string>();
-
-            return new RunStepDeltaStepDetailsToolCallsFileSearchObject(index, id, type, fileSearch, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObject"/>. </summary>
-        /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="type"> The type of tool call. This is always going to be `function` for this type of tool call. </param>
-        /// <param name="function"> The definition of the function that was called. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObject"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsFunctionObject RunStepDeltaStepDetailsToolCallsFunctionObject(int index = default, string id = null, string type = null, RunStepDeltaStepDetailsToolCallsFunctionObjectFunction function = null)
-        {
-            return new RunStepDeltaStepDetailsToolCallsFunctionObject(index, id, type, function, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/>. </summary>
-        /// <param name="name"> The name of the function. </param>
-        /// <param name="arguments"> The arguments passed to the function. </param>
-        /// <param name="output"> The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet. </param>
-        /// <returns> A new <see cref="Models.RunStepDeltaStepDetailsToolCallsFunctionObjectFunction"/> instance for mocking. </returns>
-        public static RunStepDeltaStepDetailsToolCallsFunctionObjectFunction RunStepDeltaStepDetailsToolCallsFunctionObjectFunction(string name = null, string arguments = null, string output = null)
-        {
-            return new RunStepDeltaStepDetailsToolCallsFunctionObjectFunction(name, arguments, output, serializedAdditionalRawData: null);
         }
     }
 }

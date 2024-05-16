@@ -1,4 +1,8 @@
+using OpenAI.Internal.Models;
+using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 namespace OpenAI.Assistants;
@@ -8,7 +12,7 @@ namespace OpenAI.Assistants;
 /// </summary>
 [CodeGenModel("CreateRunRequest")]
 [CodeGenSuppress("RunCreationOptions", typeof(string))]
-// [CodeGenSerialization(nameof(ResponseFormat), SerializationValueHook=nameof(SerializeResponseValue), DeserializationValueHook=nameof(DeserializeResponseValue))]
+[CodeGenSerialization(nameof(ToolConstraint), "tool_choice", SerializationValueHook = nameof(SerializeToolConstraint))]
 public partial class RunCreationOptions
 {
     // CUSTOM: assistant_id/stream visibility hidden so that they can be promoted to required method parameters
@@ -44,6 +48,26 @@ public partial class RunCreationOptions
     [CodeGenMember("AdditionalInstructions")]
     public string AdditionalInstructions { get; init; }
 
+    /// <summary> Adds additional messages to the thread before creating the run. </summary>
+    public IList<ThreadInitializationMessage> AdditionalMessages { get; } = new ChangeTrackingList<ThreadInitializationMessage>();
+
+    [CodeGenMember("AdditionalMessages")]
+    internal IList<MessageCreationOptions> InternalMessages
+    {
+        get => AdditionalMessages.Select(initializationMessage => initializationMessage as MessageCreationOptions).ToList();
+        private set
+        {
+            // Note: this path is exclusively used in a test or deserialization case; here, we'll convert the
+            //          underlying wire-friendly representation into the initialization message abstraction.
+
+            AdditionalMessages.Clear();
+            foreach (MessageCreationOptions baseMessageOptions in value)
+            {
+                AdditionalMessages.Add(new ThreadInitializationMessage(baseMessageOptions));
+            }
+        }
+    }
+
     /// <summary>
     /// A run-specific collection of tool definitions that will override the assistant-level defaults. If not provided,
     /// the assistant's defined tools will be used. Available tools include:
@@ -64,16 +88,44 @@ public partial class RunCreationOptions
     /// </list>
     /// </para>
     /// </summary>
+    [CodeGenMember("Tools")]
     public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
 
-    public RunCreationOptions()
-    {
-        AdditionalMessages = new ChangeTrackingList<MessageCreationOptions>();
-        Tools = new ChangeTrackingList<ToolDefinition>();
-        Metadata = new ChangeTrackingDictionary<string, string>();
-    }
+    /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
+    public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
 
-    private void SerializeResponseValue(Utf8JsonWriter writer) => writer.WriteObjectValue(ResponseFormat);
-    private void DeserializeResponseValue(JsonProperty property, ref AssistantResponseFormat responseFormat)
-        => responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value);
+    /// <summary> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </summary>
+    public float? Temperature { get; init; }
+
+    /// <summary>
+    /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+    ///
+    /// We generally recommend altering this or temperature but not both.
+    /// </summary>
+    [CodeGenMember("TopP")]
+    public float? NucleusSamplingFactor { get; init; }
+
+    /// <summary> The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
+    public int? MaxPromptTokens { get; init; }
+
+    /// <summary> The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
+    public int? MaxCompletionTokens { get; init; }
+
+    /// <summary> Gets or sets the truncation strategy. </summary>
+    public RunTruncationStrategy TruncationStrategy { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [CodeGenMember("ToolChoice")]
+    public ToolConstraint ToolConstraint { get; init; }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="RunCreationOptions"/>.
+    /// </summary>
+    public RunCreationOptions()
+    { }
+
+    private void SerializeToolConstraint(Utf8JsonWriter writer)
+        => writer.WriteObjectValue(ToolConstraint, new ModelReaderWriterOptions("J"));
 }

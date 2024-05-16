@@ -35,10 +35,15 @@ public abstract partial class MessageContent
     public static MessageContent FromText(string text)
         => new InternalRequestMessageTextContent(text);
 
+    /// <inheritdoc cref="InternalMessageImageUrlContent.InternalUrl"/>
     public Uri ImageUrl => AsInternalImageUrl?.InternalUrl;
+    /// <inheritdoc cref="InternalMessageImageFileContent.InternalFileId"/>
     public string ImageFileId => AsInternalImageFile?.InternalFileId;
+    /// <inheritdoc cref="InternalMessageImageFileContent.InternalDetail"/>
     public MessageImageDetail? ImageDetail => AsInternalImageFile?.InternalDetail ?? AsInternalImageUrl?.InternalDetail;
+    /// <inheritdoc cref="InternalResponseMessageTextContent.InternalText"/>
     public string Text => AsInternalRequestText?.InternalText ?? AsInternalResponseText?.InternalText;
+    /// <inheritdoc cref="InternalResponseMessageTextContent.InternalAnnotations"/>
     public IReadOnlyList<TextAnnotation> TextAnnotations => AsInternalResponseText?.InternalAnnotations ?? [];
 
     private InternalMessageImageFileContent AsInternalImageFile => this as InternalMessageImageFileContent;
@@ -52,4 +57,8 @@ public abstract partial class MessageContent
     /// </summary>
     /// <param name="value"> The text for the message content. </param>
     public static implicit operator MessageContent(string value) => FromText(value);
+
+    /// Creates a new instance of <see cref="MessageContent"/> for mocking.
+    protected MessageContent()
+    { }
 }

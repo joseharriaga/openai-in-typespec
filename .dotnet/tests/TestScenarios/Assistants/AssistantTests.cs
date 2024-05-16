@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenAI.Assistants;
+using OpenAI.Files;
+using OpenAI.VectorStores;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -474,6 +476,118 @@ public partial class AssistantTests
     }
 
     [Test]
+    public void BasicFileSearchWorks()
+    {
+        // First, we need to upload a simple test file.
+        FileClient fileClient = new();
+        OpenAIFileInfo testFile = fileClient.UploadFile(
+            BinaryData.FromString("""
+            This file describes the favorite foods of several people.
+
+            Summanus Ferdinand: tacos
+            Tekakwitha Effie: pizza
+            Filip Carola: cake
+            """).ToStream(),
+            "favorite_foods.txt",
+            OpenAIFilePurpose.Assistants);
+        Validate(testFile);
+
+        AssistantClient client = GetTestClient();
+
+        // Create an assistant, using the creation helper to make a new vector store
+        Assistant assistant = client.CreateAssistant("gpt-4-turbo", new()
+        {
+            Tools = { new FileSearchToolDefinition() },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([testFile.Id]),
+                    }
+                }
+            }
+        });
+        Validate(assistant);
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        string createdVectorStoreId = assistant.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(createdVectorStoreId);
+
+        // Modify an assistant to use the existing vector store
+        assistant = client.ModifyAssistant(assistant, new AssistantModificationOptions()
+        {
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    VectorStoreIds = { assistant.ToolResources.FileSearch.VectorStoreIds[0] },
+                },
+            },
+        });
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        Assert.That(assistant.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
+
+        // Create a thread with an override vector store
+        AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
+        {
+            InitialMessages = { new(["Using the files you have available, what's Filip's favorite food?"]) },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([testFile.Id])
+                    }
+                }
+            }
+        });
+        Validate(thread);
+        Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        createdVectorStoreId = thread.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(createdVectorStoreId);
+
+        // Ensure that modifying the thread with an existing vector store works
+        thread = client.ModifyThread(thread, new ThreadModificationOptions()
+        {
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    VectorStoreIds = { createdVectorStoreId },
+                }
+            }
+        });
+        Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        Assert.That(thread.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
+
+        ThreadRun run = client.CreateRun(thread, assistant);
+        Validate(run);
+        do
+        {
+            Thread.Sleep(1000);
+            run = client.GetRun(run);
+        } while (run?.Status.IsTerminal == false);
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+
+        PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
+        foreach (ThreadMessage message in messages)
+        {
+            foreach (MessageContent content in message.Content)
+            {
+                Console.WriteLine(content.Text);
+                foreach (TextAnnotation annotation in content.TextAnnotations)
+                {
+                    Console.WriteLine($"  --> From file: {annotation.InputFileId}, quote: {annotation.InputQuote}, replacement: {annotation.TextToReplace}");
+                }
+            }
+        }
+        Assert.That(messages.Count() > 1);
+        Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("cake"))));
+    }
+
+    [Test]
     public async Task CanEnumerateAssistants()
     {
         AssistantClient client = GetTestClient();
@@ -559,6 +673,8 @@ public partial class AssistantTests
     protected void Cleanup()
     {
         AssistantClient client = new();
+        FileClient fileClient = new();
+        VectorStoreClient vectorStoreClient = new();
         RequestOptions requestOptions = new()
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
@@ -575,9 +691,18 @@ public partial class AssistantTests
         {
             Console.WriteLine($"Cleanup: {thread.Id} -> {client.DeleteThread(thread.Id, requestOptions)?.GetRawResponse().Status}");
         }
+        foreach (OpenAIFileInfo file in _filesToDelete)
+        {
+            Console.WriteLine($"Cleanup: {file.Id} -> {fileClient.DeleteFile(file.Id, requestOptions)?.GetRawResponse().Status}");
+        }
+        foreach (string vectorStoreId in _vectorStoreIdsToDelete)
+        {
+            Console.WriteLine($"Cleanup: {vectorStoreId} => {vectorStoreClient.DeleteVectorStore(vectorStoreId, requestOptions)?.GetRawResponse().Status}");
+        }
         _messagesToDelete.Clear();
         _assistantsToDelete.Clear();
         _threadsToDelete.Clear();
+        _filesToDelete.Clear();
     }
 
     /// <summary>
@@ -608,6 +733,11 @@ public partial class AssistantTests
         {
             Assert.That(run?.Id, Is.Not.Null);
         }
+        else if (target is OpenAIFileInfo file)
+        {
+            Assert.That(file?.Id, Is.Not.Null);
+            _filesToDelete.Add(file);
+        }
         else
         {
             throw new NotImplementedException($"{nameof(Validate)} helper not implemented for: {typeof(T)}");
@@ -617,6 +747,8 @@ public partial class AssistantTests
     private readonly List<Assistant> _assistantsToDelete = [];
     private readonly List<AssistantThread> _threadsToDelete = [];
     private readonly List<ThreadMessage> _messagesToDelete = [];
+    private readonly List<OpenAIFileInfo> _filesToDelete = [];
+    private readonly List<string> _vectorStoreIdsToDelete = [];
 
     private static AssistantClient GetTestClient() => GetTestClient<AssistantClient>(TestScenario.Assistants);
 

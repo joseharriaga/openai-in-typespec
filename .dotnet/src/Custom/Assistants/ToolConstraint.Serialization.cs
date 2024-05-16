@@ -1,5 +1,6 @@
 using System;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace OpenAI.Assistants;
@@ -8,19 +9,45 @@ public partial class ToolConstraint : IJsonModel<ToolConstraint>
 {
     void IJsonModel<ToolConstraint>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<ToolConstraint>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
+        if (_plainTextValue is not null)
         {
-            throw new FormatException($"The model {nameof(ToolConstraint)} does not support writing '{format}' format.");
-        }
-
-        if (!string.IsNullOrEmpty(_predefinedValue))
-        {
-            writer.WriteStringValue(_predefinedValue);
+            writer.WriteStringValue(_plainTextValue);
         }
         else
         {
-            writer.WriteObjectValue(_innerTypeObject, options);
+            var format = options.Format == "W" ? ((IPersistableModel<ToolConstraint>)this).GetFormatFromOptions(options) : options.Format;
+            if (format != "J")
+            {
+                throw new FormatException($"The model {nameof(ToolConstraint)} does not support writing '{format}' format.");
+            }
+
+            writer.WriteStartObject();
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(_objectType.ToString());
+            if (Optional.IsDefined(_objectFunctionName))
+            {
+                writer.WritePropertyName("function"u8);
+                writer.WriteStartObject();
+                writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(_objectFunctionName);
+                writer.WriteEndObject();
+            }
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            {
+                foreach (var item in _serializedAdditionalRawData)
+                {
+                    writer.WritePropertyName(item.Key);
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(item.Value);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(item.Value))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
+                }
+            }
+            writer.WriteEndObject();
         }
     }
 
@@ -40,27 +67,48 @@ public partial class ToolConstraint : IJsonModel<ToolConstraint>
     {
         options ??= ModelSerializationExtensions.WireOptions;
 
-        string value = null;
-        bool isPredefined = true;
+        string plainTextValue = null;
+        string objectType = null;
+        string objectFunctionName = null;
+        IDictionary<string, BinaryData> rawDataDictionary = new ChangeTrackingDictionary<string, BinaryData>();
 
+        if (element.ValueKind == JsonValueKind.Null)
+        {
+            return null;
+        }
         if (element.ValueKind == JsonValueKind.String)
         {
-            value = element.GetString();
+            plainTextValue = element.GetString();
         }
         else
         {
-            isPredefined = false;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("type"u8))
                 {
-                    value = property.Value.GetString();
+                    objectType = property.Value.GetString();
                     continue;
+                }
+                if (property.NameEquals("function"u8))
+                {
+                    foreach (JsonProperty functionProperty in property.Value.EnumerateObject())
+                    {
+                        if (functionProperty.NameEquals("name"u8))
+                        {
+                            objectFunctionName = functionProperty.Value.GetString();
+                            continue;
+                        }
+                    }
+                    continue;
+                }
+                if (options.Format != "W")
+                {
+                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
         }
 
-        return new ToolConstraint(value, isPredefined);
+        return new ToolConstraint(plainTextValue, objectType, objectFunctionName, rawDataDictionary);
     }
 
     BinaryData IPersistableModel<ToolConstraint>.Write(ModelReaderWriterOptions options)

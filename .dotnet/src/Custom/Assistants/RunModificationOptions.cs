@@ -1,4 +1,4 @@
-namespace OpenAI.Internal.Models;
+namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when modifying an existing <see cref="ThreadRun"/>.

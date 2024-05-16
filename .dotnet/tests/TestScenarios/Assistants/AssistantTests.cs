@@ -339,6 +339,7 @@ public partial class AssistantTests
             new RunCreationOptions()
             {
                 AdditionalInstructions = "Call provided tools when appropriate.",
+                ToolConstraint = ToolConstraint.Auto,
             });
         Validate(run);
 

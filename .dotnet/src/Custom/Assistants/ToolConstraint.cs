@@ -1,47 +1,50 @@
-﻿using OpenAI.Internal.Models;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
 
 [CodeGenModel("AssistantsNamedToolChoice")]
 public partial class ToolConstraint
 {
+    private readonly string _plainTextValue;
     [CodeGenMember("Type")]
-    private readonly object _type;
-    private readonly BinaryData _innerTypeObject;
-    private readonly string _predefinedValue;
+    private readonly string _objectType;
+    private readonly string _objectFunctionName;
+    private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
     public static ToolConstraint None { get; } = new("none");
     public static ToolConstraint Auto { get; } = new("auto");
-    public static ToolConstraint Required { get; }
+    public static ToolConstraint Required { get; } = new("required");
 
     public ToolConstraint(ToolDefinition toolDefinition)
-        : this(toolDefinition switch
-        {
-            CodeInterpreterToolDefinition _ => "code_interpreter",
-            FileSearchToolDefinition _ => "file_search",
-            FunctionToolDefinition functionDefinition => functionDefinition.FunctionName,
-            _ => string.Empty,
-        }, isInnerType: true)
-    {}
-
-    internal ToolConstraint(string value, bool isInnerType)
     {
-        if (isInnerType)
+        switch (toolDefinition)
         {
-            _predefinedValue = value;
+            case CodeInterpreterToolDefinition:
+                _objectType = "code_interpreter";
+                break;
+            case FileSearchToolDefinition:
+                _objectType = "file_search";
+                break;
+            case FunctionToolDefinition functionTool:
+                _objectType = "function";
+                _objectFunctionName = functionTool.FunctionName;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(toolDefinition));
         }
-        else
-        {
-            _innerTypeObject = BinaryData.FromObjectAsJson<dynamic>(new
-            {
-                type = value,
-            });
-        }
+        _serializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
     }
 
-    internal ToolConstraint(string prefinedValue)
+    internal ToolConstraint(string plainTextValue)
+        : this(plainTextValue, null, null, null)
+    { }
+
+    internal ToolConstraint(string plainTextValue, string objectType, string objectFunctionName, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
-        _predefinedValue = prefinedValue;
+        _plainTextValue = plainTextValue;
+        _objectType = objectType;
+        _objectFunctionName = objectFunctionName;
+        _serializedAdditionalRawData = serializedAdditionalRawData ?? new ChangeTrackingDictionary<string, BinaryData>();
     }
 }

@@ -17,9 +17,6 @@ public readonly partial struct MessageStatus { }
 [CodeGenModel("MessageObjectIncompleteDetails")]
 public partial class MessageFailureDetails { }
 
-[CodeGenModel("CreateMessageRequestAttachment")]
-public partial class MessageCreationAttachment { }
-
 [CodeGenModel("MessageFailureDetailsReason")]
 public readonly partial struct MessageFailureReason { }
 

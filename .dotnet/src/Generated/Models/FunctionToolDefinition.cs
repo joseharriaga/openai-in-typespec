@@ -10,15 +10,5 @@ namespace OpenAI.Assistants
     /// <summary> The AssistantToolsFunction. </summary>
     public partial class FunctionToolDefinition : ToolDefinition
     {
-        /// <summary> Initializes a new instance of <see cref="FunctionToolDefinition"/>. </summary>
-        /// <param name="internalFunction"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalFunction"/> is null. </exception>
-        public FunctionToolDefinition(FunctionDefinition internalFunction)
-        {
-            Argument.AssertNotNull(internalFunction, nameof(internalFunction));
-
-            Type = "function";
-            _internalFunction = internalFunction;
-        }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using OpenAI;
 
 namespace OpenAI.Assistants;
 
 [CodeGenModel("AssistantToolsFunction")]
+[CodeGenSuppress(nameof(FunctionToolDefinition), typeof(FunctionDefinition))]
 public partial class FunctionToolDefinition : ToolDefinition
 {
     // CUSTOM: the visibility of the underlying function object is hidden to simplify the structure of the tool.

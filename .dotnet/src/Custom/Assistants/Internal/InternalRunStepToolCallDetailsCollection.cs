@@ -1,14 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text.Json;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants;
 
 [CodeGenModel("RunStepDetailsToolCallsObject")]
-internal partial class InternalRunStepToolCallDetailsCollection : IReadOnlyList<RunStepToolCall>
+internal partial class InternalRunStepDetailsToolCallsObject : IReadOnlyList<RunStepToolCall>
 {
     [CodeGenMember("ToolCalls")]
     private IReadOnlyList<RunStepToolCall> InternalToolCalls { get; } = [];

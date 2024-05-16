@@ -21,7 +21,7 @@ public partial class RunStep
     /// needs to be casted to one of the possible derived classes.
     /// </para>
     /// <para>
-    /// The available derived classes include <see cref="InternalRunStepMessageCreationDetails"/> and <see cref="InternalRunStepToolCallDetailsCollection"/>.
+    /// The available derived classes include <see cref="InternalRunStepDetailsMessageCreationObject"/> and <see cref="InternalRunStepToolCallDetailsCollection"/>.
     /// </para>
     /// </remarks>
     [CodeGenMember("StepDetails")]

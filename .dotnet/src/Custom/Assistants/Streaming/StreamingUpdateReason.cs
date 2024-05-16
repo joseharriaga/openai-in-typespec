@@ -69,7 +69,7 @@ public enum StreamingUpdateReason
     /// </summary>
     RunStepInProgress,
     /// <summary>
-    /// Indicates that an update was generated as part of a <c>thread.run.step.updated</c> event.
+    /// Indicates that an update was generated as part of a <c>thread.run.step.delta</c> event.
     /// </summary>
     RunStepUpdated,
     /// <summary>

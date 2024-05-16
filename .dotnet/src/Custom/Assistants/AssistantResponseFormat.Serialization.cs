@@ -8,23 +8,25 @@ public partial class AssistantResponseFormat : IJsonModel<AssistantResponseForma
 {
     void IJsonModel<AssistantResponseFormat>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<AssistantResponseFormat>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(AssistantResponseFormat)} does not support writing '{format}' format.");
-        }
-
-        if (_isStringLiteral)
+        if (_isPlainString)
         {
             writer.WriteStringValue(_value);
         }
         else
         {
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantResponseFormat>)this).GetFormatFromOptions(options) : options.Format;
+            if (format != "J")
+            {
+                throw new FormatException($"The model {nameof(AssistantResponseFormat)} does not support writing '{format}' format.");
+            }
+
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(_value);
             writer.WriteEndObject();
         }
+
+
     }
 
     AssistantResponseFormat IJsonModel<AssistantResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)

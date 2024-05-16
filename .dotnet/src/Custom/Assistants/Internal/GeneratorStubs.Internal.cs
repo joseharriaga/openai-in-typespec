@@ -64,10 +64,10 @@ internal partial class MessageDeltaTextContentAnnotation { }
 internal partial class MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation { }
 
 [CodeGenModel("RunStepDeltaObject")]
-internal partial class RunStepDelta { private readonly object Object; }
+internal partial class InternalRunStepDelta { private readonly object Object; }
 
 [CodeGenModel("RunStepDeltaObjectDelta")]
-internal partial class RunStepDeltaObjectDelta { }
+internal partial class InternalRunStepDeltaObjectDelta { }
 
 [CodeGenModel("MessageDeltaContentTextAnnotationsFilePathObject")]
 internal partial class MessageDeltaContentTextAnnotationsFilePathObject { }
@@ -80,6 +80,9 @@ internal partial class UnknownMessageDeltaContent { }
 
 [CodeGenModel("UnknownAssistantToolDefinition")]
 internal partial class UnknownAssistantToolDefinition { }
+
+[CodeGenModel("UnknownRunStepDeltaStepDetailsToolCallsObjectToolCallsObject")]
+internal partial class UnknownRunStepDeltaStepDetailsToolCallsObjectToolCallsObject { }
 
 [CodeGenModel("MessageDeltaContent")]
 internal partial class MessageDeltaContent { }
@@ -202,3 +205,55 @@ internal readonly partial struct InternalRunTruncationStrategyType { }
 
 [CodeGenModel("AssistantsNamedToolChoiceType")]
 internal readonly partial struct InternalAssistantsNamedToolChoiceType { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsCodeObject")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsCodeObject { }
+
+[CodeGenModel("RunStepUpdateCodeInterpreterOutput")]
+internal abstract partial class InternalRunStepUpdateCodeInterpreterOutput { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsCodeOutputImageObject")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsCodeOutputImageObject { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject
+{
+    [CodeGenMember("Logs")]
+    public string InternalLogs { get; set; }
+}
+
+[CodeGenModel("RunStepDeltaStepDetailsMessageCreationObject")]
+internal partial class InternalRunStepDeltaStepDetailsMessageCreationObject { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsObject")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsObject { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsFileSearchObject")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsFileSearchObject { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsFunctionObject")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsFunctionObject { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsObjectToolCallsObject")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject { }
+
+[CodeGenModel("RunStepDeltaStepDetailsMessageCreationObjectMessageCreation")]
+internal partial class InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage { }
+
+[CodeGenModel("RunStepDeltaStepDetails")]
+internal partial class InternalRunStepDeltaStepDetails { }
+
+[CodeGenModel("UnknownRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]
+internal partial class UnknownRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject { }
+
+[CodeGenModel("UnknownRunStepDeltaStepDetails")]
+internal partial class UnknownRunStepDeltaStepDetails { }
+
+[CodeGenModel("RunStepDeltaStepDetailsToolCallsFunctionObjectFunction")]
+internal partial class InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction { }

@@ -489,7 +489,6 @@ public partial class AssistantTests
         List<Assistant> allAssistants = new();
 
         // Page through collection
-
         int count = 0;
         AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
 
@@ -524,10 +523,9 @@ public partial class AssistantTests
             Assert.That(assistant.Name, Is.Null.Or.Empty);
         }
 
-        List<Assistant> allAssistants = new();
+        List<Assistant> allAssistants = [];
 
         // Page through collection
-
         int count = 0;
         int pageCount = 0;
         AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
@@ -535,18 +533,16 @@ public partial class AssistantTests
 
         await foreach (ResultPage<Assistant> page in pages)
         {
-            int pageItems = 0;
             foreach (Assistant assistant in page)
             {
                 Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
 
-                count++;
-                pageItems++;
-
                 allAssistants.Add(assistant);
+
+                count++;
             }
 
-            pageCount += pageItems > 0 ? 1 : 0;
+            pageCount++;
         }
 
         // Clean up

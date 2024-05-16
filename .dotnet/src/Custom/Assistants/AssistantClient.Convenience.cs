@@ -148,7 +148,8 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<ThreadMessage> GetMessages(AssistantThread thread, 
+    public virtual PageableCollection<ThreadMessage> GetMessages(
+        AssistantThread thread, 
         ListOrder? resultOrder = default)
     {
         Argument.AssertNotNull(thread, nameof(thread));

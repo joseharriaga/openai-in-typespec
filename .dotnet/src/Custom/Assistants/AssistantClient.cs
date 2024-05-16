@@ -345,7 +345,8 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(string threadId,
+    public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(
+        string threadId,
         ListOrder? resultOrder = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -378,7 +379,8 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<ThreadMessage> GetMessages(string threadId,
+    public virtual PageableCollection<ThreadMessage> GetMessages(
+        string threadId,
         ListOrder? resultOrder = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));

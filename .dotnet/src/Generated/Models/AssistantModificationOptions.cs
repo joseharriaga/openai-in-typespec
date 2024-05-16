@@ -62,14 +62,14 @@ namespace OpenAI.Assistants
         /// <param name="toolResources"> A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="temperature"> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </param>
-        /// <param name="topP">
+        /// <param name="nucleusSamplingFactor">
         /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
         ///
         /// We generally recommend altering this or temperature but not both.
         /// </param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<ToolDefinition> defaultTools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<ToolDefinition> defaultTools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Name = name;
@@ -79,7 +79,7 @@ namespace OpenAI.Assistants
             ToolResources = toolResources;
             Metadata = metadata;
             Temperature = temperature;
-            TopP = topP;
+            NucleusSamplingFactor = nucleusSamplingFactor;
             ResponseFormat = responseFormat;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -93,11 +93,5 @@ namespace OpenAI.Assistants
         public IDictionary<string, string> Metadata { get; set; }
         /// <summary> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </summary>
         public float? Temperature { get; set; }
-        /// <summary>
-        /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-        ///
-        /// We generally recommend altering this or temperature but not both.
-        /// </summary>
-        public float? TopP { get; set; }
     }
 }

@@ -114,12 +114,12 @@ namespace OpenAI.Assistants
                     writer.WriteNull("temperature");
                 }
             }
-            if (Optional.IsDefined(TopP))
+            if (Optional.IsDefined(NucleusSamplingFactor))
             {
-                if (TopP != null)
+                if (NucleusSamplingFactor != null)
                 {
                     writer.WritePropertyName("top_p"u8);
-                    writer.WriteNumberValue(TopP.Value);
+                    writer.WriteNumberValue(NucleusSamplingFactor.Value);
                 }
                 else
                 {

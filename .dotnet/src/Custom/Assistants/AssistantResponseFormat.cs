@@ -30,12 +30,14 @@ public partial class AssistantResponseFormat
     /// Default option. Specifies that the model should automatically determine whether it should respond with
     /// plain text or another format.
     /// </summary>
-    public static AssistantResponseFormat Auto { get; } = new(AutoValue);
+    public static AssistantResponseFormat Auto { get; }
+        = new(plainTextValue: AutoValue, objectType: null, serializedAdditionalRawData: null);
 
     /// <summary>
     /// Specifies that the model should respond with plain text.
     /// </summary>
-    public static AssistantResponseFormat Text { get; } = new(TextValue);
+    public static AssistantResponseFormat Text { get; }
+        = new(plainTextValue: null, objectType: TextValue, serializedAdditionalRawData: null);
 
     /// <summary>
     /// Specifies that the model should reply with a structured JSON object, enabling JSON mode.
@@ -47,16 +49,13 @@ public partial class AssistantResponseFormat
     /// the message content may be partially cut off if `finish_reason="length"`, which indicates the generation
     /// exceeded `max_tokens` or the conversation exceeded the max context length.
     /// </remarks>
-    public static AssistantResponseFormat JsonObject { get; } = new(JsonObjectValue);
+    public static AssistantResponseFormat JsonObject { get; }
+        = new(plainTextValue: null, objectType: JsonObjectValue, serializedAdditionalRawData: null);
 
     /// <summary>
     /// Creates a new instance of <see cref="AssistantResponseFormat"/> for mocking.
     /// </summary>
     protected AssistantResponseFormat()
-    { }
-
-    internal AssistantResponseFormat(string plainTextValue)
-        : this(plainTextValue, objectType: null, serializedAdditionalRawData: null)
     { }
 
     internal AssistantResponseFormat(string plainTextValue, string objectType, IDictionary<string, BinaryData> serializedAdditionalRawData)

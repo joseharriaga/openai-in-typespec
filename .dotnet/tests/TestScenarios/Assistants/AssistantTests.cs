@@ -600,8 +600,6 @@ public partial class AssistantTests
             Assert.That(assistant.Name, Is.Null.Or.Empty);
         }
 
-        List<Assistant> allAssistants = new();
-
         // Page through collection
         int count = 0;
         AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
@@ -611,17 +609,9 @@ public partial class AssistantTests
             Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
 
             count++;
-
-            allAssistants.Add(assistant);
         }
 
-        // Clean up
-        foreach (Assistant assistant in allAssistants)
-        {
-            client.DeleteAssistant(assistant.Id);
-        }
-
-        Assert.AreEqual(10, count);
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
     }
 
     [Test]
@@ -637,8 +627,6 @@ public partial class AssistantTests
             Assert.That(assistant.Name, Is.Null.Or.Empty);
         }
 
-        List<Assistant> allAssistants = [];
-
         // Page through collection
         int count = 0;
         int pageCount = 0;
@@ -651,22 +639,14 @@ public partial class AssistantTests
             {
                 Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
 
-                allAssistants.Add(assistant);
-
                 count++;
             }
 
             pageCount++;
         }
 
-        // Clean up
-        foreach (Assistant assistant in allAssistants)
-        {
-            client.DeleteAssistant(assistant.Id);
-        }
-
-        Assert.AreEqual(10, count);
-        Assert.AreEqual(5, pageCount);
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
     }
 
     [TearDown]

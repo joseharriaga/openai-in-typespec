@@ -1,10 +1,5 @@
-using System;
-using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
 
@@ -43,56 +38,6 @@ public abstract partial class StreamingUpdate
         UpdateKind = updateKind;
     }
 
-    private static async Task<IEnumerable<StreamingUpdate>> TemporaryCreateFromReaderAsync(StreamReader reader)
-        => TemporaryCreateFromLines(await reader.ReadLineAsync(), await reader.ReadLineAsync(), await reader.ReadLineAsync());
-
-    private static IEnumerable<StreamingUpdate> TemporaryCreateFromReader(StreamReader reader)
-        => TemporaryCreateFromLines(reader.ReadLine(), reader.ReadLine(), reader.ReadLine());
-
-    private static IEnumerable<StreamingUpdate> TemporaryCreateFromLines(string eventLine, string dataLine, string emptyLine)
-    {
-        if (eventLine?.StartsWith("event: ") != true || dataLine?.StartsWith("data: ") != true || emptyLine != string.Empty)
-        {
-            throw new InvalidOperationException();
-        }
-
-        if (eventLine == "event: done" && dataLine == "data: [DONE]") return null;
-
-        string eventName = eventLine.Substring("event: ".Length);
-        string data = dataLine.Substring("data: ".Length);
-        JsonDocument dataDocument = JsonDocument.Parse(data);
-        JsonElement e = dataDocument.RootElement;
-
-        StreamingUpdateReason updateKind = StreamingUpdateReasonExtensions.FromSseEventLabel(eventName);
-
-        return updateKind switch
-        {
-            StreamingUpdateReason.ThreadCreated => ThreadUpdate.DeserializeThreadCreationUpdates(e, updateKind),
-            StreamingUpdateReason.RunCreated
-            or StreamingUpdateReason.RunQueued
-            or StreamingUpdateReason.RunInProgress
-            or StreamingUpdateReason.RunCompleted
-            or StreamingUpdateReason.RunFailed
-            or StreamingUpdateReason.RunCancelling
-            or StreamingUpdateReason.RunCancelled
-            or StreamingUpdateReason.RunExpired => RunUpdate.DeserializeRunUpdates(e, updateKind),
-            StreamingUpdateReason.RunRequiresAction => RequiredActionUpdate.DeserializeRequiredActionUpdates(e),
-            StreamingUpdateReason.RunStepCreated
-            or StreamingUpdateReason.RunStepInProgress
-            or StreamingUpdateReason.RunStepCompleted
-            or StreamingUpdateReason.RunStepFailed
-            or StreamingUpdateReason.RunStepCancelled
-            or StreamingUpdateReason.RunStepExpired => RunStepUpdate.DeserializeRunStepUpdates(e, updateKind),
-            StreamingUpdateReason.MessageCreated
-            or StreamingUpdateReason.MessageInProgress
-            or StreamingUpdateReason.MessageCompleted
-            or StreamingUpdateReason.MessageFailed => MessageStatusUpdate.DeserializeMessageStatusUpdates(e, updateKind),
-            StreamingUpdateReason.RunStepUpdated => RunStepDetailsUpdate.DeserializeRunStepDetailsUpdates(e, updateKind),
-            StreamingUpdateReason.MessageUpdated => MessageContentUpdate.DeserializeMessageContentUpdates(e, updateKind),
-            _ => null,
-        };
-    }
-
     internal static IEnumerable<StreamingUpdate> FromEvent(ServerSentEvent sseItem)
     {
         StreamingUpdateReason updateKind = StreamingUpdateReasonExtensions.FromSseEventLabel(sseItem.EventType);
@@ -125,29 +70,6 @@ public abstract partial class StreamingUpdate
             StreamingUpdateReason.MessageUpdated => MessageContentUpdate.DeserializeMessageContentUpdates(e, updateKind),
             _ => null,
         };
-    }
-
-    internal static ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateTemporaryResult(ClientResult protocolResult)
-    {
-        // NOTE: This is entirely temporary! Just for prototyping and discussion.
-
-        async IAsyncEnumerable<StreamingUpdate> TemporaryEnumerateAsync(PipelineResponse response)
-        {
-            using StreamReader reader = new(response.ContentStream);
-            while (true)
-            {
-                IEnumerable<StreamingUpdate> nextUpdates = await TemporaryCreateFromReaderAsync(reader);
-                if (nextUpdates == null) break;
-                foreach (StreamingUpdate update in nextUpdates)
-                {
-                    yield return update;
-                }
-            }
-        }
-
-        PipelineResponse response = protocolResult.GetRawResponse();
-        IAsyncEnumerable<StreamingUpdate> asyncEnumerable = TemporaryEnumerateAsync(response);
-        return ClientResult.FromValue(asyncEnumerable, response);
     }
 }
 

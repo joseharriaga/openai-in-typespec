@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenAI.Assistants;
 using System;
+using System.ClientModel;
 using System.Threading.Tasks;
 
 namespace OpenAI.Samples;
@@ -14,23 +15,14 @@ public partial class AssistantSamples
 #pragma warning disable OPENAI001
         AssistantClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-        string latestId = null;
-        bool continueQuery = true;
         int count = 0;
 
-        while (continueQuery)
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
+        await foreach (Assistant assistant in assistants)
         {
-            ListQueryPage<Assistant> pagedAssistants = await client.GetAssistantsAsync(previousId: latestId);
+            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
 
-            foreach (Assistant assistant in pagedAssistants)
-            {
-                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-
-                latestId = assistant.Id;
-                count++;
-            }
-
-            continueQuery = pagedAssistants.HasMore;
+            count++;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenAI.Assistants;
 using System;
+using System.ClientModel;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
@@ -152,10 +153,10 @@ public partial class AssistantSamples
         // With the run complete, list the messages and display their content
         if (run.Status == RunStatus.Completed)
         {
-            ListQueryPage<ThreadMessage> messages
-                = await client.GetMessagesAsync(run.ThreadId, resultOrder: ListOrder.OldestFirst);
+            AsyncPageableCollection<ThreadMessage> messages
+                = client.GetMessagesAsync(run.ThreadId, resultOrder: ListOrder.OldestFirst);
 
-            foreach (ThreadMessage message in messages)
+            await foreach (ThreadMessage message in messages)
             {
                 Console.WriteLine($"[{message.Role.ToString().ToUpper()}]: ");
                 foreach (MessageContent contentItem in message.Content)

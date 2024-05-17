@@ -3,6 +3,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -173,7 +174,7 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        ClientResult protocolResult = await CompleteChatAsync(content, null).ConfigureAwait(false);
+        ClientResult protocolResult = CompleteChat(content, null);
         Internal.Models.CreateChatCompletionResponse internalResponse
             = CreateChatCompletionResponse.FromResponse(protocolResult.GetRawResponse());
         List<ChatCompletion> chatCompletions = [];
@@ -188,8 +189,8 @@ public partial class ChatClient
     /// Begins a streaming response for a chat completion request using a single, simple user message as input.
     /// </summary>
     /// <remarks>
-    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
-    /// <see cref="IEnumerable{T}"/> interface. 
+    /// <see cref="StreamingClientResult{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="IAsyncEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
     /// <param name="choiceCount">
@@ -197,7 +198,7 @@ public partial class ChatClient
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual ResultCollection<StreamingChatUpdate> CompleteChatStreaming(
+    public virtual StreamingClientResult<StreamingChatUpdate> CompleteChatStreaming(
          string message,
          int? choiceCount = null,
          ChatCompletionOptions options = null)
@@ -210,7 +211,7 @@ public partial class ChatClient
     /// Begins a streaming response for a chat completion request using a single, simple user message as input.
     /// </summary>
     /// <remarks>
-    /// <see cref="AsyncResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="StreamingClientResult{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
     /// <see cref="IAsyncEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="message"> The user message to provide as a prompt for chat completion. </param>
@@ -219,48 +220,21 @@ public partial class ChatClient
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(
+    public virtual Task<StreamingClientResult<StreamingChatUpdate>> CompleteChatStreamingAsync(
         string message,
         int? choiceCount = null,
         ChatCompletionOptions options = null)
-        => CompleteChatStreamingAsync(
-            new List<ChatRequestMessage> { new ChatRequestUserMessage(message) },
-            choiceCount,
-            options);
+    => CompleteChatStreamingAsync(
+        new List<ChatRequestMessage> { new ChatRequestUserMessage(message) },
+        choiceCount,
+        options);
 
     /// <summary>
     /// Begins a streaming response for a chat completion request using the provided chat messages as input and
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
-    /// <see cref="IEnumerable{T}"/> interface. 
-    /// </remarks>
-    /// <param name="messages"> The messages to provide as input for chat completion. </param>
-    /// <param name="choiceCount">
-    ///     The number of independent, alternative choices that the chat completion request should generate.
-    /// </param>
-    /// <param name="options"> Additional options for the chat completion request. </param>
-    /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual ResultCollection<StreamingChatUpdate> CompleteChatStreaming(
-        IEnumerable<ChatRequestMessage> messages,
-        int? choiceCount = null,
-        ChatCompletionOptions options = null)
-    {
-        Argument.AssertNotNull(messages, nameof(messages));
-        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
-        using BinaryContent content = BinaryContent.Create(internalRequest);
-        RequestOptions requestOptions = new() { BufferResponse = false };
-        ClientResult getResult() => CompleteChat(content, requestOptions);
-        return new StreamingChatUpdateCollection(getResult);
-    }
-
-    /// <summary>
-    /// Begins a streaming response for a chat completion request using the provided chat messages as input and
-    /// history.
-    /// </summary>
-    /// <remarks>
-    /// <see cref="AsyncResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="StreamingClientResult{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
     /// <see cref="IAsyncEnumerable{T}"/> interface. 
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
@@ -268,8 +242,9 @@ public partial class ChatClient
     ///     The number of independent, alternative choices that the chat completion request should generate.
     /// </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
+    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(
+    public virtual StreamingClientResult<StreamingChatUpdate> CompleteChatStreaming(
         IEnumerable<ChatRequestMessage> messages,
         int? choiceCount = null,
         ChatCompletionOptions options = null)
@@ -277,16 +252,54 @@ public partial class ChatClient
         Argument.AssertNotNull(messages, nameof(messages));
         Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
         using BinaryContent content = BinaryContent.Create(internalRequest);
-        RequestOptions requestOptions = new() { BufferResponse = false };
-        async Task<ClientResult> getResultAsync() =>
-            await CompleteChatAsync(content, requestOptions).ConfigureAwait(false);
-        return new AsyncStreamingChatUpdateCollection(getResultAsync);
+        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, null, bufferResponse: false);
+        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, null);
+        ClientResult protocolResult = ClientResult.FromResponse(response);
+        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
+            protocolResult,
+            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
+                responseForEnumeration.GetRawResponse().ContentStream,
+                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
     }
 
-    private PipelineMessage CreateChatCompletionPipelineMessage(BinaryContent content, RequestOptions options = null)
+    /// <summary>
+    /// Begins a streaming response for a chat completion request using the provided chat messages as input and
+    /// history.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="StreamingClientResult{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="IAsyncEnumerable{T}"/> interface. 
+    /// </remarks>
+    /// <param name="messages"> The messages to provide as input for chat completion. </param>
+    /// <param name="choiceCount">
+    ///     The number of independent, alternative choices that the chat completion request should generate.
+    /// </param>
+    /// <param name="options"> Additional options for the chat completion request. </param>
+    /// <param name="cancellationToken"> The cancellation token for the operation. </param>
+    /// <returns> A streaming result with incremental chat completion updates. </returns>
+    public virtual async Task<StreamingClientResult<StreamingChatUpdate>> CompleteChatStreamingAsync(
+        IEnumerable<ChatRequestMessage> messages,
+        int? choiceCount = null,
+        ChatCompletionOptions options = null)
+    {
+        Argument.AssertNotNull(messages, nameof(messages));
+        Internal.Models.CreateChatCompletionRequest internalRequest = CreateInternalRequest(messages, options, choiceCount, stream: true);
+        using BinaryContent content = BinaryContent.Create(internalRequest);
+        PipelineMessage requestMessage = CreateChatCompletionPipelineMessage(content, null, bufferResponse: false);
+        PipelineResponse response = Pipeline.ProcessMessage(requestMessage, null);
+        ClientResult protocolResult = ClientResult.FromResponse(response);
+        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
+            protocolResult,
+            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
+                responseForEnumeration.GetRawResponse().ContentStream,
+                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
+    }
+
+    private PipelineMessage CreateChatCompletionPipelineMessage(BinaryContent content, RequestOptions options = null, bool bufferResponse = true)
     {
         PipelineMessage message = Pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
+        message.BufferResponse = bufferResponse;
         PipelineRequest request = message.Request;
         request.Method = "POST";
         UriBuilder uriBuilder = new(_endpoint.AbsoluteUri);

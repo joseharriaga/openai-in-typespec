@@ -12,7 +12,7 @@ public partial class ModerationTests
     {
         ModerationClient client = new("text-moderation-stable");
 
-        Moderation moderation = await client.ClassifyTextInputAsync("I am killing all my houseplants!");
+        ModerationResult moderation = await client.ClassifyTextInputAsync("I am killing all my houseplants!");
         Assert.IsNotNull(moderation);
         Assert.IsTrue(moderation.Flagged);
         Assert.IsTrue(moderation.Categories.Violence);

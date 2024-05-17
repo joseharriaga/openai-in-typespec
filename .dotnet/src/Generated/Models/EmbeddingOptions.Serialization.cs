@@ -88,7 +88,7 @@ namespace OpenAI.Embeddings
             BinaryData input = default;
             CreateEmbeddingRequestModel model = default;
             EmbeddingOptionsEncodingFormat? encodingFormat = default;
-            long? dimensions = default;
+            int? dimensions = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -119,7 +119,7 @@ namespace OpenAI.Embeddings
                     {
                         continue;
                     }
-                    dimensions = property.Value.GetInt64();
+                    dimensions = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("user"u8))

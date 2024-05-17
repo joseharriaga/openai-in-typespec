@@ -19,6 +19,10 @@ namespace OpenAI.Internal.Models
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
+        private const string Gpt4oValue = "gpt-4o";
+        private const string Gpt4o20240513Value = "gpt-4o-2024-05-13";
+        private const string Gpt4TurboValue = "gpt-4-turbo";
+        private const string Gpt4Turbo20240409Value = "gpt-4-turbo-2024-04-09";
         private const string Gpt40125PreviewValue = "gpt-4-0125-preview";
         private const string Gpt4TurboPreviewValue = "gpt-4-turbo-preview";
         private const string Gpt41106PreviewValue = "gpt-4-1106-preview";
@@ -37,6 +41,14 @@ namespace OpenAI.Internal.Models
         private const string Gpt35Turbo0125Value = "gpt-3.5-turbo-0125";
         private const string Gpt35Turbo16k0613Value = "gpt-3.5-turbo-16k-0613";
 
+        /// <summary> gpt-4o. </summary>
+        public static CreateChatCompletionRequestModel Gpt4o { get; } = new CreateChatCompletionRequestModel(Gpt4oValue);
+        /// <summary> gpt-4o-2024-05-13. </summary>
+        public static CreateChatCompletionRequestModel Gpt4o20240513 { get; } = new CreateChatCompletionRequestModel(Gpt4o20240513Value);
+        /// <summary> gpt-4-turbo. </summary>
+        public static CreateChatCompletionRequestModel Gpt4Turbo { get; } = new CreateChatCompletionRequestModel(Gpt4TurboValue);
+        /// <summary> gpt-4-turbo-2024-04-09. </summary>
+        public static CreateChatCompletionRequestModel Gpt4Turbo20240409 { get; } = new CreateChatCompletionRequestModel(Gpt4Turbo20240409Value);
         /// <summary> gpt-4-0125-preview. </summary>
         public static CreateChatCompletionRequestModel Gpt40125Preview { get; } = new CreateChatCompletionRequestModel(Gpt40125PreviewValue);
         /// <summary> gpt-4-turbo-preview. </summary>

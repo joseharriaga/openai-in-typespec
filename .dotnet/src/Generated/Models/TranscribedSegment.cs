@@ -52,16 +52,10 @@ namespace OpenAI.Audio
         /// <param name="tokenIds"> Array of token IDs for the text content. </param>
         /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
         /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
-        /// <param name="compressionRatio">
-        /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
-        /// failed.
-        /// </param>
-        /// <param name="noSpeechProbability">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
-        /// is below -1, consider this segment silent.
-        /// </param>
+        /// <param name="compressionRatio"> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </param>
+        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="tokenIds"/> is null. </exception>
-        internal TranscribedSegment(long id, long seekOffset, TimeSpan start, TimeSpan end, string text, IEnumerable<long> tokenIds, double temperature, double averageLogProbability, double compressionRatio, double noSpeechProbability)
+        internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IEnumerable<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability)
         {
             Argument.AssertNotNull(text, nameof(text));
             Argument.AssertNotNull(tokenIds, nameof(tokenIds));
@@ -87,16 +81,10 @@ namespace OpenAI.Audio
         /// <param name="tokenIds"> Array of token IDs for the text content. </param>
         /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
         /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
-        /// <param name="compressionRatio">
-        /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
-        /// failed.
-        /// </param>
-        /// <param name="noSpeechProbability">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
-        /// is below -1, consider this segment silent.
-        /// </param>
+        /// <param name="compressionRatio"> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </param>
+        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal TranscribedSegment(long id, long seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<long> tokenIds, double temperature, double averageLogProbability, double compressionRatio, double noSpeechProbability, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             SeekOffset = seekOffset;
@@ -117,7 +105,7 @@ namespace OpenAI.Audio
         }
 
         /// <summary> Unique identifier of the segment. </summary>
-        public long Id { get; }
+        public int Id { get; }
         /// <summary> Start time of the segment in seconds. </summary>
         public TimeSpan Start { get; }
         /// <summary> End time of the segment in seconds. </summary>
@@ -125,11 +113,8 @@ namespace OpenAI.Audio
         /// <summary> Text content of the segment. </summary>
         public string Text { get; }
         /// <summary> Temperature parameter used for generating the segment. </summary>
-        public double Temperature { get; }
-        /// <summary>
-        /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
-        /// failed.
-        /// </summary>
-        public double CompressionRatio { get; }
+        public float Temperature { get; }
+        /// <summary> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </summary>
+        public float CompressionRatio { get; }
     }
 }

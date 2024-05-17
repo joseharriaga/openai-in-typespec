@@ -49,12 +49,12 @@ namespace OpenAI.Moderations
         /// <param name="harassmentThreatening"> The score for the category 'harassment/threatening'. </param>
         /// <param name="selfHarm"> The score for the category 'self-harm'. </param>
         /// <param name="selfHarmIntent"> The score for the category 'self-harm/intent'. </param>
-        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructive'. </param>
+        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructions'. </param>
         /// <param name="sexual"> The score for the category 'sexual'. </param>
         /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
-        internal ModerationCategoryScores(double hate, double hateThreatening, double harassment, double harassmentThreatening, double selfHarm, double selfHarmIntent, double selfHarmInstructions, double sexual, double sexualMinors, double violence, double violenceGraphic)
+        internal ModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -76,13 +76,13 @@ namespace OpenAI.Moderations
         /// <param name="harassmentThreatening"> The score for the category 'harassment/threatening'. </param>
         /// <param name="selfHarm"> The score for the category 'self-harm'. </param>
         /// <param name="selfHarmIntent"> The score for the category 'self-harm/intent'. </param>
-        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructive'. </param>
+        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructions'. </param>
         /// <param name="sexual"> The score for the category 'sexual'. </param>
         /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ModerationCategoryScores(double hate, double hateThreatening, double harassment, double harassmentThreatening, double selfHarm, double selfHarmIntent, double selfHarmInstructions, double sexual, double sexualMinors, double violence, double violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -104,26 +104,26 @@ namespace OpenAI.Moderations
         }
 
         /// <summary> The score for the category 'hate'. </summary>
-        public double Hate { get; }
+        public float Hate { get; }
         /// <summary> The score for the category 'hate/threatening'. </summary>
-        public double HateThreatening { get; }
+        public float HateThreatening { get; }
         /// <summary> The score for the category 'harassment'. </summary>
-        public double Harassment { get; }
+        public float Harassment { get; }
         /// <summary> The score for the category 'harassment/threatening'. </summary>
-        public double HarassmentThreatening { get; }
+        public float HarassmentThreatening { get; }
         /// <summary> The score for the category 'self-harm'. </summary>
-        public double SelfHarm { get; }
+        public float SelfHarm { get; }
         /// <summary> The score for the category 'self-harm/intent'. </summary>
-        public double SelfHarmIntent { get; }
-        /// <summary> The score for the category 'self-harm/instructive'. </summary>
-        public double SelfHarmInstructions { get; }
+        public float SelfHarmIntent { get; }
+        /// <summary> The score for the category 'self-harm/instructions'. </summary>
+        public float SelfHarmInstructions { get; }
         /// <summary> The score for the category 'sexual'. </summary>
-        public double Sexual { get; }
+        public float Sexual { get; }
         /// <summary> The score for the category 'sexual/minors'. </summary>
-        public double SexualMinors { get; }
+        public float SexualMinors { get; }
         /// <summary> The score for the category 'violence'. </summary>
-        public double Violence { get; }
+        public float Violence { get; }
         /// <summary> The score for the category 'violence/graphic'. </summary>
-        public double ViolenceGraphic { get; }
+        public float ViolenceGraphic { get; }
     }
 }

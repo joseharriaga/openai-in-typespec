@@ -1,18 +1,18 @@
 using OpenAI.Assistants;
 using OpenAI.Audio;
+using OpenAI.Batch;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Images;
-using OpenAI.Internal.Models;
 using OpenAI.Models;
 using OpenAI.Moderations;
+using OpenAI.VectorStores;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 
 namespace OpenAI;
 
@@ -23,23 +23,25 @@ namespace OpenAI;
 [CodeGenModel("OpenAIClient")]
 [CodeGenSuppress("OpenAIClient", typeof(ApiKeyCredential))]
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
-// [CodeGenSuppress("GetAssistantsClient")]
-// [CodeGenSuppress("GetMessagesClient")]
-// [CodeGenSuppress("GetRunsClient")]
-// [CodeGenSuppress("GetThreadsClient")]
+[CodeGenSuppress("GetAssistantClientClient")]
 [CodeGenSuppress("GetAudioClientClient")]
+[CodeGenSuppress("GetBatchClientClient")]
 [CodeGenSuppress("GetChatClient")]
-[CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetEmbeddingClientClient")]
 [CodeGenSuppress("GetFileClientClient")]
 [CodeGenSuppress("GetFineTuningClientClient")]
 [CodeGenSuppress("GetImageClientClient")]
+[CodeGenSuppress("GetInternalAssistantMessageClientClient")]
+[CodeGenSuppress("GetInternalAssistantRunClientClient")]
+[CodeGenSuppress("GetInternalAssistantThreadClientClient")]
+[CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetModelClientClient")]
 [CodeGenSuppress("GetModerationClientClient")]
+[CodeGenSuppress("GetVectorStoreClientClient")]
 public partial class OpenAIClient
 {
     private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
-    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v1";
+    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v2";
     private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
     private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
     private const string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
@@ -117,6 +119,17 @@ public partial class OpenAIClient
     public virtual AudioClient GetAudioClient(string model) => new(_pipeline, model, _endpoint, _options);
 
     /// <summary>
+    /// Gets a new instance of <see cref="BatchClient"/> that reuses the client configuration details provided to
+    /// the <see cref="OpenAIClient"/> instance.
+    /// </summary>
+    /// <remarks>
+    /// This method is functionally equivalent to using the <see cref="BatchClient"/> constructor directly with
+    /// the same configuration details.
+    /// </remarks>
+    /// <returns> A new <see cref="BatchClient"/>. </returns>
+    public virtual BatchClient GetBatchClient() => new(_pipeline, _endpoint, _options);
+
+    /// <summary>
     /// Gets a new instance of <see cref="ChatClient"/> that reuses the client configuration details provided to
     /// the <see cref="OpenAIClient"/> instance.
     /// </summary>
@@ -172,14 +185,14 @@ public partial class OpenAIClient
     public virtual ImageClient GetImageClient(string model) => new(_pipeline, model, _endpoint, _options);
 
     /// <summary>
-    /// Gets a new instance of <see cref="ModelManagementClient"/> that reuses the client configuration details provided to
+    /// Gets a new instance of <see cref="ModelClient"/> that reuses the client configuration details provided to
     /// the <see cref="OpenAIClient"/> instance.
     /// </summary>
     /// <remarks>
-    /// This method is functionally equivalent to using the <see cref="ModelManagementClient"/> constructor directly with
+    /// This method is functionally equivalent to using the <see cref="ModelClient"/> constructor directly with
     /// the same configuration details.
     /// </remarks>
-    /// <returns> A new <see cref="ModelManagementClient"/>. </returns>
+    /// <returns> A new <see cref="ModelClient"/>. </returns>
     public virtual ModelClient GetModelClient() => new(_pipeline, _endpoint, _options);
 
     /// <summary>
@@ -192,6 +205,18 @@ public partial class OpenAIClient
     /// </remarks>
     /// <returns> A new <see cref="ModerationClient"/>. </returns>
     public virtual ModerationClient GetModerationClient(string model) => new(_pipeline, model, _endpoint, _options);
+
+    /// <summary>
+    /// Gets a new instance of <see cref="VectorStoreClient"/> that reuses the client configuration details provided to
+    /// the <see cref="OpenAIClient"/> instance.
+    /// </summary>
+    /// <remarks>
+    /// This method is functionally equivalent to using the <see cref="VectorStoreClient"/> constructor directly with
+    /// the same configuration details.
+    /// </remarks>
+    /// <returns> A new <see cref="ModelClient"/>. </returns>
+    [Experimental("OPENAI001")]
+    public virtual VectorStoreClient GetVectorStoreClient() => new(_pipeline, _endpoint, _options);
 
     internal static ClientPipeline CreatePipeline(ApiKeyCredential credential, OpenAIClientOptions options = null)
     {

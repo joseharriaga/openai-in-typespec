@@ -105,7 +105,7 @@ public partial class ModelClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> DeleteAsync(string model, RequestOptions options)
+    public virtual async Task<ClientResult> DeleteModelAsync(string model, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 

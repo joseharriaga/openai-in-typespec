@@ -1,5 +1,10 @@
 ﻿namespace OpenAI.Audio;
 
+// CUSTOM: Renamed.
+
+[CodeGenModel("TranscriptionWord")]
+public readonly partial struct TranscribedWord {}
+
 // CUSTOM: Made internal.
 
 [CodeGenModel("CreateTranscriptionResponseVerboseJsonTask")]

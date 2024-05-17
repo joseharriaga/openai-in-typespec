@@ -5,10 +5,10 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI
 {
     /// <summary> The ListOrder. </summary>
-    internal readonly partial struct ListOrder : IEquatable<ListOrder>
+    public readonly partial struct ListOrder : IEquatable<ListOrder>
     {
         private readonly string _value;
 
@@ -19,13 +19,8 @@ namespace OpenAI.Internal.Models
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        private const string AscValue = "asc";
-        private const string DescValue = "desc";
-
-        /// <summary> asc. </summary>
-        public static ListOrder Asc { get; } = new ListOrder(AscValue);
-        /// <summary> desc. </summary>
-        public static ListOrder Desc { get; } = new ListOrder(DescValue);
+        private const string OldestFirstValue = "asc";
+        private const string NewestFirstValue = "desc";
         /// <summary> Determines if two <see cref="ListOrder"/> values are the same. </summary>
         public static bool operator ==(ListOrder left, ListOrder right) => left.Equals(right);
         /// <summary> Determines if two <see cref="ListOrder"/> values are not the same. </summary>

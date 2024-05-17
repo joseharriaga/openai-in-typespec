@@ -21,8 +21,15 @@ namespace OpenAI.Internal
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
+            if (Code != null)
+            {
+                writer.WritePropertyName("code"u8);
+                writer.WriteStringValue(Code);
+            }
+            else
+            {
+                writer.WriteNull("code");
+            }
             writer.WritePropertyName("message"u8);
             writer.WriteStringValue(Message);
             if (Param != null)
@@ -34,15 +41,8 @@ namespace OpenAI.Internal
             {
                 writer.WriteNull("param");
             }
-            if (Code != null)
-            {
-                writer.WritePropertyName("code"u8);
-                writer.WriteStringValue(Code);
-            }
-            else
-            {
-                writer.WriteNull("code");
-            }
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -81,17 +81,22 @@ namespace OpenAI.Internal
             {
                 return null;
             }
-            string type = default;
+            string code = default;
             string message = default;
             string param = default;
-            string code = default;
+            string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
+                if (property.NameEquals("code"u8))
                 {
-                    type = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        code = null;
+                        continue;
+                    }
+                    code = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("message"u8))
@@ -109,14 +114,9 @@ namespace OpenAI.Internal
                     param = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("code"u8))
+                if (property.NameEquals("type"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        code = null;
-                        continue;
-                    }
-                    code = property.Value.GetString();
+                    type = property.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -125,7 +125,7 @@ namespace OpenAI.Internal
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new OpenAIError(type, message, param, code, serializedAdditionalRawData);
+            return new OpenAIError(code, message, param, type, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<OpenAIError>.Write(ModelReaderWriterOptions options)
@@ -158,6 +158,14 @@ namespace OpenAI.Internal
         }
 
         string IPersistableModel<OpenAIError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The result to deserialize the model from. </param>
+        internal static OpenAIError FromResponse(PipelineResponse response)
+        {
+            using var document = JsonDocument.Parse(response.Content);
+            return DeserializeOpenAIError(document.RootElement);
+        }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal virtual BinaryContent ToBinaryContent()

@@ -1,22 +1,43 @@
+using OpenAI.Internal.Models;
+using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when creating a new <see cref="ThreadRun"/>.
 /// </summary>
+[CodeGenModel("CreateRunRequest")]
+[CodeGenSuppress("RunCreationOptions", typeof(string))]
+[CodeGenSerialization(nameof(ToolConstraint), "tool_choice", SerializationValueHook = nameof(SerializeToolConstraint))]
 public partial class RunCreationOptions
 {
+    // CUSTOM: assistant_id/stream visibility hidden so that they can be promoted to required method parameters
+    [CodeGenMember("AssistantId")]
+    internal string AssistantId { get; set; }
+
+    [CodeGenMember("Stream")]
+    internal bool? Stream { get; set; }
+
+    /// <inheritdoc cref="AssistantResponseFormat"/>
+    [CodeGenMember("ResponseFormat")]
+    public AssistantResponseFormat ResponseFormat { get; init; }
+
     /// <summary>
     /// A run-specific model name that will override the assistant's defined model. If not provided, the assistant's
     /// selection will be used.
     /// </summary>
+    [CodeGenMember("Model")]
     public string ModelOverride { get; init; }
 
     /// <summary>
     /// A run specific replacement for the assistant's default instructions that will override the assistant-level
     /// instructions. If not specified, the assistant's instructions will be used.
     /// </summary>
+    [CodeGenMember("Instructions")]
     public string InstructionsOverride { get; init; }
 
     /// <summary>
@@ -24,7 +45,28 @@ public partial class RunCreationOptions
     /// run. Unlike <see cref="InstructionsOverride"/>, the assistant's instructions are preserved and these additional
     /// instructions are concatenated.
     /// </summary>
+    [CodeGenMember("AdditionalInstructions")]
     public string AdditionalInstructions { get; init; }
+
+    /// <summary> Adds additional messages to the thread before creating the run. </summary>
+    public IList<ThreadInitializationMessage> AdditionalMessages { get; } = new ChangeTrackingList<ThreadInitializationMessage>();
+
+    [CodeGenMember("AdditionalMessages")]
+    internal IList<MessageCreationOptions> InternalMessages
+    {
+        get => AdditionalMessages.Select(initializationMessage => initializationMessage as MessageCreationOptions).ToList();
+        private set
+        {
+            // Note: this path is exclusively used in a test or deserialization case; here, we'll convert the
+            //          underlying wire-friendly representation into the initialization message abstraction.
+
+            AdditionalMessages.Clear();
+            foreach (MessageCreationOptions baseMessageOptions in value)
+            {
+                AdditionalMessages.Add(new ThreadInitializationMessage(baseMessageOptions));
+            }
+        }
+    }
 
     /// <summary>
     /// A run-specific collection of tool definitions that will override the assistant-level defaults. If not provided,
@@ -36,8 +78,8 @@ public partial class RunCreationOptions
     ///     - works with data, math, and computer code
     /// </item>
     /// <item>
-    ///     <c>retrieval</c> - <see cref="RetrievalToolDefinition"/> 
-    ///     - dynamically enriches an Run's context with content from uploaded, indexed files
+    ///     <c>file_search</c> - <see cref="FileSearchToolDefinition"/> 
+    ///     - dynamically enriches an Run's context with content from vector stores
     /// </item>
     /// <item>
     ///     <c>function</c> - <see cref="FunctionToolDefinition"/>
@@ -46,17 +88,44 @@ public partial class RunCreationOptions
     /// </list>
     /// </para>
     /// </summary>
+    [CodeGenMember("Tools")]
     public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
 
-    /// <summary>
-    /// An optional key/value mapping of additional, supplemental data items to attach to the <see cref="ThreadRun"/>.
-    /// This information may be useful for storing custom details in a structured format.
-    /// </summary>
-    /// <remarks>
-    /// <list type="bullet">
-    ///     <item><b>Keys</b> can be a maximum of 64 characters in length.</item>
-    ///     <item><b>Values</b> can be a maximum of 512 characters in length.</item>
-    /// </list>
-    /// </remarks>
+    /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
     public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
+
+    /// <summary> What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. </summary>
+    public float? Temperature { get; init; }
+
+    /// <summary>
+    /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+    ///
+    /// We generally recommend altering this or temperature but not both.
+    /// </summary>
+    [CodeGenMember("TopP")]
+    public float? NucleusSamplingFactor { get; init; }
+
+    /// <summary> The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
+    public int? MaxPromptTokens { get; init; }
+
+    /// <summary> The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
+    public int? MaxCompletionTokens { get; init; }
+
+    /// <summary> Gets or sets the truncation strategy. </summary>
+    public RunTruncationStrategy TruncationStrategy { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [CodeGenMember("ToolChoice")]
+    public ToolConstraint ToolConstraint { get; init; }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="RunCreationOptions"/>.
+    /// </summary>
+    public RunCreationOptions()
+    { }
+
+    private void SerializeToolConstraint(Utf8JsonWriter writer)
+        => writer.WriteObjectValue(ToolConstraint, new ModelReaderWriterOptions("J"));
 }

@@ -1,21 +1,15 @@
-using System.Collections.Generic;
-
 namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when modifying an existing <see cref="AssistantThread"/>.
 /// </summary>
+[CodeGenModel("ModifyThreadRequest")]
 public partial class ThreadModificationOptions
 {
-    /// <summary>
-    /// A replacement for the optional key/value mapping of additional, supplemental data items to attach to the
-    /// <see cref="AssistantThread"/>. This information may be useful for storing custom details in a structured format.
-    /// </summary>
-    /// <remarks>
-    /// <list type="bullet">
-    ///     <item><b>Keys</b> can be a maximum of 64 characters in length.</item>
-    ///     <item><b>Values</b> can be a maximum of 512 characters in length.</item>
-    /// </list>
-    /// </remarks>
-    public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
+    // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
+    //          response models (which do not contain resource initialization helpers).
+
+    /// <inheritdoc cref="ToolResources"/>
+    [CodeGenMember("ToolResources")]
+    public ToolResources ToolResources { get; init; }
 }

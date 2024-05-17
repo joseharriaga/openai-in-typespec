@@ -64,7 +64,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             ChatCompletionToolType type = default;
-            FunctionObject function = default;
+            FunctionDefinition function = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -76,7 +76,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("function"u8))
                 {
-                    function = FunctionObject.DeserializeFunctionObject(property.Value, options);
+                    function = FunctionDefinition.DeserializeFunctionDefinition(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

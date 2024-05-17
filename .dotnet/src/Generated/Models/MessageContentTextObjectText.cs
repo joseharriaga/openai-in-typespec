@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
     /// <summary> The MessageContentTextObjectText. </summary>
     internal partial class MessageContentTextObjectText
@@ -45,9 +45,12 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="MessageContentTextObjectText"/>. </summary>
         /// <param name="value"> The data that makes up the text. </param>
-        /// <param name="annotations"></param>
+        /// <param name="annotations">
+        /// Please note <see cref="MessageContentTextObjectAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="MessageContentTextAnnotationsFileCitationObject"/> and <see cref="MessageContentTextAnnotationsFilePathObject"/>.
+        /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="value"/> or <paramref name="annotations"/> is null. </exception>
-        internal MessageContentTextObjectText(string value, IEnumerable<BinaryData> annotations)
+        public MessageContentTextObjectText(string value, IEnumerable<MessageContentTextObjectAnnotation> annotations)
         {
             Argument.AssertNotNull(value, nameof(value));
             Argument.AssertNotNull(annotations, nameof(annotations));
@@ -58,9 +61,12 @@ namespace OpenAI.Internal.Models
 
         /// <summary> Initializes a new instance of <see cref="MessageContentTextObjectText"/>. </summary>
         /// <param name="value"> The data that makes up the text. </param>
-        /// <param name="annotations"></param>
+        /// <param name="annotations">
+        /// Please note <see cref="MessageContentTextObjectAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="MessageContentTextAnnotationsFileCitationObject"/> and <see cref="MessageContentTextAnnotationsFilePathObject"/>.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageContentTextObjectText(string value, IReadOnlyList<BinaryData> annotations, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageContentTextObjectText(string value, IList<MessageContentTextObjectAnnotation> annotations, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Value = value;
             Annotations = annotations;
@@ -73,48 +79,12 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> The data that makes up the text. </summary>
-        public string Value { get; }
+        public string Value { get; set; }
         /// <summary>
         /// Gets the annotations
-        /// <para>
-        /// To assign an object to the element of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// <remarks>
-        /// Supported types:
-        /// <list type="bullet">
-        /// <item>
-        /// <description><see cref="MessageContentTextAnnotationsFileCitationObject"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="MessageContentTextAnnotationsFilePathObject"/></description>
-        /// </item>
-        /// </list>
-        /// </remarks>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
+        /// Please note <see cref="MessageContentTextObjectAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="MessageContentTextAnnotationsFileCitationObject"/> and <see cref="MessageContentTextAnnotationsFilePathObject"/>.
         /// </summary>
-        public IReadOnlyList<BinaryData> Annotations { get; }
+        public IList<MessageContentTextObjectAnnotation> Annotations { get; }
     }
 }

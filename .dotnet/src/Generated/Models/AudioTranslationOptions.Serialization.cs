@@ -90,7 +90,7 @@ namespace OpenAI.Audio
             CreateTranslationRequestModel model = default;
             string prompt = default;
             AudioTranslationFormat? responseFormat = default;
-            double? temperature = default;
+            float? temperature = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -125,7 +125,7 @@ namespace OpenAI.Audio
                     {
                         continue;
                     }
-                    temperature = property.Value.GetDouble();
+                    temperature = property.Value.GetSingle();
                     continue;
                 }
                 if (options.Format != "W")

@@ -26,7 +26,7 @@ namespace OpenAI.Audio
             writer.WritePropertyName("language"u8);
             writer.WriteStringValue(Language);
             writer.WritePropertyName("duration"u8);
-            writer.WriteNumberValue(Convert.ToInt32(Duration.Value.ToString("%s")));
+            writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.fff")));
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
             if (Optional.IsCollectionDefined(Segments))
@@ -98,7 +98,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("duration"u8))
                 {
-                    DeserializeNullableTimespan(property, ref duration);
+                    duration = TimeSpan.FromSeconds(property.Value.GetDouble());
                     continue;
                 }
                 if (property.NameEquals("text"u8))

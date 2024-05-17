@@ -43,25 +43,25 @@ namespace OpenAI.LegacyCompletions
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CompletionUsage"/>. </summary>
-        /// <param name="promptTokens"> Number of tokens in the prompt. </param>
         /// <param name="completionTokens"> Number of tokens in the generated completion. </param>
+        /// <param name="promptTokens"> Number of tokens in the prompt. </param>
         /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
-        internal CompletionUsage(long promptTokens, long completionTokens, long totalTokens)
+        internal CompletionUsage(int completionTokens, int promptTokens, int totalTokens)
         {
-            PromptTokens = promptTokens;
             CompletionTokens = completionTokens;
+            PromptTokens = promptTokens;
             TotalTokens = totalTokens;
         }
 
         /// <summary> Initializes a new instance of <see cref="CompletionUsage"/>. </summary>
-        /// <param name="promptTokens"> Number of tokens in the prompt. </param>
         /// <param name="completionTokens"> Number of tokens in the generated completion. </param>
+        /// <param name="promptTokens"> Number of tokens in the prompt. </param>
         /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CompletionUsage(long promptTokens, long completionTokens, long totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CompletionUsage(int completionTokens, int promptTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            PromptTokens = promptTokens;
             CompletionTokens = completionTokens;
+            PromptTokens = promptTokens;
             TotalTokens = totalTokens;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -71,11 +71,11 @@ namespace OpenAI.LegacyCompletions
         {
         }
 
-        /// <summary> Number of tokens in the prompt. </summary>
-        public long PromptTokens { get; }
         /// <summary> Number of tokens in the generated completion. </summary>
-        public long CompletionTokens { get; }
+        public int CompletionTokens { get; }
+        /// <summary> Number of tokens in the prompt. </summary>
+        public int PromptTokens { get; }
         /// <summary> Total number of tokens used in the request (prompt + completion). </summary>
-        public long TotalTokens { get; }
+        public int TotalTokens { get; }
     }
 }

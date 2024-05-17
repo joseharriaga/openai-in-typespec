@@ -25,8 +25,15 @@ namespace OpenAI.Images
             writer.WriteStringValue(Prompt);
             if (Optional.IsDefined(Model))
             {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.Value.ToString());
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteStringValue(Model.Value.ToString());
+                }
+                else
+                {
+                    writer.WriteNull("model");
+                }
             }
             if (Optional.IsDefined(N))
             {
@@ -124,6 +131,7 @@ namespace OpenAI.Images
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        model = null;
                         continue;
                     }
                     model = new CreateImageRequestModel(property.Value.GetString());

@@ -19,13 +19,16 @@ namespace OpenAI.Files
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        private const string FineTuneValue = "fine-tune";
         private const string AssistantsValue = "assistants";
+        private const string BatchValue = "batch";
+        private const string FineTuneValue = "fine-tune";
 
-        /// <summary> fine-tune. </summary>
-        public static UploadFileOptionsPurpose FineTune { get; } = new UploadFileOptionsPurpose(FineTuneValue);
         /// <summary> assistants. </summary>
         public static UploadFileOptionsPurpose Assistants { get; } = new UploadFileOptionsPurpose(AssistantsValue);
+        /// <summary> batch. </summary>
+        public static UploadFileOptionsPurpose Batch { get; } = new UploadFileOptionsPurpose(BatchValue);
+        /// <summary> fine-tune. </summary>
+        public static UploadFileOptionsPurpose FineTune { get; } = new UploadFileOptionsPurpose(FineTuneValue);
         /// <summary> Determines if two <see cref="UploadFileOptionsPurpose"/> values are the same. </summary>
         public static bool operator ==(UploadFileOptionsPurpose left, UploadFileOptionsPurpose right) => left.Equals(right);
         /// <summary> Determines if two <see cref="UploadFileOptionsPurpose"/> values are not the same. </summary>

@@ -78,8 +78,8 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string token = default;
-            double logprob = default;
-            IReadOnlyList<long> bytes = default;
+            float logprob = default;
+            IReadOnlyList<int> bytes = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -91,20 +91,20 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("logprob"u8))
                 {
-                    logprob = property.Value.GetDouble();
+                    logprob = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("bytes"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        bytes = new ChangeTrackingList<long>();
+                        bytes = new ChangeTrackingList<int>();
                         continue;
                     }
-                    List<long> array = new List<long>();
+                    List<int> array = new List<int>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetInt64());
+                        array.Add(item.GetInt32());
                     }
                     bytes = array;
                     continue;

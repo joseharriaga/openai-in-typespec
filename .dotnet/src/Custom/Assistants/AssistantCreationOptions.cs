@@ -1,3 +1,4 @@
+using OpenAI.Internal.Models;
 using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
@@ -5,58 +6,51 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// Represents additional options available when creating a new <see cref="Assistant"/>.
 /// </summary>
+[CodeGenModel("CreateAssistantRequest")]
+[CodeGenSuppress(nameof(AssistantCreationOptions), typeof(string))]
 public partial class AssistantCreationOptions
 {
-    /// <summary>
-    /// An optional display name for the assistant.
-    /// </summary>
-    public string Name { get; init; }
-    /// <summary>
-    /// A description to associate with the assistant.
-    /// </summary>
-    public string Description { get; init; }
+    // CUSTOM: visibility hidden to promote required property to method parameter
+    internal string Model { get; set; }
 
     /// <summary>
-    /// Default instructions for the assistant to use when creating messages.
-    /// </summary>
-    public string Instructions { get; init; }
-
-    /// <summary>
-    /// A collection of default tool definitions to enable for the assistant. Available tools include:
     /// <para>
-    /// <list type="bullet">
-    /// <item>
-    ///     <c>code_interpreter</c> - <see cref="CodeInterpreterToolDefinition"/> 
-    ///     - works with data, math, and computer code
-    /// </item>
-    /// <item>
-    ///     <c>retrieval</c> - <see cref="RetrievalToolDefinition"/> 
-    ///     - dynamically enriches an assistant's context with content from uploaded, indexed files
-    /// </item>
-    /// <item>
-    ///     <c>function</c> - <see cref="FunctionToolDefinition"/>
-    ///     - enables caller-provided custom functions for actions and enrichment
-    /// </item>
-    /// </list>
+    /// A list of tool enabled on the assistant.
     /// </para>
+    /// There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
     /// </summary>
+    [CodeGenMember("Tools")]
     public IList<ToolDefinition> Tools { get; } = new ChangeTrackingList<ToolDefinition>();
 
-    /// <summary>
-    /// A collection of IDs for previously uploaded files that are made accessible to the assistant. These IDs are the
-    /// basis for the functionality of file-based tools like <c>retrieval</c>.
-    /// </summary>
-    public IList<string> FileIds { get; } = new ChangeTrackingList<string>();
+    /// <inheritdoc cref="ToolResources"/>
+    [CodeGenMember("ToolResources")]
+    public ToolResources ToolResources { get; init; }
+
+    /// <inheritdoc cref="AssistantResponseFormat"/>
+    [CodeGenMember("ResponseFormat")]
+    public AssistantResponseFormat ResponseFormat { get; init; }
 
     /// <summary>
-    /// An optional key/value mapping of additional, supplemental data items to attach to the <see cref="Assistant"/>.
-    /// This information may be useful for storing custom details in a structured format.
+    /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+    ///
+    /// We generally recommend altering this or temperature but not both.
     /// </summary>
-    /// <remarks>
-    /// <list type="bullet">
-    ///     <item><b>Keys</b> can be a maximum of 64 characters in length.</item>
-    ///     <item><b>Values</b> can be a maximum of 512 characters in length.</item>
-    /// </list>
-    /// </remarks>
-    public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
+    [CodeGenMember("TopP")]
+    public float? NucleusSamplingFactor { get; init; }
+    
+    internal AssistantCreationOptions(InternalCreateAssistantRequestModel model)
+        : this()
+    {
+        Model = model.ToString();
+    }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="AssistantCreationOptions"/>.
+    /// </summary>
+    public AssistantCreationOptions()
+    {
+        Metadata = new ChangeTrackingDictionary<string, string>();
+        Tools = new ChangeTrackingList<ToolDefinition>();
+        ToolResources = new();
+    }
 }

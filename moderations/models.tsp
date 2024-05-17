@@ -1,20 +1,23 @@
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
 model CreateModerationRequest {
   /** The input text to classify */
-  input: CreateModerationRequestInput;
+  input: string | string[];
 
-  /**
-   * Two content moderations models are available: `text-moderation-stable` and
-   * `text-moderation-latest`. The default is `text-moderation-latest` which will be automatically
-   * upgraded over time. This ensures you are always using our most accurate model. If you use
-   * `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy
-   * of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
-   */
+  @doc("""
+  Two content moderations models are available: `text-moderation-stable` and `text-moderation-latest`.
+  
+  The default is `text-moderation-latest` which will be automatically upgraded over time. This ensures you are always using our most accurate model. If you use `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
+  """)
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | MODERATION_MODELS = "text-moderation-latest";
+  `model`?: string | "text-moderation-latest" | "text-moderation-stable" = "text-moderation-latest";
 }
 
 /** Represents if a given text input is potentially harmful. */
@@ -32,18 +35,10 @@ model CreateModerationResponse {
 
     /** A list of the categories, and whether they are flagged or not. */
     categories: {
-      /**
-       * Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
-       * religion, nationality, sexual orientation, disability status, or caste. Hateful content
-       * aimed at non-protected groups (e.g., chess players) is harrassment.
-       */
+      /** Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment. */
       hate: boolean;
 
-      /**
-       * Hateful content that also includes violence or serious harm towards the targeted group
-       * based on race, gender, ethnicity, religion, nationality, sexual orientation, disability
-       * status, or caste.
-       */
+      /** Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. */
       `hate/threatening`: boolean;
 
       /** Content that expresses, incites, or promotes harassing language towards any target. */
@@ -52,28 +47,16 @@ model CreateModerationResponse {
       /** Harassment content that also includes violence or serious harm towards any target. */
       `harassment/threatening`: boolean;
 
-      /**
-       * Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting,
-       * and eating disorders.
-       */
+      /** Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders. */
       `self-harm`: boolean;
 
-      /**
-       * Content where the speaker expresses that they are engaging or intend to engage in acts of
-       * self-harm, such as suicide, cutting, and eating disorders.
-       */
+      /** Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders. */
       `self-harm/intent`: boolean;
 
-      /**
-       * Content that encourages performing acts of self-harm, such as suicide, cutting, and eating
-       * disorders, or that gives instructions or advice on how to commit such acts.
-       */
+      /** Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts. */
       `self-harm/instructions`: boolean;
 
-      /**
-       * Content meant to arouse sexual excitement, such as the description of sexual activity, or
-       * that promotes sexual services (excluding sex education and wellness).
-       */
+      /** Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness). */
       sexual: boolean;
 
       /** Sexual content that includes an individual who is under 18 years old. */
@@ -89,47 +72,37 @@ model CreateModerationResponse {
     /** A list of the categories along with their scores as predicted by model. */
     category_scores: {
       /** The score for the category 'hate'. */
-      hate: float64;
+      hate: float32;
 
       /** The score for the category 'hate/threatening'. */
-      `hate/threatening`: float64;
+      `hate/threatening`: float32;
 
       /** The score for the category 'harassment'. */
-      harassment: float64;
+      harassment: float32;
 
       /** The score for the category 'harassment/threatening'. */
-      `harassment/threatening`: float64;
+      `harassment/threatening`: float32;
 
       /** The score for the category 'self-harm'. */
-      `self-harm`: float64;
+      `self-harm`: float32;
 
       /** The score for the category 'self-harm/intent'. */
-      `self-harm/intent`: float64;
+      `self-harm/intent`: float32;
 
-      /** The score for the category 'self-harm/instructive'. */
-      `self-harm/instructions`: float64;
+      /** The score for the category 'self-harm/instructions'. */
+      `self-harm/instructions`: float32;
 
       /** The score for the category 'sexual'. */
-      sexual: float64;
+      sexual: float32;
 
       /** The score for the category 'sexual/minors'. */
-      `sexual/minors`: float64;
+      `sexual/minors`: float32;
 
       /** The score for the category 'violence'. */
-      violence: float64;
+      violence: float32;
 
       /** The score for the category 'violence/graphic'. */
-      `violence/graphic`: float64;
+      `violence/graphic`: float32;
     };
   }[];
-}
-
-alias MODERATION_MODELS =
-  | "text-moderation-latest"
-  | "text-moderation-stable";
-
-@oneOf
-union CreateModerationRequestInput {
-  string,
-  string[]
 }

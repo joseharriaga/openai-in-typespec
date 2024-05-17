@@ -81,74 +81,74 @@ namespace OpenAI.Moderations
             {
                 return null;
             }
-            double hate = default;
-            double hateThreatening = default;
-            double harassment = default;
-            double harassmentThreatening = default;
-            double selfHarm = default;
-            double selfHarmIntent = default;
-            double selfHarmInstructions = default;
-            double sexual = default;
-            double sexualMinors = default;
-            double violence = default;
-            double violenceGraphic = default;
+            float hate = default;
+            float hateThreatening = default;
+            float harassment = default;
+            float harassmentThreatening = default;
+            float selfHarm = default;
+            float selfHarmIntent = default;
+            float selfHarmInstructions = default;
+            float sexual = default;
+            float sexualMinors = default;
+            float violence = default;
+            float violenceGraphic = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("hate"u8))
                 {
-                    hate = property.Value.GetDouble();
+                    hate = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("hate/threatening"u8))
                 {
-                    hateThreatening = property.Value.GetDouble();
+                    hateThreatening = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("harassment"u8))
                 {
-                    harassment = property.Value.GetDouble();
+                    harassment = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("harassment/threatening"u8))
                 {
-                    harassmentThreatening = property.Value.GetDouble();
+                    harassmentThreatening = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("self-harm"u8))
                 {
-                    selfHarm = property.Value.GetDouble();
+                    selfHarm = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("self-harm/intent"u8))
                 {
-                    selfHarmIntent = property.Value.GetDouble();
+                    selfHarmIntent = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("self-harm/instructions"u8))
                 {
-                    selfHarmInstructions = property.Value.GetDouble();
+                    selfHarmInstructions = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("sexual"u8))
                 {
-                    sexual = property.Value.GetDouble();
+                    sexual = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("sexual/minors"u8))
                 {
-                    sexualMinors = property.Value.GetDouble();
+                    sexualMinors = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("violence"u8))
                 {
-                    violence = property.Value.GetDouble();
+                    violence = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("violence/graphic"u8))
                 {
-                    violenceGraphic = property.Value.GetDouble();
+                    violenceGraphic = property.Value.GetSingle();
                     continue;
                 }
                 if (options.Format != "W")

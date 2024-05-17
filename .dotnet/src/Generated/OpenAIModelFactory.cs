@@ -5,11 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Embeddings;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
 using OpenAI.Moderations;
+using OpenAI.VectorStores;
 
 namespace OpenAI
 {
@@ -35,16 +37,10 @@ namespace OpenAI
         /// <param name="tokenIds"> Array of token IDs for the text content. </param>
         /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
         /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
-        /// <param name="compressionRatio">
-        /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
-        /// failed.
-        /// </param>
-        /// <param name="noSpeechProbability">
-        /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
-        /// is below -1, consider this segment silent.
-        /// </param>
+        /// <param name="compressionRatio"> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </param>
+        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
         /// <returns> A new <see cref="Audio.TranscribedSegment"/> instance for mocking. </returns>
-        public static TranscribedSegment TranscribedSegment(long id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, double temperature = default, double averageLogProbability = default, double compressionRatio = default, double noSpeechProbability = default)
+        public static TranscribedSegment TranscribedSegment(int id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = default, double averageLogProbability = default, float compressionRatio = default, double noSpeechProbability = default)
         {
             tokenIds ??= new List<long>();
 
@@ -62,351 +58,10 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateAssistantRequest"/>. </summary>
-        /// <param name="model">
-        /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-        /// see all of your available models, or see our [Model overview](/docs/models/overview) for
-        /// descriptions of them.
-        /// </param>
-        /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
-        /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
-        /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
-        /// <param name="tools">
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-        /// </param>
-        /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
-        /// maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-        /// ascending order.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateAssistantRequest"/> instance for mocking. </returns>
-        public static CreateAssistantRequest CreateAssistantRequest(string model = null, string name = null, string description = null, string instructions = null, IEnumerable<BinaryData> tools = null, IEnumerable<string> fileIds = null, IDictionary<string, string> metadata = null)
-        {
-            tools ??= new List<BinaryData>();
-            fileIds ??= new List<string>();
-            metadata ??= new Dictionary<string, string>();
-
-            return new CreateAssistantRequest(
-                model,
-                name,
-                description,
-                instructions,
-                tools?.ToList(),
-                fileIds?.ToList(),
-                metadata,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantToolsCode"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `code_interpreter`. </param>
-        /// <returns> A new <see cref="Models.AssistantToolsCode"/> instance for mocking. </returns>
-        public static AssistantToolsCode AssistantToolsCode(AssistantToolsCodeType type = default)
-        {
-            return new AssistantToolsCode(type, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantToolsRetrieval"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `retrieval`. </param>
-        /// <returns> A new <see cref="Models.AssistantToolsRetrieval"/> instance for mocking. </returns>
-        public static AssistantToolsRetrieval AssistantToolsRetrieval(AssistantToolsRetrievalType type = default)
-        {
-            return new AssistantToolsRetrieval(type, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantToolsFunction"/>. </summary>
-        /// <param name="type"> The type of tool being defined: `function`. </param>
-        /// <param name="function"></param>
-        /// <returns> A new <see cref="Models.AssistantToolsFunction"/> instance for mocking. </returns>
-        public static AssistantToolsFunction AssistantToolsFunction(AssistantToolsFunctionType type = default, FunctionObject function = null)
-        {
-            return new AssistantToolsFunction(type, function, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `assistant`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the assistant was created. </param>
-        /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
-        /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
-        /// <param name="model">
-        /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-        /// see all of your available models, or see our [Model overview](/docs/models/overview) for
-        /// descriptions of them.
-        /// </param>
-        /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 32768 characters. </param>
-        /// <param name="tools">
-        /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant.
-        /// Tools can be of types `code_interpreter`, `retrieval`, or `function`.
-        /// </param>
-        /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs attached to this assistant. There can be a
-        /// maximum of 20 files attached to the assistant. Files are ordered by their creation date in
-        /// ascending order.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <returns> A new <see cref="Models.AssistantObject"/> instance for mocking. </returns>
-        public static AssistantObject AssistantObject(string id = null, AssistantObjectObject @object = default, DateTimeOffset createdAt = default, string name = null, string description = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null)
-        {
-            tools ??= new List<BinaryData>();
-            fileIds ??= new List<string>();
-            metadata ??= new Dictionary<string, string>();
-
-            return new AssistantObject(
-                id,
-                @object,
-                createdAt,
-                name,
-                description,
-                model,
-                instructions,
-                tools?.ToList(),
-                fileIds?.ToList(),
-                metadata,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListAssistantsResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListAssistantsResponse"/> instance for mocking. </returns>
-        public static ListAssistantsResponse ListAssistantsResponse(ListAssistantsResponseObject @object = default, IEnumerable<AssistantObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<AssistantObject>();
-
-            return new ListAssistantsResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteAssistantResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.DeleteAssistantResponse"/> instance for mocking. </returns>
-        public static DeleteAssistantResponse DeleteAssistantResponse(string id = null, bool deleted = default, DeleteAssistantResponseObject @object = default)
-        {
-            return new DeleteAssistantResponse(id, deleted, @object, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.AssistantFileObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `assistant.file`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the assistant file was created. </param>
-        /// <param name="assistantId"> The assistant ID that the file is attached to. </param>
-        /// <returns> A new <see cref="Models.AssistantFileObject"/> instance for mocking. </returns>
-        public static AssistantFileObject AssistantFileObject(string id = null, AssistantFileObjectObject @object = default, DateTimeOffset createdAt = default, string assistantId = null)
-        {
-            return new AssistantFileObject(id, @object, createdAt, assistantId, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListAssistantFilesResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListAssistantFilesResponse"/> instance for mocking. </returns>
-        public static ListAssistantFilesResponse ListAssistantFilesResponse(ListAssistantFilesResponseObject @object = default, IEnumerable<AssistantFileObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<AssistantFileObject>();
-
-            return new ListAssistantFilesResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteAssistantFileResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.DeleteAssistantFileResponse"/> instance for mocking. </returns>
-        public static DeleteAssistantFileResponse DeleteAssistantFileResponse(string id = null, bool deleted = default, DeleteAssistantFileResponseObject @object = default)
-        {
-            return new DeleteAssistantFileResponse(id, deleted, @object, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionRequest"/>. </summary>
-        /// <param name="messages">
-        /// A list of messages comprising the conversation so far.
-        /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb).
-        /// </param>
-        /// <param name="model">
-        /// ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility)
-        /// table for details on which models work with the Chat API.
-        /// </param>
-        /// <param name="frequencyPenalty">
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
-        /// frequency in the text so far, decreasing the model's likelihood to repeat the same line
-        /// verbatim.
-        ///
-        /// [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
-        /// </param>
-        /// <param name="logitBias">
-        /// Modify the likelihood of specified tokens appearing in the completion.
-        ///
-        /// Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an
-        /// associated bias value from -100 to 100. Mathematically, the bias is added to the logits
-        /// generated by the model prior to sampling. The exact effect will vary per model, but values
-        /// between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100
-        /// should result in a ban or exclusive selection of the relevant token.
-        /// </param>
-        /// <param name="logprobs">
-        /// Whether to return log probabilities of the output tokens or not. If true, returns the log
-        /// probabilities of each output token returned in the `content` of `message`. This option is
-        /// currently not available on the `gpt-4-vision-preview` model.
-        /// </param>
-        /// <param name="topLogprobs">
-        /// An integer between 0 and 20 specifying the number of most likely tokens to return at each token
-        /// position, each with an associated log probability. `logprobs` must be set to `true` if this
-        /// parameter is used.
-        /// </param>
-        /// <param name="maxTokens">
-        /// The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
-        ///
-        /// The total length of input tokens and generated tokens is limited by the model's context length.
-        /// [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
-        /// for counting tokens.
-        /// </param>
-        /// <param name="n">
-        /// How many chat completion choices to generate for each input message. Note that you will be
-        /// charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to
-        /// minimize costs.
-        /// </param>
-        /// <param name="presencePenalty">
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
-        /// in the text so far, increasing the model's likelihood to talk about new topics.
-        ///
-        /// [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
-        /// </param>
-        /// <param name="responseFormat">
-        /// An object specifying the format that the model must output. Compatible with
-        /// [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than
-        /// `gpt-3.5-turbo-1106`.
-        ///
-        /// Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the
-        /// model generates is valid JSON.
-        ///
-        /// **Important:** when using JSON mode, you **must** also instruct the model to produce JSON
-        /// yourself via a system or user message. Without this, the model may generate an unending stream
-        /// of whitespace until the generation reaches the token limit, resulting in a long-running and
-        /// seemingly "stuck" request. Also note that the message content may be partially cut off if
-        /// `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the
-        /// conversation exceeded the max context length.
-        /// </param>
-        /// <param name="seed">
-        /// This feature is in Beta.
-        ///
-        /// If specified, our system will make a best effort to sample deterministically, such that
-        /// repeated requests with the same `seed` and parameters should return the same result.
-        ///
-        /// Determinism is not guaranteed, and you should refer to the `system_fingerprint` response
-        /// parameter to monitor changes in the backend.
-        /// </param>
-        /// <param name="stop"> Up to 4 sequences where the API will stop generating further tokens. </param>
-        /// <param name="stream">
-        /// If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only
-        /// [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-        /// as they become available, with the stream terminated by a `data: [DONE]` message.
-        /// [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
-        /// </param>
-        /// <param name="temperature">
-        /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-        /// more random, while lower values like 0.2 will make it more focused and deterministic.
-        ///
-        /// We generally recommend altering this or `top_p` but not both.
-        /// </param>
-        /// <param name="topP">
-        /// An alternative to sampling with temperature, called nucleus sampling, where the model considers
-        /// the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising
-        /// the top 10% probability mass are considered.
-        ///
-        /// We generally recommend altering this or `temperature` but not both.
-        /// </param>
-        /// <param name="tools">
-        /// A list of tools the model may call. Currently, only functions are supported as a tool. Use this
-        /// to provide a list of functions the model may generate JSON inputs for.
-        /// </param>
-        /// <param name="toolChoice"></param>
-        /// <param name="user">
-        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-        /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        /// </param>
-        /// <param name="functionCall">
-        /// Deprecated in favor of `tool_choice`.
-        ///
-        /// Controls which (if any) function is called by the model. `none` means the model will not call a
-        /// function and instead generates a message. `auto` means the model can pick between generating a
-        /// message or calling a function. Specifying a particular function via `{"name": "my_function"}`
-        /// forces the model to call that function.
-        ///
-        /// `none` is the default when no functions are present. `auto` is the default if functions are
-        /// present.
-        /// </param>
-        /// <param name="functions">
-        /// Deprecated in favor of `tools`.
-        ///
-        /// A list of functions the model may generate JSON inputs for.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateChatCompletionRequest"/> instance for mocking. </returns>
-        public static CreateChatCompletionRequest CreateChatCompletionRequest(IEnumerable<BinaryData> messages = null, CreateChatCompletionRequestModel model = default, double? frequencyPenalty = null, IDictionary<string, long> logitBias = null, bool? logprobs = null, long? topLogprobs = null, long? maxTokens = null, long? n = null, double? presencePenalty = null, CreateChatCompletionRequestResponseFormat responseFormat = null, long? seed = null, BinaryData stop = null, bool? stream = null, double? temperature = null, double? topP = null, IEnumerable<ChatCompletionTool> tools = null, BinaryData toolChoice = null, string user = null, BinaryData functionCall = null, IEnumerable<ChatCompletionFunctions> functions = null)
-        {
-            messages ??= new List<BinaryData>();
-            logitBias ??= new Dictionary<string, long>();
-            tools ??= new List<ChatCompletionTool>();
-            functions ??= new List<ChatCompletionFunctions>();
-
-            return new CreateChatCompletionRequest(
-                messages?.ToList(),
-                model,
-                frequencyPenalty,
-                logitBias,
-                logprobs,
-                topLogprobs,
-                maxTokens,
-                n,
-                presencePenalty,
-                responseFormat,
-                seed,
-                stop,
-                stream,
-                temperature,
-                topP,
-                tools?.ToList(),
-                toolChoice,
-                user,
-                functionCall,
-                functions?.ToList(),
-                serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestSystemMessage"/>. </summary>
         /// <param name="content"> The contents of the system message. </param>
         /// <param name="role"> The role of the messages author, in this case `system`. </param>
-        /// <param name="name">
-        /// An optional name for the participant. Provides the model information to differentiate between
-        /// participants of the same role.
-        /// </param>
+        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestSystemMessage"/> instance for mocking. </returns>
         public static ChatCompletionRequestSystemMessage ChatCompletionRequestSystemMessage(string content = null, ChatCompletionRequestSystemMessageRole role = default, string name = null)
         {
@@ -414,12 +69,9 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestUserMessage"/>. </summary>
-        /// <param name="content"> The contents of the system message. </param>
+        /// <param name="content"> The contents of the user message. </param>
         /// <param name="role"> The role of the messages author, in this case `user`. </param>
-        /// <param name="name">
-        /// An optional name for the participant. Provides the model information to differentiate between
-        /// participants of the same role.
-        /// </param>
+        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestUserMessage"/> instance for mocking. </returns>
         public static ChatCompletionRequestUserMessage ChatCompletionRequestUserMessage(BinaryData content = null, ChatCompletionRequestUserMessageRole role = default, string name = null)
         {
@@ -446,31 +98,19 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestMessageContentPartImageImageUrl"/>. </summary>
         /// <param name="url"> Either a URL of the image or the base64 encoded image data. </param>
-        /// <param name="detail">
-        /// Specifies the detail level of the image. Learn more in the
-        /// [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
-        /// </param>
+        /// <param name="detail"> Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding). </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestMessageContentPartImageImageUrl"/> instance for mocking. </returns>
-        public static ChatCompletionRequestMessageContentPartImageImageUrl ChatCompletionRequestMessageContentPartImageImageUrl(BinaryData url = null, ChatCompletionRequestMessageContentPartImageImageUrlDetail? detail = null)
+        public static ChatCompletionRequestMessageContentPartImageImageUrl ChatCompletionRequestMessageContentPartImageImageUrl(Uri url = null, ChatCompletionRequestMessageContentPartImageImageUrlDetail? detail = null)
         {
             return new ChatCompletionRequestMessageContentPartImageImageUrl(url, detail, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionRequestAssistantMessage"/>. </summary>
-        /// <param name="content">
-        /// The contents of the assistant message. Required unless `tool_calls` or `function_call` is'
-        /// specified.
-        /// </param>
+        /// <param name="content"> The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified. </param>
         /// <param name="role"> The role of the messages author, in this case `assistant`. </param>
-        /// <param name="name">
-        /// An optional name for the participant. Provides the model information to differentiate between
-        /// participants of the same role.
-        /// </param>
+        /// <param name="name"> An optional name for the participant. Provides the model information to differentiate between participants of the same role. </param>
         /// <param name="toolCalls"></param>
-        /// <param name="functionCall">
-        /// Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be
-        /// called, as generated by the model.
-        /// </param>
+        /// <param name="functionCall"> Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. </param>
         /// <returns> A new <see cref="Models.ChatCompletionRequestAssistantMessage"/> instance for mocking. </returns>
         public static ChatCompletionRequestAssistantMessage ChatCompletionRequestAssistantMessage(string content = null, ChatCompletionRequestAssistantMessageRole role = default, string name = null, IEnumerable<ChatCompletionMessageToolCall> toolCalls = null, ChatCompletionRequestAssistantMessageFunctionCall functionCall = null)
         {
@@ -519,7 +159,7 @@ namespace OpenAI
         /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
         /// <param name="function"></param>
         /// <returns> A new <see cref="Models.ChatCompletionTool"/> instance for mocking. </returns>
-        public static ChatCompletionTool ChatCompletionTool(ChatCompletionToolType type = default, FunctionObject function = null)
+        public static ChatCompletionTool ChatCompletionTool(ChatCompletionToolType type = default, FunctionDefinition function = null)
         {
             return new ChatCompletionTool(type, function, serializedAdditionalRawData: null);
         }
@@ -534,14 +174,8 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionFunctions"/>. </summary>
-        /// <param name="description">
-        /// A description of what the function does, used by the model to choose when and how to call the
-        /// function.
-        /// </param>
-        /// <param name="name">
-        /// The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and
-        /// dashes, with a maximum length of 64.
-        /// </param>
+        /// <param name="description"> A description of what the function does, used by the model to choose when and how to call the function. </param>
+        /// <param name="name"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
         /// <param name="parameters"></param>
         /// <returns> A new <see cref="Models.ChatCompletionFunctions"/> instance for mocking. </returns>
         public static ChatCompletionFunctions ChatCompletionFunctions(string description = null, string name = null, FunctionParameters parameters = null)
@@ -551,17 +185,16 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionResponseChoice"/>. </summary>
         /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
-        /// natural stop point or a provided stop sequence, `length` if the maximum number of tokens
-        /// specified in the request was reached, `content_filter` if content was omitted due to a flag
-        /// from our content filters, `tool_calls` if the model called a tool, or `function_call`
-        /// (deprecated) if the model called a function.
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+        /// `length` if the maximum number of tokens specified in the request was reached,
+        /// `content_filter` if content was omitted due to a flag from our content filters,
+        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="message"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionResponseChoice"/> instance for mocking. </returns>
-        public static CreateChatCompletionResponseChoice CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason = default, long index = default, ChatCompletionResponseMessage message = null, CreateChatCompletionResponseChoiceLogprobs logprobs = null)
+        public static CreateChatCompletionResponseChoice CreateChatCompletionResponseChoice(CreateChatCompletionResponseChoiceFinishReason finishReason = default, int index = default, ChatCompletionResponseMessage message = null, CreateChatCompletionResponseChoiceLogprobs logprobs = null)
         {
             return new CreateChatCompletionResponseChoice(finishReason, index, message, logprobs, serializedAdditionalRawData: null);
         }
@@ -580,11 +213,7 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionResponseMessageFunctionCall"/>. </summary>
-        /// <param name="arguments">
-        /// The arguments to call the function with, as generated by the model in JSON format. Note that
-        /// the model does not always generate valid JSON, and may hallucinate parameters not defined by
-        /// your function schema. Validate the arguments in your code before calling your function.
-        /// </param>
+        /// <param name="arguments"> The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. </param>
         /// <param name="name"> The name of the function to call. </param>
         /// <returns> A new <see cref="Models.ChatCompletionResponseMessageFunctionCall"/> instance for mocking. </returns>
         public static ChatCompletionResponseMessageFunctionCall ChatCompletionResponseMessageFunctionCall(string arguments = null, string name = null)
@@ -593,7 +222,7 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionResponseChoiceLogprobs"/>. </summary>
-        /// <param name="content"></param>
+        /// <param name="content"> A list of message content tokens with log probability information. </param>
         /// <returns> A new <see cref="Models.CreateChatCompletionResponseChoiceLogprobs"/> instance for mocking. </returns>
         public static CreateChatCompletionResponseChoiceLogprobs CreateChatCompletionResponseChoiceLogprobs(IEnumerable<ChatCompletionTokenLogprob> content = null)
         {
@@ -604,24 +233,13 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionTokenLogprob"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob">
-        /// The log probability of this token, if it is within the top 20 most likely tokens. Otherwise,
-        /// the value `-9999.0` is used to signify that the token is very unlikely.
-        /// </param>
-        /// <param name="bytes">
-        /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
-        /// instances where characters are represented by multiple tokens and their byte representations
-        /// must be combined to generate the correct text representation. Can be `null` if there is no
-        /// bytes representation for the token.
-        /// </param>
-        /// <param name="topLogprobs">
-        /// List of the most likely tokens and their log probability, at this token position. In rare
-        /// cases, there may be fewer than the number of requested `top_logprobs` returned.
-        /// </param>
+        /// <param name="logprob"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
+        /// <param name="bytes"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
+        /// <param name="topLogprobs"> List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned. </param>
         /// <returns> A new <see cref="Models.ChatCompletionTokenLogprob"/> instance for mocking. </returns>
-        public static ChatCompletionTokenLogprob ChatCompletionTokenLogprob(string token = null, double logprob = default, IEnumerable<long> bytes = null, IEnumerable<ChatCompletionTokenLogprobTopLogprob> topLogprobs = null)
+        public static ChatCompletionTokenLogprob ChatCompletionTokenLogprob(string token = null, float logprob = default, IEnumerable<int> bytes = null, IEnumerable<ChatCompletionTokenLogprobTopLogprob> topLogprobs = null)
         {
-            bytes ??= new List<long>();
+            bytes ??= new List<int>();
             topLogprobs ??= new List<ChatCompletionTokenLogprobTopLogprob>();
 
             return new ChatCompletionTokenLogprob(token, logprob, bytes?.ToList(), topLogprobs?.ToList(), serializedAdditionalRawData: null);
@@ -629,17 +247,12 @@ namespace OpenAI
 
         /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionTokenLogprobTopLogprob"/>. </summary>
         /// <param name="token"> The token. </param>
-        /// <param name="logprob"> The log probability of this token. </param>
-        /// <param name="bytes">
-        /// A list of integers representing the UTF-8 bytes representation of the token. Useful in
-        /// instances where characters are represented by multiple tokens and their byte representations
-        /// must be combined to generate the correct text representation. Can be `null` if there is no
-        /// bytes representation for the token.
-        /// </param>
+        /// <param name="logprob"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
+        /// <param name="bytes"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
         /// <returns> A new <see cref="Models.ChatCompletionTokenLogprobTopLogprob"/> instance for mocking. </returns>
-        public static ChatCompletionTokenLogprobTopLogprob ChatCompletionTokenLogprobTopLogprob(string token = null, double logprob = default, IEnumerable<long> bytes = null)
+        public static ChatCompletionTokenLogprobTopLogprob ChatCompletionTokenLogprobTopLogprob(string token = null, float logprob = default, IEnumerable<int> bytes = null)
         {
-            bytes ??= new List<long>();
+            bytes ??= new List<int>();
 
             return new ChatCompletionTokenLogprobTopLogprob(token, logprob, bytes?.ToList(), serializedAdditionalRawData: null);
         }
@@ -648,7 +261,7 @@ namespace OpenAI
         /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
         /// <returns> A new <see cref="Embeddings.EmbeddingTokenUsage"/> instance for mocking. </returns>
-        public static EmbeddingTokenUsage EmbeddingTokenUsage(long inputTokens = default, long totalTokens = default)
+        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
         {
             return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);
         }
@@ -674,213 +287,23 @@ namespace OpenAI
             return new GeneratedImage(imageBytes, imageUri, revisedPrompt, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateMessageRequest"/>. </summary>
-        /// <param name="role"> The role of the entity that is creating the message. Currently only `user` is supported. </param>
-        /// <param name="content"> The content of the message. </param>
-        /// <param name="fileIds">
-        /// A list of [File](/docs/api-reference/files) IDs that the message should use. There can be a
-        /// maximum of 10 files attached to a message. Useful for tools like `retrieval` and
-        /// `code_interpreter` that can access and use files.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateMessageRequest"/> instance for mocking. </returns>
-        public static CreateMessageRequest CreateMessageRequest(CreateMessageRequestRole role = default, string content = null, IEnumerable<string> fileIds = null, IDictionary<string, string> metadata = null)
+        /// <summary> Initializes a new instance of <see cref="Assistants.MessageFailureDetails"/>. </summary>
+        /// <param name="reason"> The reason the message is incomplete. </param>
+        /// <returns> A new <see cref="Assistants.MessageFailureDetails"/> instance for mocking. </returns>
+        public static MessageFailureDetails MessageFailureDetails(MessageFailureReason reason = default)
         {
-            fileIds ??= new List<string>();
-            metadata ??= new Dictionary<string, string>();
-
-            return new CreateMessageRequest(role, content, fileIds?.ToList(), metadata, serializedAdditionalRawData: null);
+            return new MessageFailureDetails(reason, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.MessageObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `thread.message`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message was created. </param>
-        /// <param name="threadId"> The [thread](/docs/api-reference/threads) ID that this message belongs to. </param>
-        /// <param name="role"> The entity that produced the message. One of `user` or `assistant`. </param>
-        /// <param name="content"> The content of the message in array of text and/or images. </param>
-        /// <param name="assistantId">
-        /// If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this
-        /// message.
-        /// </param>
-        /// <param name="runId">
-        /// If applicable, the ID of the [run](/docs/api-reference/runs) associated with the authoring of
-        /// this message.
-        /// </param>
-        /// <param name="fileIds">
-        /// A list of [file](/docs/api-reference/files) IDs that the assistant should use. Useful for
-        /// tools like retrieval and code_interpreter that can access files. A maximum of 10 files can be
-        /// attached to a message.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <returns> A new <see cref="Models.MessageObject"/> instance for mocking. </returns>
-        public static MessageObject MessageObject(string id = null, MessageObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, MessageObjectRole role = default, IEnumerable<BinaryData> content = null, string assistantId = null, string runId = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null)
+        /// <summary> Initializes a new instance of <see cref="Models.MessageObjectAttachment"/>. </summary>
+        /// <param name="fileId"> The ID of the file to attach to the message. </param>
+        /// <param name="tools"> The tools to add this file to. </param>
+        /// <returns> A new <see cref="Models.MessageObjectAttachment"/> instance for mocking. </returns>
+        public static MessageObjectAttachment MessageObjectAttachment(string fileId = null, IEnumerable<BinaryData> tools = null)
         {
-            content ??= new List<BinaryData>();
-            fileIds ??= new List<string>();
-            metadata ??= new Dictionary<string, string>();
+            tools ??= new List<BinaryData>();
 
-            return new MessageObject(
-                id,
-                @object,
-                createdAt,
-                threadId,
-                role,
-                content?.ToList(),
-                assistantId,
-                runId,
-                fileIds?.ToList(),
-                metadata,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentImageFileObject"/>. </summary>
-        /// <param name="type"> Always `image_file`. </param>
-        /// <param name="imageFile"></param>
-        /// <returns> A new <see cref="Models.MessageContentImageFileObject"/> instance for mocking. </returns>
-        public static MessageContentImageFileObject MessageContentImageFileObject(MessageContentImageFileObjectType type = default, MessageContentImageFileObjectImageFile imageFile = null)
-        {
-            return new MessageContentImageFileObject(type, imageFile, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentImageFileObjectImageFile"/>. </summary>
-        /// <param name="fileId"> The [File](/docs/api-reference/files) ID of the image in the message content. </param>
-        /// <returns> A new <see cref="Models.MessageContentImageFileObjectImageFile"/> instance for mocking. </returns>
-        public static MessageContentImageFileObjectImageFile MessageContentImageFileObjectImageFile(string fileId = null)
-        {
-            return new MessageContentImageFileObjectImageFile(fileId, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentTextObject"/>. </summary>
-        /// <param name="type"> Always `text`. </param>
-        /// <param name="text"></param>
-        /// <returns> A new <see cref="Models.MessageContentTextObject"/> instance for mocking. </returns>
-        public static MessageContentTextObject MessageContentTextObject(MessageContentTextObjectType type = default, MessageContentTextObjectText text = null)
-        {
-            return new MessageContentTextObject(type, text, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentTextObjectText"/>. </summary>
-        /// <param name="value"> The data that makes up the text. </param>
-        /// <param name="annotations"></param>
-        /// <returns> A new <see cref="Models.MessageContentTextObjectText"/> instance for mocking. </returns>
-        public static MessageContentTextObjectText MessageContentTextObjectText(string value = null, IEnumerable<BinaryData> annotations = null)
-        {
-            annotations ??= new List<BinaryData>();
-
-            return new MessageContentTextObjectText(value, annotations?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentTextAnnotationsFileCitationObject"/>. </summary>
-        /// <param name="type"> Always `file_citation`. </param>
-        /// <param name="text"> The text in the message content that needs to be replaced. </param>
-        /// <param name="fileCitation"></param>
-        /// <param name="startIndex"></param>
-        /// <param name="endIndex"></param>
-        /// <returns> A new <see cref="Models.MessageContentTextAnnotationsFileCitationObject"/> instance for mocking. </returns>
-        public static MessageContentTextAnnotationsFileCitationObject MessageContentTextAnnotationsFileCitationObject(MessageContentTextAnnotationsFileCitationObjectType type = default, string text = null, MessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation = null, long startIndex = default, long endIndex = default)
-        {
-            return new MessageContentTextAnnotationsFileCitationObject(
-                type,
-                text,
-                fileCitation,
-                startIndex,
-                endIndex,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentTextAnnotationsFileCitationObjectFileCitation"/>. </summary>
-        /// <param name="fileId"> The ID of the specific File the citation is from. </param>
-        /// <param name="quote"> The specific quote in the file. </param>
-        /// <returns> A new <see cref="Models.MessageContentTextAnnotationsFileCitationObjectFileCitation"/> instance for mocking. </returns>
-        public static MessageContentTextAnnotationsFileCitationObjectFileCitation MessageContentTextAnnotationsFileCitationObjectFileCitation(string fileId = null, string quote = null)
-        {
-            return new MessageContentTextAnnotationsFileCitationObjectFileCitation(fileId, quote, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentTextAnnotationsFilePathObject"/>. </summary>
-        /// <param name="type"> Always `file_path`. </param>
-        /// <param name="text"> The text in the message content that needs to be replaced. </param>
-        /// <param name="filePath"></param>
-        /// <param name="startIndex"></param>
-        /// <param name="endIndex"></param>
-        /// <returns> A new <see cref="Models.MessageContentTextAnnotationsFilePathObject"/> instance for mocking. </returns>
-        public static MessageContentTextAnnotationsFilePathObject MessageContentTextAnnotationsFilePathObject(MessageContentTextAnnotationsFilePathObjectType type = default, string text = null, MessageContentTextAnnotationsFilePathObjectFilePath filePath = null, long startIndex = default, long endIndex = default)
-        {
-            return new MessageContentTextAnnotationsFilePathObject(
-                type,
-                text,
-                filePath,
-                startIndex,
-                endIndex,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageContentTextAnnotationsFilePathObjectFilePath"/>. </summary>
-        /// <param name="fileId"> The ID of the file that was generated. </param>
-        /// <returns> A new <see cref="Models.MessageContentTextAnnotationsFilePathObjectFilePath"/> instance for mocking. </returns>
-        public static MessageContentTextAnnotationsFilePathObjectFilePath MessageContentTextAnnotationsFilePathObjectFilePath(string fileId = null)
-        {
-            return new MessageContentTextAnnotationsFilePathObjectFilePath(fileId, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListMessagesResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListMessagesResponse"/> instance for mocking. </returns>
-        public static ListMessagesResponse ListMessagesResponse(ListMessagesResponseObject @object = default, IEnumerable<MessageObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<MessageObject>();
-
-            return new ListMessagesResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListMessageFilesResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListMessageFilesResponse"/> instance for mocking. </returns>
-        public static ListMessageFilesResponse ListMessageFilesResponse(ListMessageFilesResponseObject @object = default, IEnumerable<MessageFileObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<MessageFileObject>();
-
-            return new ListMessageFilesResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.MessageFileObject"/>. </summary>
-        /// <param name="id"> TThe identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `thread.message.file`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the message file was created. </param>
-        /// <param name="messageId"> The ID of the [message](/docs/api-reference/messages) that the [File](/docs/api-reference/files) is attached to. </param>
-        /// <returns> A new <see cref="Models.MessageFileObject"/> instance for mocking. </returns>
-        public static MessageFileObject MessageFileObject(string id = null, MessageFileObjectObject @object = default, DateTimeOffset createdAt = default, string messageId = null)
-        {
-            return new MessageFileObject(id, @object, createdAt, messageId, serializedAdditionalRawData: null);
+            return new MessageObjectAttachment(fileId, tools?.ToList(), serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCollection"/>. </summary>
@@ -888,52 +311,32 @@ namespace OpenAI
         /// <param name="model"> The model used to generate the moderation results. </param>
         /// <param name="results"> A list of moderation objects. </param>
         /// <returns> A new <see cref="Moderations.ModerationCollection"/> instance for mocking. </returns>
-        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<Moderation> results = null)
+        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
         {
-            results ??= new List<Moderation>();
+            results ??= new List<ModerationResult>();
 
             return new ModerationCollection(id, model, results?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Moderations.Moderation"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationResult"/>. </summary>
         /// <param name="flagged"> Whether any of the below categories are flagged. </param>
         /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
         /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
-        /// <returns> A new <see cref="Moderations.Moderation"/> instance for mocking. </returns>
-        public static Moderation Moderation(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
+        /// <returns> A new <see cref="Moderations.ModerationResult"/> instance for mocking. </returns>
+        public static ModerationResult ModerationResult(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
         {
-            return new Moderation(flagged, categories, categoryScores, serializedAdditionalRawData: null);
+            return new ModerationResult(flagged, categories, categoryScores, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCategories"/>. </summary>
-        /// <param name="hate">
-        /// Content that expresses, incites, or promotes hate based on race, gender, ethnicity,
-        /// religion, nationality, sexual orientation, disability status, or caste. Hateful content
-        /// aimed at non-protected groups (e.g., chess players) is harrassment.
-        /// </param>
-        /// <param name="hateThreatening">
-        /// Hateful content that also includes violence or serious harm towards the targeted group
-        /// based on race, gender, ethnicity, religion, nationality, sexual orientation, disability
-        /// status, or caste.
-        /// </param>
+        /// <param name="hate"> Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment. </param>
+        /// <param name="hateThreatening"> Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. </param>
         /// <param name="harassment"> Content that expresses, incites, or promotes harassing language towards any target. </param>
         /// <param name="harassmentThreatening"> Harassment content that also includes violence or serious harm towards any target. </param>
-        /// <param name="selfHarm">
-        /// Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting,
-        /// and eating disorders.
-        /// </param>
-        /// <param name="selfHarmIntent">
-        /// Content where the speaker expresses that they are engaging or intend to engage in acts of
-        /// self-harm, such as suicide, cutting, and eating disorders.
-        /// </param>
-        /// <param name="selfHarmInstructions">
-        /// Content that encourages performing acts of self-harm, such as suicide, cutting, and eating
-        /// disorders, or that gives instructions or advice on how to commit such acts.
-        /// </param>
-        /// <param name="sexual">
-        /// Content meant to arouse sexual excitement, such as the description of sexual activity, or
-        /// that promotes sexual services (excluding sex education and wellness).
-        /// </param>
+        /// <param name="selfHarm"> Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders. </param>
+        /// <param name="selfHarmIntent"> Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders. </param>
+        /// <param name="selfHarmInstructions"> Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts. </param>
+        /// <param name="sexual"> Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness). </param>
         /// <param name="sexualMinors"> Sexual content that includes an individual who is under 18 years old. </param>
         /// <param name="violence"> Content that depicts death, violence, or physical injury. </param>
         /// <param name="violenceGraphic"> Content that depicts death, violence, or physical injury in graphic detail. </param>
@@ -962,13 +365,13 @@ namespace OpenAI
         /// <param name="harassmentThreatening"> The score for the category 'harassment/threatening'. </param>
         /// <param name="selfHarm"> The score for the category 'self-harm'. </param>
         /// <param name="selfHarmIntent"> The score for the category 'self-harm/intent'. </param>
-        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructive'. </param>
+        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructions'. </param>
         /// <param name="sexual"> The score for the category 'sexual'. </param>
         /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
         /// <param name="violence"> The score for the category 'violence'. </param>
         /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
         /// <returns> A new <see cref="Moderations.ModerationCategoryScores"/> instance for mocking. </returns>
-        public static ModerationCategoryScores ModerationCategoryScores(double hate = default, double hateThreatening = default, double harassment = default, double harassmentThreatening = default, double selfHarm = default, double selfHarmIntent = default, double selfHarmInstructions = default, double sexual = default, double sexualMinors = default, double violence = default, double violenceGraphic = default)
+        public static ModerationCategoryScores ModerationCategoryScores(float hate = default, float hateThreatening = default, float harassment = default, float harassmentThreatening = default, float selfHarm = default, float selfHarmIntent = default, float selfHarmInstructions = default, float sexual = default, float sexualMinors = default, float violence = default, float violenceGraphic = default)
         {
             return new ModerationCategoryScores(
                 hate,
@@ -985,463 +388,124 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateThreadAndRunRequest"/>. </summary>
-        /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
-        /// <param name="thread"> If no thread is provided, an empty thread will be created. </param>
-        /// <param name="model">
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is
-        /// provided here, it will override the model associated with the assistant. If not, the model
-        /// associated with the assistant will be used.
-        /// </param>
-        /// <param name="instructions">
-        /// Override the default system message of the assistant. This is useful for modifying the behavior
-        /// on a per-run basis.
-        /// </param>
-        /// <param name="tools">
-        /// Override the tools the assistant can use for this run. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateThreadAndRunRequest"/> instance for mocking. </returns>
-        public static CreateThreadAndRunRequest CreateThreadAndRunRequest(string assistantId = null, CreateThreadRequest thread = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null)
-        {
-            tools ??= new List<BinaryData>();
-            metadata ??= new Dictionary<string, string>();
-
-            return new CreateThreadAndRunRequest(
-                assistantId,
-                thread,
-                model,
-                instructions,
-                tools?.ToList(),
-                metadata,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `thread.run`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the run was created. </param>
-        /// <param name="threadId">
-        /// The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this
-        /// run.
-        /// </param>
-        /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run. </param>
-        /// <param name="status">
-        /// The status of the run, which can be either `queued`, `in_progress`, `requires_action`,
-        /// `cancelling`, `cancelled`, `failed`, `completed`, or `expired`.
-        /// </param>
-        /// <param name="requiredAction">
-        /// Details on the action required to continue the run. Will be `null` if no action is
-        /// required.
-        /// </param>
-        /// <param name="lastError"> The last error associated with this run. Will be `null` if there are no errors. </param>
-        /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the run will expire. </param>
-        /// <param name="startedAt"> The Unix timestamp (in seconds) for when the run was started. </param>
-        /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run was cancelled. </param>
-        /// <param name="failedAt"> The Unix timestamp (in seconds) for when the run failed. </param>
-        /// <param name="completedAt"> The Unix timestamp (in seconds) for when the run was completed. </param>
-        /// <param name="model"> The model that the [assistant](/docs/api-reference/assistants) used for this run. </param>
-        /// <param name="instructions"> The instructions that the [assistant](/docs/api-reference/assistants) used for this run. </param>
-        /// <param name="tools"> The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. </param>
-        /// <param name="fileIds">
-        /// The list of [File](/docs/api-reference/files) IDs the
-        /// [assistant](/docs/api-reference/assistants) used for this run.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <param name="usage"></param>
-        /// <returns> A new <see cref="Models.RunObject"/> instance for mocking. </returns>
-        public static RunObject RunObject(string id = null, RunObjectObject @object = default, DateTimeOffset createdAt = default, string threadId = null, string assistantId = null, RunObjectStatus status = default, RunObjectRequiredAction requiredAction = null, RunObjectLastError lastError = null, DateTimeOffset? expiresAt = null, DateTimeOffset? startedAt = null, DateTimeOffset? cancelledAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? completedAt = null, string model = null, string instructions = null, IEnumerable<BinaryData> tools = null, IEnumerable<string> fileIds = null, IReadOnlyDictionary<string, string> metadata = null, RunCompletionUsage usage = null)
-        {
-            tools ??= new List<BinaryData>();
-            fileIds ??= new List<string>();
-            metadata ??= new Dictionary<string, string>();
-
-            return new RunObject(
-                id,
-                @object,
-                createdAt,
-                threadId,
-                assistantId,
-                status,
-                requiredAction,
-                lastError,
-                expiresAt,
-                startedAt,
-                cancelledAt,
-                failedAt,
-                completedAt,
-                model,
-                instructions,
-                tools?.ToList(),
-                fileIds?.ToList(),
-                metadata,
-                usage,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunObjectRequiredAction"/>. </summary>
-        /// <param name="type"> For now, this is always `submit_tool_outputs`. </param>
-        /// <param name="submitToolOutputs"> Details on the tool outputs needed for this run to continue. </param>
-        /// <returns> A new <see cref="Models.RunObjectRequiredAction"/> instance for mocking. </returns>
-        public static RunObjectRequiredAction RunObjectRequiredAction(RunObjectRequiredActionType type = default, RunObjectRequiredActionSubmitToolOutputs submitToolOutputs = null)
-        {
-            return new RunObjectRequiredAction(type, submitToolOutputs, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunObjectRequiredActionSubmitToolOutputs"/>. </summary>
-        /// <param name="toolCalls"> A list of the relevant tool calls. </param>
-        /// <returns> A new <see cref="Models.RunObjectRequiredActionSubmitToolOutputs"/> instance for mocking. </returns>
-        public static RunObjectRequiredActionSubmitToolOutputs RunObjectRequiredActionSubmitToolOutputs(IEnumerable<RunToolCallObject> toolCalls = null)
-        {
-            toolCalls ??= new List<RunToolCallObject>();
-
-            return new RunObjectRequiredActionSubmitToolOutputs(toolCalls?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunToolCallObject"/>. </summary>
-        /// <param name="id">
-        /// The ID of the tool call. This ID must be referenced when you submit the tool outputs in using
-        /// the [Submit tool outputs to run](/docs/api-reference/runs/submitToolOutputs) endpoint.
-        /// </param>
-        /// <param name="type"> The type of tool call the output is required for. For now, this is always `function`. </param>
-        /// <param name="function"> The function definition. </param>
-        /// <returns> A new <see cref="Models.RunToolCallObject"/> instance for mocking. </returns>
-        public static RunToolCallObject RunToolCallObject(string id = null, RunToolCallObjectType type = default, RunToolCallObjectFunction function = null)
-        {
-            return new RunToolCallObject(id, type, function, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunToolCallObjectFunction"/>. </summary>
-        /// <param name="name"> The name of the function. </param>
-        /// <param name="arguments"> The arguments that the model expects you to pass to the function. </param>
-        /// <returns> A new <see cref="Models.RunToolCallObjectFunction"/> instance for mocking. </returns>
-        public static RunToolCallObjectFunction RunToolCallObjectFunction(string name = null, string arguments = null)
-        {
-            return new RunToolCallObjectFunction(name, arguments, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunObjectLastError"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Assistants.RunError"/>. </summary>
         /// <param name="code"> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
-        /// <returns> A new <see cref="Models.RunObjectLastError"/> instance for mocking. </returns>
-        public static RunObjectLastError RunObjectLastError(RunObjectLastErrorCode code = default, string message = null)
+        /// <returns> A new <see cref="Assistants.RunError"/> instance for mocking. </returns>
+        public static RunError RunError(RunErrorCode code = default, string message = null)
         {
-            return new RunObjectLastError(code, message, serializedAdditionalRawData: null);
+            return new RunError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.RunCompletionUsage"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Assistants.RunIncompleteDetails"/>. </summary>
+        /// <param name="reason"> The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run. </param>
+        /// <returns> A new <see cref="Assistants.RunIncompleteDetails"/> instance for mocking. </returns>
+        public static RunIncompleteDetails RunIncompleteDetails(RunIncompleteReason? reason = null)
+        {
+            return new RunIncompleteDetails(reason, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Assistants.RunTokenUsage"/>. </summary>
         /// <param name="completionTokens"> Number of completion tokens used over the course of the run. </param>
         /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        /// <returns> A new <see cref="Models.RunCompletionUsage"/> instance for mocking. </returns>
-        public static RunCompletionUsage RunCompletionUsage(long completionTokens = default, long promptTokens = default, long totalTokens = default)
+        /// <returns> A new <see cref="Assistants.RunTokenUsage"/> instance for mocking. </returns>
+        public static RunTokenUsage RunTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
-            return new RunCompletionUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+            return new RunTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateRunRequest"/>. </summary>
-        /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. </param>
-        /// <param name="model">
-        /// The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value
-        /// is provided here, it will override the model associated with the assistant. If not, the model
-        /// associated with the assistant will be used.
-        /// </param>
-        /// <param name="instructions">
-        /// Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant.
-        /// This is useful for modifying the behavior on a per-run basis.
-        /// </param>
-        /// <param name="additionalInstructions">
-        /// Appends additional instructions at the end of the instructions for the run. This is useful for
-        /// modifying the behavior on a per-run basis without overriding other instructions.
-        /// </param>
-        /// <param name="tools">
-        /// Override the tools the assistant can use for this run. This is useful for modifying the
-        /// behavior on a per-run basis.
-        /// </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateRunRequest"/> instance for mocking. </returns>
-        public static CreateRunRequest CreateRunRequest(string assistantId = null, string model = null, string instructions = null, string additionalInstructions = null, IEnumerable<BinaryData> tools = null, IDictionary<string, string> metadata = null)
-        {
-            tools ??= new List<BinaryData>();
-            metadata ??= new Dictionary<string, string>();
-
-            return new CreateRunRequest(
-                assistantId,
-                model,
-                instructions,
-                additionalInstructions,
-                tools?.ToList(),
-                metadata,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListRunsResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListRunsResponse"/> instance for mocking. </returns>
-        public static ListRunsResponse ListRunsResponse(ListRunsResponseObject @object = default, IEnumerable<RunObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<RunObject>();
-
-            return new ListRunsResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListRunStepsResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListRunStepsResponse"/> instance for mocking. </returns>
-        public static ListRunStepsResponse ListRunStepsResponse(ListRunStepsResponseObject @object = default, IEnumerable<RunStepObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<RunStepObject>();
-
-            return new ListRunStepsResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepObject"/>. </summary>
-        /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `thread.run.step`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the run step was created. </param>
-        /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) associated with the run step. </param>
-        /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was run. </param>
-        /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
-        /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
-        /// <param name="status">
-        /// The status of the run step, which can be either `in_progress`, `cancelled`, `failed`,
-        /// `completed`, or `expired`.
-        /// </param>
-        /// <param name="stepDetails"> The details of the run step. </param>
-        /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
-        /// <param name="expiresAt">
-        /// The Unix timestamp (in seconds) for when the run step expired. A step is considered expired
-        /// if the parent run is expired.
-        /// </param>
-        /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run step was cancelled. </param>
-        /// <param name="failedAt"> The Unix timestamp (in seconds) for when the run step failed. </param>
-        /// <param name="completedAt"> T The Unix timestamp (in seconds) for when the run step completed.. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <param name="usage"></param>
-        /// <returns> A new <see cref="Models.RunStepObject"/> instance for mocking. </returns>
-        public static RunStepObject RunStepObject(string id = null, RunStepObjectObject @object = default, DateTimeOffset createdAt = default, string assistantId = null, string threadId = null, string runId = null, RunStepObjectType type = default, RunStepObjectStatus status = default, BinaryData stepDetails = null, RunStepObjectLastError lastError = null, DateTimeOffset? expiresAt = null, DateTimeOffset? cancelledAt = null, DateTimeOffset? failedAt = null, DateTimeOffset? completedAt = null, IReadOnlyDictionary<string, string> metadata = null, RunStepCompletionUsage usage = null)
-        {
-            metadata ??= new Dictionary<string, string>();
-
-            return new RunStepObject(
-                id,
-                @object,
-                createdAt,
-                assistantId,
-                threadId,
-                runId,
-                type,
-                status,
-                stepDetails,
-                lastError,
-                expiresAt,
-                cancelledAt,
-                failedAt,
-                completedAt,
-                metadata,
-                usage,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsMessageCreationObject"/>. </summary>
-        /// <param name="type"> Details of the message creation by the run step. </param>
-        /// <param name="messageCreation"></param>
-        /// <returns> A new <see cref="Models.RunStepDetailsMessageCreationObject"/> instance for mocking. </returns>
-        public static RunStepDetailsMessageCreationObject RunStepDetailsMessageCreationObject(RunStepDetailsMessageCreationObjectType type = default, RunStepDetailsMessageCreationObjectMessageCreation messageCreation = null)
-        {
-            return new RunStepDetailsMessageCreationObject(type, messageCreation, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsMessageCreationObjectMessageCreation"/>. </summary>
-        /// <param name="messageId"> The ID of the message that was created by this run step. </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsMessageCreationObjectMessageCreation"/> instance for mocking. </returns>
-        public static RunStepDetailsMessageCreationObjectMessageCreation RunStepDetailsMessageCreationObjectMessageCreation(string messageId = null)
-        {
-            return new RunStepDetailsMessageCreationObjectMessageCreation(messageId, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsObject"/>. </summary>
-        /// <param name="type"> Always `tool_calls`. </param>
-        /// <param name="toolCalls">
-        /// An array of tool calls the run step was involved in. These can be associated with one of three
-        /// types of tools: `code_interpreter`, `retrieval`, or `function`.
-        /// </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsObject"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsObject RunStepDetailsToolCallsObject(RunStepDetailsToolCallsObjectType type = default, IEnumerable<BinaryData> toolCalls = null)
-        {
-            toolCalls ??= new List<BinaryData>();
-
-            return new RunStepDetailsToolCallsObject(type, toolCalls?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsCodeObject"/>. </summary>
-        /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="type">
-        /// The type of tool call. This is always going to be `code_interpreter` for this type of tool
-        /// call.
-        /// </param>
-        /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsCodeObject"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsCodeObject RunStepDetailsToolCallsCodeObject(string id = null, RunStepDetailsToolCallsCodeObjectType type = default, RunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = null)
-        {
-            return new RunStepDetailsToolCallsCodeObject(id, type, codeInterpreter, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
-        /// <param name="input"> The input to the Code Interpreter tool call. </param>
-        /// <param name="outputs">
-        /// The outputs from the Code Interpreter tool call. Code Interpreter can output one or more
-        /// items, including text (`logs`) or images (`image`). Each of these are represented by a
-        /// different object type.
-        /// </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsCodeObjectCodeInterpreter"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsCodeObjectCodeInterpreter RunStepDetailsToolCallsCodeObjectCodeInterpreter(string input = null, IEnumerable<BinaryData> outputs = null)
-        {
-            outputs ??= new List<BinaryData>();
-
-            return new RunStepDetailsToolCallsCodeObjectCodeInterpreter(input, outputs?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsCodeOutputLogsObject"/>. </summary>
-        /// <param name="type"> Always `logs`. </param>
-        /// <param name="logs"> The text output from the Code Interpreter tool call. </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsCodeOutputLogsObject"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsCodeOutputLogsObject RunStepDetailsToolCallsCodeOutputLogsObject(RunStepDetailsToolCallsCodeOutputLogsObjectType type = default, string logs = null)
-        {
-            return new RunStepDetailsToolCallsCodeOutputLogsObject(type, logs, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsCodeOutputImageObject"/>. </summary>
-        /// <param name="type"> Always `image`. </param>
-        /// <param name="image"></param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsCodeOutputImageObject"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsCodeOutputImageObject RunStepDetailsToolCallsCodeOutputImageObject(RunStepDetailsToolCallsCodeOutputImageObjectType type = default, RunStepDetailsToolCallsCodeOutputImageObjectImage image = null)
-        {
-            return new RunStepDetailsToolCallsCodeOutputImageObject(type, image, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsCodeOutputImageObjectImage"/>. </summary>
-        /// <param name="fileId"> The [file](/docs/api-reference/files) ID of the image. </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsCodeOutputImageObjectImage"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsCodeOutputImageObjectImage RunStepDetailsToolCallsCodeOutputImageObjectImage(string fileId = null)
-        {
-            return new RunStepDetailsToolCallsCodeOutputImageObjectImage(fileId, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsRetrievalObject"/>. </summary>
-        /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="type"> The type of tool call. This is always going to be `retrieval` for this type of tool call. </param>
-        /// <param name="retrieval"> For now, this is always going to be an empty object. </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsRetrievalObject"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsRetrievalObject RunStepDetailsToolCallsRetrievalObject(string id = null, RunStepDetailsToolCallsRetrievalObjectType type = default, RunStepDetailsToolCallsRetrievalObjectRetrieval retrieval = null)
-        {
-            return new RunStepDetailsToolCallsRetrievalObject(id, type, retrieval, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsFunctionObject"/>. </summary>
-        /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="type"> The type of tool call. This is always going to be `function` for this type of tool call. </param>
-        /// <param name="function"> The definition of the function that was called. </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsFunctionObject"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsFunctionObject RunStepDetailsToolCallsFunctionObject(string id = null, RunStepDetailsToolCallsFunctionObjectType type = default, RunStepDetailsToolCallsFunctionObjectFunction function = null)
-        {
-            return new RunStepDetailsToolCallsFunctionObject(id, type, function, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepDetailsToolCallsFunctionObjectFunction"/>. </summary>
-        /// <param name="name"> The name of the function. </param>
-        /// <param name="arguments"> The arguments passed to the function. </param>
-        /// <param name="output">
-        /// The output of the function. This will be `null` if the outputs have not been
-        /// [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-        /// </param>
-        /// <returns> A new <see cref="Models.RunStepDetailsToolCallsFunctionObjectFunction"/> instance for mocking. </returns>
-        public static RunStepDetailsToolCallsFunctionObjectFunction RunStepDetailsToolCallsFunctionObjectFunction(string name = null, string arguments = null, string output = null)
-        {
-            return new RunStepDetailsToolCallsFunctionObjectFunction(name, arguments, output, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepObjectLastError"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Assistants.RunStepError"/>. </summary>
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
-        /// <returns> A new <see cref="Models.RunStepObjectLastError"/> instance for mocking. </returns>
-        public static RunStepObjectLastError RunStepObjectLastError(RunStepObjectLastErrorCode code = default, string message = null)
+        /// <returns> A new <see cref="Assistants.RunStepError"/> instance for mocking. </returns>
+        public static RunStepError RunStepError(RunStepErrorCode code = default, string message = null)
         {
-            return new RunStepObjectLastError(code, message, serializedAdditionalRawData: null);
+            return new RunStepError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepCompletionUsage"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Assistants.RunStepTokenUsage"/>. </summary>
         /// <param name="completionTokens"> Number of completion tokens used over the course of the run step. </param>
         /// <param name="promptTokens"> Number of prompt tokens used over the course of the run step. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        /// <returns> A new <see cref="Models.RunStepCompletionUsage"/> instance for mocking. </returns>
-        public static RunStepCompletionUsage RunStepCompletionUsage(long completionTokens = default, long promptTokens = default, long totalTokens = default)
+        /// <returns> A new <see cref="Assistants.RunStepTokenUsage"/> instance for mocking. </returns>
+        public static RunStepTokenUsage RunStepTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
-            return new RunStepCompletionUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+            return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `thread`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the thread was created. </param>
-        /// <param name="metadata">
-        /// Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-        /// additional information about the object in a structured format. Keys can be a maximum of 64
-        /// characters long and values can be a maxium of 512 characters long.
-        /// </param>
-        /// <returns> A new <see cref="Models.ThreadObject"/> instance for mocking. </returns>
-        public static ThreadObject ThreadObject(string id = null, ThreadObjectObject @object = default, DateTimeOffset createdAt = default, IReadOnlyDictionary<string, string> metadata = null)
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResources"/>. </summary>
+        /// <param name="codeInterpreter"></param>
+        /// <param name="fileSearch"></param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResources"/> instance for mocking. </returns>
+        public static ThreadObjectToolResources ThreadObjectToolResources(ThreadObjectToolResourcesCodeInterpreter codeInterpreter = null, ThreadObjectToolResourcesFileSearch fileSearch = null)
         {
-            metadata ??= new Dictionary<string, string>();
-
-            return new ThreadObject(id, @object, createdAt, metadata, serializedAdditionalRawData: null);
+            return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteThreadResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.DeleteThreadResponse"/> instance for mocking. </returns>
-        public static DeleteThreadResponse DeleteThreadResponse(string id = null, bool deleted = default, DeleteThreadResponseObject @object = default)
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/>. </summary>
+        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool. </param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/> instance for mocking. </returns>
+        public static ThreadObjectToolResourcesCodeInterpreter ThreadObjectToolResourcesCodeInterpreter(IEnumerable<string> fileIds = null)
         {
-            return new DeleteThreadResponse(id, deleted, @object, serializedAdditionalRawData: null);
+            fileIds ??= new List<string>();
+
+            return new ThreadObjectToolResourcesCodeInterpreter(fileIds?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesFileSearch"/>. </summary>
+        /// <param name="vectorStoreIds"> The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. </param>
+        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesFileSearch"/> instance for mocking. </returns>
+        public static ThreadObjectToolResourcesFileSearch ThreadObjectToolResourcesFileSearch(IEnumerable<string> vectorStoreIds = null)
+        {
+            vectorStoreIds ??= new List<string>();
+
+            return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileCounts"/>. </summary>
+        /// <param name="inProgress"> The number of files that are currently being processed. </param>
+        /// <param name="completed"> The number of files that have been successfully processed. </param>
+        /// <param name="failed"> The number of files that have failed to process. </param>
+        /// <param name="cancelled"> The number of files that were cancelled. </param>
+        /// <param name="total"> The total number of files. </param>
+        /// <returns> A new <see cref="VectorStores.VectorStoreFileCounts"/> instance for mocking. </returns>
+        public static VectorStoreFileCounts VectorStoreFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
+        {
+            return new VectorStoreFileCounts(
+                inProgress,
+                completed,
+                failed,
+                cancelled,
+                total,
+                serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileAssociationError"/>. </summary>
+        /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
+        /// <param name="message"> A human-readable description of the error. </param>
+        /// <returns> A new <see cref="VectorStores.VectorStoreFileAssociationError"/> instance for mocking. </returns>
+        public static VectorStoreFileAssociationError VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code = default, string message = null)
+        {
+            return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.VectorStoreFileBatchObjectFileCounts"/>. </summary>
+        /// <param name="inProgress"> The number of files that are currently being processed. </param>
+        /// <param name="completed"> The number of files that have been processed. </param>
+        /// <param name="failed"> The number of files that have failed to process. </param>
+        /// <param name="cancelled"> The number of files that where cancelled. </param>
+        /// <param name="total"> The total number of files. </param>
+        /// <returns> A new <see cref="Models.VectorStoreFileBatchObjectFileCounts"/> instance for mocking. </returns>
+        public static VectorStoreFileBatchObjectFileCounts VectorStoreFileBatchObjectFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
+        {
+            return new VectorStoreFileBatchObjectFileCounts(
+                inProgress,
+                completed,
+                failed,
+                cancelled,
+                total,
+                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CreateTranscriptionResponseJson"/>. </summary>
@@ -1458,6 +522,169 @@ namespace OpenAI
         public static CreateTranslationResponseJson CreateTranslationResponseJson(string text = null)
         {
             return new CreateTranslationResponseJson(text, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestInput"/>. </summary>
+        /// <param name="customId"> A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch. </param>
+        /// <param name="method"> The HTTP method to be used for the request. Currently only `POST` is supported. </param>
+        /// <param name="url"> The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported. </param>
+        /// <returns> A new <see cref="Models.BatchRequestInput"/> instance for mocking. </returns>
+        public static BatchRequestInput BatchRequestInput(string customId = null, string method = null, Uri url = null)
+        {
+            return new BatchRequestInput(customId, method, url, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestOutput"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="customId"> A developer-provided per-request id that will be used to match outputs to inputs. </param>
+        /// <param name="response"></param>
+        /// <param name="error"> For requests that failed with a non-HTTP error, this will contain more information on the cause of the failure. </param>
+        /// <returns> A new <see cref="Models.BatchRequestOutput"/> instance for mocking. </returns>
+        public static BatchRequestOutput BatchRequestOutput(string id = null, string customId = null, BatchRequestOutputResponse response = null, BatchRequestOutputError error = null)
+        {
+            return new BatchRequestOutput(id, customId, response, error, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestOutputResponse"/>. </summary>
+        /// <param name="statusCode"> The HTTP status code of the response. </param>
+        /// <param name="requestId"> An unique identifier for the OpenAI API request. Please include this request ID when contacting support. </param>
+        /// <param name="body"> The JSON body of the response. </param>
+        /// <returns> A new <see cref="Models.BatchRequestOutputResponse"/> instance for mocking. </returns>
+        public static BatchRequestOutputResponse BatchRequestOutputResponse(int? statusCode = null, string requestId = null, IReadOnlyDictionary<string, string> body = null)
+        {
+            body ??= new Dictionary<string, string>();
+
+            return new BatchRequestOutputResponse(statusCode, requestId, body, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestOutputError"/>. </summary>
+        /// <param name="code"> A machine-readable error code. </param>
+        /// <param name="message"> A human-readable error message. </param>
+        /// <returns> A new <see cref="Models.BatchRequestOutputError"/> instance for mocking. </returns>
+        public static BatchRequestOutputError BatchRequestOutputError(string code = null, string message = null)
+        {
+            return new BatchRequestOutputError(code, message, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionFunctionResponseChoice"/>. </summary>
+        /// <param name="finishReason"> The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function. </param>
+        /// <param name="index"> The index of the choice in the list of choices. </param>
+        /// <param name="message"></param>
+        /// <returns> A new <see cref="Models.CreateChatCompletionFunctionResponseChoice"/> instance for mocking. </returns>
+        public static CreateChatCompletionFunctionResponseChoice CreateChatCompletionFunctionResponseChoice(string finishReason = null, int index = default, ChatCompletionResponseMessage message = null)
+        {
+            return new CreateChatCompletionFunctionResponseChoice(finishReason, index, message, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionStreamResponseDelta"/>. </summary>
+        /// <param name="content"> The contents of the chunk message. </param>
+        /// <param name="functionCall"> Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model. </param>
+        /// <param name="toolCalls"></param>
+        /// <param name="role"> The role of the author of this message. </param>
+        /// <returns> A new <see cref="Models.ChatCompletionStreamResponseDelta"/> instance for mocking. </returns>
+        public static ChatCompletionStreamResponseDelta ChatCompletionStreamResponseDelta(string content = null, ChatCompletionStreamResponseDeltaFunctionCall functionCall = null, IEnumerable<ChatCompletionMessageToolCallChunk> toolCalls = null, string role = null)
+        {
+            toolCalls ??= new List<ChatCompletionMessageToolCallChunk>();
+
+            return new ChatCompletionStreamResponseDelta(content, functionCall, toolCalls?.ToList(), role, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionStreamResponseDeltaFunctionCall"/>. </summary>
+        /// <param name="arguments"> The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. </param>
+        /// <param name="name"> The name of the function to call. </param>
+        /// <returns> A new <see cref="Models.ChatCompletionStreamResponseDeltaFunctionCall"/> instance for mocking. </returns>
+        public static ChatCompletionStreamResponseDeltaFunctionCall ChatCompletionStreamResponseDeltaFunctionCall(string arguments = null, string name = null)
+        {
+            return new ChatCompletionStreamResponseDeltaFunctionCall(arguments, name, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionMessageToolCallChunk"/>. </summary>
+        /// <param name="index"></param>
+        /// <param name="id"> The ID of the tool call. </param>
+        /// <param name="type"> The type of the tool. Currently, only `function` is supported. </param>
+        /// <param name="function"></param>
+        /// <returns> A new <see cref="Models.ChatCompletionMessageToolCallChunk"/> instance for mocking. </returns>
+        public static ChatCompletionMessageToolCallChunk ChatCompletionMessageToolCallChunk(int index = default, string id = null, string type = null, ChatCompletionMessageToolCallChunkFunction function = null)
+        {
+            return new ChatCompletionMessageToolCallChunk(index, id, type, function, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ChatCompletionMessageToolCallChunkFunction"/>. </summary>
+        /// <param name="name"> The name of the function to call. </param>
+        /// <param name="arguments"> The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. </param>
+        /// <returns> A new <see cref="Models.ChatCompletionMessageToolCallChunkFunction"/> instance for mocking. </returns>
+        public static ChatCompletionMessageToolCallChunkFunction ChatCompletionMessageToolCallChunkFunction(string name = null, string arguments = null)
+        {
+            return new ChatCompletionMessageToolCallChunkFunction(name, arguments, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionStreamResponse"/>. </summary>
+        /// <param name="id"> A unique identifier for the chat completion. Each chunk has the same ID. </param>
+        /// <param name="choices">
+        /// A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
+        /// last chunk if you set `stream_options: {"include_usage": true}`.
+        /// </param>
+        /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </param>
+        /// <param name="model"> The model to generate the completion. </param>
+        /// <param name="systemFingerprint">
+        /// This fingerprint represents the backend configuration that the model runs with.
+        /// Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+        /// </param>
+        /// <param name="object"> The object type, which is always `chat.completion.chunk`. </param>
+        /// <param name="usage">
+        /// An optional field that will only be present when you set `stream_options: {"include_usage": true}` in your request.
+        /// When present, it contains a null value except for the last chunk which contains the token usage statistics for the entire request.
+        /// </param>
+        /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponse"/> instance for mocking. </returns>
+        public static CreateChatCompletionStreamResponse CreateChatCompletionStreamResponse(string id = null, IEnumerable<CreateChatCompletionStreamResponseChoice> choices = null, DateTimeOffset created = default, string model = null, string systemFingerprint = null, string @object = null, CreateChatCompletionStreamResponseUsage usage = null)
+        {
+            choices ??= new List<CreateChatCompletionStreamResponseChoice>();
+
+            return new CreateChatCompletionStreamResponse(
+                id,
+                choices?.ToList(),
+                created,
+                model,
+                systemFingerprint,
+                @object,
+                usage,
+                serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionStreamResponseChoice"/>. </summary>
+        /// <param name="delta"></param>
+        /// <param name="logprobs"> Log probability information for the choice. </param>
+        /// <param name="finishReason">
+        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+        /// `length` if the maximum number of tokens specified in the request was reached,
+        /// `content_filter` if content was omitted due to a flag from our content filters,
+        /// `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+        /// </param>
+        /// <param name="index"> The index of the choice in the list of choices. </param>
+        /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponseChoice"/> instance for mocking. </returns>
+        public static CreateChatCompletionStreamResponseChoice CreateChatCompletionStreamResponseChoice(ChatCompletionStreamResponseDelta delta = null, CreateChatCompletionStreamResponseChoiceLogprobs logprobs = null, string finishReason = null, int index = default)
+        {
+            return new CreateChatCompletionStreamResponseChoice(delta, logprobs, finishReason, index, serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionStreamResponseChoiceLogprobs"/>. </summary>
+        /// <param name="content"> A list of message content tokens with log probability information. </param>
+        /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponseChoiceLogprobs"/> instance for mocking. </returns>
+        public static CreateChatCompletionStreamResponseChoiceLogprobs CreateChatCompletionStreamResponseChoiceLogprobs(IEnumerable<ChatCompletionTokenLogprob> content = null)
+        {
+            content ??= new List<ChatCompletionTokenLogprob>();
+
+            return new CreateChatCompletionStreamResponseChoiceLogprobs(content?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionStreamResponseUsage"/>. </summary>
+        /// <param name="completionTokens"> Number of tokens in the generated completion. </param>
+        /// <param name="promptTokens"> Number of tokens in the prompt. </param>
+        /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
+        /// <returns> A new <see cref="Models.CreateChatCompletionStreamResponseUsage"/> instance for mocking. </returns>
+        public static CreateChatCompletionStreamResponseUsage CreateChatCompletionStreamResponseUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
+        {
+            return new CreateChatCompletionStreamResponseUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
     }
 }

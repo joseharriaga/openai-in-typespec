@@ -8,11 +8,9 @@ using System.Collections.Generic;
 namespace OpenAI.Internal.Models
 {
     /// <summary>
-    /// The parameters the functions accepts, described as a JSON Schema object. See the
-    /// [guide](/docs/guides/gpt/function-calling) for examples, and the
-    /// [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation
-    /// about the format.\n\nTo describe a function that accepts no parameters, provide the value
-    /// `{\"type\": \"object\", \"properties\": {}}`.
+    /// The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/text-generation/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+    ///
+    /// Omitting `parameters` defines a function with an empty parameter list.
     /// </summary>
     internal partial class FunctionParameters
     {

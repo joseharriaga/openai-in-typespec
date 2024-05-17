@@ -5,9 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.FineTuning;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.FineTuning
 {
     /// <summary> The ListFineTuningJobEventsResponse. </summary>
     internal partial class ListFineTuningJobEventsResponse

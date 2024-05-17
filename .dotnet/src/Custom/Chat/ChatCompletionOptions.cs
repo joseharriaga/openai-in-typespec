@@ -11,7 +11,7 @@ namespace OpenAI.Chat;
 public partial class ChatCompletionOptions
 {
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.FrequencyPenalty" />
-    public double? FrequencyPenalty { get; init; }
+    public float? FrequencyPenalty { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.LogitBias" />
     public IDictionary<int, int> TokenSelectionBiases { get; init; } = new ChangeTrackingDictionary<int, int>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Logprobs" />
@@ -21,7 +21,7 @@ public partial class ChatCompletionOptions
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.MaxTokens" />
     public int? MaxTokens { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.PresencePenalty" />
-    public double? PresencePenalty { get; init; }
+    public float? PresencePenalty { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.ResponseFormat" />
     public ChatResponseFormat? ResponseFormat { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Seed" />
@@ -29,9 +29,9 @@ public partial class ChatCompletionOptions
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Stop" />
     public IList<string> StopSequences { get; } = new ChangeTrackingList<string>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Temperature" />
-    public double? Temperature { get; init; }
+    public float? Temperature { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.TopP" />
-    public double? NucleusSamplingFactor { get; init; }
+    public float? NucleusSamplingFactor { get; init; }
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.Tools" />
     public IList<ChatToolDefinition> Tools { get; } = new ChangeTrackingList<ChatToolDefinition>();
     /// <inheritdoc cref="Internal.Models.CreateChatCompletionRequest.ToolChoice" />
@@ -52,9 +52,9 @@ public partial class ChatCompletionOptions
         return BinaryData.FromObjectAsJson(StopSequences);
     }
 
-    internal IDictionary<string, long> GetInternalLogitBias()
+    internal IDictionary<string, int> GetInternalLogitBias()
     {
-        ChangeTrackingDictionary<string, long> packedLogitBias = [];
+        ChangeTrackingDictionary<string, int> packedLogitBias = [];
         foreach (KeyValuePair<int, int> pair in TokenSelectionBiases)
         {
             packedLogitBias[$"{pair.Key}"] = pair.Value;
@@ -69,10 +69,10 @@ public partial class ChatCompletionOptions
         {
             if (tool is ChatFunctionToolDefinition functionTool)
             {
-                Internal.Models.FunctionObject functionObject = new(
+                FunctionDefinition functionObject = new(
                     functionTool.Description,
                     functionTool.FunctionName,
-                    CreateInternalFunctionParameters(functionTool.Parameters),
+                    functionTool.Parameters,
                     serializedAdditionalRawData: null);
                 internalTools.Add(new(functionObject));
             }
@@ -97,16 +97,16 @@ public partial class ChatCompletionOptions
 
     internal static Internal.Models.FunctionParameters CreateInternalFunctionParameters(BinaryData parameters)
     {
+        Internal.Models.FunctionParameters internalParameters = new();
         if (parameters == null)
         {
-            return null;
+            return internalParameters;
         }
         JsonElement parametersElement = JsonDocument.Parse(parameters.ToString()).RootElement;
-        Internal.Models.FunctionParameters internalParameters = new();
         foreach (JsonProperty property in parametersElement.EnumerateObject())
         {
             BinaryData propertyData = BinaryData.FromString(property.Value.GetRawText());
-            internalParameters.AdditionalProperties.Add(property.Name, propertyData);
+            internalParameters.AdditionalProperties[property.Name] = propertyData;
         }
         return internalParameters;
     }

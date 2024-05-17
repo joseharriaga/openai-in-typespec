@@ -31,9 +31,11 @@ internal static partial class ClientPipelineExtensions
             };
         }
 
-        return message.Response;
+        return message.BufferResponse ?
+            message.Response :
+            message.ExtractResponse();
     }
-        
+
     public static PipelineResponse ProcessMessage(
         this ClientPipeline pipeline,
         PipelineMessage message,
@@ -51,7 +53,9 @@ internal static partial class ClientPipelineExtensions
             };
         }
 
-        return message.Response;
+        return message.BufferResponse ?
+            message.Response :
+            message.ExtractResponse();
     }
 
     private static string TryBufferResponseAndCreateError(PipelineMessage message)

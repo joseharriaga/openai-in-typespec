@@ -77,8 +77,6 @@ public partial class VectorStoreClient
     /// <returns> The response returned from the service. </returns>
     public virtual async Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null)
     {
-        Argument.AssertNotNull(content, nameof(content));
-
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
@@ -93,8 +91,6 @@ public partial class VectorStoreClient
     /// <returns> The response returned from the service. </returns>
     public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null)
     {
-        Argument.AssertNotNull(content, nameof(content));
-
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }

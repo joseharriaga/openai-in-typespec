@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.VectorStores;
 
 namespace OpenAI.Internal.Models
 {
@@ -75,7 +76,7 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             ListVectorStoresResponseObject @object = default;
-            IReadOnlyList<VectorStoreObject> data = default;
+            IReadOnlyList<VectorStore> data = default;
             string firstId = default;
             string lastId = default;
             bool hasMore = default;
@@ -90,10 +91,10 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("data"u8))
                 {
-                    List<VectorStoreObject> array = new List<VectorStoreObject>();
+                    List<VectorStore> array = new List<VectorStore>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(VectorStoreObject.DeserializeVectorStoreObject(item, options));
+                        array.Add(VectorStore.DeserializeVectorStore(item, options));
                     }
                     data = array;
                     continue;

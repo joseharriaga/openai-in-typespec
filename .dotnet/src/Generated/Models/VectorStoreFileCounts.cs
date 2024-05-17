@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
     /// <summary> The VectorStoreObjectFileCounts. </summary>
-    internal partial class VectorStoreObjectFileCounts
+    public readonly partial struct VectorStoreFileCounts
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,15 +40,15 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreObjectFileCounts"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="VectorStoreFileCounts"/>. </summary>
         /// <param name="inProgress"> The number of files that are currently being processed. </param>
         /// <param name="completed"> The number of files that have been successfully processed. </param>
         /// <param name="failed"> The number of files that have failed to process. </param>
         /// <param name="cancelled"> The number of files that were cancelled. </param>
         /// <param name="total"> The total number of files. </param>
-        internal VectorStoreObjectFileCounts(int inProgress, int completed, int failed, int cancelled, int total)
+        internal VectorStoreFileCounts(int inProgress, int completed, int failed, int cancelled, int total)
         {
             InProgress = inProgress;
             Completed = completed;
@@ -57,14 +57,14 @@ namespace OpenAI.Internal.Models
             Total = total;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreObjectFileCounts"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="VectorStoreFileCounts"/>. </summary>
         /// <param name="inProgress"> The number of files that are currently being processed. </param>
         /// <param name="completed"> The number of files that have been successfully processed. </param>
         /// <param name="failed"> The number of files that have failed to process. </param>
         /// <param name="cancelled"> The number of files that were cancelled. </param>
         /// <param name="total"> The total number of files. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreObjectFileCounts(int inProgress, int completed, int failed, int cancelled, int total, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreFileCounts(int inProgress, int completed, int failed, int cancelled, int total, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             InProgress = inProgress;
             Completed = completed;
@@ -74,8 +74,8 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreObjectFileCounts"/> for deserialization. </summary>
-        internal VectorStoreObjectFileCounts()
+        /// <summary> Initializes a new instance of <see cref="VectorStoreFileCounts"/> for deserialization. </summary>
+        public VectorStoreFileCounts()
         {
         }
 

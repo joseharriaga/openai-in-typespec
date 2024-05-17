@@ -509,7 +509,22 @@ function Edit-GeneratedModels {
         "InternalListBatchesResponse.cs",
         "InternalListBatchesResponse.Serialization.cs",
         
-        "VectorStoreFileStatusFilter.cs"
+        # VectorStoreClient types
+        "VectorStore.cs",
+        "VectorStore.Serialization.cs",
+        "VectorStoreCreationOptions.cs",
+        "VectorStoreCreationOptions.Serialization.cs",
+        "VectorStoreExpirationPolicy.cs",
+        "VectorStoreExpirationPolicy.Serialization.cs",
+        "VectorStoreExpirationAnchor.Serialization.cs",
+        "VectorStoreModificationOptions.cs",
+        "VectorStoreModificationOptions.Serialization.cs",
+        "VectorStoreFileStatusFilter.cs",
+        "VectorStoreFileCounts.cs",
+        "VectorStoreFileCounts.Serialization.cs",
+        "VectorStoreStatus.Serialization.cs",
+        "InternalDeleteVectorStoreResponse.cs",
+        "InternalDeleteVectorStoreResponse.Serialization.cs"
     )
 
     foreach ($file in $files) {

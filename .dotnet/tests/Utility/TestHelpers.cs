@@ -4,6 +4,7 @@ using OpenAI.Batch;
 using OpenAI.Chat;
 using OpenAI.Files;
 using OpenAI.Images;
+using OpenAI.VectorStores;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -19,18 +20,19 @@ internal static class TestHelpers
     {
         Assistants,
         Batch,
-        TextToSpeech,
         Chat,
-        VisionChat,
-        Files,
         Embeddings,
+        Files,
         FineTuning,
         Images,
-        Transcription,
-        Models,
         LegacyCompletions,
+        Models,
         Moderations,
+        TextToSpeech,
         TopLevel,
+        Transcription,
+        VectorStores,
+        VisionChat,
     }
 
     public static OpenAIClient GetTestTopLevelClient() => GetTestClient<OpenAIClient>(TestScenario.TopLevel);
@@ -43,6 +45,7 @@ internal static class TestHelpers
         {
 #pragma warning disable OPENAI001
             TestScenario.Assistants => new AssistantClient(options),
+            TestScenario.VectorStores => new VectorStoreClient(options),
 #pragma warning restore OPENAI001
             TestScenario.Batch => new BatchClient(options),
             TestScenario.Chat => new ChatClient(overrideModel ?? "gpt-3.5-turbo", options),

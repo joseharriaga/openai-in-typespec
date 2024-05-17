@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class VectorStoreObjectFileCounts : IJsonModel<VectorStoreObjectFileCounts>
+    public partial struct VectorStoreFileCounts : IJsonModel<VectorStoreFileCounts>, IJsonModel<object>
     {
-        void IJsonModel<VectorStoreObjectFileCounts>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<VectorStoreFileCounts>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileCounts>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreObjectFileCounts)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(VectorStoreFileCounts)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -49,26 +49,26 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        VectorStoreObjectFileCounts IJsonModel<VectorStoreObjectFileCounts>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        VectorStoreFileCounts IJsonModel<VectorStoreFileCounts>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileCounts>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreObjectFileCounts)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(VectorStoreFileCounts)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeVectorStoreObjectFileCounts(document.RootElement, options);
+            return DeserializeVectorStoreFileCounts(document.RootElement, options);
         }
 
-        internal static VectorStoreObjectFileCounts DeserializeVectorStoreObjectFileCounts(JsonElement element, ModelReaderWriterOptions options = null)
+        void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options) => ((IJsonModel<VectorStoreFileCounts>)this).Write(writer, options);
+
+        object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => ((IJsonModel<VectorStoreFileCounts>)this).Create(ref reader, options);
+
+        internal static VectorStoreFileCounts DeserializeVectorStoreFileCounts(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             int inProgress = default;
             int completed = default;
             int failed = default;
@@ -109,7 +109,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new VectorStoreObjectFileCounts(
+            return new VectorStoreFileCounts(
                 inProgress,
                 completed,
                 failed,
@@ -118,47 +118,53 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<VectorStoreObjectFileCounts>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<VectorStoreFileCounts>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileCounts>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreObjectFileCounts)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(VectorStoreFileCounts)} does not support writing '{options.Format}' format.");
             }
         }
 
-        VectorStoreObjectFileCounts IPersistableModel<VectorStoreObjectFileCounts>.Create(BinaryData data, ModelReaderWriterOptions options)
+        VectorStoreFileCounts IPersistableModel<VectorStoreFileCounts>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileCounts>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeVectorStoreObjectFileCounts(document.RootElement, options);
+                        return DeserializeVectorStoreFileCounts(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreObjectFileCounts)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(VectorStoreFileCounts)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<VectorStoreObjectFileCounts>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<VectorStoreFileCounts>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+
+        BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options) => ((IPersistableModel<VectorStoreFileCounts>)this).Write(options);
+
+        object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options) => ((IPersistableModel<VectorStoreFileCounts>)this).Create(data, options);
+
+        string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options) => ((IPersistableModel<VectorStoreFileCounts>)this).GetFormatFromOptions(options);
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static VectorStoreObjectFileCounts FromResponse(PipelineResponse response)
+        internal static VectorStoreFileCounts FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeVectorStoreObjectFileCounts(document.RootElement);
+            return DeserializeVectorStoreFileCounts(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        internal BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
     /// <summary> A vector store is a collection of processed files can be used by the `file_search` tool. </summary>
-    internal partial class VectorStoreObject
+    public partial class VectorStore
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,7 +43,7 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreObject"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="VectorStore"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store was created. </param>
         /// <param name="name"> The name of the vector store. </param>
@@ -51,12 +52,11 @@ namespace OpenAI.Internal.Models
         /// <param name="status"> The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. </param>
         /// <param name="lastActiveAt"> The Unix timestamp (in seconds) for when the vector store was last active. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/> or <paramref name="fileCounts"/> is null. </exception>
-        internal VectorStoreObject(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreObjectFileCounts fileCounts, VectorStoreObjectStatus status, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="name"/> is null. </exception>
+        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStoreStatus status, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
-            Argument.AssertNotNull(fileCounts, nameof(fileCounts));
 
             Id = id;
             CreatedAt = createdAt;
@@ -68,7 +68,7 @@ namespace OpenAI.Internal.Models
             Metadata = metadata;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreObject"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="VectorStore"/>. </summary>
         /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `vector_store`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store was created. </param>
@@ -76,12 +76,12 @@ namespace OpenAI.Internal.Models
         /// <param name="usageBytes"> The total number of bytes used by the files in the vector store. </param>
         /// <param name="fileCounts"></param>
         /// <param name="status"> The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. </param>
-        /// <param name="expiresAfter"></param>
+        /// <param name="expirationPolicy"></param>
         /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the vector store will expire. </param>
         /// <param name="lastActiveAt"> The Unix timestamp (in seconds) for when the vector store was last active. </param>
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreObject(string id, VectorStoreObjectObject @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreObjectFileCounts fileCounts, VectorStoreObjectStatus status, VectorStoreExpirationAfter expiresAfter, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStore(string id, object @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStoreStatus status, VectorStoreExpirationPolicy expirationPolicy, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -90,22 +90,20 @@ namespace OpenAI.Internal.Models
             UsageBytes = usageBytes;
             FileCounts = fileCounts;
             Status = status;
-            ExpiresAfter = expiresAfter;
+            ExpirationPolicy = expirationPolicy;
             ExpiresAt = expiresAt;
             LastActiveAt = lastActiveAt;
             Metadata = metadata;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreObject"/> for deserialization. </summary>
-        internal VectorStoreObject()
+        /// <summary> Initializes a new instance of <see cref="VectorStore"/> for deserialization. </summary>
+        internal VectorStore()
         {
         }
 
         /// <summary> The identifier, which can be referenced in API endpoints. </summary>
         public string Id { get; }
-        /// <summary> The object type, which is always `vector_store`. </summary>
-        public VectorStoreObjectObject Object { get; } = VectorStoreObjectObject.VectorStore;
 
         /// <summary> The Unix timestamp (in seconds) for when the vector store was created. </summary>
         public DateTimeOffset CreatedAt { get; }
@@ -114,11 +112,9 @@ namespace OpenAI.Internal.Models
         /// <summary> The total number of bytes used by the files in the vector store. </summary>
         public int UsageBytes { get; }
         /// <summary> Gets the file counts. </summary>
-        public VectorStoreObjectFileCounts FileCounts { get; }
+        public VectorStoreFileCounts FileCounts { get; }
         /// <summary> The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. </summary>
-        public VectorStoreObjectStatus Status { get; }
-        /// <summary> Gets the expires after. </summary>
-        public VectorStoreExpirationAfter ExpiresAfter { get; }
+        public VectorStoreStatus Status { get; }
         /// <summary> The Unix timestamp (in seconds) for when the vector store will expire. </summary>
         public DateTimeOffset? ExpiresAt { get; }
         /// <summary> The Unix timestamp (in seconds) for when the vector store was last active. </summary>

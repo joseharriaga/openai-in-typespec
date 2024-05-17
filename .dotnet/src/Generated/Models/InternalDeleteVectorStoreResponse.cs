@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    /// <summary> The expiration policy for a vector store. </summary>
-    internal partial class VectorStoreExpirationAfter
+    /// <summary> The DeleteVectorStoreResponse. </summary>
+    internal partial class InternalDeleteVectorStoreResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,33 +43,39 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreExpirationAfter"/>. </summary>
-        /// <param name="days"> The number of days after the anchor time that the vector store will expire. </param>
-        public VectorStoreExpirationAfter(int days)
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteVectorStoreResponse"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="deleted"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        internal InternalDeleteVectorStoreResponse(string id, bool deleted)
         {
-            Days = days;
+            Argument.AssertNotNull(id, nameof(id));
+
+            Id = id;
+            Deleted = deleted;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreExpirationAfter"/>. </summary>
-        /// <param name="anchor"> Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`. </param>
-        /// <param name="days"> The number of days after the anchor time that the vector store will expire. </param>
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteVectorStoreResponse"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="deleted"></param>
+        /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreExpirationAfter(VectorStoreExpirationAfterAnchor anchor, int days, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteVectorStoreResponse(string id, bool deleted, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Anchor = anchor;
-            Days = days;
+            Id = id;
+            Deleted = deleted;
+            Object = @object;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreExpirationAfter"/> for deserialization. </summary>
-        internal VectorStoreExpirationAfter()
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteVectorStoreResponse"/> for deserialization. </summary>
+        internal InternalDeleteVectorStoreResponse()
         {
         }
 
-        /// <summary> Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`. </summary>
-        public VectorStoreExpirationAfterAnchor Anchor { get; } = VectorStoreExpirationAfterAnchor.LastActiveAt;
-
-        /// <summary> The number of days after the anchor time that the vector store will expire. </summary>
-        public int Days { get; set; }
+        /// <summary> Gets the id. </summary>
+        public string Id { get; }
+        /// <summary> Gets the deleted. </summary>
+        public bool Deleted { get; }
     }
 }

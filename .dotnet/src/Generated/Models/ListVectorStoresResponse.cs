@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.VectorStores;
 
 namespace OpenAI.Internal.Models
 {
@@ -49,7 +50,7 @@ namespace OpenAI.Internal.Models
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="data"/>, <paramref name="firstId"/> or <paramref name="lastId"/> is null. </exception>
-        internal ListVectorStoresResponse(IEnumerable<VectorStoreObject> data, string firstId, string lastId, bool hasMore)
+        internal ListVectorStoresResponse(IEnumerable<VectorStore> data, string firstId, string lastId, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
             Argument.AssertNotNull(firstId, nameof(firstId));
@@ -68,7 +69,7 @@ namespace OpenAI.Internal.Models
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ListVectorStoresResponse(ListVectorStoresResponseObject @object, IReadOnlyList<VectorStoreObject> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ListVectorStoresResponse(ListVectorStoresResponseObject @object, IReadOnlyList<VectorStore> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -87,7 +88,7 @@ namespace OpenAI.Internal.Models
         public ListVectorStoresResponseObject Object { get; } = ListVectorStoresResponseObject.List;
 
         /// <summary> Gets the data. </summary>
-        public IReadOnlyList<VectorStoreObject> Data { get; }
+        public IReadOnlyList<VectorStore> Data { get; }
         /// <summary> Gets the first id. </summary>
         public string FirstId { get; }
         /// <summary> Gets the last id. </summary>

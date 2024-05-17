@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class DeleteVectorStoreResponse : IJsonModel<DeleteVectorStoreResponse>
+    internal partial class InternalDeleteVectorStoreResponse : IJsonModel<InternalDeleteVectorStoreResponse>
     {
-        void IJsonModel<DeleteVectorStoreResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalDeleteVectorStoreResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteVectorStoreResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteVectorStoreResponse)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalDeleteVectorStoreResponse)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -26,7 +26,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Deleted);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -45,19 +45,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        DeleteVectorStoreResponse IJsonModel<DeleteVectorStoreResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalDeleteVectorStoreResponse IJsonModel<InternalDeleteVectorStoreResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteVectorStoreResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteVectorStoreResponse)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalDeleteVectorStoreResponse)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeDeleteVectorStoreResponse(document.RootElement, options);
+            return DeserializeInternalDeleteVectorStoreResponse(document.RootElement, options);
         }
 
-        internal static DeleteVectorStoreResponse DeserializeDeleteVectorStoreResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalDeleteVectorStoreResponse DeserializeInternalDeleteVectorStoreResponse(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -67,7 +67,7 @@ namespace OpenAI.Internal.Models
             }
             string id = default;
             bool deleted = default;
-            DeleteVectorStoreResponseObject @object = default;
+            object @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new DeleteVectorStoreResponseObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (options.Format != "W")
@@ -93,46 +93,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new DeleteVectorStoreResponse(id, deleted, @object, serializedAdditionalRawData);
+            return new InternalDeleteVectorStoreResponse(id, deleted, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<DeleteVectorStoreResponse>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalDeleteVectorStoreResponse>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteVectorStoreResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(DeleteVectorStoreResponse)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalDeleteVectorStoreResponse)} does not support writing '{options.Format}' format.");
             }
         }
 
-        DeleteVectorStoreResponse IPersistableModel<DeleteVectorStoreResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalDeleteVectorStoreResponse IPersistableModel<InternalDeleteVectorStoreResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteVectorStoreResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeDeleteVectorStoreResponse(document.RootElement, options);
+                        return DeserializeInternalDeleteVectorStoreResponse(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(DeleteVectorStoreResponse)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalDeleteVectorStoreResponse)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<DeleteVectorStoreResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalDeleteVectorStoreResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static DeleteVectorStoreResponse FromResponse(PipelineResponse response)
+        internal static InternalDeleteVectorStoreResponse FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeDeleteVectorStoreResponse(document.RootElement);
+            return DeserializeInternalDeleteVectorStoreResponse(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

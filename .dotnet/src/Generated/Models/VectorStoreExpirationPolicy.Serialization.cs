@@ -8,23 +8,23 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class VectorStoreExpirationAfter : IJsonModel<VectorStoreExpirationAfter>
+    public partial class VectorStoreExpirationPolicy : IJsonModel<VectorStoreExpirationPolicy>
     {
-        void IJsonModel<VectorStoreExpirationAfter>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<VectorStoreExpirationPolicy>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreExpirationAfter>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreExpirationPolicy>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreExpirationAfter)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(VectorStoreExpirationPolicy)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("anchor"u8);
-            writer.WriteStringValue(Anchor.ToString());
+            writer.WriteStringValue(_anchor.ToSerialString());
             writer.WritePropertyName("days"u8);
-            writer.WriteNumberValue(Days);
+            writer.WriteNumberValue(_days);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -43,19 +43,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        VectorStoreExpirationAfter IJsonModel<VectorStoreExpirationAfter>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        VectorStoreExpirationPolicy IJsonModel<VectorStoreExpirationPolicy>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreExpirationAfter>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreExpirationPolicy>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreExpirationAfter)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(VectorStoreExpirationPolicy)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeVectorStoreExpirationAfter(document.RootElement, options);
+            return DeserializeVectorStoreExpirationPolicy(document.RootElement, options);
         }
 
-        internal static VectorStoreExpirationAfter DeserializeVectorStoreExpirationAfter(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static VectorStoreExpirationPolicy DeserializeVectorStoreExpirationPolicy(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -63,7 +63,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            VectorStoreExpirationAfterAnchor anchor = default;
+            VectorStoreExpirationAnchor anchor = default;
             int days = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -71,7 +71,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("anchor"u8))
                 {
-                    anchor = new VectorStoreExpirationAfterAnchor(property.Value.GetString());
+                    anchor = property.Value.GetString().ToVectorStoreExpirationAnchor();
                     continue;
                 }
                 if (property.NameEquals("days"u8))
@@ -85,46 +85,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new VectorStoreExpirationAfter(anchor, days, serializedAdditionalRawData);
+            return new VectorStoreExpirationPolicy(anchor, days, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<VectorStoreExpirationAfter>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<VectorStoreExpirationPolicy>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreExpirationAfter>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreExpirationPolicy>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreExpirationAfter)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(VectorStoreExpirationPolicy)} does not support writing '{options.Format}' format.");
             }
         }
 
-        VectorStoreExpirationAfter IPersistableModel<VectorStoreExpirationAfter>.Create(BinaryData data, ModelReaderWriterOptions options)
+        VectorStoreExpirationPolicy IPersistableModel<VectorStoreExpirationPolicy>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreExpirationAfter>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreExpirationPolicy>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeVectorStoreExpirationAfter(document.RootElement, options);
+                        return DeserializeVectorStoreExpirationPolicy(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreExpirationAfter)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(VectorStoreExpirationPolicy)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<VectorStoreExpirationAfter>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<VectorStoreExpirationPolicy>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static VectorStoreExpirationAfter FromResponse(PipelineResponse response)
+        internal static VectorStoreExpirationPolicy FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeVectorStoreExpirationAfter(document.RootElement);
+            return DeserializeVectorStoreExpirationPolicy(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

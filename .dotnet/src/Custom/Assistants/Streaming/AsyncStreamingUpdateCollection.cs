@@ -3,7 +3,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 namespace OpenAI.Assistants;
 
 /// <summary>
-/// Implementation of collection abstraction over streaming chat updates.
+/// Implementation of collection abstraction over streaming assistant updates.
 /// </summary>
 internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingUpdate>
 {

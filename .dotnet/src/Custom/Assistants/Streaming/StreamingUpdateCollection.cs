@@ -4,14 +4,13 @@ using System.ClientModel.Primitives;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text.Json;
 
 #nullable enable
 
 namespace OpenAI.Assistants;
 
 /// <summary>
-/// Implementation of collection abstraction over streaming chat updates.
+/// Implementation of collection abstraction over streaming assistant updates.
 /// </summary>
 internal class StreamingUpdateCollection : ResultCollection<StreamingUpdate>
 {

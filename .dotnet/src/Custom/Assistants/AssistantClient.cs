@@ -491,21 +491,23 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual async Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> CreateRunStreamingAsync(
+    public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+
         options ??= new();
         options.AssistantId = assistantId;
         options.Stream = true;
 
-        ClientResult protocolResult = await CreateRunAsync(threadId, options.ToBinaryContent(), StreamRequestOptions)
+        async Task<ClientResult> getResultAsync() =>
+            await CreateRunAsync(threadId, options.ToBinaryContent(), StreamRequestOptions)
             .ConfigureAwait(false);
 
-        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+        return new AsyncStreamingUpdateCollection(getResultAsync);
     }
 
     /// <summary>
@@ -515,20 +517,21 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateRunStreaming(
+    public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+
         options ??= new();
         options.AssistantId = assistantId;
         options.Stream = true;
 
-        ClientResult protocolResult = CreateRun(threadId, options.ToBinaryContent(), StreamRequestOptions);
+        ClientResult getResult() => CreateRun(threadId, options.ToBinaryContent(), StreamRequestOptions);
 
-        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+        return new StreamingUpdateCollection(getResult);
     }
 
     /// <summary>
@@ -729,7 +732,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual async Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> SubmitToolOutputsToRunStreamingAsync(
+    public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
         string threadId,
         string runId,
         IEnumerable<ToolOutput> toolOutputs)
@@ -739,10 +742,12 @@ public partial class AssistantClient
 
         BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
             .ToBinaryContent();
-        ClientResult protocolResult = await SubmitToolOutputsToRunAsync(threadId, runId, content, StreamRequestOptions)
+
+        async Task<ClientResult> getResultAsync() =>
+            await SubmitToolOutputsToRunAsync(threadId, runId, content, StreamRequestOptions)
             .ConfigureAwait(false);
 
-        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+        return new AsyncStreamingUpdateCollection(getResultAsync);
     }
 
     /// <summary>
@@ -753,7 +758,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> SubmitToolOutputsToRunStreaming(
+    public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
         string threadId,
         string runId,
         IEnumerable<ToolOutput> toolOutputs)
@@ -763,9 +768,10 @@ public partial class AssistantClient
 
         BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
             .ToBinaryContent();
-        ClientResult protocolResult = SubmitToolOutputsToRun(threadId, runId, content, StreamRequestOptions);
 
-        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+        ClientResult getResult() => SubmitToolOutputsToRun(threadId, runId, content, StreamRequestOptions);
+
+        return new StreamingUpdateCollection(getResult);
     }
 
     /// <summary>
@@ -903,6 +909,6 @@ public partial class AssistantClient
         return ClientResult.FromValue(deserializedResultValue, pipelineResponse);
     }
 
-    private RequestOptions StreamRequestOptions => _streamRequestOptions ??= new() { BufferResponse = false };
-    private RequestOptions _streamRequestOptions;
+    private static RequestOptions StreamRequestOptions => _streamRequestOptions ??= new() { BufferResponse = false };
+    private static RequestOptions _streamRequestOptions;
 }

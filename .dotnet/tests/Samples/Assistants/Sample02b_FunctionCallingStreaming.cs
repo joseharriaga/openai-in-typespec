@@ -91,15 +91,15 @@ public partial class AssistantSamples
 
         #region Step 3 - Initiate a streaming run
         // TODO: replace this with finalized enumerable result pattern
-        ClientResult<IAsyncEnumerable<StreamingUpdate>> asyncUpdates
-            = await client.CreateRunStreamingAsync(thread, assistant);
+        AsyncResultCollection<StreamingUpdate> asyncUpdates
+            = client.CreateRunStreamingAsync(thread, assistant);
 
         ThreadRun currentRun = null;
         do
         {
             currentRun = null;
             List<ToolOutput> outputsToSubmit = [];
-            await foreach (StreamingUpdate update in asyncUpdates.Value)
+            await foreach (StreamingUpdate update in asyncUpdates)
             {
                 if (update is RunUpdate runUpdate)
                 {
@@ -123,7 +123,7 @@ public partial class AssistantSamples
             }
             if (outputsToSubmit.Count > 0)
             {
-                asyncUpdates = await client.SubmitToolOutputsToRunStreamingAsync(currentRun, outputsToSubmit);
+                asyncUpdates = client.SubmitToolOutputsToRunStreamingAsync(currentRun, outputsToSubmit);
             }
         } while (currentRun?.Status.IsTerminal == false);
         #endregion

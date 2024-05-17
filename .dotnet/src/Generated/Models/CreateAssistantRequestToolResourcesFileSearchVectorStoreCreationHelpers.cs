@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Assistants;
 
 namespace OpenAI.Internal.Models
 {
@@ -45,7 +46,7 @@ namespace OpenAI.Internal.Models
         /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers"/>. </summary>
         public CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers()
         {
-            VectorStores = new ChangeTrackingList<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore>();
+            VectorStores = new ChangeTrackingList<VectorStoreCreationHelper>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers"/>. </summary>
@@ -55,7 +56,7 @@ namespace OpenAI.Internal.Models
         /// attached to the assistant.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers(IList<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> vectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers(IList<VectorStoreCreationHelper> vectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             VectorStores = vectorStores;
             _serializedAdditionalRawData = serializedAdditionalRawData;
@@ -66,6 +67,6 @@ namespace OpenAI.Internal.Models
         /// file_ids and attach it to this assistant. There can be a maximum of 1 vector store
         /// attached to the assistant.
         /// </summary>
-        public IList<CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> VectorStores { get; }
+        public IList<VectorStoreCreationHelper> VectorStores { get; }
     }
 }

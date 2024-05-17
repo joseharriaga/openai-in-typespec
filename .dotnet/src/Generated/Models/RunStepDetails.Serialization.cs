@@ -65,8 +65,8 @@ namespace OpenAI.Assistants
             {
                 switch (discriminator.GetString())
                 {
-                    case "message_creation": return InternalRunStepMessageCreationDetails.DeserializeInternalRunStepMessageCreationDetails(element, options);
-                    case "tool_calls": return InternalRunStepToolCallDetailsCollection.DeserializeInternalRunStepToolCallDetailsCollection(element, options);
+                    case "message_creation": return InternalRunStepDetailsMessageCreationObject.DeserializeInternalRunStepDetailsMessageCreationObject(element, options);
+                    case "tool_calls": return InternalRunStepDetailsToolCallsObject.DeserializeInternalRunStepDetailsToolCallsObject(element, options);
                 }
             }
             return UnknownRunStepObjectStepDetails.DeserializeUnknownRunStepObjectStepDetails(element, options);

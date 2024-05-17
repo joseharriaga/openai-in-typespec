@@ -24,12 +24,12 @@ namespace OpenAI.Assistants
             if (Optional.IsDefined(CodeInterpreter))
             {
                 writer.WritePropertyName("code_interpreter"u8);
-                writer.WriteObjectValue(CodeInterpreter, options);
+                writer.WriteObjectValue<CodeInterpreterToolResources>(CodeInterpreter, options);
             }
             if (Optional.IsDefined(FileSearch))
             {
                 writer.WritePropertyName("file_search"u8);
-                writer.WriteObjectValue(FileSearch, options);
+                SerializeFileSearch(writer);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {

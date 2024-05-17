@@ -24,24 +24,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("file_id"u8);
             writer.WriteStringValue(FileId);
             writer.WritePropertyName("tools"u8);
-            writer.WriteStartArray();
-            foreach (var item in Tools)
-            {
-                if (item == null)
-                {
-                    writer.WriteNullValue();
-                    continue;
-                }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                using (JsonDocument document = JsonDocument.Parse(item))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            writer.WriteEndArray();
+            SerializeTools(writer);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -81,7 +64,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string fileId = default;
-            IList<BinaryData> tools = default;
+            IReadOnlyList<ToolDefinition> tools = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -93,19 +76,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("tools"u8))
                 {
-                    List<BinaryData> array = new List<BinaryData>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
-                    }
-                    tools = array;
+                    DeserializeTools(property, ref tools);
                     continue;
                 }
                 if (options.Format != "W")

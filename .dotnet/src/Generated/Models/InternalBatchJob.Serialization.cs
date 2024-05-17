@@ -7,7 +7,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
 namespace OpenAI.Batch
 {
@@ -25,7 +24,7 @@ namespace OpenAI.Batch
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("endpoint"u8);
             writer.WriteStringValue(Endpoint);
             if (Optional.IsDefined(Errors))
@@ -153,7 +152,7 @@ namespace OpenAI.Batch
                 return null;
             }
             string id = default;
-            InternalBatchObject @object = default;
+            object @object = default;
             string endpoint = default;
             InternalBatchErrors errors = default;
             string inputFileId = default;
@@ -183,7 +182,7 @@ namespace OpenAI.Batch
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new InternalBatchObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (property.NameEquals("endpoint"u8))

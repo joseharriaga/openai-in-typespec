@@ -22,7 +22,7 @@ namespace OpenAI.Assistants
 
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
+            writer.WriteStringValue(_type.ToString());
             if (Optional.IsDefined(LastMessages))
             {
                 if (LastMessages != null)
@@ -73,7 +73,7 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            RunTruncationStrategyType type = default;
+            InternalRunTruncationStrategyType type = default;
             int? lastMessages = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -81,7 +81,7 @@ namespace OpenAI.Assistants
             {
                 if (property.NameEquals("type"u8))
                 {
-                    type = new RunTruncationStrategyType(property.Value.GetString());
+                    type = new InternalRunTruncationStrategyType(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("last_messages"u8))

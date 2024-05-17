@@ -121,5 +121,27 @@ public partial class TranscriptionTests
         }
     }
 
+    [Test]
+    public void BadTranscriptionRequest()
+    {
+        AudioClient client = GetTestClient();
+        string path = Path.Combine("Assets", "hello_world.m4a");
+
+        Exception caughtException = null;
+        try
+        {
+            _ = client.TranscribeAudio(path, new AudioTranscriptionOptions()
+            {
+                Language = "this should cause an error"
+            });
+        }
+        catch (Exception ex)
+        {
+            caughtException = ex;
+        }
+        Assert.That(caughtException, Is.InstanceOf<ClientResultException>());
+        Assert.That(caughtException.Message?.ToLower(), Contains.Substring("invalid language"));
+    }
+
     private static AudioClient GetTestClient() => GetTestClient<AudioClient>(TestScenario.Transcription);
 }

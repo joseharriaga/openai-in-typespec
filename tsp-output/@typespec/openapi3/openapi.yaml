@@ -2029,6 +2029,8 @@ components:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
       description: Represents an `assistant` that can call the model and use tools.
+    AssistantResponseFormat:
+      type: object
     AssistantToolDefinition:
       type: object
       required:
@@ -6595,13 +6597,25 @@ components:
           type: object
           properties:
             step_details:
-              anyOf:
-                - $ref: '#/components/schemas/RunStepDeltaStepDetailsMessageCreationObject'
-                - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObject'
+              allOf:
+                - $ref: '#/components/schemas/RunStepDeltaStepDetails'
               description: The details of the run step.
               x-oaiExpandable: true
           description: The delta containing the fields that have changed on the run step.
       description: Represents a run step delta i.e. any changed fields on a run step during streaming.
+    RunStepDeltaStepDetails:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the details object.
+      discriminator:
+        propertyName: type
+        mapping:
+          message_creation: '#/components/schemas/RunStepDeltaStepDetailsMessageCreationObject'
+          tool_calls: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObject'
     RunStepDeltaStepDetailsMessageCreationObject:
       type: object
       required:
@@ -6618,6 +6632,8 @@ components:
             message_id:
               type: string
               description: The ID of the message that was created by this run step.
+      allOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetails'
       description: Details of the message creation by the run step.
     RunStepDeltaStepDetailsToolCallsCodeObject:
       type: object
@@ -6646,13 +6662,27 @@ components:
             outputs:
               type: array
               items:
-                anyOf:
-                  - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject'
-                  - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutputImageObject'
+                $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject'
               description: The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
               x-oaiExpandable: true
           description: The Code Interpreter tool call definition.
+      allOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObjectToolCallsObject'
       description: Details of the Code Interpreter tool call the run step was involved in.
+    RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the details object.
+      discriminator:
+        propertyName: type
+        mapping:
+          logs: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject'
+          image: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeOutputImageObject'
+      description: Abstractly represents a run step tool call details code interpreter output.
     RunStepDeltaStepDetailsToolCallsCodeOutputImageObject:
       type: object
       required:
@@ -6674,6 +6704,8 @@ components:
             file_id:
               type: string
               description: The [file](/docs/api-reference/files) ID of the image.
+      allOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject'
     RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject:
       type: object
       required:
@@ -6692,6 +6724,8 @@ components:
         logs:
           type: string
           description: The text output from the Code Interpreter tool call.
+      allOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject'
       description: Text output from the Code Interpreter tool call as part of a run step.
     RunStepDeltaStepDetailsToolCallsFileSearchObject:
       type: object
@@ -6718,6 +6752,8 @@ components:
             type: string
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
+      allOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObjectToolCallsObject'
     RunStepDeltaStepDetailsToolCallsFunctionObject:
       type: object
       required:
@@ -6750,6 +6786,8 @@ components:
               nullable: true
               description: The output of the function. This will be `null` if the outputs have not been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
           description: The definition of the function that was called.
+      allOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObjectToolCallsObject'
     RunStepDeltaStepDetailsToolCallsObject:
       type: object
       required:
@@ -6763,13 +6801,27 @@ components:
         tool_calls:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeObject'
-              - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsFileSearchObject'
-              - $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsFunctionObject'
+            $ref: '#/components/schemas/RunStepDeltaStepDetailsToolCallsObjectToolCallsObject'
           description: 'An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.'
           x-oaiExpandable: true
+      allOf:
+        - $ref: '#/components/schemas/RunStepDeltaStepDetails'
       description: Details of the tool call.
+    RunStepDeltaStepDetailsToolCallsObjectToolCallsObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The discriminated type identifier for the details object.
+      discriminator:
+        propertyName: type
+        mapping:
+          code_interpreter: '#/components/schemas/RunStepDeltaStepDetailsToolCallsCodeObject'
+          file_search: '#/components/schemas/RunStepDeltaStepDetailsToolCallsFileSearchObject'
+          function: '#/components/schemas/RunStepDeltaStepDetailsToolCallsFunctionObject'
+      description: Abstractly represents a run step tool call details inner object.
     RunStepDetailsMessageCreationObject:
       type: object
       required:

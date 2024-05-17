@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OpenAI.Internal.VectorStores
+namespace OpenAI.VectorStores
 {
     /// <summary> The CreateVectorStoreFileBatchRequest. </summary>
     internal partial class InternalCreateVectorStoreFileBatchRequest

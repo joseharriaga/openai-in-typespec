@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenAI.Assistants;
 using System;
+using System.ClientModel;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
@@ -152,7 +153,7 @@ public partial class AssistantSamples
         // With the run complete, list the messages and display their content
         if (run.Status == RunStatus.Completed)
         {
-            ListQueryPage<ThreadMessage> messages
+            PageableCollection<ThreadMessage> messages
                 = client.GetMessages(run.ThreadId, resultOrder: ListOrder.OldestFirst);
 
             foreach (ThreadMessage message in messages)

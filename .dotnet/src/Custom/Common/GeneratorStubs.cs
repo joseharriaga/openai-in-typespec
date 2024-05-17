@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace OpenAI;
 
@@ -6,3 +7,11 @@ namespace OpenAI;
 
 [CodeGenModel("ChatCompletionStreamOptions")]
 internal partial class InternalChatCompletionStreamOptions {}
+
+internal interface IInternalListResponse<T>
+{
+    IReadOnlyList<T> Data { get; }
+    string FirstId { get; }
+    string LastId { get; }
+    bool HasMore { get; }
+}

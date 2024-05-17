@@ -43,21 +43,12 @@ namespace OpenAI.Assistants
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="CodeInterpreterToolResources"/>. </summary>
-        internal CodeInterpreterToolResources()
-        {
-            FileIds = new ChangeTrackingList<string>();
-        }
-
-        /// <summary> Initializes a new instance of <see cref="CodeInterpreterToolResources"/>. </summary>
         /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CodeInterpreterToolResources(IReadOnlyList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CodeInterpreterToolResources(IList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileIds = fileIds;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        /// <summary> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool. </summary>
-        public IReadOnlyList<string> FileIds { get; }
     }
 }

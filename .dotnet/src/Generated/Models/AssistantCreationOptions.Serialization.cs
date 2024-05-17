@@ -74,7 +74,7 @@ namespace OpenAI.Assistants
                 if (ToolResources != null)
                 {
                     writer.WritePropertyName("tool_resources"u8);
-                    writer.WriteObjectValue<ToolResourceDefinitions>(ToolResources, options);
+                    writer.WriteObjectValue<ToolResources>(ToolResources, options);
                 }
                 else
                 {
@@ -111,12 +111,12 @@ namespace OpenAI.Assistants
                     writer.WriteNull("temperature");
                 }
             }
-            if (Optional.IsDefined(TopP))
+            if (Optional.IsDefined(NucleusSamplingFactor))
             {
-                if (TopP != null)
+                if (NucleusSamplingFactor != null)
                 {
                     writer.WritePropertyName("top_p"u8);
-                    writer.WriteNumberValue(TopP.Value);
+                    writer.WriteNumberValue(NucleusSamplingFactor.Value);
                 }
                 else
                 {
@@ -128,14 +128,7 @@ namespace OpenAI.Assistants
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(ResponseFormat);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(ResponseFormat))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
                 }
                 else
                 {
@@ -185,11 +178,11 @@ namespace OpenAI.Assistants
             string description = default;
             string instructions = default;
             IList<ToolDefinition> tools = default;
-            ToolResourceDefinitions toolResources = default;
+            ToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
-            BinaryData responseFormat = default;
+            AssistantResponseFormat responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -250,7 +243,7 @@ namespace OpenAI.Assistants
                         toolResources = null;
                         continue;
                     }
-                    toolResources = ToolResourceDefinitions.DeserializeToolResourceDefinitions(property.Value, options);
+                    toolResources = Assistants.ToolResources.DeserializeToolResources(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("metadata"u8))
@@ -294,7 +287,7 @@ namespace OpenAI.Assistants
                         responseFormat = null;
                         continue;
                     }
-                    responseFormat = BinaryData.FromString(property.Value.GetRawText());
+                    responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

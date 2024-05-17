@@ -6,7 +6,6 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
-using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
@@ -37,6 +36,64 @@ namespace OpenAI.VectorStores
             _pipeline = pipeline;
             _keyCredential = keyCredential;
             _endpoint = endpoint;
+        }
+
+        /// <summary> Retrieves a vector store. </summary>
+        /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get vector store. </remarks>
+        public virtual async Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId)
+        {
+            Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+
+            ClientResult result = await GetVectorStoreAsync(vectorStoreId, null).ConfigureAwait(false);
+            return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
+        /// <summary> Retrieves a vector store. </summary>
+        /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get vector store. </remarks>
+        public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId)
+        {
+            Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+
+            ClientResult result = GetVectorStore(vectorStoreId, null);
+            return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
+        /// <summary> Modifies a vector store. </summary>
+        /// <param name="vectorStoreId"> The ID of the vector store to modify. </param>
+        /// <param name="vectorStore"> The <see cref="VectorStoreModificationOptions"/> to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="vectorStore"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Modify vector store. </remarks>
+        public virtual async Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore)
+        {
+            Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+            Argument.AssertNotNull(vectorStore, nameof(vectorStore));
+
+            using BinaryContent content = vectorStore.ToBinaryContent();
+            ClientResult result = await ModifyVectorStoreAsync(vectorStoreId, content, null).ConfigureAwait(false);
+            return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
+        /// <summary> Modifies a vector store. </summary>
+        /// <param name="vectorStoreId"> The ID of the vector store to modify. </param>
+        /// <param name="vectorStore"> The <see cref="VectorStoreModificationOptions"/> to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="vectorStore"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Modify vector store. </remarks>
+        public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore)
+        {
+            Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+            Argument.AssertNotNull(vectorStore, nameof(vectorStore));
+
+            using BinaryContent content = vectorStore.ToBinaryContent();
+            ClientResult result = ModifyVectorStore(vectorStoreId, content, null);
+            return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         internal PipelineMessage CreateGetVectorStoresRequest(int? limit, string order, string after, string before, RequestOptions options)

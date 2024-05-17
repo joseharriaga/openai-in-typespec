@@ -215,6 +215,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="ModelClient"/>. </returns>
+    [Experimental("OPENAI001")]
     public virtual VectorStoreClient GetVectorStoreClient() => new(_pipeline, _endpoint, _options);
 
     internal static ClientPipeline CreatePipeline(ApiKeyCredential credential, OpenAIClientOptions options = null)

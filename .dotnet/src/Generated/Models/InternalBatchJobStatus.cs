@@ -5,10 +5,10 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Models
+namespace OpenAI.Batch
 {
     /// <summary> Enum for status in InternalBatchJob. </summary>
-    public readonly partial struct InternalBatchJobStatus : IEquatable<InternalBatchJobStatus>
+    internal readonly partial struct InternalBatchJobStatus : IEquatable<InternalBatchJobStatus>
     {
         private readonly string _value;
 

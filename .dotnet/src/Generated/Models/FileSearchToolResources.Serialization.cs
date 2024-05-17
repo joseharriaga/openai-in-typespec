@@ -31,6 +31,11 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
+            if (options.Format != "W" && Optional.IsCollectionDefined(NewVectorStores))
+            {
+                writer.WritePropertyName("vector_stores"u8);
+                SerializeNewVectorStores(writer);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -69,7 +74,8 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            IReadOnlyList<string> vectorStoreIds = default;
+            IList<string> vectorStoreIds = default;
+            IList<VectorStoreCreationHelper> vectorStores = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -88,13 +94,27 @@ namespace OpenAI.Assistants
                     vectorStoreIds = array;
                     continue;
                 }
+                if (property.NameEquals("vector_stores"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<VectorStoreCreationHelper> array = new List<VectorStoreCreationHelper>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(VectorStoreCreationHelper.DeserializeVectorStoreCreationHelper(item, options));
+                    }
+                    vectorStores = array;
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FileSearchToolResources(vectorStoreIds ?? new ChangeTrackingList<string>(), serializedAdditionalRawData);
+            return new FileSearchToolResources(vectorStoreIds ?? new ChangeTrackingList<string>(), vectorStores ?? new ChangeTrackingList<VectorStoreCreationHelper>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<FileSearchToolResources>.Write(ModelReaderWriterOptions options)

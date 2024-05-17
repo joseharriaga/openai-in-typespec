@@ -7,6 +7,7 @@ namespace OpenAI.Assistants;
 /// Represents additional options available when creating a new <see cref="Assistant"/>.
 /// </summary>
 [CodeGenModel("CreateAssistantRequest")]
+[CodeGenSuppress(nameof(AssistantCreationOptions), typeof(string))]
 public partial class AssistantCreationOptions
 {
     // CUSTOM: visibility hidden to promote required property to method parameter
@@ -21,15 +22,22 @@ public partial class AssistantCreationOptions
     [CodeGenMember("Tools")]
     public IList<ToolDefinition> Tools { get; } = new ChangeTrackingList<ToolDefinition>();
 
-    /// <summary>
-    /// <para>
-    /// A set of resources that are made available to the assistant.
-    /// </para>
-    /// The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
-    /// </summary>
+    /// <inheritdoc cref="ToolResources"/>
     [CodeGenMember("ToolResources")]
-    public ToolResourceDefinitions ToolResources { get; set; }
+    public ToolResources ToolResources { get; init; }
 
+    /// <inheritdoc cref="AssistantResponseFormat"/>
+    [CodeGenMember("ResponseFormat")]
+    public AssistantResponseFormat ResponseFormat { get; init; }
+
+    /// <summary>
+    /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+    ///
+    /// We generally recommend altering this or temperature but not both.
+    /// </summary>
+    [CodeGenMember("TopP")]
+    public float? NucleusSamplingFactor { get; init; }
+    
     internal AssistantCreationOptions(InternalCreateAssistantRequestModel model)
         : this()
     {
@@ -43,5 +51,6 @@ public partial class AssistantCreationOptions
     {
         Metadata = new ChangeTrackingDictionary<string, string>();
         Tools = new ChangeTrackingList<ToolDefinition>();
+        ToolResources = new();
     }
 }

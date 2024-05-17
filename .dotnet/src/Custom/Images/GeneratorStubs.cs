@@ -5,12 +5,6 @@
 [CodeGenModel("CreateImageEditRequestModel")]
 internal readonly partial struct CreateImageEditRequestModel { }
 
-[CodeGenModel("CreateImageEditRequestResponseFormat")]
-internal readonly partial struct ImageEditOptionsResponseFormat { }
-
-[CodeGenModel("CreateImageEditRequestSize")]
-internal readonly partial struct ImageEditOptionsSize { }
-
 [CodeGenModel("CreateImageRequestModel")]
 internal readonly partial struct CreateImageRequestModel { }
 

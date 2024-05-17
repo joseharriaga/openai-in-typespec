@@ -1,13 +1,10 @@
 namespace OpenAI.Batch;
 
 [CodeGenModel("Batch")]
-internal partial class InternalBatchJob {}
+internal partial class InternalBatchJob { private readonly object Object; }
 
-[CodeGenModel("BatchObject")]
-internal readonly partial struct InternalBatchObject {}
-
-[CodeGenModel("BatchStatus")]
-internal readonly partial struct InternalBatchStatus {}
+[CodeGenModel("InternalBatchJobStatus")]
+internal readonly partial struct InternalBatchJobStatus {}
 
 [CodeGenModel("BatchErrors")]
 internal partial class InternalBatchErrors {}

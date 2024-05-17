@@ -5,7 +5,7 @@ namespace OpenAI.VectorStores;
 /// <summary>
 /// Represents the possible states for a vector store file association.
 /// </summary>
-[CodeGenModel("VectorStoreFileObjectStatus")]
+[CodeGenModel("VectorStoreFileAssociationStatus")]
 public enum VectorStoreFileAssociationStatus
 {
     /// <summary>

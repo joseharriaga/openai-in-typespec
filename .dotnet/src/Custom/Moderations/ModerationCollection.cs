@@ -7,8 +7,8 @@ namespace OpenAI.Moderations;
 [CodeGenModel("CreateModerationResponse")]
 [CodeGenSuppress("Results")]
 [CodeGenSuppress(nameof(ModerationCollection))]
-[CodeGenSuppress(nameof(ModerationCollection), typeof(string), typeof(string), typeof(IReadOnlyList<Moderation>))]
-public partial class ModerationCollection : ReadOnlyCollection<Moderation>
+[CodeGenSuppress(nameof(ModerationCollection), typeof(string), typeof(string), typeof(IReadOnlyList<ModerationResult>))]
+public partial class ModerationCollection : ReadOnlyCollection<ModerationResult>
 {
     // CUSTOM: Recovered this field. See https://github.com/Azure/autorest.csharp/issues/4636.
     /// <summary>
@@ -48,7 +48,7 @@ public partial class ModerationCollection : ReadOnlyCollection<Moderation>
     /// <param name="model"> The model used to generate the moderation results. </param>
     /// <param name="results"> A list of moderation objects. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="model"/> or <paramref name="results"/> is null. </exception>
-    internal ModerationCollection(string id, string model, IEnumerable<Moderation> results)
+    internal ModerationCollection(string id, string model, IEnumerable<ModerationResult> results)
         : base([.. results])
     {
         Argument.AssertNotNull(id, nameof(id));
@@ -64,7 +64,7 @@ public partial class ModerationCollection : ReadOnlyCollection<Moderation>
     /// <param name="model"> The model used to generate the moderation results. </param>
     /// <param name="results"> A list of moderation objects. </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-    internal ModerationCollection(string id, string model, IReadOnlyList<Moderation> results, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal ModerationCollection(string id, string model, IReadOnlyList<ModerationResult> results, IDictionary<string, BinaryData> serializedAdditionalRawData)
         : base([.. results])
     {
         Id = id;

@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Models
+namespace OpenAI.VectorStores
 {
-    /// <summary> The DeleteModelResponse. </summary>
-    public partial class DeleteModelResponse
+    /// <summary> The DeleteVectorStoreFileResponse. </summary>
+    internal partial class InternalDeleteVectorStoreFileResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,11 +43,11 @@ namespace OpenAI.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="DeleteModelResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteVectorStoreFileResponse"/>. </summary>
         /// <param name="id"></param>
         /// <param name="deleted"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        internal DeleteModelResponse(string id, bool deleted)
+        internal InternalDeleteVectorStoreFileResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
@@ -54,12 +55,12 @@ namespace OpenAI.Models
             Deleted = deleted;
         }
 
-        /// <summary> Initializes a new instance of <see cref="DeleteModelResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteVectorStoreFileResponse"/>. </summary>
         /// <param name="id"></param>
         /// <param name="deleted"></param>
         /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal DeleteModelResponse(string id, bool deleted, DeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteVectorStoreFileResponse(string id, bool deleted, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -67,8 +68,8 @@ namespace OpenAI.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="DeleteModelResponse"/> for deserialization. </summary>
-        internal DeleteModelResponse()
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteVectorStoreFileResponse"/> for deserialization. </summary>
+        internal InternalDeleteVectorStoreFileResponse()
         {
         }
 

@@ -1,7 +1,7 @@
 ﻿namespace OpenAI.Files;
 
-[CodeGenModel("DeleteFileResponseObject")]
-internal readonly partial struct DeleteFileResponseObject { }
+[CodeGenModel("DeleteFileResponse")]
+internal partial class InternalDeleteFileResponse { private readonly object Object; }
 
 [CodeGenModel("ListFilesResponseObject")]
 internal readonly partial struct ListFilesResponseObject { }

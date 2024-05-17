@@ -1,8 +1,5 @@
 namespace OpenAI.VectorStores;
 
-[CodeGenModel("UpdateVectorStoreRequest")]
-public partial class VectorStoreModificationOptions {}
-
 [CodeGenModel("ListVectorStoreFilesFilter")]
 public readonly partial struct VectorStoreFileStatusFilter {}
 
@@ -15,6 +12,9 @@ internal partial class InternalCreateVectorStoreFileBatchRequest {}
 [CodeGenModel("DeleteVectorStoreResponse")]
 internal partial class InternalDeleteVectorStoreResponse { private readonly object Object; }
 
+[CodeGenModel("DeleteVectorStoreFileResponse")]
+internal partial class InternalDeleteVectorStoreFileResponse { private readonly object Object; }
+
 [CodeGenModel("VectorStoreObjectFileCounts")]
 public readonly partial struct VectorStoreFileCounts {}
 
@@ -24,7 +24,7 @@ internal partial class InternalListVectorStoresResponse : IInternalListResponse<
     private readonly object Object;
 }
 
-[CodeGenModel("VectorStoreFileObjectLastErrorCode")]
+[CodeGenModel("VectorStoreFileAssociationErrorCode")]
 public readonly partial struct VectorStoreFileAssociationErrorCode {}
 
 [CodeGenModel("VectorStoreFileObjectLastError")]
@@ -35,3 +35,6 @@ internal partial class InternalListVectorStoreFilesResponse : IInternalListRespo
 {
     private readonly object Object;
 }
+
+[CodeGenModel("VectorStoreBatchFileJobStatus")]
+public readonly partial struct VectorStoreBatchFileJobStatus {}

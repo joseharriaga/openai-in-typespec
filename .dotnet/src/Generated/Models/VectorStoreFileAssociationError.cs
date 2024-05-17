@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
@@ -47,7 +46,7 @@ namespace OpenAI.VectorStores
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
-        internal VectorStoreFileAssociationError(Models.VectorStoreFileAssociationErrorCode code, string message)
+        internal VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code, string message)
         {
             Argument.AssertNotNull(message, nameof(message));
 
@@ -59,7 +58,7 @@ namespace OpenAI.VectorStores
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreFileAssociationError(Models.VectorStoreFileAssociationErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             Message = message;
@@ -72,7 +71,7 @@ namespace OpenAI.VectorStores
         }
 
         /// <summary> One of `server_error` or `rate_limit_exceeded`. </summary>
-        public Models.VectorStoreFileAssociationErrorCode Code { get; }
+        public VectorStoreFileAssociationErrorCode Code { get; }
         /// <summary> A human-readable description of the error. </summary>
         public string Message { get; }
     }

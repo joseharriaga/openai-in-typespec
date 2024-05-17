@@ -56,11 +56,10 @@ public partial class FileTests : SyncAsyncTestBase
         Assert.AreEqual(uploadedFile.Id, fileInfo.Id);
         Assert.AreEqual(uploadedFile.Filename, fileInfo.Filename);
 
-        DeleteFileResponse deleteResponse = IsAsync
+        bool deleted = IsAsync
             ? await client.DeleteFileAsync(uploadedFile.Id)
             : client.DeleteFile(uploadedFile.Id);
-        Assert.AreEqual(uploadedFile.Id, deleteResponse.Id);
-        Assert.IsTrue(deleteResponse.Deleted);
+        Assert.IsTrue(deleted);
     }
 
     [Test]

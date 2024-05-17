@@ -1,7 +1,10 @@
 ﻿using OpenAI.Assistants;
+using OpenAI.Files;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using static OpenAI.InternalListHelpers;
@@ -124,49 +127,383 @@ public partial class VectorStoreClient
         return ClientResult.FromValue(internalResponse.Deleted, rawProtocolResponse);
     }
 
+    /// <summary>
+    /// Gets the collection of <see cref="VectorStore"/> instances for the configured organization.
+    /// </summary>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="VectorStore"/> instances that can be asynchronously enumerated via
+    /// <c>await foreach</c>.
+    /// </returns>
     public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null)
     {
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPageAsync<VectorStore, InternalListVectorStoresResponse>(GetVectorStoresAsync, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPageAsync<VectorStore, InternalListVectorStoresResponse>(GetVectorStoresAsync, resultOrder, continuation, pageSize));
+        return CreateAsyncPageable<VectorStore, InternalListVectorStoresResponse>((continuationToken, pageSize)
+            => GetVectorStoresAsync(pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
+    /// <summary>
+    /// Gets the collection of <see cref="VectorStore"/> instances for the configured organization.
+    /// </summary>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="VectorStore"/> instances that can be synchronously enumerated via <c>foreach</c>.
+    /// </returns>
     public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null)
     {
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPage<VectorStore, InternalListVectorStoresResponse>(GetVectorStores, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPage<VectorStore, InternalListVectorStoresResponse>(GetVectorStores, resultOrder, continuation, pageSize));
+        return CreatePageable<VectorStore, InternalListVectorStoresResponse>((continuationToken, pageSize)
+            => GetVectorStores(pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
+    /// <summary>
+    /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
+    /// </summary>
+    /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
+    /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
+    /// <returns>
+    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
+    /// </returns>
     public virtual async Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId)
     {
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        ClientResult protocolResult = await CreateVectorStoreFileAsync(vectorStoreId, internalRequest.ToBinaryContent(), null).ConfigureAwait(false);
+        ClientResult protocolResult = await AddFileToVectorStoreAsync(vectorStoreId, internalRequest.ToBinaryContent(), null).ConfigureAwait(false);
         PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
         VectorStoreFileAssociation fileAssociation = VectorStoreFileAssociation.FromResponse(protocolResponse);
         return ClientResult.FromValue(fileAssociation, protocolResponse);
     }
 
+    /// <summary>
+    /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
+    /// </summary>
+    /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
+    /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
+    /// <returns>
+    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
+    /// </returns>
     public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId)
     {
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        ClientResult protocolResult = CreateVectorStoreFile(vectorStoreId, internalRequest.ToBinaryContent(), null);
+        ClientResult protocolResult = AddFileToVectorStore(vectorStoreId, internalRequest.ToBinaryContent(), null);
         PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
         VectorStoreFileAssociation fileAssociation = VectorStoreFileAssociation.FromResponse(protocolResponse);
         return ClientResult.FromValue(fileAssociation, protocolResponse);
     }
 
-    //public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetVectorStoreFileAssociationsAsync(string vectorStoreId, ListOrder? resultOrder = null)
-    //{
-    //    return PageableResultHelpers.Create(
-    //        (pageSize) => GetFirstPageAsync<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(GetVectorStoreFilesAsync, vectorStoreId, resultOrder, pageSize),
-    //        (continuation, pageSize) => GetNextPageAsync<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(GetVectorStoreFilesAsync, vectorStoreId, resultOrder, continuation, pageSize));
-    //}
+    /// <summary>
+    /// Gets the collection of <see cref="VectorStoreFileAssociation"/> instances representing file inclusions in the
+    /// specified vector store.
+    /// </summary>
+    /// <param name="vectorStoreId">
+    /// The ID of the vector store to enumerate the file associations of.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="filter">
+    /// A status filter that file associations must match to be included in the collection.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
+    /// <c>await foreach</c>.
+    /// </returns>
+    public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+        string vectorStoreId,
+        ListOrder? resultOrder = null,
+        VectorStoreFileStatusFilter? filter = null)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+            (continuationToken, pageSize) => GetFileAssociationsAsync(
+                vectorStoreId, pageSize, resultOrder?.ToString(), continuationToken, null, filter?.ToString(), null));
+    }
 
-    //public virtual PageableCollection<VectorStoreFileAssociation> GetVectorStoreFileAssociations(string vectorStoreId, ListOrder? resultOrder = null)
-    //{
-    //    return PageableResultHelpers.Create(
-    //        (pageSize) => GetFirstPage<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(GetVectorStoreFiles, vectorStoreId, resultOrder, pageSize),
-    //        (continuation, pageSize) => GetNextPage<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(GetVectorStoreFiles, vectorStoreId, resultOrder, continuation, pageSize));
-    //}
+    /// <summary>
+    /// Gets the collection of <see cref="VectorStoreFileAssociation"/> instances representing file inclusions in the
+    /// specified vector store.
+    /// </summary>
+    /// <param name="vectorStoreId">
+    /// The ID of the vector store to enumerate the file associations of.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="filter">
+    /// A status filter that file associations must match to be included in the collection.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
+    /// <c>foreach</c>.
+    /// </returns>
+    public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+            (continuationToken, pageSize) => GetFileAssociations(
+                vectorStoreId, pageSize, resultOrder?.ToString(), continuationToken, null, filter?.ToString(), null));
+    }
+
+    /// <summary>
+    /// Gets a <see cref="VectorStoreFileAssociation"/> instance representing an existing association between a known
+    /// vector store ID and file ID.
+    /// </summary>
+    /// <param name="vectorStoreId"> The ID of the vector store associated with the file. </param>
+    /// <param name="fileId"> The ID of the file associated with the vector store. </param>
+    /// <returns> A <see cref="VectorStoreFileAssociation"/> instance. </returns>
+    public virtual async Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(
+        string vectorStoreId,
+        string fileId)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
+        ClientResult result = await GetFileAssociationAsync(vectorStoreId, fileId, null).ConfigureAwait(false);
+        PipelineResponse response = result?.GetRawResponse();
+        VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
+        return ClientResult.FromValue(value, response);
+    }
+
+    /// <summary>
+    /// Gets a <see cref="VectorStoreFileAssociation"/> instance representing an existing association between a known
+    /// vector store ID and file ID.
+    /// </summary>
+    /// <param name="vectorStoreId"> The ID of the vector store associated with the file. </param>
+    /// <param name="fileId"> The ID of the file associated with the vector store. </param>
+    /// <returns> A <see cref="VectorStoreFileAssociation"/> instance. </returns>
+    public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(
+        string vectorStoreId,
+        string fileId)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
+        ClientResult result = GetFileAssociation(vectorStoreId, fileId, null);
+        PipelineResponse response = result?.GetRawResponse();
+        VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
+        return ClientResult.FromValue(value, response);
+    }
+
+    /// <summary>
+    /// Removes the association between a file and vector store, which makes the file no longer available to the vector
+    /// store.
+    /// </summary>
+    /// <remarks>
+    /// This does not delete the file. To delete the file, use <see cref="FileClient.DeleteFile(string)"/>.
+    /// </remarks>
+    /// <param name="vectorStoreId"> The ID of the vector store that the file should be removed from. </param>
+    /// <param name="fileId"> The ID of the file to remove from the vector store. </param>
+    /// <returns> A value indicating whether the removal operation was successful. </returns>
+    public virtual async Task<ClientResult<bool>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId)
+    {
+        ClientResult protocolResult = await RemoveFileFromStoreAsync(vectorStoreId, fileId, null).ConfigureAwait(false);
+        PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
+        InternalDeleteVectorStoreFileResponse internalDeletion = InternalDeleteVectorStoreFileResponse.FromResponse(protocolResponse);
+        return ClientResult.FromValue(internalDeletion.Deleted, protocolResponse);
+    }
+
+    /// <summary>
+    /// Removes the association between a file and vector store, which makes the file no longer available to the vector
+    /// store.
+    /// </summary>
+    /// <remarks>
+    /// This does not delete the file. To delete the file, use <see cref="FileClient.DeleteFile(string)"/>.
+    /// </remarks>
+    /// <param name="vectorStoreId"> The ID of the vector store that the file should be removed from. </param>
+    /// <param name="fileId"> The ID of the file to remove from the vector store. </param>
+    /// <returns> A value indicating whether the removal operation was successful. </returns>
+    public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId)
+    {
+        ClientResult protocolResult = RemoveFileFromStore(vectorStoreId, fileId, null);
+        PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
+        InternalDeleteVectorStoreFileResponse internalDeletion = InternalDeleteVectorStoreFileResponse.FromResponse(protocolResponse);
+        return ClientResult.FromValue(internalDeletion.Deleted, protocolResponse);
+    }
+
+    /// <summary>
+    /// Begins a batch job to associate multiple jobs with a vector store, beginning the ingestion process.
+    /// </summary>
+    /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
+    /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
+    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the batch operation. </returns>
+    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(fileIds, nameof(fileIds));
+
+        BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
+        ClientResult result = await CreateBatchFileJobAsync(vectorStoreId, content, null).ConfigureAwait(false);
+        PipelineResponse response = result?.GetRawResponse();
+        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        return ClientResult.FromValue(value, response);
+    }
+
+    /// <summary>
+    /// Begins a batch job to associate multiple jobs with a vector store, beginning the ingestion process.
+    /// </summary>
+    /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
+    /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
+    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the batch operation. </returns>
+    public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(fileIds, nameof(fileIds));
+
+        BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
+        ClientResult result = CreateBatchFileJob(vectorStoreId, content, null);
+        PipelineResponse response = result?.GetRawResponse();
+        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        return ClientResult.FromValue(value, response);
+    }
+
+    /// <summary>
+    /// Gets an existing vector store batch file ingestion job from a known vector store ID and job ID.
+    /// </summary>
+    /// <param name="vectorStoreId"> The ID of the vector store into which the batch of files was started. </param>
+    /// <param name="batchJobId"> The ID of the batch operation adding files to the vector store. </param>
+    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the ingestion operation. </returns>
+    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+
+        ClientResult result = await GetBatchFileJobAsync(vectorStoreId, batchJobId, null).ConfigureAwait(false);
+        PipelineResponse response = result?.GetRawResponse();
+        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        return ClientResult.FromValue(value, response);
+    }
+
+    /// <summary>
+    /// Gets an existing vector store batch file ingestion job from a known vector store ID and job ID.
+    /// </summary>
+    /// <param name="vectorStoreId"> The ID of the vector store into which the batch of files was started. </param>
+    /// <param name="batchJobId"> The ID of the batch operation adding files to the vector store. </param>
+    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the ingestion operation. </returns>
+    public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+
+        ClientResult result = GetBatchFileJob(vectorStoreId, batchJobId, null);
+        PipelineResponse response = result?.GetRawResponse();
+        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        return ClientResult.FromValue(value, response);
+    }
+
+    /// <summary>
+    /// Cancels an in-progress <see cref="VectorStoreBatchFileJob"/>.
+    /// </summary>
+    /// <param name="vectorStoreId">
+    /// The ID of the <see cref="VectorStore"/> that is the ingestion target of the batch job being cancelled.
+    /// </param>
+    /// <param name="batchJobId">
+    /// The ID of the <see cref="VectorStoreBatchFileJob"/> that should be canceled. 
+    /// </param>
+    /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
+    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+
+        ClientResult result = await CancelBatchFileJobAsync(vectorStoreId, batchJobId, null).ConfigureAwait(false);
+        PipelineResponse response = result?.GetRawResponse();
+        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        return ClientResult.FromValue(value, response);
+    }
+
+    /// <summary>
+    /// Cancels an in-progress <see cref="VectorStoreBatchFileJob"/>.
+    /// </summary>
+    /// <param name="vectorStoreId">
+    /// The ID of the <see cref="VectorStore"/> that is the ingestion target of the batch job being cancelled.
+    /// </param>
+    /// <param name="batchJobId">
+    /// The ID of the <see cref="VectorStoreBatchFileJob"/> that should be canceled. 
+    /// </param>
+    /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
+    public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+
+        ClientResult result = CancelBatchFileJob(vectorStoreId, batchJobId, null);
+        PipelineResponse response = result?.GetRawResponse();
+        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        return ClientResult.FromValue(value, response);
+    }
+
+    /// <summary>
+    /// Gets the collection of file associations associated with a vector store batch file job, representing the files
+    /// that were scheduled for ingestion into the vector store.
+    /// </summary>
+    /// <param name="vectorStoreId">
+    /// The ID of the vector store into which the file batch was scheduled for ingestion.
+    /// </param>
+    /// <param name="batchJobId">
+    /// The ID of the batch file job that was previously scheduled.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="filter">
+    /// A status filter that file associations must match to be included in the collection.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
+    /// <c>await foreach</c>.
+    /// </returns>
+    public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+        string vectorStoreId,
+        string batchJobId,
+        ListOrder? resultOrder = null,
+        VectorStoreFileStatusFilter? filter = null)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+
+        return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+            (continuationToken, pageSize) => GetFileAssociationsAsync
+                (vectorStoreId, batchJobId, pageSize, resultOrder?.ToString(), continuationToken, null, filter?.ToString(), null));
+    }
+
+    /// <summary>
+    /// Gets the collection of file associations associated with a vector store batch file job, representing the files
+    /// that were scheduled for ingestion into the vector store.
+    /// </summary>
+    /// <param name="vectorStoreId">
+    /// The ID of the vector store into which the file batch was scheduled for ingestion.
+    /// </param>
+    /// <param name="batchJobId">
+    /// The ID of the batch file job that was previously scheduled.
+    /// </param>
+    /// <param name="resultOrder">
+    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    /// timestamp.
+    /// </param>
+    /// <param name="filter">
+    /// A status filter that file associations must match to be included in the collection.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
+    /// <c>foreach</c>.
+    /// </returns>
+    public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(
+        string vectorStoreId,
+        string batchJobId,
+        ListOrder? resultOrder = null,
+        VectorStoreFileStatusFilter? filter = null)
+    {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+
+        return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+            (continuationToken, pageSize) => GetFileAssociations
+                (vectorStoreId, batchJobId, pageSize, resultOrder?.ToString(), continuationToken, null, filter?.ToString(), null));
+    }
 }

@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Files
+namespace OpenAI.Models
 {
-    /// <summary> The DeleteFileResponse. </summary>
-    public partial class DeleteFileResponse
+    /// <summary> The DeleteModelResponse. </summary>
+    internal partial class InternalDeleteModelResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,11 +42,11 @@ namespace OpenAI.Files
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="DeleteFileResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteModelResponse"/>. </summary>
         /// <param name="id"></param>
         /// <param name="deleted"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        internal DeleteFileResponse(string id, bool deleted)
+        internal InternalDeleteModelResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
@@ -54,27 +54,26 @@ namespace OpenAI.Files
             Deleted = deleted;
         }
 
-        /// <summary> Initializes a new instance of <see cref="DeleteFileResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteModelResponse"/>. </summary>
         /// <param name="id"></param>
-        /// <param name="object"></param>
         /// <param name="deleted"></param>
+        /// <param name="object"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal DeleteFileResponse(string id, DeleteFileResponseObject @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteModelResponse(string id, bool deleted, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
-            Object = @object;
             Deleted = deleted;
+            Object = @object;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="DeleteFileResponse"/> for deserialization. </summary>
-        internal DeleteFileResponse()
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteModelResponse"/> for deserialization. </summary>
+        internal InternalDeleteModelResponse()
         {
         }
 
         /// <summary> Gets the id. </summary>
         public string Id { get; }
-
         /// <summary> Gets the deleted. </summary>
         public bool Deleted { get; }
     }

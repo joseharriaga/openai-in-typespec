@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
     /// <summary> A batch of files attached to a vector store. </summary>
-    internal partial class VectorStoreFileBatchObject
+    public partial class VectorStoreBatchFileJob
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,37 +43,36 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreFileBatchObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
+        /// <summary> Initializes a new instance of <see cref="VectorStoreBatchFileJob"/>. </summary>
+        /// <param name="batchId"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store files batch was created. </param>
         /// <param name="vectorStoreId"> The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. </param>
         /// <param name="status"> The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`. </param>
         /// <param name="fileCounts"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="vectorStoreId"/> or <paramref name="fileCounts"/> is null. </exception>
-        internal VectorStoreFileBatchObject(string id, DateTimeOffset createdAt, string vectorStoreId, VectorStoreFileBatchObjectStatus status, VectorStoreFileBatchObjectFileCounts fileCounts)
+        /// <exception cref="ArgumentNullException"> <paramref name="batchId"/> or <paramref name="vectorStoreId"/> is null. </exception>
+        internal VectorStoreBatchFileJob(string batchId, DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, VectorStoreFileCounts fileCounts)
         {
-            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(batchId, nameof(batchId));
             Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(fileCounts, nameof(fileCounts));
 
-            Id = id;
+            BatchId = batchId;
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
             Status = status;
             FileCounts = fileCounts;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreFileBatchObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
+        /// <summary> Initializes a new instance of <see cref="VectorStoreBatchFileJob"/>. </summary>
+        /// <param name="batchId"> The identifier, which can be referenced in API endpoints. </param>
         /// <param name="object"> The object type, which is always `vector_store.file_batch`. </param>
         /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store files batch was created. </param>
         /// <param name="vectorStoreId"> The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. </param>
         /// <param name="status"> The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`. </param>
         /// <param name="fileCounts"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreFileBatchObject(string id, VectorStoreFileBatchObjectObject @object, DateTimeOffset createdAt, string vectorStoreId, VectorStoreFileBatchObjectStatus status, VectorStoreFileBatchObjectFileCounts fileCounts, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreBatchFileJob(string batchId, object @object, DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, VectorStoreFileCounts fileCounts, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Id = id;
+            BatchId = batchId;
             Object = @object;
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
@@ -81,23 +81,16 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreFileBatchObject"/> for deserialization. </summary>
-        internal VectorStoreFileBatchObject()
+        /// <summary> Initializes a new instance of <see cref="VectorStoreBatchFileJob"/> for deserialization. </summary>
+        internal VectorStoreBatchFileJob()
         {
         }
-
-        /// <summary> The identifier, which can be referenced in API endpoints. </summary>
-        public string Id { get; }
-        /// <summary> The object type, which is always `vector_store.file_batch`. </summary>
-        public VectorStoreFileBatchObjectObject Object { get; } = VectorStoreFileBatchObjectObject.VectorStoreFilesBatch;
 
         /// <summary> The Unix timestamp (in seconds) for when the vector store files batch was created. </summary>
         public DateTimeOffset CreatedAt { get; }
         /// <summary> The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. </summary>
         public string VectorStoreId { get; }
         /// <summary> The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`. </summary>
-        public VectorStoreFileBatchObjectStatus Status { get; }
-        /// <summary> Gets the file counts. </summary>
-        public VectorStoreFileBatchObjectFileCounts FileCounts { get; }
+        public VectorStoreBatchFileJobStatus Status { get; }
     }
 }

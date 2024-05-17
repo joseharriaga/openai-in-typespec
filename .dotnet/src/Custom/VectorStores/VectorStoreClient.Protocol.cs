@@ -1,10 +1,27 @@
 ﻿using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace OpenAI.VectorStores;
 
+[CodeGenSuppress("GetVectorStoreFilesAsync", typeof(string), typeof(int?), typeof(string), typeof(string), typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("GetVectorStoreFiles", typeof(string), typeof(int?), typeof(string), typeof(string), typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CreateVectorStoreFileAsync", typeof(string), typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("CreateVectorStoreFile", typeof(string), typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("GetVectorStoreFileAsync", typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("GetVectorStoreFile", typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("DeleteVectorStoreFileAsync", typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("DeleteVectorStoreFile", typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CreateVectorStoreFileBatchAsync", typeof(string), typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("CreateVectorStoreFileBatch", typeof(string), typeof(BinaryContent), typeof(RequestOptions))]
+[CodeGenSuppress("GetVectorStoreFileBatchAsync", typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("GetVectorStoreFileBatch", typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CancelVectorStoreFileBatchAsync", typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("CancelVectorStoreFileBatch", typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("GetFilesInVectorStoreBatchesAsync", typeof(string), typeof(string), typeof(int?), typeof(string), typeof(string), typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("GetFilesInVectorStoreBatches", typeof(string), typeof(string), typeof(int?), typeof(string), typeof(string), typeof(string), typeof(string), typeof(RequestOptions))]
 public partial class VectorStoreClient
 {
     /// <summary>
@@ -31,6 +48,7 @@ public partial class VectorStoreClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
         using PipelineMessage message = CreateGetVectorStoresRequest(limit, order, after, before, options);
@@ -61,6 +79,7 @@ public partial class VectorStoreClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult GetVectorStores(int? limit, string order, string after, string before, RequestOptions options)
     {
         using PipelineMessage message = CreateGetVectorStoresRequest(limit, order, after, before, options);
@@ -89,6 +108,7 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null)
     {
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
@@ -104,6 +124,7 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -121,6 +142,7 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -139,6 +161,7 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -158,6 +181,7 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult ModifyVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -176,6 +200,7 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<ClientResult> DeleteVectorStoreAsync(string vectorStoreId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -193,6 +218,7 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual ClientResult DeleteVectorStore(string vectorStoreId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -229,7 +255,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetVectorStoreFilesAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
@@ -265,7 +292,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetVectorStoreFiles(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
@@ -283,7 +311,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> CreateVectorStoreFileAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -302,7 +331,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult CreateVectorStoreFile(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -321,7 +351,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetVectorStoreFileAsync(string vectorStoreId, string fileId, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -340,7 +371,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetVectorStoreFile(string vectorStoreId, string fileId, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -359,7 +391,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> DeleteVectorStoreFileAsync(string vectorStoreId, string fileId, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -378,7 +411,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult DeleteVectorStoreFile(string vectorStoreId, string fileId, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -397,7 +431,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> CreateVectorStoreFileBatchAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -416,7 +451,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult CreateVectorStoreFileBatch(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -435,7 +471,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetVectorStoreFileBatchAsync(string vectorStoreId, string batchId, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -454,7 +491,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetVectorStoreFileBatch(string vectorStoreId, string batchId, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -473,7 +511,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> CancelVectorStoreFileBatchAsync(string vectorStoreId, string batchId, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -492,7 +531,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult CancelVectorStoreFileBatch(string vectorStoreId, string batchId, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -530,7 +570,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetFilesInVectorStoreBatchesAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -568,7 +609,8 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetFilesInVectorStoreBatches(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual ClientResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));

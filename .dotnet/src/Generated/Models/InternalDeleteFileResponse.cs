@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Files
 {
-    /// <summary> The DeleteVectorStoreFileResponse. </summary>
-    internal partial class DeleteVectorStoreFileResponse
+    /// <summary> The DeleteFileResponse. </summary>
+    internal partial class InternalDeleteFileResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,11 +43,11 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="DeleteVectorStoreFileResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteFileResponse"/>. </summary>
         /// <param name="id"></param>
         /// <param name="deleted"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        internal DeleteVectorStoreFileResponse(string id, bool deleted)
+        internal InternalDeleteFileResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
@@ -54,29 +55,28 @@ namespace OpenAI.Internal.Models
             Deleted = deleted;
         }
 
-        /// <summary> Initializes a new instance of <see cref="DeleteVectorStoreFileResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteFileResponse"/>. </summary>
         /// <param name="id"></param>
-        /// <param name="deleted"></param>
         /// <param name="object"></param>
+        /// <param name="deleted"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal DeleteVectorStoreFileResponse(string id, bool deleted, DeleteVectorStoreFileResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteFileResponse(string id, object @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
-            Deleted = deleted;
             Object = @object;
+            Deleted = deleted;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="DeleteVectorStoreFileResponse"/> for deserialization. </summary>
-        internal DeleteVectorStoreFileResponse()
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteFileResponse"/> for deserialization. </summary>
+        internal InternalDeleteFileResponse()
         {
         }
 
         /// <summary> Gets the id. </summary>
         public string Id { get; }
+
         /// <summary> Gets the deleted. </summary>
         public bool Deleted { get; }
-        /// <summary> Gets the object. </summary>
-        public DeleteVectorStoreFileResponseObject Object { get; } = DeleteVectorStoreFileResponseObject.VectorStoreFileDeleted;
     }
 }

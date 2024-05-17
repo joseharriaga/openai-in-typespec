@@ -35,7 +35,7 @@ public partial class VectorStoreTests
         {
             FileIds = { testFiles[0].Id },
             Name = "test vector store",
-            ExpiresAfter = new VectorStoreExpirationPolicy()
+            ExpirationPolicy = new VectorStoreExpirationPolicy()
             {
                 Anchor = VectorStoreExpirationAnchor.LastActiveAt,
                 Days = 3,
@@ -159,6 +159,84 @@ public partial class VectorStoreTests
         Assert.That(lastIdSeen, Is.EqualTo(0));
     }
 
+    [Test]
+    public void CanAssociateFiles()
+    {
+        VectorStoreClient client = GetTestClient();
+        VectorStore vectorStore = client.CreateVectorStore();
+        Validate(vectorStore);
+
+        IReadOnlyList<OpenAIFileInfo> files = GetNewTestFiles(3);
+
+        foreach (OpenAIFileInfo file in files)
+        {
+            VectorStoreFileAssociation association = client.AddFileToVectorStore(vectorStore, file);
+            Validate(association);
+            Assert.Multiple(() =>
+            {
+                Assert.That(association.FileId, Is.EqualTo(file.Id));
+                Assert.That(association.VectorStoreId, Is.EqualTo(vectorStore.Id));
+                Assert.That(association.LastError, Is.Null);
+                Assert.That(association.CreatedAt, Is.GreaterThan(s_2024));
+                Assert.That(association.Status, Is.EqualTo(VectorStoreFileAssociationStatus.InProgress));
+            });
+        }
+
+        bool removed = client.RemoveFileFromStore(vectorStore, files[0]);
+        Assert.True(removed);
+        _associationsToRemove.RemoveAt(0);
+
+        // Errata: removals aren't immediately reflected when requesting the list
+        Thread.Sleep(1000);
+
+        int count = 0;
+        foreach (VectorStoreFileAssociation association in client.GetFileAssociations(vectorStore))
+        {
+            count++;
+            Assert.That(association.FileId, Is.Not.EqualTo(files[0].Id));
+            Assert.That(association.VectorStoreId, Is.EqualTo(vectorStore.Id));
+        }
+        Assert.That(count, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void CanUseBatchIngestion()
+    {
+        VectorStoreClient client = GetTestClient();
+        VectorStore vectorStore = client.CreateVectorStore();
+        Validate(vectorStore);
+
+        IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
+
+        VectorStoreBatchFileJob batchJob = client.CreateBatchFileJob(vectorStore, testFiles);
+        Validate(batchJob);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(batchJob.BatchId, Is.Not.Null);
+            Assert.That(batchJob.VectorStoreId, Is.EqualTo(vectorStore.Id));
+            Assert.That(batchJob.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.InProgress));
+        });
+
+        for (int i = 0; i < 10 && client.GetBatchFileJob(batchJob).Value.Status != VectorStoreBatchFileJobStatus.Completed; i++)
+        {
+            Thread.Sleep(500);
+        }
+
+        foreach (VectorStoreFileAssociation association in client.GetFileAssociations(batchJob))
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(association.FileId, Is.Not.Null);
+                Assert.That(association.VectorStoreId, Is.EqualTo(vectorStore.Id));
+                Assert.That(association.Status, Is.EqualTo(VectorStoreFileAssociationStatus.Completed));
+                // Assert.That(association.Size, Is.GreaterThan(0));
+                Assert.That(association.CreatedAt, Is.GreaterThan(s_2024));
+                Assert.That(association.LastError, Is.Null);
+            });
+        }
+    }
+
     private IReadOnlyList<OpenAIFileInfo> GetNewTestFiles(int count)
     {
         List<OpenAIFileInfo> files = [];
@@ -185,13 +263,23 @@ public partial class VectorStoreTests
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
         };
+        foreach (VectorStoreBatchFileJob job in _jobsToCancel)
+        {
+            ClientResult protocolResult = vectorStoreClient.CancelBatchFileJob(job.VectorStoreId, job.BatchId, requestOptions);
+            Console.WriteLine($"Cleanup: {job.BatchId} => {protocolResult?.GetRawResponse()?.Status}");
+        }
+        foreach (VectorStoreFileAssociation association in _associationsToRemove)
+        {
+            ClientResult protocolResult = vectorStoreClient.RemoveFileFromStore(association.VectorStoreId, association.FileId, requestOptions);
+            Console.WriteLine($"Cleanup: {association.FileId}<->{association.VectorStoreId} => {protocolResult?.GetRawResponse()?.Status}");
+        }
         foreach (OpenAIFileInfo file in _filesToDelete)
         {
-            Console.WriteLine($"Cleanup: {file.Id} -> {fileClient.DeleteFile(file.Id, requestOptions)?.GetRawResponse().Status}");
+            Console.WriteLine($"Cleanup: {file.Id} -> {fileClient.DeleteFile(file.Id, requestOptions)?.GetRawResponse()?.Status}");
         }
         foreach (VectorStore vectorStore in _vectorStoresToDelete)
         {
-            Console.WriteLine($"Cleanup: {vectorStore.Id} => {vectorStoreClient.DeleteVectorStore(vectorStore.Id, requestOptions)?.GetRawResponse().Status}");
+            Console.WriteLine($"Cleanup: {vectorStore.Id} => {vectorStoreClient.DeleteVectorStore(vectorStore.Id, requestOptions)?.GetRawResponse()?.Status}");
         }
         _filesToDelete.Clear();
         _vectorStoresToDelete.Clear();
@@ -206,7 +294,18 @@ public partial class VectorStoreTests
     /// <exception cref="NotImplementedException"> The provided instance type isn't supported. </exception>
     private void Validate<T>(T target)
     {
-        if (target is OpenAIFileInfo file)
+        if (target is VectorStoreBatchFileJob job)
+        {
+            Assert.That(job.BatchId, Is.Not.Null);
+            _jobsToCancel.Add(job);
+        }
+        else if (target is VectorStoreFileAssociation association)
+        {
+            Assert.That(association?.FileId, Is.Not.Null);
+            Assert.That(association?.VectorStoreId, Is.Not.Null);
+            _associationsToRemove.Add(association);
+        }
+        else if (target is OpenAIFileInfo file)
         {
             Assert.That(file?.Id, Is.Not.Null);
             _filesToDelete.Add(file);
@@ -222,6 +321,8 @@ public partial class VectorStoreTests
         }
     }
 
+    private readonly List<VectorStoreBatchFileJob> _jobsToCancel = [];
+    private readonly List<VectorStoreFileAssociation> _associationsToRemove = [];
     private readonly List<OpenAIFileInfo> _filesToDelete = [];
     private readonly List<VectorStore> _vectorStoresToDelete = [];
 

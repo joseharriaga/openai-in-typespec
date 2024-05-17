@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Moderations
 {
-    public partial class Moderation : IJsonModel<Moderation>
+    public partial class ModerationResult : IJsonModel<ModerationResult>
     {
-        void IJsonModel<Moderation>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ModerationResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Moderation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ModerationResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(Moderation)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ModerationResult)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -45,19 +45,19 @@ namespace OpenAI.Moderations
             writer.WriteEndObject();
         }
 
-        Moderation IJsonModel<Moderation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ModerationResult IJsonModel<ModerationResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Moderation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ModerationResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(Moderation)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ModerationResult)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeModeration(document.RootElement, options);
+            return DeserializeModerationResult(document.RootElement, options);
         }
 
-        internal static Moderation DeserializeModeration(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ModerationResult DeserializeModerationResult(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -93,46 +93,46 @@ namespace OpenAI.Moderations
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new Moderation(flagged, categories, categoryScores, serializedAdditionalRawData);
+            return new ModerationResult(flagged, categories, categoryScores, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<Moderation>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ModerationResult>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Moderation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ModerationResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(Moderation)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ModerationResult)} does not support writing '{options.Format}' format.");
             }
         }
 
-        Moderation IPersistableModel<Moderation>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ModerationResult IPersistableModel<ModerationResult>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Moderation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ModerationResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeModeration(document.RootElement, options);
+                        return DeserializeModerationResult(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(Moderation)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ModerationResult)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<Moderation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ModerationResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static Moderation FromResponse(PipelineResponse response)
+        internal static ModerationResult FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeModeration(document.RootElement);
+            return DeserializeModerationResult(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

@@ -7,213 +7,27 @@ namespace OpenAI;
 
 internal static class InternalListHelpers
 {
-    internal delegate Task<ClientResult> AsyncProtocolListMethod(int? limit, string order, string after, string before, RequestOptions options);
-    internal delegate Task<ClientResult> AsyncProtocolListMethod2(string id, int? limit, string order, string after, string before, RequestOptions options);
-    internal delegate Task<ClientResult> AsyncProtocolListMethod3(string id, string id2, int? limit, string order, string after, string before, RequestOptions options);
-    internal delegate ClientResult ProtocolListMethod(int? limit, string order, string after, string before, RequestOptions options);
-    internal delegate ClientResult ProtocolListMethod2(string id, int? limit, string order, string after, string before, RequestOptions options);
-    internal delegate ClientResult ProtocolListMethod3(string id, string id2, int? limit, string order, string after, string before, RequestOptions options);
+    internal delegate Task<ClientResult> AsyncListResponseFunc(string continuationToken, int? pageSize);
+    internal delegate ClientResult ListResponseFunc(string continuationToken, int? pageSize);
+
+    internal static AsyncPageableCollection<T> CreateAsyncPageable<T, U>(AsyncListResponseFunc listResponseFunc)
+        where U : IJsonModel<U>, IInternalListResponse<T>
+    {
+        async Task<ResultPage<T>> pageFunc(string continuationToken, int? pageSize)
+            => GetPageFromProtocol<T,U>(await listResponseFunc(continuationToken, pageSize).ConfigureAwait(false));
+        return PageableResultHelpers.Create((pageSize) => pageFunc(null, pageSize), pageFunc);
+    }
+
+    internal static PageableCollection<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
+        where U : IJsonModel<U>, IInternalListResponse<T>
+    {
+        ResultPage<T> pageFunc(string continuationToken, int? pageSize)
+            => GetPageFromProtocol<T, U>(listResponseFunc(continuationToken, pageSize));
+        return PageableResultHelpers.Create((pageSize) => pageFunc(null, pageSize), pageFunc);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static async Task<ResultPage<TInstance>> GetFirstPageAsync<TInstance, UInternalList>(
-        AsyncProtocolListMethod protocolMethod,
-        ListOrder? resultOrder = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance,UInternalList>(
-            await protocolMethod(
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: null,
-                before: null,
-                options: null).ConfigureAwait(false));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static async Task<ResultPage<TInstance>> GetFirstPageAsync<TInstance, UInternalList>(
-        AsyncProtocolListMethod2 protocolMethod,
-        string id,
-        ListOrder? resultOrder = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            await protocolMethod(
-                id: id,
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: null,
-                before: null,
-                options: null).ConfigureAwait(false));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static async Task<ResultPage<TInstance>> GetFirstPageAsync<TInstance, UInternalList>(
-        AsyncProtocolListMethod3 protocolMethod,
-        string id,
-        string id2,
-        ListOrder? resultOrder = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            await protocolMethod(
-                id: id,
-                id2: id2,
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: null,
-                before: null,
-                options: null).ConfigureAwait(false));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static ResultPage<TInstance> GetFirstPage<TInstance, UInternalList>(
-        ProtocolListMethod protocolMethod,
-        ListOrder? resultOrder = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            protocolMethod(
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: null,
-                before: null,
-                options: null));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static ResultPage<TInstance> GetFirstPage<TInstance, UInternalList>(
-        ProtocolListMethod2 protocolMethod,
-        string id,
-        ListOrder? resultOrder = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            protocolMethod(
-                id: id,
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: null,
-                before: null,
-                options: null));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static ResultPage<TInstance> GetFirstPage<TInstance, UInternalList>(
-        ProtocolListMethod3 protocolMethod,
-        string id,
-        string id2,
-        ListOrder? resultOrder = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            protocolMethod(
-                id: id,
-                id2: id2,
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: null,
-                before: null,
-                options: null));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static async Task<ResultPage<TInstance>> GetNextPageAsync<TInstance, UInternalList>(
-        AsyncProtocolListMethod protocolMethod,
-        ListOrder? resultOrder = null,
-        string continuationToken = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance,UInternalList>(
-            await protocolMethod(
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: continuationToken,
-                before: null,
-                options: null).ConfigureAwait(false));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static async Task<ResultPage<TInstance>> GetNextPageAsync<TInstance, UInternalList>(
-        AsyncProtocolListMethod2 protocolMethod,
-        string id,
-        ListOrder? resultOrder = null,
-        string continuationToken = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            await protocolMethod(
-                id: id,
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: continuationToken,
-                before: null,
-                options: null).ConfigureAwait(false));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static async Task<ResultPage<TInstance>> GetNextPageAsync<TInstance, UInternalList>(
-        AsyncProtocolListMethod3 protocolMethod,
-        string id,
-        string id2,
-        ListOrder? resultOrder = null,
-        string continuationToken = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            await protocolMethod(
-                id: id,
-                id2: id2,
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: continuationToken,
-                before: null,
-                options: null).ConfigureAwait(false));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static ResultPage<TInstance> GetNextPage<TInstance, UInternalList>(
-        ProtocolListMethod protocolMethod,
-        ListOrder? resultOrder = null,
-        string continuationToken = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            protocolMethod(
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: continuationToken,
-                before: null,
-                options: null));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static ResultPage<TInstance> GetNextPage<TInstance, UInternalList>(
-        ProtocolListMethod2 protocolMethod,
-        string id,
-        ListOrder? resultOrder = null,
-        string continuationToken = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            protocolMethod(
-                id: id,
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: continuationToken,
-                before: null,
-                options: null));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static ResultPage<TInstance> GetNextPage<TInstance, UInternalList>(
-        ProtocolListMethod3 protocolMethod,
-        string id,
-        string id2,
-        ListOrder? resultOrder = null,
-        string continuationToken = null,
-        int? pageSize = null)
-            where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-        => GetPageFromProtocol<TInstance, UInternalList>(
-            protocolMethod(
-                id: id,
-                id2: id2,
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: continuationToken,
-                before: null,
-                options: null));
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ResultPage<TInstance> GetPageFromProtocol<TInstance,UInternalList>(ClientResult protocolResult)
+    private static ResultPage<TInstance> GetPageFromProtocol<TInstance, UInternalList>(ClientResult protocolResult)
             where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
     {
         PipelineResponse response = protocolResult.GetRawResponse();

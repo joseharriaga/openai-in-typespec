@@ -311,21 +311,21 @@ namespace OpenAI
         /// <param name="model"> The model used to generate the moderation results. </param>
         /// <param name="results"> A list of moderation objects. </param>
         /// <returns> A new <see cref="Moderations.ModerationCollection"/> instance for mocking. </returns>
-        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<Moderation> results = null)
+        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
         {
-            results ??= new List<Moderation>();
+            results ??= new List<ModerationResult>();
 
             return new ModerationCollection(id, model, results?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Moderations.Moderation"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationResult"/>. </summary>
         /// <param name="flagged"> Whether any of the below categories are flagged. </param>
         /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
         /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
-        /// <returns> A new <see cref="Moderations.Moderation"/> instance for mocking. </returns>
-        public static Moderation Moderation(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
+        /// <returns> A new <see cref="Moderations.ModerationResult"/> instance for mocking. </returns>
+        public static ModerationResult ModerationResult(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
         {
-            return new Moderation(flagged, categories, categoryScores, serializedAdditionalRawData: null);
+            return new ModerationResult(flagged, categories, categoryScores, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCategories"/>. </summary>
@@ -485,39 +485,9 @@ namespace OpenAI
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <returns> A new <see cref="VectorStores.VectorStoreFileAssociationError"/> instance for mocking. </returns>
-        public static VectorStoreFileAssociationError VectorStoreFileAssociationError(Models.VectorStoreFileAssociationErrorCode code = default, string message = null)
+        public static VectorStoreFileAssociationError VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code = default, string message = null)
         {
             return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.DeleteVectorStoreFileResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.DeleteVectorStoreFileResponse"/> instance for mocking. </returns>
-        public static DeleteVectorStoreFileResponse DeleteVectorStoreFileResponse(string id = null, bool deleted = default, DeleteVectorStoreFileResponseObject @object = default)
-        {
-            return new DeleteVectorStoreFileResponse(id, deleted, @object, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.VectorStoreFileBatchObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `vector_store.file_batch`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store files batch was created. </param>
-        /// <param name="vectorStoreId"> The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. </param>
-        /// <param name="status"> The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`. </param>
-        /// <param name="fileCounts"></param>
-        /// <returns> A new <see cref="Models.VectorStoreFileBatchObject"/> instance for mocking. </returns>
-        public static VectorStoreFileBatchObject VectorStoreFileBatchObject(string id = null, VectorStoreFileBatchObjectObject @object = default, DateTimeOffset createdAt = default, string vectorStoreId = null, VectorStoreFileBatchObjectStatus status = default, VectorStoreFileBatchObjectFileCounts fileCounts = null)
-        {
-            return new VectorStoreFileBatchObject(
-                id,
-                @object,
-                createdAt,
-                vectorStoreId,
-                status,
-                fileCounts,
-                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.VectorStoreFileBatchObjectFileCounts"/>. </summary>

@@ -118,25 +118,29 @@ public partial class ModelClient
     /// <param name="model"> The model to delete. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <remarks> Delete. </remarks>
-    public virtual async Task<ClientResult<DeleteModelResponse>> DeleteAsync(string model)
+    /// <remarks> A value indicating whether the deletion operation was successful. </remarks>
+    public virtual async Task<ClientResult<bool>> DeleteModelAsync(string model)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
-        ClientResult result = await DeleteAsync(model, null).ConfigureAwait(false);
-        return ClientResult.FromValue(DeleteModelResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        ClientResult result = await DeleteModelAsync(model, null).ConfigureAwait(false);
+        PipelineResponse response = result?.GetRawResponse();
+        InternalDeleteModelResponse value = InternalDeleteModelResponse.FromResponse(response);
+        return ClientResult.FromValue(value.Deleted, response);
     }
 
     /// <summary> Delete a fine-tuned model. You must have the Owner role in your organization to delete a model. </summary>
     /// <param name="model"> The model to delete. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <remarks> Delete. </remarks>
-    public virtual ClientResult<DeleteModelResponse> Delete(string model)
+    /// <remarks> A value indicating whether the deletion operation was successful. </remarks>
+    public virtual ClientResult<bool> Delete(string model)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = Delete(model, null);
-        return ClientResult.FromValue(DeleteModelResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        PipelineResponse response = result?.GetRawResponse();
+        InternalDeleteModelResponse value = InternalDeleteModelResponse.FromResponse(response);
+        return ClientResult.FromValue(value.Deleted, response);
     }
 }

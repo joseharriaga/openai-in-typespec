@@ -7,43 +7,32 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.ClientShared.Internal;
-using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
-    public partial class VectorStoreFileAssociation : IJsonModel<VectorStoreFileAssociation>
+    public partial class VectorStoreBatchFileJob : IJsonModel<VectorStoreBatchFileJob>
     {
-        void IJsonModel<VectorStoreFileAssociation>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<VectorStoreBatchFileJob>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileAssociation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreBatchFileJob>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(VectorStoreBatchFileJob)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(FileId);
+            writer.WriteStringValue(BatchId);
             writer.WritePropertyName("object"u8);
             writer.WriteObjectValue<object>(Object, options);
-            writer.WritePropertyName("usage_bytes"u8);
-            writer.WriteNumberValue(Size);
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("vector_store_id"u8);
             writer.WriteStringValue(VectorStoreId);
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
-            if (LastError != null)
-            {
-                writer.WritePropertyName("last_error"u8);
-                writer.WriteObjectValue<VectorStoreFileAssociationError?>(LastError, options);
-            }
-            else
-            {
-                writer.WriteNull("last_error");
-            }
+            writer.WritePropertyName("file_counts"u8);
+            writer.WriteObjectValue<VectorStoreFileCounts>(FileCounts, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -62,19 +51,19 @@ namespace OpenAI.VectorStores
             writer.WriteEndObject();
         }
 
-        VectorStoreFileAssociation IJsonModel<VectorStoreFileAssociation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        VectorStoreBatchFileJob IJsonModel<VectorStoreBatchFileJob>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileAssociation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreBatchFileJob>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(VectorStoreBatchFileJob)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeVectorStoreFileAssociation(document.RootElement, options);
+            return DeserializeVectorStoreBatchFileJob(document.RootElement, options);
         }
 
-        internal static VectorStoreFileAssociation DeserializeVectorStoreFileAssociation(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static VectorStoreBatchFileJob DeserializeVectorStoreBatchFileJob(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -84,11 +73,10 @@ namespace OpenAI.VectorStores
             }
             string id = default;
             object @object = default;
-            int usageBytes = default;
             DateTimeOffset createdAt = default;
             string vectorStoreId = default;
-            VectorStoreFileAssociationStatus status = default;
-            VectorStoreFileAssociationError? lastError = default;
+            VectorStoreBatchFileJobStatus status = default;
+            VectorStoreFileCounts fileCounts = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -103,11 +91,6 @@ namespace OpenAI.VectorStores
                     @object = property.Value.GetObject();
                     continue;
                 }
-                if (property.NameEquals("usage_bytes"u8))
-                {
-                    usageBytes = property.Value.GetInt32();
-                    continue;
-                }
                 if (property.NameEquals("created_at"u8))
                 {
                     createdAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
@@ -120,17 +103,12 @@ namespace OpenAI.VectorStores
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    status = property.Value.GetString().ToVectorStoreFileAssociationStatus();
+                    status = new VectorStoreBatchFileJobStatus(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("last_error"u8))
+                if (property.NameEquals("file_counts"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        lastError = null;
-                        continue;
-                    }
-                    lastError = VectorStoreFileAssociationError.DeserializeVectorStoreFileAssociationError(property.Value, options);
+                    fileCounts = VectorStoreFileCounts.DeserializeVectorStoreFileCounts(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -139,54 +117,53 @@ namespace OpenAI.VectorStores
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new VectorStoreFileAssociation(
+            return new VectorStoreBatchFileJob(
                 id,
                 @object,
-                usageBytes,
                 createdAt,
                 vectorStoreId,
                 status,
-                lastError,
+                fileCounts,
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<VectorStoreFileAssociation>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<VectorStoreBatchFileJob>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileAssociation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreBatchFileJob>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(VectorStoreBatchFileJob)} does not support writing '{options.Format}' format.");
             }
         }
 
-        VectorStoreFileAssociation IPersistableModel<VectorStoreFileAssociation>.Create(BinaryData data, ModelReaderWriterOptions options)
+        VectorStoreBatchFileJob IPersistableModel<VectorStoreBatchFileJob>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileAssociation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreBatchFileJob>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeVectorStoreFileAssociation(document.RootElement, options);
+                        return DeserializeVectorStoreBatchFileJob(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(VectorStoreBatchFileJob)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<VectorStoreFileAssociation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<VectorStoreBatchFileJob>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static VectorStoreFileAssociation FromResponse(PipelineResponse response)
+        internal static VectorStoreBatchFileJob FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeVectorStoreFileAssociation(document.RootElement);
+            return DeserializeVectorStoreBatchFileJob(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

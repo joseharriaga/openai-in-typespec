@@ -36,12 +36,12 @@ namespace OpenAI.VectorStores
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(Name);
             }
-            if (Optional.IsDefined(ExpiresAfter))
+            if (Optional.IsDefined(ExpirationPolicy))
             {
-                if (ExpiresAfter != null)
+                if (ExpirationPolicy != null)
                 {
                     writer.WritePropertyName("expires_after"u8);
-                    writer.WriteObjectValue(ExpiresAfter, options);
+                    writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
                 }
                 else
                 {

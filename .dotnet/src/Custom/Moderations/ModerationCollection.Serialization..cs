@@ -32,7 +32,7 @@ public partial class ModerationCollection : IJsonModel<ModerationCollection>
         writer.WriteStartArray();
         foreach (var item in Items)
         {
-            writer.WriteObjectValue<Moderation>(item, options);
+            writer.WriteObjectValue<ModerationResult>(item, options);
         }
         writer.WriteEndArray();
         if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -64,7 +64,7 @@ public partial class ModerationCollection : IJsonModel<ModerationCollection>
         }
         string id = default;
         string model = default;
-        IReadOnlyList<Moderation> results = default;
+        IReadOnlyList<ModerationResult> results = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
         foreach (var property in element.EnumerateObject())
@@ -81,10 +81,10 @@ public partial class ModerationCollection : IJsonModel<ModerationCollection>
             }
             if (property.NameEquals("results"u8))
             {
-                List<Moderation> array = new List<Moderation>();
+                List<ModerationResult> array = new List<ModerationResult>();
                 foreach (var item in property.Value.EnumerateArray())
                 {
-                    array.Add(Moderation.DeserializeModeration(item, options));
+                    array.Add(ModerationResult.DeserializeModerationResult(item, options));
                 }
                 results = array;
                 continue;

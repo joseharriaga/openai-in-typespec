@@ -42,8 +42,15 @@ function Remove-PseudoSuppressedTypes {
         "CreateThreadAndRunRequestToolResources",
         "CreateThreadRequestToolResources",
         "DeleteAssistantResponseObject",
+        "DeleteFileResponseObject",
         "DeleteMessageResponseObject",
+        "DeleteModelResponseObject",
         "DeleteThreadResponseObject",
+        "DeleteVectorStoreFileResponseObject",
+        "DeleteVectorStoreResponseObject",
+        "ImageEditOptionsResponseFormat",
+        "ImageEditOptionsSize",
+        "InternalBatchJobObject",
         "InternalMessageContentImageUrlObjectImageUrlDetail",
         "InternalMessageContentItemFileObjectImageFileDetail",
         "ListAssistantsResponseObject",
@@ -52,6 +59,7 @@ function Remove-PseudoSuppressedTypes {
         "ListRunsResponseObject",
         "ListRunStepsResponseObject",
         "ListThreadsResponseObject",
+        "ListVectorStoreFilesResponseObject",
         "MessageContentImageUrlObjectImageUrlDetail",
         "MessageDeltaContentImageFileObjectImageFileDetail",
         "MessageDeltaContentImageUrlObjectImageUrlDetail",
@@ -64,12 +72,8 @@ function Remove-PseudoSuppressedTypes {
         "RunStepObjectObject",
         "ThreadObjectObject",
         "ToolConstraint",
-        "VectorStoreObjectObject",
-        "DeleteVectorStoreResponseObject",
         "VectorStoreFileObjectObject",
-        "VectorStoreFileAssociationStatus",
-        "ListVectorStoreFilesResponseObject",
-        "VectorStoreFileAssociation"
+        "VectorStoreObjectObject"
     )
     foreach ($target in $targets) {
         Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {

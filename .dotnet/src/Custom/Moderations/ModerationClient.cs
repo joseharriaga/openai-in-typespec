@@ -69,7 +69,7 @@ public partial class ModerationClient
     /// <param name="input"> The text to classify. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="input"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="input"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<Moderation>> ClassifyTextInputAsync(string input)
+    public virtual async Task<ClientResult<ModerationResult>> ClassifyTextInputAsync(string input)
     {
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
@@ -85,7 +85,7 @@ public partial class ModerationClient
     /// <param name="input"> The text to classify. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="input"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="input"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<Moderation> ClassifyTextInput(string input)
+    public virtual ClientResult<ModerationResult> ClassifyTextInput(string input)
     {
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 

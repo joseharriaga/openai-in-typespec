@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class DeleteVectorStoreFileResponse : IJsonModel<DeleteVectorStoreFileResponse>
+    internal partial class InternalDeleteVectorStoreFileResponse : IJsonModel<InternalDeleteVectorStoreFileResponse>
     {
-        void IJsonModel<DeleteVectorStoreFileResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalDeleteVectorStoreFileResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreFileResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteVectorStoreFileResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteVectorStoreFileResponse)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalDeleteVectorStoreFileResponse)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -26,7 +26,7 @@ namespace OpenAI.Internal.Models
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Deleted);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -45,19 +45,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        DeleteVectorStoreFileResponse IJsonModel<DeleteVectorStoreFileResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalDeleteVectorStoreFileResponse IJsonModel<InternalDeleteVectorStoreFileResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreFileResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteVectorStoreFileResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteVectorStoreFileResponse)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalDeleteVectorStoreFileResponse)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeDeleteVectorStoreFileResponse(document.RootElement, options);
+            return DeserializeInternalDeleteVectorStoreFileResponse(document.RootElement, options);
         }
 
-        internal static DeleteVectorStoreFileResponse DeserializeDeleteVectorStoreFileResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalDeleteVectorStoreFileResponse DeserializeInternalDeleteVectorStoreFileResponse(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -67,7 +67,7 @@ namespace OpenAI.Internal.Models
             }
             string id = default;
             bool deleted = default;
-            DeleteVectorStoreFileResponseObject @object = default;
+            object @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -84,7 +84,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new DeleteVectorStoreFileResponseObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (options.Format != "W")
@@ -93,46 +93,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new DeleteVectorStoreFileResponse(id, deleted, @object, serializedAdditionalRawData);
+            return new InternalDeleteVectorStoreFileResponse(id, deleted, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<DeleteVectorStoreFileResponse>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalDeleteVectorStoreFileResponse>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreFileResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteVectorStoreFileResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(DeleteVectorStoreFileResponse)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalDeleteVectorStoreFileResponse)} does not support writing '{options.Format}' format.");
             }
         }
 
-        DeleteVectorStoreFileResponse IPersistableModel<DeleteVectorStoreFileResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalDeleteVectorStoreFileResponse IPersistableModel<InternalDeleteVectorStoreFileResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreFileResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteVectorStoreFileResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeDeleteVectorStoreFileResponse(document.RootElement, options);
+                        return DeserializeInternalDeleteVectorStoreFileResponse(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(DeleteVectorStoreFileResponse)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalDeleteVectorStoreFileResponse)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<DeleteVectorStoreFileResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalDeleteVectorStoreFileResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static DeleteVectorStoreFileResponse FromResponse(PipelineResponse response)
+        internal static InternalDeleteVectorStoreFileResponse FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeDeleteVectorStoreFileResponse(document.RootElement);
+            return DeserializeInternalDeleteVectorStoreFileResponse(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

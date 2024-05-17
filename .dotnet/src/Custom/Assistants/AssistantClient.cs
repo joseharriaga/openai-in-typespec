@@ -107,9 +107,8 @@ public partial class AssistantClient
     /// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
     public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null)
     {
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPageAsync<Assistant, InternalListAssistantsResponse>(GetAssistantsAsync, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPageAsync<Assistant, InternalListAssistantsResponse>(GetAssistantsAsync, resultOrder, continuation, pageSize));
+        return CreateAsyncPageable<Assistant, InternalListAssistantsResponse>((continuationToken, pageSize)
+            => GetAssistantsAsync(pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
     /// <summary>
@@ -122,9 +121,8 @@ public partial class AssistantClient
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
     public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null)
     {
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPage<Assistant, InternalListAssistantsResponse>(GetAssistants, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPage<Assistant, InternalListAssistantsResponse>(GetAssistants, resultOrder, continuation, pageSize));
+        return CreatePageable<Assistant, InternalListAssistantsResponse>((continuationToken, pageSize)
+            => GetAssistants(pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
     /// <summary>
@@ -325,9 +323,8 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPageAsync<ThreadMessage,InternalListMessagesResponse>(GetMessagesAsync, threadId, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPageAsync<ThreadMessage,InternalListMessagesResponse>(GetMessagesAsync, threadId, resultOrder, continuation, pageSize));
+        return CreateAsyncPageable<ThreadMessage, InternalListMessagesResponse>((continuationToken, pageSize)
+            => GetMessagesAsync(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
     /// <summary>
@@ -345,9 +342,8 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPage<ThreadMessage, InternalListMessagesResponse>(GetMessages, threadId, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPage<ThreadMessage, InternalListMessagesResponse>(GetMessages, threadId, resultOrder, continuation, pageSize));
+        return CreatePageable<ThreadMessage, InternalListMessagesResponse>((continuationToken, pageSize)
+            => GetMessages(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
     /// <summary>
@@ -627,9 +623,8 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPageAsync<ThreadRun, InternalListRunsResponse>(GetRunsAsync, threadId, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPageAsync<ThreadRun, InternalListRunsResponse>(GetRunsAsync, threadId, resultOrder, continuation, pageSize));
+        return CreateAsyncPageable<ThreadRun, InternalListRunsResponse>((continuationToken, pageSize)
+            => GetRunsAsync(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
     /// <summary>
@@ -647,9 +642,8 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPage<ThreadRun, InternalListRunsResponse>(GetRuns, threadId, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPage<ThreadRun, InternalListRunsResponse>(GetRuns, threadId, resultOrder, continuation, pageSize));
+        return CreatePageable<ThreadRun, InternalListRunsResponse>((continuationToken, pageSize)
+            => GetRuns(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
     /// <summary>
@@ -822,9 +816,8 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPageAsync<RunStep, InternalListRunStepsResponse>(GetRunStepsAsync, threadId, runId, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPageAsync<RunStep, InternalListRunStepsResponse>(GetRunStepsAsync, threadId, runId, resultOrder, continuation, pageSize));
+        return CreateAsyncPageable<RunStep, InternalListRunStepsResponse>((continuationToken, pageSize)
+            => GetRunStepsAsync(threadId, runId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
     /// <summary>
@@ -845,9 +838,8 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return PageableResultHelpers.Create(
-            (pageSize) => GetFirstPage<RunStep, InternalListRunStepsResponse>(GetRunSteps, threadId, runId, resultOrder, pageSize),
-            (continuation, pageSize) => GetNextPage<RunStep, InternalListRunStepsResponse>(GetRunSteps, threadId, runId, resultOrder, continuation, pageSize));
+        return CreatePageable<RunStep, InternalListRunStepsResponse>((continuationToken, pageSize)
+            => GetRunSteps(threadId, runId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
     /// <summary>

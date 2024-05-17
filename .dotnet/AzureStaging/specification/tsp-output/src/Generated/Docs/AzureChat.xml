@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <members>
+    <member name="CreateChatCompletionAsync(RequestContent,RequestContext)">
+      <example>
+This sample shows how to call CreateChatCompletionAsync and parse the result.
+<code><![CDATA[
+Uri endpoint = new Uri("<https://my-service.azure.com>");
+AzureKeyCredential credential = new AzureKeyCredential("<key>");
+AzureChat client = new AzureOpenAIClient(endpoint, credential).GetAzureChatClient();
+
+using RequestContent content = RequestContent.Create(new
+{
+    messages = new object[]
+    {
+        new
+        {
+            content = "<content>",
+            role = "system",
+        }
+    },
+    model = "gpt-4o",
+});
+Response response = await client.CreateChatCompletionAsync(content);
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("finish_reason").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("index").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("content").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("role").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("token").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("logprob").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("bytes")[0].ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("token").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("logprob").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("bytes")[0].ToString());
+Console.WriteLine(result.GetProperty("created").ToString());
+Console.WriteLine(result.GetProperty("model").ToString());
+Console.WriteLine(result.GetProperty("object").ToString());
+]]></code>
+This sample shows how to call CreateChatCompletionAsync with all request content and parse the result.
+<code><![CDATA[
+Uri endpoint = new Uri("<https://my-service.azure.com>");
+AzureKeyCredential credential = new AzureKeyCredential("<key>");
+AzureChat client = new AzureOpenAIClient(endpoint, credential).GetAzureChatClient();
+
+using RequestContent content = RequestContent.Create(new
+{
+    data_sources = new object[]
+    {
+        new
+        {
+            parameters = new
+            {
+                authentication = new object(),
+                top_n_documents = 1234,
+                in_scope = true,
+                strictness = 1234,
+                role_information = "<role_information>",
+                endpoint = "http://localhost:3000",
+                index_name = "<index_name>",
+                fields_mapping = new
+                {
+                    title_field = "<title_field>",
+                    url_field = "<url_field>",
+                    filepath_field = "<filepath_field>",
+                    content_fields = new object[]
+                    {
+                        "<content_fields>"
+                    },
+                    content_fields_separator = "<content_fields_separator>",
+                    vector_fields = new object[]
+                    {
+                        "<vector_fields>"
+                    },
+                    image_vector_fields = new object[]
+                    {
+                        "<image_vector_fields>"
+                    },
+                },
+                query_type = "simple",
+                semantic_configuration = "<semantic_configuration>",
+                filter = "<filter>",
+                embedding_dependency = new
+                {
+                    endpoint = "http://localhost:3000",
+                    authentication = new
+                    {
+                        key = "<key>",
+                        type = "api_key",
+                    },
+                    type = "endpoint",
+                },
+            },
+            type = "azure_search",
+        }
+    },
+    messages = new object[]
+    {
+        new
+        {
+            content = "<content>",
+            role = "system",
+            name = "<name>",
+        }
+    },
+    model = "gpt-4o",
+    frequency_penalty = 123.45F,
+    logit_bias = new
+    {
+        key = 1234,
+    },
+    logprobs = true,
+    top_logprobs = 1234,
+    max_tokens = 1234,
+    n = 1234,
+    presence_penalty = 123.45F,
+    response_format = new
+    {
+        type = "text",
+    },
+    seed = 1234L,
+    stop = "<stop>",
+    stream = true,
+    stream_options = new
+    {
+        include_usage = true,
+    },
+    temperature = 123.45F,
+    top_p = 123.45F,
+    tools = new object[]
+    {
+        new
+        {
+            type = "function",
+            function = new
+            {
+                description = "<description>",
+                name = "<name>",
+                parameters = new object(),
+            },
+        }
+    },
+    tool_choice = "none",
+    user = "<user>",
+    function_call = "none",
+    functions = new object[]
+    {
+        new
+        {
+            description = "<description>",
+            name = "<name>",
+        }
+    },
+});
+Response response = await client.CreateChatCompletionAsync(content);
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("prompt_index").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("sexual").GetProperty("severity").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("sexual").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("violence").GetProperty("severity").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("violence").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("hate").GetProperty("severity").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("hate").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("selfHarm").GetProperty("severity").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("selfHarm").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("profanity").GetProperty("detected").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("profanity").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("customBlocklists")[0].GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("customBlocklists")[0].GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("error").GetProperty("<key>").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("jailbreak").GetProperty("detected").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("jailbreak").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("finish_reason").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("index").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("content").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("tool_calls")[0].GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("tool_calls")[0].GetProperty("type").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("tool_calls")[0].GetProperty("function").GetProperty("name").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("tool_calls")[0].GetProperty("function").GetProperty("arguments").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("role").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("function_call").GetProperty("arguments").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("function_call").GetProperty("name").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("token").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("logprob").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("bytes")[0].ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("token").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("logprob").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("bytes")[0].ToString());
+Console.WriteLine(result.GetProperty("created").ToString());
+Console.WriteLine(result.GetProperty("model").ToString());
+Console.WriteLine(result.GetProperty("system_fingerprint").ToString());
+Console.WriteLine(result.GetProperty("object").ToString());
+Console.WriteLine(result.GetProperty("usage").GetProperty("completion_tokens").ToString());
+Console.WriteLine(result.GetProperty("usage").GetProperty("prompt_tokens").ToString());
+Console.WriteLine(result.GetProperty("usage").GetProperty("total_tokens").ToString());
+]]></code></example>
+    </member>
+    <member name="CreateChatCompletion(RequestContent,RequestContext)">
+      <example>
+This sample shows how to call CreateChatCompletion and parse the result.
+<code><![CDATA[
+Uri endpoint = new Uri("<https://my-service.azure.com>");
+AzureKeyCredential credential = new AzureKeyCredential("<key>");
+AzureChat client = new AzureOpenAIClient(endpoint, credential).GetAzureChatClient();
+
+using RequestContent content = RequestContent.Create(new
+{
+    messages = new object[]
+    {
+        new
+        {
+            content = "<content>",
+            role = "system",
+        }
+    },
+    model = "gpt-4o",
+});
+Response response = client.CreateChatCompletion(content);
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("finish_reason").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("index").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("content").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("role").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("token").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("logprob").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("bytes")[0].ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("token").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("logprob").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("bytes")[0].ToString());
+Console.WriteLine(result.GetProperty("created").ToString());
+Console.WriteLine(result.GetProperty("model").ToString());
+Console.WriteLine(result.GetProperty("object").ToString());
+]]></code>
+This sample shows how to call CreateChatCompletion with all request content and parse the result.
+<code><![CDATA[
+Uri endpoint = new Uri("<https://my-service.azure.com>");
+AzureKeyCredential credential = new AzureKeyCredential("<key>");
+AzureChat client = new AzureOpenAIClient(endpoint, credential).GetAzureChatClient();
+
+using RequestContent content = RequestContent.Create(new
+{
+    data_sources = new object[]
+    {
+        new
+        {
+            parameters = new
+            {
+                authentication = new object(),
+                top_n_documents = 1234,
+                in_scope = true,
+                strictness = 1234,
+                role_information = "<role_information>",
+                endpoint = "http://localhost:3000",
+                index_name = "<index_name>",
+                fields_mapping = new
+                {
+                    title_field = "<title_field>",
+                    url_field = "<url_field>",
+                    filepath_field = "<filepath_field>",
+                    content_fields = new object[]
+                    {
+                        "<content_fields>"
+                    },
+                    content_fields_separator = "<content_fields_separator>",
+                    vector_fields = new object[]
+                    {
+                        "<vector_fields>"
+                    },
+                    image_vector_fields = new object[]
+                    {
+                        "<image_vector_fields>"
+                    },
+                },
+                query_type = "simple",
+                semantic_configuration = "<semantic_configuration>",
+                filter = "<filter>",
+                embedding_dependency = new
+                {
+                    endpoint = "http://localhost:3000",
+                    authentication = new
+                    {
+                        key = "<key>",
+                        type = "api_key",
+                    },
+                    type = "endpoint",
+                },
+            },
+            type = "azure_search",
+        }
+    },
+    messages = new object[]
+    {
+        new
+        {
+            content = "<content>",
+            role = "system",
+            name = "<name>",
+        }
+    },
+    model = "gpt-4o",
+    frequency_penalty = 123.45F,
+    logit_bias = new
+    {
+        key = 1234,
+    },
+    logprobs = true,
+    top_logprobs = 1234,
+    max_tokens = 1234,
+    n = 1234,
+    presence_penalty = 123.45F,
+    response_format = new
+    {
+        type = "text",
+    },
+    seed = 1234L,
+    stop = "<stop>",
+    stream = true,
+    stream_options = new
+    {
+        include_usage = true,
+    },
+    temperature = 123.45F,
+    top_p = 123.45F,
+    tools = new object[]
+    {
+        new
+        {
+            type = "function",
+            function = new
+            {
+                description = "<description>",
+                name = "<name>",
+                parameters = new object(),
+            },
+        }
+    },
+    tool_choice = "none",
+    user = "<user>",
+    function_call = "none",
+    functions = new object[]
+    {
+        new
+        {
+            description = "<description>",
+            name = "<name>",
+        }
+    },
+});
+Response response = client.CreateChatCompletion(content);
+
+JsonElement result = JsonDocument.Parse(response.ContentStream).RootElement;
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("prompt_index").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("sexual").GetProperty("severity").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("sexual").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("violence").GetProperty("severity").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("violence").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("hate").GetProperty("severity").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("hate").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("selfHarm").GetProperty("severity").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("selfHarm").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("profanity").GetProperty("detected").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("profanity").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("customBlocklists")[0].GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("customBlocklists")[0].GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("error").GetProperty("<key>").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("jailbreak").GetProperty("detected").ToString());
+Console.WriteLine(result.GetProperty("prompt_filter_results")[0].GetProperty("content_filter_results")[0].GetProperty("jailbreak").GetProperty("filtered").ToString());
+Console.WriteLine(result.GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("finish_reason").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("index").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("content").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("tool_calls")[0].GetProperty("id").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("tool_calls")[0].GetProperty("type").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("tool_calls")[0].GetProperty("function").GetProperty("name").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("tool_calls")[0].GetProperty("function").GetProperty("arguments").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("role").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("function_call").GetProperty("arguments").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("message").GetProperty("function_call").GetProperty("name").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("token").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("logprob").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("bytes")[0].ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("token").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("logprob").ToString());
+Console.WriteLine(result.GetProperty("choices")[0].GetProperty("logprobs").GetProperty("content")[0].GetProperty("top_logprobs")[0].GetProperty("bytes")[0].ToString());
+Console.WriteLine(result.GetProperty("created").ToString());
+Console.WriteLine(result.GetProperty("model").ToString());
+Console.WriteLine(result.GetProperty("system_fingerprint").ToString());
+Console.WriteLine(result.GetProperty("object").ToString());
+Console.WriteLine(result.GetProperty("usage").GetProperty("completion_tokens").ToString());
+Console.WriteLine(result.GetProperty("usage").GetProperty("prompt_tokens").ToString());
+Console.WriteLine(result.GetProperty("usage").GetProperty("total_tokens").ToString());
+]]></code></example>
+    </member>
+  </members>
+</doc>

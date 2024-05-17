@@ -230,6 +230,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Azure OpenAI service.
     /// </summary>
     /// <returns> A new <see cref="VectorStoreClient"/> instance. </returns>
+    [Experimental("OPENAI001")]
     public override VectorStoreClient GetVectorStoreClient()
         => new AzureVectorStoreClient(Pipeline, Endpoint, _options);
 

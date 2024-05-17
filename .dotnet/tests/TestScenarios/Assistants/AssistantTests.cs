@@ -194,7 +194,6 @@ public partial class AssistantTests
 
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread);
         Assert.That(messages.Count, Is.GreaterThanOrEqualTo(1));
-
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
         {
             Thread.Sleep(500);
@@ -711,6 +710,7 @@ public partial class AssistantTests
         _assistantsToDelete.Clear();
         _threadsToDelete.Clear();
         _filesToDelete.Clear();
+        _vectorStoreIdsToDelete.Clear();
     }
 
     /// <summary>

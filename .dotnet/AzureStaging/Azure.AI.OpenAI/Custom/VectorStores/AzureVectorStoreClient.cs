@@ -3,6 +3,7 @@
 
 using OpenAI.VectorStores;
 using System.ClientModel.Primitives;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.VectorStores;
 
@@ -12,6 +13,7 @@ namespace Azure.AI.OpenAI.VectorStores;
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
+[Experimental("OPENAI001")]
 internal partial class AzureVectorStoreClient : VectorStoreClient
 {
     private readonly Uri _endpoint;

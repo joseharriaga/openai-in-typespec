@@ -24,16 +24,12 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
 
     public override async Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null)
     {
-        Argument.AssertNotNull(content, nameof(content));
-
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     public override ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null)
     {
-        Argument.AssertNotNull(content, nameof(content));
-
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
@@ -88,15 +84,13 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> GetVectorStoreFilesAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    public override async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-
         using PipelineMessage message = CreateGetVectorStoreFilesRequest(vectorStoreId, limit, order, after, before, filter, options);
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    public override ClientResult GetVectorStoreFiles(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    public override ClientResult GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
@@ -104,7 +98,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> CreateVectorStoreFileAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public override async Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -113,7 +107,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    public override ClientResult CreateVectorStoreFile(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public override ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -122,7 +116,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> GetVectorStoreFileAsync(string vectorStoreId, string fileId, RequestOptions options)
+    public override async Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -131,7 +125,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    public override ClientResult GetVectorStoreFile(string vectorStoreId, string fileId, RequestOptions options)
+    public override ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -140,7 +134,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> DeleteVectorStoreFileAsync(string vectorStoreId, string fileId, RequestOptions options)
+    public override async Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -149,7 +143,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    public override ClientResult DeleteVectorStoreFile(string vectorStoreId, string fileId, RequestOptions options)
+    public override ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -158,7 +152,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> CreateVectorStoreFileBatchAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public override async Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -167,7 +161,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    public override ClientResult CreateVectorStoreFileBatch(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public override ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -176,7 +170,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> GetVectorStoreFileBatchAsync(string vectorStoreId, string batchId, RequestOptions options)
+    public override async Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -185,7 +179,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    public override ClientResult GetVectorStoreFileBatch(string vectorStoreId, string batchId, RequestOptions options)
+    public override ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -194,7 +188,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> CancelVectorStoreFileBatchAsync(string vectorStoreId, string batchId, RequestOptions options)
+    public override async Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -203,7 +197,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    public override ClientResult CancelVectorStoreFileBatch(string vectorStoreId, string batchId, RequestOptions options)
+    public override ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -212,7 +206,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> GetFilesInVectorStoreBatchesAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    public override async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -221,7 +215,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    public override ClientResult GetFilesInVectorStoreBatches(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    public override ClientResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));

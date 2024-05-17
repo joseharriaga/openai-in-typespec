@@ -7,7 +7,9 @@ using Azure.Identity;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using OpenAI;
 using OpenAI.Assistants;
+using OpenAI.Files;
 using OpenAI.Tests;
+using OpenAI.VectorStores;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics;
@@ -24,6 +26,12 @@ public class AssistantTests
         AzureOpenAIClient client = new();
         AssistantClient assistantClient = client.GetAssistantClient();
         Assert.That(assistantClient, Is.Not.Null);
+    }
+
+    [TestCase]
+    public void OldModelGivesGoodError()
+    {
+        AssistantClient client = GetTestClient();
     }
 
     [Test]
@@ -60,7 +68,7 @@ public class AssistantTests
             },
         });
         Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        ListQueryPage<Assistant> recentAssistants = client.GetAssistants();
+        PageableCollection<Assistant> recentAssistants = client.GetAssistants();
         Assistant listedAssistant = recentAssistants.FirstOrDefault(pageItem => pageItem.Id == assistant.Id);
         Assert.That(listedAssistant, Is.Not.Null);
         Assert.That(listedAssistant.Metadata.TryGetValue("testkey", out string newMetadataValue) && newMetadataValue == "goodbye!");
@@ -100,6 +108,91 @@ public class AssistantTests
     }
 
     [Test]
+    public void SettingResponseFormatWorks()
+    {
+        AssistantClient client = GetTestClient();
+        Assistant assistant = client.CreateAssistant("gpt-35-turbo-latest", new()
+        {
+            ResponseFormat = AssistantResponseFormat.JsonObject,
+        });
+        Validate(assistant);
+        Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        assistant = client.ModifyAssistant(assistant, new()
+        {
+            ResponseFormat = AssistantResponseFormat.Text,
+        });
+        Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.Text));
+        AssistantThread thread = client.CreateThread();
+        Validate(thread);
+        ThreadMessage message = client.CreateMessage(thread, ["Write some JSON for me!"]);
+        Validate(message);
+        ThreadRun run = client.CreateRun(thread, assistant, new()
+        {
+            ResponseFormat = AssistantResponseFormat.JsonObject,
+        });
+        Validate(run);
+        Assert.That(run.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+    }
+
+    [TestCase]
+    public async Task StreamingToolCall()
+    {
+        AssistantClient client = GetTestClient();
+        FunctionToolDefinition getWeatherTool = new("get_current_weather", "Gets the user's current weather");
+        Assistant assistant = await client.CreateAssistantAsync("gpt-35-turbo-latest", new()
+        {
+            Tools = { getWeatherTool }
+        });
+        Validate(assistant);
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
+
+        Print(" >>> Beginning call ... ");
+        ClientResult<IAsyncEnumerable<StreamingUpdate>> asyncResults = await client.CreateThreadAndRunStreamingAsync(
+            assistant,
+            new()
+            {
+                InitialMessages = { new(["What should I wear outside right now?"]), },
+            });
+        Print(" >>> Starting enumeration ...");
+
+        ThreadRun run = null;
+
+        do
+        {
+            run = null;
+            List<ToolOutput> toolOutputs = [];
+            await foreach (StreamingUpdate update in asyncResults.Value)
+            {
+                string message = update.UpdateKind.ToString();
+
+                if (update is RunUpdate runUpdate)
+                {
+                    message += $" run_id:{runUpdate.Value.Id}";
+                    run = runUpdate.Value;
+                }
+                if (update is RequiredActionUpdate requiredActionUpdate)
+                {
+                    Assert.That(requiredActionUpdate.FunctionName, Is.EqualTo(getWeatherTool.FunctionName));
+                    Assert.That(requiredActionUpdate.GetThreadRun().Status, Is.EqualTo(RunStatus.RequiresAction));
+                    message += $" {requiredActionUpdate.FunctionName}";
+                    toolOutputs.Add(new(requiredActionUpdate.ToolCallId, "warm and sunny"));
+                }
+                if (update is MessageContentUpdate contentUpdate)
+                {
+                    message += $" {contentUpdate.Text}";
+                }
+                Print(message);
+            }
+            if (toolOutputs.Count > 0)
+            {
+                asyncResults = await client.SubmitToolOutputsToRunStreamingAsync(run, toolOutputs);
+            }
+        } while (run?.Status.IsTerminal == false);
+    }
+
+    [Test]
     public void BasicMessageOperationsWork()
     {
         AssistantClient client = GetTestClient();
@@ -111,10 +204,10 @@ public class AssistantTests
         Assert.That(message.Content?.Count, Is.EqualTo(1));
         Assert.That(message.Content[0], Is.Not.Null);
         Assert.That(message.Content[0].Text, Is.EqualTo("Hello, world!"));
-        // BUG: Can't currently delete messages
-        // bool deleted = client.DeleteMessage(message);
-        // Assert.That(deleted, Is.True);
-        // _messagesToDelete.Remove(message);
+         //BUG: Can't currently delete messages
+         bool deleted = client.DeleteMessage(message);
+         Assert.That(deleted, Is.True);
+         _messagesToDelete.Remove(message);
 
         message = client.CreateMessage(thread, ["Goodbye, world!"], new MessageCreationOptions()
         {
@@ -138,12 +231,12 @@ public class AssistantTests
         });
         Assert.That(message.Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
 
-        ListQueryPage<ThreadMessage> messagePage = client.GetMessages(thread);
+        PageableCollection<ThreadMessage> messagePage = client.GetMessages(thread);
         Assert.That(messagePage.Count, Is.EqualTo(2));
         // BUG: Can't currently delete messages
-        // Assert.That(messagePage.Count, Is.EqualTo(1));
-        Assert.That(messagePage[0].Id, Is.EqualTo(message.Id));
-        Assert.That(messagePage[0].Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
+        Assert.That(messagePage.Count, Is.EqualTo(1));
+        Assert.That(messagePage.ElementAt(0).Id, Is.EqualTo(message.Id));
+        Assert.That(messagePage.ElementAt(0).Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
     }
 
     [Test]
@@ -170,16 +263,17 @@ public class AssistantTests
         };
         AssistantThread thread = client.CreateThread(options);
         Validate(thread);
-        ListQueryPage<ThreadMessage> messagePage = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
-        Assert.That(messagePage.Count, Is.EqualTo(2));
-        Assert.That(messagePage[0].Role, Is.EqualTo(MessageRole.User));
-        Assert.That(messagePage[0].Content?.Count, Is.EqualTo(1));
-        Assert.That(messagePage[0].Content[0].Text, Is.EqualTo("Hello, world!"));
-        Assert.That(messagePage[1].Content?.Count, Is.EqualTo(2));
-        Assert.That(messagePage[1].Content[0], Is.Not.Null);
-        Assert.That(messagePage[1].Content[0].Text, Is.EqualTo("Can you describe this image for me?"));
-        Assert.That(messagePage[1].Content[1], Is.Not.Null);
-        Assert.That(messagePage[1].Content[1].ImageUrl.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
+        PageableCollection<ThreadMessage> messagePage = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
+        List<ThreadMessage> messageList = messagePage.ToList();
+        Assert.That(messageList.Count, Is.EqualTo(2));
+        Assert.That(messageList[0].Role, Is.EqualTo(MessageRole.User));
+        Assert.That(messageList[0].Content?.Count, Is.EqualTo(1));
+        Assert.That(messageList[0].Content[0].Text, Is.EqualTo("Hello, world!"));
+        Assert.That(messageList[1].Content?.Count, Is.EqualTo(2));
+        Assert.That(messageList[1].Content[0], Is.Not.Null);
+        Assert.That(messageList[1].Content[0].Text, Is.EqualTo("Can you describe this image for me?"));
+        Assert.That(messageList[1].Content[1], Is.Not.Null);
+        Assert.That(messageList[1].Content[1].ImageUrl.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
     }
 
     [Test]
@@ -190,7 +284,7 @@ public class AssistantTests
         Validate(assistant);
         AssistantThread thread = client.CreateThread();
         Validate(thread);
-        ListQueryPage<ThreadRun> runPage = client.GetRuns(thread.Id);
+        PageableCollection<ThreadRun> runPage = client.GetRuns(thread.Id);
         Assert.That(runPage.Count, Is.EqualTo(0));
         ThreadMessage message = client.CreateMessage(thread.Id, ["Hello, assistant!"]);
         Validate(message);
@@ -203,9 +297,9 @@ public class AssistantTests
         Assert.That(retrievedRun.Id, Is.EqualTo(run.Id));
         runPage = client.GetRuns(thread.Id);
         Assert.That(runPage.Count, Is.EqualTo(1));
-        Assert.That(runPage[0].Id, Is.EqualTo(run.Id));
+        Assert.That(runPage.ElementAt(0).Id, Is.EqualTo(run.Id));
 
-        ListQueryPage<ThreadMessage> messages = client.GetMessages(thread);
+        PageableCollection<ThreadMessage> messages = client.GetMessages(thread);
         Assert.That(messages.Count, Is.EqualTo(1));
 
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
@@ -213,19 +307,21 @@ public class AssistantTests
             Thread.Sleep(500);
             run = client.GetRun(run);
         }
-        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
-        Assert.That(run.CompletedAt, Is.GreaterThan(s_2024));
-        Assert.That(run.RequiredActions.Count, Is.EqualTo(0));
-        Assert.That(run.AssistantId, Is.EqualTo(assistant.Id));
-        Assert.That(run.FailedAt, Is.Null);
-        Assert.That(run.IncompleteDetails, Is.Null);
-
+        Assert.Multiple(() =>
+        {
+            Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+            Assert.That(run.CompletedAt, Is.GreaterThan(s_2024));
+            Assert.That(run.RequiredActions, Is.Empty);
+            Assert.That(run.AssistantId, Is.EqualTo(assistant.Id));
+            Assert.That(run.FailedAt, Is.Null);
+            Assert.That(run.IncompleteDetails, Is.Null);
+        });
         messages = client.GetMessages(thread);
         Assert.That(messages.Count, Is.EqualTo(2));
 
-        Assert.That(messages[0].Role, Is.EqualTo(MessageRole.Assistant));
-        Assert.That(messages[1].Role, Is.EqualTo(MessageRole.User));
-        Assert.That(messages[1].Id, Is.EqualTo(message.Id));
+        Assert.That(messages.ElementAt(0).Role, Is.EqualTo(MessageRole.Assistant));
+        Assert.That(messages.ElementAt(1).Role, Is.EqualTo(MessageRole.User));
+        Assert.That(messages.ElementAt(1).Id, Is.EqualTo(message.Id));
     }
 
     [Test]
@@ -256,20 +352,20 @@ public class AssistantTests
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
         Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
 
-        ListQueryPage<RunStep> runSteps = client.GetRunSteps(run, maxResults: 100);
-        Assert.That(runSteps, Has.Count.GreaterThan(1));
+        PageableCollection<RunStep> runSteps = client.GetRunSteps(run);
+        Assert.That(runSteps.Count(), Is.GreaterThan(1));
         Assert.Multiple(() =>
         {
-            Assert.That(runSteps[0].AssistantId, Is.EqualTo(assistant.Id));
-            Assert.That(runSteps[0].ThreadId, Is.EqualTo(thread.Id));
-            Assert.That(runSteps[0].RunId, Is.EqualTo(run.Id));
-            Assert.That(runSteps[0].CreatedAt, Is.GreaterThan(s_2024));
-            Assert.That(runSteps[0].CompletedAt, Is.GreaterThan(s_2024));
+            Assert.That(runSteps.ElementAt(0).AssistantId, Is.EqualTo(assistant.Id));
+            Assert.That(runSteps.ElementAt(0).ThreadId, Is.EqualTo(thread.Id));
+            Assert.That(runSteps.ElementAt(0).RunId, Is.EqualTo(run.Id));
+            Assert.That(runSteps.ElementAt(0).CreatedAt, Is.GreaterThan(s_2024));
+            Assert.That(runSteps.ElementAt(0).CompletedAt, Is.GreaterThan(s_2024));
         });
-        RunStepDetails details = runSteps[0].Details;
+        RunStepDetails details = runSteps.ElementAt(0).Details;
         Assert.That(details?.CreatedMessageId, Is.Not.Null.Or.Empty);
 
-        details = runSteps[1].Details;
+        details = runSteps.ElementAt(1).Details;
         Assert.Multiple(() =>
         {
             Assert.That(details?.ToolCalls.Count, Is.GreaterThan(0));
@@ -348,11 +444,124 @@ public class AssistantTests
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        ListQueryPage<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
+        PageableCollection<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
         Assert.That(messages.Count, Is.GreaterThan(1));
-        Assert.That(messages[0].Role, Is.EqualTo(MessageRole.Assistant));
-        Assert.That(messages[0].Content?[0], Is.Not.Null);
-        Assert.That(messages[0].Content[0].Text, Does.Contain("tacos"));
+        Assert.That(messages.ElementAt(0).Role, Is.EqualTo(MessageRole.Assistant));
+        Assert.That(messages.ElementAt(0).Content?[0], Is.Not.Null);
+        Assert.That(messages.ElementAt(0).Content?[0].Text, Does.Contain("tacos"));
+    }
+
+    [Test]
+    public void BasicFileSearchWorks()
+    {
+        // First, we need to upload a simple test file.
+        
+        FileClient fileClient = GetTestFileClient();
+        OpenAIFileInfo testFile = fileClient.UploadFile(
+            BinaryData.FromString("""
+            This file describes the favorite foods of several people.
+
+            Summanus Ferdinand: tacos
+            Tekakwitha Effie: pizza
+            Filip Carola: cake
+            """).ToStream(),
+            "favorite_foods.txt",
+            OpenAIFilePurpose.Assistants);
+        Validate(testFile);
+
+        AssistantClient client = GetTestClient();
+
+        // Create an assistant, using the creation helper to make a new vector store
+        Assistant assistant = client.CreateAssistant("gpt-35-turbo-latest", new()
+        {
+            Tools = { new FileSearchToolDefinition() },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([testFile.Id]),
+                    }
+                }
+            }
+        });
+        Validate(assistant);
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        string createdVectorStoreId = assistant.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(createdVectorStoreId);
+
+        // Modify an assistant to use the existing vector store
+        assistant = client.ModifyAssistant(assistant, new AssistantModificationOptions()
+        {
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    VectorStoreIds = { assistant.ToolResources.FileSearch.VectorStoreIds[0] },
+                },
+            },
+        });
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        Assert.That(assistant.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
+
+        // Create a thread with an override vector store
+        AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
+        {
+            InitialMessages = { new(["Using the files you have available, what's Filip's favorite food?"]) },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([testFile.Id])
+                    }
+                }
+            }
+        });
+        Validate(thread);
+        Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        createdVectorStoreId = thread.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(createdVectorStoreId);
+
+        // Ensure that modifying the thread with an existing vector store works
+        thread = client.ModifyThread(thread, new ThreadModificationOptions()
+        {
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    VectorStoreIds = { createdVectorStoreId },
+                }
+            }
+        });
+        Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        Assert.That(thread.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
+
+        ThreadRun run = client.CreateRun(thread, assistant);
+        Validate(run);
+        do
+        {
+            Thread.Sleep(1000);
+            run = client.GetRun(run);
+        } while (run?.Status.IsTerminal == false);
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+
+        PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
+        foreach (ThreadMessage message in messages)
+        {
+            foreach (MessageContent content in message.Content)
+            {
+                Console.WriteLine(content.Text);
+                foreach (TextAnnotation annotation in content.TextAnnotations)
+                {
+                    Console.WriteLine($"  --> From file: {annotation.InputFileId}, quote: {annotation.InputQuote}, replacement: {annotation.TextToReplace}");
+                }
+            }
+        }
+        Assert.That(messages.Count() > 1);
+        Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("cake"))));
     }
 
     [Test]
@@ -407,7 +616,12 @@ public class AssistantTests
     [TearDown]
     protected void Cleanup()
     {
-        AssistantClient client = new();
+        AzureOpenAIClient topLevelClient = new(
+            new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_TIP_ENDPOINT")),
+            new DefaultAzureCredential());
+        AssistantClient client = topLevelClient.GetAssistantClient();
+        FileClient fileClient = topLevelClient.GetFileClient();
+        VectorStoreClient vectorStoreClient = topLevelClient.GetVectorStoreClient();
         RequestOptions requestOptions = new()
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
@@ -424,9 +638,19 @@ public class AssistantTests
         {
             Console.WriteLine($"Cleanup: {thread.Id} -> {client.DeleteThread(thread.Id, requestOptions)?.GetRawResponse().Status}");
         }
+        foreach (string vectorStoreId in _vectorStoreIdsToDelete)
+        {
+            Console.WriteLine($"Cleanup: {vectorStoreId} => {vectorStoreClient.DeleteVectorStore(vectorStoreId, requestOptions)?.GetRawResponse().Status}");
+        }
+        foreach (OpenAIFileInfo file in _filesToDelete)
+        {
+            Console.WriteLine($"Cleanup: {file.Id} -> {fileClient.DeleteFile(file.Id, requestOptions)?.GetRawResponse().Status}");
+        }
         _messagesToDelete.Clear();
         _assistantsToDelete.Clear();
         _threadsToDelete.Clear();
+        _vectorStoreIdsToDelete.Clear();
+        _filesToDelete.Clear();
     }
 
     /// <summary>
@@ -453,6 +677,11 @@ public class AssistantTests
             Assert.That(message?.Id, Is.Not.Null);
             _messagesToDelete.Add(message);
         }
+        else if (target is OpenAIFileInfo file)
+        {
+            Assert.That(file?.Id, Is.Not.Null);
+            _filesToDelete.Add(file);
+        }
         else if (target is ThreadRun run)
         {
             Assert.That(run?.Id, Is.Not.Null);
@@ -466,6 +695,8 @@ public class AssistantTests
     private readonly List<Assistant> _assistantsToDelete = [];
     private readonly List<AssistantThread> _threadsToDelete = [];
     private readonly List<ThreadMessage> _messagesToDelete = [];
+    private readonly List<OpenAIFileInfo> _filesToDelete = [];
+    private readonly List<string> _vectorStoreIdsToDelete = [];
 
     private static AssistantClient GetTestClient()
     {
@@ -491,6 +722,14 @@ public class AssistantTests
             new ApiKeyCredential(Environment.GetEnvironmentVariable("AZURE_OPENAI_TIP_API_KEY")),
             options);
         return azureClient.GetAssistantClient();
+    }
+
+    private static FileClient GetTestFileClient()
+    {
+        AzureOpenAIClient azureClient = new(
+            new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_TIP_ENDPOINT")),
+            new ApiKeyCredential(Environment.GetEnvironmentVariable("AZURE_OPENAI_TIP_API_KEY")));
+        return azureClient.GetFileClient();
     }
 
     private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);

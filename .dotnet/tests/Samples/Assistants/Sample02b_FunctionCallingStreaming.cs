@@ -125,7 +125,9 @@ public partial class AssistantSamples
             {
                 asyncUpdates = client.SubmitToolOutputsToRunStreamingAsync(currentRun, outputsToSubmit);
             }
-        } while (currentRun?.Status.IsTerminal == false);
+        }
+        while (currentRun?.Status.IsTerminal == false);
+
         #endregion
 
         // Optionally, delete the resources for tidiness if no longer needed.

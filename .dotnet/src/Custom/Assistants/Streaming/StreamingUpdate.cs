@@ -93,6 +93,40 @@ public abstract partial class StreamingUpdate
         };
     }
 
+    internal static IEnumerable<StreamingUpdate> FromEvent(ServerSentEvent sseItem)
+    {
+        StreamingUpdateReason updateKind = StreamingUpdateReasonExtensions.FromSseEventLabel(sseItem.EventType);
+        using JsonDocument dataDocument = JsonDocument.Parse(sseItem.Data);
+        JsonElement e = dataDocument.RootElement;
+
+        return updateKind switch
+        {
+            StreamingUpdateReason.ThreadCreated => ThreadUpdate.DeserializeThreadCreationUpdates(e, updateKind),
+            StreamingUpdateReason.RunCreated
+            or StreamingUpdateReason.RunQueued
+            or StreamingUpdateReason.RunInProgress
+            or StreamingUpdateReason.RunCompleted
+            or StreamingUpdateReason.RunFailed
+            or StreamingUpdateReason.RunCancelling
+            or StreamingUpdateReason.RunCancelled
+            or StreamingUpdateReason.RunExpired => RunUpdate.DeserializeRunUpdates(e, updateKind),
+            StreamingUpdateReason.RunRequiresAction => RequiredActionUpdate.DeserializeRequiredActionUpdates(e),
+            StreamingUpdateReason.RunStepCreated
+            or StreamingUpdateReason.RunStepInProgress
+            or StreamingUpdateReason.RunStepCompleted
+            or StreamingUpdateReason.RunStepFailed
+            or StreamingUpdateReason.RunStepCancelled
+            or StreamingUpdateReason.RunStepExpired => RunStepUpdate.DeserializeRunStepUpdates(e, updateKind),
+            StreamingUpdateReason.MessageCreated
+            or StreamingUpdateReason.MessageInProgress
+            or StreamingUpdateReason.MessageCompleted
+            or StreamingUpdateReason.MessageFailed => MessageStatusUpdate.DeserializeMessageStatusUpdates(e, updateKind),
+            StreamingUpdateReason.RunStepUpdated => RunStepDetailsUpdate.DeserializeRunStepDetailsUpdates(e, updateKind),
+            StreamingUpdateReason.MessageUpdated => MessageContentUpdate.DeserializeMessageContentUpdates(e, updateKind),
+            _ => null,
+        };
+    }
+
     internal static ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateTemporaryResult(ClientResult protocolResult)
     {
         // NOTE: This is entirely temporary! Just for prototyping and discussion.

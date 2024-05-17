@@ -88,8 +88,7 @@ internal class StreamingUpdateCollection : ResultCollection<StreamingUpdate>
                     return false;
                 }
 
-                using JsonDocument doc = JsonDocument.Parse(_events.Current.Data);
-                var updates = StreamingUpdate.DeserializeStreamingUpdates(doc.RootElement);
+                var updates = StreamingUpdate.FromEvent(_events.Current);
                 _updates = updates.GetEnumerator();
 
                 if (_updates.MoveNext())

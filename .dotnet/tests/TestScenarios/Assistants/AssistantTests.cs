@@ -385,12 +385,12 @@ public partial class AssistantTests
         Stopwatch stopwatch = Stopwatch.StartNew();
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
-        ClientResult<IAsyncEnumerable<StreamingUpdate>> streamingResult
-            = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        AsyncResultCollection<StreamingUpdate> streamingResult
+            = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
 
         Print(">>> Connected <<<");
 
-        await foreach (StreamingUpdate update in streamingResult.Value)
+        await foreach (StreamingUpdate update in streamingResult)
         {
             string message = $"{update.UpdateKind} ";
             if (update is RunUpdate runUpdate)
@@ -432,7 +432,7 @@ public partial class AssistantTests
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
         Print(" >>> Beginning call ... ");
-        ClientResult<IAsyncEnumerable<StreamingUpdate>> asyncResults = await client.CreateThreadAndRunStreamingAsync(
+        AsyncResultCollection<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
             assistant,
             new()
             {
@@ -446,7 +446,7 @@ public partial class AssistantTests
         {
             run = null;
             List<ToolOutput> toolOutputs = [];
-            await foreach (StreamingUpdate update in asyncResults.Value)
+            await foreach (StreamingUpdate update in asyncResults)
             {
                 string message = update.UpdateKind.ToString();
 
@@ -470,7 +470,7 @@ public partial class AssistantTests
             }
             if (toolOutputs.Count > 0)
             {
-                asyncResults = await client.SubmitToolOutputsToRunStreamingAsync(run, toolOutputs);
+                asyncResults = client.SubmitToolOutputsToRunStreamingAsync(run, toolOutputs);
             }
         } while (run?.Status.IsTerminal == false);
     }

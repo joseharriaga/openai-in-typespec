@@ -287,7 +287,7 @@ public partial class AssistantClient
     /// <param name="assistant"> The assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> CreateThreadAndRunStreamingAsync(
+    public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
         Assistant assistant,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -299,7 +299,7 @@ public partial class AssistantClient
     /// <param name="assistant"> The assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateThreadAndRunStreaming(
+    public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(
         Assistant assistant,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)

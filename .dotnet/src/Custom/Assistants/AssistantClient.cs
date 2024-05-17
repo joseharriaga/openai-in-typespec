@@ -578,18 +578,22 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual async Task<ClientResult<IAsyncEnumerable<StreamingUpdate>>> CreateThreadAndRunStreamingAsync(
+    public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
     {
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+
         runOptions ??= new();
         runOptions.Stream = true;
         BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
-        ClientResult protocolResult = await CreateThreadAndRunAsync(protocolContent, StreamRequestOptions)
+
+        async Task<ClientResult> getResultAsync() => 
+            await CreateThreadAndRunAsync(protocolContent, StreamRequestOptions)
             .ConfigureAwait(false);
 
-        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+        return new AsyncStreamingUpdateCollection(getResultAsync);
     }
 
     /// <summary>
@@ -598,17 +602,20 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual ClientResult<IAsyncEnumerable<StreamingUpdate>> CreateThreadAndRunStreaming(
+    public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
     {
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+
         runOptions ??= new();
         runOptions.Stream = true;
         BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
-        ClientResult protocolResult = CreateThreadAndRun(protocolContent, StreamRequestOptions);
 
-        return StreamingUpdate.CreateTemporaryResult(protocolResult);
+        ClientResult getResult() => CreateThreadAndRun(protocolContent, StreamRequestOptions);
+
+        return new StreamingUpdateCollection(getResult);
     }
 
     /// <summary>

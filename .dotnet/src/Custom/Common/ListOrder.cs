@@ -1,3 +1,8 @@
+using OpenAI.Assistants;
+using System.ClientModel.Primitives;
+using System.ClientModel;
+using System.Threading.Tasks;
+
 namespace OpenAI;
 
 [CodeGenModel("ListOrder")]

@@ -17,3 +17,21 @@ internal partial class InternalDeleteVectorStoreResponse { private readonly obje
 
 [CodeGenModel("VectorStoreObjectFileCounts")]
 public readonly partial struct VectorStoreFileCounts {}
+
+[CodeGenModel("ListVectorStoresResponse")]
+internal partial class InternalListVectorStoresResponse : IInternalListResponse<VectorStore>
+{
+    private readonly object Object;
+}
+
+[CodeGenModel("VectorStoreFileObjectLastErrorCode")]
+public readonly partial struct VectorStoreFileAssociationErrorCode {}
+
+[CodeGenModel("VectorStoreFileObjectLastError")]
+public partial struct VectorStoreFileAssociationError {}
+
+[CodeGenModel("ListVectorStoreFilesResponse")]
+internal partial class InternalListVectorStoreFilesResponse : IInternalListResponse<VectorStoreFileAssociation>
+{
+    private readonly object Object;
+}

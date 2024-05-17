@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using static OpenAI.InternalListHelpers;
 
 namespace OpenAI.Assistants;
 
@@ -17,6 +18,8 @@ namespace OpenAI.Assistants;
 [CodeGenSuppress("AssistantClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateAssistantAsync", typeof(AssistantCreationOptions))]
 [CodeGenSuppress("CreateAssistant", typeof(AssistantCreationOptions))]
+[CodeGenSuppress("GetAssistantsAsync", typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetAssistants", typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
 public partial class AssistantClient
 {
     private readonly InternalAssistantMessageClient _messageSubClient;
@@ -104,25 +107,10 @@ public partial class AssistantClient
     /// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
     public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null)
     {
-        async Task<ResultPage<Assistant>> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = await GetAssistantsAsync(limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
-            return ResultPage<Assistant>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        async Task<ResultPage<Assistant>> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = await GetAssistantsAsync(limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
-            return ResultPage<Assistant>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPageAsync<Assistant, InternalListAssistantsResponse>(GetAssistantsAsync, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPageAsync<Assistant, InternalListAssistantsResponse>(GetAssistantsAsync, resultOrder, continuation, pageSize));
     }
-
 
     /// <summary>
     /// Returns a collection of <see cref="Assistant"/> instances.
@@ -134,23 +122,9 @@ public partial class AssistantClient
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
     public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null)
     {
-        ResultPage<Assistant> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = GetAssistants(limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
-            return ResultPage<Assistant>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        ResultPage<Assistant> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = GetAssistants(limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListAssistantsResponse values = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content);
-            return ResultPage<Assistant>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPage<Assistant, InternalListAssistantsResponse>(GetAssistants, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPage<Assistant, InternalListAssistantsResponse>(GetAssistants, resultOrder, continuation, pageSize));
     }
 
     /// <summary>
@@ -351,23 +325,9 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        async Task<ResultPage<ThreadMessage>> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = await GetMessagesAsync(threadId, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
-            return ResultPage<ThreadMessage>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        async Task<ResultPage<ThreadMessage>> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = await GetMessagesAsync(threadId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
-            return ResultPage<ThreadMessage>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPageAsync<ThreadMessage,InternalListMessagesResponse>(GetMessagesAsync, threadId, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPageAsync<ThreadMessage,InternalListMessagesResponse>(GetMessagesAsync, threadId, resultOrder, continuation, pageSize));
     }
 
     /// <summary>
@@ -385,23 +345,9 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ResultPage<ThreadMessage> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = GetMessages(threadId, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
-            return ResultPage<ThreadMessage>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        ResultPage<ThreadMessage> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = GetMessages(threadId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse values = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content);
-            return ResultPage<ThreadMessage>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPage<ThreadMessage, InternalListMessagesResponse>(GetMessages, threadId, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPage<ThreadMessage, InternalListMessagesResponse>(GetMessages, threadId, resultOrder, continuation, pageSize));
     }
 
     /// <summary>
@@ -681,23 +627,9 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        async Task<ResultPage<ThreadRun>> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = await GetRunsAsync(threadId, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunsResponse values = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content);
-            return ResultPage<ThreadRun>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        async Task<ResultPage<ThreadRun>> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = await GetRunsAsync(threadId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunsResponse values = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content);
-            return ResultPage<ThreadRun>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPageAsync<ThreadRun, InternalListRunsResponse>(GetRunsAsync, threadId, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPageAsync<ThreadRun, InternalListRunsResponse>(GetRunsAsync, threadId, resultOrder, continuation, pageSize));
     }
 
     /// <summary>
@@ -715,23 +647,9 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ResultPage<ThreadRun> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = GetRuns(threadId, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunsResponse values = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content);
-            return ResultPage<ThreadRun>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        ResultPage<ThreadRun> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = GetRuns(threadId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunsResponse values = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content);
-            return ResultPage<ThreadRun>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPage<ThreadRun, InternalListRunsResponse>(GetRuns, threadId, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPage<ThreadRun, InternalListRunsResponse>(GetRuns, threadId, resultOrder, continuation, pageSize));
     }
 
     /// <summary>
@@ -904,23 +822,9 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        async Task<ResultPage<RunStep>> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = await GetRunStepsAsync(threadId, runId, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunStepsResponse values = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content);
-            return ResultPage<RunStep>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        async Task<ResultPage<RunStep>> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = await GetRunStepsAsync(threadId, runId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunStepsResponse values = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content);
-            return ResultPage<RunStep>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPageAsync<RunStep, InternalListRunStepsResponse>(GetRunStepsAsync, threadId, runId, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPageAsync<RunStep, InternalListRunStepsResponse>(GetRunStepsAsync, threadId, runId, resultOrder, continuation, pageSize));
     }
 
     /// <summary>
@@ -941,23 +845,9 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        ResultPage<RunStep> firstPageFunc(int? pageSize)
-        {
-            ClientResult result = GetRunSteps(threadId, runId, limit: pageSize, order: resultOrder?.ToString(), after: null, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunStepsResponse values = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content);
-            return ResultPage<RunStep>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        ResultPage<RunStep> nextPageFunc(string? continuationToken, int? pageSize)
-        {
-            ClientResult result = GetRunSteps(threadId, runId, limit: pageSize, order: resultOrder?.ToString(), after: continuationToken, before: null, options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunStepsResponse values = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content);
-            return ResultPage<RunStep>.Create(values.Data, values.HasMore ? values.LastId : null, response);
-        }
-
-        return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPage<RunStep, InternalListRunStepsResponse>(GetRunSteps, threadId, runId, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPage<RunStep, InternalListRunStepsResponse>(GetRunSteps, threadId, runId, resultOrder, continuation, pageSize));
     }
 
     /// <summary>

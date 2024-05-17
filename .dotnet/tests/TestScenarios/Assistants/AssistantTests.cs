@@ -595,20 +595,34 @@ public partial class AssistantTests
         // Create assistant collection
         for (int i = 0; i < 10; i++)
         {
-            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
+            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}",
+            });
             Validate(assistant);
-            Assert.That(assistant.Name, Is.Null.Or.Empty);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
         }
 
         // Page through collection
         int count = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst);
+
+        int lastIdSeen = int.MaxValue;
 
         await foreach (Assistant assistant in assistants)
         {
             Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-
+            if (assistant.Name?.StartsWith("Test Assistant ") == true)
+            {
+                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
+                Assert.That(seenId, Is.LessThan(lastIdSeen));
+                lastIdSeen = seenId;
+            }
             count++;
+            if (lastIdSeen == 0 || count > 100)
+            {
+                break;
+            }
         }
 
         Assert.That(count, Is.GreaterThanOrEqualTo(10));
@@ -622,27 +636,41 @@ public partial class AssistantTests
         // Create assistant collection
         for (int i = 0; i < 10; i++)
         {
-            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo");
+            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
             Validate(assistant);
-            Assert.That(assistant.Name, Is.Null.Or.Empty);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
         }
 
         // Page through collection
         int count = 0;
         int pageCount = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync();
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst);
         IAsyncEnumerable<ResultPage<Assistant>> pages = assistants.AsPages(pageSizeHint: 2);
+
+        int lastIdSeen = int.MaxValue;
 
         await foreach (ResultPage<Assistant> page in pages)
         {
             foreach (Assistant assistant in page)
             {
                 Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-
+                if (assistant.Name?.StartsWith("Test Assistant ") == true)
+                {
+                    Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
+                    Assert.That(seenId, Is.LessThan(lastIdSeen));
+                    lastIdSeen = seenId;
+                }
                 count++;
             }
 
             pageCount++;
+            if (lastIdSeen == 0 || count > 100)
+            {
+                break;
+            }
         }
 
         Assert.That(count, Is.GreaterThanOrEqualTo(10));

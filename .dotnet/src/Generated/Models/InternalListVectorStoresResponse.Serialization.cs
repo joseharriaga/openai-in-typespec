@@ -7,23 +7,22 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.VectorStores;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class ListVectorStoresResponse : IJsonModel<ListVectorStoresResponse>
+    internal partial class InternalListVectorStoresResponse : IJsonModel<InternalListVectorStoresResponse>
     {
-        void IJsonModel<ListVectorStoresResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalListVectorStoresResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ListVectorStoresResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalListVectorStoresResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ListVectorStoresResponse)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalListVectorStoresResponse)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("data"u8);
             writer.WriteStartArray();
             foreach (var item in Data)
@@ -55,19 +54,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        ListVectorStoresResponse IJsonModel<ListVectorStoresResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalListVectorStoresResponse IJsonModel<InternalListVectorStoresResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ListVectorStoresResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalListVectorStoresResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ListVectorStoresResponse)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalListVectorStoresResponse)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeListVectorStoresResponse(document.RootElement, options);
+            return DeserializeInternalListVectorStoresResponse(document.RootElement, options);
         }
 
-        internal static ListVectorStoresResponse DeserializeListVectorStoresResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalListVectorStoresResponse DeserializeInternalListVectorStoresResponse(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -75,7 +74,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            ListVectorStoresResponseObject @object = default;
+            object @object = default;
             IReadOnlyList<VectorStore> data = default;
             string firstId = default;
             string lastId = default;
@@ -86,7 +85,7 @@ namespace OpenAI.Internal.Models
             {
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new ListVectorStoresResponseObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (property.NameEquals("data"u8))
@@ -120,7 +119,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ListVectorStoresResponse(
+            return new InternalListVectorStoresResponse(
                 @object,
                 data,
                 firstId,
@@ -129,43 +128,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ListVectorStoresResponse>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalListVectorStoresResponse>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ListVectorStoresResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalListVectorStoresResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ListVectorStoresResponse)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalListVectorStoresResponse)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ListVectorStoresResponse IPersistableModel<ListVectorStoresResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalListVectorStoresResponse IPersistableModel<InternalListVectorStoresResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ListVectorStoresResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalListVectorStoresResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeListVectorStoresResponse(document.RootElement, options);
+                        return DeserializeInternalListVectorStoresResponse(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ListVectorStoresResponse)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalListVectorStoresResponse)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ListVectorStoresResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalListVectorStoresResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static ListVectorStoresResponse FromResponse(PipelineResponse response)
+        internal static InternalListVectorStoresResponse FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeListVectorStoresResponse(document.RootElement);
+            return DeserializeInternalListVectorStoresResponse(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

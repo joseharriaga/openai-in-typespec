@@ -6,7 +6,8 @@ function Edit-RunObjectSerialization {
         "RunStep.Serialization.cs"
         "ThreadMessage.Serialization.cs",
         "ThreadRun.Serialization.cs",
-        "VectorStore.Serialization.cs"
+        "VectorStore.Serialization.cs",
+        "VectorStoreFileAssociation.Serialization.cs"
     )
     foreach ($target in $targets) {
         $file = Get-ChildItem -Path $directory -Filter $target
@@ -64,7 +65,11 @@ function Remove-PseudoSuppressedTypes {
         "ThreadObjectObject",
         "ToolConstraint",
         "VectorStoreObjectObject",
-        "DeleteVectorStoreResponseObject"
+        "DeleteVectorStoreResponseObject",
+        "VectorStoreFileObjectObject",
+        "VectorStoreFileAssociationStatus",
+        "ListVectorStoreFilesResponseObject",
+        "VectorStoreFileAssociation"
     )
     foreach ($target in $targets) {
         Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {

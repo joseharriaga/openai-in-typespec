@@ -39,6 +39,32 @@ namespace OpenAI.VectorStores
             _endpoint = endpoint;
         }
 
+        /// <summary> Retrieves a vector store. </summary>
+        /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get vector store. </remarks>
+        public virtual async Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId)
+        {
+            Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+
+            ClientResult result = await GetVectorStoreAsync(vectorStoreId, null).ConfigureAwait(false);
+            return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
+        /// <summary> Retrieves a vector store. </summary>
+        /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks> Get vector store. </remarks>
+        public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId)
+        {
+            Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+
+            ClientResult result = GetVectorStore(vectorStoreId, null);
+            return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        }
+
         /// <summary> Modifies a vector store. </summary>
         /// <param name="vectorStoreId"> The ID of the vector store to modify. </param>
         /// <param name="vectorStore"> The <see cref="VectorStoreModificationOptions"/> to use. </param>

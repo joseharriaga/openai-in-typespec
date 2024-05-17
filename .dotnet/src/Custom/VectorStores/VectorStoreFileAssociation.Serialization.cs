@@ -7,26 +7,28 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.ClientShared.Internal;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class VectorStoreFileObject : IJsonModel<VectorStoreFileObject>
+    public partial class VectorStoreFileAssociation : IJsonModel<VectorStoreFileAssociation>
     {
-        void IJsonModel<VectorStoreFileObject>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<VectorStoreFileAssociation>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileAssociation>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreFileObject)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
+            writer.WriteStringValue(FileId);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
+            writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("usage_bytes"u8);
-            writer.WriteNumberValue(UsageBytes);
+            writer.WriteNumberValue(Size);
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("vector_store_id"u8);
@@ -36,7 +38,7 @@ namespace OpenAI.Internal.Models
             if (LastError != null)
             {
                 writer.WritePropertyName("last_error"u8);
-                writer.WriteObjectValue(LastError, options);
+                writer.WriteObjectValue<VectorStoreFileAssociationError?>(LastError, options);
             }
             else
             {
@@ -60,19 +62,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        VectorStoreFileObject IJsonModel<VectorStoreFileObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        VectorStoreFileAssociation IJsonModel<VectorStoreFileAssociation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileAssociation>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreFileObject)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeVectorStoreFileObject(document.RootElement, options);
+            return DeserializeVectorStoreFileAssociation(document.RootElement, options);
         }
 
-        internal static VectorStoreFileObject DeserializeVectorStoreFileObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static VectorStoreFileAssociation DeserializeVectorStoreFileAssociation(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -81,12 +83,12 @@ namespace OpenAI.Internal.Models
                 return null;
             }
             string id = default;
-            VectorStoreFileObjectObject @object = default;
+            object @object = default;
             int usageBytes = default;
             DateTimeOffset createdAt = default;
             string vectorStoreId = default;
-            VectorStoreFileObjectStatus status = default;
-            VectorStoreFileObjectLastError lastError = default;
+            VectorStoreFileAssociationStatus status = default;
+            VectorStoreFileAssociationError? lastError = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -98,7 +100,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new VectorStoreFileObjectObject(property.Value.GetString());
+                    @object = property.Value.GetObject();
                     continue;
                 }
                 if (property.NameEquals("usage_bytes"u8))
@@ -118,7 +120,7 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    status = new VectorStoreFileObjectStatus(property.Value.GetString());
+                    status = property.Value.GetString().ToVectorStoreFileAssociationStatus();
                     continue;
                 }
                 if (property.NameEquals("last_error"u8))
@@ -128,7 +130,7 @@ namespace OpenAI.Internal.Models
                         lastError = null;
                         continue;
                     }
-                    lastError = VectorStoreFileObjectLastError.DeserializeVectorStoreFileObjectLastError(property.Value, options);
+                    lastError = VectorStoreFileAssociationError.DeserializeVectorStoreFileAssociationError(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -137,7 +139,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new VectorStoreFileObject(
+            return new VectorStoreFileAssociation(
                 id,
                 @object,
                 usageBytes,
@@ -148,43 +150,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<VectorStoreFileObject>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<VectorStoreFileAssociation>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileAssociation>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreFileObject)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support writing '{options.Format}' format.");
             }
         }
 
-        VectorStoreFileObject IPersistableModel<VectorStoreFileObject>.Create(BinaryData data, ModelReaderWriterOptions options)
+        VectorStoreFileAssociation IPersistableModel<VectorStoreFileAssociation>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileObject>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileAssociation>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeVectorStoreFileObject(document.RootElement, options);
+                        return DeserializeVectorStoreFileAssociation(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreFileObject)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<VectorStoreFileObject>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<VectorStoreFileAssociation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static VectorStoreFileObject FromResponse(PipelineResponse response)
+        internal static VectorStoreFileAssociation FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeVectorStoreFileObject(document.RootElement);
+            return DeserializeVectorStoreFileAssociation(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

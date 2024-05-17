@@ -167,14 +167,6 @@ internal partial class InternalRunObjectRequiredActionSubmitToolOutputs { privat
 [CodeGenModel("RunToolCallObjectFunction")]
 internal partial class InternalRunToolCallObjectFunction { }
 
-internal interface IInternalListResponse<T>
-{
-    IReadOnlyList<T> Data { get; }
-    string FirstId { get; }
-    string LastId { get; }
-    bool HasMore { get; }
-}
-
 [CodeGenModel("ListAssistantsResponse")]
 internal partial class InternalListAssistantsResponse : IInternalListResponse<Assistant> { private readonly object Object; }
 

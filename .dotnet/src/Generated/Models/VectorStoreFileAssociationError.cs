@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
     /// <summary> The VectorStoreFileObjectLastError. </summary>
-    internal partial class VectorStoreFileObjectLastError
+    public readonly partial struct VectorStoreFileAssociationError
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -40,13 +41,13 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreFileObjectLastError"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="VectorStoreFileAssociationError"/>. </summary>
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
-        internal VectorStoreFileObjectLastError(VectorStoreFileObjectLastErrorCode code, string message)
+        internal VectorStoreFileAssociationError(Models.VectorStoreFileAssociationErrorCode code, string message)
         {
             Argument.AssertNotNull(message, nameof(message));
 
@@ -54,24 +55,24 @@ namespace OpenAI.Internal.Models
             Message = message;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreFileObjectLastError"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="VectorStoreFileAssociationError"/>. </summary>
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VectorStoreFileObjectLastError(VectorStoreFileObjectLastErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreFileAssociationError(Models.VectorStoreFileAssociationErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             Message = message;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreFileObjectLastError"/> for deserialization. </summary>
-        internal VectorStoreFileObjectLastError()
+        /// <summary> Initializes a new instance of <see cref="VectorStoreFileAssociationError"/> for deserialization. </summary>
+        public VectorStoreFileAssociationError()
         {
         }
 
         /// <summary> One of `server_error` or `rate_limit_exceeded`. </summary>
-        public VectorStoreFileObjectLastErrorCode Code { get; }
+        public Models.VectorStoreFileAssociationErrorCode Code { get; }
         /// <summary> A human-readable description of the error. </summary>
         public string Message { get; }
     }

@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.VectorStores
+namespace OpenAI.VectorStores
 {
     /// <summary> The CreateVectorStoreFileRequest. </summary>
     internal partial class InternalCreateVectorStoreFileRequest

@@ -463,26 +463,6 @@ namespace OpenAI
             return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ListVectorStoresResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListVectorStoresResponse"/> instance for mocking. </returns>
-        public static ListVectorStoresResponse ListVectorStoresResponse(ListVectorStoresResponseObject @object = default, IEnumerable<VectorStore> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<VectorStore>();
-
-            return new ListVectorStoresResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileCounts"/>. </summary>
         /// <param name="inProgress"> The number of files that are currently being processed. </param>
         /// <param name="completed"> The number of files that have been successfully processed. </param>
@@ -501,55 +481,13 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ListVectorStoreFilesResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <returns> A new <see cref="Models.ListVectorStoreFilesResponse"/> instance for mocking. </returns>
-        public static ListVectorStoreFilesResponse ListVectorStoreFilesResponse(ListVectorStoreFilesResponseObject @object = default, IEnumerable<VectorStoreFileObject> data = null, string firstId = null, string lastId = null, bool hasMore = default)
-        {
-            data ??= new List<VectorStoreFileObject>();
-
-            return new ListVectorStoreFilesResponse(
-                @object,
-                data?.ToList(),
-                firstId,
-                lastId,
-                hasMore,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.VectorStoreFileObject"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `vector_store.file`. </param>
-        /// <param name="usageBytes"> The total vector store usage in bytes. Note that this may be different from the original file size. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store file was created. </param>
-        /// <param name="vectorStoreId"> The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to. </param>
-        /// <param name="status"> The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use. </param>
-        /// <param name="lastError"> The last error associated with this vector store file. Will be `null` if there are no errors. </param>
-        /// <returns> A new <see cref="Models.VectorStoreFileObject"/> instance for mocking. </returns>
-        public static VectorStoreFileObject VectorStoreFileObject(string id = null, VectorStoreFileObjectObject @object = default, int usageBytes = default, DateTimeOffset createdAt = default, string vectorStoreId = null, VectorStoreFileObjectStatus status = default, VectorStoreFileObjectLastError lastError = null)
-        {
-            return new VectorStoreFileObject(
-                id,
-                @object,
-                usageBytes,
-                createdAt,
-                vectorStoreId,
-                status,
-                lastError,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.VectorStoreFileObjectLastError"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileAssociationError"/>. </summary>
         /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
         /// <param name="message"> A human-readable description of the error. </param>
-        /// <returns> A new <see cref="Models.VectorStoreFileObjectLastError"/> instance for mocking. </returns>
-        public static VectorStoreFileObjectLastError VectorStoreFileObjectLastError(VectorStoreFileObjectLastErrorCode code = default, string message = null)
+        /// <returns> A new <see cref="VectorStores.VectorStoreFileAssociationError"/> instance for mocking. </returns>
+        public static VectorStoreFileAssociationError VectorStoreFileAssociationError(Models.VectorStoreFileAssociationErrorCode code = default, string message = null)
         {
-            return new VectorStoreFileObjectLastError(code, message, serializedAdditionalRawData: null);
+            return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.DeleteVectorStoreFileResponse"/>. </summary>

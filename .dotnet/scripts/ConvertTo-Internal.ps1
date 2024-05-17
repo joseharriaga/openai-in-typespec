@@ -517,6 +517,12 @@ function Edit-GeneratedModels {
         "VectorStoreExpirationPolicy.cs",
         "VectorStoreExpirationPolicy.Serialization.cs",
         "VectorStoreExpirationAnchor.Serialization.cs",
+        "VectorStoreFileAssociation.cs",
+        "VectorStoreFileAssociation.Serialization.cs",
+        "VectorStoreFileAssociationStatus.Serialization.cs",
+        "VectorStoreFileAssociationError.cs",
+        "VectorStoreFileAssociationError.Serialization.cs",
+        "VectorStoreFileAssociationErrorCode.cs",
         "VectorStoreModificationOptions.cs",
         "VectorStoreModificationOptions.Serialization.cs",
         "VectorStoreFileStatusFilter.cs",
@@ -524,7 +530,15 @@ function Edit-GeneratedModels {
         "VectorStoreFileCounts.Serialization.cs",
         "VectorStoreStatus.Serialization.cs",
         "InternalDeleteVectorStoreResponse.cs",
-        "InternalDeleteVectorStoreResponse.Serialization.cs"
+        "InternalDeleteVectorStoreResponse.Serialization.cs",
+        "InternalListVectorStoresResponse.cs",
+        "InternalListVectorStoresResponse.Serialization.cs",
+        "InternalListVectorStoreFilesResponse.cs",
+        "InternalListVectorStoreFilesResponse.Serialization.cs",
+        "InternalCreateVectorStoreFileRequest.cs",
+        "InternalCreateVectorStoreFileRequest.Serialization.cs",
+        "InternalCreateVectorStoreFileBatchRequest.cs",
+        "InternalCreateVectorStoreFileBatchRequest.Serialization.cs"
     )
 
     foreach ($file in $files) {

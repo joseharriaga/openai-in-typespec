@@ -1,8 +1,10 @@
-﻿using System;
+﻿using OpenAI.Assistants;
+using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using static OpenAI.InternalListHelpers;
 
 namespace OpenAI.VectorStores;
 
@@ -12,8 +14,6 @@ namespace OpenAI.VectorStores;
 [CodeGenClient("VectorStores")]
 [CodeGenSuppress("GetVectorStoresAsync", typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
 [CodeGenSuppress("GetVectorStores", typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
-[CodeGenSuppress("GetVectorStoreAsync", typeof(string))]
-[CodeGenSuppress("GetVectorStore", typeof(string))]
 [CodeGenSuppress("GetVectorStoreFilesAsync", typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
 [CodeGenSuppress("GetVectorStoreFiles", typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
 [CodeGenSuppress("CreateVectorStoreFileAsync", typeof(string), typeof(InternalCreateVectorStoreFileRequest))]
@@ -123,4 +123,50 @@ public partial class VectorStoreClient
         InternalDeleteVectorStoreResponse internalResponse = InternalDeleteVectorStoreResponse.FromResponse(rawProtocolResponse);
         return ClientResult.FromValue(internalResponse.Deleted, rawProtocolResponse);
     }
+
+    public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null)
+    {
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPageAsync<VectorStore, InternalListVectorStoresResponse>(GetVectorStoresAsync, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPageAsync<VectorStore, InternalListVectorStoresResponse>(GetVectorStoresAsync, resultOrder, continuation, pageSize));
+    }
+
+    public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null)
+    {
+        return PageableResultHelpers.Create(
+            (pageSize) => GetFirstPage<VectorStore, InternalListVectorStoresResponse>(GetVectorStores, resultOrder, pageSize),
+            (continuation, pageSize) => GetNextPage<VectorStore, InternalListVectorStoresResponse>(GetVectorStores, resultOrder, continuation, pageSize));
+    }
+
+    public virtual async Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId)
+    {
+        InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
+        ClientResult protocolResult = await CreateVectorStoreFileAsync(vectorStoreId, internalRequest.ToBinaryContent(), null).ConfigureAwait(false);
+        PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
+        VectorStoreFileAssociation fileAssociation = VectorStoreFileAssociation.FromResponse(protocolResponse);
+        return ClientResult.FromValue(fileAssociation, protocolResponse);
+    }
+
+    public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId)
+    {
+        InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
+        ClientResult protocolResult = CreateVectorStoreFile(vectorStoreId, internalRequest.ToBinaryContent(), null);
+        PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
+        VectorStoreFileAssociation fileAssociation = VectorStoreFileAssociation.FromResponse(protocolResponse);
+        return ClientResult.FromValue(fileAssociation, protocolResponse);
+    }
+
+    //public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetVectorStoreFileAssociationsAsync(string vectorStoreId, ListOrder? resultOrder = null)
+    //{
+    //    return PageableResultHelpers.Create(
+    //        (pageSize) => GetFirstPageAsync<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(GetVectorStoreFilesAsync, vectorStoreId, resultOrder, pageSize),
+    //        (continuation, pageSize) => GetNextPageAsync<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(GetVectorStoreFilesAsync, vectorStoreId, resultOrder, continuation, pageSize));
+    //}
+
+    //public virtual PageableCollection<VectorStoreFileAssociation> GetVectorStoreFileAssociations(string vectorStoreId, ListOrder? resultOrder = null)
+    //{
+    //    return PageableResultHelpers.Create(
+    //        (pageSize) => GetFirstPage<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(GetVectorStoreFiles, vectorStoreId, resultOrder, pageSize),
+    //        (continuation, pageSize) => GetNextPage<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(GetVectorStoreFiles, vectorStoreId, resultOrder, continuation, pageSize));
+    //}
 }

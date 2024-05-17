@@ -5,11 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Models;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    /// <summary> The ListVectorStoreFilesResponse. </summary>
-    internal partial class ListVectorStoreFilesResponse
+    /// <summary> The ListVectorStoresResponse. </summary>
+    internal partial class InternalListVectorStoresResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,13 +44,13 @@ namespace OpenAI.Internal.Models
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ListVectorStoreFilesResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalListVectorStoresResponse"/>. </summary>
         /// <param name="data"></param>
         /// <param name="firstId"></param>
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="data"/>, <paramref name="firstId"/> or <paramref name="lastId"/> is null. </exception>
-        internal ListVectorStoreFilesResponse(IEnumerable<VectorStoreFileObject> data, string firstId, string lastId, bool hasMore)
+        internal InternalListVectorStoresResponse(IEnumerable<VectorStore> data, string firstId, string lastId, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
             Argument.AssertNotNull(firstId, nameof(firstId));
@@ -61,14 +62,14 @@ namespace OpenAI.Internal.Models
             HasMore = hasMore;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ListVectorStoreFilesResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalListVectorStoresResponse"/>. </summary>
         /// <param name="object"></param>
         /// <param name="data"></param>
         /// <param name="firstId"></param>
         /// <param name="lastId"></param>
         /// <param name="hasMore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ListVectorStoreFilesResponse(ListVectorStoreFilesResponseObject @object, IReadOnlyList<VectorStoreFileObject> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListVectorStoresResponse(object @object, IReadOnlyList<VectorStore> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -78,16 +79,13 @@ namespace OpenAI.Internal.Models
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ListVectorStoreFilesResponse"/> for deserialization. </summary>
-        internal ListVectorStoreFilesResponse()
+        /// <summary> Initializes a new instance of <see cref="InternalListVectorStoresResponse"/> for deserialization. </summary>
+        internal InternalListVectorStoresResponse()
         {
         }
 
-        /// <summary> Gets the object. </summary>
-        public ListVectorStoreFilesResponseObject Object { get; } = ListVectorStoreFilesResponseObject.List;
-
         /// <summary> Gets the data. </summary>
-        public IReadOnlyList<VectorStoreFileObject> Data { get; }
+        public IReadOnlyList<VectorStore> Data { get; }
         /// <summary> Gets the first id. </summary>
         public string FirstId { get; }
         /// <summary> Gets the last id. </summary>

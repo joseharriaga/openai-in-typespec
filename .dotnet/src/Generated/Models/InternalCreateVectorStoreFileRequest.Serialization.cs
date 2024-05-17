@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.VectorStores
+namespace OpenAI.VectorStores
 {
     internal partial class InternalCreateVectorStoreFileRequest : IJsonModel<InternalCreateVectorStoreFileRequest>
     {

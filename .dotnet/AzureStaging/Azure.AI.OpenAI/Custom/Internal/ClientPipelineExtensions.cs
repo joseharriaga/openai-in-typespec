@@ -1,7 +1,7 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
-namespace OpenAI;
+namespace Azure.AI.OpenAI;
 
 internal static partial class ClientPipelineExtensions
 {

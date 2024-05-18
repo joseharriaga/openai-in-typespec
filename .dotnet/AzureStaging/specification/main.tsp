@@ -3,6 +3,7 @@ import "@typespec/openapi3";
 import "@typespec/openapi";
 
 import "./chat";
+import "./images";
 
 using TypeSpec.Http;
 

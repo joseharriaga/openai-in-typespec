@@ -5,8 +5,11 @@ options:
   "@typespec/openapi3":
     output-file: "{project-root}/tsp-output/azure-openai-openapi3.yaml"
   "@azure-tools/typespec-csharp":
-    namespace: Azure.AI.OpenAI
+    namespace: "Azure.AI.OpenAI"
     emitter-output-dir: "{project-root}/tsp-output"
     generate-convenience-methods: false
     unreferenced-types-handling: keepAll
     model-namespace: false
+    generate-test-project: false
+    single-top-level-client: true
+    flavor: "unbranded"

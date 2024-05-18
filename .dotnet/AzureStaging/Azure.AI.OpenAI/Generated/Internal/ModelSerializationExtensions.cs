@@ -9,8 +9,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
 using System.Xml;
+using OpenAI;
 
-namespace OpenAI
+namespace Azure.AI.OpenAI
 {
     internal static class ModelSerializationExtensions
     {

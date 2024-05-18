@@ -15,12 +15,14 @@ model AzureChatDataSourceEndpointVectorizationSource
   type: "endpoint";
   endpoint: url;
   authentication: AzureChatDataSourceAuthenticationOptions;
+  dimensions?: int32;
 }
 
 model AzureChatDataSourceDeploymentNameVectorizationSource
   extends AzureChatDataSourceVectorizationSource {
   type: "deployment_name";
   deployment_name: string;
+  dimensions?: int32;
 }
 
 model AzureChatDataSourceModelIdVectorizationSource

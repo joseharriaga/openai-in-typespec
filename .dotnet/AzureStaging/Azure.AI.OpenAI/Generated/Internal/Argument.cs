@@ -5,8 +5,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using OpenAI;
 
-namespace OpenAI
+namespace Azure.AI.OpenAI
 {
     internal static class Argument
     {

@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal
+namespace Azure.AI.OpenAI.Internal
 {
     /// <summary> The Error. </summary>
     internal partial class OpenAIError

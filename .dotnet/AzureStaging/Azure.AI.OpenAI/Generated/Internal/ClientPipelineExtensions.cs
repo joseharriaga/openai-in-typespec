@@ -5,11 +5,13 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
+using OpenAI;
 
-namespace OpenAI
+namespace Azure.AI.OpenAI
 {
     internal static partial class ClientPipelineExtensions
     {
+
         public static async ValueTask<ClientResult<bool>> ProcessHeadAsBoolMessageAsync(this ClientPipeline pipeline, PipelineMessage message, RequestOptions options)
         {
             PipelineResponse response = await pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);

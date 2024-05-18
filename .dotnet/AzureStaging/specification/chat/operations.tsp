@@ -1,6 +1,7 @@
 import "@typespec/http";
 import "@typespec/openapi";
 
+import "../common";
 import "./models.request.tsp";
 import "./models.response.tsp";
 
@@ -18,5 +19,5 @@ interface AzureChat {
   @tag("Chat")
   createChatCompletion(
     ...AzureCreateChatCompletionRequest,
-  ): AzureCreateChatCompletionResponse;
+  ): AzureCreateChatCompletionResponse | AzureOpenAIErrorResponse<AzureOpenAIChatError>;
 }

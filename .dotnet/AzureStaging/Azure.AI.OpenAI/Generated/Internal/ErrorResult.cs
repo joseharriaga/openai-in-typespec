@@ -4,8 +4,9 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using OpenAI;
 
-namespace OpenAI
+namespace Azure.AI.OpenAI
 {
     internal class ErrorResult<T> : ClientResult<T>
     {

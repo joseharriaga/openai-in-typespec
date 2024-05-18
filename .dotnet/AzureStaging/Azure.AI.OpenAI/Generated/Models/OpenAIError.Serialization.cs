@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal
+namespace Azure.AI.OpenAI.Internal
 {
     internal partial class OpenAIError : IJsonModel<OpenAIError>
     {

@@ -14,6 +14,9 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics;
 
+using Azure.AI.OpenAI.Internal;
+using Azure.AI.OpenAI.Assistants;
+
 namespace Azure.AI.OpenAI.Tests;
 
 #pragma warning disable OPENAI001
@@ -149,7 +152,7 @@ public class AssistantTests
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
         Print(" >>> Beginning call ... ");
-        ClientResult<IAsyncEnumerable<StreamingUpdate>> asyncResults = await client.CreateThreadAndRunStreamingAsync(
+        AsyncResultCollection<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
             assistant,
             new()
             {
@@ -163,7 +166,7 @@ public class AssistantTests
         {
             run = null;
             List<ToolOutput> toolOutputs = [];
-            await foreach (StreamingUpdate update in asyncResults.Value)
+            await foreach (StreamingUpdate update in asyncResults)
             {
                 string message = update.UpdateKind.ToString();
 
@@ -187,7 +190,7 @@ public class AssistantTests
             }
             if (toolOutputs.Count > 0)
             {
-                asyncResults = await client.SubmitToolOutputsToRunStreamingAsync(run, toolOutputs);
+                asyncResults = client.SubmitToolOutputsToRunStreamingAsync(run, toolOutputs);
             }
         } while (run?.Status.IsTerminal == false);
     }
@@ -580,12 +583,12 @@ public class AssistantTests
         Stopwatch stopwatch = Stopwatch.StartNew();
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
-        ClientResult<IAsyncEnumerable<StreamingUpdate>> streamingResult
-            = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        AsyncResultCollection<StreamingUpdate> streamingResult
+            = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
 
         Print(">>> Connected <<<");
 
-        await foreach (StreamingUpdate update in streamingResult.Value)
+        await foreach (StreamingUpdate update in streamingResult)
         {
             string message = $"{update.UpdateKind} ";
             if (update is RunUpdate runUpdate)
@@ -612,6 +615,28 @@ public class AssistantTests
         }
         Print(">>> Done <<<");
     }
+
+    [Test]
+    public void InternalRawDataWorks()
+    {
+        // AssistantClient client = GetTestClient();
+        AssistantCreationOptions options = new();
+        Assert.That(options.GetTestDataSource(), Is.Null);
+        AzureChatSearchDataSource source = new(
+            new(
+                allowPartialResult: true,
+                endpoint: new Uri("https://test-search.azure.net"),
+                indexName: "index-name-goes-here",
+                new AzureChatDataSourceEndpointVectorizationSource(
+                    new Uri("https://www.some.embedding.endpoint.here"),
+                    new AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions())));
+        options.SetTestDataSource(source);
+        AzureChatSearchDataSource retrievedSource = options.GetTestDataSource() as AzureChatSearchDataSource;
+        Assert.That(retrievedSource, Is.Not.Null);
+        Assert.That(retrievedSource.Parameters.Endpoint, Is.EqualTo(source.Parameters.Endpoint));
+        Assert.That(retrievedSource.Parameters.EmbeddingDependency, Is.InstanceOf<AzureChatDataSourceEndpointVectorizationSource>());
+    }
+
 
     [TearDown]
     protected void Cleanup()

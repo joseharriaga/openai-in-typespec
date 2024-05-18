@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace OpenAI;
+namespace Azure.AI.OpenAI;
 
 internal class PageableResultHelpers
 {

@@ -36,7 +36,6 @@ public partial class ChatClient
     /// <description>
     /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
     /// </description>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>

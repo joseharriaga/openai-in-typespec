@@ -239,9 +239,9 @@ public partial class ChatClientTests
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);
         using JsonDocument choiceAsJson = JsonDocument.Parse(serializedChoice);
-        Assert.IsNotNull(choiceAsJson.RootElement);
-        Assert.AreEqual(JsonValueKind.String, choiceAsJson.RootElement.ValueKind);
-        Assert.AreEqual("auto", choiceAsJson.RootElement.ToString());
+        Assert.That(choiceAsJson.RootElement, Is.Not.Null);
+        Assert.That(choiceAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(choiceAsJson.RootElement.ToString, Is.EqualTo("auto"));
     }
 
     [Test]
@@ -275,29 +275,29 @@ public partial class ChatClientTests
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);
         using JsonDocument choiceAsJson = JsonDocument.Parse(serializedChoice);
-        Assert.IsNotNull(choiceAsJson.RootElement);
-        Assert.AreEqual(JsonValueKind.Object, choiceAsJson.RootElement.ValueKind);
+        Assert.That(choiceAsJson.RootElement, Is.Not.Null);
+        Assert.That(choiceAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.Object));
 
-        Assert.IsTrue(choiceAsJson.RootElement.TryGetProperty("type", out JsonElement typeProperty));
-        Assert.IsNotNull(typeProperty);
-        Assert.AreEqual(JsonValueKind.String, typeProperty.ValueKind);
-        Assert.AreEqual("function", typeProperty.ToString());
+        Assert.That(choiceAsJson.RootElement.TryGetProperty("type", out JsonElement typeProperty), Is.True);
+        Assert.That(typeProperty, Is.Not.Null);
+        Assert.That(typeProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(typeProperty.ToString(), Is.EqualTo("function"));
 
-        Assert.IsTrue(choiceAsJson.RootElement.TryGetProperty("function", out JsonElement functionProperty));
-        Assert.IsNotNull(functionProperty);
-        Assert.AreEqual(JsonValueKind.Object, functionProperty.ValueKind);
+        Assert.That(choiceAsJson.RootElement.TryGetProperty("function", out JsonElement functionProperty), Is.True);
+        Assert.That(functionProperty, Is.Not.Null);
+        Assert.That(functionProperty.ValueKind, Is.EqualTo(JsonValueKind.Object));
 
-        Assert.IsTrue(functionProperty.TryGetProperty("name", out JsonElement functionNameProperty));
-        Assert.IsNotNull(functionNameProperty);
-        Assert.AreEqual(JsonValueKind.String, functionNameProperty.ValueKind);
-        Assert.AreEqual(functionName, functionNameProperty.ToString());
+        Assert.That(functionProperty.TryGetProperty("name", out JsonElement functionNameProperty), Is.True);
+        Assert.That(functionNameProperty, Is.Not.Null);
+        Assert.That(functionNameProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(functionNameProperty.ToString(), Is.EqualTo(functionName));
 
         if (fromRawJson)
         {
             // Confirm that we also have the additional data.
-            Assert.IsTrue(choiceAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty));
-            Assert.IsNotNull(additionalPropertyProperty);
-            Assert.AreEqual(JsonValueKind.True, additionalPropertyProperty.ValueKind);
+            Assert.That(choiceAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty), Is.True);
+            Assert.That(additionalPropertyProperty, Is.Not.Null);
+            Assert.That(additionalPropertyProperty.ValueKind, Is.EqualTo(JsonValueKind.True));
         }
     }
 
@@ -323,9 +323,9 @@ public partial class ChatClientTests
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);
         using JsonDocument choiceAsJson = JsonDocument.Parse(serializedChoice);
-        Assert.IsNotNull(choiceAsJson.RootElement);
-        Assert.AreEqual(JsonValueKind.String, choiceAsJson.RootElement.ValueKind);
-        Assert.AreEqual("auto", choiceAsJson.RootElement.ToString());
+        Assert.That(choiceAsJson.RootElement, Is.Not.Null);
+        Assert.That(choiceAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(choiceAsJson.RootElement.ToString(), Is.EqualTo("auto"));
     }
 
     [Test]
@@ -356,20 +356,20 @@ public partial class ChatClientTests
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);
         using JsonDocument choiceAsJson = JsonDocument.Parse(serializedChoice);
-        Assert.IsNotNull(choiceAsJson.RootElement);
-        Assert.AreEqual(JsonValueKind.Object, choiceAsJson.RootElement.ValueKind);
+        Assert.That(choiceAsJson.RootElement, Is.Not.Null);
+        Assert.That(choiceAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.Object));
 
-        Assert.IsTrue(choiceAsJson.RootElement.TryGetProperty("name", out JsonElement nameProperty));
-        Assert.IsNotNull(nameProperty);
-        Assert.AreEqual(JsonValueKind.String, nameProperty.ValueKind);
-        Assert.AreEqual(functionName, nameProperty.ToString());
+        Assert.That(choiceAsJson.RootElement.TryGetProperty("name", out JsonElement nameProperty), Is.True);
+        Assert.That(nameProperty, Is.Not.Null);
+        Assert.That(nameProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(nameProperty.ToString(), Is.EqualTo(functionName));
 
         if (fromRawJson)
         {
             // Confirm that we also have the additional data.
-            Assert.IsTrue(choiceAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty));
-            Assert.IsNotNull(additionalPropertyProperty);
-            Assert.AreEqual(JsonValueKind.True, additionalPropertyProperty.ValueKind);
+            Assert.That(choiceAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty), Is.True);
+            Assert.That(additionalPropertyProperty, Is.Not.Null);
+            Assert.That(additionalPropertyProperty.ValueKind, Is.EqualTo(JsonValueKind.True));
         }
     }
 
@@ -402,25 +402,25 @@ public partial class ChatClientTests
 
         BinaryData serializedPart = ModelReaderWriter.Write(part);
         using JsonDocument partAsJson = JsonDocument.Parse(serializedPart);
-        Assert.IsNotNull(partAsJson.RootElement);
-        Assert.AreEqual(JsonValueKind.Object, partAsJson.RootElement.ValueKind);
+        Assert.That(partAsJson.RootElement, Is.Not.Null);
+        Assert.That(partAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.Object));
 
-        Assert.IsTrue(partAsJson.RootElement.TryGetProperty("type", out JsonElement typeProperty));
-        Assert.IsNotNull(typeProperty);
-        Assert.AreEqual(JsonValueKind.String, typeProperty.ValueKind);
-        Assert.AreEqual("text", typeProperty.ToString());
+        Assert.That(partAsJson.RootElement.TryGetProperty("type", out JsonElement typeProperty), Is.True);
+        Assert.That(typeProperty, Is.Not.Null);
+        Assert.That(typeProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(typeProperty.ToString(), Is.EqualTo("text"));
 
-        Assert.IsTrue(partAsJson.RootElement.TryGetProperty("text", out JsonElement textProperty));
-        Assert.IsNotNull(textProperty);
-        Assert.AreEqual(JsonValueKind.String, textProperty.ValueKind);
-        Assert.AreEqual(text, textProperty.ToString());
+        Assert.That(partAsJson.RootElement.TryGetProperty("text", out JsonElement textProperty), Is.True);
+        Assert.That(textProperty, Is.Not.Null);
+        Assert.That(textProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(textProperty.ToString(), Is.EqualTo(text));
 
         if (fromRawJson)
         {
             // Confirm that we also have the additional data.
-            Assert.IsTrue(partAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty));
-            Assert.IsNotNull(additionalPropertyProperty);
-            Assert.AreEqual(JsonValueKind.True, additionalPropertyProperty.ValueKind);
+            Assert.That(partAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty), Is.True);
+            Assert.That(additionalPropertyProperty, Is.Not.Null);
+            Assert.That(additionalPropertyProperty.ValueKind, Is.EqualTo(JsonValueKind.True));
         }
     }
 
@@ -456,34 +456,34 @@ public partial class ChatClientTests
 
         BinaryData serializedPart = ModelReaderWriter.Write(part);
         using JsonDocument partAsJson = JsonDocument.Parse(serializedPart);
-        Assert.IsNotNull(partAsJson.RootElement);
-        Assert.AreEqual(JsonValueKind.Object, partAsJson.RootElement.ValueKind);
+        Assert.That(partAsJson.RootElement, Is.Not.Null);
+        Assert.That(partAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.Object));
 
-        Assert.IsTrue(partAsJson.RootElement.TryGetProperty("type", out JsonElement typeProperty));
-        Assert.IsNotNull(typeProperty);
-        Assert.AreEqual(JsonValueKind.String, typeProperty.ValueKind);
-        Assert.AreEqual("image_url", typeProperty.ToString());
+        Assert.That(partAsJson.RootElement.TryGetProperty("type", out JsonElement typeProperty), Is.True);
+        Assert.That(typeProperty, Is.Not.Null);
+        Assert.That(typeProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(typeProperty.ToString(), Is.EqualTo("image_url"));
 
-        Assert.IsTrue(partAsJson.RootElement.TryGetProperty("image_url", out JsonElement imageUrlProperty));
-        Assert.IsNotNull(imageUrlProperty);
-        Assert.AreEqual(JsonValueKind.Object, imageUrlProperty.ValueKind);
+        Assert.That(partAsJson.RootElement.TryGetProperty("image_url", out JsonElement imageUrlProperty), Is.True);
+        Assert.That(imageUrlProperty, Is.Not.Null);
+        Assert.That(imageUrlProperty.ValueKind, Is.EqualTo(JsonValueKind.Object));
 
-        Assert.IsTrue(imageUrlProperty.TryGetProperty("url", out JsonElement imageUrlUrlProperty));
-        Assert.IsNotNull(imageUrlUrlProperty);
-        Assert.AreEqual(JsonValueKind.String, imageUrlUrlProperty.ValueKind);
-        Assert.AreEqual(uri, imageUrlUrlProperty.ToString());
+        Assert.That(imageUrlProperty.TryGetProperty("url", out JsonElement imageUrlUrlProperty), Is.True);
+        Assert.That(imageUrlUrlProperty, Is.Not.Null);
+        Assert.That(imageUrlUrlProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(imageUrlUrlProperty.ToString(), Is.EqualTo(uri));
 
-        Assert.IsTrue(imageUrlProperty.TryGetProperty("detail", out JsonElement imageUrlDetailProperty));
-        Assert.IsNotNull(imageUrlDetailProperty);
-        Assert.AreEqual(JsonValueKind.String, imageUrlDetailProperty.ValueKind);
-        Assert.AreEqual("high", imageUrlDetailProperty.ToString());
+        Assert.That(imageUrlProperty.TryGetProperty("detail", out JsonElement imageUrlDetailProperty), Is.True);
+        Assert.That(imageUrlDetailProperty, Is.Not.Null);
+        Assert.That(imageUrlDetailProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(imageUrlDetailProperty.ToString(), Is.EqualTo("high"));
 
         if (fromRawJson)
         {
             // Confirm that we also have the additional data.
-            Assert.IsTrue(partAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty));
-            Assert.IsNotNull(additionalPropertyProperty);
-            Assert.AreEqual(JsonValueKind.True, additionalPropertyProperty.ValueKind);
+            Assert.That(partAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty), Is.True);
+            Assert.That(additionalPropertyProperty, Is.Not.Null);
+            Assert.That(additionalPropertyProperty.ValueKind, Is.EqualTo(JsonValueKind.True));
         }
     }
 
@@ -520,8 +520,8 @@ public partial class ChatClientTests
             part = ModelReaderWriter.Read<ChatMessageContentPart>(data);
 
             // Confirm that we parsed the data URI correctly.
-            Assert.AreEqual(imageMediaType, part.ImageBytesMediaType);
-            Assert.AreEqual(imageData.ToArray(), part.ImageBytes.ToArray());
+            Assert.That(part.ImageBytesMediaType, Is.EqualTo(imageMediaType));
+            Assert.That(part.ImageBytes.ToArray(), Is.EqualTo(imageData.ToArray()));
         }
         else
         {
@@ -531,34 +531,34 @@ public partial class ChatClientTests
 
         BinaryData serializedPart = ModelReaderWriter.Write(part);
         using JsonDocument partAsJson = JsonDocument.Parse(serializedPart);
-        Assert.IsNotNull(partAsJson.RootElement);
-        Assert.AreEqual(JsonValueKind.Object, partAsJson.RootElement.ValueKind);
+        Assert.That(partAsJson.RootElement, Is.Not.Null);
+        Assert.That(partAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.Object));
 
-        Assert.IsTrue(partAsJson.RootElement.TryGetProperty("type", out JsonElement typeProperty));
-        Assert.IsNotNull(typeProperty);
-        Assert.AreEqual(JsonValueKind.String, typeProperty.ValueKind);
-        Assert.AreEqual("image_url", typeProperty.ToString());
+        Assert.That(partAsJson.RootElement.TryGetProperty("type", out JsonElement typeProperty), Is.True);
+        Assert.That(typeProperty, Is.Not.Null);
+        Assert.That(typeProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(typeProperty.ToString(), Is.EqualTo("image_url"));
 
-        Assert.IsTrue(partAsJson.RootElement.TryGetProperty("image_url", out JsonElement imageUrlProperty));
-        Assert.IsNotNull(imageUrlProperty);
-        Assert.AreEqual(JsonValueKind.Object, imageUrlProperty.ValueKind);
+        Assert.That(partAsJson.RootElement.TryGetProperty("image_url", out JsonElement imageUrlProperty), Is.True);
+        Assert.That(imageUrlProperty, Is.Not.Null);
+        Assert.That(imageUrlProperty.ValueKind, Is.EqualTo(JsonValueKind.Object));
 
-        Assert.IsTrue(imageUrlProperty.TryGetProperty("url", out JsonElement imageUrlUrlProperty));
-        Assert.IsNotNull(imageUrlUrlProperty);
-        Assert.AreEqual(JsonValueKind.String, imageUrlUrlProperty.ValueKind);
-        Assert.AreEqual(dataUri, imageUrlUrlProperty.ToString());
+        Assert.That(imageUrlProperty.TryGetProperty("url", out JsonElement imageUrlUrlProperty), Is.True);
+        Assert.That(imageUrlUrlProperty, Is.Not.Null);
+        Assert.That(imageUrlUrlProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(imageUrlUrlProperty.ToString(), Is.EqualTo(dataUri));
 
-        Assert.IsTrue(imageUrlProperty.TryGetProperty("detail", out JsonElement imageUrlDetailProperty));
-        Assert.IsNotNull(imageUrlDetailProperty);
-        Assert.AreEqual(JsonValueKind.String, imageUrlDetailProperty.ValueKind);
-        Assert.AreEqual("auto", imageUrlDetailProperty.ToString());
+        Assert.That(imageUrlProperty.TryGetProperty("detail", out JsonElement imageUrlDetailProperty), Is.True);
+        Assert.That(imageUrlDetailProperty, Is.Not.Null);
+        Assert.That(imageUrlDetailProperty.ValueKind, Is.EqualTo(JsonValueKind.String));
+        Assert.That(imageUrlDetailProperty.ToString(), Is.EqualTo("auto"));
 
         if (fromRawJson)
         {
             // Confirm that we also have the additional data.
-            Assert.IsTrue(partAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty));
-            Assert.IsNotNull(additionalPropertyProperty);
-            Assert.AreEqual(JsonValueKind.True, additionalPropertyProperty.ValueKind);
+            Assert.That(partAsJson.RootElement.TryGetProperty("additional_property", out JsonElement additionalPropertyProperty), Is.True);
+            Assert.That(additionalPropertyProperty, Is.Not.Null);
+            Assert.That(additionalPropertyProperty.ValueKind, Is.EqualTo(JsonValueKind.True));
         }
     }
 

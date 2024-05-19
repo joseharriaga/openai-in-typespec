@@ -28,14 +28,14 @@ namespace OpenAI.Samples
         private const string GetCurrentWeatherFunctionName = "get_current_weather";
 
         private static readonly ChatTool getCurrentLocationFunction = ChatTool.CreateFunctionTool(
-            GetCurrentLocationFunctionName,
-            "Get the user's current location"
+            functionName: GetCurrentLocationFunctionName,
+            functionDescription: "Get the user's current location"
         );
 
         private static readonly ChatTool getCurrentWeatherFunction = ChatTool.CreateFunctionTool(
-            GetCurrentWeatherFunctionName,
-            "Get the current weather in a given location",
-            BinaryData.FromString("""
+            functionName: GetCurrentWeatherFunctionName,
+            functionDescription: "Get the current weather in a given location",
+            functionParameters: BinaryData.FromString("""
                 {
                     "type": "object",
                     "properties": {
@@ -56,7 +56,7 @@ namespace OpenAI.Samples
         #endregion
 
         [Test]
-        // [Ignore("Compilation validation only")]
+        [Ignore("Compilation validation only")]
         public void Sample03_FunctionCalling()
         {
             ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));

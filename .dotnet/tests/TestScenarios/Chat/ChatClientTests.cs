@@ -46,38 +46,133 @@ public partial class ChatClientTests
             new SystemChatMessage("You are a helpful assistant. You always talk like a pirate."),
             new UserChatMessage("Hello, assistant! Can you help me train my parrot?"),
         ]);
-        Assert.That(new string[] { "aye", "arr", "hearty" }.Any(pirateWord => result.Value.Content.ToString().ToLowerInvariant().Contains(pirateWord)));
+        Assert.That(new string[] { "aye", "arr", "hearty" }.Any(pirateWord => result.Value.Content[0].Text.ToLowerInvariant().Contains(pirateWord)));
     }
 
-    // TODO
+    [Test]
+    public void StreamingChat()
+    {
+        ChatClient client = new("gpt-3.5-turbo");
+
+        TimeSpan? firstTokenReceiptTime = null;
+        TimeSpan? latestTokenReceiptTime = null;
+        Stopwatch stopwatch = Stopwatch.StartNew();
+
+        ResultCollection<StreamingChatUpdate> streamingResult
+            = client.CompleteChatStreaming([new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")]);
+        Assert.That(streamingResult, Is.InstanceOf<ResultCollection<StreamingChatUpdate>>());
+        int updateCount = 0;
+
+        foreach (StreamingChatUpdate chatUpdate in streamingResult)
+        {
+            firstTokenReceiptTime ??= stopwatch.Elapsed;
+            latestTokenReceiptTime = stopwatch.Elapsed;
+            Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
+            updateCount++;
+        }
+        Assert.That(updateCount, Is.GreaterThan(1));
+        Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
+
+        // Validate that network stream was disposed - this will show up as the
+        // the raw response holding an empty content stream.
+        PipelineResponse response = streamingResult.GetRawResponse();
+        Assert.That(response.ContentStream.Length, Is.EqualTo(0));
+    }
+
+    [Test]
+    public async Task StreamingChatAsync()
+    {
+        ChatClient client = new("gpt-3.5-turbo");
+
+        TimeSpan? firstTokenReceiptTime = null;
+        TimeSpan? latestTokenReceiptTime = null;
+        Stopwatch stopwatch = Stopwatch.StartNew();
+
+        AsyncResultCollection<StreamingChatUpdate> streamingResult
+            = client.CompleteChatStreamingAsync([new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")]);
+        Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatUpdate>>());
+        int updateCount = 0;
+        ChatTokenUsage usage = null;
+
+        await foreach (StreamingChatUpdate chatUpdate in streamingResult)
+        {
+            firstTokenReceiptTime ??= stopwatch.Elapsed;
+            latestTokenReceiptTime = stopwatch.Elapsed;
+            usage ??= chatUpdate.TokenUsage;
+            Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
+            updateCount++;
+        }
+        Assert.That(updateCount, Is.GreaterThan(1));
+        Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
+        Assert.That(usage, Is.Not.Null);
+        Assert.That(usage?.InputTokens, Is.GreaterThan(0));
+        Assert.That(usage?.OutputTokens, Is.GreaterThan(0));
+        Assert.That(usage.InputTokens + usage.OutputTokens, Is.EqualTo(usage.TotalTokens));
+
+        // Validate that network stream was disposed - this will show up as the
+        // the raw response holding an empty content stream.
+        PipelineResponse response = streamingResult.GetRawResponse();
+        Assert.That(response.ContentStream.Length, Is.EqualTo(0));
+    }
+
+    #region Tools
+    private const string GetCurrentLocationFunctionName = "get_current_location";
+
+    private const string GetCurrentWeatherFunctionName = "get_current_weather";
+
+    private static readonly ChatTool getCurrentLocationFunction = ChatTool.CreateFunctionTool(
+        functionName: GetCurrentLocationFunctionName,
+        functionDescription: "Get the user's current location"
+    );
+
+    private static readonly ChatTool getCurrentWeatherFunction = ChatTool.CreateFunctionTool(
+        functionName: GetCurrentWeatherFunctionName,
+        functionDescription: "Get the current weather in a given location",
+        functionParameters: BinaryData.FromString("""
+                {
+                    "type": "object",
+                    "properties": {
+                        "location": {
+                            "type": "string",
+                            "description": "The city and state, e.g. Boston, MA"
+                        },
+                        "unit": {
+                            "type": "string",
+                            "enum": [ "celsius", "fahrenheit" ],
+                            "description": "The temperature unit to use. Infer this from the specified location."
+                        }
+                    },
+                    "required": [ "location" ]
+                }
+                """)
+    );
+    #endregion
+
+    private ClientResult GetStreamingMockUpdate()
+    {
+        MockPipelineResponse response = new();
+        response.SetContent("""
+            data: {"id":"chatcmpl-9OrT0Ib1h95fQhtdfsMC1Pn8arrXk", "object":"chat.completion.chunk", "created":1715712426, "model":"gpt-3.5-turbo-0125", "system_fingerprint":null, "choices":[ { "index":0, "delta":{ "role":"assistant", "content":null, "tool_calls":[ { "index":0, "id":"call_KTeiNDFMuy7BO18eMZnaXdpn", "type":"function", "function":{ "name":"get_current_weather", "arguments":"" } }, { "index":0, "id":"call_KTeiNDFMuy7BO18eMZnaXdpn", "type":"function", "function":{ "name":"get_current_weather", "arguments":"" } }, { "index":0, "id":"call_KTeiNDFMuy7BO18eMZnaXdpn", "type":"function", "function":{ "name":"get_current_weather", "arguments":"" } } ] }, "logprobs":null, "finish_reason":null } ], "usage":null }
+
+            data: [DONE]
+
+
+            """);
+        return ClientResult.FromResponse(response);
+    }
+
     //[Test]
-    //public async Task StreamingChat()
+    //public void MockStreamingChatWithToolsAsync()
     //{
-    //    ChatClient client = GetTestClient();
+    //    StreamingChatUpdateCollection updates = new(GetStreamingMockUpdate);
 
-    //    TimeSpan? firstTokenReceiptTime = null;
-    //    TimeSpan? latestTokenReceiptTime = null;
-    //    Stopwatch stopwatch = Stopwatch.StartNew();
-
-    //    StreamingClientResult<StreamingChatUpdate> streamingResult
-    //        = client.CompleteChatStreaming("What are the best pizza toppings? Give me a breakdown on the reasons.");
-    //    Assert.That(streamingResult, Is.InstanceOf<StreamingClientResult<StreamingChatUpdate>>());
     //    int updateCount = 0;
-    //    ChatTokenUsage usage = null;
-
-    //    await foreach (StreamingChatUpdate chatUpdate in streamingResult)
+    //    foreach (StreamingChatUpdate chatUpdate in updates)
     //    {
-    //        firstTokenReceiptTime ??= stopwatch.Elapsed;
-    //        latestTokenReceiptTime = stopwatch.Elapsed;
-    //        usage ??= chatUpdate.TokenUsage;
     //        updateCount++;
     //    }
+
     //    Assert.That(updateCount, Is.GreaterThan(1));
-    //    Assert.That(latestTokenReceiptTime - firstTokenReceiptTime > TimeSpan.FromMilliseconds(500));
-    //    Assert.That(usage, Is.Not.Null);
-    //    Assert.That(usage?.InputTokens, Is.GreaterThan(0));
-    //    Assert.That(usage?.OutputTokens, Is.GreaterThan(0));
-    //    Assert.That(usage.InputTokens + usage.OutputTokens, Is.EqualTo(usage.TotalTokens));
     //}
 
     [Test]
@@ -91,14 +186,14 @@ public partial class ChatClientTests
         ];
         ClientResult<ChatCompletion> firstResult = client.CompleteChat(messages);
         Assert.That(firstResult?.Value, Is.Not.Null);
-        Assert.That(firstResult.Value.Content.ToString().ToLowerInvariant(), Contains.Substring("white"));
-        Assert.That(firstResult.Value.Content.ToString().ToLowerInvariant(), Contains.Substring("black"));
+        Assert.That(firstResult.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("white"));
+        Assert.That(firstResult.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("black"));
         messages.Add(new AssistantChatMessage(firstResult.Value));
         messages.Add(new UserChatMessage("Which of those are considered brightest, aligning with hexadecimal rgb notation?"));
         ClientResult<ChatCompletion> secondResult = client.CompleteChat(messages);
         Assert.That(secondResult?.Value, Is.Not.Null);
-        Assert.That(secondResult.Value.Content.ToString().ToLowerInvariant(), Contains.Substring("white"));
-        Assert.That(secondResult.Value.Content.ToString().ToLowerInvariant(), Does.Not.Contains("black"));
+        Assert.That(secondResult.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("white"));
+        Assert.That(secondResult.Value.Content[0].Text.ToLowerInvariant(), Does.Not.Contains("black"));
     }
 
     [Test]

@@ -55,7 +55,7 @@ internal class ServerSentEventEnumerable : IEnumerable<ServerSentEvent>
         {
             ServerSentEvent? nextEvent = _reader.TryGetNextEvent();
             _enumerable.LastEventId = _reader.LastEventId;
-            _enumerable.ReconnectionInterval= _reader.ReconnectionInterval;
+            _enumerable.ReconnectionInterval = _reader.ReconnectionInterval;
 
             if (nextEvent.HasValue)
             {

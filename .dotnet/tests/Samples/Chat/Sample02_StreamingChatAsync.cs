@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenAI.Chat;
 using System;
+using System.ClientModel;
 using System.Threading.Tasks;
 
 namespace OpenAI.Samples
@@ -8,13 +9,13 @@ namespace OpenAI.Samples
     public partial class ChatSamples
     {
         [Test]
-        // [Ignore("Compilation validation only")]
+        [Ignore("Compilation validation only")]
         public async Task Sample02_StreamingChatAsync()
         {
             ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            StreamingClientResult<StreamingChatUpdate> result =
-                client.CompleteChatStreaming([new UserChatMessage("How does AI work? Explain it in simple terms.")]);
+            AsyncResultCollection<StreamingChatUpdate> result =
+                client.CompleteChatStreamingAsync([new UserChatMessage("How does AI work? Explain it in simple terms.")]);
 
             Console.WriteLine("[ASSISTANT]: ");
             await foreach (StreamingChatUpdate chatUpdate in result)

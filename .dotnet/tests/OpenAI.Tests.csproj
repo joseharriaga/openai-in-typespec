@@ -4,6 +4,8 @@
     <!--Ignore XML doc comments on test types and members-->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <LangVersion>latest</LangVersion>
+    <!--<SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile Include="..\src\OpenAI.snk" />-->
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\OpenAI.csproj" />

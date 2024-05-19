@@ -105,27 +105,24 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="StreamingClientResult{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
-    /// <see cref="IAsyncEnumerable{T}"/> interface. 
+    /// <see cref="AsyncResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="IAsyncEnumerable{T}"/> interface.
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual async Task<StreamingClientResult<StreamingChatUpdate>> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    public virtual AsyncResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(messages, nameof(messages));
+        Argument.AssertNotNull(messages, nameof(messages));
 
         options ??= new();
-        CreateChatCompletionOptions(messages, ref options, true);
+        CreateChatCompletionOptions(messages, ref options, stream: true);
 
         using BinaryContent content = options.ToBinaryContent();
-        using PipelineMessage message = CreateCreateChatCompletionRequest(content, options: null); ;
-        ClientResult result = ClientResult.FromResponse(_pipeline.ProcessMessage(message, options: null));
-        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            result,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
-                responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
+        RequestOptions requestOptions = new() { BufferResponse = false };
+        async Task<ClientResult> getResultAsync() =>
+            await CompleteChatAsync(content, requestOptions).ConfigureAwait(false);
+        return new AsyncStreamingChatUpdateCollection(getResultAsync);
     }
 
     /// <summary>
@@ -133,33 +130,34 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="StreamingClientResult{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
-    /// <see cref="IAsyncEnumerable{T}"/> interface. 
+    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
+    /// <see cref="IEnumerable{T}"/> interface.
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual StreamingClientResult<StreamingChatUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    public virtual ResultCollection<StreamingChatUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
     {
-        Argument.AssertNotNullOrEmpty(messages, nameof(messages));
+        Argument.AssertNotNull(messages, nameof(messages));
 
         options ??= new();
-        CreateChatCompletionOptions(messages, ref options, true);
+        CreateChatCompletionOptions(messages, ref options, stream: true);
 
         using BinaryContent content = options.ToBinaryContent();
-        using PipelineMessage message = CreateCreateChatCompletionRequest(content, options: null);
-        ClientResult result = ClientResult.FromResponse(_pipeline.ProcessMessage(message, options: null));
-        return StreamingClientResult<StreamingChatUpdate>.CreateFromResponse(
-            result,
-            (responseForEnumeration) => SseAsyncEnumerator<StreamingChatUpdate>.EnumerateFromSseStream(
-                responseForEnumeration.GetRawResponse().ContentStream,
-                e => StreamingChatUpdate.DeserializeStreamingChatUpdates(e)));
+        RequestOptions requestOptions = new() { BufferResponse = false };
+        ClientResult getResult() => CompleteChat(content, requestOptions);
+        return new StreamingChatUpdateCollection(getResult);
     }
 
     private void CreateChatCompletionOptions(IEnumerable<ChatMessage> messages, ref ChatCompletionOptions options, bool stream = false)
     {
         options.Messages = messages.ToList();
         options.Model = _model;
-        options.Stream = stream ? true : null;
+        options.Stream = stream 
+            ? true
+            : null;
+        options.StreamOptions = stream
+            ? new InternalChatCompletionStreamOptions() { IncludeUsage = true }
+            : null;
     }
 }

@@ -11,7 +11,7 @@ public partial class ChatFunction
 {
     // CUSTOM: Added custom constructor.
     /// <summary>
-    /// Creates a new instance of <see cref="FunctionChatTool"/>.
+    /// Creates a new instance of <see cref="ChatFunction"/>.
     /// </summary>
     /// <param name="functionName"> The <c>name</c> of the function. </param>
     /// <param name="description"> The <c>description</c> of the function. </param>

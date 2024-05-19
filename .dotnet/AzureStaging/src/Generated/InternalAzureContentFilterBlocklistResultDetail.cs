@@ -71,8 +71,9 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the filtered. </summary>
-        public bool Filtered { get; }
+        internal bool Filtered { get; set; }
         /// <summary> Gets the id. </summary>
-        public string Id { get; }
+        internal string Id { get; set; }
     }
 }
+

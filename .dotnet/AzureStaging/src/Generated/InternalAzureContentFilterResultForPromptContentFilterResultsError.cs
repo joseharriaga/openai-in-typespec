@@ -72,8 +72,9 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the code. </summary>
-        public string Code { get; }
+        internal string Code { get; set; }
         /// <summary> Gets the message. </summary>
-        public string Message { get; }
+        internal string Message { get; set; }
     }
 }
+

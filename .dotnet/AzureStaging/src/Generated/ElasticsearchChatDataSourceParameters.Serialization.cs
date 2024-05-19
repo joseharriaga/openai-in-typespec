@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    public partial class AzureChatElasticsearchDataSourceParameters : IJsonModel<AzureChatElasticsearchDataSourceParameters>
+    public partial class ElasticsearchChatDataSourceParameters : IJsonModel<ElasticsearchChatDataSourceParameters>
     {
-        void IJsonModel<AzureChatElasticsearchDataSourceParameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ElasticsearchChatDataSourceParameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatElasticsearchDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatElasticsearchDataSourceParameters)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ElasticsearchChatDataSourceParameters)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -51,8 +51,11 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("max_search_queries"u8);
                 writer.WriteNumberValue(MaxSearchQueries.Value);
             }
-            writer.WritePropertyName("allow_partial_result"u8);
-            writer.WriteBooleanValue(AllowPartialResult);
+            if (Optional.IsDefined(AllowPartialResult))
+            {
+                writer.WritePropertyName("allow_partial_result"u8);
+                writer.WriteBooleanValue(AllowPartialResult.Value);
+            }
             if (Optional.IsCollectionDefined(IncludeContexts))
             {
                 writer.WritePropertyName("include_contexts"u8);
@@ -112,19 +115,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        AzureChatElasticsearchDataSourceParameters IJsonModel<AzureChatElasticsearchDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ElasticsearchChatDataSourceParameters IJsonModel<ElasticsearchChatDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatElasticsearchDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatElasticsearchDataSourceParameters)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ElasticsearchChatDataSourceParameters)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureChatElasticsearchDataSourceParameters(document.RootElement, options);
+            return DeserializeElasticsearchChatDataSourceParameters(document.RootElement, options);
         }
 
-        internal static AzureChatElasticsearchDataSourceParameters DeserializeAzureChatElasticsearchDataSourceParameters(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ElasticsearchChatDataSourceParameters DeserializeElasticsearchChatDataSourceParameters(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -138,11 +141,11 @@ namespace Azure.AI.OpenAI.Chat
             int? strictness = default;
             string roleInformation = default;
             int? maxSearchQueries = default;
-            bool allowPartialResult = default;
+            bool? allowPartialResult = default;
             IReadOnlyList<BinaryData> includeContexts = default;
             Uri endpoint = default;
             string indexName = default;
-            AzureChatElasticsearchDataSourceParametersFieldsMapping fieldsMapping = default;
+            ElasticsearchChatDataSourceParametersFieldsMapping fieldsMapping = default;
             string queryType = default;
             AzureChatDataSourceVectorizationSource embeddingDependency = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -201,6 +204,10 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 if (property.NameEquals("allow_partial_result"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     allowPartialResult = property.Value.GetBoolean();
                     continue;
                 }
@@ -241,7 +248,7 @@ namespace Azure.AI.OpenAI.Chat
                     {
                         continue;
                     }
-                    fieldsMapping = AzureChatElasticsearchDataSourceParametersFieldsMapping.DeserializeAzureChatElasticsearchDataSourceParametersFieldsMapping(property.Value, options);
+                    fieldsMapping = ElasticsearchChatDataSourceParametersFieldsMapping.DeserializeElasticsearchChatDataSourceParametersFieldsMapping(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("query_type"u8))
@@ -264,7 +271,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureChatElasticsearchDataSourceParameters(
+            return new ElasticsearchChatDataSourceParameters(
                 authentication,
                 topNDocuments,
                 inScope,
@@ -281,43 +288,43 @@ namespace Azure.AI.OpenAI.Chat
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureChatElasticsearchDataSourceParameters>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ElasticsearchChatDataSourceParameters>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatElasticsearchDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatElasticsearchDataSourceParameters)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ElasticsearchChatDataSourceParameters)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureChatElasticsearchDataSourceParameters IPersistableModel<AzureChatElasticsearchDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ElasticsearchChatDataSourceParameters IPersistableModel<ElasticsearchChatDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatElasticsearchDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureChatElasticsearchDataSourceParameters(document.RootElement, options);
+                        return DeserializeElasticsearchChatDataSourceParameters(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatElasticsearchDataSourceParameters)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ElasticsearchChatDataSourceParameters)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureChatElasticsearchDataSourceParameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ElasticsearchChatDataSourceParameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AzureChatElasticsearchDataSourceParameters FromResponse(PipelineResponse response)
+        internal static ElasticsearchChatDataSourceParameters FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureChatElasticsearchDataSourceParameters(document.RootElement);
+            return DeserializeElasticsearchChatDataSourceParameters(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

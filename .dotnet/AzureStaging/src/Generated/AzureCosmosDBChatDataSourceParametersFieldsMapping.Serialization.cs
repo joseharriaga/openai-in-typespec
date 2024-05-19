@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    public partial class AzureChatCosmosDBDataSourceParametersFieldsMapping : IJsonModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>
+    public partial class AzureCosmosDBChatDataSourceParametersFieldsMapping : IJsonModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>
     {
-        void IJsonModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatCosmosDBDataSourceParametersFieldsMapping)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureCosmosDBChatDataSourceParametersFieldsMapping)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -73,19 +73,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        AzureChatCosmosDBDataSourceParametersFieldsMapping IJsonModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AzureCosmosDBChatDataSourceParametersFieldsMapping IJsonModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatCosmosDBDataSourceParametersFieldsMapping)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureCosmosDBChatDataSourceParametersFieldsMapping)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureChatCosmosDBDataSourceParametersFieldsMapping(document.RootElement, options);
+            return DeserializeAzureCosmosDBChatDataSourceParametersFieldsMapping(document.RootElement, options);
         }
 
-        internal static AzureChatCosmosDBDataSourceParametersFieldsMapping DeserializeAzureChatCosmosDBDataSourceParametersFieldsMapping(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AzureCosmosDBChatDataSourceParametersFieldsMapping DeserializeAzureCosmosDBChatDataSourceParametersFieldsMapping(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -149,7 +149,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureChatCosmosDBDataSourceParametersFieldsMapping(
+            return new AzureCosmosDBChatDataSourceParametersFieldsMapping(
                 contentFields,
                 vectorFields,
                 titleField,
@@ -159,43 +159,43 @@ namespace Azure.AI.OpenAI.Chat
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatCosmosDBDataSourceParametersFieldsMapping)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureCosmosDBChatDataSourceParametersFieldsMapping)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureChatCosmosDBDataSourceParametersFieldsMapping IPersistableModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AzureCosmosDBChatDataSourceParametersFieldsMapping IPersistableModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureChatCosmosDBDataSourceParametersFieldsMapping(document.RootElement, options);
+                        return DeserializeAzureCosmosDBChatDataSourceParametersFieldsMapping(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatCosmosDBDataSourceParametersFieldsMapping)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureCosmosDBChatDataSourceParametersFieldsMapping)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureChatCosmosDBDataSourceParametersFieldsMapping>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AzureCosmosDBChatDataSourceParametersFieldsMapping>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AzureChatCosmosDBDataSourceParametersFieldsMapping FromResponse(PipelineResponse response)
+        internal static AzureCosmosDBChatDataSourceParametersFieldsMapping FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureChatCosmosDBDataSourceParametersFieldsMapping(document.RootElement);
+            return DeserializeAzureCosmosDBChatDataSourceParametersFieldsMapping(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

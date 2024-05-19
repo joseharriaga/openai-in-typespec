@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatSearchDataSourceParameters. </summary>
-    public partial class AzureChatSearchDataSourceParameters
+    /// <summary> The AzureMachineLearningIndexChatDataSourceParameters. </summary>
+    public partial class AzureMachineLearningIndexChatDataSourceParameters
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,32 +42,24 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatSearchDataSourceParameters"/>. </summary>
-        /// <param name="allowPartialResult">
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </param>
-        /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
-        /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
-        /// <param name="embeddingDependency">
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/>, <paramref name="indexName"/> or <paramref name="embeddingDependency"/> is null. </exception>
-        internal AzureChatSearchDataSourceParameters(bool allowPartialResult, Uri endpoint, string indexName, AzureChatDataSourceVectorizationSource embeddingDependency)
+        /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSourceParameters"/>. </summary>
+        /// <param name="projectResourceId"> The ID of the Azure Machine Learning index project to use. </param>
+        /// <param name="name"> The name of the Azure Machine Learning index to use. </param>
+        /// <param name="version"> The version of the vector index to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="projectResourceId"/>, <paramref name="name"/> or <paramref name="version"/> is null. </exception>
+        internal AzureMachineLearningIndexChatDataSourceParameters(string projectResourceId, string name, string version)
         {
-            Argument.AssertNotNull(endpoint, nameof(endpoint));
-            Argument.AssertNotNull(indexName, nameof(indexName));
-            Argument.AssertNotNull(embeddingDependency, nameof(embeddingDependency));
+            Argument.AssertNotNull(projectResourceId, nameof(projectResourceId));
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(version, nameof(version));
 
-            AllowPartialResult = allowPartialResult;
             IncludeContexts = new ChangeTrackingList<BinaryData>();
-            Endpoint = endpoint;
-            IndexName = indexName;
-            EmbeddingDependency = embeddingDependency;
+            ProjectResourceId = projectResourceId;
+            Name = name;
+            Version = version;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatSearchDataSourceParameters"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSourceParameters"/>. </summary>
         /// <param name="authentication">
         /// The authentication mechanism to use with the data source.
         /// Please note <see cref="AzureChatDataSourceAuthenticationOptions"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
@@ -96,18 +88,12 @@ namespace Azure.AI.OpenAI.Chat
         /// The output context properties to include on the response.
         /// By default, citations and intent will be requested.
         /// </param>
-        /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
-        /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
-        /// <param name="fieldsMapping"> The field mappings to use with the Azure Search resource. </param>
-        /// <param name="queryType"> The query type for the Azure Search resource to use. </param>
-        /// <param name="semanticConfiguration"> Additional semantic configuration for the query. </param>
-        /// <param name="filter"> A filter to apply to the search. </param>
-        /// <param name="embeddingDependency">
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
-        /// </param>
+        /// <param name="projectResourceId"> The ID of the Azure Machine Learning index project to use. </param>
+        /// <param name="name"> The name of the Azure Machine Learning index to use. </param>
+        /// <param name="version"> The version of the vector index to use. </param>
+        /// <param name="filter"> A search filter, which is only applicable if the vector index is of the 'AzureSearch' type. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatSearchDataSourceParameters(AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool allowPartialResult, IReadOnlyList<BinaryData> includeContexts, Uri endpoint, string indexName, AzureChatSearchDataSourceParametersFieldsMapping fieldsMapping, string queryType, string semanticConfiguration, string filter, AzureChatDataSourceVectorizationSource embeddingDependency, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureMachineLearningIndexChatDataSourceParameters(AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string projectResourceId, string name, string version, string filter, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Authentication = authentication;
             TopNDocuments = topNDocuments;
@@ -117,18 +103,15 @@ namespace Azure.AI.OpenAI.Chat
             MaxSearchQueries = maxSearchQueries;
             AllowPartialResult = allowPartialResult;
             IncludeContexts = includeContexts;
-            Endpoint = endpoint;
-            IndexName = indexName;
-            FieldsMapping = fieldsMapping;
-            QueryType = queryType;
-            SemanticConfiguration = semanticConfiguration;
+            ProjectResourceId = projectResourceId;
+            Name = name;
+            Version = version;
             Filter = filter;
-            EmbeddingDependency = embeddingDependency;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatSearchDataSourceParameters"/> for deserialization. </summary>
-        internal AzureChatSearchDataSourceParameters()
+        /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSourceParameters"/> for deserialization. </summary>
+        internal AzureMachineLearningIndexChatDataSourceParameters()
         {
         }
 
@@ -162,7 +145,7 @@ namespace Azure.AI.OpenAI.Chat
         /// If set to true, the system will allow partial search results to be used and the request will fail if all
         /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
         /// </summary>
-        public bool AllowPartialResult { get; }
+        public bool? AllowPartialResult { get; }
         /// <summary>
         /// The output context properties to include on the response.
         /// By default, citations and intent will be requested.
@@ -209,23 +192,13 @@ namespace Azure.AI.OpenAI.Chat
         /// </para>
         /// </summary>
         public IReadOnlyList<BinaryData> IncludeContexts { get; }
-        /// <summary> The absolute endpoint path for the Azure Search resource to use. </summary>
-        public Uri Endpoint { get; }
-        /// <summary> The name of the index to use, as specified in the Azure Search resource. </summary>
-        public string IndexName { get; }
-        /// <summary> The field mappings to use with the Azure Search resource. </summary>
-        public AzureChatSearchDataSourceParametersFieldsMapping FieldsMapping { get; }
-        /// <summary> The query type for the Azure Search resource to use. </summary>
-        public string QueryType { get; }
-        /// <summary> Additional semantic configuration for the query. </summary>
-        public string SemanticConfiguration { get; }
-        /// <summary> A filter to apply to the search. </summary>
+        /// <summary> The ID of the Azure Machine Learning index project to use. </summary>
+        public string ProjectResourceId { get; }
+        /// <summary> The name of the Azure Machine Learning index to use. </summary>
+        public string Name { get; }
+        /// <summary> The version of the vector index to use. </summary>
+        public string Version { get; }
+        /// <summary> A search filter, which is only applicable if the vector index is of the 'AzureSearch' type. </summary>
         public string Filter { get; }
-        /// <summary>
-        /// Gets the embedding dependency
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
-        /// </summary>
-        public AzureChatDataSourceVectorizationSource EmbeddingDependency { get; }
     }
 }

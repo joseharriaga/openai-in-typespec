@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    public partial class AzureChatPineconeDataSourceFieldsMapping : IJsonModel<AzureChatPineconeDataSourceFieldsMapping>
+    public partial class PineconeChatDataSourceFieldsMapping : IJsonModel<PineconeChatDataSourceFieldsMapping>
     {
-        void IJsonModel<AzureChatPineconeDataSourceFieldsMapping>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<PineconeChatDataSourceFieldsMapping>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatPineconeDataSourceFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSourceFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatPineconeDataSourceFieldsMapping)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(PineconeChatDataSourceFieldsMapping)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -66,19 +66,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        AzureChatPineconeDataSourceFieldsMapping IJsonModel<AzureChatPineconeDataSourceFieldsMapping>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        PineconeChatDataSourceFieldsMapping IJsonModel<PineconeChatDataSourceFieldsMapping>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatPineconeDataSourceFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSourceFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatPineconeDataSourceFieldsMapping)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(PineconeChatDataSourceFieldsMapping)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureChatPineconeDataSourceFieldsMapping(document.RootElement, options);
+            return DeserializePineconeChatDataSourceFieldsMapping(document.RootElement, options);
         }
 
-        internal static AzureChatPineconeDataSourceFieldsMapping DeserializeAzureChatPineconeDataSourceFieldsMapping(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static PineconeChatDataSourceFieldsMapping DeserializePineconeChatDataSourceFieldsMapping(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -131,7 +131,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureChatPineconeDataSourceFieldsMapping(
+            return new PineconeChatDataSourceFieldsMapping(
                 contentFields,
                 titleField,
                 urlField,
@@ -140,43 +140,43 @@ namespace Azure.AI.OpenAI.Chat
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureChatPineconeDataSourceFieldsMapping>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<PineconeChatDataSourceFieldsMapping>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatPineconeDataSourceFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSourceFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatPineconeDataSourceFieldsMapping)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(PineconeChatDataSourceFieldsMapping)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureChatPineconeDataSourceFieldsMapping IPersistableModel<AzureChatPineconeDataSourceFieldsMapping>.Create(BinaryData data, ModelReaderWriterOptions options)
+        PineconeChatDataSourceFieldsMapping IPersistableModel<PineconeChatDataSourceFieldsMapping>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatPineconeDataSourceFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSourceFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureChatPineconeDataSourceFieldsMapping(document.RootElement, options);
+                        return DeserializePineconeChatDataSourceFieldsMapping(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatPineconeDataSourceFieldsMapping)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(PineconeChatDataSourceFieldsMapping)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureChatPineconeDataSourceFieldsMapping>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<PineconeChatDataSourceFieldsMapping>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AzureChatPineconeDataSourceFieldsMapping FromResponse(PipelineResponse response)
+        internal static PineconeChatDataSourceFieldsMapping FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureChatPineconeDataSourceFieldsMapping(document.RootElement);
+            return DeserializePineconeChatDataSourceFieldsMapping(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

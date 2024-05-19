@@ -59,8 +59,9 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the license. </summary>
-        public string License { get; }
+        internal string License { get; set; }
         /// <summary> Gets the url. </summary>
-        public Uri URL { get; }
+        internal Uri URL { get; set; }
     }
 }
+

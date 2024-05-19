@@ -7,14 +7,10 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatPineconeDataSource. </summary>
-    public partial class AzureChatPineconeDataSource : AzureChatDataSource
+    /// <summary> The PineconeChatDataSource. </summary>
+    public partial class PineconeChatDataSource : AzureChatDataSource
     {
-        /// <summary> Initializes a new instance of <see cref="AzureChatPineconeDataSource"/>. </summary>
-        /// <param name="allowPartialResult">
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </param>
+        /// <summary> Initializes a new instance of <see cref="PineconeChatDataSource"/>. </summary>
         /// <param name="environment"></param>
         /// <param name="indexName"></param>
         /// <param name="embeddingDependency">
@@ -23,7 +19,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </param>
         /// <param name="fieldsMapping"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="environment"/>, <paramref name="indexName"/>, <paramref name="embeddingDependency"/> or <paramref name="fieldsMapping"/> is null. </exception>
-        internal AzureChatPineconeDataSource(bool allowPartialResult, string environment, string indexName, AzureChatDataSourceVectorizationSource embeddingDependency, AzureChatPineconeDataSourceFieldsMapping fieldsMapping)
+        internal PineconeChatDataSource(string environment, string indexName, AzureChatDataSourceVectorizationSource embeddingDependency, PineconeChatDataSourceFieldsMapping fieldsMapping)
         {
             Argument.AssertNotNull(environment, nameof(environment));
             Argument.AssertNotNull(indexName, nameof(indexName));
@@ -31,7 +27,6 @@ namespace Azure.AI.OpenAI.Chat
             Argument.AssertNotNull(fieldsMapping, nameof(fieldsMapping));
 
             Type = "pinecone";
-            AllowPartialResult = allowPartialResult;
             IncludeContexts = new ChangeTrackingList<BinaryData>();
             Environment = environment;
             IndexName = indexName;
@@ -39,7 +34,7 @@ namespace Azure.AI.OpenAI.Chat
             FieldsMapping = fieldsMapping;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatPineconeDataSource"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="PineconeChatDataSource"/>. </summary>
         /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="authentication">
@@ -77,7 +72,7 @@ namespace Azure.AI.OpenAI.Chat
         /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
         /// </param>
         /// <param name="fieldsMapping"></param>
-        internal AzureChatPineconeDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string environment, string indexName, AzureChatDataSourceVectorizationSource embeddingDependency, AzureChatPineconeDataSourceFieldsMapping fieldsMapping) : base(type, serializedAdditionalRawData)
+        internal PineconeChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string environment, string indexName, AzureChatDataSourceVectorizationSource embeddingDependency, PineconeChatDataSourceFieldsMapping fieldsMapping) : base(type, serializedAdditionalRawData)
         {
             Authentication = authentication;
             TopNDocuments = topNDocuments;
@@ -93,8 +88,8 @@ namespace Azure.AI.OpenAI.Chat
             FieldsMapping = fieldsMapping;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatPineconeDataSource"/> for deserialization. </summary>
-        internal AzureChatPineconeDataSource()
+        /// <summary> Initializes a new instance of <see cref="PineconeChatDataSource"/> for deserialization. </summary>
+        internal PineconeChatDataSource()
         {
         }
 
@@ -128,7 +123,7 @@ namespace Azure.AI.OpenAI.Chat
         /// If set to true, the system will allow partial search results to be used and the request will fail if all
         /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
         /// </summary>
-        public bool AllowPartialResult { get; }
+        public bool? AllowPartialResult { get; }
         /// <summary>
         /// The output context properties to include on the response.
         /// By default, citations and intent will be requested.
@@ -186,6 +181,6 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         public AzureChatDataSourceVectorizationSource EmbeddingDependency { get; }
         /// <summary> Gets the fields mapping. </summary>
-        public AzureChatPineconeDataSourceFieldsMapping FieldsMapping { get; }
+        public PineconeChatDataSourceFieldsMapping FieldsMapping { get; }
     }
 }

@@ -83,22 +83,23 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the sexual. </summary>
-        public ContentFilterSeverityResult Sexual { get; }
+        internal ContentFilterSeverityResult Sexual { get; set; }
         /// <summary> Gets the violence. </summary>
-        public ContentFilterSeverityResult Violence { get; }
+        internal ContentFilterSeverityResult Violence { get; set; }
         /// <summary> Gets the hate. </summary>
-        public ContentFilterSeverityResult Hate { get; }
+        internal ContentFilterSeverityResult Hate { get; set; }
         /// <summary> Gets the self harm. </summary>
-        public ContentFilterSeverityResult SelfHarm { get; }
+        internal ContentFilterSeverityResult SelfHarm { get; set; }
         /// <summary> Gets the profanity. </summary>
-        public ContentFilterDetectionResult Profanity { get; }
+        internal ContentFilterDetectionResult Profanity { get; set; }
         /// <summary> Gets the custom blocklists. </summary>
-        public ContentFilterBlocklistResult CustomBlocklists { get; }
+        internal ContentFilterBlocklistResult CustomBlocklists { get; set; }
         /// <summary> Gets the error. </summary>
-        public InternalAzureContentFilterResultForPromptContentFilterResultsError Error { get; }
+        internal InternalAzureContentFilterResultForPromptContentFilterResultsError Error { get; set; }
         /// <summary> Gets the protected material text. </summary>
-        public ContentFilterDetectionResult ProtectedMaterialText { get; }
+        internal ContentFilterDetectionResult ProtectedMaterialText { get; set; }
         /// <summary> Gets the protected material code. </summary>
-        public InternalAzureContentFilterResultForChoiceProtectedMaterialCode ProtectedMaterialCode { get; }
+        internal InternalAzureContentFilterResultForChoiceProtectedMaterialCode ProtectedMaterialCode { get; set; }
     }
 }
+

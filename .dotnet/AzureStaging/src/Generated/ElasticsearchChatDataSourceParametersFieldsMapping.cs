@@ -4,12 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatCosmosDBDataSourceParametersFieldsMapping. </summary>
-    public partial class AzureChatCosmosDBDataSourceParametersFieldsMapping
+    /// <summary> The ElasticsearchChatDataSourceParametersFieldsMapping. </summary>
+    public partial class ElasticsearchChatDataSourceParametersFieldsMapping
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,54 +42,43 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSourceParametersFieldsMapping"/>. </summary>
-        /// <param name="contentFields"></param>
-        /// <param name="vectorFields"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="contentFields"/> or <paramref name="vectorFields"/> is null. </exception>
-        internal AzureChatCosmosDBDataSourceParametersFieldsMapping(IEnumerable<string> contentFields, IEnumerable<string> vectorFields)
+        /// <summary> Initializes a new instance of <see cref="ElasticsearchChatDataSourceParametersFieldsMapping"/>. </summary>
+        internal ElasticsearchChatDataSourceParametersFieldsMapping()
         {
-            Argument.AssertNotNull(contentFields, nameof(contentFields));
-            Argument.AssertNotNull(vectorFields, nameof(vectorFields));
-
-            ContentFields = contentFields.ToList();
-            VectorFields = vectorFields.ToList();
+            ContentFields = new ChangeTrackingList<string>();
+            VectorFields = new ChangeTrackingList<string>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSourceParametersFieldsMapping"/>. </summary>
-        /// <param name="contentFields"></param>
-        /// <param name="vectorFields"></param>
+        /// <summary> Initializes a new instance of <see cref="ElasticsearchChatDataSourceParametersFieldsMapping"/>. </summary>
         /// <param name="titleField"></param>
         /// <param name="urlField"></param>
         /// <param name="filepathField"></param>
+        /// <param name="contentFields"></param>
         /// <param name="contentFieldsSeparator"></param>
+        /// <param name="vectorFields"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatCosmosDBDataSourceParametersFieldsMapping(IReadOnlyList<string> contentFields, IReadOnlyList<string> vectorFields, string titleField, string urlField, string filepathField, string contentFieldsSeparator, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ElasticsearchChatDataSourceParametersFieldsMapping(string titleField, string urlField, string filepathField, IReadOnlyList<string> contentFields, string contentFieldsSeparator, IReadOnlyList<string> vectorFields, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            ContentFields = contentFields;
-            VectorFields = vectorFields;
             TitleField = titleField;
             UrlField = urlField;
             FilepathField = filepathField;
+            ContentFields = contentFields;
             ContentFieldsSeparator = contentFieldsSeparator;
+            VectorFields = vectorFields;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSourceParametersFieldsMapping"/> for deserialization. </summary>
-        internal AzureChatCosmosDBDataSourceParametersFieldsMapping()
-        {
-        }
-
-        /// <summary> Gets the content fields. </summary>
-        public IReadOnlyList<string> ContentFields { get; }
-        /// <summary> Gets the vector fields. </summary>
-        public IReadOnlyList<string> VectorFields { get; }
         /// <summary> Gets the title field. </summary>
         public string TitleField { get; }
         /// <summary> Gets the url field. </summary>
         public string UrlField { get; }
         /// <summary> Gets the filepath field. </summary>
         public string FilepathField { get; }
+        /// <summary> Gets the content fields. </summary>
+        public IReadOnlyList<string> ContentFields { get; }
         /// <summary> Gets the content fields separator. </summary>
         public string ContentFieldsSeparator { get; }
+        /// <summary> Gets the vector fields. </summary>
+        public IReadOnlyList<string> VectorFields { get; }
     }
 }

@@ -59,8 +59,9 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the prompt index. </summary>
-        public int? PromptIndex { get; }
+        internal int? PromptIndex { get; set; }
         /// <summary> Gets the content filter results. </summary>
-        public InternalAzureContentFilterResultForPromptContentFilterResults ContentFilterResults { get; }
+        internal InternalAzureContentFilterResultForPromptContentFilterResults ContentFilterResults { get; set; }
     }
 }
+

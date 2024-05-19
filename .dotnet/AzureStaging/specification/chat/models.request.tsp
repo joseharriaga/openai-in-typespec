@@ -22,7 +22,7 @@ model AzureChatDataSource {
 }
 
 /** Represents a data source configuration that will use an Azure Search resource. */
-model AzureChatSearchDataSource extends AzureChatDataSource {
+model AzureSearchChatDataSource extends AzureChatDataSource {
   /** The discriminated type identifier, which is always 'azure_search'. */
   type: "azure_search";
 
@@ -80,7 +80,7 @@ model AzureChatSearchDataSource extends AzureChatDataSource {
 }
 
 /** Represents a data source configuration that will use an Azure Machine Learning vector index. */
-model AzureChatMachineLearningIndexDataSource extends AzureChatDataSource {
+model AzureMachineLearningIndexChatDataSource extends AzureChatDataSource {
   type: "azure_ml_index";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
@@ -100,7 +100,7 @@ model AzureChatMachineLearningIndexDataSource extends AzureChatDataSource {
 }
 
 /** Represents a data source configuration that will use an Azure CosmosDB resource. */
-model AzureChatCosmosDBDataSource extends AzureChatDataSource {
+model AzureCosmosDBChatDataSource extends AzureChatDataSource {
   type: "AzureCosmosDB";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
@@ -119,7 +119,7 @@ model AzureChatCosmosDBDataSource extends AzureChatDataSource {
   };
 }
 
-model AzureChatElasticsearchDataSource extends AzureChatDataSource {
+model ElasticsearchChatDataSource extends AzureChatDataSource {
   type: "elasticsearch";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
@@ -138,7 +138,7 @@ model AzureChatElasticsearchDataSource extends AzureChatDataSource {
   };
 }
 
-model AzureChatPineconeDataSource extends AzureChatDataSource {
+model PineconeChatDataSource extends AzureChatDataSource {
   type: "pinecone";
   ...AzureChatDataSourceCommonParameters;
   environment: string;
@@ -188,7 +188,7 @@ alias AzureChatDataSourceCommonParameters = {
    * If set to true, the system will allow partial search results to be used and the request will fail if all
    * partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
    */
-  allow_partial_result: boolean = false;
+  allow_partial_result?: boolean = false;
 
   /**
    * The output context properties to include on the response.

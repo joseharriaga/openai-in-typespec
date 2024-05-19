@@ -22,7 +22,7 @@ namespace Azure.AI.OpenAI
         private const string ResponsibleAIPolicyViolationValue = "ResponsibleAIPolicyViolation";
 
         /// <summary> ResponsibleAIPolicyViolation. </summary>
-        public static InternalAzureOpenAIChatErrorInnerErrorCode ResponsibleAIPolicyViolation { get; } = new InternalAzureOpenAIChatErrorInnerErrorCode(ResponsibleAIPolicyViolationValue);
+        internal static InternalAzureOpenAIChatErrorInnerErrorCode ResponsibleAIPolicyViolation { get; set; } = new InternalAzureOpenAIChatErrorInnerErrorCode(ResponsibleAIPolicyViolationValue);
         /// <summary> Determines if two <see cref="InternalAzureOpenAIChatErrorInnerErrorCode"/> values are the same. </summary>
         public static bool operator ==(InternalAzureOpenAIChatErrorInnerErrorCode left, InternalAzureOpenAIChatErrorInnerErrorCode right) => left.Equals(right);
         /// <summary> Determines if two <see cref="InternalAzureOpenAIChatErrorInnerErrorCode"/> values are not the same. </summary>
@@ -43,3 +43,4 @@ namespace Azure.AI.OpenAI
         public override string ToString() => _value;
     }
 }
+

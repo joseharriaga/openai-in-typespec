@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatCosmosDBDataSourceParameters. </summary>
-    public partial class AzureChatCosmosDBDataSourceParameters
+    /// <summary> The AzureCosmosDBChatDataSourceParameters. </summary>
+    public partial class AzureCosmosDBChatDataSourceParameters
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,11 +42,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSourceParameters"/>. </summary>
-        /// <param name="allowPartialResult">
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </param>
+        /// <summary> Initializes a new instance of <see cref="AzureCosmosDBChatDataSourceParameters"/>. </summary>
         /// <param name="containerName"></param>
         /// <param name="databaseName"></param>
         /// <param name="embeddingDependency">
@@ -56,7 +52,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="indexName"></param>
         /// <param name="fieldsMapping"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="containerName"/>, <paramref name="databaseName"/>, <paramref name="embeddingDependency"/>, <paramref name="indexName"/> or <paramref name="fieldsMapping"/> is null. </exception>
-        internal AzureChatCosmosDBDataSourceParameters(bool allowPartialResult, string containerName, string databaseName, AzureChatDataSourceVectorizationSource embeddingDependency, string indexName, AzureChatCosmosDBDataSourceParametersFieldsMapping fieldsMapping)
+        internal AzureCosmosDBChatDataSourceParameters(string containerName, string databaseName, AzureChatDataSourceVectorizationSource embeddingDependency, string indexName, AzureCosmosDBChatDataSourceParametersFieldsMapping fieldsMapping)
         {
             Argument.AssertNotNull(containerName, nameof(containerName));
             Argument.AssertNotNull(databaseName, nameof(databaseName));
@@ -64,7 +60,6 @@ namespace Azure.AI.OpenAI.Chat
             Argument.AssertNotNull(indexName, nameof(indexName));
             Argument.AssertNotNull(fieldsMapping, nameof(fieldsMapping));
 
-            AllowPartialResult = allowPartialResult;
             IncludeContexts = new ChangeTrackingList<BinaryData>();
             ContainerName = containerName;
             DatabaseName = databaseName;
@@ -73,7 +68,7 @@ namespace Azure.AI.OpenAI.Chat
             FieldsMapping = fieldsMapping;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSourceParameters"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureCosmosDBChatDataSourceParameters"/>. </summary>
         /// <param name="authentication">
         /// The authentication mechanism to use with the data source.
         /// Please note <see cref="AzureChatDataSourceAuthenticationOptions"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
@@ -111,7 +106,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="indexName"></param>
         /// <param name="fieldsMapping"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatCosmosDBDataSourceParameters(AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string containerName, string databaseName, AzureChatDataSourceVectorizationSource embeddingDependency, string indexName, AzureChatCosmosDBDataSourceParametersFieldsMapping fieldsMapping, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureCosmosDBChatDataSourceParameters(AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string containerName, string databaseName, AzureChatDataSourceVectorizationSource embeddingDependency, string indexName, AzureCosmosDBChatDataSourceParametersFieldsMapping fieldsMapping, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Authentication = authentication;
             TopNDocuments = topNDocuments;
@@ -129,8 +124,8 @@ namespace Azure.AI.OpenAI.Chat
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSourceParameters"/> for deserialization. </summary>
-        internal AzureChatCosmosDBDataSourceParameters()
+        /// <summary> Initializes a new instance of <see cref="AzureCosmosDBChatDataSourceParameters"/> for deserialization. </summary>
+        internal AzureCosmosDBChatDataSourceParameters()
         {
         }
 
@@ -164,7 +159,7 @@ namespace Azure.AI.OpenAI.Chat
         /// If set to true, the system will allow partial search results to be used and the request will fail if all
         /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
         /// </summary>
-        public bool AllowPartialResult { get; }
+        public bool? AllowPartialResult { get; }
         /// <summary>
         /// The output context properties to include on the response.
         /// By default, citations and intent will be requested.
@@ -224,6 +219,6 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> Gets the index name. </summary>
         public string IndexName { get; }
         /// <summary> Gets the fields mapping. </summary>
-        public AzureChatCosmosDBDataSourceParametersFieldsMapping FieldsMapping { get; }
+        public AzureCosmosDBChatDataSourceParametersFieldsMapping FieldsMapping { get; }
     }
 }

@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatSearchDataSourceParametersFieldsMapping. </summary>
-    public partial class AzureChatSearchDataSourceParametersFieldsMapping
+    /// <summary> The AzureSearchChatDataSourceParametersFieldsMapping. </summary>
+    public partial class AzureSearchChatDataSourceParametersFieldsMapping
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,15 +42,15 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatSearchDataSourceParametersFieldsMapping"/>. </summary>
-        internal AzureChatSearchDataSourceParametersFieldsMapping()
+        /// <summary> Initializes a new instance of <see cref="AzureSearchChatDataSourceParametersFieldsMapping"/>. </summary>
+        internal AzureSearchChatDataSourceParametersFieldsMapping()
         {
             ContentFields = new ChangeTrackingList<string>();
             VectorFields = new ChangeTrackingList<string>();
             ImageVectorFields = new ChangeTrackingList<string>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatSearchDataSourceParametersFieldsMapping"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureSearchChatDataSourceParametersFieldsMapping"/>. </summary>
         /// <param name="titleField"> The name of the index field to use as a title. </param>
         /// <param name="urlField"> The name of the index field to use as a URL. </param>
         /// <param name="filepathField"> The name of the index field to use as a filepath. </param>
@@ -59,7 +59,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="vectorFields"> THe names of fields that represent vector data. </param>
         /// <param name="imageVectorFields"> The names of fields that represent image vector data. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatSearchDataSourceParametersFieldsMapping(string titleField, string urlField, string filepathField, IReadOnlyList<string> contentFields, string contentFieldsSeparator, IReadOnlyList<string> vectorFields, IReadOnlyList<string> imageVectorFields, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureSearchChatDataSourceParametersFieldsMapping(string titleField, string urlField, string filepathField, IReadOnlyList<string> contentFields, string contentFieldsSeparator, IReadOnlyList<string> vectorFields, IReadOnlyList<string> imageVectorFields, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             TitleField = titleField;
             UrlField = urlField;

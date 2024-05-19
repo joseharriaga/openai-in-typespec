@@ -70,10 +70,11 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the filtered. </summary>
-        public bool Filtered { get; }
+        internal bool Filtered { get; set; }
         /// <summary> Gets the detected. </summary>
-        public bool Detected { get; }
+        internal bool Detected { get; set; }
         /// <summary> Gets the citation. </summary>
-        public InternalAzureContentFilterResultForChoiceProtectedMaterialCodeCitation Citation { get; }
+        internal InternalAzureContentFilterResultForChoiceProtectedMaterialCodeCitation Citation { get; set; }
     }
 }
+

@@ -4,11 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatElasticsearchDataSourceParametersFieldsMapping. </summary>
-    public partial class AzureChatElasticsearchDataSourceParametersFieldsMapping
+    /// <summary> The PineconeChatDataSourceFieldsMapping. </summary>
+    public partial class PineconeChatDataSourceFieldsMapping
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,43 +43,47 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatElasticsearchDataSourceParametersFieldsMapping"/>. </summary>
-        internal AzureChatElasticsearchDataSourceParametersFieldsMapping()
+        /// <summary> Initializes a new instance of <see cref="PineconeChatDataSourceFieldsMapping"/>. </summary>
+        /// <param name="contentFields"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="contentFields"/> is null. </exception>
+        internal PineconeChatDataSourceFieldsMapping(IEnumerable<string> contentFields)
         {
-            ContentFields = new ChangeTrackingList<string>();
-            VectorFields = new ChangeTrackingList<string>();
+            Argument.AssertNotNull(contentFields, nameof(contentFields));
+
+            ContentFields = contentFields.ToList();
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatElasticsearchDataSourceParametersFieldsMapping"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="PineconeChatDataSourceFieldsMapping"/>. </summary>
+        /// <param name="contentFields"></param>
         /// <param name="titleField"></param>
         /// <param name="urlField"></param>
         /// <param name="filepathField"></param>
-        /// <param name="contentFields"></param>
         /// <param name="contentFieldsSeparator"></param>
-        /// <param name="vectorFields"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatElasticsearchDataSourceParametersFieldsMapping(string titleField, string urlField, string filepathField, IReadOnlyList<string> contentFields, string contentFieldsSeparator, IReadOnlyList<string> vectorFields, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal PineconeChatDataSourceFieldsMapping(IReadOnlyList<string> contentFields, string titleField, string urlField, string filepathField, string contentFieldsSeparator, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
+            ContentFields = contentFields;
             TitleField = titleField;
             UrlField = urlField;
             FilepathField = filepathField;
-            ContentFields = contentFields;
             ContentFieldsSeparator = contentFieldsSeparator;
-            VectorFields = vectorFields;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
+        /// <summary> Initializes a new instance of <see cref="PineconeChatDataSourceFieldsMapping"/> for deserialization. </summary>
+        internal PineconeChatDataSourceFieldsMapping()
+        {
+        }
+
+        /// <summary> Gets the content fields. </summary>
+        public IReadOnlyList<string> ContentFields { get; }
         /// <summary> Gets the title field. </summary>
         public string TitleField { get; }
         /// <summary> Gets the url field. </summary>
         public string UrlField { get; }
         /// <summary> Gets the filepath field. </summary>
         public string FilepathField { get; }
-        /// <summary> Gets the content fields. </summary>
-        public IReadOnlyList<string> ContentFields { get; }
         /// <summary> Gets the content fields separator. </summary>
         public string ContentFieldsSeparator { get; }
-        /// <summary> Gets the vector fields. </summary>
-        public IReadOnlyList<string> VectorFields { get; }
     }
 }

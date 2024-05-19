@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    public partial class AzureChatPineconeDataSource : IJsonModel<AzureChatPineconeDataSource>
+    public partial class AzureMachineLearningIndexChatDataSourceParameters : IJsonModel<AzureMachineLearningIndexChatDataSourceParameters>
     {
-        void IJsonModel<AzureChatPineconeDataSource>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AzureMachineLearningIndexChatDataSourceParameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatPineconeDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatPineconeDataSource)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureMachineLearningIndexChatDataSourceParameters)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -51,8 +51,11 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("max_search_queries"u8);
                 writer.WriteNumberValue(MaxSearchQueries.Value);
             }
-            writer.WritePropertyName("allow_partial_result"u8);
-            writer.WriteBooleanValue(AllowPartialResult);
+            if (Optional.IsDefined(AllowPartialResult))
+            {
+                writer.WritePropertyName("allow_partial_result"u8);
+                writer.WriteBooleanValue(AllowPartialResult.Value);
+            }
             if (Optional.IsCollectionDefined(IncludeContexts))
             {
                 writer.WritePropertyName("include_contexts"u8);
@@ -75,16 +78,17 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            writer.WritePropertyName("environment"u8);
-            writer.WriteStringValue(Environment);
-            writer.WritePropertyName("index_name"u8);
-            writer.WriteStringValue(IndexName);
-            writer.WritePropertyName("embedding_dependency"u8);
-            writer.WriteObjectValue(EmbeddingDependency, options);
-            writer.WritePropertyName("fields_mapping"u8);
-            writer.WriteObjectValue(FieldsMapping, options);
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
+            writer.WritePropertyName("project_resource_id"u8);
+            writer.WriteStringValue(ProjectResourceId);
+            writer.WritePropertyName("name"u8);
+            writer.WriteStringValue(Name);
+            writer.WritePropertyName("version"u8);
+            writer.WriteStringValue(Version);
+            if (Optional.IsDefined(Filter))
+            {
+                writer.WritePropertyName("filter"u8);
+                writer.WriteStringValue(Filter);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -103,19 +107,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        AzureChatPineconeDataSource IJsonModel<AzureChatPineconeDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AzureMachineLearningIndexChatDataSourceParameters IJsonModel<AzureMachineLearningIndexChatDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatPineconeDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatPineconeDataSource)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureMachineLearningIndexChatDataSourceParameters)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureChatPineconeDataSource(document.RootElement, options);
+            return DeserializeAzureMachineLearningIndexChatDataSourceParameters(document.RootElement, options);
         }
 
-        internal static AzureChatPineconeDataSource DeserializeAzureChatPineconeDataSource(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AzureMachineLearningIndexChatDataSourceParameters DeserializeAzureMachineLearningIndexChatDataSourceParameters(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -129,13 +133,12 @@ namespace Azure.AI.OpenAI.Chat
             int? strictness = default;
             string roleInformation = default;
             int? maxSearchQueries = default;
-            bool allowPartialResult = default;
+            bool? allowPartialResult = default;
             IReadOnlyList<BinaryData> includeContexts = default;
-            string environment = default;
-            string indexName = default;
-            AzureChatDataSourceVectorizationSource embeddingDependency = default;
-            AzureChatPineconeDataSourceFieldsMapping fieldsMapping = default;
-            string type = default;
+            string projectResourceId = default;
+            string name = default;
+            string version = default;
+            string filter = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -192,6 +195,10 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 if (property.NameEquals("allow_partial_result"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     allowPartialResult = property.Value.GetBoolean();
                     continue;
                 }
@@ -216,29 +223,24 @@ namespace Azure.AI.OpenAI.Chat
                     includeContexts = array;
                     continue;
                 }
-                if (property.NameEquals("environment"u8))
+                if (property.NameEquals("project_resource_id"u8))
                 {
-                    environment = property.Value.GetString();
+                    projectResourceId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("index_name"u8))
+                if (property.NameEquals("name"u8))
                 {
-                    indexName = property.Value.GetString();
+                    name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("embedding_dependency"u8))
+                if (property.NameEquals("version"u8))
                 {
-                    embeddingDependency = AzureChatDataSourceVectorizationSource.DeserializeAzureChatDataSourceVectorizationSource(property.Value, options);
+                    version = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("fields_mapping"u8))
+                if (property.NameEquals("filter"u8))
                 {
-                    fieldsMapping = AzureChatPineconeDataSourceFieldsMapping.DeserializeAzureChatPineconeDataSourceFieldsMapping(property.Value, options);
-                    continue;
-                }
-                if (property.NameEquals("type"u8))
-                {
-                    type = property.Value.GetString();
+                    filter = property.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -247,9 +249,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureChatPineconeDataSource(
-                type,
-                serializedAdditionalRawData,
+            return new AzureMachineLearningIndexChatDataSourceParameters(
                 authentication,
                 topNDocuments,
                 inScope,
@@ -258,53 +258,54 @@ namespace Azure.AI.OpenAI.Chat
                 maxSearchQueries,
                 allowPartialResult,
                 includeContexts ?? new ChangeTrackingList<BinaryData>(),
-                environment,
-                indexName,
-                embeddingDependency,
-                fieldsMapping);
+                projectResourceId,
+                name,
+                version,
+                filter,
+                serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureChatPineconeDataSource>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatPineconeDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatPineconeDataSource)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureMachineLearningIndexChatDataSourceParameters)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureChatPineconeDataSource IPersistableModel<AzureChatPineconeDataSource>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AzureMachineLearningIndexChatDataSourceParameters IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatPineconeDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureChatPineconeDataSource(document.RootElement, options);
+                        return DeserializeAzureMachineLearningIndexChatDataSourceParameters(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatPineconeDataSource)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureMachineLearningIndexChatDataSourceParameters)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureChatPineconeDataSource>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new AzureChatPineconeDataSource FromResponse(PipelineResponse response)
+        internal static AzureMachineLearningIndexChatDataSourceParameters FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureChatPineconeDataSource(document.RootElement);
+            return DeserializeAzureMachineLearningIndexChatDataSourceParameters(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal override BinaryContent ToBinaryContent()
+        internal virtual BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

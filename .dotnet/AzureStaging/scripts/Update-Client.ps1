@@ -21,6 +21,7 @@ try {
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
   Invoke { .$PSScriptRoot/Prune-Generated-Files.ps1 }
+  Invoke { .$PSScriptRoot/Make-Internals-Settable.ps1 }
   Partialize-ClientPipelineExtensions
 }
 finally {

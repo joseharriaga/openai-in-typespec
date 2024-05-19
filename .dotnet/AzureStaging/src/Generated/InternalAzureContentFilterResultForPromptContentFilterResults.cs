@@ -89,22 +89,23 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the sexual. </summary>
-        public ContentFilterSeverityResult Sexual { get; }
+        internal ContentFilterSeverityResult Sexual { get; set; }
         /// <summary> Gets the violence. </summary>
-        public ContentFilterSeverityResult Violence { get; }
+        internal ContentFilterSeverityResult Violence { get; set; }
         /// <summary> Gets the hate. </summary>
-        public ContentFilterSeverityResult Hate { get; }
+        internal ContentFilterSeverityResult Hate { get; set; }
         /// <summary> Gets the self harm. </summary>
-        public ContentFilterSeverityResult SelfHarm { get; }
+        internal ContentFilterSeverityResult SelfHarm { get; set; }
         /// <summary> Gets the profanity. </summary>
-        public ContentFilterDetectionResult Profanity { get; }
+        internal ContentFilterDetectionResult Profanity { get; set; }
         /// <summary> Gets the custom blocklists. </summary>
-        public ContentFilterBlocklistResult CustomBlocklists { get; }
+        internal ContentFilterBlocklistResult CustomBlocklists { get; set; }
         /// <summary> Gets the error. </summary>
-        public InternalAzureContentFilterResultForPromptContentFilterResultsError Error { get; }
+        internal InternalAzureContentFilterResultForPromptContentFilterResultsError Error { get; set; }
         /// <summary> Gets the jailbreak. </summary>
-        public ContentFilterDetectionResult Jailbreak { get; }
+        internal ContentFilterDetectionResult Jailbreak { get; set; }
         /// <summary> Gets the indirect attack. </summary>
-        public ContentFilterDetectionResult IndirectAttack { get; }
+        internal ContentFilterDetectionResult IndirectAttack { get; set; }
     }
 }
+

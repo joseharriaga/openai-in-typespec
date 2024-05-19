@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    public partial class AzureChatSearchDataSourceParametersFieldsMapping : IJsonModel<AzureChatSearchDataSourceParametersFieldsMapping>
+    public partial class AzureSearchChatDataSourceParametersFieldsMapping : IJsonModel<AzureSearchChatDataSourceParametersFieldsMapping>
     {
-        void IJsonModel<AzureChatSearchDataSourceParametersFieldsMapping>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AzureSearchChatDataSourceParametersFieldsMapping>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatSearchDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureSearchChatDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatSearchDataSourceParametersFieldsMapping)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureSearchChatDataSourceParametersFieldsMapping)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -89,19 +89,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        AzureChatSearchDataSourceParametersFieldsMapping IJsonModel<AzureChatSearchDataSourceParametersFieldsMapping>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AzureSearchChatDataSourceParametersFieldsMapping IJsonModel<AzureSearchChatDataSourceParametersFieldsMapping>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatSearchDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureSearchChatDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatSearchDataSourceParametersFieldsMapping)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureSearchChatDataSourceParametersFieldsMapping)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureChatSearchDataSourceParametersFieldsMapping(document.RootElement, options);
+            return DeserializeAzureSearchChatDataSourceParametersFieldsMapping(document.RootElement, options);
         }
 
-        internal static AzureChatSearchDataSourceParametersFieldsMapping DeserializeAzureChatSearchDataSourceParametersFieldsMapping(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AzureSearchChatDataSourceParametersFieldsMapping DeserializeAzureSearchChatDataSourceParametersFieldsMapping(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -188,7 +188,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureChatSearchDataSourceParametersFieldsMapping(
+            return new AzureSearchChatDataSourceParametersFieldsMapping(
                 titleField,
                 urlField,
                 filepathField,
@@ -199,43 +199,43 @@ namespace Azure.AI.OpenAI.Chat
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureChatSearchDataSourceParametersFieldsMapping>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AzureSearchChatDataSourceParametersFieldsMapping>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatSearchDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureSearchChatDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatSearchDataSourceParametersFieldsMapping)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureSearchChatDataSourceParametersFieldsMapping)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureChatSearchDataSourceParametersFieldsMapping IPersistableModel<AzureChatSearchDataSourceParametersFieldsMapping>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AzureSearchChatDataSourceParametersFieldsMapping IPersistableModel<AzureSearchChatDataSourceParametersFieldsMapping>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatSearchDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureSearchChatDataSourceParametersFieldsMapping>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureChatSearchDataSourceParametersFieldsMapping(document.RootElement, options);
+                        return DeserializeAzureSearchChatDataSourceParametersFieldsMapping(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatSearchDataSourceParametersFieldsMapping)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureSearchChatDataSourceParametersFieldsMapping)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureChatSearchDataSourceParametersFieldsMapping>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AzureSearchChatDataSourceParametersFieldsMapping>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AzureChatSearchDataSourceParametersFieldsMapping FromResponse(PipelineResponse response)
+        internal static AzureSearchChatDataSourceParametersFieldsMapping FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureChatSearchDataSourceParametersFieldsMapping(document.RootElement);
+            return DeserializeAzureSearchChatDataSourceParametersFieldsMapping(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

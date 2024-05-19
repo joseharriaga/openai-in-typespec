@@ -1,7 +1,7 @@
 $generatedCodeRoot = Join-Path $PSScriptRoot .. src Generated -Resolve
 
 $patternsToKeep = @(
-    "AzureChat*DataSource",
+    "*ChatDataSource",
     "ContentFilter",
     "OpenAI*Error"
 )

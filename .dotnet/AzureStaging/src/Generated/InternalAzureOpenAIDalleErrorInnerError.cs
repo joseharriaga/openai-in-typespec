@@ -61,10 +61,11 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the code. </summary>
-        public string Code { get; }
+        internal string Code { get; set; }
         /// <summary> Gets the revised prompt. </summary>
-        public string RevisedPrompt { get; }
+        internal string RevisedPrompt { get; set; }
         /// <summary> Gets the content filter results. </summary>
-        public ImagePromptContentFilterResult ContentFilterResults { get; }
+        internal ImagePromptContentFilterResult ContentFilterResults { get; set; }
     }
 }
+

@@ -130,111 +130,6 @@ components:
                   - data_source_index
       allOf:
         - $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
-    AzureChatCosmosDBDataSource:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum:
-            - AzureCosmosDB
-        parameters:
-          type: object
-          properties:
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-              description: The authentication mechanism to use with the data source.
-            top_n_documents:
-              type: integer
-              format: int32
-              description: The configured number of documents to feature in the query.
-            in_scope:
-              type: boolean
-              description: Whether queries should be restricted to use of the indexed data.
-            strictness:
-              type: integer
-              format: int32
-              minimum: 1
-              maximum: 5
-              description: |-
-                The configured strictness of the search relevance filtering.
-                Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
-            max_search_queries:
-              type: integer
-              format: int32
-              description: |-
-                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-                By default, the system will make an automatic determination.
-            allow_partial_result:
-              type: boolean
-              description: |-
-                If set to true, the system will allow partial search results to be used and the request will fail if all
-                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-              default: false
-            include_contexts:
-              type: array
-              items:
-                type: string
-                enum:
-                  - citations
-                  - intent
-                  - all_retrieved_documents
-              maxItems: 3
-              description: |-
-                The output context properties to include on the response.
-                By default, citations and intent will be requested.
-              default:
-                - citations
-                - intent
-            container_name:
-              type: string
-            database_name:
-              type: string
-            embedding_dependency:
-              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-            index_name:
-              type: string
-            fields_mapping:
-              type: object
-              properties:
-                content_fields:
-                  type: array
-                  items:
-                    type: string
-                vector_fields:
-                  type: array
-                  items:
-                    type: string
-                title_field:
-                  type: string
-                url_field:
-                  type: string
-                filepath_field:
-                  type: string
-                content_fields_separator:
-                  type: string
-              required:
-                - content_fields
-                - vector_fields
-          required:
-            - allow_partial_result
-            - container_name
-            - database_name
-            - embedding_dependency
-            - index_name
-            - fields_mapping
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
-      description: Represents a data source configuration that will use an Azure CosmosDB resource.
     AzureChatDataSource:
       type: object
       required:
@@ -245,11 +140,11 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          azure_search: '#/components/schemas/AzureChatSearchDataSource'
-          azure_ml_index: '#/components/schemas/AzureChatMachineLearningIndexDataSource'
-          AzureCosmosDB: '#/components/schemas/AzureChatCosmosDBDataSource'
-          elasticsearch: '#/components/schemas/AzureChatElasticsearchDataSource'
-          pinecone: '#/components/schemas/AzureChatPineconeDataSource'
+          azure_search: '#/components/schemas/AzureSearchChatDataSource'
+          azure_ml_index: '#/components/schemas/AzureMachineLearningIndexChatDataSource'
+          AzureCosmosDB: '#/components/schemas/AzureCosmosDBChatDataSource'
+          elasticsearch: '#/components/schemas/ElasticsearchChatDataSource'
+          pinecone: '#/components/schemas/PineconeChatDataSource'
       description: |-
         A representation of configuration data for a single Azure OpenAI chat data source.
         This will be used by a chat completions request that should use Azure OpenAI chat extensions to augment the
@@ -435,414 +330,6 @@ components:
           endpoint: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
           deployment_name: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
           model_id: '#/components/schemas/AzureChatDataSourceModelIdVectorizationSource'
-    AzureChatElasticsearchDataSource:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum:
-            - elasticsearch
-        parameters:
-          type: object
-          properties:
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-              description: The authentication mechanism to use with the data source.
-            top_n_documents:
-              type: integer
-              format: int32
-              description: The configured number of documents to feature in the query.
-            in_scope:
-              type: boolean
-              description: Whether queries should be restricted to use of the indexed data.
-            strictness:
-              type: integer
-              format: int32
-              minimum: 1
-              maximum: 5
-              description: |-
-                The configured strictness of the search relevance filtering.
-                Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
-            max_search_queries:
-              type: integer
-              format: int32
-              description: |-
-                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-                By default, the system will make an automatic determination.
-            allow_partial_result:
-              type: boolean
-              description: |-
-                If set to true, the system will allow partial search results to be used and the request will fail if all
-                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-              default: false
-            include_contexts:
-              type: array
-              items:
-                type: string
-                enum:
-                  - citations
-                  - intent
-                  - all_retrieved_documents
-              maxItems: 3
-              description: |-
-                The output context properties to include on the response.
-                By default, citations and intent will be requested.
-              default:
-                - citations
-                - intent
-            endpoint:
-              type: string
-              format: uri
-            index_name:
-              type: string
-            fields_mapping:
-              type: object
-              properties:
-                title_field:
-                  type: string
-                url_field:
-                  type: string
-                filepath_field:
-                  type: string
-                content_fields:
-                  type: array
-                  items:
-                    type: string
-                content_fields_separator:
-                  type: string
-                vector_fields:
-                  type: array
-                  items:
-                    type: string
-            query_type:
-              type: string
-              enum:
-                - simple
-                - vector
-            embedding_dependency:
-              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-          required:
-            - allow_partial_result
-            - endpoint
-            - index_name
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
-    AzureChatMachineLearningIndexDataSource:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum:
-            - azure_ml_index
-        parameters:
-          type: object
-          properties:
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-              description: The authentication mechanism to use with the data source.
-            top_n_documents:
-              type: integer
-              format: int32
-              description: The configured number of documents to feature in the query.
-            in_scope:
-              type: boolean
-              description: Whether queries should be restricted to use of the indexed data.
-            strictness:
-              type: integer
-              format: int32
-              minimum: 1
-              maximum: 5
-              description: |-
-                The configured strictness of the search relevance filtering.
-                Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
-            max_search_queries:
-              type: integer
-              format: int32
-              description: |-
-                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-                By default, the system will make an automatic determination.
-            allow_partial_result:
-              type: boolean
-              description: |-
-                If set to true, the system will allow partial search results to be used and the request will fail if all
-                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-              default: false
-            include_contexts:
-              type: array
-              items:
-                type: string
-                enum:
-                  - citations
-                  - intent
-                  - all_retrieved_documents
-              maxItems: 3
-              description: |-
-                The output context properties to include on the response.
-                By default, citations and intent will be requested.
-              default:
-                - citations
-                - intent
-            project_resource_id:
-              type: string
-              description: The ID of the Azure Machine Learning index project to use.
-            name:
-              type: string
-              description: The name of the Azure Machine Learning index to use.
-            version:
-              type: string
-              description: The version of the vector index to use.
-            filter:
-              type: string
-              description: A search filter, which is only applicable if the vector index is of the 'AzureSearch' type.
-          required:
-            - allow_partial_result
-            - project_resource_id
-            - name
-            - version
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
-      description: Represents a data source configuration that will use an Azure Machine Learning vector index.
-    AzureChatPineconeDataSource:
-      type: object
-      required:
-        - type
-        - allow_partial_result
-        - environment
-        - index_name
-        - embedding_dependency
-        - fields_mapping
-      properties:
-        type:
-          type: string
-          enum:
-            - pinecone
-        authentication:
-          allOf:
-            - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-          description: The authentication mechanism to use with the data source.
-        top_n_documents:
-          type: integer
-          format: int32
-          description: The configured number of documents to feature in the query.
-        in_scope:
-          type: boolean
-          description: Whether queries should be restricted to use of the indexed data.
-        strictness:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 5
-          description: |-
-            The configured strictness of the search relevance filtering.
-            Higher strictness will increase precision but lower recall of the answer.
-        role_information:
-          type: string
-          description: |-
-            Additional instructions for the model to inform how it should behave and any context it should reference when
-            generating a response. You can describe the assistant's personality and tell it how to format responses.
-            This is limited to 100 tokens and counts against the overall token limit.
-        max_search_queries:
-          type: integer
-          format: int32
-          description: |-
-            The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-            By default, the system will make an automatic determination.
-        allow_partial_result:
-          type: boolean
-          description: |-
-            If set to true, the system will allow partial search results to be used and the request will fail if all
-            partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-          default: false
-        include_contexts:
-          type: array
-          items:
-            type: string
-            enum:
-              - citations
-              - intent
-              - all_retrieved_documents
-          maxItems: 3
-          description: |-
-            The output context properties to include on the response.
-            By default, citations and intent will be requested.
-          default:
-            - citations
-            - intent
-        environment:
-          type: string
-        index_name:
-          type: string
-        embedding_dependency:
-          $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-        fields_mapping:
-          type: object
-          properties:
-            content_fields:
-              type: array
-              items:
-                type: string
-            title_field:
-              type: string
-            url_field:
-              type: string
-            filepath_field:
-              type: string
-            content_fields_separator:
-              type: string
-          required:
-            - content_fields
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
-    AzureChatSearchDataSource:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum:
-            - azure_search
-          description: The discriminated type identifier, which is always 'azure_search'.
-        parameters:
-          type: object
-          properties:
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-              description: The authentication mechanism to use with the data source.
-            top_n_documents:
-              type: integer
-              format: int32
-              description: The configured number of documents to feature in the query.
-            in_scope:
-              type: boolean
-              description: Whether queries should be restricted to use of the indexed data.
-            strictness:
-              type: integer
-              format: int32
-              minimum: 1
-              maximum: 5
-              description: |-
-                The configured strictness of the search relevance filtering.
-                Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
-            max_search_queries:
-              type: integer
-              format: int32
-              description: |-
-                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-                By default, the system will make an automatic determination.
-            allow_partial_result:
-              type: boolean
-              description: |-
-                If set to true, the system will allow partial search results to be used and the request will fail if all
-                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-              default: false
-            include_contexts:
-              type: array
-              items:
-                type: string
-                enum:
-                  - citations
-                  - intent
-                  - all_retrieved_documents
-              maxItems: 3
-              description: |-
-                The output context properties to include on the response.
-                By default, citations and intent will be requested.
-              default:
-                - citations
-                - intent
-            endpoint:
-              type: string
-              format: uri
-              description: The absolute endpoint path for the Azure Search resource to use.
-            index_name:
-              type: string
-              description: The name of the index to use, as specified in the Azure Search resource.
-            fields_mapping:
-              type: object
-              properties:
-                title_field:
-                  type: string
-                  description: The name of the index field to use as a title.
-                url_field:
-                  type: string
-                  description: The name of the index field to use as a URL.
-                filepath_field:
-                  type: string
-                  description: The name of the index field to use as a filepath.
-                content_fields:
-                  type: array
-                  items:
-                    type: string
-                  description: The names of index fields that should be treated as content.
-                content_fields_separator:
-                  type: string
-                  description: The separator pattern that content fields should use.
-                vector_fields:
-                  type: array
-                  items:
-                    type: string
-                  description: THe names of fields that represent vector data.
-                image_vector_fields:
-                  type: array
-                  items:
-                    type: string
-                  description: The names of fields that represent image vector data.
-              description: The field mappings to use with the Azure Search resource.
-            query_type:
-              type: string
-              enum:
-                - simple
-                - semantic
-                - vector
-                - vector_simple_hybrid
-                - vector_semantic_hybrid
-              description: The query type for the Azure Search resource to use.
-            semantic_configuration:
-              type: string
-              description: Additional semantic configuration for the query.
-            filter:
-              type: string
-              description: A filter to apply to the search.
-            embedding_dependency:
-              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-          required:
-            - allow_partial_result
-            - endpoint
-            - index_name
-            - embedding_dependency
-          description: The parameter information to control the use of the Azure Search data source.
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
-      description: Represents a data source configuration that will use an Azure Search resource.
     AzureContentFilterBlocklistIdResult:
       type: object
       required:
@@ -1007,6 +494,110 @@ components:
             - low
             - medium
             - high
+    AzureCosmosDBChatDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - AzureCosmosDB
+        parameters:
+          type: object
+          properties:
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+              description: The authentication mechanism to use with the data source.
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            container_name:
+              type: string
+            database_name:
+              type: string
+            embedding_dependency:
+              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+            index_name:
+              type: string
+            fields_mapping:
+              type: object
+              properties:
+                content_fields:
+                  type: array
+                  items:
+                    type: string
+                vector_fields:
+                  type: array
+                  items:
+                    type: string
+                title_field:
+                  type: string
+                url_field:
+                  type: string
+                filepath_field:
+                  type: string
+                content_fields_separator:
+                  type: string
+              required:
+                - content_fields
+                - vector_fields
+          required:
+            - container_name
+            - database_name
+            - embedding_dependency
+            - index_name
+            - fields_mapping
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
+      description: Represents a data source configuration that will use an Azure CosmosDB resource.
     AzureCreateChatCompletionRequest:
       type: object
       properties:
@@ -1046,6 +637,90 @@ components:
           $ref: '#/components/schemas/AzureContentFilterImageResponseResults'
       allOf:
         - $ref: '#/components/schemas/OpenAI.Image'
+    AzureMachineLearningIndexChatDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - azure_ml_index
+        parameters:
+          type: object
+          properties:
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+              description: The authentication mechanism to use with the data source.
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            project_resource_id:
+              type: string
+              description: The ID of the Azure Machine Learning index project to use.
+            name:
+              type: string
+              description: The name of the Azure Machine Learning index to use.
+            version:
+              type: string
+              description: The version of the vector index to use.
+            filter:
+              type: string
+              description: A search filter, which is only applicable if the vector index is of the 'AzureSearch' type.
+          required:
+            - project_resource_id
+            - name
+            - version
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
+      description: Represents a data source configuration that will use an Azure Machine Learning vector index.
     AzureOpenAIChatError:
       type: object
       properties:
@@ -1090,6 +765,135 @@ components:
               type: string
             content_filter_results:
               $ref: '#/components/schemas/AzureContentFilterImagePromptResults'
+    AzureSearchChatDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - azure_search
+          description: The discriminated type identifier, which is always 'azure_search'.
+        parameters:
+          type: object
+          properties:
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+              description: The authentication mechanism to use with the data source.
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            endpoint:
+              type: string
+              format: uri
+              description: The absolute endpoint path for the Azure Search resource to use.
+            index_name:
+              type: string
+              description: The name of the index to use, as specified in the Azure Search resource.
+            fields_mapping:
+              type: object
+              properties:
+                title_field:
+                  type: string
+                  description: The name of the index field to use as a title.
+                url_field:
+                  type: string
+                  description: The name of the index field to use as a URL.
+                filepath_field:
+                  type: string
+                  description: The name of the index field to use as a filepath.
+                content_fields:
+                  type: array
+                  items:
+                    type: string
+                  description: The names of index fields that should be treated as content.
+                content_fields_separator:
+                  type: string
+                  description: The separator pattern that content fields should use.
+                vector_fields:
+                  type: array
+                  items:
+                    type: string
+                  description: THe names of fields that represent vector data.
+                image_vector_fields:
+                  type: array
+                  items:
+                    type: string
+                  description: The names of fields that represent image vector data.
+              description: The field mappings to use with the Azure Search resource.
+            query_type:
+              type: string
+              enum:
+                - simple
+                - semantic
+                - vector
+                - vector_simple_hybrid
+                - vector_semantic_hybrid
+              description: The query type for the Azure Search resource to use.
+            semantic_configuration:
+              type: string
+              description: Additional semantic configuration for the query.
+            filter:
+              type: string
+              description: A filter to apply to the search.
+            embedding_dependency:
+              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+          required:
+            - endpoint
+            - index_name
+            - embedding_dependency
+          description: The parameter information to control the use of the Azure Search data source.
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
+      description: Represents a data source configuration that will use an Azure Search resource.
     ChatCompletionMessageToolCallsItem:
       type: array
       items:
@@ -1130,6 +934,107 @@ components:
 
         `none` is the default when no tools are present. `auto` is the default if tools are present.
       x-oaiExpandable: true
+    ElasticsearchChatDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - elasticsearch
+        parameters:
+          type: object
+          properties:
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+              description: The authentication mechanism to use with the data source.
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            endpoint:
+              type: string
+              format: uri
+            index_name:
+              type: string
+            fields_mapping:
+              type: object
+              properties:
+                title_field:
+                  type: string
+                url_field:
+                  type: string
+                filepath_field:
+                  type: string
+                content_fields:
+                  type: array
+                  items:
+                    type: string
+                content_fields_separator:
+                  type: string
+                vector_fields:
+                  type: array
+                  items:
+                    type: string
+            query_type:
+              type: string
+              enum:
+                - simple
+                - vector
+            embedding_dependency:
+              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+          required:
+            - endpoint
+            - index_name
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
     OpenAI.ChatCompletionFunctionCallOption:
       type: object
       required:
@@ -1866,6 +1771,96 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OpenAI.Image'
+    PineconeChatDataSource:
+      type: object
+      required:
+        - type
+        - environment
+        - index_name
+        - embedding_dependency
+        - fields_mapping
+      properties:
+        type:
+          type: string
+          enum:
+            - pinecone
+        authentication:
+          allOf:
+            - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+          description: The authentication mechanism to use with the data source.
+        top_n_documents:
+          type: integer
+          format: int32
+          description: The configured number of documents to feature in the query.
+        in_scope:
+          type: boolean
+          description: Whether queries should be restricted to use of the indexed data.
+        strictness:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          description: |-
+            The configured strictness of the search relevance filtering.
+            Higher strictness will increase precision but lower recall of the answer.
+        role_information:
+          type: string
+          description: |-
+            Additional instructions for the model to inform how it should behave and any context it should reference when
+            generating a response. You can describe the assistant's personality and tell it how to format responses.
+            This is limited to 100 tokens and counts against the overall token limit.
+        max_search_queries:
+          type: integer
+          format: int32
+          description: |-
+            The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+            By default, the system will make an automatic determination.
+        allow_partial_result:
+          type: boolean
+          description: |-
+            If set to true, the system will allow partial search results to be used and the request will fail if all
+            partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+          default: false
+        include_contexts:
+          type: array
+          items:
+            type: string
+            enum:
+              - citations
+              - intent
+              - all_retrieved_documents
+          maxItems: 3
+          description: |-
+            The output context properties to include on the response.
+            By default, citations and intent will be requested.
+          default:
+            - citations
+            - intent
+        environment:
+          type: string
+        index_name:
+          type: string
+        embedding_dependency:
+          $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+        fields_mapping:
+          type: object
+          properties:
+            content_fields:
+              type: array
+              items:
+                type: string
+            title_field:
+              type: string
+            url_field:
+              type: string
+            filepath_field:
+              type: string
+            content_fields_separator:
+              type: string
+          required:
+            - content_fields
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -8,12 +8,12 @@ using System.Collections.Generic;
 namespace Azure.AI.OpenAI.Chat
 {
     /// <summary> Represents a data source configuration that will use an Azure CosmosDB resource. </summary>
-    public partial class AzureChatCosmosDBDataSource : AzureChatDataSource
+    public partial class AzureCosmosDBChatDataSource : AzureChatDataSource
     {
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSource"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureCosmosDBChatDataSource"/>. </summary>
         /// <param name="parameters"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="parameters"/> is null. </exception>
-        internal AzureChatCosmosDBDataSource(AzureChatCosmosDBDataSourceParameters parameters)
+        internal AzureCosmosDBChatDataSource(AzureCosmosDBChatDataSourceParameters parameters)
         {
             Argument.AssertNotNull(parameters, nameof(parameters));
 
@@ -21,21 +21,21 @@ namespace Azure.AI.OpenAI.Chat
             Parameters = parameters;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSource"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureCosmosDBChatDataSource"/>. </summary>
         /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="parameters"></param>
-        internal AzureChatCosmosDBDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, AzureChatCosmosDBDataSourceParameters parameters) : base(type, serializedAdditionalRawData)
+        internal AzureCosmosDBChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, AzureCosmosDBChatDataSourceParameters parameters) : base(type, serializedAdditionalRawData)
         {
             Parameters = parameters;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatCosmosDBDataSource"/> for deserialization. </summary>
-        internal AzureChatCosmosDBDataSource()
+        /// <summary> Initializes a new instance of <see cref="AzureCosmosDBChatDataSource"/> for deserialization. </summary>
+        internal AzureCosmosDBChatDataSource()
         {
         }
 
         /// <summary> Gets the parameters. </summary>
-        public AzureChatCosmosDBDataSourceParameters Parameters { get; }
+        public AzureCosmosDBChatDataSourceParameters Parameters { get; }
     }
 }

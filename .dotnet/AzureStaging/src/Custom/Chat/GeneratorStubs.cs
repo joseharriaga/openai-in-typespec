@@ -13,18 +13,17 @@ namespace Azure.AI.OpenAI.Chat;
 [CodeGenModel("AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions")] public partial class AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions { }
 [CodeGenModel("AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions")] public partial class AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions { }
 [CodeGenModel("AzureChatDataSourceVectorizationSource")] public partial class AzureChatDataSourceVectorizationSource { }
-[CodeGenModel("AzureChatCosmosDBDataSource")] public partial class AzureChatCosmosDBDataSource { }
-[CodeGenModel("AzureChatCosmosDBDataSourceParameters")] public partial class AzureChatCosmosDBDataSourceParameters { }
-[CodeGenModel("AzureChatCosmosDBDataSourceParametersFieldsMapping")] public partial class AzureChatCosmosDBDataSourceParametersFieldsMapping { }
-[CodeGenModel("AzureChatElasticsearchDataSource")] public partial class AzureChatElasticsearchDataSource { }
-[CodeGenModel("AzureChatElasticsearchDataSourceParameters")] public partial class AzureChatElasticsearchDataSourceParameters { }
-[CodeGenModel("AzureChatElasticsearchDataSourceParametersFieldsMapping")] public partial class AzureChatElasticsearchDataSourceParametersFieldsMapping { }
-[CodeGenModel("AzureChatElasticsearchDataSourceParametersQueryType")] public readonly partial struct AzureChatElasticsearchDataSourceParametersQueryType { }
-[CodeGenModel("AzureChatMachineLearningIndexDataSource")] public partial class AzureChatMachineLearningIndexDataSource { }
-[CodeGenModel("AzureChatMachineLearningIndexDataSourceParameters")] public partial class AzureChatMachineLearningIndexDataSourceParameters { }
-[CodeGenModel("AzureChatPineconeDataSource")] public partial class AzureChatPineconeDataSource { }
-[CodeGenModel("AzureChatPineconeDataSourceFieldsMapping")] public partial class AzureChatPineconeDataSourceFieldsMapping { }
-[CodeGenModel("AzureChatSearchDataSource")] public partial class AzureChatSearchDataSource { }
-[CodeGenModel("AzureChatSearchDataSourceParameters")] public partial class AzureChatSearchDataSourceParameters { }
-[CodeGenModel("AzureChatSearchDataSourceParametersFieldsMapping")] public partial class AzureChatSearchDataSourceParametersFieldsMapping { }
-[CodeGenModel("AzureChatSearchDataSourceParametersQueryType")] public readonly partial struct AzureChatSearchDataSourceParametersQueryType { }
+[CodeGenModel("AzureCosmosDBChatDataSource")] public partial class AzureCosmosDBChatDataSource { }
+[CodeGenModel("AzureCosmosDBChatDataSourceParameters")] public partial class AzureCosmosDBChatDataSourceParameters { }
+[CodeGenModel("AzureCosmosDBChatDataSourceParametersFieldsMapping")] public partial class AzureCosmosDBChatDataSourceParametersFieldsMapping { }
+[CodeGenModel("ElasticsearchChatDataSource")] public partial class ElasticsearchChatDataSource { }
+[CodeGenModel("ElasticsearchChatDataSourceParameters")] public partial class ElasticsearchChatDataSourceParameters { }
+[CodeGenModel("ElasticsearchChatDataSourceParametersFieldsMapping")] public partial class ElasticsearchChatDataSourceParametersFieldsMapping { }
+[CodeGenModel("ElasticsearchChatDataSourceParametersQueryType")] public readonly partial struct ElasticsearchChatDataSourceParametersQueryType { }
+[CodeGenModel("AzureMachineLearningIndexChatDataSource")] public partial class AzureMachineLearningIndexChatDataSource { }
+[CodeGenModel("AzureMachineLearningIndexChatDataSourceParameters")] public partial class AzureMachineLearningIndexChatDataSourceParameters { }
+[CodeGenModel("PineconeChatDataSource")] public partial class PineconeChatDataSource { }
+[CodeGenModel("PineconeChatDataSourceFieldsMapping")] public partial class PineconeChatDataSourceFieldsMapping { }
+
+[CodeGenModel("AzureSearchChatDataSourceParametersFieldsMapping")] public partial class AzureSearchChatDataSourceParametersFieldsMapping { }
+[CodeGenModel("AzureSearchChatDataSourceParametersQueryType")] public readonly partial struct AzureSearchChatDataSourceParametersQueryType { }

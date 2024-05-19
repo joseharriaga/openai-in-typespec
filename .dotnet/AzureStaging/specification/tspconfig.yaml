@@ -3,13 +3,14 @@ emit:
   - "@azure-tools/typespec-csharp"
 options:
   "@typespec/openapi3":
-    output-file: "{project-root}/tsp-output/azure-openai-openapi3.yaml"
+    output-file: "{project-root}/azure-openai-openapi3.yaml"
   "@azure-tools/typespec-csharp":
     namespace: "Azure.AI.OpenAI"
-    emitter-output-dir: "{project-root}/tsp-output"
+    emitter-output-dir: "{project-root}/../src"
     generate-convenience-methods: false
     unreferenced-types-handling: keepAll
     model-namespace: false
     generate-test-project: false
     single-top-level-client: true
+    new-project: false
     flavor: "unbranded"

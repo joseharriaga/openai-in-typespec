@@ -11,11 +11,13 @@ model AzureOpenAIError<T> {
     code?: "ResponsibleAIPolicyViolation";
     revised_prompt?: string;
     content_filter_results?: T;
-  }
+  };
 }
 
-model AzureOpenAIChatError is AzureOpenAIError<AzureContentFilterResultForPrompt>;
-model AzureOpenAIDalleError is AzureOpenAIError<AzureContentFilterImagePromptResults>;
+model AzureOpenAIChatError
+  is AzureOpenAIError<AzureContentFilterResultForPrompt>;
+model AzureOpenAIDalleError
+  is AzureOpenAIError<AzureContentFilterImagePromptResults>;
 
 model AzureOpenAIErrorResponse<T> {
   error?: T;

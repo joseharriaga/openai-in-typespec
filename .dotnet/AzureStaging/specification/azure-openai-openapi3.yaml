@@ -1,0 +1,1889 @@
+openapi: 3.0.0
+info:
+  title: Azure OpenAI Service
+  description: The OpenAI REST API. Please see https://platform.openai.com/docs/api-reference for more details.
+  version: 0.0.0
+tags:
+  - name: Chat
+  - name: Images
+paths:
+  /chat/completions:
+    post:
+      tags:
+        - Chat
+      operationId: createChatCompletion
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/AzureCreateChatCompletionResponse'
+                  - type: object
+                    properties:
+                      error:
+                        $ref: '#/components/schemas/AzureOpenAIChatError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AzureCreateChatCompletionRequest'
+  /deployments/{deploymentId}/images/generations:
+    post:
+      tags:
+        - Images
+      operationId: ImageGenerations_Create
+      parameters:
+        - name: deploymentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/OpenAI.ImagesResponse'
+                  - type: object
+                    properties:
+                      error:
+                        $ref: '#/components/schemas/AzureOpenAIDalleError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenAI.CreateImageRequest'
+security:
+  - ApiKeyAuth: []
+  - OAuth2Auth:
+      - https://cognitiveservices.azure.com/.default
+components:
+  schemas:
+    AzureChatCompletionResponseMessage:
+      type: object
+      properties:
+        context:
+          type: object
+          properties:
+            intent:
+              type: string
+            citations:
+              type: array
+              items:
+                type: object
+                properties:
+                  content:
+                    type: string
+                  title:
+                    type: string
+                  url:
+                    type: string
+                  filepath:
+                    type: string
+                  chunk_id:
+                    type: string
+                required:
+                  - content
+            all_retrieved_documents:
+              type: array
+              items:
+                type: object
+                properties:
+                  content:
+                    type: string
+                  title:
+                    type: string
+                  url:
+                    type: string
+                  filepath:
+                    type: string
+                  chunk_id:
+                    type: string
+                  search_queries:
+                    type: array
+                    items:
+                      type: string
+                  data_source_index:
+                    type: integer
+                    format: int32
+                  original_search_score:
+                    type: number
+                    format: double
+                  rerank_score:
+                    type: number
+                    format: double
+                  filter_reason:
+                    type: string
+                    enum:
+                      - score
+                      - rerank
+                required:
+                  - content
+                  - search_queries
+                  - data_source_index
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
+    AzureChatCosmosDBDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - AzureCosmosDB
+        parameters:
+          type: object
+          properties:
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+              description: The authentication mechanism to use with the data source.
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            container_name:
+              type: string
+            database_name:
+              type: string
+            embedding_dependency:
+              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+            index_name:
+              type: string
+            fields_mapping:
+              type: object
+              properties:
+                content_fields:
+                  type: array
+                  items:
+                    type: string
+                vector_fields:
+                  type: array
+                  items:
+                    type: string
+                title_field:
+                  type: string
+                url_field:
+                  type: string
+                filepath_field:
+                  type: string
+                content_fields_separator:
+                  type: string
+              required:
+                - content_fields
+                - vector_fields
+          required:
+            - allow_partial_result
+            - container_name
+            - database_name
+            - embedding_dependency
+            - index_name
+            - fields_mapping
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
+      description: Represents a data source configuration that will use an Azure CosmosDB resource.
+    AzureChatDataSource:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          azure_search: '#/components/schemas/AzureChatSearchDataSource'
+          azure_ml_index: '#/components/schemas/AzureChatMachineLearningIndexDataSource'
+          AzureCosmosDB: '#/components/schemas/AzureChatCosmosDBDataSource'
+          elasticsearch: '#/components/schemas/AzureChatElasticsearchDataSource'
+          pinecone: '#/components/schemas/AzureChatPineconeDataSource'
+      description: |-
+        A representation of configuration data for a single Azure OpenAI chat data source.
+        This will be used by a chat completions request that should use Azure OpenAI chat extensions to augment the
+        response behavior.
+        The use of this configuration is compatible only with Azure OpenAI.
+    AzureChatDataSourceAccessTokenAuthenticationOptions:
+      type: object
+      required:
+        - type
+        - access_token
+      properties:
+        type:
+          type: string
+          enum:
+            - access_token
+        access_token:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+    AzureChatDataSourceApiKeyAuthenticationOptions:
+      type: object
+      required:
+        - type
+        - key
+      properties:
+        type:
+          type: string
+          enum:
+            - api_key
+        key:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+    AzureChatDataSourceAuthenticationOptions:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          api_key: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
+          connection_string: '#/components/schemas/AzureChatDataSourceConnectionStringAuthenticationOptions'
+          key_and_key_id: '#/components/schemas/AzureChatDataSourceKeyAndKeyIdAuthenticationOptions'
+          encoded_api_key: '#/components/schemas/AzureChatDataSourceEncodedApiKeyAuthenticationOptions'
+          access_token: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
+          system_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
+          user_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
+    AzureChatDataSourceConnectionStringAuthenticationOptions:
+      type: object
+      required:
+        - type
+        - connection_string
+      properties:
+        type:
+          type: string
+          enum:
+            - connection_string
+        connection_string:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+    AzureChatDataSourceDeploymentNameVectorizationSource:
+      type: object
+      required:
+        - type
+        - deployment_name
+      properties:
+        type:
+          type: string
+          enum:
+            - deployment_name
+        deployment_name:
+          type: string
+        dimensions:
+          type: integer
+          format: int32
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+    AzureChatDataSourceEncodedApiKeyAuthenticationOptions:
+      type: object
+      required:
+        - type
+        - encoded_api_key
+      properties:
+        type:
+          type: string
+          enum:
+            - encoded_api_key
+        encoded_api_key:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+    AzureChatDataSourceEndpointVectorizationSource:
+      type: object
+      required:
+        - type
+        - endpoint
+        - authentication
+      properties:
+        type:
+          type: string
+          enum:
+            - endpoint
+        endpoint:
+          type: string
+          format: uri
+        authentication:
+          $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+        dimensions:
+          type: integer
+          format: int32
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+    AzureChatDataSourceKeyAndKeyIdAuthenticationOptions:
+      type: object
+      required:
+        - type
+        - key
+        - key_id
+      properties:
+        type:
+          type: string
+          enum:
+            - key_and_key_id
+        key:
+          type: string
+        key_id:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+    AzureChatDataSourceModelIdVectorizationSource:
+      type: object
+      required:
+        - type
+        - model_id
+      properties:
+        type:
+          type: string
+          enum:
+            - model_id
+        model_id:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+    AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - system_assigned_managed_identity
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+    AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions:
+      type: object
+      required:
+        - type
+        - managed_identity_resource_id
+      properties:
+        type:
+          type: string
+          enum:
+            - user_assigned_managed_identity
+        managed_identity_resource_id:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+    AzureChatDataSourceVectorizationSource:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          endpoint: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
+          deployment_name: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
+          model_id: '#/components/schemas/AzureChatDataSourceModelIdVectorizationSource'
+    AzureChatElasticsearchDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - elasticsearch
+        parameters:
+          type: object
+          properties:
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+              description: The authentication mechanism to use with the data source.
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            endpoint:
+              type: string
+              format: uri
+            index_name:
+              type: string
+            fields_mapping:
+              type: object
+              properties:
+                title_field:
+                  type: string
+                url_field:
+                  type: string
+                filepath_field:
+                  type: string
+                content_fields:
+                  type: array
+                  items:
+                    type: string
+                content_fields_separator:
+                  type: string
+                vector_fields:
+                  type: array
+                  items:
+                    type: string
+            query_type:
+              type: string
+              enum:
+                - simple
+                - vector
+            embedding_dependency:
+              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+          required:
+            - allow_partial_result
+            - endpoint
+            - index_name
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
+    AzureChatMachineLearningIndexDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - azure_ml_index
+        parameters:
+          type: object
+          properties:
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+              description: The authentication mechanism to use with the data source.
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            project_resource_id:
+              type: string
+              description: The ID of the Azure Machine Learning index project to use.
+            name:
+              type: string
+              description: The name of the Azure Machine Learning index to use.
+            version:
+              type: string
+              description: The version of the vector index to use.
+            filter:
+              type: string
+              description: A search filter, which is only applicable if the vector index is of the 'AzureSearch' type.
+          required:
+            - allow_partial_result
+            - project_resource_id
+            - name
+            - version
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
+      description: Represents a data source configuration that will use an Azure Machine Learning vector index.
+    AzureChatPineconeDataSource:
+      type: object
+      required:
+        - type
+        - allow_partial_result
+        - environment
+        - index_name
+        - embedding_dependency
+        - fields_mapping
+      properties:
+        type:
+          type: string
+          enum:
+            - pinecone
+        authentication:
+          allOf:
+            - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+          description: The authentication mechanism to use with the data source.
+        top_n_documents:
+          type: integer
+          format: int32
+          description: The configured number of documents to feature in the query.
+        in_scope:
+          type: boolean
+          description: Whether queries should be restricted to use of the indexed data.
+        strictness:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          description: |-
+            The configured strictness of the search relevance filtering.
+            Higher strictness will increase precision but lower recall of the answer.
+        role_information:
+          type: string
+          description: |-
+            Additional instructions for the model to inform how it should behave and any context it should reference when
+            generating a response. You can describe the assistant's personality and tell it how to format responses.
+            This is limited to 100 tokens and counts against the overall token limit.
+        max_search_queries:
+          type: integer
+          format: int32
+          description: |-
+            The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+            By default, the system will make an automatic determination.
+        allow_partial_result:
+          type: boolean
+          description: |-
+            If set to true, the system will allow partial search results to be used and the request will fail if all
+            partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+          default: false
+        include_contexts:
+          type: array
+          items:
+            type: string
+            enum:
+              - citations
+              - intent
+              - all_retrieved_documents
+          maxItems: 3
+          description: |-
+            The output context properties to include on the response.
+            By default, citations and intent will be requested.
+          default:
+            - citations
+            - intent
+        environment:
+          type: string
+        index_name:
+          type: string
+        embedding_dependency:
+          $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+        fields_mapping:
+          type: object
+          properties:
+            content_fields:
+              type: array
+              items:
+                type: string
+            title_field:
+              type: string
+            url_field:
+              type: string
+            filepath_field:
+              type: string
+            content_fields_separator:
+              type: string
+          required:
+            - content_fields
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
+    AzureChatSearchDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - azure_search
+          description: The discriminated type identifier, which is always 'azure_search'.
+        parameters:
+          type: object
+          properties:
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+              description: The authentication mechanism to use with the data source.
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            endpoint:
+              type: string
+              format: uri
+              description: The absolute endpoint path for the Azure Search resource to use.
+            index_name:
+              type: string
+              description: The name of the index to use, as specified in the Azure Search resource.
+            fields_mapping:
+              type: object
+              properties:
+                title_field:
+                  type: string
+                  description: The name of the index field to use as a title.
+                url_field:
+                  type: string
+                  description: The name of the index field to use as a URL.
+                filepath_field:
+                  type: string
+                  description: The name of the index field to use as a filepath.
+                content_fields:
+                  type: array
+                  items:
+                    type: string
+                  description: The names of index fields that should be treated as content.
+                content_fields_separator:
+                  type: string
+                  description: The separator pattern that content fields should use.
+                vector_fields:
+                  type: array
+                  items:
+                    type: string
+                  description: THe names of fields that represent vector data.
+                image_vector_fields:
+                  type: array
+                  items:
+                    type: string
+                  description: The names of fields that represent image vector data.
+              description: The field mappings to use with the Azure Search resource.
+            query_type:
+              type: string
+              enum:
+                - simple
+                - semantic
+                - vector
+                - vector_simple_hybrid
+                - vector_semantic_hybrid
+              description: The query type for the Azure Search resource to use.
+            semantic_configuration:
+              type: string
+              description: Additional semantic configuration for the query.
+            filter:
+              type: string
+              description: A filter to apply to the search.
+            embedding_dependency:
+              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+          required:
+            - allow_partial_result
+            - endpoint
+            - index_name
+            - embedding_dependency
+          description: The parameter information to control the use of the Azure Search data source.
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
+      description: Represents a data source configuration that will use an Azure Search resource.
+    AzureContentFilterBlocklistIdResult:
+      type: object
+      required:
+        - id
+        - filtered
+      properties:
+        id:
+          type: string
+        filtered:
+          type: boolean
+    AzureContentFilterBlocklistResult:
+      type: object
+      required:
+        - filtered
+      properties:
+        filtered:
+          type: boolean
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              filtered:
+                type: boolean
+              id:
+                type: string
+            required:
+              - filtered
+              - id
+    AzureContentFilterDetectionResult:
+      type: object
+      required:
+        - filtered
+        - detected
+      properties:
+        filtered:
+          type: boolean
+        detected:
+          type: boolean
+    AzureContentFilterImagePromptResults:
+      type: object
+      required:
+        - jailbreak
+      properties:
+        profanity:
+          $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+        custom_blocklists:
+          $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+        jailbreak:
+          $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+      allOf:
+        - $ref: '#/components/schemas/AzureContentFilterImageResponseResults'
+    AzureContentFilterImageResponseResults:
+      type: object
+      properties:
+        sexual:
+          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+        violence:
+          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+        hate:
+          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+        self_harm:
+          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+    AzureContentFilterResultForChoice:
+      type: object
+      required:
+        - error
+      properties:
+        sexual:
+          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+        violence:
+          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+        hate:
+          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+        self_harm:
+          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+        profanity:
+          $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+        custom_blocklists:
+          $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+          required:
+            - code
+            - message
+        protected_material_text:
+          $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+        protected_material_code:
+          type: object
+          properties:
+            filtered:
+              type: boolean
+            detected:
+              type: boolean
+            citation:
+              type: object
+              properties:
+                license:
+                  type: string
+                URL:
+                  type: string
+                  format: uri
+          required:
+            - filtered
+            - detected
+    AzureContentFilterResultForPrompt:
+      type: object
+      properties:
+        prompt_index:
+          type: integer
+          format: int32
+        content_filter_results:
+          type: object
+          properties:
+            sexual:
+              $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+            violence:
+              $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+            hate:
+              $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+            self_harm:
+              $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+            profanity:
+              $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+            custom_blocklists:
+              $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+            error:
+              type: object
+              properties:
+                code:
+                  type: string
+                message:
+                  type: string
+              required:
+                - code
+                - message
+            jailbreak:
+              $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+            indirect_attack:
+              $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          required:
+            - error
+            - jailbreak
+            - indirect_attack
+    AzureContentFilterSeverityResult:
+      type: object
+      required:
+        - filtered
+        - severity
+      properties:
+        filtered:
+          type: boolean
+        severity:
+          type: string
+          enum:
+            - safe
+            - low
+            - medium
+            - high
+    AzureCreateChatCompletionRequest:
+      type: object
+      properties:
+        data_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureChatDataSource'
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.CreateChatCompletionRequest'
+    AzureCreateChatCompletionResponse:
+      type: object
+      properties:
+        prompt_filter_results:
+          type: array
+          items:
+            type: object
+            properties:
+              prompt_index:
+                type: integer
+                format: int32
+              content_filter_results:
+                $ref: '#/components/schemas/AzureContentFilterResultForPrompt'
+            required:
+              - prompt_index
+              - content_filter_results
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.CreateChatCompletionResponse'
+    AzureImage:
+      type: object
+      required:
+        - prompt_filter_results
+        - content_filter_results
+      properties:
+        prompt_filter_results:
+          $ref: '#/components/schemas/AzureContentFilterImagePromptResults'
+        content_filter_results:
+          $ref: '#/components/schemas/AzureContentFilterImageResponseResults'
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.Image'
+    AzureOpenAIChatError:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+        inner_error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+                - ResponsibleAIPolicyViolation
+            revised_prompt:
+              type: string
+            content_filter_results:
+              $ref: '#/components/schemas/AzureContentFilterResultForPrompt'
+    AzureOpenAIDalleError:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+        inner_error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+                - ResponsibleAIPolicyViolation
+            revised_prompt:
+              type: string
+            content_filter_results:
+              $ref: '#/components/schemas/AzureContentFilterImagePromptResults'
+    ChatCompletionMessageToolCallsItem:
+      type: array
+      items:
+        $ref: '#/components/schemas/OpenAI.ChatCompletionMessageToolCall'
+      description: The tool calls generated by the model, such as function calls.
+    ChatCompletionRequestMessage:
+      anyOf:
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestSystemMessage'
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestUserMessage'
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestAssistantMessage'
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestToolMessage'
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestFunctionMessage'
+      x-oaiExpandable: true
+    ChatCompletionRequestMessageContentPart:
+      anyOf:
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessageContentPartText'
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessageContentPartImage'
+      x-oaiExpandable: true
+    ChatCompletionTokenLogprobBytes:
+      type: array
+      items:
+        type: integer
+        format: int32
+    ChatCompletionToolChoiceOption:
+      anyOf:
+        - type: string
+          enum:
+            - none
+            - auto
+            - required
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionNamedToolChoice'
+      description: |-
+        Controls which (if any) tool is called by the model.
+        `none` means the model will not call any tool and instead generates a message.
+        `auto` means the model can pick between generating a message or calling one or more tools.
+        `required` means the model must call one or more tools.
+        Specifying a particular tool via `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+
+        `none` is the default when no tools are present. `auto` is the default if tools are present.
+      x-oaiExpandable: true
+    OpenAI.ChatCompletionFunctionCallOption:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The name of the function to call.
+      description: 'Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.'
+    OpenAI.ChatCompletionFunctions:
+      type: object
+      required:
+        - name
+      properties:
+        description:
+          type: string
+          description: A description of what the function does, used by the model to choose when and how to call the function.
+        name:
+          type: string
+          description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+        parameters:
+          $ref: '#/components/schemas/OpenAI.FunctionParameters'
+      deprecated: true
+    OpenAI.ChatCompletionMessageToolCall:
+      type: object
+      required:
+        - id
+        - type
+        - function
+      properties:
+        id:
+          type: string
+          description: The ID of the tool call.
+        type:
+          type: string
+          enum:
+            - function
+          description: The type of the tool. Currently, only `function` is supported.
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the function to call.
+            arguments:
+              type: string
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
+          required:
+            - name
+            - arguments
+          description: The function that the model called.
+    OpenAI.ChatCompletionNamedToolChoice:
+      type: object
+      required:
+        - type
+        - function
+      properties:
+        type:
+          type: string
+          enum:
+            - function
+          description: The type of the tool. Currently, only `function` is supported.
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the function to call.
+          required:
+            - name
+      description: Specifies a tool the model should use. Use to force the model to call a specific function.
+    OpenAI.ChatCompletionRequestAssistantMessage:
+      type: object
+      required:
+        - role
+      properties:
+        content:
+          type: string
+          nullable: true
+          description: The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
+        role:
+          type: string
+          enum:
+            - assistant
+          description: The role of the messages author, in this case `assistant`.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+        tool_calls:
+          $ref: '#/components/schemas/ChatCompletionMessageToolCallsItem'
+        function_call:
+          type: object
+          properties:
+            arguments:
+              type: string
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
+            name:
+              type: string
+              description: The name of the function to call.
+          required:
+            - arguments
+            - name
+          description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
+          deprecated: true
+    OpenAI.ChatCompletionRequestFunctionMessage:
+      type: object
+      required:
+        - role
+        - content
+        - name
+      properties:
+        role:
+          type: string
+          enum:
+            - function
+          description: The role of the messages author, in this case `function`.
+        content:
+          type: string
+          nullable: true
+          description: The contents of the function message.
+        name:
+          type: string
+          description: The name of the function to call.
+      deprecated: true
+    OpenAI.ChatCompletionRequestMessageContentPartImage:
+      type: object
+      required:
+        - type
+        - image_url
+      properties:
+        type:
+          type: string
+          enum:
+            - image_url
+          description: The type of the content part.
+        image_url:
+          type: object
+          properties:
+            url:
+              type: string
+              format: uri
+              description: Either a URL of the image or the base64 encoded image data.
+            detail:
+              type: string
+              enum:
+                - auto
+                - low
+                - high
+              description: Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+              default: auto
+          required:
+            - url
+    OpenAI.ChatCompletionRequestMessageContentPartText:
+      type: object
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+          description: The type of the content part.
+        text:
+          type: string
+          description: The text content.
+    OpenAI.ChatCompletionRequestSystemMessage:
+      type: object
+      required:
+        - content
+        - role
+      properties:
+        content:
+          type: string
+          description: The contents of the system message.
+        role:
+          type: string
+          enum:
+            - system
+          description: The role of the messages author, in this case `system`.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+    OpenAI.ChatCompletionRequestToolMessage:
+      type: object
+      required:
+        - role
+        - content
+        - tool_call_id
+      properties:
+        role:
+          type: string
+          enum:
+            - tool
+          description: The role of the messages author, in this case `tool`.
+        content:
+          type: string
+          description: The contents of the tool message.
+        tool_call_id:
+          type: string
+          description: Tool call that this message is responding to.
+    OpenAI.ChatCompletionRequestUserMessage:
+      type: object
+      required:
+        - content
+        - role
+      properties:
+        content:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatCompletionRequestMessageContentPart'
+          description: The contents of the user message.
+          x-oaiExpandable: true
+        role:
+          type: string
+          enum:
+            - user
+          description: The role of the messages author, in this case `user`.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+    OpenAI.ChatCompletionResponseMessage:
+      type: object
+      required:
+        - content
+        - role
+      properties:
+        content:
+          type: string
+          nullable: true
+          description: The contents of the message.
+        tool_calls:
+          $ref: '#/components/schemas/ChatCompletionMessageToolCallsItem'
+        role:
+          type: string
+          enum:
+            - assistant
+          description: The role of the author of this message.
+        function_call:
+          type: object
+          properties:
+            arguments:
+              type: string
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
+            name:
+              type: string
+              description: The name of the function to call.
+          required:
+            - arguments
+            - name
+          description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
+          deprecated: true
+      description: A chat completion message generated by the model.
+    OpenAI.ChatCompletionStreamOptions:
+      type: object
+      properties:
+        include_usage:
+          type: boolean
+          description: 'If set, an additional chunk will be streamed before the `data: [DONE]` message. The `usage` field on this chunk shows the token usage statistics for the entire request, and the `choices` field will always be an empty array. All other chunks will also include a `usage` field, but with a null value.'
+      description: 'Options for streaming response. Only set this when you set `stream: true`.'
+    OpenAI.ChatCompletionTokenLogprob:
+      type: object
+      required:
+        - token
+        - logprob
+        - bytes
+        - top_logprobs
+      properties:
+        token:
+          type: string
+          description: The token.
+        logprob:
+          type: number
+          format: float
+          description: The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
+        bytes:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/ChatCompletionTokenLogprobBytes'
+          nullable: true
+          description: A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
+        top_logprobs:
+          type: array
+          items:
+            type: object
+            properties:
+              token:
+                type: string
+                description: The token.
+              logprob:
+                type: number
+                format: float
+                description: The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
+              bytes:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+                nullable: true
+                description: A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
+            required:
+              - token
+              - logprob
+              - bytes
+          description: List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
+    OpenAI.ChatCompletionTool:
+      type: object
+      required:
+        - type
+        - function
+      properties:
+        type:
+          type: string
+          enum:
+            - function
+          description: The type of the tool. Currently, only `function` is supported.
+        function:
+          $ref: '#/components/schemas/OpenAI.FunctionObject'
+    OpenAI.CompletionUsage:
+      type: object
+      required:
+        - completion_tokens
+        - prompt_tokens
+        - total_tokens
+      properties:
+        completion_tokens:
+          type: integer
+          format: int32
+          description: Number of tokens in the generated completion.
+        prompt_tokens:
+          type: integer
+          format: int32
+          description: Number of tokens in the prompt.
+        total_tokens:
+          type: integer
+          format: int32
+          description: Total number of tokens used in the request (prompt + completion).
+      description: Usage statistics for the completion request.
+    OpenAI.CreateChatCompletionRequest:
+      type: object
+      required:
+        - messages
+        - model
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionRequestMessage'
+          minItems: 1
+          description: A list of messages comprising the conversation so far. [Example Python code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
+        model:
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
+                - gpt-4-turbo
+                - gpt-4-turbo-2024-04-09
+                - gpt-4-0125-preview
+                - gpt-4-turbo-preview
+                - gpt-4-1106-preview
+                - gpt-4-vision-preview
+                - gpt-4
+                - gpt-4-0314
+                - gpt-4-0613
+                - gpt-4-32k
+                - gpt-4-32k-0314
+                - gpt-4-32k-0613
+                - gpt-3.5-turbo
+                - gpt-3.5-turbo-16k
+                - gpt-3.5-turbo-0301
+                - gpt-3.5-turbo-0613
+                - gpt-3.5-turbo-1106
+                - gpt-3.5-turbo-0125
+                - gpt-3.5-turbo-16k-0613
+          description: ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.
+          x-oaiTypeLabel: string
+        frequency_penalty:
+          type: number
+          format: float
+          nullable: true
+          minimum: -2
+          maximum: 2
+          description: |-
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
+
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+          default: 0
+        logit_bias:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+          nullable: true
+          description: |-
+            Modify the likelihood of specified tokens appearing in the completion.
+
+            Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
+          x-oaiTypeLabel: map
+          default: null
+        logprobs:
+          type: boolean
+          nullable: true
+          description: Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.
+          default: false
+        top_logprobs:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 20
+          description: An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
+        max_tokens:
+          type: integer
+          format: int32
+          nullable: true
+          description: |-
+            The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
+
+            The total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
+        n:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 128
+          description: How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
+          default: 1
+        presence_penalty:
+          type: number
+          format: float
+          nullable: true
+          minimum: -2
+          maximum: 2
+          description: |-
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
+
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+          default: 0
+        response_format:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - text
+                - json_object
+              description: Must be one of `text` or `json_object`.
+              default: text
+          description: |-
+            An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+
+            Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+
+            **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+        seed:
+          type: integer
+          format: int64
+          nullable: true
+          minimum: -9223372036854776000
+          maximum: 9223372036854776000
+          description: |-
+            This feature is in Beta.
+            If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
+            Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+        stop:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          nullable: true
+          description: Up to 4 sequences where the API will stop generating further tokens.
+          default: null
+        stream:
+          type: boolean
+          nullable: true
+          description: 'If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).'
+          default: false
+        stream_options:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/OpenAI.ChatCompletionStreamOptions'
+          nullable: true
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: |-
+            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+
+            We generally recommend altering this or `top_p` but not both.
+          default: 1
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 1
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or `temperature` but not both.
+          default: 1
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenAI.ChatCompletionTool'
+          description: A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
+        tool_choice:
+          $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
+        user:
+          type: string
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+        function_call:
+          anyOf:
+            - type: string
+              enum:
+                - none
+                - auto
+            - $ref: '#/components/schemas/OpenAI.ChatCompletionFunctionCallOption'
+          description: |-
+            Deprecated in favor of `tool_choice`.
+
+            Controls which (if any) function is called by the model.
+            `none` means the model will not call a function and instead generates a message.
+            `auto` means the model can pick between generating a message or calling a function.
+            Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
+
+            `none` is the default when no functions are present. `auto` is the default if functions are present.
+          deprecated: true
+          x-oaiExpandable: true
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenAI.ChatCompletionFunctions'
+          minItems: 1
+          maxItems: 128
+          description: |-
+            Deprecated in favor of `tools`.
+
+            A list of functions the model may generate JSON inputs for.
+          deprecated: true
+    OpenAI.CreateChatCompletionResponse:
+      type: object
+      required:
+        - id
+        - choices
+        - created
+        - model
+        - object
+      properties:
+        id:
+          type: string
+          description: A unique identifier for the chat completion.
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              finish_reason:
+                type: string
+                enum:
+                  - stop
+                  - length
+                  - tool_calls
+                  - content_filter
+                  - function_call
+                description: |-
+                  The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+                  `length` if the maximum number of tokens specified in the request was reached,
+                  `content_filter` if content was omitted due to a flag from our content filters,
+                  `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+              index:
+                type: integer
+                format: int32
+                description: The index of the choice in the list of choices.
+              message:
+                $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
+              logprobs:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
+                    nullable: true
+                    description: A list of message content tokens with log probability information.
+                required:
+                  - content
+                nullable: true
+                description: Log probability information for the choice.
+            required:
+              - finish_reason
+              - index
+              - message
+              - logprobs
+          description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
+        created:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the chat completion was created.
+        model:
+          type: string
+          description: The model used for the chat completion.
+        system_fingerprint:
+          type: string
+          description: |-
+            This fingerprint represents the backend configuration that the model runs with.
+
+            Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+        object:
+          type: string
+          enum:
+            - chat.completion
+          description: The object type, which is always `chat.completion`.
+        usage:
+          $ref: '#/components/schemas/OpenAI.CompletionUsage'
+      description: Represents a chat completion response returned by model, based on the provided input.
+    OpenAI.CreateImageRequest:
+      type: object
+      required:
+        - prompt
+      properties:
+        prompt:
+          type: string
+          description: A text description of the desired image(s). The maximum length is 1000 characters for `dall-e-2` and 4000 characters for `dall-e-3`.
+        model:
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - dall-e-2
+                - dall-e-3
+          nullable: true
+          description: The model to use for image generation.
+          x-oaiTypeLabel: string
+          default: dall-e-2
+        n:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 10
+          description: The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is supported.
+          default: 1
+        quality:
+          type: string
+          enum:
+            - standard
+            - hd
+          description: The quality of the image that will be generated. `hd` creates images with finer details and greater consistency across the image. This param is only supported for `dall-e-3`.
+          default: standard
+        response_format:
+          type: string
+          enum:
+            - url
+            - b64_json
+          nullable: true
+          description: The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated.
+          default: url
+        size:
+          type: string
+          enum:
+            - 256x256
+            - 512x512
+            - 1024x1024
+            - 1792x1024
+            - 1024x1792
+          nullable: true
+          description: The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or `1024x1792` for `dall-e-3` models.
+          default: 1024x1024
+        style:
+          type: string
+          enum:
+            - vivid
+            - natural
+          nullable: true
+          description: The style of the generated images. Must be one of `vivid` or `natural`. Vivid causes the model to lean towards generating hyper-real and dramatic images. Natural causes the model to produce more natural, less hyper-real looking images. This param is only supported for `dall-e-3`.
+          default: vivid
+        user:
+          type: string
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+    OpenAI.FunctionObject:
+      type: object
+      required:
+        - name
+      properties:
+        description:
+          type: string
+          description: A description of what the function does, used by the model to choose when and how to call the function.
+        name:
+          type: string
+          description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+        parameters:
+          $ref: '#/components/schemas/OpenAI.FunctionParameters'
+    OpenAI.FunctionParameters:
+      type: object
+      additionalProperties: {}
+      description: |-
+        The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/text-generation/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. 
+
+        Omitting `parameters` defines a function with an empty parameter list.
+    OpenAI.Image:
+      type: object
+      properties:
+        b64_json:
+          type: string
+          format: base64
+          description: The base64-encoded JSON of the generated image, if `response_format` is `b64_json`.
+        url:
+          type: string
+          format: uri
+          description: The URL of the generated image, if `response_format` is `url` (default).
+        revised_prompt:
+          type: string
+          description: The prompt that was used to generate the image, if there was any revision to the prompt.
+      description: Represents the url or the content of an image generated by the OpenAI API.
+    OpenAI.ImagesResponse:
+      type: object
+      required:
+        - created
+        - data
+      properties:
+        created:
+          type: integer
+          format: unixtime
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenAI.Image'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api-key
+    OAuth2Auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+          scopes:
+            https://cognitiveservices.azure.com/.default: ''
+servers:
+  - url: '{endpoint}/openai'
+    description: Azure OpenAI APIs for completions and search
+    variables:
+      endpoint:
+        default: ''
+        description: |-
+          Supported Cognitive Services endpoints (protocol and hostname, for example:
+          https://westus.api.cognitive.microsoft.com).

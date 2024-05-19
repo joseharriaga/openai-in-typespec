@@ -1,0 +1,43 @@
+{
+  "assistants": {
+    "endpoint_name": "AZURE_OPENAI_TIP_ENDPOINT",
+    "api_key_name": "AZURE_OPENAI_TIP_API_KEY"
+  },
+  "audio": {
+    "endpoint_name": "AZURE_OPENAI_ENDPOINT_SWEDENCENTRAL",
+    "api_key_name": "AZURE_OPENAI_API_KEY_SWEDENCENTRAL",
+    "deployment": "whisper"
+  },
+  "batch": {
+    "endpoint_name": "AZURE_OPENAI_ENDPOINT",
+    "api_key_name": "AZURE_OPENAI_API_KEY",
+    "deployment":  "gpt-35-turbo"
+  },
+  "chat": {
+    "endpoint_name": "AZURE_OPENAI_ENDPOINT",
+    "api_key_name": "AZURE_OPENAI_API_KEY",
+    "deployment": "gpt-35-turbo"
+  },
+  "embeddings": {
+    "endpoint_name": "AZURE_OPENAI_ENDPOINT",
+    "api_key_name": "AZURE_OPENAI_API_KEY",
+    "deployment": "text-embedding-3-small"
+  },
+  "files": {
+    "endpoint_name": "AZURE_OPENAI_ENDPOINT",
+    "api_key_name": "AZURE_OPENAI_API_KEY"
+  },
+  "fine_tuning": {
+    "endpoint_name": "AZURE_OPENAI_ENDPOINT",
+    "api_key_name": "AZURE_OPENAI_API_KEY"
+  },
+  "images": {
+    "endpoint_name": "AZURE_OPENAI_ENDPOINT_SWEDENCENTRAL",
+    "api_key_name": "AZURE_OPENAI_API_KEY_SWEDENCENTRAL",
+    "deployment": "dall-e-3"
+  },
+  "vector_stores": {
+    "endpoint_name": "AZURE_OPENAI_TIP_ENDPOINT",
+    "api_key_name": "AZURE_OPENAI_TIP_API_KEY"
+  }
+}

@@ -17,8 +17,8 @@ interface AzureImages {
   @operationId("ImageGenerations_Create")
   @tag("Images")
   createImage(
-    @path deploymentId: string;
-    @body image: CreateImageRequest;
+    @path deploymentId: string,
+    @body image: CreateImageRequest,
     // @query api-version: string;
   ): ImagesResponse | AzureOpenAIErrorResponse<AzureOpenAIDalleError>;
 }

@@ -25,7 +25,7 @@ alias AzureContentFilterCategoriesBase = {
   error: {
     code: string;
     message: string;
-  }
+  };
 };
 
 model AzureContentFilterBlocklistResult {
@@ -33,7 +33,7 @@ model AzureContentFilterBlocklistResult {
   details?: {
     filtered: boolean;
     id: string;
-  }[]
+  }[];
 }
 
 model AzureContentFilterResultForPrompt {
@@ -41,8 +41,8 @@ model AzureContentFilterResultForPrompt {
   content_filter_results?: {
     ...AzureContentFilterCategoriesBase;
     jailbreak: AzureContentFilterDetectionResult;
-    indirect_attack: AzureContentFilterDetectionResult;  
-  }
+    indirect_attack: AzureContentFilterDetectionResult;
+  };
 }
 
 model AzureContentFilterResultForChoice {
@@ -52,8 +52,8 @@ model AzureContentFilterResultForChoice {
     ...AzureContentFilterDetectionResult;
     citation?: {
       license?: string;
-      URL?: url;  
-    }
+      URL?: url;
+    };
   };
 }
 
@@ -65,7 +65,7 @@ model AzureContentFilterImageResponseResults {
 }
 
 model AzureContentFilterImagePromptResults
-extends AzureContentFilterImageResponseResults {
+  extends AzureContentFilterImageResponseResults {
   profanity?: AzureContentFilterDetectionResult;
   custom_blocklists?: AzureContentFilterBlocklistResult;
   jailbreak: AzureContentFilterDetectionResult;

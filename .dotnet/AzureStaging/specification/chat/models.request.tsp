@@ -25,30 +25,41 @@ model AzureChatDataSource {
 model AzureChatSearchDataSource extends AzureChatDataSource {
   /** The discriminated type identifier, which is always 'azure_search'. */
   type: "azure_search";
+
   /** The parameter information to control the use of the Azure Search data source. */
   parameters: {
     ...AzureChatDataSourceCommonParameters;
+
     /** The absolute endpoint path for the Azure Search resource to use. */
     endpoint: url;
+
     /** The name of the index to use, as specified in the Azure Search resource. */
     index_name: string;
+
     /** The field mappings to use with the Azure Search resource. */
     fields_mapping?: {
       /** The name of the index field to use as a title. */
       title_field?: string;
+
       /** The name of the index field to use as a URL. */
       url_field?: string;
+
       /** The name of the index field to use as a filepath. */
       filepath_field?: string;
+
       /** The names of index fields that should be treated as content. */
       content_fields?: string[];
+
       /** The separator pattern that content fields should use. */
       content_fields_separator?: string;
+
       /** THe names of fields that represent vector data. */
       vector_fields?: string[];
+
       /** The names of fields that represent image vector data. */
       image_vector_fields?: string[];
     };
+
     /** The query type for the Azure Search resource to use. */
     query_type?:
       | "simple"
@@ -56,11 +67,14 @@ model AzureChatSearchDataSource extends AzureChatDataSource {
       | "vector"
       | "vector_simple_hybrid"
       | "vector_semantic_hybrid";
+
     /** Additional semantic configuration for the query. */
     semantic_configuration?: string;
+
     /** A filter to apply to the search. */
     filter?: string;
-    /** */
+
+    /**  */
     embedding_dependency: AzureChatDataSourceVectorizationSource;
   };
 }
@@ -70,12 +84,16 @@ model AzureChatMachineLearningIndexDataSource extends AzureChatDataSource {
   type: "azure_ml_index";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
+
     /** The ID of the Azure Machine Learning index project to use. */
     project_resource_id: string;
+
     /** The name of the Azure Machine Learning index to use. */
     name: string;
+
     /** The version of the vector index to use. */
     version: string;
+
     /** A search filter, which is only applicable if the vector index is of the 'AzureSearch' type. */
     filter?: string;
   };
@@ -138,10 +156,13 @@ model AzureChatPineconeDataSource extends AzureChatDataSource {
 alias AzureChatDataSourceCommonParameters = {
   /** The authentication mechanism to use with the data source. */
   authentication?: AzureChatDataSourceAuthenticationOptions;
+
   /** The configured number of documents to feature in the query. */
   top_n_documents?: int32;
+
   /** Whether queries should be restricted to use of the indexed data. */
   in_scope?: boolean;
+
   /**
    * The configured strictness of the search relevance filtering.
    * Higher strictness will increase precision but lower recall of the answer.
@@ -149,26 +170,33 @@ alias AzureChatDataSourceCommonParameters = {
   @minValue(1)
   @maxValue(5)
   strictness?: int32;
+
   /**
    * Additional instructions for the model to inform how it should behave and any context it should reference when
    * generating a response. You can describe the assistant's personality and tell it how to format responses.
    * This is limited to 100 tokens and counts against the overall token limit.
    */
   role_information?: string;
-  /** 
+
+  /**
    * The maximum number of rewritten queries that should be sent to the search provider for a single user message.
    * By default, the system will make an automatic determination.
    */
   max_search_queries?: int32;
-  /** 
+
+  /**
    * If set to true, the system will allow partial search results to be used and the request will fail if all
    * partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
    */
   allow_partial_result: boolean = false;
+
   /**
    * The output context properties to include on the response.
    * By default, citations and intent will be requested.
    */
   @maxItems(3)
-  include_contexts?: ("citations" | "intent" | "all_retrieved_documents")[] = ["citations", "intent"];
+  include_contexts?: ("citations" | "intent" | "all_retrieved_documents")[] = [
+    "citations",
+    "intent"
+  ];
 };

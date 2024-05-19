@@ -6,9 +6,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAI", "..\src\OpenAI.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAI.Tests", "..\tests\OpenAI.Tests.csproj", "{1F1CD1D4-9932-4B73-99D8-C252A67D4B46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI", "Azure.AI.OpenAI\Azure.AI.OpenAI.csproj", "{C496D944-868E-481B-BABC-82634003289F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI", "src\Azure.AI.OpenAI.csproj", "{C496D944-868E-481B-BABC-82634003289F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI.Tests", "Azure.AI.OpenAI.Tests\Azure.AI.OpenAI.Tests.csproj", "{F9B7E9F9-33F4-4E26-A367-B27CEE0EC247}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI.Tests", "tests\Azure.AI.OpenAI.Tests.csproj", "{F9B7E9F9-33F4-4E26-A367-B27CEE0EC247}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

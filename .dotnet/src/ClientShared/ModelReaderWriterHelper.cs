@@ -27,5 +27,5 @@ internal static class ModelReaderWriterHelper
         => ValidateFormat<object>(model, format);
 
     private static ModelReaderWriterOptions? _wireOptions;
-    public static ModelReaderWriterOptions WireOptions => _wireOptions ??= new ModelReaderWriterOptions("W");
+    public static ModelReaderWriterOptions WireOptions => _wireOptions ??= new ModelReaderWriterOptions("J"); // ("W");
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenAI.ClientShared.Internal;
+using System;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -50,7 +51,7 @@ public partial class GeneratedImageCollection : IJsonModel<GeneratedImageCollect
     // CUSTOM: Recovered the deserialization of _serializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
     internal static GeneratedImageCollection DeserializeGeneratedImageCollection(JsonElement element, ModelReaderWriterOptions options = null)
     {
-        options ??= new ModelReaderWriterOptions("W");
+        options ??= ModelReaderWriterHelper.WireOptions;
 
         if (element.ValueKind == JsonValueKind.Null)
         {

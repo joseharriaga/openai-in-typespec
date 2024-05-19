@@ -22,8 +22,8 @@ model AzureChatCompletionResponseMessage extends ChatCompletionResponseMessage {
       data_source_index: int32;
       original_search_score?: float64;
       rerank_score?: float64;
-      filter_reason?: "score" | "rerank"
-    }[]
+      filter_reason?: "score" | "rerank";
+    }[];
   };
 }
 

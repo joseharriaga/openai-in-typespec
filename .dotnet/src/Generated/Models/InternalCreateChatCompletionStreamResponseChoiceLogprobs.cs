@@ -4,12 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Chat
 {
-    /// <summary> The ChatCompletionFunctions. </summary>
-    [Obsolete("This field is marked as deprecated.")]
-    public partial class ChatFunction
+    /// <summary> The CreateChatCompletionStreamResponseChoiceLogprobs. </summary>
+    internal partial class InternalCreateChatCompletionStreamResponseChoiceLogprobs
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,22 +43,28 @@ namespace OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ChatFunction"/>. </summary>
-        /// <param name="functionDescription"> A description of what the function does, used by the model to choose when and how to call the function. </param>
-        /// <param name="functionName"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
-        /// <param name="functionParameters"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ChatFunction(string functionDescription, string functionName, BinaryData functionParameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionStreamResponseChoiceLogprobs"/>. </summary>
+        /// <param name="content"> A list of message content tokens with log probability information. </param>
+        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs(IEnumerable<ChatTokenLogProbabilityInfo> content)
         {
-            FunctionDescription = functionDescription;
-            FunctionName = functionName;
-            FunctionParameters = functionParameters;
+            Content = content?.ToList();
+        }
+
+        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionStreamResponseChoiceLogprobs"/>. </summary>
+        /// <param name="content"> A list of message content tokens with log probability information. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs(IReadOnlyList<ChatTokenLogProbabilityInfo> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            Content = content;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ChatFunction"/> for deserialization. </summary>
-        internal ChatFunction()
+        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionStreamResponseChoiceLogprobs"/> for deserialization. </summary>
+        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs()
         {
         }
+
+        /// <summary> A list of message content tokens with log probability information. </summary>
+        public IReadOnlyList<ChatTokenLogProbabilityInfo> Content { get; }
     }
 }

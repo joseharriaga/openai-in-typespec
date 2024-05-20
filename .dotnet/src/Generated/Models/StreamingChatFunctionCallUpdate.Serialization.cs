@@ -10,21 +10,27 @@ using System.Text.Json;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatFunctionCall : IJsonModel<ChatFunctionCall>
+    public partial class StreamingChatFunctionCallUpdate : IJsonModel<StreamingChatFunctionCallUpdate>
     {
-        void IJsonModel<ChatFunctionCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<StreamingChatFunctionCallUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatFunctionCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ChatFunctionCall)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(StreamingChatFunctionCallUpdate)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("arguments"u8);
-            writer.WriteStringValue(FunctionArguments);
-            writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(FunctionName);
+            if (Optional.IsDefined(FunctionArgumentsUpdate))
+            {
+                writer.WritePropertyName("arguments"u8);
+                writer.WriteStringValue(FunctionArgumentsUpdate);
+            }
+            if (Optional.IsDefined(FunctionName))
+            {
+                writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(FunctionName);
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -43,19 +49,19 @@ namespace OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        ChatFunctionCall IJsonModel<ChatFunctionCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        StreamingChatFunctionCallUpdate IJsonModel<StreamingChatFunctionCallUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatFunctionCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ChatFunctionCall)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(StreamingChatFunctionCallUpdate)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeChatFunctionCall(document.RootElement, options);
+            return DeserializeStreamingChatFunctionCallUpdate(document.RootElement, options);
         }
 
-        internal static ChatFunctionCall DeserializeChatFunctionCall(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static StreamingChatFunctionCallUpdate DeserializeStreamingChatFunctionCallUpdate(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -85,46 +91,46 @@ namespace OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ChatFunctionCall(arguments, name, serializedAdditionalRawData);
+            return new StreamingChatFunctionCallUpdate(arguments, name, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ChatFunctionCall>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<StreamingChatFunctionCallUpdate>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatFunctionCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ChatFunctionCall)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StreamingChatFunctionCallUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ChatFunctionCall IPersistableModel<ChatFunctionCall>.Create(BinaryData data, ModelReaderWriterOptions options)
+        StreamingChatFunctionCallUpdate IPersistableModel<StreamingChatFunctionCallUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatFunctionCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeChatFunctionCall(document.RootElement, options);
+                        return DeserializeStreamingChatFunctionCallUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ChatFunctionCall)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StreamingChatFunctionCallUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ChatFunctionCall>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<StreamingChatFunctionCallUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static ChatFunctionCall FromResponse(PipelineResponse response)
+        internal static StreamingChatFunctionCallUpdate FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeChatFunctionCall(document.RootElement);
+            return DeserializeStreamingChatFunctionCallUpdate(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

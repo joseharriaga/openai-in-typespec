@@ -21,20 +21,20 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Description))
+            if (Optional.IsDefined(FunctionDescription))
             {
                 writer.WritePropertyName("description"u8);
-                writer.WriteStringValue(Description);
+                writer.WriteStringValue(FunctionDescription);
             }
             writer.WritePropertyName("name"u8);
             writer.WriteStringValue(FunctionName);
-            if (Optional.IsDefined(Parameters))
+            if (Optional.IsDefined(FunctionParameters))
             {
                 writer.WritePropertyName("parameters"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(Parameters);
+				writer.WriteRawValue(FunctionParameters);
 #else
-                using (JsonDocument document = JsonDocument.Parse(Parameters))
+                using (JsonDocument document = JsonDocument.Parse(FunctionParameters))
                 {
                     JsonSerializer.Serialize(writer, document.RootElement);
                 }

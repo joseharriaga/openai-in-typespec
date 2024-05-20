@@ -29,6 +29,6 @@ public partial class ChatWithVision
                 MaxTokens = 2048,
             });
         Console.WriteLine(result.Value.Content);
-        Assert.That(result.Value.Content.ToString().ToLowerInvariant(), Contains.Substring("stop"));
+        Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("stop"));
     }
 }

@@ -14,15 +14,15 @@ public partial class ChatFunction
     /// Creates a new instance of <see cref="ChatFunction"/>.
     /// </summary>
     /// <param name="functionName"> The <c>name</c> of the function. </param>
-    /// <param name="description"> The <c>description</c> of the function. </param>
-    /// <param name="parameters"> The <c>parameters</c> into the function, in JSON Schema format. </param>
-    public ChatFunction(string functionName, string description = null, BinaryData parameters = null)
+    /// <param name="functionDescription"> The <c>description</c> of the function. </param>
+    /// <param name="functionParameters"> The <c>parameters</c> into the function, in JSON Schema format. </param>
+    public ChatFunction(string functionName, string functionDescription = null, BinaryData functionParameters = null)
     {
         Argument.AssertNotNull(functionName, nameof(functionName));
 
         FunctionName = functionName;
-        Description = description;
-        Parameters = parameters;
+        FunctionDescription = functionDescription;
+        FunctionParameters = functionParameters;
     }
 
     // CUSTOM: Renamed.
@@ -30,8 +30,13 @@ public partial class ChatFunction
     [CodeGenMember("Name")]
     public string FunctionName { get; }
 
+    // CUSTOM: Renamed
+    /// <summary> A description of what the function does, used by the model to choose when and how to call the function. </summary>
+    [CodeGenMember("Description")]
+    public string FunctionDescription { get; set; }
+
     // CUSTOM: Changed type to BinarayData.
     /// <summary> Gets or sets the parameters. </summary>
     [CodeGenMember("Parameters")]
-    public BinaryData Parameters { get; set; }
+    public BinaryData FunctionParameters { get; set; }
 }

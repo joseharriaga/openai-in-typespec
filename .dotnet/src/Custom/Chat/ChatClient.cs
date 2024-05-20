@@ -111,7 +111,7 @@ public partial class ChatClient
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
     {
         Argument.AssertNotNull(messages, nameof(messages));
 
@@ -122,7 +122,7 @@ public partial class ChatClient
         RequestOptions requestOptions = new() { BufferResponse = false };
         async Task<ClientResult> getResultAsync() =>
             await CompleteChatAsync(content, requestOptions).ConfigureAwait(false);
-        return new AsyncStreamingChatUpdateCollection(getResultAsync);
+        return new AsyncStreamingChatCompletionUpdateCollection(getResultAsync);
     }
 
     /// <summary>
@@ -136,7 +136,7 @@ public partial class ChatClient
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual ResultCollection<StreamingChatUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
     {
         Argument.AssertNotNull(messages, nameof(messages));
 
@@ -146,7 +146,7 @@ public partial class ChatClient
         using BinaryContent content = options.ToBinaryContent();
         RequestOptions requestOptions = new() { BufferResponse = false };
         ClientResult getResult() => CompleteChat(content, requestOptions);
-        return new StreamingChatUpdateCollection(getResult);
+        return new StreamingChatCompletionUpdateCollection(getResult);
     }
 
     private void CreateChatCompletionOptions(IEnumerable<ChatMessage> messages, ref ChatCompletionOptions options, bool stream = false)

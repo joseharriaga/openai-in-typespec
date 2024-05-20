@@ -58,12 +58,12 @@ public partial class ChatClientTests
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        ResultCollection<StreamingChatUpdate> streamingResult
+        ResultCollection<StreamingChatCompletionUpdate> streamingResult
             = client.CompleteChatStreaming([new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")]);
-        Assert.That(streamingResult, Is.InstanceOf<ResultCollection<StreamingChatUpdate>>());
+        Assert.That(streamingResult, Is.InstanceOf<ResultCollection<StreamingChatCompletionUpdate>>());
         int updateCount = 0;
 
-        foreach (StreamingChatUpdate chatUpdate in streamingResult)
+        foreach (StreamingChatCompletionUpdate chatUpdate in streamingResult)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
@@ -88,17 +88,17 @@ public partial class ChatClientTests
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        AsyncResultCollection<StreamingChatUpdate> streamingResult
+        AsyncResultCollection<StreamingChatCompletionUpdate> streamingResult
             = client.CompleteChatStreamingAsync([new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")]);
-        Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatUpdate>>());
+        Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatCompletionUpdate>>());
         int updateCount = 0;
         ChatTokenUsage usage = null;
 
-        await foreach (StreamingChatUpdate chatUpdate in streamingResult)
+        await foreach (StreamingChatCompletionUpdate chatUpdate in streamingResult)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
-            usage ??= chatUpdate.TokenUsage;
+            usage ??= chatUpdate.Usage;
             Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
             updateCount++;
         }

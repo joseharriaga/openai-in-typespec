@@ -6,8 +6,8 @@ using System.Text.Json;
 
 namespace OpenAI.Chat;
 
-[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Chat.InternalChatCompletionResponseMessage>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
-internal partial class InternalChatCompletionResponseMessage : IJsonModel<InternalChatCompletionResponseMessage>
+[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Chat.InternalChatCompletionStreamResponseDelta>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
+internal partial class InternalChatCompletionStreamResponseDelta : IJsonModel<InternalChatCompletionStreamResponseDelta>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SerializeContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -21,12 +21,12 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
         throw new NotImplementedException();
     }
 
-    void IJsonModel<InternalChatCompletionResponseMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    void IJsonModel<InternalChatCompletionStreamResponseDelta>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessage>)this).GetFormatFromOptions(options) : options.Format;
+        var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionStreamResponseDelta>)this).GetFormatFromOptions(options) : options.Format;
         if (format != "J")
         {
-            throw new FormatException($"The model {nameof(InternalChatCompletionResponseMessage)} does not support writing '{format}' format.");
+            throw new FormatException($"The model {nameof(InternalChatCompletionStreamResponseDelta)} does not support writing '{format}' format.");
         }
 
         writer.WriteStartObject();
@@ -42,6 +42,11 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
                 writer.WriteNull("content");
             }
         }
+        if (Optional.IsDefined(FunctionCall))
+        {
+            writer.WritePropertyName("function_call"u8);
+            writer.WriteObjectValue(FunctionCall, options);
+        }
         if (Optional.IsCollectionDefined(ToolCalls))
         {
             writer.WritePropertyName("tool_calls"u8);
@@ -52,12 +57,10 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
             }
             writer.WriteEndArray();
         }
-        writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role.ToSerialString());
-        if (Optional.IsDefined(FunctionCall))
+        if (Optional.IsDefined(Role))
         {
-            writer.WritePropertyName("function_call"u8);
-            writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
+            writer.WritePropertyName("role"u8);
+            writer.WriteStringValue(Role.Value.ToSerialString());
         }
         if (options.Format != "W" && _serializedAdditionalRawData != null)
         {
@@ -77,7 +80,7 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
         writer.WriteEndObject();
     }
 
-    internal static InternalChatCompletionResponseMessage DeserializeInternalChatCompletionResponseMessage(JsonElement element, ModelReaderWriterOptions options = null)
+    internal static InternalChatCompletionStreamResponseDelta DeserializeInternalChatCompletionStreamResponseDelta(JsonElement element, ModelReaderWriterOptions options = null)
     {
         options ??= ModelSerializationExtensions.WireOptions;
 
@@ -86,9 +89,9 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
             return null;
         }
         IReadOnlyList<ChatMessageContentPart> content = default;
-        IReadOnlyList<ChatToolCall> toolCalls = default;
-        ChatMessageRole role = default;
-        ChatFunctionCall functionCall = default;
+        StreamingChatFunctionCallUpdate functionCall = default;
+        IReadOnlyList<StreamingChatToolCallUpdate> toolCalls = default;
+        ChatMessageRole? role = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
         foreach (var property in element.EnumerateObject())
@@ -104,32 +107,36 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
                 content = array;
                 continue;
             }
-            if (property.NameEquals("tool_calls"u8))
-            {
-                if (property.Value.ValueKind == JsonValueKind.Null)
-                {
-                    continue;
-                }
-                List<ChatToolCall> array = new List<ChatToolCall>();
-                foreach (var item in property.Value.EnumerateArray())
-                {
-                    array.Add(ChatToolCall.DeserializeChatToolCall(item, options));
-                }
-                toolCalls = array;
-                continue;
-            }
-            if (property.NameEquals("role"u8))
-            {
-                role = property.Value.GetString().ToChatMessageRole();
-                continue;
-            }
             if (property.NameEquals("function_call"u8))
             {
                 if (property.Value.ValueKind == JsonValueKind.Null)
                 {
                     continue;
                 }
-                functionCall = ChatFunctionCall.DeserializeChatFunctionCall(property.Value, options);
+                functionCall = StreamingChatFunctionCallUpdate.DeserializeStreamingChatFunctionCallUpdate(property.Value, options);
+                continue;
+            }
+            if (property.NameEquals("tool_calls"u8))
+            {
+                if (property.Value.ValueKind == JsonValueKind.Null)
+                {
+                    continue;
+                }
+                List<StreamingChatToolCallUpdate> array = new List<StreamingChatToolCallUpdate>();
+                foreach (var item in property.Value.EnumerateArray())
+                {
+                    array.Add(StreamingChatToolCallUpdate.DeserializeStreamingChatToolCallUpdate(item, options));
+                }
+                toolCalls = array;
+                continue;
+            }
+            if (property.NameEquals("role"u8))
+            {
+                if (property.Value.ValueKind == JsonValueKind.Null)
+                {
+                    continue;
+                }
+                role = property.Value.GetString().ToChatMessageRole();
                 continue;
             }
             if (options.Format != "W")
@@ -138,6 +145,6 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new InternalChatCompletionResponseMessage(content ?? new ChangeTrackingList<ChatMessageContentPart>(), toolCalls ?? new ChangeTrackingList<ChatToolCall>(), role, functionCall, serializedAdditionalRawData);
+        return new InternalChatCompletionStreamResponseDelta(content ?? new ChangeTrackingList<ChatMessageContentPart>(), functionCall, toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(), role, serializedAdditionalRawData);
     }
 }

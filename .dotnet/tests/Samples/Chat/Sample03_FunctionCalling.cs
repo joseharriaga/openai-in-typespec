@@ -133,7 +133,7 @@ namespace OpenAI.Samples
 
                                     default:
                                         {
-                                            // Handle other or unexpected calls.
+                                            // Handle other unexpected calls.
                                             throw new NotImplementedException();
                                         }
                                 }

@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    /// <summary> The ChatCompletionFunctions. </summary>
-    [Obsolete("This field is marked as deprecated.")]
-    public partial class ChatFunction
+    /// <summary> The ChatCompletionMessageToolCallChunk. </summary>
+    public partial class StreamingChatToolCallUpdate
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,22 +42,29 @@ namespace OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ChatFunction"/>. </summary>
-        /// <param name="functionDescription"> A description of what the function does, used by the model to choose when and how to call the function. </param>
-        /// <param name="functionName"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
-        /// <param name="functionParameters"></param>
+        /// <summary> Initializes a new instance of <see cref="StreamingChatToolCallUpdate"/>. </summary>
+        /// <param name="index"></param>
+        /// <param name="id"> The ID of the tool call. </param>
+        /// <param name="kind"> The type of the tool. Currently, only `function` is supported. </param>
+        /// <param name="function"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ChatFunction(string functionDescription, string functionName, BinaryData functionParameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal StreamingChatToolCallUpdate(int index, string id, ChatToolCallKind kind, InternalChatCompletionMessageToolCallChunkFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            FunctionDescription = functionDescription;
-            FunctionName = functionName;
-            FunctionParameters = functionParameters;
+            Index = index;
+            Id = id;
+            Kind = kind;
+            Function = function;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ChatFunction"/> for deserialization. </summary>
-        internal ChatFunction()
+        /// <summary> Initializes a new instance of <see cref="StreamingChatToolCallUpdate"/> for deserialization. </summary>
+        internal StreamingChatToolCallUpdate()
         {
         }
+
+        /// <summary> Gets the index. </summary>
+        public int Index { get; }
+        /// <summary> The ID of the tool call. </summary>
+        public string Id { get; }
     }
 }

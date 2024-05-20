@@ -6,6 +6,12 @@ internal partial class InternalChatCompletionFunctionCallOption { }
 [CodeGenModel("ChatCompletionMessageToolCallFunction")]
 internal partial class InternalChatCompletionMessageToolCallFunction { }
 
+[CodeGenModel("ChatCompletionMessageToolCallChunkFunction")]
+internal partial class InternalChatCompletionMessageToolCallChunkFunction { }
+
+[CodeGenModel("ChatCompletionMessageToolCallChunkType")]
+internal readonly partial struct InternalChatCompletionMessageToolCallChunkType { }
+
 [CodeGenModel("ChatCompletionNamedToolChoice")]
 internal partial class InternalChatCompletionNamedToolChoice { }
 
@@ -36,6 +42,12 @@ internal readonly partial struct InternalChatCompletionResponseMessageRole { }
 [CodeGenModel("ChatCompletionStreamOptions")]
 internal partial class InternalChatCompletionStreamOptions { }
 
+[CodeGenModel("InternalChatCompletionStreamResponseDeltaFunctionCall")]
+internal partial class ChatCompletionStreamResponseDeltaFunctionCall { }
+
+[CodeGenModel("ChatCompletionStreamResponseDeltaRole")]
+internal readonly partial struct InternalChatCompletionStreamResponseDeltaRole { }
+
 [CodeGenModel("ChatResponseFormatType")]
 internal readonly partial struct InternalChatResponseFormatType { }
 
@@ -60,6 +72,19 @@ internal partial class InternalCreateChatCompletionResponseChoice { }
 [CodeGenModel("CreateChatCompletionResponseObject")]
 internal readonly partial struct InternalCreateChatCompletionResponseObject { }
 
+[CodeGenModel("CreateChatCompletionStreamResponseChoice")]
+internal partial class InternalCreateChatCompletionStreamResponseChoice { }
 
+[CodeGenModel("CreateChatCompletionStreamResponseChoiceFinishReason")]
+internal readonly partial struct InternalCreateChatCompletionStreamResponseChoiceFinishReason { }
+
+[CodeGenModel("CreateChatCompletionStreamResponseChoiceLogprobs")]
+internal partial class InternalCreateChatCompletionStreamResponseChoiceLogprobs { }
+
+[CodeGenModel("CreateChatCompletionStreamResponseObject")]
+internal readonly partial struct InternalCreateChatCompletionStreamResponseObject { }
+
+[CodeGenModel("CreateChatCompletionStreamResponseUsage")]
+internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 
 

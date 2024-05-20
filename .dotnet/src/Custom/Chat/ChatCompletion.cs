@@ -8,10 +8,12 @@ public partial class ChatCompletion
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> The object type, which is always `chat.completion`. </summary>
+    [CodeGenMember("Object")]
     private InternalCreateChatCompletionResponseObject Object { get; } = InternalCreateChatCompletionResponseObject.ChatCompletion;
 
     // CUSTOM: Made internal. We only get back a single choice, and instead we flatten the structure for usability.
     /// <summary> A list of chat completion choices. Can be more than one if `n` is greater than 1. </summary>
+    [CodeGenMember("Choices")]
     internal IReadOnlyList<InternalCreateChatCompletionResponseChoice> Choices { get; }
 
     // CUSTOM: Renamed.

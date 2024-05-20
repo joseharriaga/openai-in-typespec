@@ -12,6 +12,45 @@ namespace OpenAI.Tests.Chat;
 public partial class ChatToolTests
 {
     [Test]
+    public void ConstraintsWork()
+    {
+        ChatClient client = new("gpt-3.5-turbo");
+
+        foreach (var (choice, reason) in new (ChatToolChoice, ChatFinishReason)[]
+        {
+            (null, ChatFinishReason.ToolCalls),
+            (ChatToolChoice.None, ChatFinishReason.Stop),
+            (new ChatToolChoice(s_numberForWordTool), ChatFinishReason.Stop),
+            (ChatToolChoice.Auto, ChatFinishReason.ToolCalls),
+            // TODO: Add test for ChatToolChoice.Required
+        })
+        {
+            ChatCompletionOptions options = new()
+            {
+                Tools = { s_numberForWordTool },
+                ToolChoice = choice,
+            };
+            ClientResult<ChatCompletion> result = client.CompleteChat([new UserChatMessage("What's the number for the word 'banana'?")], options);
+            Assert.That(result.Value.FinishReason, Is.EqualTo(reason));
+        }
+    }
+
+    private static ChatTool s_numberForWordTool = ChatTool.CreateFunctionTool(
+        "get_number_for_word",
+        "gets an arbitrary number assigned to a given word",
+        BinaryData.FromString("""
+            {
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string"
+                    }
+                }
+            }
+            """)
+        );
+
+    [Test]
     public void NoParameterToolWorks()
     {
         ChatClient client = new("gpt-3.5-turbo");
@@ -40,7 +79,7 @@ public partial class ChatToolTests
                 new ToolChatMessage(functionToolCall.Id, "green"),
             ]);
         Assert.That(result.Value.FinishReason, Is.EqualTo(ChatFinishReason.Stop));
-        Assert.That(result.Value.Content.ToString().ToLowerInvariant(), Contains.Substring("green"));
+        Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("green"));
     }
 
     [Test]
@@ -83,6 +122,6 @@ public partial class ChatToolTests
         messages.Add(new AssistantChatMessage(result.Value));
         messages.Add(new ToolChatMessage(functionToolCall.Id, "chartreuse"));
         result = client.CompleteChat(messages, options);
-        Assert.That(result.Value.Content.ToString().ToLowerInvariant(), Contains.Substring("chartreuse"));
+        Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("chartreuse"));
     }
 }

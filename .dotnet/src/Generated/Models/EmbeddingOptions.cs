@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Embeddings
 {
@@ -42,6 +44,18 @@ namespace OpenAI.Embeddings
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
+        /// <summary>
+        /// Gets the dictionary containing additional raw data to serialize.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+        ///       It is subject to change and not intended for stable use.
+        /// </remarks>
+        [Experimental("OPENAI002")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IDictionary<string, BinaryData> SerializedAdditionalRawData
+            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+
         /// <summary> Initializes a new instance of <see cref="EmbeddingOptions"/>. </summary>
         /// <param name="input"> Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens. </param>
         /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
@@ -64,3 +78,4 @@ namespace OpenAI.Embeddings
         public string User { get; set; }
     }
 }
+

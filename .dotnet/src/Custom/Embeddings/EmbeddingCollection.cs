@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Embeddings;
 
@@ -46,6 +48,18 @@ public partial class EmbeddingCollection : ReadOnlyCollection<Embedding>
     /// </para>
     /// </summary>
     private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+
+    /// <summary>
+    /// Gets the dictionary containing additional raw data to serialize.
+    /// </summary>
+    /// <remarks>
+    /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+    ///       It is subject to change and not intended for stable use.
+    /// </remarks>
+    [Experimental("OPENAI002")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public IDictionary<string, BinaryData> SerializedAdditionalRawData
+        => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
 
     // CUSTOM: Set the inherited Items property via the base constructor in favor of the suppressed Data property.
     /// <summary> Initializes a new instance of <see cref="EmbeddingCollection"/>. </summary>

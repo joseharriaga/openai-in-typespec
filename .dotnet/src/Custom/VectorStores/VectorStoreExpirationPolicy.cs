@@ -13,8 +13,6 @@ namespace OpenAI.VectorStores;
 [CodeGenSuppress(nameof(VectorStoreExpirationPolicy), typeof(VectorStoreExpirationAnchor), typeof(int), typeof(IDictionary<string, BinaryData>))]
 public partial class VectorStoreExpirationPolicy
 {
-    private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
     [CodeGenMember("Anchor")]
     private VectorStoreExpirationAnchor _anchor;
     [CodeGenMember("Days")]

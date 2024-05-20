@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
 [CodeGenModel("AssistantsNamedToolChoice")]
 public partial class ToolConstraint
 {
+    private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+
+    /// <summary>
+    /// Gets the dictionary containing additional raw data to serialize.
+    /// </summary>
+    /// <remarks>
+    /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+    ///       It is subject to change and not intended for stable use.
+    /// </remarks>
+    [Experimental("OPENAI002")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public IDictionary<string, BinaryData> SerializedAdditionalRawData
+        => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+
     private readonly string _plainTextValue;
     [CodeGenMember("Type")]
     private readonly string _objectType;
     private readonly string _objectFunctionName;
-    private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
     public static ToolConstraint None { get; } = new("none");
     public static ToolConstraint Auto { get; } = new("auto");

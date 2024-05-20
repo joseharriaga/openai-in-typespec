@@ -46,9 +46,11 @@ public class ImageTests : TestBase<ImageClient>
         Assert.That(image, Is.Not.Null);
         Assert.That(image.ImageUri, Is.Not.Null);
         Console.WriteLine($"RESPONSE--\n{imageResult.GetRawResponse().Content}");
+#pragma warning disable OPENAI002
         ImagePromptContentFilterResult promptResults = image.GetPromptContentFilterResults();
         ImageResponseContentFilterResult responseResults = image.GetResponseContentFilterResults();
         Assert.That(promptResults?.Sexual?.Severity, Is.EqualTo("safe"));
         Assert.That(responseResults?.Sexual?.Severity, Is.EqualTo("safe"));
+#pragma warning restore
     }
 }

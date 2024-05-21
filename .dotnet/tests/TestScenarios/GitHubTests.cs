@@ -10,7 +10,7 @@ public partial class GitHubTests
     public void CanUseGitHubSecret()
     {
         string gitHubSecretString = Environment.GetEnvironmentVariable("SECRET_VALUE");
-        Assert.That(gitHubSecretString, Is.Not.Null.Or.Empty);
+        Assert.That(gitHubSecretString, Is.Not.Null.And.Not.Empty);
     }
 
     [Test(Description = "That that we can run some tests without secrets")]

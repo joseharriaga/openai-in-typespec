@@ -15,7 +15,7 @@ namespace OpenAI.Tests.Audio;
 public partial class TranscriptionTests : SyncAsyncTestBase
 {
     public TranscriptionTests(bool isAsync)
-    : base(isAsync)
+        : base(isAsync)
     {
     }
 
@@ -27,8 +27,6 @@ public partial class TranscriptionTests : SyncAsyncTestBase
 
     [Test]
     [TestCase(AudioSourceKind.UsingStream)]
-    [TestCase(AudioSourceKind.UsingStream)]
-    [TestCase(AudioSourceKind.UsingFilePath)]
     [TestCase(AudioSourceKind.UsingFilePath)]
     public async Task TranscriptionWorks(AudioSourceKind audioSourceKind)
     {
@@ -113,7 +111,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
             }
             Assert.That(segments[i].End, Is.GreaterThan(segments[i].Start));
             Assert.That(string.IsNullOrEmpty(segments[i].Text), Is.False);
-            Assert.That(segments[i].TokenIds, Is.Not.Null.Or.Empty);
+            Assert.That(segments[i].TokenIds, Is.Not.Null.And.Not.Empty);
             foreach (int tokenId in segments[i].TokenIds)
             {
                 Assert.That(tokenId, Is.GreaterThan(0));

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NUnit.Framework;
 using OpenAI.Chat;
+using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -15,51 +16,67 @@ using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Chat;
 
-public partial class ChatClientTests
+[TestFixture(true)]
+[TestFixture(false)]
+public partial class ChatClientTests : SyncAsyncTestBase
 {
-    [Test]
-    public void HelloWorldChat()
+    public ChatClientTests(bool isAsync)
+        : base(isAsync)
     {
-        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat); // new("gpt-3.5-turbo");
-        Assert.That(client, Is.InstanceOf<ChatClient>());
-        ClientResult<ChatCompletion> result = client.CompleteChat([new UserChatMessage("Hello, world!")]);
+    }
+
+    [Test]
+    public async Task HelloWorldChat()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+        IEnumerable<ChatMessage> messages = [new UserChatMessage("Hello, world!")];
+        ClientResult<ChatCompletion> result = IsAsync
+            ? await client.CompleteChatAsync(messages)
+            : client.CompleteChat(messages);
         Assert.That(result, Is.InstanceOf<ClientResult<ChatCompletion>>());
         Assert.That(result.Value.Content[0].Kind, Is.EqualTo(ChatMessageContentPartKind.Text));
         Assert.That(result.Value.Content[0].Text.Length, Is.GreaterThan(0));
     }
 
     [Test]
-    public void HelloWorldWithTopLevelClient()
+    public async Task HelloWorldWithTopLevelClient()
     {
-        OpenAIClient client = new(credential: new(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
+        OpenAIClient client = GetTestClient<OpenAIClient>(TestScenario.TopLevel);
         ChatClient chatClient = client.GetChatClient("gpt-3.5-turbo");
-        ClientResult<ChatCompletion> result = chatClient.CompleteChat([new UserChatMessage("Hello, world!")]);
-        Assert.That(result, Is.InstanceOf<ClientResult<ChatCompletion>>());
-        Assert.That(result.Value.Content.ToString().Length, Is.GreaterThan(0));
+        IEnumerable<ChatMessage> messages = [new UserChatMessage("Hello, world!")];
+        ClientResult<ChatCompletion> result = IsAsync
+            ? await chatClient.CompleteChatAsync(messages)
+            : chatClient.CompleteChat(messages);
+        Assert.That(result.Value.Content[0].Text.Length, Is.GreaterThan(0));
     }
+
     [Test]
-    public void MultiMessageChat()
+    public async Task MultiMessageChat()
     {
-        ChatClient client = new("gpt-3.5-turbo");
-        ClientResult<ChatCompletion> result = client.CompleteChat(
-        [
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+        IEnumerable<ChatMessage> messages = [
             new SystemChatMessage("You are a helpful assistant. You always talk like a pirate."),
             new UserChatMessage("Hello, assistant! Can you help me train my parrot?"),
-        ]);
+        ];
+        ClientResult<ChatCompletion> result = IsAsync
+            ? await client.CompleteChatAsync(messages)
+            : client.CompleteChat(messages);
         Assert.That(new string[] { "aye", "arr", "hearty" }.Any(pirateWord => result.Value.Content[0].Text.ToLowerInvariant().Contains(pirateWord)));
     }
 
     [Test]
     public void StreamingChat()
     {
-        ChatClient client = new("gpt-3.5-turbo");
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+        IEnumerable<ChatMessage> messages = [
+            new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")
+        ];
 
         TimeSpan? firstTokenReceiptTime = null;
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        ResultCollection<StreamingChatCompletionUpdate> streamingResult
-            = client.CompleteChatStreaming([new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")]);
+        ResultCollection<StreamingChatCompletionUpdate> streamingResult = client.CompleteChatStreaming(messages);
         Assert.That(streamingResult, Is.InstanceOf<ResultCollection<StreamingChatCompletionUpdate>>());
         int updateCount = 0;
 
@@ -82,14 +99,16 @@ public partial class ChatClientTests
     [Test]
     public async Task StreamingChatAsync()
     {
-        ChatClient client = new("gpt-3.5-turbo");
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+        IEnumerable<ChatMessage> messages = [
+            new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")
+        ];
 
         TimeSpan? firstTokenReceiptTime = null;
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        AsyncResultCollection<StreamingChatCompletionUpdate> streamingResult
-            = client.CompleteChatStreamingAsync([new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")]);
+        AsyncResultCollection<StreamingChatCompletionUpdate> streamingResult = client.CompleteChatStreamingAsync(messages);
         Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatCompletionUpdate>>());
         int updateCount = 0;
         ChatTokenUsage usage = null;
@@ -176,15 +195,17 @@ public partial class ChatClientTests
     //}
 
     [Test]
-    public void TwoTurnChat()
+    public async Task TwoTurnChat()
     {
-        ChatClient client = GetTestClient();
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
 
         List<ChatMessage> messages =
         [
             new UserChatMessage("What are ten of the most common colors, including the brightest and darkest?"),
         ];
-        ClientResult<ChatCompletion> firstResult = client.CompleteChat(messages);
+        ClientResult<ChatCompletion> firstResult = IsAsync
+            ? await client.CompleteChatAsync(messages)
+            : client.CompleteChat(messages);
         Assert.That(firstResult?.Value, Is.Not.Null);
         Assert.That(firstResult.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("white"));
         Assert.That(firstResult.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("black"));
@@ -197,20 +218,22 @@ public partial class ChatClientTests
     }
 
     [Test]
-    public void AuthFailure()
+    public async Task AuthFailure()
     {
         string fakeApiKey = "not-a-real-key-but-should-be-sanitized";
         ChatClient client = new("gpt-3.5-turbo", new ApiKeyCredential(fakeApiKey));
-        Exception caughtException = null;
+        IEnumerable<ChatMessage> messages = [new UserChatMessage("Uh oh, this isn't going to work with that key")];
+        ClientResultException clientResultException = null;
         try
         {
-            _ = client.CompleteChat([new UserChatMessage("Uh oh, this isn't going to work with that key")]);
+            _ = IsAsync
+                ? await client.CompleteChatAsync(messages)
+                : client.CompleteChat(messages);
         }
-        catch (Exception ex)
+        catch (ClientResultException ex)
         {
-            caughtException = ex;
+            clientResultException = ex;
         }
-        var clientResultException = caughtException as ClientResultException;
         Assert.That(clientResultException, Is.Not.Null);
         Assert.That(clientResultException.Status, Is.EqualTo((int)HttpStatusCode.Unauthorized));
         Assert.That(clientResultException.Message, Does.Contain("API key"));
@@ -374,7 +397,7 @@ public partial class ChatClientTests
         using JsonDocument choiceAsJson = JsonDocument.Parse(serializedChoice);
         Assert.That(choiceAsJson.RootElement, Is.Not.Null);
         Assert.That(choiceAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.String));
-        Assert.That(choiceAsJson.RootElement.ToString, Is.EqualTo("auto"));
+        Assert.That(choiceAsJson.RootElement.ToString(), Is.EqualTo("auto"));
     }
 
     [Test]
@@ -695,5 +718,26 @@ public partial class ChatClientTests
         }
     }
 
-    private static ChatClient GetTestClient(string overrideModel = null) => GetTestClient<ChatClient>(TestScenario.Chat, overrideModel);
+    [Test]
+    public async Task JsonResult()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+        IEnumerable<ChatMessage> messages = [
+            new UserChatMessage("Give me a JSON object with the following properties: red, green, and blue. The value "
+                + "of each property should be a string containing their RGB representation in hexadecimal.")
+        ];
+        ChatCompletionOptions options = new() { ResponseFormat = ChatResponseFormat.JsonObject };
+        ClientResult<ChatCompletion> result = IsAsync
+            ? await client.CompleteChatAsync(messages, options)
+            : client.CompleteChat(messages, options);
+
+        JsonDocument jsonDocument = JsonDocument.Parse(result.Value.Content[0].Text);
+
+        Assert.That(jsonDocument.RootElement.TryGetProperty("red", out JsonElement redProperty));
+        Assert.That(jsonDocument.RootElement.TryGetProperty("green", out JsonElement greenProperty));
+        Assert.That(jsonDocument.RootElement.TryGetProperty("blue", out JsonElement blueProperty));
+        Assert.That(redProperty.GetString().ToLowerInvariant(), Contains.Substring("ff0000"));
+        Assert.That(greenProperty.GetString().ToLowerInvariant(), Contains.Substring("00ff00"));
+        Assert.That(blueProperty.GetString().ToLowerInvariant(), Contains.Substring("0000ff"));
+    }
 }

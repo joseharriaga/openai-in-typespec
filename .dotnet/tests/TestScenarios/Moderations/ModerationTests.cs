@@ -11,7 +11,7 @@ namespace OpenAI.Tests.Moderations;
 public partial class ModerationTests : SyncAsyncTestBase
 {
     public ModerationTests(bool isAsync)
-    : base(isAsync)
+        : base(isAsync)
     {
     }
 

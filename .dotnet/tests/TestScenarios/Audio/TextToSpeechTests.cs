@@ -2,7 +2,10 @@
 using OpenAI.Audio;
 using OpenAI.Tests.Utility;
 using System;
+using System.ClientModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Audio;
 
@@ -11,7 +14,7 @@ namespace OpenAI.Tests.Audio;
 public partial class TextToSpeechTests : SyncAsyncTestBase
 {
     public TextToSpeechTests(bool isAsync)
-    : base(isAsync)
+        : base(isAsync)
     {
     }
 
@@ -25,6 +28,7 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
             : client.GenerateSpeechFromText("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer);
 
         Assert.That(audio, Is.Not.Null);
+        ValidateGeneratedAudio(audio, "hello");
     }
 
     [Test]
@@ -48,5 +52,13 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
             : client.GenerateSpeechFromText("Hello, world!", GeneratedSpeechVoice.Alloy, options);
 
         Assert.That(audio, Is.Not.Null);
+    }
+
+    private void ValidateGeneratedAudio(BinaryData audio, string expectedSubstring)
+    {
+        AudioClient client = GetTestClient<AudioClient>(TestScenario.Transcription);
+        AudioTranscription transcription = client.TranscribeAudio(audio.ToStream(), "hello_world.wav");
+
+        Assert.That(transcription.Text.ToLowerInvariant(), Contains.Substring(expectedSubstring));
     }
 }

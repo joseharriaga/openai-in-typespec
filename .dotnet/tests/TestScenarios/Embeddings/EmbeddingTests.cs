@@ -18,6 +18,12 @@ public partial class EmbeddingTests : SyncAsyncTestBase
     {
     }
 
+    public enum EmbeddingsInputKind
+    {
+        UsingStrings,
+        UsingIntegers,
+    }
+
     [Test]
     public async Task GenerateSingleEmbedding()
     {
@@ -38,27 +44,48 @@ public partial class EmbeddingTests : SyncAsyncTestBase
     }
 
     [Test]
-    public async Task GenerateMultipleEmbeddings()
+    [TestCase(EmbeddingsInputKind.UsingStrings)]
+    [TestCase(EmbeddingsInputKind.UsingIntegers)]
+    public async Task GenerateMultipleEmbeddings(EmbeddingsInputKind embeddingsInputKind)
     {
         EmbeddingClient client = new("text-embedding-3-small");
 
         const int Dimensions = 456;
-
-        List<string> prompts =
-        [
-            "Hello, world!",
-            "This is a test.",
-            "Goodbye!"
-        ];
 
         EmbeddingGenerationOptions options = new()
         {
             Dimensions = Dimensions,
         };
 
-        EmbeddingCollection embeddings = IsAsync
-            ? await client.GenerateEmbeddingsAsync(prompts, options)
-            : client.GenerateEmbeddings(prompts, options);
+        EmbeddingCollection embeddings = null;
+
+        if (embeddingsInputKind == EmbeddingsInputKind.UsingStrings)
+        {
+            List<string> prompts =
+            [
+                "Hello, world!",
+                "This is a test.",
+                "Goodbye!"
+            ];
+
+            embeddings = IsAsync
+                ? await client.GenerateEmbeddingsAsync(prompts, options)
+                : client.GenerateEmbeddings(prompts, options);
+        }
+        else if (embeddingsInputKind == EmbeddingsInputKind.UsingIntegers)
+        {
+            List<List<int>> prompts =
+            [
+                [104, 101, 108, 108, 111],
+                [119, 111, 114, 108, 100],
+                [84, 69, 83, 84]
+            ];
+
+            embeddings = IsAsync
+                ? await client.GenerateEmbeddingsAsync(prompts, options)
+                : client.GenerateEmbeddings(prompts, options);
+        }
+
         Assert.That(embeddings, Is.Not.Null);
         Assert.That(embeddings.Count, Is.EqualTo(3));
         Assert.That(embeddings.Model, Is.EqualTo("text-embedding-3-small"));

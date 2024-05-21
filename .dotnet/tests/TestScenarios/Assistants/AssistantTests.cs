@@ -253,17 +253,17 @@ public partial class AssistantTests
             Assert.That(runSteps.First().CompletedAt, Is.GreaterThan(s_2024));
         });
         RunStepDetails details = runSteps.First().Details;
-        Assert.That(details?.CreatedMessageId, Is.Not.Null.Or.Empty);
+        Assert.That(details?.CreatedMessageId, Is.Not.Null.And.Not.Empty);
 
         details = runSteps.ElementAt(1).Details;
         Assert.Multiple(() =>
         {
             Assert.That(details?.ToolCalls.Count, Is.GreaterThan(0));
             Assert.That(details.ToolCalls[0].ToolKind, Is.EqualTo(RunStepToolCallKind.CodeInterpreter));
-            Assert.That(details.ToolCalls[0].ToolCallId, Is.Not.Null.Or.Empty);
-            Assert.That(details.ToolCalls[0].CodeInterpreterInput, Is.Not.Null.Or.Empty);
+            Assert.That(details.ToolCalls[0].ToolCallId, Is.Not.Null.And.Not.Empty);
+            Assert.That(details.ToolCalls[0].CodeInterpreterInput, Is.Not.Null.And.Not.Empty);
             Assert.That(details.ToolCalls[0].CodeInterpreterOutputs?.Count, Is.GreaterThan(0));
-            Assert.That(details.ToolCalls[0].CodeInterpreterOutputs[0].ImageFileId, Is.Not.Null.Or.Empty);
+            Assert.That(details.ToolCalls[0].CodeInterpreterOutputs[0].ImageFileId, Is.Not.Null.And.Not.Empty);
         });
     }
 
@@ -347,9 +347,9 @@ public partial class AssistantTests
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.RequiresAction));
         Assert.That(run.RequiredActions?.Count, Is.EqualTo(1));
-        Assert.That(run.RequiredActions[0].ToolCallId, Is.Not.Null.Or.Empty);
+        Assert.That(run.RequiredActions[0].ToolCallId, Is.Not.Null.And.Not.Empty);
         Assert.That(run.RequiredActions[0].FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
-        Assert.That(run.RequiredActions[0].FunctionArguments, Is.Not.Null.Or.Empty);
+        Assert.That(run.RequiredActions[0].FunctionArguments, Is.Not.Null.And.Not.Empty);
 
         run = client.SubmitToolOutputsToRun(run, [new(run.RequiredActions[0].ToolCallId, "tacos")]);
         Assert.That(run.Status.IsTerminal, Is.False);

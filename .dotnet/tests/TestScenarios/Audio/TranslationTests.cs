@@ -12,7 +12,7 @@ namespace OpenAI.Tests.Audio;
 public partial class TranslationTests : SyncAsyncTestBase
 {
     public TranslationTests(bool isAsync)
-    : base(isAsync)
+        : base(isAsync)
     {
     }
 
@@ -24,8 +24,6 @@ public partial class TranslationTests : SyncAsyncTestBase
 
     [Test]
     [TestCase(AudioSourceKind.UsingStream)]
-    [TestCase(AudioSourceKind.UsingStream)]
-    [TestCase(AudioSourceKind.UsingFilePath)]
     [TestCase(AudioSourceKind.UsingFilePath)]
     public async Task TranslationWorks(AudioSourceKind audioSourceKind)
     {
@@ -49,8 +47,8 @@ public partial class TranslationTests : SyncAsyncTestBase
                 ? await client.TranslateAudioAsync(path)
                 : client.TranslateAudio(path);
         }
-
         Assert.That(translation?.Text, Is.Not.Null);
+        Assert.That(translation.Text.ToLowerInvariant(), Contains.Substring("whisper"));
     }
 
     private static AudioClient GetTestClient() => GetTestClient<AudioClient>(TestScenario.Transcription);

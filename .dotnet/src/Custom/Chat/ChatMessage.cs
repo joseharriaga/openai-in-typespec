@@ -95,7 +95,7 @@ public abstract partial class ChatMessage
     /// </summary>
     /// <remarks>
     /// Using a <see cref="string"/> in the position of a <see cref="ChatMessage"/> is equivalent to invoking
-    /// <see cref="CreateUserMessage(string)"/> or applying the <see cref="UserChatMessage.UserChatMessage(string)"/>
+    /// <see cref="CreateUserMessage(string)"/> or using the <see cref="UserChatMessage.UserChatMessage(string)"/>
     /// constructor.
     /// </remarks>
     public static implicit operator ChatMessage(string content) => new UserChatMessage(content);

@@ -130,8 +130,7 @@ public partial class ChatMessageContentPart
     /// </summary>
     /// <remarks>
     /// Using a <see cref="string"/> in the position of a <see cref="ChatMessageContentPart"/> is equivalent to
-    /// calling the <see cref="CreateTextMessageContentPart(string)"/> method or using the
-    /// <see cref="ChatMessageContentPart.ChatMessageContentPart(string)"/> constructor.
+    /// calling the <see cref="CreateTextMessageContentPart(string)"/> method.
     /// </remarks>
     /// <param name="content"> The text content to use as this content part. </param>
     public static implicit operator ChatMessageContentPart(string content) => new(content);

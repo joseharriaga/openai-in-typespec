@@ -1,35 +1,54 @@
 ﻿using NUnit.Framework;
 using OpenAI.Images;
+using OpenAI.Tests.Utility;
 using System;
-using System.ClientModel;
+using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Images;
 
-public partial class ImageGenerationTests
+[TestFixture(true)]
+[TestFixture(false)]
+public partial class ImageGenerationTests : SyncAsyncTestBase
 {
-    [Test]
-    public void BasicGenerationWorks()
+    public ImageGenerationTests(bool isAsync)
+    : base(isAsync)
     {
-        ImageClient client = new("dall-e-3");
-        ClientResult<GeneratedImage> result = client.GenerateImage("an isolated stop sign");
-        Assert.That(result, Is.InstanceOf<ClientResult<GeneratedImage>>());
-        Assert.That(result.Value.ImageUri, Is.Not.Null);
-        Console.WriteLine(result.Value.ImageUri.AbsoluteUri);
-        Assert.That(result.Value.ImageBytes, Is.Null);
-        // Assert.That(result.Value.CreatedAt, Is.GreaterThan(new DateTimeOffset(new DateTime(year: 2020, month: 1, day: 1))));
     }
 
     [Test]
-    public void GenerationWithOptionsWorks()
+    public async Task BasicGenerationWorks()
+    {
+        ImageClient client = new("dall-e-3");
+
+        string prompt = "An isolated stop sign.";
+
+        GeneratedImage image = IsAsync
+            ? await client.GenerateImageAsync(prompt)
+            : client.GenerateImage(prompt);
+        Assert.That(image.ImageUri, Is.Not.Null);
+        Assert.That(image.ImageBytes, Is.Null);
+
+        Console.WriteLine(image.ImageUri.AbsoluteUri);
+    }
+
+    [Test]
+    public async Task GenerationWithOptionsWorks()
     {
         ImageClient client = GetTestClient();
-        ClientResult<GeneratedImage> result = client.GenerateImage("an isolated stop sign", new ImageGenerationOptions()
+
+        string prompt = "An isolated stop sign.";
+
+        ImageGenerationOptions options = new()
         {
             Quality = GeneratedImageQuality.Standard,
             Style = GeneratedImageStyle.Natural,
-        });
-        Assert.That(result.Value.ImageUri, Is.Not.Null);
+        };
+
+        GeneratedImage image = IsAsync
+            ? await client.GenerateImageAsync(prompt, options)
+            : client.GenerateImage(prompt, options);
+        Assert.That(image.ImageUri, Is.Not.Null);
     }
 
     private static ImageClient GetTestClient() => GetTestClient<ImageClient>(TestScenario.Images);

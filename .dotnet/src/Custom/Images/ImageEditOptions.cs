@@ -15,7 +15,7 @@ public partial class ImageEditOptions
 {
     // CUSTOM: Made internal. The model is specified by the client.
     /// <summary> The model to use for image generation. Only `dall-e-2` is supported at this time. </summary>
-    internal CreateImageEditRequestModel? Model { get; set; }
+    internal InternalCreateImageEditRequestModel? Model { get; set; }
 
     // CUSTOM:
     // - Made internal. This value comes from a parameter on the client method.

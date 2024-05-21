@@ -109,7 +109,7 @@ namespace OpenAI.Images
                 return null;
             }
             BinaryData image = default;
-            CreateImageVariationRequestModel? model = default;
+            InternalCreateImageVariationRequestModel? model = default;
             long? n = default;
             GeneratedImageFormat? responseFormat = default;
             GeneratedImageSize? size = default;
@@ -130,7 +130,7 @@ namespace OpenAI.Images
                         model = null;
                         continue;
                     }
-                    model = new CreateImageVariationRequestModel(property.Value.GetString());
+                    model = new InternalCreateImageVariationRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("n"u8))

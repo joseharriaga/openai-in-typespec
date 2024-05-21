@@ -111,7 +111,7 @@ namespace OpenAI.Images
                 return null;
             }
             string prompt = default;
-            CreateImageRequestModel? model = default;
+            InternalCreateImageRequestModel? model = default;
             long? n = default;
             GeneratedImageQuality? quality = default;
             GeneratedImageFormat? responseFormat = default;
@@ -134,7 +134,7 @@ namespace OpenAI.Images
                         model = null;
                         continue;
                     }
-                    model = new CreateImageRequestModel(property.Value.GetString());
+                    model = new InternalCreateImageRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("n"u8))

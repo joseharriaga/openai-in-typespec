@@ -50,7 +50,7 @@ namespace OpenAI.Images
         /// <param name="size"> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </param>
         /// <param name="user"> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ImageVariationOptions(BinaryData image, CreateImageVariationRequestModel? model, long? n, GeneratedImageFormat? responseFormat, GeneratedImageSize? size, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ImageVariationOptions(BinaryData image, InternalCreateImageVariationRequestModel? model, long? n, GeneratedImageFormat? responseFormat, GeneratedImageSize? size, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Image = image;
             Model = model;

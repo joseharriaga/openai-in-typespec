@@ -9,7 +9,7 @@ public partial class ImageGenerationOptions
 {
     // CUSTOM: Made internal. The model is specified by the client.
     /// <summary> The model to use for image generation. </summary>
-    internal CreateImageRequestModel? Model { get; set; }
+    internal InternalCreateImageRequestModel? Model { get; set; }
 
     // CUSTOM:
     // - Made internal. This value comes from a parameter on the client method.

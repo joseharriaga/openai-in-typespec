@@ -125,7 +125,7 @@ namespace OpenAI.Images
             BinaryData image = default;
             string prompt = default;
             BinaryData mask = default;
-            CreateImageEditRequestModel? model = default;
+            InternalCreateImageEditRequestModel? model = default;
             long? n = default;
             GeneratedImageSize? size = default;
             GeneratedImageFormat? responseFormat = default;
@@ -160,7 +160,7 @@ namespace OpenAI.Images
                         model = null;
                         continue;
                     }
-                    model = new CreateImageEditRequestModel(property.Value.GetString());
+                    model = new InternalCreateImageEditRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("n"u8))

@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace OpenAI.Assistants;
+﻿namespace OpenAI.Assistants;
 
 /*
  * This file stubs and performs minimal customization to generated internal types for the OpenAI.Assistants namespace.
  */
- 
+
 [CodeGenModel("SubmitToolOutputsRunRequest")]
 internal partial class InternalSubmitToolOutputsRunRequest { }
 

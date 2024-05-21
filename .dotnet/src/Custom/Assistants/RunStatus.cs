@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OpenAI.Assistants;
 
 [CodeGenModel("ThreadRunStatus")]

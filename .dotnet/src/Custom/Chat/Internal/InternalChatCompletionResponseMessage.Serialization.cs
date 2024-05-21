@@ -22,58 +22,41 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
     }
 
     void IJsonModel<InternalChatCompletionResponseMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessage>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(InternalChatCompletionResponseMessage)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeInternalChatCompletionResponseMessage, writer, options);
 
+    internal static void SerializeInternalChatCompletionResponseMessage(InternalChatCompletionResponseMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
-        if (Optional.IsCollectionDefined(Content))
+        if (Optional.IsCollectionDefined(instance.Content))
         {
-            if (Content[0] != null)
+            if (instance.Content[0] != null)
             {
                 writer.WritePropertyName("content"u8);
-                writer.WriteStringValue(Content[0].Text);
+                writer.WriteStringValue(instance.Content[0].Text);
             }
             else
             {
                 writer.WriteNull("content");
             }
         }
-        if (Optional.IsCollectionDefined(ToolCalls))
+        if (Optional.IsCollectionDefined(instance.ToolCalls))
         {
             writer.WritePropertyName("tool_calls"u8);
             writer.WriteStartArray();
-            foreach (var item in ToolCalls)
+            foreach (var item in instance.ToolCalls)
             {
                 writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
         }
         writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role.ToSerialString());
-        if (Optional.IsDefined(FunctionCall))
+        writer.WriteStringValue(instance.Role.ToSerialString());
+        if (Optional.IsDefined(instance.FunctionCall))
         {
             writer.WritePropertyName("function_call"u8);
-            writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
+            writer.WriteObjectValue<ChatFunctionCall>(instance.FunctionCall, options);
         }
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-            }
-        }
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

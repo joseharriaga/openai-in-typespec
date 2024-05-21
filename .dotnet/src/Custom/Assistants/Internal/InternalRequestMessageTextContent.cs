@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OpenAI.Assistants;
+﻿namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents an item of text content within an Assistants API message.

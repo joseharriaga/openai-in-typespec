@@ -11,34 +11,31 @@ internal partial class InternalCreateChatCompletionStreamResponseChoice : IJsonM
     // CUSTOM:
     // - Made FinishReason nullable.
     void IJsonModel<InternalCreateChatCompletionStreamResponseChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoice>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseChoice)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeInternalCreateChatCompletionStreamResponseChoice, writer, options);
 
+    internal static void SerializeInternalCreateChatCompletionStreamResponseChoice(InternalCreateChatCompletionStreamResponseChoice instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
         writer.WritePropertyName("delta"u8);
-        writer.WriteObjectValue(Delta, options);
-        if (Optional.IsDefined(Logprobs))
+        writer.WriteObjectValue(instance.Delta, options);
+        if (Optional.IsDefined(instance.Logprobs))
         {
-            if (Logprobs != null)
+            if (instance.Logprobs != null)
             {
                 writer.WritePropertyName("logprobs"u8);
-                writer.WriteObjectValue<ChatLogProbabilityInfo>(Logprobs, options);
+                writer.WriteObjectValue<ChatLogProbabilityInfo>(instance.Logprobs, options);
             }
             else
             {
                 writer.WriteNull("logprobs");
             }
         }
-        if (Optional.IsDefined(FinishReason))
+        if (Optional.IsDefined(instance.FinishReason))
         {
-            if (FinishReason != null)
+            if (instance.FinishReason != null)
             {
                 writer.WritePropertyName("finish_reason"u8);
-                writer.WriteStringValue(FinishReason.Value.ToSerialString());
+                writer.WriteStringValue(instance.FinishReason.Value.ToSerialString());
             }
             else
             {
@@ -46,22 +43,8 @@ internal partial class InternalCreateChatCompletionStreamResponseChoice : IJsonM
             }
         }
         writer.WritePropertyName("index"u8);
-        writer.WriteNumberValue(Index);
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-            }
-        }
+        writer.WriteNumberValue(instance.Index);
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

@@ -14,7 +14,7 @@ model AzureChatDataSourceEndpointVectorizationSource
   extends AzureChatDataSourceVectorizationSource {
   type: "endpoint";
   endpoint: url;
-  authentication: AzureChatDataSourceAuthenticationOptions;
+  authentication: AzureChatDataSourceApiKeyAuthenticationOptions | AzureChatDataSourceAccessTokenAuthenticationOptions;
   dimensions?: int32;
 }
 

@@ -48,11 +48,6 @@ namespace Azure.AI.OpenAI.Chat
 
         /// <summary> Gets the endpoint. </summary>
         internal Uri Endpoint { get; set; }
-        /// <summary>
-        /// Gets the authentication
-        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
-        /// </summary>
-        internal DataSourceAuthentication Authentication { get; set; }
         /// <summary> Gets the dimensions. </summary>
         internal int? Dimensions { get; set; }
     }

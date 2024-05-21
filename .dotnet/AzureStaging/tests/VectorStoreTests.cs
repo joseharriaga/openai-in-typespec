@@ -33,7 +33,6 @@ public class VectorStoreTests : TestBase<VectorStoreClient>
         Validate(vectorStore);
         bool deleted = client.DeleteVectorStore(vectorStore);
         Assert.That(deleted, Is.True);
-        _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
@@ -77,7 +76,6 @@ public class VectorStoreTests : TestBase<VectorStoreClient>
 
         deleted = client.DeleteVectorStore(vectorStore.Id);
         Assert.That(deleted, Is.True);
-        _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
         vectorStore = client.CreateVectorStore(new()
         {
@@ -190,7 +188,6 @@ public class VectorStoreTests : TestBase<VectorStoreClient>
 
         bool removed = client.RemoveFileFromStore(vectorStore, files[0]);
         Assert.True(removed);
-        _associationsToRemove.RemoveAt(0);
 
         // Errata: removals aren't immediately reflected when requesting the list
         Thread.Sleep(1000);
@@ -265,82 +262,6 @@ public class VectorStoreTests : TestBase<VectorStoreClient>
 
         return files;
     }
-    [TearDown]
-    protected void Cleanup()
-    {
-        AzureOpenAIClient cleanupClient = GetTestTopLevelClient(new()
-        {
-            ShouldOutputRequests = false,
-            ShouldOutputResponses = false,
-        });
-        FileClient fileClient = cleanupClient.GetFileClient();
-        VectorStoreClient vectorStoreClient = cleanupClient.GetVectorStoreClient();
-        RequestOptions requestOptions = new()
-        {
-            ErrorOptions = ClientErrorBehaviors.NoThrow,
-        };
-        foreach (VectorStoreBatchFileJob job in _jobsToCancel)
-        {
-            ClientResult protocolResult = vectorStoreClient.CancelBatchFileJob(job.VectorStoreId, job.BatchId, requestOptions);
-            Console.WriteLine($"Cleanup: {job.BatchId} => {protocolResult?.GetRawResponse()?.Status}");
-        }
-        foreach (VectorStoreFileAssociation association in _associationsToRemove)
-        {
-            ClientResult protocolResult = vectorStoreClient.RemoveFileFromStore(association.VectorStoreId, association.FileId, requestOptions);
-            Console.WriteLine($"Cleanup: {association.FileId}<->{association.VectorStoreId} => {protocolResult?.GetRawResponse()?.Status}");
-        }
-        foreach (OpenAIFileInfo file in _filesToDelete)
-        {
-            Console.WriteLine($"Cleanup: {file.Id} -> {fileClient.DeleteFile(file.Id, requestOptions)?.GetRawResponse()?.Status}");
-        }
-        foreach (VectorStore vectorStore in _vectorStoresToDelete)
-        {
-            Console.WriteLine($"Cleanup: {vectorStore.Id} => {vectorStoreClient.DeleteVectorStore(vectorStore.Id, requestOptions)?.GetRawResponse()?.Status}");
-        }
-        _filesToDelete.Clear();
-        _vectorStoresToDelete.Clear();
-    }
-
-    /// <summary>
-    /// Performs basic, invariant validation of a target that was just instantiated from its corresponding origination
-    /// mechanism. If applicable, the instance is recorded into the test run for cleanup of persistent resources.
-    /// </summary>
-    /// <typeparam name="T"> Instance type being validated. </typeparam>
-    /// <param name="target"> The instance to validate. </param>
-    /// <exception cref="NotImplementedException"> The provided instance type isn't supported. </exception>
-    private void Validate<T>(T target)
-    {
-        if (target is VectorStoreBatchFileJob job)
-        {
-            Assert.That(job.BatchId, Is.Not.Null);
-            _jobsToCancel.Add(job);
-        }
-        else if (target is VectorStoreFileAssociation association)
-        {
-            Assert.That(association?.FileId, Is.Not.Null);
-            Assert.That(association?.VectorStoreId, Is.Not.Null);
-            _associationsToRemove.Add(association);
-        }
-        else if (target is OpenAIFileInfo file)
-        {
-            Assert.That(file?.Id, Is.Not.Null);
-            _filesToDelete.Add(file);
-        }
-        else if (target is VectorStore vectorStore)
-        {
-            Assert.That(vectorStore?.Id, Is.Not.Null);
-            _vectorStoresToDelete.Add(vectorStore);
-        }
-        else
-        {
-            throw new NotImplementedException($"{nameof(Validate)} helper not implemented for: {typeof(T)}");
-        }
-    }
-
-    private readonly List<VectorStoreBatchFileJob> _jobsToCancel = [];
-    private readonly List<VectorStoreFileAssociation> _associationsToRemove = [];
-    private readonly List<OpenAIFileInfo> _filesToDelete = [];
-    private readonly List<VectorStore> _vectorStoresToDelete = [];
 
     private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
 }

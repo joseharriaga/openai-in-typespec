@@ -182,6 +182,9 @@ public class TestBase<TClient>
             case nameof(ThreadMessage):
                 _threadIdsWithMessageIdsToDelete.Add((parentId, id));
                 break;
+            case nameof(VectorStoreFileAssociation):
+                _vectorStoreFileAssociationsToRemove.Add((parentId, id));
+                break;
             default:
                 throw new NotImplementedException();
         }
@@ -199,6 +202,10 @@ public class TestBase<TClient>
         if (target is ThreadMessage message)
         {
             ValidateById<ThreadMessage>(message.Id, message.ThreadId);
+        }
+        else if (target is VectorStoreFileAssociation fileAssociation)
+        {
+            ValidateById<VectorStoreFileAssociation>(fileAssociation.VectorStoreId, fileAssociation.FileId);
         }
         else
         {
@@ -240,6 +247,10 @@ public class TestBase<TClient>
         {
             Console.WriteLine($"Cleanup: {threadId} -> {client.DeleteThread(threadId, requestOptions)?.GetRawResponse().Status}");
         }
+        foreach ((string vectorStoreId, string fileId) in _vectorStoreFileAssociationsToRemove)
+        {
+            Console.WriteLine($"Cleanup: {vectorStoreId}<->{fileId} => {vectorStoreClient.RemoveFileFromStore(vectorStoreId, fileId, requestOptions)?.GetRawResponse().Status}");
+        }
         foreach (string vectorStoreId in _vectorStoreIdsToDelete)
         {
             Console.WriteLine($"Cleanup: {vectorStoreId} => {vectorStoreClient.DeleteVectorStore(vectorStoreId, requestOptions)?.GetRawResponse().Status}");
@@ -251,6 +262,7 @@ public class TestBase<TClient>
         _threadIdsWithMessageIdsToDelete.Clear();
         _assistantIdsToDelete.Clear();
         _threadIdsToDelete.Clear();
+        _vectorStoreFileAssociationsToRemove.Clear();
         _vectorStoreIdsToDelete.Clear();
         _fileIdsToDelete.Clear();
     }
@@ -259,6 +271,7 @@ public class TestBase<TClient>
     private readonly List<string> _threadIdsToDelete = [];
     private readonly List<(string, string)> _threadIdsWithMessageIdsToDelete = [];
     private readonly List<string> _fileIdsToDelete = [];
+    private readonly List<(string, string)> _vectorStoreFileAssociationsToRemove = [];
     private readonly List<string> _vectorStoreIdsToDelete = [];
 }
 

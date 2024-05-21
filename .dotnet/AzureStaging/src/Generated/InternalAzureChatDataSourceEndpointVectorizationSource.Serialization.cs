@@ -24,7 +24,7 @@ namespace Azure.AI.OpenAI.Chat
             writer.WritePropertyName("endpoint"u8);
             writer.WriteStringValue(Endpoint.AbsoluteUri);
             writer.WritePropertyName("authentication"u8);
-            writer.WriteObjectValue(Authentication, options);
+            writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
             if (Optional.IsDefined(Dimensions))
             {
                 writer.WritePropertyName("dimensions"u8);

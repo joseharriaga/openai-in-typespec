@@ -255,7 +255,9 @@ components:
           type: string
           format: uri
         authentication:
-          $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+          anyOf:
+            - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
+            - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
         dimensions:
           type: integer
           format: int32

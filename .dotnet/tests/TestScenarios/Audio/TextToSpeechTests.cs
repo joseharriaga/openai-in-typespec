@@ -1,38 +1,52 @@
 ﻿using NUnit.Framework;
 using OpenAI.Audio;
+using OpenAI.Tests.Utility;
 using System;
-using System.ClientModel;
+using System.Threading.Tasks;
 
 namespace OpenAI.Tests.Audio;
 
-public partial class TextToSpeechTests
+[TestFixture(true)]
+[TestFixture(false)]
+public partial class TextToSpeechTests : SyncAsyncTestBase
 {
+    public TextToSpeechTests(bool isAsync)
+    : base(isAsync)
+    {
+    }
+
     [Test]
-    public void BasicTextToSpeechWorks()
+    public async Task BasicTextToSpeechWorks()
     {
         AudioClient client = new("tts-1");
-        ClientResult<BinaryData> result = client.GenerateSpeechFromText("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer);
-        BinaryData audio = result.Value;
-        
-        Assert.NotNull(audio);
+
+        BinaryData audio = IsAsync
+            ? await client.GenerateSpeechFromTextAsync("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer)
+            : client.GenerateSpeechFromText("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer);
+
+        Assert.That(audio, Is.Not.Null);
     }
 
     [Test]
     [TestCase(null)]
     [TestCase(GeneratedSpeechFormat.Mp3)]
-    [TestCase(GeneratedSpeechFormat.Aac)]
     [TestCase(GeneratedSpeechFormat.Opus)]
+    [TestCase(GeneratedSpeechFormat.Aac)]
     [TestCase(GeneratedSpeechFormat.Flac)]
-    public void OutputFormatWorks(GeneratedSpeechFormat? responseFormat)
+    [TestCase(GeneratedSpeechFormat.Wav)]
+    [TestCase(GeneratedSpeechFormat.Pcm)]
+    public async Task OutputFormatWorks(GeneratedSpeechFormat? responseFormat)
     {
         AudioClient client = new("tts-1");
+
         SpeechGenerationOptions options = responseFormat == null
             ? new()
             : new() { ResponseFormat = responseFormat };
 
-        ClientResult<BinaryData> result = client.GenerateSpeechFromText("Hello, world!", GeneratedSpeechVoice.Alloy, options);
-        BinaryData audio = result.Value;
+        BinaryData audio = IsAsync
+            ? await client.GenerateSpeechFromTextAsync("Hello, world!", GeneratedSpeechVoice.Alloy, options)
+            : client.GenerateSpeechFromText("Hello, world!", GeneratedSpeechVoice.Alloy, options);
 
-        Assert.NotNull(audio);
+        Assert.That(audio, Is.Not.Null);
     }
 }

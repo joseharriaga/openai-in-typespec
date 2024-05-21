@@ -114,7 +114,7 @@ namespace OpenAI.Audio
                 return null;
             }
             BinaryData file = default;
-            CreateTranscriptionRequestModel model = default;
+            InternalCreateTranscriptionRequestModel model = default;
             string language = default;
             string prompt = default;
             AudioTranscriptionFormat? responseFormat = default;
@@ -131,7 +131,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("model"u8))
                 {
-                    model = new CreateTranscriptionRequestModel(property.Value.GetString());
+                    model = new InternalCreateTranscriptionRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("language"u8))

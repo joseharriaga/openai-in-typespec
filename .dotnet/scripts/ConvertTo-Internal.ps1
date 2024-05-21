@@ -341,6 +341,7 @@ function Edit-GeneratedModels {
         "VectorStoreCreationHelper.cs",
         "VectorStoreCreationHelper.Serialization.cs",
 
+        # OpenAI.Audio namespace
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",
         "AudioTranscriptionFormat.Serialization.cs",
@@ -351,11 +352,11 @@ function Edit-GeneratedModels {
         "AudioTranslationFormat.Serialization.cs",
         "AudioTranslationOptions.cs",
         "AudioTranslationOptions.Serialization.cs",
-        "CreateTranscriptionResponseVerboseJsonTask.cs",
-        "CreateTranslationResponseVerboseJsonTask.cs",
-        "CreateSpeechRequestModel.cs",
-        "CreateTranscriptionRequestModel.cs",
-        "CreateTranslationRequestModel.cs"
+        "InternalCreateSpeechRequestModel.cs",
+        "InternalCreateTranscriptionRequestModel.cs",
+        "InternalCreateTranscriptionResponseVerboseJsonTask.cs",
+        "InternalCreateTranslationRequestModel.cs"
+        "InternalCreateTranslationResponseVerboseJsonTask.cs",
         "GeneratedSpeechFormat.Serialization.cs",
         "GeneratedSpeechVoice.Serialization.cs",
         "SpeechGenerationOptions.cs",
@@ -365,6 +366,7 @@ function Edit-GeneratedModels {
         "TranscribedWord.cs",
         "TranscribedWord.Serialization.cs",
 
+        # OpenAI.Chat namespace
         "AssistantChatMessage.cs",
         "AssistantChatMessage.Serialization.cs",
         "ChatCompletion.cs",
@@ -468,33 +470,36 @@ function Edit-GeneratedModels {
         "UserChatMessage.cs",
         "UserChatMessage.Serialization.cs", 
 
-        "CreateEmbeddingRequestModel.cs",
-        "CreateEmbeddingResponseObject.cs",
+        # OpenAI.Embeddings namespace
         "Embedding.cs",
         "Embedding.Serialization.cs",
         "EmbeddingCollection.cs",
         "EmbeddingCollection.Serialization.cs",
-        "EmbeddingObject.cs",
-        "EmbeddingOptions.cs",
-        "EmbeddingOptions.Serialization.cs",
-        "EmbeddingOptionsEncodingFormat.cs",
+        "EmbeddingGenerationOptions.cs",
+        "EmbeddingGenerationOptions.Serialization.cs",
         "EmbeddingTokenUsage.cs",
         "EmbeddingTokenUsage.Serialization.cs",
+        "InternalCreateEmbeddingRequestModel.cs",
+        "InternalCreateEmbeddingResponseObject.cs",
+        "InternalEmbeddingGenerationOptionsEncodingFormat.cs",
+        "InternalEmbeddingObject.cs",
 
+        # OpenAI.Files namespace
+        "FileUploadPurpose.cs",
         "InternalDeleteFileResponse.cs",
         "InternalDeleteFileResponse.Serialization.cs",
-        "ListFilesResponseObject.cs",
+        "InternalFileUploadOptions.cs",
+        "InternalFileUploadOptions.Serialization.cs",
+        "InternalListFilesResponseObject.cs",
+        "InternalOpenAIFileObject.cs",
         "OpenAIFileInfo.cs",
         "OpenAIFileInfo.Serialization.cs",
         "OpenAIFileInfoCollection.cs",
         "OpenAIFileInfoCollection.Serialization.cs",
-        "OpenAIFileObject.cs",
         "OpenAIFilePurpose.cs",
         "OpenAIFileStatus.cs",
-        "UploadFileOptions.cs",
-        "UploadFileOptions.Serialization.cs",
-        "UploadFileOptionsPurpose.cs"
 
+        # OpenAI.FineTuning namespace
         "CreateFineTuningJobRequest.cs",
         "CreateFineTuningJobRequest.Serialization.cs",
         "CreateFineTuningJobRequestHyperparameters.cs",
@@ -535,9 +540,7 @@ function Edit-GeneratedModels {
         "ListFineTuningJobEventsResponse.Serialization.cs",
         "ListFineTuningJobEventsResponseObject.cs",
 
-        "CreateImageEditRequestModel.cs",
-        "CreateImageRequestModel.cs",
-        "CreateImageVariationRequestModel.cs",
+        # OpenAI.Images namespace
         "GeneratedImage.cs",
         "GeneratedImage.Serialization.cs",
         "GeneratedImageCollection.cs",
@@ -554,9 +557,13 @@ function Edit-GeneratedModels {
         "ImageGenerationOptions.Serialization.cs",
         "ImageVariationOptions.cs",
         "ImageVariationOptions.Serialization.cs",
-        "ImageVariationOptionsResponseFormat.cs",
-        "ImageVariationOptionsSize.cs",
+        "InternalCreateImageEditRequestModel.cs",
+        "InternalCreateImageRequestModel.cs",
+        "InternalCreateImageVariationRequestModel.cs",
+        "InternalImageVariationOptionsResponseFormat.cs",
+        "InternalImageVariationOptionsSize.cs",
 
+        # OpenAI.LegacyCompletions namespace
         "CreateCompletionRequest.cs",
         "CreateCompletionRequest.Serialization.cs",
         "CreateCompletionRequestModel.cs",
@@ -571,9 +578,7 @@ function Edit-GeneratedModels {
         "CompletionUsage.cs",
         "CompletionUsage.Serialization.cs",
 
-        "InternalChatCompletionStreamOptions.cs",
-        "InternalChatCompletionStreamOptions.Serialization.cs",
-
+        # OpenAI.Models namespace
         "InternalDeleteModelResponse.cs",
         "InternalDeleteModelResponse.Serialization.cs",
         "ListModelsResponseObject.cs",
@@ -583,6 +588,7 @@ function Edit-GeneratedModels {
         "OpenAIModelInfoCollection.cs",
         "OpenAIModelInfoCollection.Serialization.cs",
 
+        # OpenAI.Moderation namespace
         "CreateModerationRequestModel.cs",
         "ModerationCategories.cs",
         "ModerationCategories.Serialization.cs",
@@ -595,6 +601,7 @@ function Edit-GeneratedModels {
         "ModerationResult.cs",
         "ModerationResult.Serialization.cs",
 
+        # OpenAI.VectorStores namespace
         "InternalBatchCompletionTimeframe.cs",
         "InternalBatchError.cs",
         "InternalBatchError.Serialization.cs",

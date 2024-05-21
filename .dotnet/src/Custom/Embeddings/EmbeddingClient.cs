@@ -10,8 +10,8 @@ namespace OpenAI.Embeddings;
 /// <summary> The service client for the OpenAI Embeddings endpoint. </summary>
 [CodeGenClient("Embeddings")]
 [CodeGenSuppress("EmbeddingClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingOptions))]
-[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingOptions))]
+[CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingGenerationOptions))]
+[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingGenerationOptions))]
 public partial class EmbeddingClient
 {
     private readonly string _model;
@@ -73,15 +73,15 @@ public partial class EmbeddingClient
     // CUSTOM: Added to simplify generating a single embedding from a string input.
     /// <summary> Creates an embedding vector representing the input text. </summary>
     /// <param name="input"> The string that will be turned into an embedding. </param>
-    /// <param name="options"> The <see cref="EmbeddingOptions"/> to use. </param>
+    /// <param name="options"> The <see cref="EmbeddingGenerationOptions"/> to use. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="input"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="input"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingOptions options = null)
+    public virtual async Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
         options ??= new();
-        CreateEmbeddingOptions(BinaryData.FromObjectAsJson(input), ref options);
+        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(input), ref options);
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
@@ -91,15 +91,15 @@ public partial class EmbeddingClient
     // CUSTOM: Added to simplify generating a single embedding from a string input.
     /// <summary> Creates an embedding vector representing the input text. </summary>
     /// <param name="input"> The string that will be turned into an embedding. </param>
-    /// <param name="options"> The <see cref="EmbeddingOptions"/> to use. </param>
+    /// <param name="options"> The <see cref="EmbeddingGenerationOptions"/> to use. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="input"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="input"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingOptions options = null)
+    public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
         options ??= new();
-        CreateEmbeddingOptions(BinaryData.FromObjectAsJson(input), ref options);
+        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(input), ref options);
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
@@ -109,15 +109,15 @@ public partial class EmbeddingClient
     // CUSTOM: Added to simplify passing the input as a collection of strings instead of BinaryData.
     /// <summary> Creates an embedding vector representing the input text. </summary>
     /// <param name="inputs"> The strings that will be turned into embeddings. </param>
-    /// <param name="options"> The <see cref="EmbeddingOptions"/> to use. </param>
+    /// <param name="options"> The <see cref="EmbeddingGenerationOptions"/> to use. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingOptions options = null)
+    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         options ??= new();
-        CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
@@ -128,15 +128,15 @@ public partial class EmbeddingClient
     // CUSTOM: Added to simplify passing the input as a collection of strings instead of BinaryData.
     /// <summary> Creates an embedding vector representing the input text. </summary>
     /// <param name="inputs"> The strings that will be turned into embeddings. </param>
-    /// <param name="options"> The <see cref="EmbeddingOptions"/> to use. </param>
+    /// <param name="options"> The <see cref="EmbeddingGenerationOptions"/> to use. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingOptions options = null)
+    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         options ??= new();
-        CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
@@ -146,15 +146,15 @@ public partial class EmbeddingClient
     // CUSTOM: Added to simplify passing the input as a collection of a collection of tokens instead of BinaryData.
     /// <summary> Creates an embedding vector representing the input text. </summary>
     /// <param name="inputs"> The strings that will be turned into embeddings. </param>
-    /// <param name="options"> The <see cref="EmbeddingOptions"/> to use. </param>
+    /// <param name="options"> The <see cref="EmbeddingGenerationOptions"/> to use. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingOptions options = null)
+    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         options ??= new();
-        CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = await GenerateEmbeddingsAsync(content, (RequestOptions)null).ConfigureAwait(false);
@@ -164,25 +164,25 @@ public partial class EmbeddingClient
     // CUSTOM: Added to simplify passing the input as a collection of a collection of tokens instead of BinaryData.
     /// <summary> Creates an embedding vector representing the input text. </summary>
     /// <param name="inputs"> The strings that will be turned into embeddings. </param>
-    /// <param name="options"> The <see cref="EmbeddingOptions"/> to use. </param>
+    /// <param name="options"> The <see cref="EmbeddingGenerationOptions"/> to use. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingOptions options = null)
+    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         options ??= new();
-        CreateEmbeddingOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = GenerateEmbeddings(content, (RequestOptions)null);
         return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    private void CreateEmbeddingOptions(BinaryData input, ref EmbeddingOptions options)
+    private void CreateEmbeddingGenerationOptions(BinaryData input, ref EmbeddingGenerationOptions options)
     {
         options.Input = input;
         options.Model = _model;
-        options.EncodingFormat = EmbeddingOptionsEncodingFormat.Base64;
+        options.EncodingFormat = InternalEmbeddingGenerationOptionsEncodingFormat.Base64;
     }
 }

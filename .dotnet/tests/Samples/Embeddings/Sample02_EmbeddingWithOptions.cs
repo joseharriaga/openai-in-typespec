@@ -17,7 +17,7 @@ namespace OpenAI.Samples
                 + " and a really helpful concierge. The location is perfect -- right downtown, close to all "
                 + " the tourist attractions. We highly recommend this hotel.";
 
-            EmbeddingOptions options = new() { Dimensions = 512 };
+            EmbeddingGenerationOptions options = new() { Dimensions = 512 };
 
             Embedding embedding = client.GenerateEmbedding(description, options);
             ReadOnlyMemory<float> vector = embedding.Vector;

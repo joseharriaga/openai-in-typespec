@@ -57,7 +57,7 @@ public partial class Embedding
 
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> The object type, which is always "embedding". </summary>
-    private EmbeddingObject Object { get; } = EmbeddingObject.Embedding;
+    private InternalEmbeddingObject Object { get; } = InternalEmbeddingObject.Embedding;
 
     // CUSTOM: Added logic to handle additional custom properties.
     /// <summary> Initializes a new instance of <see cref="Embedding"/>. </summary>
@@ -68,7 +68,7 @@ public partial class Embedding
     /// </param>
     /// <param name="object"> The object type, which is always "embedding". </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-    internal Embedding(int index, BinaryData embeddingProperty, EmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal Embedding(int index, BinaryData embeddingProperty, InternalEmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
         Index = (int)index;
         EmbeddingProperty = embeddingProperty;

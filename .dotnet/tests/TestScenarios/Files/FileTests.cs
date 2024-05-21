@@ -25,14 +25,13 @@ public partial class FileTests : SyncAsyncTestBase
         OpenAIFileInfoCollection allFiles = IsAsync
             ? await client.GetFilesAsync()
             : client.GetFiles();
-        Assert.Greater(allFiles.Count, 0);
+        Assert.That(allFiles.Count, Is.GreaterThan(0));
         Console.WriteLine($"Total files count: {allFiles.Count}");
 
         OpenAIFileInfoCollection assistantsFiles = IsAsync
             ? await client.GetFilesAsync(OpenAIFilePurpose.Assistants)
             : client.GetFiles(OpenAIFilePurpose.Assistants);
-        Assert.Greater(assistantsFiles.Count, 0);
-        Assert.Less(assistantsFiles.Count, allFiles.Count);
+        Assert.That(assistantsFiles.Count, Is.GreaterThan(0).And.LessThan(allFiles.Count));
         Console.WriteLine($"Assistant files count: {assistantsFiles.Count}");
     }
 
@@ -44,22 +43,22 @@ public partial class FileTests : SyncAsyncTestBase
         string filename = "test-file-delete-me.txt";
 
         OpenAIFileInfo uploadedFile = IsAsync
-            ? await client.UploadFileAsync(file, filename, OpenAIFilePurpose.Assistants)
-            : client.UploadFile(file, filename, OpenAIFilePurpose.Assistants);
-        Assert.NotNull(uploadedFile);
-        Assert.AreEqual(filename, uploadedFile.Filename);
-        Assert.AreEqual(OpenAIFilePurpose.Assistants, uploadedFile.Purpose);
+            ? await client.UploadFileAsync(file, filename, FileUploadPurpose.Assistants)
+            : client.UploadFile(file, filename, FileUploadPurpose.Assistants);
+        Assert.That(uploadedFile, Is.Not.Null);
+        Assert.That(uploadedFile.Filename, Is.EqualTo(filename));
+        Assert.That(uploadedFile.Purpose, Is.EqualTo(OpenAIFilePurpose.Assistants));
 
         OpenAIFileInfo fileInfo = IsAsync
             ? await client.GetFileAsync(uploadedFile.Id)
             : client.GetFile(uploadedFile.Id);
-        Assert.AreEqual(uploadedFile.Id, fileInfo.Id);
-        Assert.AreEqual(uploadedFile.Filename, fileInfo.Filename);
+        Assert.That(fileInfo.Id, Is.EqualTo(uploadedFile.Id));
+        Assert.That(fileInfo.Filename, Is.EqualTo(uploadedFile.Filename));
 
         bool deleted = IsAsync
             ? await client.DeleteFileAsync(uploadedFile.Id)
             : client.DeleteFile(uploadedFile.Id);
-        Assert.IsTrue(deleted);
+        Assert.That(deleted, Is.True);
     }
 
     [Test]
@@ -70,7 +69,7 @@ public partial class FileTests : SyncAsyncTestBase
         OpenAIFileInfo fileInfo = IsAsync
             ? await client.GetFileAsync("file-S7roYWamZqfMK9D979HU4q6m")
             : client.GetFile("file-S7roYWamZqfMK9D979HU4q6m");
-        Assert.NotNull(fileInfo);
+        Assert.That(fileInfo, Is.Not.Null);
 
         BinaryData downloadedContent = IsAsync
             ? await client.DownloadFileAsync("file-S7roYWamZqfMK9D979HU4q6m")

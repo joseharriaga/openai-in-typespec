@@ -87,7 +87,7 @@ namespace OpenAI.Audio
                 return null;
             }
             BinaryData file = default;
-            CreateTranslationRequestModel model = default;
+            InternalCreateTranslationRequestModel model = default;
             string prompt = default;
             AudioTranslationFormat? responseFormat = default;
             float? temperature = default;
@@ -102,7 +102,7 @@ namespace OpenAI.Audio
                 }
                 if (property.NameEquals("model"u8))
                 {
-                    model = new CreateTranslationRequestModel(property.Value.GetString());
+                    model = new InternalCreateTranslationRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("prompt"u8))

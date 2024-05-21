@@ -11,8 +11,8 @@ namespace OpenAI.Files;
 /// </summary>
 [CodeGenClient("Files")]
 [CodeGenSuppress("FileClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateFileAsync", typeof(UploadFileOptions))]
-[CodeGenSuppress("CreateFile", typeof(UploadFileOptions))]
+[CodeGenSuppress("CreateFileAsync", typeof(InternalFileUploadOptions))]
+[CodeGenSuppress("CreateFile", typeof(InternalFileUploadOptions))]
 [CodeGenSuppress("GetFilesAsync", typeof(string))]
 [CodeGenSuppress("GetFiles", typeof(string))]
 [CodeGenSuppress("RetrieveFileAsync", typeof(string))]
@@ -80,14 +80,14 @@ public partial class FileClient
     /// <param name="filename"> TODO. </param>
     /// <param name="purpose"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, OpenAIFilePurpose purpose)
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
         Argument.AssertNotNullOrEmpty(filename, nameof(filename));
 
-        UploadFileOptions options = new()
+        InternalFileUploadOptions options = new()
         {
-            Purpose = new UploadFileOptionsPurpose(purpose.ToString())
+            Purpose = purpose
         };
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
@@ -109,14 +109,14 @@ public partial class FileClient
     /// <param name="filename"> TODO. </param>
     /// <param name="purpose"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, OpenAIFilePurpose purpose)
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
         Argument.AssertNotNullOrEmpty(filename, nameof(filename));
 
-        UploadFileOptions options = new()
+        InternalFileUploadOptions options = new()
         {
-            Purpose = new UploadFileOptionsPurpose(purpose.ToString())
+            Purpose = purpose
         };
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
@@ -138,7 +138,7 @@ public partial class FileClient
     /// <param name="filename"> TODO. </param>
     /// <param name="purpose"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-    public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, OpenAIFilePurpose purpose)
+    public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
         Argument.AssertNotNullOrEmpty(filename, nameof(filename));
@@ -161,7 +161,7 @@ public partial class FileClient
     /// <param name="filename"> TODO. </param>
     /// <param name="purpose"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, OpenAIFilePurpose purpose)
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
         Argument.AssertNotNullOrEmpty(filename, nameof(filename));
@@ -182,7 +182,7 @@ public partial class FileClient
     /// <param name="filePath"> TODO. </param>
     /// <param name="purpose"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="filePath"/> is null. </exception>
-    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, OpenAIFilePurpose purpose)
+    public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, FileUploadPurpose purpose)
     {
         Argument.AssertNotNullOrEmpty(filePath, nameof(filePath));
 
@@ -203,7 +203,7 @@ public partial class FileClient
     /// <param name="filePath"> TODO. </param>
     /// <param name="purpose"> TODO. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="filePath"/> is null. </exception>
-    public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, OpenAIFilePurpose purpose)
+    public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, FileUploadPurpose purpose)
     {
         Argument.AssertNotNullOrEmpty(filePath, nameof(filePath));
 

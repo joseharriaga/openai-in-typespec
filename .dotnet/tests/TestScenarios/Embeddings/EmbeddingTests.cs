@@ -28,13 +28,13 @@ public partial class EmbeddingTests : SyncAsyncTestBase
         Embedding embedding = IsAsync
             ? await client.GenerateEmbeddingAsync(input)
             : client.GenerateEmbedding(input);
-        Assert.IsNotNull(embedding);
-        Assert.AreEqual(0, embedding.Index);
-        Assert.IsNotNull(embedding.Vector);
-        Assert.AreEqual(1536, embedding.Vector.Span.Length);
+        Assert.That(embedding, Is.Not.Null);
+        Assert.That(embedding.Index, Is.EqualTo(0));
+        Assert.That(embedding.Vector, Is.Not.Null);
+        Assert.That(embedding.Vector.Span.Length, Is.EqualTo(1536));
         
         float[] array = embedding.Vector.ToArray();
-        Assert.AreEqual(1536, array.Length);
+        Assert.That(array.Length, Is.EqualTo(1536));
     }
 
     [Test]
@@ -51,7 +51,7 @@ public partial class EmbeddingTests : SyncAsyncTestBase
             "Goodbye!"
         ];
 
-        EmbeddingOptions options = new()
+        EmbeddingGenerationOptions options = new()
         {
             Dimensions = Dimensions,
         };
@@ -59,39 +59,46 @@ public partial class EmbeddingTests : SyncAsyncTestBase
         EmbeddingCollection embeddings = IsAsync
             ? await client.GenerateEmbeddingsAsync(prompts, options)
             : client.GenerateEmbeddings(prompts, options);
-        Assert.IsNotNull(embeddings);
-        Assert.AreEqual(3, embeddings.Count);
-        Assert.AreEqual("text-embedding-3-small", embeddings.Model);
-        Assert.Greater(embeddings.Usage.InputTokens, 0);
-        Assert.Greater(embeddings.Usage.TotalTokens, 0);
+        Assert.That(embeddings, Is.Not.Null);
+        Assert.That(embeddings.Count, Is.EqualTo(3));
+        Assert.That(embeddings.Model, Is.EqualTo("text-embedding-3-small"));
+        Assert.That(embeddings.Usage.InputTokens, Is.GreaterThan(0));
+        Assert.That(embeddings.Usage.TotalTokens, Is.GreaterThan(0));
 
         for (int i = 0; i < embeddings.Count; i++)
         {
-            Assert.AreEqual(i, embeddings[i].Index);
-            Assert.NotNull(embeddings[i].Vector);
-            Assert.AreEqual(Dimensions, embeddings[i].Vector.Span.Length);
+            Assert.That(embeddings[i].Index, Is.EqualTo(i));
+            Assert.That(embeddings[i].Vector, Is.Not.Null);
+            Assert.That(embeddings[i].Vector.Span.Length, Is.EqualTo(Dimensions));
 
             float[] array = embeddings[i].Vector.ToArray();
-            Assert.AreEqual(Dimensions, array.Length);
+            Assert.That(array.Length, Is.EqualTo(Dimensions));
         }
     }
 
     [Test]
-    public void BadOptions()
+    public async Task BadOptions()
     {
         EmbeddingClient client = GetTestClient();
+
+        EmbeddingGenerationOptions options = new()
+        {
+            Dimensions = -42,
+        };
+
         Exception caughtException = null;
+
         try
         {
-            client.GenerateEmbedding("foo", new EmbeddingOptions()
-            {
-                Dimensions = -42,
-            });
+            _ = IsAsync
+                ? await client.GenerateEmbeddingAsync("foo", options)
+                : client.GenerateEmbedding("foo", options);
         }
         catch (Exception ex)
         {
             caughtException = ex;
         }
+
         Assert.That(caughtException, Is.InstanceOf<ClientResultException>());
         Assert.That(caughtException.Message, Contains.Substring("dimensions"));
     }

@@ -17,7 +17,7 @@ internal static partial class OpenAIModelFactory
     {
         data ??= new List<Embedding>();
 
-        return new EmbeddingCollection(data?.ToList(), model, CreateEmbeddingResponseObject.List, usage, serializedAdditionalRawData: null);
+        return new EmbeddingCollection(data?.ToList(), model, InternalCreateEmbeddingResponseObject.List, usage, serializedAdditionalRawData: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="Embeddings.Embedding"/>. </summary>
@@ -30,7 +30,7 @@ internal static partial class OpenAIModelFactory
     public static Embedding Embedding(ReadOnlyMemory<float> vector = default, int index = default)
     {
         // TODO: Vector must be converted to base64-encoded string.
-        return new Embedding(index, BinaryData.FromObjectAsJson(vector), EmbeddingObject.Embedding, serializedAdditionalRawData: null);
+        return new Embedding(index, BinaryData.FromObjectAsJson(vector), InternalEmbeddingObject.Embedding, serializedAdditionalRawData: null);
     }
 
 }

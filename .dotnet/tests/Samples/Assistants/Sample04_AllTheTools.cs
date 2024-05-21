@@ -57,7 +57,7 @@ public partial class AssistantSamples
                 Jane Doe: 44
                 """).ToStream(),
             "favorite_numbers.txt",
-            OpenAIFilePurpose.Assistants);
+            FileUploadPurpose.Assistants);
         #endregion
 
         #region Create an assistant with functions, file search, and code interpreter all enabled

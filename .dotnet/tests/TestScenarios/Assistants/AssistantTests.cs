@@ -488,7 +488,7 @@ public partial class AssistantTests
             Filip Carola: cake
             """).ToStream(),
             "favorite_foods.txt",
-            OpenAIFilePurpose.Assistants);
+            FileUploadPurpose.Assistants);
         Validate(testFile);
 
         AssistantClient client = GetTestClient();

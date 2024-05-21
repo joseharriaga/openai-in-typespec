@@ -5,14 +5,14 @@ namespace OpenAI.Audio;
 /// operation.
 /// </summary>
 [CodeGenModel("CreateSpeechRequest")]
-[CodeGenSuppress("SpeechGenerationOptions", typeof(CreateSpeechRequestModel), typeof(string), typeof(GeneratedSpeechVoice))]
+[CodeGenSuppress("SpeechGenerationOptions", typeof(InternalCreateSpeechRequestModel), typeof(string), typeof(GeneratedSpeechVoice))]
 public partial class SpeechGenerationOptions
 {
     // CUSTOM:
     // - Made internal. The model is specified by the client.
     // - Added setter.
     /// <summary> One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`. </summary>
-    internal CreateSpeechRequestModel Model { get; set; }
+    internal InternalCreateSpeechRequestModel Model { get; set; }
 
     // CUSTOM:
     // - Made internal. This value comes from a parameter on the client method.

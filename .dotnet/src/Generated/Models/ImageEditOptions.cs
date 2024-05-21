@@ -66,7 +66,7 @@ namespace OpenAI.Images
         /// <param name="responseFormat"> The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated. </param>
         /// <param name="user"> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ImageEditOptions(BinaryData image, string prompt, BinaryData mask, CreateImageEditRequestModel? model, long? n, GeneratedImageSize? size, GeneratedImageFormat? responseFormat, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ImageEditOptions(BinaryData image, string prompt, BinaryData mask, InternalCreateImageEditRequestModel? model, long? n, GeneratedImageSize? size, GeneratedImageFormat? responseFormat, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Image = image;
             Prompt = prompt;

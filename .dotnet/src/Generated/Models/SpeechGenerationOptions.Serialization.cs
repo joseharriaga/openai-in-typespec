@@ -75,7 +75,7 @@ namespace OpenAI.Audio
             {
                 return null;
             }
-            CreateSpeechRequestModel model = default;
+            InternalCreateSpeechRequestModel model = default;
             string input = default;
             GeneratedSpeechVoice voice = default;
             GeneratedSpeechFormat? responseFormat = default;
@@ -86,7 +86,7 @@ namespace OpenAI.Audio
             {
                 if (property.NameEquals("model"u8))
                 {
-                    model = new CreateSpeechRequestModel(property.Value.GetString());
+                    model = new InternalCreateSpeechRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("input"u8))

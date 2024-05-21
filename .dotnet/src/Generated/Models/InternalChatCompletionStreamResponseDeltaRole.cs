@@ -5,10 +5,10 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Models
+namespace OpenAI.Chat
 {
     /// <summary> Enum for role in InternalChatCompletionStreamResponseDelta. </summary>
-    public readonly partial struct InternalChatCompletionStreamResponseDeltaRole : IEquatable<InternalChatCompletionStreamResponseDeltaRole>
+    internal readonly partial struct InternalChatCompletionStreamResponseDeltaRole : IEquatable<InternalChatCompletionStreamResponseDeltaRole>
     {
         private readonly string _value;
 

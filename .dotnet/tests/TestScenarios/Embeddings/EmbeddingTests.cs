@@ -51,7 +51,7 @@ public partial class EmbeddingTests : SyncAsyncTestBase
             "Goodbye!"
         ];
 
-        EmbeddingOptions options = new()
+        EmbeddingGenerationOptions options = new()
         {
             Dimensions = Dimensions,
         };
@@ -77,21 +77,28 @@ public partial class EmbeddingTests : SyncAsyncTestBase
     }
 
     [Test]
-    public void BadOptions()
+    public async Task BadOptions()
     {
         EmbeddingClient client = GetTestClient();
+
+        EmbeddingGenerationOptions options = new()
+        {
+            Dimensions = -42,
+        };
+
         Exception caughtException = null;
+
         try
         {
-            client.GenerateEmbedding("foo", new EmbeddingOptions()
-            {
-                Dimensions = -42,
-            });
+            _ = IsAsync
+                ? await client.GenerateEmbeddingAsync("foo", options)
+                : client.GenerateEmbedding("foo", options);
         }
         catch (Exception ex)
         {
             caughtException = ex;
         }
+
         Assert.That(caughtException, Is.InstanceOf<ClientResultException>());
         Assert.That(caughtException.Message, Contains.Substring("dimensions"));
     }

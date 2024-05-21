@@ -25,7 +25,7 @@ public partial class EmbeddingClient
     /// </item>
     /// <item>
     /// <description>
-    /// Please try the simpler <see cref="GenerateEmbeddings(IEnumerable{string}, EmbeddingOptions)"/> convenience overload with strongly typed models first.
+    /// Please try the simpler <see cref="GenerateEmbeddings(IEnumerable{string}, EmbeddingGenerationOptions)"/> convenience overload with strongly typed models first.
     /// </description>
     /// </item>
     /// </list>
@@ -58,7 +58,7 @@ public partial class EmbeddingClient
     /// </item>
     /// <item>
     /// <description>
-    /// Please try the simpler <see cref="GenerateEmbeddingsAsync(IEnumerable{string}, EmbeddingOptions)"/> convenience overload with strongly typed models first.
+    /// Please try the simpler <see cref="GenerateEmbeddingsAsync(IEnumerable{string}, EmbeddingGenerationOptions)"/> convenience overload with strongly typed models first.
     /// </description>
     /// </item>
     /// </list>

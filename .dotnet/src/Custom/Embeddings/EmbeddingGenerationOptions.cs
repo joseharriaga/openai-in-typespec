@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace OpenAI.Embeddings;
 
 [CodeGenModel("CreateEmbeddingRequest")]
-[CodeGenSuppress("EmbeddingOptions", typeof(BinaryData), typeof(InternalCreateEmbeddingRequestModel))]
-public partial class EmbeddingOptions
+[CodeGenSuppress("EmbeddingGenerationOptions", typeof(BinaryData), typeof(InternalCreateEmbeddingRequestModel))]
+public partial class EmbeddingGenerationOptions
 {
     // CUSTOM:
     // - Made internal. This value comes from a parameter on the client method.
@@ -79,11 +79,11 @@ public partial class EmbeddingOptions
     /// The format to return the embeddings in. Can be either `float` or
     /// [`base64`](https://pypi.org/project/pybase64/).
     /// </summary>
-    internal InternalEmbeddingOptionsEncodingFormat? EncodingFormat { get; set; }
+    internal InternalEmbeddingGenerationOptionsEncodingFormat? EncodingFormat { get; set; }
 
     // CUSTOM: Made public now that there are no required properties.
-    /// <summary> Initializes a new instance of <see cref="EmbeddingOptions"/>. </summary>
-    public EmbeddingOptions()
+    /// <summary> Initializes a new instance of <see cref="EmbeddingGenerationOptions"/>. </summary>
+    public EmbeddingGenerationOptions()
     {
     }
 }

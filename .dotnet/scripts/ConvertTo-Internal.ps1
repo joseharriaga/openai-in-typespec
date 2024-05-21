@@ -475,14 +475,14 @@ function Edit-GeneratedModels {
         "Embedding.Serialization.cs",
         "EmbeddingCollection.cs",
         "EmbeddingCollection.Serialization.cs",
-        "EmbeddingOptions.cs",
-        "EmbeddingOptions.Serialization.cs",
+        "EmbeddingGenerationOptions.cs",
+        "EmbeddingGenerationOptions.Serialization.cs",
         "EmbeddingTokenUsage.cs",
         "EmbeddingTokenUsage.Serialization.cs",
         "InternalCreateEmbeddingRequestModel.cs",
         "InternalCreateEmbeddingResponseObject.cs",
+        "InternalEmbeddingGenerationOptionsEncodingFormat.cs",
         "InternalEmbeddingObject.cs",
-        "InternalEmbeddingOptionsEncodingFormat.cs",
 
         # OpenAI.Files namespace
         "FileUploadPurpose.cs",

@@ -11,5 +11,5 @@ internal readonly partial struct InternalCreateEmbeddingResponseObject { }
 [CodeGenModel("EmbeddingObject")]
 internal readonly partial struct InternalEmbeddingObject { }
 
-[CodeGenModel("EmbeddingOptionsEncodingFormat")]
-internal readonly partial struct InternalEmbeddingOptionsEncodingFormat { }
+[CodeGenModel("EmbeddingGenerationOptionsEncodingFormat")]
+internal readonly partial struct InternalEmbeddingGenerationOptionsEncodingFormat { }

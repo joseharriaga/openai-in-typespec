@@ -485,19 +485,19 @@ function Edit-GeneratedModels {
         "InternalEmbeddingOptionsEncodingFormat.cs",
 
         # OpenAI.Files namespace
+        "FileUploadPurpose.cs",
         "InternalDeleteFileResponse.cs",
         "InternalDeleteFileResponse.Serialization.cs",
-        "ListFilesResponseObject.cs",
+        "InternalFileUploadOptions.cs",
+        "InternalFileUploadOptions.Serialization.cs",
+        "InternalListFilesResponseObject.cs",
+        "InternalOpenAIFileObject.cs",
         "OpenAIFileInfo.cs",
         "OpenAIFileInfo.Serialization.cs",
         "OpenAIFileInfoCollection.cs",
         "OpenAIFileInfoCollection.Serialization.cs",
-        "OpenAIFileObject.cs",
         "OpenAIFilePurpose.cs",
         "OpenAIFileStatus.cs",
-        "UploadFileOptions.cs",
-        "UploadFileOptions.Serialization.cs",
-        "UploadFileOptionsPurpose.cs"
 
         # OpenAI.FineTuning namespace
         "CreateFineTuningJobRequest.cs",

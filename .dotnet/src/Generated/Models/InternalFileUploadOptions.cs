@@ -9,7 +9,7 @@ using System.IO;
 namespace OpenAI.Files
 {
     /// <summary> The CreateFileRequest. </summary>
-    public partial class UploadFileOptions
+    internal partial class InternalFileUploadOptions
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,7 +43,7 @@ namespace OpenAI.Files
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="UploadFileOptions"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalFileUploadOptions"/>. </summary>
         /// <param name="file"> The File object (not file name) to be uploaded. </param>
         /// <param name="purpose">
         /// The intended purpose of the uploaded file.
@@ -51,7 +51,7 @@ namespace OpenAI.Files
         /// Use "assistants" for [Assistants](/docs/api-reference/assistants) and [Message](/docs/api-reference/messages) files, "vision" for Assistants image file inputs, "batch" for [Batch API](/docs/guides/batch), and "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal UploadFileOptions(Stream file, UploadFileOptionsPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalFileUploadOptions(Stream file, FileUploadPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             File = file;
             Purpose = purpose;

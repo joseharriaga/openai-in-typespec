@@ -89,7 +89,7 @@ namespace OpenAI.Files
             long? bytes = default;
             DateTimeOffset createdAt = default;
             string filename = default;
-            OpenAIFileObject @object = default;
+            InternalOpenAIFileObject @object = default;
             OpenAIFilePurpose purpose = default;
             OpenAIFileStatus status = default;
             string statusDetails = default;
@@ -124,7 +124,7 @@ namespace OpenAI.Files
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new OpenAIFileObject(property.Value.GetString());
+                    @object = new InternalOpenAIFileObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("purpose"u8))

@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace OpenAI.Files;
 
 [CodeGenModel("CreateFileRequest")]
-[CodeGenSuppress("UploadFileOptions", typeof(Stream), typeof(UploadFileOptionsPurpose))]
-public partial class UploadFileOptions
+[CodeGenSuppress("InternalFileUploadOptions", typeof(Stream), typeof(FileUploadPurpose))]
+internal partial class InternalFileUploadOptions
 {
     // CUSTOM:
     // - Made internal. This value comes from a parameter on the client method.
@@ -22,11 +21,11 @@ public partial class UploadFileOptions
     /// [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages). This
     /// allows us to validate the format of the uploaded file is correct for fine-tuning.
     /// </summary>
-    internal UploadFileOptionsPurpose Purpose { get; set; }
+    internal FileUploadPurpose Purpose { get; set; }
 
     // CUSTOM: Made public now that there are no required properties.
-    /// <summary> Initializes a new instance of <see cref="UploadFileOptions"/> for deserialization. </summary>
-    public UploadFileOptions()
+    /// <summary> Initializes a new instance of <see cref="InternalFileUploadOptions"/> for deserialization. </summary>
+    public InternalFileUploadOptions()
     {
     }
 

@@ -77,7 +77,7 @@ namespace OpenAI.Audio
             {
                 return null;
             }
-            CreateTranslationResponseVerboseJsonTask task = default;
+            InternalCreateTranslationResponseVerboseJsonTask task = default;
             string language = default;
             TimeSpan? duration = default;
             string text = default;
@@ -88,7 +88,7 @@ namespace OpenAI.Audio
             {
                 if (property.NameEquals("task"u8))
                 {
-                    task = new CreateTranslationResponseVerboseJsonTask(property.Value.GetString());
+                    task = new InternalCreateTranslationResponseVerboseJsonTask(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("language"u8))

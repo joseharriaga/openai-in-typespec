@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenAI.Audio;
+using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
 using System.Collections.Generic;
@@ -9,50 +10,48 @@ using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Audio;
 
-public partial class TranscriptionTests
+[TestFixture(true)]
+[TestFixture(false)]
+public partial class TranscriptionTests : SyncAsyncTestBase
 {
+    public TranscriptionTests(bool isAsync)
+    : base(isAsync)
+    {
+    }
+
     public enum AudioSourceKind
     {
         UsingStream,
         UsingFilePath,
     }
 
-    public enum SyncOrAsync
-    {
-        Sync,
-        Async,
-    }
-
     [Test]
-    [TestCase(AudioSourceKind.UsingStream, SyncOrAsync.Sync)]
-    [TestCase(AudioSourceKind.UsingStream, SyncOrAsync.Async)]
-    [TestCase(AudioSourceKind.UsingFilePath, SyncOrAsync.Sync)]
-    [TestCase(AudioSourceKind.UsingFilePath, SyncOrAsync.Async)]
-    public async Task TranscriptionWorks(AudioSourceKind audioSourceKind, SyncOrAsync syncOrAsync)
+    [TestCase(AudioSourceKind.UsingStream)]
+    [TestCase(AudioSourceKind.UsingStream)]
+    [TestCase(AudioSourceKind.UsingFilePath)]
+    [TestCase(AudioSourceKind.UsingFilePath)]
+    public async Task TranscriptionWorks(AudioSourceKind audioSourceKind)
     {
         AudioClient client = GetTestClient();
         string filename = "hello_world.m4a";
         string path = Path.Combine("Assets", filename);
         AudioTranscription transcription = null;
+
         if (audioSourceKind == AudioSourceKind.UsingStream)
         {
             using FileStream inputStream = File.OpenRead(path);
-            transcription = syncOrAsync switch
-            {
-                SyncOrAsync.Sync => client.TranscribeAudio(inputStream, filename),
-                SyncOrAsync.Async => await client.TranscribeAudioAsync(inputStream, filename),
-                _ => throw new ArgumentException(nameof(syncOrAsync)),
-            };
+
+            transcription = IsAsync
+                ? await client.TranscribeAudioAsync(inputStream, filename)
+                : client.TranscribeAudio(inputStream, filename);
         }
         else if (audioSourceKind == AudioSourceKind.UsingFilePath)
         {
-            transcription = syncOrAsync switch
-            {
-                SyncOrAsync.Sync => client.TranscribeAudio(path),
-                SyncOrAsync.Async => await client.TranscribeAudioAsync(path),
-                _ => throw new ArgumentException(nameof(syncOrAsync)),
-            };
+            transcription = IsAsync
+                ? await client.TranscribeAudioAsync(path)
+                : client.TranscribeAudio(path);
         }
+
         Assert.That(transcription, Is.Not.Null);
         Assert.That(transcription.Text.ToLowerInvariant(), Contains.Substring("hello"));
     }
@@ -62,22 +61,27 @@ public partial class TranscriptionTests
     [TestCase(AudioTimestampGranularities.Word)]
     [TestCase(AudioTimestampGranularities.Segment)]
     [TestCase(AudioTimestampGranularities.Word | AudioTimestampGranularities.Segment)]
-    public void TimestampsWork(AudioTimestampGranularities granularityFlags)
+    public async Task TimestampsWork(AudioTimestampGranularities granularityFlags)
     {
         AudioClient client = GetTestClient();
+
         using FileStream inputStream = File.OpenRead(Path.Combine("Assets", "hello_world.m4a"));
-        ClientResult<AudioTranscription> transcriptionResult = client.TranscribeAudio(inputStream, "hello_world.m4a", new AudioTranscriptionOptions()
+
+        AudioTranscriptionOptions options = new()
         {
-             ResponseFormat = AudioTranscriptionFormat.Verbose,
-             Temperature = 0.4f,
-             Granularities = granularityFlags,
-        });
-        Assert.That(transcriptionResult.Value, Is.Not.Null);
+            ResponseFormat = AudioTranscriptionFormat.Verbose,
+            Temperature = 0.4f,
+            Granularities = granularityFlags,
+        };
 
-        Console.WriteLine(transcriptionResult.GetRawResponse().Content.ToString());
+        AudioTranscription transcription = IsAsync
+            ? await client.TranscribeAudioAsync(inputStream, "hello_world.m4a", options)
+            : client.TranscribeAudio(inputStream, "hello_world.m4a", options);
 
-        IReadOnlyList<TranscribedWord> words = transcriptionResult.Value.Words;
-        IReadOnlyList<TranscribedSegment> segments = transcriptionResult.Value.Segments;
+        Assert.That(transcription, Is.Not.Null);
+
+        IReadOnlyList<TranscribedWord> words = transcription.Words;
+        IReadOnlyList<TranscribedSegment> segments = transcription.Segments;
 
         bool wordTimestampsPresent = words?.Count > 0;
         bool segmentTimestampsPresent = segments?.Count > 0;
@@ -122,23 +126,30 @@ public partial class TranscriptionTests
     }
 
     [Test]
-    public void BadTranscriptionRequest()
+    public async Task BadTranscriptionRequest()
     {
         AudioClient client = GetTestClient();
+
         string path = Path.Combine("Assets", "hello_world.m4a");
 
+        AudioTranscriptionOptions options = new AudioTranscriptionOptions()
+        {
+            Language = "this should cause an error"
+        };
+
         Exception caughtException = null;
+
         try
         {
-            _ = client.TranscribeAudio(path, new AudioTranscriptionOptions()
-            {
-                Language = "this should cause an error"
-            });
+            _ = IsAsync
+                ? await client.TranscribeAudioAsync(path, options)
+                : client.TranscribeAudio(path, options);
         }
         catch (Exception ex)
         {
             caughtException = ex;
         }
+
         Assert.That(caughtException, Is.InstanceOf<ClientResultException>());
         Assert.That(caughtException.Message?.ToLower(), Contains.Substring("invalid language"));
     }

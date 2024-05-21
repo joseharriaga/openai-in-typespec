@@ -351,11 +351,11 @@ function Edit-GeneratedModels {
         "AudioTranslationFormat.Serialization.cs",
         "AudioTranslationOptions.cs",
         "AudioTranslationOptions.Serialization.cs",
-        "CreateTranscriptionResponseVerboseJsonTask.cs",
-        "CreateTranslationResponseVerboseJsonTask.cs",
-        "CreateSpeechRequestModel.cs",
-        "CreateTranscriptionRequestModel.cs",
-        "CreateTranslationRequestModel.cs"
+        "InternalCreateSpeechRequestModel.cs",
+        "InternalCreateTranscriptionRequestModel.cs",
+        "InternalCreateTranscriptionResponseVerboseJsonTask.cs",
+        "InternalCreateTranslationRequestModel.cs"
+        "InternalCreateTranslationResponseVerboseJsonTask.cs",
         "GeneratedSpeechFormat.Serialization.cs",
         "GeneratedSpeechVoice.Serialization.cs",
         "SpeechGenerationOptions.cs",

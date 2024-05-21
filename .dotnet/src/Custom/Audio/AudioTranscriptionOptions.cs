@@ -6,7 +6,7 @@ using System.IO;
 namespace OpenAI.Audio;
 
 [CodeGenModel("CreateTranscriptionRequest")]
-[CodeGenSuppress("AudioTranscriptionOptions", typeof(BinaryData), typeof(CreateTranscriptionRequestModel))]
+[CodeGenSuppress("AudioTranscriptionOptions", typeof(BinaryData), typeof(InternalCreateTranscriptionRequestModel))]
 public partial class AudioTranscriptionOptions
 {
     // CUSTOM: Made internal. This value comes from a parameter on the client method.
@@ -36,7 +36,7 @@ public partial class AudioTranscriptionOptions
     /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
     /// is currently available.
     /// </summary>
-    internal CreateTranscriptionRequestModel Model { get; set; }
+    internal InternalCreateTranscriptionRequestModel Model { get; set; }
 
     // CUSTOM: Made internal. The model is specified by the client.
     /// <summary>

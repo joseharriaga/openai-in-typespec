@@ -89,4 +89,14 @@ public abstract partial class ChatMessage
 
     /// <inheritdoc cref="FunctionChatMessage(string, string)"/>
     public static FunctionChatMessage CreateFunctionMessage(string functionName, string content) => new FunctionChatMessage(functionName, content);
+
+    /// <summary>
+    /// Implicitly creates a new instance of <see cref="UserChatMessage"/> from a single item of plain text content.
+    /// </summary>
+    /// <remarks>
+    /// Using a <see cref="string"/> in the position of a <see cref="ChatMessage"/> is equivalent to invoking
+    /// <see cref="CreateUserMessage(string)"/> or applying the <see cref="UserChatMessage.UserChatMessage(string)"/>
+    /// constructor.
+    /// </remarks>
+    public static implicit operator ChatMessage(string content) => new UserChatMessage(content);
 }

@@ -86,8 +86,8 @@ namespace OpenAI.Embeddings
                 return null;
             }
             BinaryData input = default;
-            CreateEmbeddingRequestModel model = default;
-            EmbeddingOptionsEncodingFormat? encodingFormat = default;
+            InternalCreateEmbeddingRequestModel model = default;
+            InternalEmbeddingOptionsEncodingFormat? encodingFormat = default;
             int? dimensions = default;
             string user = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -101,7 +101,7 @@ namespace OpenAI.Embeddings
                 }
                 if (property.NameEquals("model"u8))
                 {
-                    model = new CreateEmbeddingRequestModel(property.Value.GetString());
+                    model = new InternalCreateEmbeddingRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("encoding_format"u8))
@@ -110,7 +110,7 @@ namespace OpenAI.Embeddings
                     {
                         continue;
                     }
-                    encodingFormat = new EmbeddingOptionsEncodingFormat(property.Value.GetString());
+                    encodingFormat = new InternalEmbeddingOptionsEncodingFormat(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("dimensions"u8))

@@ -62,7 +62,7 @@ public partial class EmbeddingCollection : IJsonModel<EmbeddingCollection>
         }
         IReadOnlyList<Embedding> data = default;
         string model = default;
-        CreateEmbeddingResponseObject @object = default;
+        InternalCreateEmbeddingResponseObject @object = default;
         EmbeddingTokenUsage usage = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -85,7 +85,7 @@ public partial class EmbeddingCollection : IJsonModel<EmbeddingCollection>
             }
             if (property.NameEquals("object"u8))
             {
-                @object = new CreateEmbeddingResponseObject(property.Value.GetString());
+                @object = new InternalCreateEmbeddingResponseObject(property.Value.GetString());
                 continue;
             }
             if (property.NameEquals("usage"u8))

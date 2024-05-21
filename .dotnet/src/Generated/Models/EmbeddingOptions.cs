@@ -49,7 +49,7 @@ namespace OpenAI.Embeddings
         /// <param name="dimensions"> The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models. </param>
         /// <param name="user"> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal EmbeddingOptions(BinaryData input, CreateEmbeddingRequestModel model, EmbeddingOptionsEncodingFormat? encodingFormat, int? dimensions, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal EmbeddingOptions(BinaryData input, InternalCreateEmbeddingRequestModel model, InternalEmbeddingOptionsEncodingFormat? encodingFormat, int? dimensions, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Input = input;
             Model = model;

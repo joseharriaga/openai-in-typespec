@@ -7,12 +7,12 @@ namespace OpenAI.Embeddings;
 [CodeGenModel("CreateEmbeddingResponse")]
 [CodeGenSuppress("Data")]
 [CodeGenSuppress(nameof(EmbeddingCollection))]
-[CodeGenSuppress(nameof(EmbeddingCollection), typeof(IReadOnlyList<Embedding>), typeof(string), typeof(CreateEmbeddingResponseObject), typeof(EmbeddingTokenUsage))]
+[CodeGenSuppress(nameof(EmbeddingCollection), typeof(IReadOnlyList<Embedding>), typeof(string), typeof(InternalCreateEmbeddingResponseObject), typeof(EmbeddingTokenUsage))]
 public partial class EmbeddingCollection : ReadOnlyCollection<Embedding>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> The object type, which is always "list". </summary>
-    private CreateEmbeddingResponseObject Object { get; } = CreateEmbeddingResponseObject.List;
+    private InternalCreateEmbeddingResponseObject Object { get; } = InternalCreateEmbeddingResponseObject.List;
 
     // CUSTOM: Recovered this field. See https://github.com/Azure/autorest.csharp/issues/4636.
     /// <summary>
@@ -71,7 +71,7 @@ public partial class EmbeddingCollection : ReadOnlyCollection<Embedding>
     /// <param name="object"> The object type, which is always "list". </param>
     /// <param name="usage"> The usage information for the request. </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-    internal EmbeddingCollection(IReadOnlyList<Embedding> data, string model, CreateEmbeddingResponseObject @object, EmbeddingTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal EmbeddingCollection(IReadOnlyList<Embedding> data, string model, InternalCreateEmbeddingResponseObject @object, EmbeddingTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         : base([.. data])
     {
         Model = model;

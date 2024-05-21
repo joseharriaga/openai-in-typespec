@@ -74,7 +74,7 @@ namespace OpenAI.Embeddings
             }
             int index = default;
             BinaryData embedding = default;
-            EmbeddingObject @object = default;
+            InternalEmbeddingObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -91,7 +91,7 @@ namespace OpenAI.Embeddings
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new EmbeddingObject(property.Value.GetString());
+                    @object = new InternalEmbeddingObject(property.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

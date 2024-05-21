@@ -25,7 +25,7 @@ internal static class AdditionalPropertyHelpers
         using JsonDocument document = JsonDocument.Parse(binaryValue);
         foreach (JsonElement element in document.RootElement.EnumerateArray())
         {
-            items.Add((U)ModelReaderWriter.Read(BinaryData.FromObjectAsJson(element.GetRawText()), typeof(U)));
+            items.Add((U)ModelReaderWriter.Read(BinaryData.FromObjectAsJson(element), typeof(U)));
         }
         value = (T)(IList<U>)items;
         return true;

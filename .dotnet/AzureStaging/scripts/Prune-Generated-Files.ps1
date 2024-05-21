@@ -3,7 +3,10 @@ $generatedCodeRoot = Join-Path $PSScriptRoot .. src Generated -Resolve
 $patternsToKeep = @(
     "*DataSource*",
     "*ContentFilter*",
-    "*OpenAI*Error*"
+    "*OpenAI*Error*",
+    "*Context*",
+    "*RetrievedDoc*",
+    "*Citation*"
 )
 $patternsToDelete = @(
     "*Elasticsearch*QueryType*",

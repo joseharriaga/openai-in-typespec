@@ -453,7 +453,7 @@ public class AssistantTests : TestBase<AssistantClient>
             Filip Carola: cake
             """).ToStream(),
             "favorite_foods.txt",
-            OpenAIFilePurpose.Assistants);
+            FileUploadPurpose.Assistants);
         Validate(testFile);
 
         // Create an assistant, using the creation helper to make a new vector store

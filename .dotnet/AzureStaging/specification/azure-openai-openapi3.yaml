@@ -142,7 +142,7 @@ components:
         mapping:
           azure_search: '#/components/schemas/AzureSearchChatDataSource'
           azure_ml_index: '#/components/schemas/AzureMachineLearningIndexChatDataSource'
-          AzureCosmosDB: '#/components/schemas/AzureCosmosDBChatDataSource'
+          azure_cosmos_db: '#/components/schemas/AzureCosmosDBChatDataSource'
           elasticsearch: '#/components/schemas/ElasticsearchChatDataSource'
           pinecone: '#/components/schemas/PineconeChatDataSource'
       description: |-
@@ -505,7 +505,7 @@ components:
         type:
           type: string
           enum:
-            - AzureCosmosDB
+            - azure_cosmos_db
         parameters:
           type: object
           properties:

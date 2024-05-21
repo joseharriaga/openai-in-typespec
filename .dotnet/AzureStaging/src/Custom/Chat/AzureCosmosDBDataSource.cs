@@ -103,7 +103,7 @@ public partial class AzureCosmosDBChatDataSource : AzureChatDataSource
 
     public AzureCosmosDBChatDataSource()
     {
-        Type = "azure_search";
+        Type = "azure_cosmos_db";
         InternalParameters = new();
         _serializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
     }

@@ -105,5 +105,36 @@ public class ChatTests : TestBase<ChatClient>
         Assert.That(bool.TryParse(serialized?.parameters?.allow_partial_result?.ToString(), out bool parsed) && parsed == true);
         Assert.That(serialized?.parameters?.query_type?.ToString(), Is.EqualTo("simple"));
         Assert.That(serialized?.parameters?.embedding_dependency?.type?.ToString(), Is.EqualTo("endpoint"));
+
+#pragma warning disable OPENAI002
+        ChatCompletionOptions options = new();
+        options.AddDataSource(new ElasticsearchChatDataSource()
+        {
+            Authentication = DataSourceAuthentication.FromAccessToken("foo-token"),
+            Endpoint = new Uri("https://my-elasticsearch.com"),
+            IndexName = "my-index-name",
+            InScope = true,
+        });
+
+        IReadOnlyList<AzureChatDataSource> sourcesFromOptions = options.GetDataSources();
+        Assert.That(sourcesFromOptions, Has.Count.EqualTo(1));
+        Assert.That(sourcesFromOptions[0], Is.InstanceOf<ElasticsearchChatDataSource>());
+        Assert.That((sourcesFromOptions[0] as ElasticsearchChatDataSource).IndexName, Is.EqualTo("my-index-name"));
+
+        options.AddDataSource(new AzureCosmosDBChatDataSource()
+        {
+            Authentication = DataSourceAuthentication.FromApiKey("api-key"),
+            ContainerName = "my-container-name",
+            DatabaseName = "my_database_name",
+            FieldMappings = new()
+            {
+                ContentFieldNames = { "hello", "world" },
+            },
+            IndexName = "my-index-name",
+            VectorizationSource = DataSourceVectorizer.FromDeploymentName("my-deployment"),
+        });
+        sourcesFromOptions = options.GetDataSources();
+        Assert.That(sourcesFromOptions, Has.Count.EqualTo(2));
+        Assert.That(sourcesFromOptions[1], Is.InstanceOf<AzureCosmosDBChatDataSource>());
     }
 }

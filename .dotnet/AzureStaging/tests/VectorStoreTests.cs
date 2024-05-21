@@ -258,7 +258,7 @@ public class VectorStoreTests : TestBase<VectorStoreClient>
             OpenAIFileInfo file = client.UploadFile(
                 BinaryData.FromString("This is a test file").ToStream(),
                 $"test_file_{i.ToString().PadLeft(3, '0')}.txt",
-                OpenAIFilePurpose.Assistants);
+                FileUploadPurpose.Assistants);
             Validate(file);
             files.Add(file);
         }

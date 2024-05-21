@@ -17,7 +17,7 @@ namespace Azure.AI.OpenAI.Chat
         {
             Argument.AssertNotNull(internalParameters, nameof(internalParameters));
 
-            Type = "AzureCosmosDB";
+            Type = "azure_cosmos_db";
             InternalParameters = internalParameters;
         }
     }

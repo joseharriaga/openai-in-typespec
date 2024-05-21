@@ -34,4 +34,8 @@ public static partial class AzureChatCompletionExtensions
             out ContentFilterResultForResponse response)
                 ? response
                 : null;
+
+    [Experimental("OPENAI002")]
+    public static AzureChatMessageContext GetAzureMessageContext(this ChatCompletion chatCompletion)
+        => throw new NotImplementedException();
 }

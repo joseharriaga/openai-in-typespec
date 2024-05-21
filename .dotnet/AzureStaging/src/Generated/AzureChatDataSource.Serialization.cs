@@ -65,9 +65,9 @@ namespace Azure.AI.OpenAI.Chat
             {
                 switch (discriminator.GetString())
                 {
+                    case "azure_cosmos_db": return AzureCosmosDBChatDataSource.DeserializeAzureCosmosDBChatDataSource(element, options);
                     case "azure_ml_index": return AzureMachineLearningIndexChatDataSource.DeserializeAzureMachineLearningIndexChatDataSource(element, options);
                     case "azure_search": return AzureSearchChatDataSource.DeserializeAzureSearchChatDataSource(element, options);
-                    case "AzureCosmosDB": return AzureCosmosDBChatDataSource.DeserializeAzureCosmosDBChatDataSource(element, options);
                     case "elasticsearch": return ElasticsearchChatDataSource.DeserializeElasticsearchChatDataSource(element, options);
                     case "pinecone": return PineconeChatDataSource.DeserializePineconeChatDataSource(element, options);
                 }

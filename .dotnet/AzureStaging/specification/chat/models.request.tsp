@@ -101,7 +101,7 @@ model AzureMachineLearningIndexChatDataSource extends AzureChatDataSource {
 
 /** Represents a data source configuration that will use an Azure CosmosDB resource. */
 model AzureCosmosDBChatDataSource extends AzureChatDataSource {
-  type: "AzureCosmosDB";
+  type: "azure_cosmos_db";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
     container_name: string;

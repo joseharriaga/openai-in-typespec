@@ -23,7 +23,7 @@ alias AzureContentFilterCategoriesBase = {
   profanity?: AzureContentFilterDetectionResult;
   custom_blocklists?: AzureContentFilterBlocklistResult;
   error: {
-    code: string;
+    code: int32;
     message: string;
   };
 };

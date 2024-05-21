@@ -22,10 +22,10 @@ namespace Azure.AI.OpenAI.Chat
 
             writer.WriteStartObject();
             writer.WritePropertyName("parameters"u8);
-            writer.WriteObjectValue(Parameters, options);
+            writer.WriteObjectValue<InternalElasticsearchChatDataSourceParameters>(InternalParameters, options);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -63,7 +63,7 @@ namespace Azure.AI.OpenAI.Chat
             {
                 return null;
             }
-            ElasticsearchChatDataSourceParameters parameters = default;
+            InternalElasticsearchChatDataSourceParameters parameters = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -71,7 +71,7 @@ namespace Azure.AI.OpenAI.Chat
             {
                 if (property.NameEquals("parameters"u8))
                 {
-                    parameters = ElasticsearchChatDataSourceParameters.DeserializeElasticsearchChatDataSourceParameters(property.Value, options);
+                    parameters = InternalElasticsearchChatDataSourceParameters.DeserializeInternalElasticsearchChatDataSourceParameters(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("type"u8))
@@ -79,7 +79,7 @@ namespace Azure.AI.OpenAI.Chat
                     type = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -134,3 +134,4 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
+

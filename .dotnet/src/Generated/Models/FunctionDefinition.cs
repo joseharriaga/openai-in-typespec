@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI
 {
@@ -42,6 +44,18 @@ namespace OpenAI
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
+        /// <summary>
+        /// Gets the dictionary containing additional raw data to serialize.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+        ///       It is subject to change and not intended for stable use.
+        /// </remarks>
+        [Experimental("OPENAI002")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IDictionary<string, BinaryData> SerializedAdditionalRawData
+            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+
         /// <summary> Initializes a new instance of <see cref="FunctionDefinition"/>. </summary>
         /// <param name="name"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
@@ -76,3 +90,4 @@ namespace OpenAI
         public string Name { get; set; }
     }
 }
+

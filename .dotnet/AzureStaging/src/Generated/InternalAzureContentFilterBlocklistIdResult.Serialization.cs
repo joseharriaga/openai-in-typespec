@@ -25,7 +25,7 @@ namespace Azure.AI.OpenAI
             writer.WriteStringValue(Id);
             writer.WritePropertyName("filtered"u8);
             writer.WriteBooleanValue(Filtered);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -79,7 +79,7 @@ namespace Azure.AI.OpenAI
                     filtered = property.Value.GetBoolean();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -134,4 +134,5 @@ namespace Azure.AI.OpenAI
         }
     }
 }
+
 

@@ -27,7 +27,7 @@ namespace OpenAI.Audio
             writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.fff")));
             writer.WritePropertyName("end"u8);
             writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.fff")));
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -87,7 +87,7 @@ namespace OpenAI.Audio
                     end = TimeSpan.FromSeconds(property.Value.GetDouble());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -148,3 +148,4 @@ namespace OpenAI.Audio
         }
     }
 }
+

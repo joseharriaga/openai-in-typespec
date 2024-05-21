@@ -4,12 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using Azure.AI.OpenAI.Chat;
 
-namespace Azure.AI.OpenAI
+namespace Azure.AI.OpenAI.Chat
 {
     /// <summary> Unknown version of AzureChatDataSourceAuthenticationOptions. </summary>
-    internal partial class InternalUnknownAzureChatDataSourceAuthenticationOptions : AzureChatDataSourceAuthenticationOptions
+    internal partial class InternalUnknownAzureChatDataSourceAuthenticationOptions : DataSourceAuthentication
     {
         /// <summary> Initializes a new instance of <see cref="InternalUnknownAzureChatDataSourceAuthenticationOptions"/>. </summary>
         /// <param name="type"></param>

@@ -7,24 +7,23 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.AI.OpenAI.Chat;
 
-namespace Azure.AI.OpenAI
+namespace Azure.AI.OpenAI.Chat
 {
-    internal partial class InternalUnknownAzureChatDataSourceVectorizationSource : IJsonModel<AzureChatDataSourceVectorizationSource>
+    internal partial class InternalUnknownAzureChatDataSourceVectorizationSource : IJsonModel<DataSourceVectorizer>
     {
-        void IJsonModel<AzureChatDataSourceVectorizationSource>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<DataSourceVectorizer>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatDataSourceVectorizationSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatDataSourceVectorizationSource)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(DataSourceVectorizer)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -42,16 +41,16 @@ namespace Azure.AI.OpenAI
             writer.WriteEndObject();
         }
 
-        AzureChatDataSourceVectorizationSource IJsonModel<AzureChatDataSourceVectorizationSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        DataSourceVectorizer IJsonModel<DataSourceVectorizer>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatDataSourceVectorizationSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatDataSourceVectorizationSource)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(DataSourceVectorizer)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureChatDataSourceVectorizationSource(document.RootElement, options);
+            return DeserializeDataSourceVectorizer(document.RootElement, options);
         }
 
         internal static InternalUnknownAzureChatDataSourceVectorizationSource DeserializeInternalUnknownAzureChatDataSourceVectorizationSource(JsonElement element, ModelReaderWriterOptions options = null)
@@ -72,7 +71,7 @@ namespace Azure.AI.OpenAI
                     type = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -81,36 +80,36 @@ namespace Azure.AI.OpenAI
             return new InternalUnknownAzureChatDataSourceVectorizationSource(type, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureChatDataSourceVectorizationSource>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<DataSourceVectorizer>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatDataSourceVectorizationSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatDataSourceVectorizationSource)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(DataSourceVectorizer)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureChatDataSourceVectorizationSource IPersistableModel<AzureChatDataSourceVectorizationSource>.Create(BinaryData data, ModelReaderWriterOptions options)
+        DataSourceVectorizer IPersistableModel<DataSourceVectorizer>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatDataSourceVectorizationSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureChatDataSourceVectorizationSource(document.RootElement, options);
+                        return DeserializeDataSourceVectorizer(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatDataSourceVectorizationSource)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(DataSourceVectorizer)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureChatDataSourceVectorizationSource>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<DataSourceVectorizer>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
@@ -123,8 +122,9 @@ namespace Azure.AI.OpenAI
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal override BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create<AzureChatDataSourceVectorizationSource>(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create<DataSourceVectorizer>(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }
+
 

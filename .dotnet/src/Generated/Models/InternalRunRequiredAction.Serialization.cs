@@ -25,7 +25,7 @@ namespace OpenAI.Assistants
             writer.WriteObjectValue<object>(Type, options);
             writer.WritePropertyName("submit_tool_outputs"u8);
             writer.WriteObjectValue(SubmitToolOutputs, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -79,7 +79,7 @@ namespace OpenAI.Assistants
                     submitToolOutputs = InternalRunObjectRequiredActionSubmitToolOutputs.DeserializeInternalRunObjectRequiredActionSubmitToolOutputs(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -134,3 +134,4 @@ namespace OpenAI.Assistants
         }
     }
 }
+

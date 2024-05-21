@@ -36,7 +36,7 @@ namespace OpenAI.Batch
                 }
                 writer.WriteEndArray();
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -103,7 +103,7 @@ namespace OpenAI.Batch
                     data = array;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -158,3 +158,4 @@ namespace OpenAI.Batch
         }
     }
 }
+

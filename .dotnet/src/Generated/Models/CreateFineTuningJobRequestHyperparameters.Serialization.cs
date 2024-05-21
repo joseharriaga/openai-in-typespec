@@ -57,7 +57,7 @@ namespace OpenAI.FineTuning
                 }
 #endif
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -129,7 +129,7 @@ namespace OpenAI.FineTuning
                     nEpochs = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -184,3 +184,4 @@ namespace OpenAI.FineTuning
         }
     }
 }
+

@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             writer.WriteObjectValue<object>(_type, options);
             writer.WritePropertyName("function"u8);
             writer.WriteObjectValue<InternalRunToolCallObjectFunction>(_internalFunction, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -87,7 +87,7 @@ namespace OpenAI.Assistants
                     function = InternalRunToolCallObjectFunction.DeserializeInternalRunToolCallObjectFunction(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -142,3 +142,4 @@ namespace OpenAI.Assistants
         }
     }
 }
+

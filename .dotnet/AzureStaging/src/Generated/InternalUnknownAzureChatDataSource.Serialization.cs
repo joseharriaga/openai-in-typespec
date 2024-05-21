@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.AI.OpenAI.Chat;
 
-namespace Azure.AI.OpenAI
+namespace Azure.AI.OpenAI.Chat
 {
     internal partial class InternalUnknownAzureChatDataSource : IJsonModel<AzureChatDataSource>
     {
@@ -24,7 +23,7 @@ namespace Azure.AI.OpenAI
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -72,7 +71,7 @@ namespace Azure.AI.OpenAI
                     type = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -127,4 +126,5 @@ namespace Azure.AI.OpenAI
         }
     }
 }
+
 

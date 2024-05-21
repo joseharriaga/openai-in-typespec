@@ -11,31 +11,14 @@ namespace Azure.AI.OpenAI.Chat
     public partial class ElasticsearchChatDataSource : AzureChatDataSource
     {
         /// <summary> Initializes a new instance of <see cref="ElasticsearchChatDataSource"/>. </summary>
-        /// <param name="parameters"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="parameters"/> is null. </exception>
-        internal ElasticsearchChatDataSource(ElasticsearchChatDataSourceParameters parameters)
+        /// <param name="internalParameters"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="internalParameters"/> is null. </exception>
+        internal ElasticsearchChatDataSource(InternalElasticsearchChatDataSourceParameters internalParameters)
         {
-            Argument.AssertNotNull(parameters, nameof(parameters));
+            Argument.AssertNotNull(internalParameters, nameof(internalParameters));
 
             Type = "elasticsearch";
-            Parameters = parameters;
+            InternalParameters = internalParameters;
         }
-
-        /// <summary> Initializes a new instance of <see cref="ElasticsearchChatDataSource"/>. </summary>
-        /// <param name="type"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="parameters"></param>
-        internal ElasticsearchChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, ElasticsearchChatDataSourceParameters parameters) : base(type, serializedAdditionalRawData)
-        {
-            Parameters = parameters;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="ElasticsearchChatDataSource"/> for deserialization. </summary>
-        internal ElasticsearchChatDataSource()
-        {
-        }
-
-        /// <summary> Gets the parameters. </summary>
-        public ElasticsearchChatDataSourceParameters Parameters { get; }
     }
 }

@@ -32,7 +32,7 @@ public abstract partial class ChatMessage : IJsonModel<ChatMessage>
         writer.WriteStartObject();
         writer.WritePropertyName("role"u8);
         writer.WriteStringValue(Role);
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
+        if (true && _serializedAdditionalRawData != null)
         {
             foreach (var item in _serializedAdditionalRawData)
             {

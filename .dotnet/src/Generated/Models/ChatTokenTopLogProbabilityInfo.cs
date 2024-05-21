@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace OpenAI.Chat
@@ -43,6 +45,18 @@ namespace OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
+        /// <summary>
+        /// Gets the dictionary containing additional raw data to serialize.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+        ///       It is subject to change and not intended for stable use.
+        /// </remarks>
+        [Experimental("OPENAI002")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IDictionary<string, BinaryData> SerializedAdditionalRawData
+            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+
         /// <summary> Initializes a new instance of <see cref="ChatTokenTopLogProbabilityInfo"/>. </summary>
         /// <param name="token"> The token. </param>
         /// <param name="logProbability"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
@@ -79,3 +93,4 @@ namespace OpenAI.Chat
         public string Token { get; }
     }
 }
+

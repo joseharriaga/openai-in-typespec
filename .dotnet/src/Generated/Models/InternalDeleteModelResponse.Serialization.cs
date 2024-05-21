@@ -27,7 +27,7 @@ namespace OpenAI.Models
             writer.WriteBooleanValue(Deleted);
             writer.WritePropertyName("object"u8);
             writer.WriteObjectValue<object>(Object, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -87,7 +87,7 @@ namespace OpenAI.Models
                     @object = property.Value.GetObject();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -142,3 +142,4 @@ namespace OpenAI.Models
         }
     }
 }
+

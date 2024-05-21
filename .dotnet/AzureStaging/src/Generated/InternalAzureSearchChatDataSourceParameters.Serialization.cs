@@ -21,11 +21,8 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Authentication))
-            {
-                writer.WritePropertyName("authentication"u8);
-                writer.WriteObjectValue(Authentication, options);
-            }
+            writer.WritePropertyName("authentication"u8);
+            writer.WriteObjectValue(Authentication, options);
             if (Optional.IsDefined(TopNDocuments))
             {
                 writer.WritePropertyName("top_n_documents"u8);
@@ -70,15 +67,15 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteStringValue(Endpoint.AbsoluteUri);
             writer.WritePropertyName("index_name"u8);
             writer.WriteStringValue(IndexName);
-            if (Optional.IsDefined(FieldsMapping))
+            if (Optional.IsDefined(FieldMappings))
             {
                 writer.WritePropertyName("fields_mapping"u8);
-                writer.WriteObjectValue(FieldsMapping, options);
+                writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
             }
             if (Optional.IsDefined(QueryType))
             {
                 writer.WritePropertyName("query_type"u8);
-                writer.WriteStringValue(QueryType);
+                writer.WriteStringValue(QueryType.Value.ToString());
             }
             if (Optional.IsDefined(SemanticConfiguration))
             {
@@ -90,9 +87,12 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("filter"u8);
                 writer.WriteStringValue(Filter);
             }
-            writer.WritePropertyName("embedding_dependency"u8);
-            writer.WriteObjectValue(EmbeddingDependency, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (Optional.IsDefined(VectorizationSource))
+            {
+                writer.WritePropertyName("embedding_dependency"u8);
+                writer.WriteObjectValue<DataSourceVectorizer>(VectorizationSource, options);
+            }
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -130,7 +130,7 @@ namespace Azure.AI.OpenAI.Chat
             {
                 return null;
             }
-            AzureChatDataSourceAuthenticationOptions authentication = default;
+            DataSourceAuthentication authentication = default;
             int? topNDocuments = default;
             bool? inScope = default;
             int? strictness = default;
@@ -140,22 +140,18 @@ namespace Azure.AI.OpenAI.Chat
             IList<string> includeContexts = default;
             Uri endpoint = default;
             string indexName = default;
-            AzureSearchChatDataSourceParametersFieldsMapping fieldsMapping = default;
-            string queryType = default;
+            DataSourceFieldMappings fieldsMapping = default;
+            DataSourceQueryType? queryType = default;
             string semanticConfiguration = default;
             string filter = default;
-            AzureChatDataSourceVectorizationSource embeddingDependency = default;
+            DataSourceVectorizer embeddingDependency = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("authentication"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    authentication = AzureChatDataSourceAuthenticationOptions.DeserializeAzureChatDataSourceAuthenticationOptions(property.Value, options);
+                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("top_n_documents"u8))
@@ -238,12 +234,16 @@ namespace Azure.AI.OpenAI.Chat
                     {
                         continue;
                     }
-                    fieldsMapping = AzureSearchChatDataSourceParametersFieldsMapping.DeserializeAzureSearchChatDataSourceParametersFieldsMapping(property.Value, options);
+                    fieldsMapping = DataSourceFieldMappings.DeserializeDataSourceFieldMappings(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("query_type"u8))
                 {
-                    queryType = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    queryType = new DataSourceQueryType(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("semantic_configuration"u8))
@@ -258,10 +258,14 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 if (property.NameEquals("embedding_dependency"u8))
                 {
-                    embeddingDependency = AzureChatDataSourceVectorizationSource.DeserializeAzureChatDataSourceVectorizationSource(property.Value, options);
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    embeddingDependency = DataSourceVectorizer.DeserializeDataSourceVectorizer(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -332,4 +336,5 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
+
 

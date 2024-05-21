@@ -47,7 +47,7 @@ internal partial class InternalCreateChatCompletionStreamResponseChoice : IJsonM
         }
         writer.WritePropertyName("index"u8);
         writer.WriteNumberValue(Index);
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
+        if (true && _serializedAdditionalRawData != null)
         {
             foreach (var item in _serializedAdditionalRawData)
             {
@@ -111,7 +111,7 @@ internal partial class InternalCreateChatCompletionStreamResponseChoice : IJsonM
                 index = property.Value.GetInt32();
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

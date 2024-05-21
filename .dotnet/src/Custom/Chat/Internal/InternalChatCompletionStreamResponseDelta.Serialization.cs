@@ -62,7 +62,7 @@ internal partial class InternalChatCompletionStreamResponseDelta : IJsonModel<In
             writer.WritePropertyName("role"u8);
             writer.WriteStringValue(Role.Value.ToSerialString());
         }
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
+        if (true && _serializedAdditionalRawData != null)
         {
             foreach (var item in _serializedAdditionalRawData)
             {
@@ -139,7 +139,7 @@ internal partial class InternalChatCompletionStreamResponseDelta : IJsonModel<In
                 role = property.Value.GetString().ToChatMessageRole();
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

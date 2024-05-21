@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("delta"u8);
             writer.WriteObjectValue(Delta, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -87,7 +87,7 @@ namespace OpenAI.Assistants
                     delta = InternalRunStepDeltaObjectDelta.DeserializeInternalRunStepDeltaObjectDelta(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -142,3 +142,4 @@ namespace OpenAI.Assistants
         }
     }
 }
+

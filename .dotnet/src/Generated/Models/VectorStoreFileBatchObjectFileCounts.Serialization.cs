@@ -31,7 +31,7 @@ namespace OpenAI.Internal.Models
             writer.WriteNumberValue(Cancelled);
             writer.WritePropertyName("total"u8);
             writer.WriteNumberValue(Total);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -103,7 +103,7 @@ namespace OpenAI.Internal.Models
                     total = property.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -164,3 +164,4 @@ namespace OpenAI.Internal.Models
         }
     }
 }
+

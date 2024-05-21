@@ -46,7 +46,7 @@ namespace OpenAI.Audio
             writer.WriteNumberValue(CompressionRatio);
             writer.WritePropertyName("no_speech_prob"u8);
             writer.WriteNumberValue(NoSpeechProbability);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -153,7 +153,7 @@ namespace OpenAI.Audio
                     noSpeechProb = property.Value.GetDouble();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -225,3 +225,4 @@ namespace OpenAI.Audio
         }
     }
 }
+

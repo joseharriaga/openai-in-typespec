@@ -25,7 +25,7 @@ namespace OpenAI.Embeddings
             writer.WriteNumberValue(InputTokens);
             writer.WritePropertyName("total_tokens"u8);
             writer.WriteNumberValue(TotalTokens);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -79,7 +79,7 @@ namespace OpenAI.Embeddings
                     totalTokens = property.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -134,3 +134,4 @@ namespace OpenAI.Embeddings
         }
     }
 }
+

@@ -33,7 +33,7 @@ namespace OpenAI.VectorStores
             writer.WriteStringValue(Status.ToString());
             writer.WritePropertyName("file_counts"u8);
             writer.WriteObjectValue<VectorStoreFileCounts>(FileCounts, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -111,7 +111,7 @@ namespace OpenAI.VectorStores
                     fileCounts = VectorStoreFileCounts.DeserializeVectorStoreFileCounts(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -173,3 +173,4 @@ namespace OpenAI.VectorStores
         }
     }
 }
+

@@ -43,7 +43,7 @@ namespace OpenAI.Moderations
             writer.WriteBooleanValue(Violence);
             writer.WritePropertyName("violence/graphic"u8);
             writer.WriteBooleanValue(ViolenceGraphic);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -151,7 +151,7 @@ namespace OpenAI.Moderations
                     violenceGraphic = property.Value.GetBoolean();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -218,3 +218,4 @@ namespace OpenAI.Moderations
         }
     }
 }
+

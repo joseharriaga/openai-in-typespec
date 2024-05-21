@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Audio
 {
@@ -42,6 +44,18 @@ namespace OpenAI.Audio
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
+        /// <summary>
+        /// Gets the dictionary containing additional raw data to serialize.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+        ///       It is subject to change and not intended for stable use.
+        /// </remarks>
+        [Experimental("OPENAI002")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IDictionary<string, BinaryData> SerializedAdditionalRawData
+            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+
         /// <summary> Initializes a new instance of <see cref="SpeechGenerationOptions"/>. </summary>
         /// <param name="model"> One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`. </param>
         /// <param name="input"> The text to generate audio for. The maximum length is 4096 characters. </param>
@@ -64,3 +78,4 @@ namespace OpenAI.Audio
         public float? Speed { get; set; }
     }
 }
+

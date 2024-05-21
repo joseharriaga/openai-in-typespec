@@ -22,10 +22,10 @@ namespace Azure.AI.OpenAI
 
             writer.WriteStartObject();
             writer.WritePropertyName("code"u8);
-            writer.WriteStringValue(Code);
+            writer.WriteNumberValue(Code);
             writer.WritePropertyName("message"u8);
             writer.WriteStringValue(Message);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -63,7 +63,7 @@ namespace Azure.AI.OpenAI
             {
                 return null;
             }
-            string code = default;
+            int code = default;
             string message = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -71,7 +71,7 @@ namespace Azure.AI.OpenAI
             {
                 if (property.NameEquals("code"u8))
                 {
-                    code = property.Value.GetString();
+                    code = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("message"u8))
@@ -79,7 +79,7 @@ namespace Azure.AI.OpenAI
                     message = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -134,4 +134,5 @@ namespace Azure.AI.OpenAI
         }
     }
 }
+
 

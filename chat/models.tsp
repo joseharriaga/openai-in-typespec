@@ -348,7 +348,8 @@ model ChatCompletionRequestUserMessage extends ChatCompletionRequestMessage {
   name?: string;
 }
 
-model ChatCompletionRequestAssistantMessage extends ChatCompletionRequestMessage {
+model ChatCompletionRequestAssistantMessage
+  extends ChatCompletionRequestMessage {
   @doc("""
   The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
   """)
@@ -391,7 +392,8 @@ model ChatCompletionRequestToolMessage extends ChatCompletionRequestMessage {
 }
 
 #deprecated "This field is marked as deprecated."
-model ChatCompletionRequestFunctionMessage extends ChatCompletionRequestMessage {
+model ChatCompletionRequestFunctionMessage
+  extends ChatCompletionRequestMessage {
   @doc("""
   The role of the messages author, in this case `function`.
   """)
@@ -409,11 +411,11 @@ model ChatCompletionMessageToolCalls is ChatCompletionMessageToolCall[];
 
 /** The role of the author of a message */
 enum ChatCompletionRole {
-  "system",
-  "user",
-  "assistant",
-  "tool",
-  "function"
+  system,
+  user,
+  assistant,
+  tool,
+  function,
 }
 
 /** Represents a chat completion response returned by model, based on the provided input. */

@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat
 {
@@ -42,31 +44,42 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
+        /// <summary>
+        /// Gets the dictionary containing additional raw data to serialize.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+        ///       It is subject to change and not intended for stable use.
+        /// </remarks>
+        [Experimental("OPENAI002")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IDictionary<string, BinaryData> SerializedAdditionalRawData
+            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+
         /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/>. </summary>
+        /// <param name="authentication">
+        /// The authentication mechanism to use with the data source.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
+        /// </param>
         /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
         /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
-        /// <param name="embeddingDependency">
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/>, <paramref name="indexName"/> or <paramref name="embeddingDependency"/> is null. </exception>
-        internal InternalAzureSearchChatDataSourceParameters(Uri endpoint, string indexName, AzureChatDataSourceVectorizationSource embeddingDependency)
+        /// <exception cref="ArgumentNullException"> <paramref name="authentication"/>, <paramref name="endpoint"/> or <paramref name="indexName"/> is null. </exception>
+        internal InternalAzureSearchChatDataSourceParameters(DataSourceAuthentication authentication, Uri endpoint, string indexName)
         {
+            Argument.AssertNotNull(authentication, nameof(authentication));
             Argument.AssertNotNull(endpoint, nameof(endpoint));
             Argument.AssertNotNull(indexName, nameof(indexName));
-            Argument.AssertNotNull(embeddingDependency, nameof(embeddingDependency));
 
+            Authentication = authentication;
             _internalIncludeContexts = new ChangeTrackingList<string>();
             Endpoint = endpoint;
             IndexName = indexName;
-            EmbeddingDependency = embeddingDependency;
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/>. </summary>
         /// <param name="authentication">
         /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="AzureChatDataSourceAuthenticationOptions"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceAccessTokenAuthenticationOptions"/>, <see cref="AzureChatDataSourceApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceConnectionStringAuthenticationOptions"/>, <see cref="AzureChatDataSourceEncodedApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceKeyAndKeyIdAuthenticationOptions"/>, <see cref="AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions"/> and <see cref="AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/>.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="topNDocuments"> The configured number of documents to feature in the query. </param>
         /// <param name="inScope"> Whether queries should be restricted to use of the indexed data. </param>
@@ -93,16 +106,15 @@ namespace Azure.AI.OpenAI.Chat
         /// </param>
         /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
         /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
-        /// <param name="fieldsMapping"> The field mappings to use with the Azure Search resource. </param>
+        /// <param name="fieldMappings"> The field mappings to use with the Azure Search resource. </param>
         /// <param name="queryType"> The query type for the Azure Search resource to use. </param>
         /// <param name="semanticConfiguration"> Additional semantic configuration for the query. </param>
         /// <param name="filter"> A filter to apply to the search. </param>
-        /// <param name="embeddingDependency">
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
+        /// <param name="vectorizationSource">
+        /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalAzureSearchChatDataSourceParameters(AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IList<string> internalIncludeContexts, Uri endpoint, string indexName, AzureSearchChatDataSourceParametersFieldsMapping fieldsMapping, string queryType, string semanticConfiguration, string filter, AzureChatDataSourceVectorizationSource embeddingDependency, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalAzureSearchChatDataSourceParameters(DataSourceAuthentication authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IList<string> internalIncludeContexts, Uri endpoint, string indexName, DataSourceFieldMappings fieldMappings, DataSourceQueryType? queryType, string semanticConfiguration, string filter, DataSourceVectorizer vectorizationSource, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Authentication = authentication;
             TopNDocuments = topNDocuments;
@@ -114,11 +126,11 @@ namespace Azure.AI.OpenAI.Chat
             _internalIncludeContexts = internalIncludeContexts;
             Endpoint = endpoint;
             IndexName = indexName;
-            FieldsMapping = fieldsMapping;
+            FieldMappings = fieldMappings;
             QueryType = queryType;
             SemanticConfiguration = semanticConfiguration;
             Filter = filter;
-            EmbeddingDependency = embeddingDependency;
+            VectorizationSource = vectorizationSource;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -129,10 +141,9 @@ namespace Azure.AI.OpenAI.Chat
 
         /// <summary>
         /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="AzureChatDataSourceAuthenticationOptions"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceAccessTokenAuthenticationOptions"/>, <see cref="AzureChatDataSourceApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceConnectionStringAuthenticationOptions"/>, <see cref="AzureChatDataSourceEncodedApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceKeyAndKeyIdAuthenticationOptions"/>, <see cref="AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions"/> and <see cref="AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/>.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </summary>
-        internal AzureChatDataSourceAuthenticationOptions Authentication { get; set; }
+        internal DataSourceAuthentication Authentication { get; set; }
         /// <summary> The configured number of documents to feature in the query. </summary>
         internal int? TopNDocuments { get; set; }
         /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
@@ -162,20 +173,11 @@ namespace Azure.AI.OpenAI.Chat
         internal Uri Endpoint { get; set; }
         /// <summary> The name of the index to use, as specified in the Azure Search resource. </summary>
         internal string IndexName { get; set; }
-        /// <summary> The field mappings to use with the Azure Search resource. </summary>
-        internal AzureSearchChatDataSourceParametersFieldsMapping FieldsMapping { get; set; }
-        /// <summary> The query type for the Azure Search resource to use. </summary>
-        internal string QueryType { get; set; }
         /// <summary> Additional semantic configuration for the query. </summary>
         internal string SemanticConfiguration { get; set; }
         /// <summary> A filter to apply to the search. </summary>
         internal string Filter { get; set; }
-        /// <summary>
-        /// Gets the embedding dependency
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
-        /// </summary>
-        internal AzureChatDataSourceVectorizationSource EmbeddingDependency { get; set; }
     }
 }
+
 

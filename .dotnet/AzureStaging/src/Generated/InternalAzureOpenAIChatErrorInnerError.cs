@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI
 {
@@ -42,6 +44,18 @@ namespace Azure.AI.OpenAI
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
+        /// <summary>
+        /// Gets the dictionary containing additional raw data to serialize.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+        ///       It is subject to change and not intended for stable use.
+        /// </remarks>
+        [Experimental("OPENAI002")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IDictionary<string, BinaryData> SerializedAdditionalRawData
+            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+
         /// <summary> Initializes a new instance of <see cref="InternalAzureOpenAIChatErrorInnerError"/>. </summary>
         internal InternalAzureOpenAIChatErrorInnerError()
         {
@@ -52,7 +66,7 @@ namespace Azure.AI.OpenAI
         /// <param name="revisedPrompt"></param>
         /// <param name="contentFilterResults"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalAzureOpenAIChatErrorInnerError(string code, string revisedPrompt, InternalAzureContentFilterResultForPrompt contentFilterResults, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalAzureOpenAIChatErrorInnerError(string code, string revisedPrompt, ContentFilterResultForPrompt contentFilterResults, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             RevisedPrompt = revisedPrompt;
@@ -65,7 +79,8 @@ namespace Azure.AI.OpenAI
         /// <summary> Gets the revised prompt. </summary>
         internal string RevisedPrompt { get; set; }
         /// <summary> Gets the content filter results. </summary>
-        internal InternalAzureContentFilterResultForPrompt ContentFilterResults { get; set; }
+        internal ContentFilterResultForPrompt ContentFilterResults { get; set; }
     }
 }
+
 

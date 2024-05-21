@@ -21,11 +21,8 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Authentication))
-            {
-                writer.WritePropertyName("authentication"u8);
-                writer.WriteObjectValue(Authentication, options);
-            }
+            writer.WritePropertyName("authentication"u8);
+            writer.WriteObjectValue(Authentication, options);
             if (Optional.IsDefined(TopNDocuments))
             {
                 writer.WritePropertyName("top_n_documents"u8);
@@ -89,7 +86,7 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("filter"u8);
                 writer.WriteStringValue(Filter);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -127,7 +124,7 @@ namespace Azure.AI.OpenAI.Chat
             {
                 return null;
             }
-            AzureChatDataSourceAuthenticationOptions authentication = default;
+            DataSourceAuthentication authentication = default;
             int? topNDocuments = default;
             bool? inScope = default;
             int? strictness = default;
@@ -145,11 +142,7 @@ namespace Azure.AI.OpenAI.Chat
             {
                 if (property.NameEquals("authentication"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    authentication = AzureChatDataSourceAuthenticationOptions.DeserializeAzureChatDataSourceAuthenticationOptions(property.Value, options);
+                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("top_n_documents"u8))
@@ -243,7 +236,7 @@ namespace Azure.AI.OpenAI.Chat
                     filter = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -311,3 +304,4 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
+

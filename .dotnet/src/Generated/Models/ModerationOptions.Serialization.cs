@@ -35,7 +35,7 @@ namespace OpenAI.Moderations
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.Value.ToString());
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -93,7 +93,7 @@ namespace OpenAI.Moderations
                     model = new CreateModerationRequestModel(property.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -148,3 +148,4 @@ namespace OpenAI.Moderations
         }
     }
 }
+

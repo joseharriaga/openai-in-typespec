@@ -36,7 +36,7 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("content_filter_results"u8);
                 writer.WriteObjectValue(ContentFilterResults, options);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -100,7 +100,7 @@ namespace Azure.AI.OpenAI
                     contentFilterResults = ImagePromptContentFilterResult.DeserializeImagePromptContentFilterResult(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -155,4 +155,5 @@ namespace Azure.AI.OpenAI
         }
     }
 }
+
 

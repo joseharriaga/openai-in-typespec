@@ -26,7 +26,7 @@ public partial class ToolChatMessage : IJsonModel<ToolChatMessage>
             writer.WritePropertyName("content"u8);
             writer.WriteStringValue(Content[0].Text);
         }
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
+        if (true && _serializedAdditionalRawData != null)
         {
             foreach (var item in _serializedAdditionalRawData)
             {
@@ -76,7 +76,7 @@ public partial class ToolChatMessage : IJsonModel<ToolChatMessage>
                 content = array;
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat
 {
@@ -42,17 +44,35 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
+        /// <summary>
+        /// Gets the dictionary containing additional raw data to serialize.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
+        ///       It is subject to change and not intended for stable use.
+        /// </remarks>
+        [Experimental("OPENAI002")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IDictionary<string, BinaryData> SerializedAdditionalRawData
+            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+
         /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSourceParameters"/>. </summary>
+        /// <param name="authentication">
+        /// The authentication mechanism to use with the data source.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
+        /// </param>
         /// <param name="projectResourceId"> The ID of the Azure Machine Learning index project to use. </param>
         /// <param name="name"> The name of the Azure Machine Learning index to use. </param>
         /// <param name="version"> The version of the vector index to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="projectResourceId"/>, <paramref name="name"/> or <paramref name="version"/> is null. </exception>
-        internal AzureMachineLearningIndexChatDataSourceParameters(string projectResourceId, string name, string version)
+        /// <exception cref="ArgumentNullException"> <paramref name="authentication"/>, <paramref name="projectResourceId"/>, <paramref name="name"/> or <paramref name="version"/> is null. </exception>
+        internal AzureMachineLearningIndexChatDataSourceParameters(DataSourceAuthentication authentication, string projectResourceId, string name, string version)
         {
+            Argument.AssertNotNull(authentication, nameof(authentication));
             Argument.AssertNotNull(projectResourceId, nameof(projectResourceId));
             Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(version, nameof(version));
 
+            Authentication = authentication;
             IncludeContexts = new ChangeTrackingList<BinaryData>();
             ProjectResourceId = projectResourceId;
             Name = name;
@@ -62,8 +82,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSourceParameters"/>. </summary>
         /// <param name="authentication">
         /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="AzureChatDataSourceAuthenticationOptions"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceAccessTokenAuthenticationOptions"/>, <see cref="AzureChatDataSourceApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceConnectionStringAuthenticationOptions"/>, <see cref="AzureChatDataSourceEncodedApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceKeyAndKeyIdAuthenticationOptions"/>, <see cref="AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions"/> and <see cref="AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/>.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="topNDocuments"> The configured number of documents to feature in the query. </param>
         /// <param name="inScope"> Whether queries should be restricted to use of the indexed data. </param>
@@ -93,7 +112,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="version"> The version of the vector index to use. </param>
         /// <param name="filter"> A search filter, which is only applicable if the vector index is of the 'AzureSearch' type. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureMachineLearningIndexChatDataSourceParameters(AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string projectResourceId, string name, string version, string filter, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureMachineLearningIndexChatDataSourceParameters(DataSourceAuthentication authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string projectResourceId, string name, string version, string filter, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Authentication = authentication;
             TopNDocuments = topNDocuments;
@@ -117,10 +136,9 @@ namespace Azure.AI.OpenAI.Chat
 
         /// <summary>
         /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="AzureChatDataSourceAuthenticationOptions"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceAccessTokenAuthenticationOptions"/>, <see cref="AzureChatDataSourceApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceConnectionStringAuthenticationOptions"/>, <see cref="AzureChatDataSourceEncodedApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceKeyAndKeyIdAuthenticationOptions"/>, <see cref="AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions"/> and <see cref="AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/>.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </summary>
-        public AzureChatDataSourceAuthenticationOptions Authentication { get; }
+        public DataSourceAuthentication Authentication { get; }
         /// <summary> The configured number of documents to feature in the query. </summary>
         public int? TopNDocuments { get; }
         /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
@@ -202,3 +220,4 @@ namespace Azure.AI.OpenAI.Chat
         public string Filter { get; }
     }
 }
+

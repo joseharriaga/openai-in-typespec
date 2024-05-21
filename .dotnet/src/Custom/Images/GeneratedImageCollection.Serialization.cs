@@ -30,7 +30,7 @@ public partial class GeneratedImageCollection : IJsonModel<GeneratedImageCollect
             writer.WriteObjectValue<GeneratedImage>(item, options);
         }
         writer.WriteEndArray();
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
+        if (true && _serializedAdditionalRawData != null)
         {
             foreach (var item in _serializedAdditionalRawData)
             {
@@ -78,7 +78,7 @@ public partial class GeneratedImageCollection : IJsonModel<GeneratedImageCollect
                 data = array;
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

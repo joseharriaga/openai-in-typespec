@@ -21,7 +21,7 @@ namespace OpenAI.Internal.Models
             }
 
             writer.WriteStartObject();
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -63,7 +63,7 @@ namespace OpenAI.Internal.Models
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -118,3 +118,4 @@ namespace OpenAI.Internal.Models
         }
     }
 }
+

@@ -269,7 +269,7 @@ public partial class AzureOpenAIClient : OpenAIClient
         }
         else
         {
-            string environmentApiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY");
+            string environmentApiKey = Environment.GetEnvironmentVariable(s_aoaiApiKeyEnvironmentVariable);
             if (string.IsNullOrEmpty(environmentApiKey))
             {
                 throw new InvalidOperationException(
@@ -298,7 +298,7 @@ public partial class AzureOpenAIClient : OpenAIClient
         }
         else
         {
-            string environmentApiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+            string environmentApiKey = Environment.GetEnvironmentVariable(s_aoaiEndpointEnvironmentVariable);
             if (string.IsNullOrEmpty(environmentApiKey))
             {
                 throw new InvalidOperationException(

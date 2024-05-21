@@ -75,7 +75,7 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
     filter?: string;
 
     /**  */
-    embedding_dependency: AzureChatDataSourceVectorizationSource;
+    embedding_dependency?: AzureChatDataSourceVectorizationSource;
   };
 }
 
@@ -155,7 +155,7 @@ model PineconeChatDataSource extends AzureChatDataSource {
 
 alias AzureChatDataSourceCommonParameters = {
   /** The authentication mechanism to use with the data source. */
-  authentication?: AzureChatDataSourceAuthenticationOptions;
+  authentication: AzureChatDataSourceAuthenticationOptions;
 
   /** The configured number of documents to feature in the query. */
   top_n_documents?: int32;

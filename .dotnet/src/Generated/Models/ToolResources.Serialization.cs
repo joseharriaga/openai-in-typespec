@@ -31,7 +31,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("file_search"u8);
                 SerializeFileSearch(writer);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -93,7 +93,7 @@ namespace OpenAI.Assistants
                     fileSearch = FileSearchToolResources.DeserializeFileSearchToolResources(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -148,3 +148,4 @@ namespace OpenAI.Assistants
         }
     }
 }
+

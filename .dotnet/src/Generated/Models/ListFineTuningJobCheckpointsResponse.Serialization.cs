@@ -56,7 +56,7 @@ namespace OpenAI.FineTuning
             }
             writer.WritePropertyName("has_more"u8);
             writer.WriteBooleanValue(HasMore);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -143,7 +143,7 @@ namespace OpenAI.FineTuning
                     hasMore = property.Value.GetBoolean();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -204,3 +204,4 @@ namespace OpenAI.FineTuning
         }
     }
 }
+

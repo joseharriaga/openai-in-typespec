@@ -10,8 +10,8 @@ model ChatCompletionRequestMessage {
   role: string;
 }
 
-model ChatMessageContentPart { }
+model ChatMessageContentPart {}
 
-model ChatCompletionToolChoice { }
+model ChatCompletionToolChoice {}
 
-model ChatCompletionFunctionChoice { }
+model ChatCompletionFunctionChoice {}

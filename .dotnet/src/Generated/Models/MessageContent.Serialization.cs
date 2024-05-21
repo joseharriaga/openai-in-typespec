@@ -20,7 +20,7 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -96,3 +96,4 @@ namespace OpenAI.Assistants
         }
     }
 }
+

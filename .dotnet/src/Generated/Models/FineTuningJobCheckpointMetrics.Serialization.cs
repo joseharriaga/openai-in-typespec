@@ -56,7 +56,7 @@ namespace OpenAI.FineTuning
                 writer.WritePropertyName("full_valid_mean_token_accuracy"u8);
                 writer.WriteNumberValue(FullValidMeanTokenAccuracy.Value);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -168,7 +168,7 @@ namespace OpenAI.FineTuning
                     fullValidMeanTokenAccuracy = property.Value.GetSingle();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -231,3 +231,4 @@ namespace OpenAI.FineTuning
         }
     }
 }
+

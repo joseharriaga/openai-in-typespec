@@ -48,7 +48,7 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("content_fields_separator"u8);
                 writer.WriteStringValue(ContentFieldsSeparator);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -125,7 +125,7 @@ namespace Azure.AI.OpenAI.Chat
                     contentFieldsSeparator = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -186,3 +186,4 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
+

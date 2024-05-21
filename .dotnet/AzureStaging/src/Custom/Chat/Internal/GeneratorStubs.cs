@@ -1,0 +1,15 @@
+namespace Azure.AI.OpenAI.Chat;
+
+[CodeGenModel("AzureChatDataSourceAccessTokenAuthenticationOptions")] internal partial class InternalAzureChatDataSourceAccessTokenAuthenticationOptions { }
+[CodeGenModel("AzureChatDataSourceApiKeyAuthenticationOptions")] internal partial class InternalAzureChatDataSourceApiKeyAuthenticationOptions { }
+[CodeGenModel("AzureChatDataSourceConnectionStringAuthenticationOptions")] internal partial class InternalAzureChatDataSourceConnectionStringAuthenticationOptions { }
+[CodeGenModel("AzureChatDataSourceDeploymentNameVectorizationSource")] internal partial class InternalAzureChatDataSourceDeploymentNameVectorizationSource { }
+[CodeGenModel("AzureChatDataSourceEncodedApiKeyAuthenticationOptions")] internal partial class InternalAzureChatDataSourceEncodedApiKeyAuthenticationOptions { }
+[CodeGenModel("AzureChatDataSourceEndpointVectorizationSource")] internal partial class InternalAzureChatDataSourceEndpointVectorizationSource { }
+[CodeGenModel("AzureChatDataSourceKeyAndKeyIdAuthenticationOptions")] internal partial class InternalAzureChatDataSourceKeyAndKeyIdAuthenticationOptions { }
+[CodeGenModel("AzureChatDataSourceModelIdVectorizationSource")] internal partial class InternalAzureChatDataSourceModelIdVectorizationSource { }
+[CodeGenModel("AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions")] internal partial class InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions { }
+[CodeGenModel("AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions")] internal partial class InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions { }
+[CodeGenModel("UnknownAzureChatDataSource")] internal partial class InternalUnknownAzureChatDataSource { }
+[CodeGenModel("UnknownAzureChatDataSourceAuthenticationOptions")] internal partial class InternalUnknownAzureChatDataSourceAuthenticationOptions { }
+[CodeGenModel("UnknownAzureChatDataSourceVectorizationSource")] internal partial class InternalUnknownAzureChatDataSourceVectorizationSource { }

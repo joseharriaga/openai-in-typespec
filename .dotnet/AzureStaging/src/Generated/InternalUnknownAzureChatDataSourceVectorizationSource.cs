@@ -4,12 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using Azure.AI.OpenAI.Chat;
 
-namespace Azure.AI.OpenAI
+namespace Azure.AI.OpenAI.Chat
 {
     /// <summary> Unknown version of AzureChatDataSourceVectorizationSource. </summary>
-    internal partial class InternalUnknownAzureChatDataSourceVectorizationSource : AzureChatDataSourceVectorizationSource
+    internal partial class InternalUnknownAzureChatDataSourceVectorizationSource : DataSourceVectorizer
     {
         /// <summary> Initializes a new instance of <see cref="InternalUnknownAzureChatDataSourceVectorizationSource"/>. </summary>
         /// <param name="type"></param>

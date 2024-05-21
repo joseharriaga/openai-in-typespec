@@ -33,7 +33,7 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
             writer.WriteObjectValue(_imageUrl, options);
         }
 
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
+        if (true && _serializedAdditionalRawData != null)
         {
             foreach (var item in _serializedAdditionalRawData)
             {
@@ -82,7 +82,7 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
                 imageUrl = InternalChatCompletionRequestMessageContentPartImageImageUrl.DeserializeInternalChatCompletionRequestMessageContentPartImageImageUrl(property.Value, options);
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

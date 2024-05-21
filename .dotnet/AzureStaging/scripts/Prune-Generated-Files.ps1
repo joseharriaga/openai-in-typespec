@@ -1,9 +1,14 @@
 $generatedCodeRoot = Join-Path $PSScriptRoot .. src Generated -Resolve
 
 $patternsToKeep = @(
-    "*ChatDataSource",
-    "ContentFilter",
-    "OpenAI*Error"
+    "*DataSource*",
+    "*ContentFilter*",
+    "*OpenAI*Error*"
+)
+$patternsToDelete = @(
+    "*Elasticsearch*QueryType*",
+    "*Elasticsearch*FieldsMapping*",
+    "*CosmosDB*FieldsMapping*"
 )
 
 Get-ChildItem $generatedCodeRoot -File | ForEach-Object {
@@ -11,8 +16,14 @@ Get-ChildItem $generatedCodeRoot -File | ForEach-Object {
     $generatedFilename = $_.Name;
     $keepFile = $false
     foreach ($pattern in $patternsToKeep) {
-        if ($generatedFilename -like "*$pattern*") {
+        if ($generatedFilename -like "$pattern") {
             $keepFile = $true
+            foreach ($deletePattern in $patternsToDelete) {
+                if ($generatedFilename -like $deletePattern) {
+                    $keepFile = $false
+                    break
+                }
+            }
             break
         }
     }

@@ -11,22 +11,27 @@ namespace Azure.AI.OpenAI.Chat
     public partial class PineconeChatDataSource : AzureChatDataSource
     {
         /// <summary> Initializes a new instance of <see cref="PineconeChatDataSource"/>. </summary>
+        /// <param name="authentication">
+        /// The authentication mechanism to use with the data source.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
+        /// </param>
         /// <param name="environment"></param>
         /// <param name="indexName"></param>
         /// <param name="embeddingDependency">
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
+        /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="fieldsMapping"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="environment"/>, <paramref name="indexName"/>, <paramref name="embeddingDependency"/> or <paramref name="fieldsMapping"/> is null. </exception>
-        internal PineconeChatDataSource(string environment, string indexName, AzureChatDataSourceVectorizationSource embeddingDependency, PineconeChatDataSourceFieldsMapping fieldsMapping)
+        /// <exception cref="ArgumentNullException"> <paramref name="authentication"/>, <paramref name="environment"/>, <paramref name="indexName"/>, <paramref name="embeddingDependency"/> or <paramref name="fieldsMapping"/> is null. </exception>
+        internal PineconeChatDataSource(DataSourceAuthentication authentication, string environment, string indexName, DataSourceVectorizer embeddingDependency, PineconeChatDataSourceFieldsMapping fieldsMapping)
         {
+            Argument.AssertNotNull(authentication, nameof(authentication));
             Argument.AssertNotNull(environment, nameof(environment));
             Argument.AssertNotNull(indexName, nameof(indexName));
             Argument.AssertNotNull(embeddingDependency, nameof(embeddingDependency));
             Argument.AssertNotNull(fieldsMapping, nameof(fieldsMapping));
 
             Type = "pinecone";
+            Authentication = authentication;
             IncludeContexts = new ChangeTrackingList<BinaryData>();
             Environment = environment;
             IndexName = indexName;
@@ -39,8 +44,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         /// <param name="authentication">
         /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="AzureChatDataSourceAuthenticationOptions"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceAccessTokenAuthenticationOptions"/>, <see cref="AzureChatDataSourceApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceConnectionStringAuthenticationOptions"/>, <see cref="AzureChatDataSourceEncodedApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceKeyAndKeyIdAuthenticationOptions"/>, <see cref="AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions"/> and <see cref="AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/>.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="topNDocuments"> The configured number of documents to feature in the query. </param>
         /// <param name="inScope"> Whether queries should be restricted to use of the indexed data. </param>
@@ -68,11 +72,10 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="environment"></param>
         /// <param name="indexName"></param>
         /// <param name="embeddingDependency">
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
+        /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="fieldsMapping"></param>
-        internal PineconeChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, AzureChatDataSourceAuthenticationOptions authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string environment, string indexName, AzureChatDataSourceVectorizationSource embeddingDependency, PineconeChatDataSourceFieldsMapping fieldsMapping) : base(type, serializedAdditionalRawData)
+        internal PineconeChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, DataSourceAuthentication authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IReadOnlyList<BinaryData> includeContexts, string environment, string indexName, DataSourceVectorizer embeddingDependency, PineconeChatDataSourceFieldsMapping fieldsMapping) : base(type, serializedAdditionalRawData)
         {
             Authentication = authentication;
             TopNDocuments = topNDocuments;
@@ -95,10 +98,9 @@ namespace Azure.AI.OpenAI.Chat
 
         /// <summary>
         /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="AzureChatDataSourceAuthenticationOptions"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceAccessTokenAuthenticationOptions"/>, <see cref="AzureChatDataSourceApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceConnectionStringAuthenticationOptions"/>, <see cref="AzureChatDataSourceEncodedApiKeyAuthenticationOptions"/>, <see cref="AzureChatDataSourceKeyAndKeyIdAuthenticationOptions"/>, <see cref="AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions"/> and <see cref="AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/>.
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </summary>
-        public AzureChatDataSourceAuthenticationOptions Authentication { get; }
+        public DataSourceAuthentication Authentication { get; }
         /// <summary> The configured number of documents to feature in the query. </summary>
         public int? TopNDocuments { get; }
         /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
@@ -176,10 +178,9 @@ namespace Azure.AI.OpenAI.Chat
         public string IndexName { get; }
         /// <summary>
         /// Gets the embedding dependency
-        /// Please note <see cref="AzureChatDataSourceVectorizationSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="AzureChatDataSourceDeploymentNameVectorizationSource"/>, <see cref="AzureChatDataSourceEndpointVectorizationSource"/> and <see cref="AzureChatDataSourceModelIdVectorizationSource"/>.
+        /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </summary>
-        public AzureChatDataSourceVectorizationSource EmbeddingDependency { get; }
+        public DataSourceVectorizer EmbeddingDependency { get; }
         /// <summary> Gets the fields mapping. </summary>
         public PineconeChatDataSourceFieldsMapping FieldsMapping { get; }
     }

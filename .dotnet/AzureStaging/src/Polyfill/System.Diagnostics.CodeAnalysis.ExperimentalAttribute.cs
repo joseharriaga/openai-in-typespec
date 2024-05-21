@@ -1,3 +1,4 @@
+#nullable enable
 #if !NET8_0_OR_GREATER
 
 // Licensed to the .NET Foundation under one or more agreements.

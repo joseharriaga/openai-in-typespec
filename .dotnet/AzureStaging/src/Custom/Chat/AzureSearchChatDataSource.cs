@@ -1,14 +1,31 @@
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureSearchChatDataSource")]
+[CodeGenSuppress(nameof(AzureSearchChatDataSource))]
+[CodeGenSuppress(nameof(AzureSearchChatDataSource), typeof(string), typeof(IDictionary<string, BinaryData>), typeof(InternalAzureSearchChatDataSourceParameters))]
 public partial class AzureSearchChatDataSource : AzureChatDataSource
 {
     [CodeGenMember("Parameters")]
     internal InternalAzureSearchChatDataSourceParameters InternalParameters { get; }
 
+    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.Endpoint"/>
+    public required Uri Endpoint
+    {
+        get => InternalParameters.Endpoint;
+        init => InternalParameters.Endpoint = value;
+    }
+
+    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.IndexName"/>
+    public required string IndexName
+    {
+        get => InternalParameters.IndexName;
+        init => InternalParameters.IndexName = value;
+    }
+    
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.Authentication"/>
-    public AzureChatDataSourceAuthenticationOptions Authentication
+    public required DataSourceAuthentication Authentication
     {
         get => InternalParameters.Authentication;
         init => InternalParameters.Authentication = value;
@@ -56,20 +73,6 @@ public partial class AzureSearchChatDataSource : AzureChatDataSource
         init => InternalParameters.AllowPartialResult = value;
     }
 
-    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.Endpoint"/>
-    public Uri Endpoint
-    {
-        get => InternalParameters.Endpoint;
-        init => InternalParameters.Endpoint = value;
-    }
-
-    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.IndexName"/>
-    public string IndexName
-    {
-        get => InternalParameters.IndexName;
-        init => InternalParameters.IndexName = value;
-    }
-
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.OutputContextFlags"/>
     DataSourceOutputContextFlags? OutputContextFlags
     {
@@ -77,15 +80,15 @@ public partial class AzureSearchChatDataSource : AzureChatDataSource
         init => InternalParameters.OutputContextFlags = value;
     }
 
-    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.FieldsMapping"/>
-    public AzureSearchChatDataSourceParametersFieldsMapping FieldsMapping
+    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.FieldMappings"/>
+    public DataSourceFieldMappings FieldMappings
     {
-        get => InternalParameters.FieldsMapping;
-        init => InternalParameters.FieldsMapping = value;
+        get => InternalParameters.FieldMappings;
+        init => InternalParameters.FieldMappings = value;
     }
 
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.QueryType"/>
-    public string QueryType
+    public DataSourceQueryType? QueryType
     {
         get => InternalParameters.QueryType;
         init => InternalParameters.QueryType = value;
@@ -98,23 +101,34 @@ public partial class AzureSearchChatDataSource : AzureChatDataSource
         init => InternalParameters.SemanticConfiguration = value;
     }
 
-    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.EmbeddingDependency"/>
+    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.Filter"/>
     public string Filter
     {
         get => InternalParameters.Filter;
         init => InternalParameters.Filter = value;
     }
 
-    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.EmbeddingDependency"/>
-    public AzureChatDataSourceVectorizationSource EmbeddingDependency
+    /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.VectorizationSource"/>
+    public DataSourceVectorizer VectorizationSource
     {
-        get => InternalParameters.EmbeddingDependency;
-        init => InternalParameters.EmbeddingDependency = value;
+        get => InternalParameters.VectorizationSource;
+        init => InternalParameters.VectorizationSource = value;
     }
 
     public AzureSearchChatDataSource()
     {
+        Type = "azure_search";
         InternalParameters = new();
         _serializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
+    }
+
+    /// <summary> Initializes a new instance of <see cref="AzureSearchChatDataSource"/>. </summary>
+    /// <param name="type"></param>
+    /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+    /// <param name="internalParameters"> The parameter information to control the use of the Azure Search data source. </param>
+    [SetsRequiredMembers]
+    internal AzureSearchChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalAzureSearchChatDataSourceParameters internalParameters) : base(type, serializedAdditionalRawData)
+    {
+        InternalParameters = internalParameters;
     }
 }

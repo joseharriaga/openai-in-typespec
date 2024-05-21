@@ -72,7 +72,7 @@ namespace OpenAI.Images
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(User);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -188,7 +188,7 @@ namespace OpenAI.Images
                     user = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -252,3 +252,4 @@ namespace OpenAI.Images
         }
     }
 }
+

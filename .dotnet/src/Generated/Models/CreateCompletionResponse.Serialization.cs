@@ -47,7 +47,7 @@ namespace OpenAI.LegacyCompletions
                 writer.WritePropertyName("usage"u8);
                 writer.WriteObjectValue(Usage, options);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -140,7 +140,7 @@ namespace OpenAI.LegacyCompletions
                     usage = ChatTokenUsage.DeserializeChatTokenUsage(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -203,3 +203,4 @@ namespace OpenAI.LegacyCompletions
         }
     }
 }
+

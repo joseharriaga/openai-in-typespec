@@ -16,14 +16,46 @@ internal partial class AzureChatClient : ChatClient
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ClientResult CompleteChat(BinaryContent content, RequestOptions options = null)
     {
+        using MemoryStream contentInputStream = new();
+        content.WriteTo(contentInputStream);
+        contentInputStream.Position = 0;
+        using JsonDocument inputDocument = JsonDocument.Parse(contentInputStream);
+
+        using MemoryStream contentOutputStream = new();
+        Utf8JsonWriter contentOutputWriter = new(contentOutputStream);
+        contentOutputWriter.WriteStartObject();
+        foreach (JsonProperty property in inputDocument.RootElement.EnumerateObject())
+        {
+            if (!property.NameEquals("stream_options"u8))
+            {
+                contentOutputWriter.WritePropertyName(property.Name);
+                string rawValue = property.Value.GetRawText();
+                contentOutputWriter.WriteObjectValue(property.Value);
+            }
+        }
+        contentOutputWriter.WriteEndObject();
+        contentOutputWriter.Flush();
+        contentOutputStream.Position = 0;
+        content.Dispose();
+        content = BinaryContent.Create(contentOutputStream);
+
         using PipelineMessage message = CreateCompleteChatRequestMessage(content, options);
         PipelineResponse response = Pipeline.ProcessMessage(message, options);
-        _ = TryReplaceResponseStreamWithClonedElement(
-            response,
-            "sdk_content_filter_response",
-            ("choices", JsonValueKind.Array),
-            ("content_filter_results", JsonValueKind.Object));
-        return ClientResult.FromResponse(response);
+        if (message.BufferResponse)
+        {
+            _ = TryReplaceResponseStreamWithClonedElement(
+                response,
+                "sdk_content_filter_response",
+                ("choices", JsonValueKind.Array),
+                ("content_filter_results", JsonValueKind.Object));
+            _ = TryReplaceResponseStreamWithClonedElement(
+                response,
+                "sdk_azure_message_context",
+                ("choices", JsonValueKind.Array),
+                ("message", JsonValueKind.Object),
+                ("context", JsonValueKind.Object));
+        }
+        return ClientResult.FromResponse(message.BufferResponse ? response : message.ExtractResponse());
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -31,6 +63,17 @@ internal partial class AzureChatClient : ChatClient
     {
         using PipelineMessage message = CreateCompleteChatRequestMessage(content, options);
         PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
+        _ = TryReplaceResponseStreamWithClonedElement(
+            response,
+            "sdk_content_filter_response",
+            ("choices", JsonValueKind.Array),
+            ("content_filter_results", JsonValueKind.Object));
+        _ = TryReplaceResponseStreamWithClonedElement(
+            response,
+            "sdk_azure_message_context",
+            ("choices", JsonValueKind.Array),
+            ("message", JsonValueKind.Object),
+            ("context", JsonValueKind.Object));
         return ClientResult.FromResponse(response);
     }
 

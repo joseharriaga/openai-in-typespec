@@ -37,5 +37,10 @@ public static partial class AzureChatCompletionExtensions
 
     [Experimental("OPENAI002")]
     public static AzureChatMessageContext GetAzureMessageContext(this ChatCompletion chatCompletion)
-        => throw new NotImplementedException();
+        => AdditionalPropertyHelpers.TryGetAdditionalProperty(
+            chatCompletion.SerializedAdditionalRawData,
+            "sdk_azure_message_context",
+            out AzureChatMessageContext messageContext)
+                ? messageContext
+                : null;
 }

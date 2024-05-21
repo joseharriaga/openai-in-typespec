@@ -9,6 +9,7 @@ using Azure.Identity;
 using OpenAI.Chat;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Text;
 
 namespace Azure.AI.OpenAI.Tests;
 
@@ -20,6 +21,22 @@ public class ChatTests : TestBase<ChatClient>
         ChatClient chatClient = GetTestClient();
         ClientResult<ChatCompletion> chatCompletion = chatClient.CompleteChat([new UserChatMessage("hello, world!")]);
         Assert.That(chatCompletion?.Value, Is.Not.Null);
+    }
+
+    [Test]
+    public void HelloWorldStreaming()
+    {
+        ChatClient chatClient = GetTestClient("gpt-4");
+        StringBuilder contentBuilder = new();
+        foreach (StreamingChatCompletionUpdate chatUpdate in chatClient.CompleteChatStreaming(
+            [new UserChatMessage("Hello, assistant"!)]))
+        {
+            foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
+            {
+                contentBuilder.Append(contentPart.Text);
+            }
+        }
+        Assert.That(contentBuilder.ToString(), Is.Not.Null.Or.Empty);
     }
 
     [Test]
@@ -136,5 +153,74 @@ public class ChatTests : TestBase<ChatClient>
         sourcesFromOptions = options.GetDataSources();
         Assert.That(sourcesFromOptions, Has.Count.EqualTo(2));
         Assert.That(sourcesFromOptions[1], Is.InstanceOf<AzureCosmosDBChatDataSource>());
+    }
+
+    [Test]
+    public void SearchExtensionWorks()
+    {
+        string searchEndpoint = Environment.GetEnvironmentVariable("AOAI_SEARCH_ENDPOINT");
+        string searchKey = Environment.GetEnvironmentVariable("AOAI_SEARCH_API_KEY");
+        string searchIndex = Environment.GetEnvironmentVariable("AOAI_SEARCH_INDEX_NAME");
+
+        AzureSearchChatDataSource source = new()
+        {
+            Endpoint = new Uri(searchEndpoint),
+            Authentication = DataSourceAuthentication.FromApiKey(searchKey),
+            IndexName = searchIndex,
+            AllowPartialResult = true,
+            QueryType = DataSourceQueryType.Simple,
+        };
+        ChatCompletionOptions options = new();
+        options.AddDataSource(source);
+
+        ChatClient client = GetTestClient("gpt-4");
+        ClientResult<ChatCompletion> chatCompletionResult = client.CompleteChat(
+            [new UserChatMessage("What does the term 'PR complete' mean?")],
+            options);
+        Console.WriteLine($"--- RESPONSE CONTENT ---");
+        Console.WriteLine(chatCompletionResult.GetRawResponse().Content);
+        ChatCompletion chatCompletion = chatCompletionResult.Value;
+        AzureChatMessageContext context = chatCompletion.GetAzureMessageContext();
+        Assert.That(context?.Intent, Is.Not.Null.Or.Empty);
+        Assert.That(context?.Citations, Has.Count.GreaterThan(0));
+        Assert.That(context.Citations[0].Filepath, Is.Not.Null.Or.Empty);
+        Assert.That(context.Citations[0].Content, Is.Not.Null.Or.Empty);
+        Assert.That(context.Citations[0].ChunkId, Is.Not.Null.Or.Empty);
+        Assert.That(context.Citations[0].Title, Is.Not.Null.Or.Empty);
+        Assert.That(context.Citations[0].Url, Is.Not.Null.Or.Empty);
+    }
+
+    [Test]
+    public void StreamingSearchExtensionWorks()
+    {
+        string searchEndpoint = Environment.GetEnvironmentVariable("AOAI_SEARCH_ENDPOINT");
+        string searchKey = Environment.GetEnvironmentVariable("AOAI_SEARCH_API_KEY");
+        string searchIndex = Environment.GetEnvironmentVariable("AOAI_SEARCH_INDEX_NAME");
+
+        AzureSearchChatDataSource source = new()
+        {
+            Endpoint = new Uri(searchEndpoint),
+            Authentication = DataSourceAuthentication.FromApiKey(searchKey),
+            IndexName = searchIndex,
+            AllowPartialResult = true,
+            QueryType = DataSourceQueryType.Simple,
+        };
+        ChatCompletionOptions options = new();
+        options.AddDataSource(source);
+
+        ChatClient client = GetTestClient("gpt-4");
+
+        ResultCollection<StreamingChatCompletionUpdate> chatUpdates = client.CompleteChatStreaming(
+            [new UserChatMessage("What does the term 'PR complete' mean?")],
+            options);
+
+        foreach (StreamingChatCompletionUpdate chatUpdate in chatUpdates)
+        {
+            AzureChatMessageContext context = chatUpdate.GetAzureMessageContext();
+            foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
+            {
+                Console.WriteLine(contentPart.Text);
+            }
+        }
     }
 }

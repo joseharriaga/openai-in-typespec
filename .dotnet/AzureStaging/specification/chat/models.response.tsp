@@ -12,19 +12,26 @@ model AzureCreateChatCompletionResponse extends CreateChatCompletionResponse {
   }[];
 }
 
-model AzureChatCompletionResponseMessage extends ChatCompletionResponseMessage {
-  context?: {
-    intent?: string;
-    citations?: AzureChatDataSourceCitation[];
-    all_retrieved_documents?: {
-      ...AzureChatDataSourceCitation;
-      search_queries: string[];
-      data_source_index: int32;
-      original_search_score?: float64;
-      rerank_score?: float64;
-      filter_reason?: "score" | "rerank";
-    }[];
+model AzureChatMessageContext {
+  intent?: string;
+  citations?: AzureChatDataSourceCitation[];
+  all_retrieved_documents?: {
+    ...AzureChatDataSourceCitation;
+    search_queries: string[];
+    data_source_index: int32;
+    original_search_score?: float64;
+    rerank_score?: float64;
+    filter_reason?: "score" | "rerank";
   };
+}
+
+model AzureChatCompletionResponseMessage extends ChatCompletionResponseMessage {
+  context?: AzureChatMessageContext;
+}
+
+model AzureChatCompletionStreamResponseDelta
+  extends ChatCompletionStreamResponseDelta {
+  context?: AzureChatMessageContext;
 }
 
 alias AzureChatDataSourceCitation = {

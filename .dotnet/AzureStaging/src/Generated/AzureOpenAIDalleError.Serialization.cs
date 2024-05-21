@@ -24,7 +24,7 @@ namespace Azure.AI.OpenAI
             if (Optional.IsDefined(Code))
             {
                 writer.WritePropertyName("code"u8);
-                writer.WriteStringValue(Code);
+                writer.WriteNumberValue(Code.Value);
             }
             if (Optional.IsDefined(Message))
             {
@@ -84,7 +84,7 @@ namespace Azure.AI.OpenAI
             {
                 return null;
             }
-            string code = default;
+            int? code = default;
             string message = default;
             string param = default;
             string type = default;
@@ -95,7 +95,11 @@ namespace Azure.AI.OpenAI
             {
                 if (property.NameEquals("code"u8))
                 {
-                    code = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    code = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("message"u8))

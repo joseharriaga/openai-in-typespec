@@ -68,7 +68,7 @@ namespace Azure.AI.OpenAI
         /// <param name="type"></param>
         /// <param name="innerError"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureOpenAIChatError(string code, string message, string param, string type, InternalAzureOpenAIChatErrorInnerError innerError, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureOpenAIChatError(int? code, string message, string param, string type, InternalAzureOpenAIChatErrorInnerError innerError, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             Message = message;
@@ -79,7 +79,7 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the code. </summary>
-        public string Code { get; }
+        public int? Code { get; }
         /// <summary> Gets the message. </summary>
         public string Message { get; }
         /// <summary> Gets the param. </summary>

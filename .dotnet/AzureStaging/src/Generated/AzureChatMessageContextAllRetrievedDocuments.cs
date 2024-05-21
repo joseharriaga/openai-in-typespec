@@ -8,10 +8,10 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Azure.AI.OpenAI.Chat
+namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureChatCompletionResponseMessageContextAllRetrievedDocument. </summary>
-    public partial class AzureChatRetrievedDocument
+    /// <summary> The AzureChatMessageContextAllRetrievedDocuments. </summary>
+    public partial class AzureChatMessageContextAllRetrievedDocuments
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -57,12 +57,12 @@ namespace Azure.AI.OpenAI.Chat
         public IDictionary<string, BinaryData> SerializedAdditionalRawData
             => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatRetrievedDocument"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureChatMessageContextAllRetrievedDocuments"/>. </summary>
         /// <param name="content"></param>
         /// <param name="searchQueries"></param>
         /// <param name="dataSourceIndex"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> or <paramref name="searchQueries"/> is null. </exception>
-        internal AzureChatRetrievedDocument(string content, IEnumerable<string> searchQueries, int dataSourceIndex)
+        internal AzureChatMessageContextAllRetrievedDocuments(string content, IEnumerable<string> searchQueries, int dataSourceIndex)
         {
             Argument.AssertNotNull(content, nameof(content));
             Argument.AssertNotNull(searchQueries, nameof(searchQueries));
@@ -72,7 +72,7 @@ namespace Azure.AI.OpenAI.Chat
             DataSourceIndex = dataSourceIndex;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatRetrievedDocument"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureChatMessageContextAllRetrievedDocuments"/>. </summary>
         /// <param name="content"></param>
         /// <param name="title"></param>
         /// <param name="url"></param>
@@ -84,7 +84,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="rerankScore"></param>
         /// <param name="filterReason"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatRetrievedDocument(string content, string title, string url, string filepath, string chunkId, IReadOnlyList<string> searchQueries, int dataSourceIndex, double? originalSearchScore, double? rerankScore, string filterReason, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureChatMessageContextAllRetrievedDocuments(string content, string title, string url, string filepath, string chunkId, IReadOnlyList<string> searchQueries, int dataSourceIndex, double? originalSearchScore, double? rerankScore, string filterReason, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Content = content;
             Title = title;
@@ -99,8 +99,8 @@ namespace Azure.AI.OpenAI.Chat
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatRetrievedDocument"/> for deserialization. </summary>
-        internal AzureChatRetrievedDocument()
+        /// <summary> Initializes a new instance of <see cref="AzureChatMessageContextAllRetrievedDocuments"/> for deserialization. </summary>
+        internal AzureChatMessageContextAllRetrievedDocuments()
         {
         }
 

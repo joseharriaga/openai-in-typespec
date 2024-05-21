@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatCompletionResponseMessageContext. </summary>
+    /// <summary> The AzureChatMessageContext. </summary>
     public partial class AzureChatMessageContext
     {
         /// <summary>
@@ -59,8 +59,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> Initializes a new instance of <see cref="AzureChatMessageContext"/>. </summary>
         internal AzureChatMessageContext()
         {
-            Citations = new ChangeTrackingList<AzureChatCitation>();
-            AllRetrievedDocuments = new ChangeTrackingList<AzureChatRetrievedDocument>();
+            Citations = new ChangeTrackingList<AzureChatMessageContextCitation>();
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatMessageContext"/>. </summary>
@@ -68,7 +67,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="citations"></param>
         /// <param name="allRetrievedDocuments"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatMessageContext(string intent, IReadOnlyList<AzureChatCitation> citations, IReadOnlyList<AzureChatRetrievedDocument> allRetrievedDocuments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureChatMessageContext(string intent, IReadOnlyList<AzureChatMessageContextCitation> citations, AzureChatMessageContextAllRetrievedDocuments allRetrievedDocuments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Intent = intent;
             Citations = citations;
@@ -79,9 +78,9 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> Gets the intent. </summary>
         public string Intent { get; }
         /// <summary> Gets the citations. </summary>
-        public IReadOnlyList<AzureChatCitation> Citations { get; }
+        public IReadOnlyList<AzureChatMessageContextCitation> Citations { get; }
         /// <summary> Gets the all retrieved documents. </summary>
-        public IReadOnlyList<AzureChatRetrievedDocument> AllRetrievedDocuments { get; }
+        public AzureChatMessageContextAllRetrievedDocuments AllRetrievedDocuments { get; }
     }
 }
 

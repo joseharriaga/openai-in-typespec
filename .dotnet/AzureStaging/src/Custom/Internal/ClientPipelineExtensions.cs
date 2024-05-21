@@ -47,19 +47,13 @@ internal static partial class ClientPipelineExtensions
 
     private static string TryBufferResponseAndCreateError(PipelineMessage message)
     {
-        if (message.BufferResponse)
-        {
-            message.Response.BufferContent();
-        }
+        message.Response.BufferContent();
         return TryCreateErrorMessageFromResponse(message.Response);
     }
 
     private static async Task<string> TryBufferResponseAndCreateErrorAsync(PipelineMessage message)
     {
-        if (message.BufferResponse)
-        {
-            await message.Response.BufferContentAsync().ConfigureAwait(false);
-        }
+        await message.Response.BufferContentAsync().ConfigureAwait(false);
         return TryCreateErrorMessageFromResponse(message.Response);
     }
 

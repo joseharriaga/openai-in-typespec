@@ -36,15 +36,10 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(AllRetrievedDocuments))
+            if (Optional.IsDefined(AllRetrievedDocuments))
             {
                 writer.WritePropertyName("all_retrieved_documents"u8);
-                writer.WriteStartArray();
-                foreach (var item in AllRetrievedDocuments)
-                {
-                    writer.WriteObjectValue(item, options);
-                }
-                writer.WriteEndArray();
+                writer.WriteObjectValue(AllRetrievedDocuments, options);
             }
             if (true && _serializedAdditionalRawData != null)
             {
@@ -85,8 +80,8 @@ namespace Azure.AI.OpenAI.Chat
                 return null;
             }
             string intent = default;
-            IReadOnlyList<AzureChatCitation> citations = default;
-            IReadOnlyList<AzureChatRetrievedDocument> allRetrievedDocuments = default;
+            IReadOnlyList<AzureChatMessageContextCitation> citations = default;
+            AzureChatMessageContextAllRetrievedDocuments allRetrievedDocuments = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -102,10 +97,10 @@ namespace Azure.AI.OpenAI.Chat
                     {
                         continue;
                     }
-                    List<AzureChatCitation> array = new List<AzureChatCitation>();
+                    List<AzureChatMessageContextCitation> array = new List<AzureChatMessageContextCitation>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(AzureChatCitation.DeserializeAzureChatCitation(item, options));
+                        array.Add(AzureChatMessageContextCitation.DeserializeAzureChatMessageContextCitation(item, options));
                     }
                     citations = array;
                     continue;
@@ -116,12 +111,7 @@ namespace Azure.AI.OpenAI.Chat
                     {
                         continue;
                     }
-                    List<AzureChatRetrievedDocument> array = new List<AzureChatRetrievedDocument>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(AzureChatRetrievedDocument.DeserializeAzureChatRetrievedDocument(item, options));
-                    }
-                    allRetrievedDocuments = array;
+                    allRetrievedDocuments = AzureChatMessageContextAllRetrievedDocuments.DeserializeAzureChatMessageContextAllRetrievedDocuments(property.Value, options);
                     continue;
                 }
                 if (true)
@@ -130,7 +120,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureChatMessageContext(intent, citations ?? new ChangeTrackingList<AzureChatCitation>(), allRetrievedDocuments ?? new ChangeTrackingList<AzureChatRetrievedDocument>(), serializedAdditionalRawData);
+            return new AzureChatMessageContext(intent, citations ?? new ChangeTrackingList<AzureChatMessageContextCitation>(), allRetrievedDocuments, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<AzureChatMessageContext>.Write(ModelReaderWriterOptions options)

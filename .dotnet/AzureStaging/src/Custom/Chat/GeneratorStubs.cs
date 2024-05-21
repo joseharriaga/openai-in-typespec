@@ -7,4 +7,6 @@ namespace Azure.AI.OpenAI.Chat;
 [CodeGenModel("PineconeChatDataSourceFieldsMapping")] public partial class PineconeChatDataSourceFieldsMapping { }
 [CodeGenModel("AzureChatCompletionResponseMessageContextCitation")] public partial class AzureChatCitation { }
 [CodeGenModel("AzureChatCompletionResponseMessageContextAllRetrievedDocument")] public partial class AzureChatRetrievedDocument { }
-[CodeGenModel("AzureChatCompletionResponseMessageContext")] public partial class AzureChatMessageContext { }
+[CodeGenModel("AzureChatMessageContext")] public partial class AzureChatMessageContext { }
+[CodeGenModel("AzureChatCompletionStreamResponseDelta")] internal partial class AzureStreamingChatCompletionUpdate { }
+[CodeGenModel("AzureCreateChatCompletionRequest")] internal partial class AzureChatCompletionOptions { }

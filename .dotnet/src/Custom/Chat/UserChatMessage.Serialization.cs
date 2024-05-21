@@ -27,12 +27,19 @@ public partial class UserChatMessage : IJsonModel<UserChatMessage>
         if (Optional.IsCollectionDefined(Content))
         {
             writer.WritePropertyName("content"u8);
-            writer.WriteStartArray();
-            foreach (var item in Content)
+            if (Content.Count == 1 && !string.IsNullOrEmpty(Content[0].Text))
             {
-                writer.WriteObjectValue(item, options);
+                writer.WriteStringValue(Content[0].Text);
             }
-            writer.WriteEndArray();
+            else
+            {
+                writer.WriteStartArray();
+                foreach (var item in Content)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
         }
         if (true && _serializedAdditionalRawData != null)
         {

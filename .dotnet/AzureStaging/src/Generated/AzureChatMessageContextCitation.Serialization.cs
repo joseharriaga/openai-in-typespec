@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Azure.AI.OpenAI.Chat
+namespace Azure.AI.OpenAI
 {
-    public partial class AzureChatCitation : IJsonModel<AzureChatCitation>
+    public partial class AzureChatMessageContextCitation : IJsonModel<AzureChatMessageContextCitation>
     {
-        void IJsonModel<AzureChatCitation>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AzureChatMessageContextCitation>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatCitation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureChatMessageContextCitation>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatCitation)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureChatMessageContextCitation)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -61,19 +61,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        AzureChatCitation IJsonModel<AzureChatCitation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AzureChatMessageContextCitation IJsonModel<AzureChatMessageContextCitation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatCitation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureChatMessageContextCitation>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatCitation)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureChatMessageContextCitation)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureChatCitation(document.RootElement, options);
+            return DeserializeAzureChatMessageContextCitation(document.RootElement, options);
         }
 
-        internal static AzureChatCitation DeserializeAzureChatCitation(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AzureChatMessageContextCitation DeserializeAzureChatMessageContextCitation(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -121,7 +121,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureChatCitation(
+            return new AzureChatMessageContextCitation(
                 content,
                 title,
                 url,
@@ -130,43 +130,43 @@ namespace Azure.AI.OpenAI.Chat
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureChatCitation>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AzureChatMessageContextCitation>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatCitation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureChatMessageContextCitation>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatCitation)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureChatMessageContextCitation)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureChatCitation IPersistableModel<AzureChatCitation>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AzureChatMessageContextCitation IPersistableModel<AzureChatMessageContextCitation>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatCitation>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureChatMessageContextCitation>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureChatCitation(document.RootElement, options);
+                        return DeserializeAzureChatMessageContextCitation(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatCitation)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureChatMessageContextCitation)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureChatCitation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AzureChatMessageContextCitation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AzureChatCitation FromResponse(PipelineResponse response)
+        internal static AzureChatMessageContextCitation FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureChatCitation(document.RootElement);
+            return DeserializeAzureChatMessageContextCitation(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

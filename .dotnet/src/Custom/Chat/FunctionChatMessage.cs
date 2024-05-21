@@ -12,13 +12,6 @@ namespace OpenAI.Chat;
 [CodeGenSuppress("FunctionChatMessage", typeof(IEnumerable<ChatMessageContentPart>), typeof(string))]
 public partial class FunctionChatMessage : ChatMessage
 {
-    // CUSTOM: Renamed.
-    /// <summary>
-    /// The <c>name</c> of the called function that this message provides information from.
-    /// </summary>
-    [CodeGenMember("Name")]
-    public string FunctionName { get; }
-
     /// <summary>
     /// Creates a new instance of <see cref="FunctionChatMessage"/>.
     /// </summary>
@@ -39,4 +32,11 @@ public partial class FunctionChatMessage : ChatMessage
             ? new ChangeTrackingList<ChatMessageContentPart>()
             : [ChatMessageContentPart.CreateTextMessageContentPart(content)];
     }
+
+    // CUSTOM: Renamed.
+    /// <summary>
+    /// The <c>name</c> of the called function that this message provides information from.
+    /// </summary>
+    [CodeGenMember("Name")]
+    public string FunctionName { get; }
 }

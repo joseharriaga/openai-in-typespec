@@ -63,11 +63,11 @@ public enum ChatFinishReason
     /// </summary>
     /// <remarks>
     /// To resolve tool calls, append the message associated with the tool calls followed by matching instances of
-    /// <see cref="ChatRequestToolMessage"/> for each tool call, then perform another chat completion with the combined
+    /// <see cref="ToolChatMessage"/> for each tool call, then perform another chat completion with the combined
     /// set of messages.
     /// <para>
     /// <b>Note</b>: <see cref="ToolCalls"/> is <i>not</i> provided as the <c>finish_reason</c> if the model calls a
-    /// tool in response to an explicit <c>tool_choice</c> via <see cref="ChatCompletionOptions.ToolConstraint"/>.
+    /// tool in response to an explicit <c>tool_choice</c> via <see cref="ChatCompletionOptions.ToolChoice"/>.
     /// In that case, calling the specified tool is assumed and the expected reason is <see cref="Stop"/>.
     /// </para>
     /// </remarks>
@@ -79,7 +79,7 @@ public enum ChatFinishReason
     /// </summary>
     /// <remarks>
     /// To resolve a function call, append the message associated with the function call followed by a
-    /// <see cref="ChatRequestFunctionMessage"/> with the appropriate name and arguments, then perform another chat
+    /// <see cref="FunctionChatMessage"/> with the appropriate name and arguments, then perform another chat
     /// completion with the combined set of messages.
     /// </remarks>
     [CodeGenMember("FunctionCall")]

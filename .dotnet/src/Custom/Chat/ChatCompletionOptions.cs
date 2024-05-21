@@ -19,6 +19,7 @@ public partial class ChatCompletionOptions
     /// Please note <see cref="ChatMessage"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
     /// The available derived classes include <see cref="AssistantChatMessage"/>, <see cref="FunctionChatMessage"/>, <see cref="SystemChatMessage"/>, <see cref="ToolChatMessage"/> and <see cref="UserChatMessage"/>.
     /// </summary>
+    [CodeGenMember("Messages")]
     internal IList<ChatMessage> Messages { get; set; }
 
     // CUSTOM:
@@ -40,7 +41,6 @@ public partial class ChatCompletionOptions
     [CodeGenMember("Stream")]
     internal bool? Stream { get; set; }
 
-    // TODO: What do we do about this?
     /// <summary> Gets or sets the stream options. </summary>
     [CodeGenMember("StreamOptions")]
     internal InternalChatCompletionStreamOptions StreamOptions { get; set; }

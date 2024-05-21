@@ -11,14 +11,6 @@ namespace OpenAI.Chat;
 [CodeGenModel("ChatCompletionRequestAssistantMessage")]
 public partial class AssistantChatMessage : ChatMessage
 {
-    // CUSTOM: Renamed.
-    /// <summary>
-    /// An optional <c>name</c> associated with the assistant message. This is typically defined with a <c>system</c>
-    /// message and is used to differentiate between multiple participants of the same role.
-    /// </summary>
-    [CodeGenMember("Name")]
-    public string ParticipantName { get; set; }
-
     // CUSTOM: Made internal.
     /// <summary> Initializes a new instance of <see cref="AssistantChatMessage"/>. </summary>
     internal AssistantChatMessage()
@@ -107,4 +99,12 @@ public partial class AssistantChatMessage : ChatMessage
         ToolCalls = (IList<ChatToolCall>)chatCompletion.ToolCalls;
         FunctionCall = chatCompletion.FunctionCall;
     }
+
+    // CUSTOM: Renamed.
+    /// <summary>
+    /// An optional <c>name</c> associated with the assistant message. This is typically defined with a <c>system</c>
+    /// message and is used to differentiate between multiple participants of the same role.
+    /// </summary>
+    [CodeGenMember("Name")]
+    public string ParticipantName { get; set; }
 }

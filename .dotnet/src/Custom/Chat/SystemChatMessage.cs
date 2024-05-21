@@ -14,12 +14,6 @@ namespace OpenAI.Chat;
 public partial class SystemChatMessage : ChatMessage
 {
     /// <summary>
-    /// An optional <c>name</c> for the participant.
-    /// </summary>
-    [CodeGenMember("Name")]
-    public string ParticipantName { get; set; }
-
-    /// <summary>
     /// Creates a new instance of <see cref="SystemChatMessage"/>.
     /// </summary>
     /// <param name="content"> The <c>system</c> message text that guides the model's behavior. </param>
@@ -30,4 +24,10 @@ public partial class SystemChatMessage : ChatMessage
         Role = "system";
         Content = [ChatMessageContentPart.CreateTextMessageContentPart(content)];
     }
+
+    /// <summary>
+    /// An optional <c>name</c> for the participant.
+    /// </summary>
+    [CodeGenMember("Name")]
+    public string ParticipantName { get; set; }
 }

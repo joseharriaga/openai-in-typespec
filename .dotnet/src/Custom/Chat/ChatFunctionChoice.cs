@@ -26,18 +26,6 @@ public partial class ChatFunctionChoice
         _isPlainString = true;
     }
 
-    // CUSTOM: Added custom public constructor to handle the object representation.
-    /// <summary>
-    /// Creates a new instance of <see cref="ChatFunctionChoice"/>.
-    /// </summary>
-    public ChatFunctionChoice(ChatFunction chatFunction)
-    {
-        Argument.AssertNotNull(chatFunction, nameof(chatFunction));
-
-        _function = new(chatFunction.FunctionName);
-        _isPlainString = false;
-    }
-
     // CUSTOM: Added the function name parameter to the constructor that takes additional data to handle the object representation.
     /// <summary> Initializes a new instance of <see cref="ChatFunctionChoice"/>. </summary>
     /// <param name="functionName"> TODO </param>
@@ -50,6 +38,18 @@ public partial class ChatFunctionChoice
         _isPlainString = false;
 
         _serializedAdditionalRawData = serializedAdditionalRawData;
+    }
+
+    // CUSTOM: Added custom public constructor to handle the object representation.
+    /// <summary>
+    /// Creates a new instance of <see cref="ChatFunctionChoice"/>.
+    /// </summary>
+    public ChatFunctionChoice(ChatFunction chatFunction)
+    {
+        Argument.AssertNotNull(chatFunction, nameof(chatFunction));
+
+        _function = new(chatFunction.FunctionName);
+        _isPlainString = false;
     }
 
     /// <summary>

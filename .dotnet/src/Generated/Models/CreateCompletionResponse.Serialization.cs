@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Chat;
 
 namespace OpenAI.LegacyCompletions
 {
@@ -90,7 +91,7 @@ namespace OpenAI.LegacyCompletions
             string model = default;
             string systemFingerprint = default;
             CreateCompletionResponseObject @object = default;
-            CompletionUsage usage = default;
+            ChatTokenUsage usage = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -136,7 +137,7 @@ namespace OpenAI.LegacyCompletions
                     {
                         continue;
                     }
-                    usage = CompletionUsage.DeserializeCompletionUsage(property.Value, options);
+                    usage = ChatTokenUsage.DeserializeChatTokenUsage(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

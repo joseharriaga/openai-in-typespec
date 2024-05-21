@@ -13,7 +13,7 @@ namespace OpenAI.Samples
         {
             ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            ChatCompletion chatCompletion = await client.CompleteChatAsync("How does AI work? Explain it in simple terms.");
+            ChatCompletion chatCompletion = await client.CompleteChatAsync([new UserChatMessage("How does AI work? Explain it in simple terms.")]);
 
             Console.WriteLine($"[ASSISTANT]:");
             Console.WriteLine($"{chatCompletion.Content}");

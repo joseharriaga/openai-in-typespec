@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Chat;
 
 namespace OpenAI.LegacyCompletions
 {
@@ -74,7 +75,7 @@ namespace OpenAI.LegacyCompletions
         /// <param name="object"> The object type, which is always "text_completion". </param>
         /// <param name="usage"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionResponse(string id, IReadOnlyList<CreateCompletionResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, CreateCompletionResponseObject @object, CompletionUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CreateCompletionResponse(string id, IReadOnlyList<CreateCompletionResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, CreateCompletionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Choices = choices;
@@ -109,6 +110,6 @@ namespace OpenAI.LegacyCompletions
         public CreateCompletionResponseObject Object { get; } = CreateCompletionResponseObject.TextCompletion;
 
         /// <summary> Gets the usage. </summary>
-        public CompletionUsage Usage { get; }
+        public ChatTokenUsage Usage { get; }
     }
 }

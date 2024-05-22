@@ -36,6 +36,12 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
     /** The name of the index to use, as specified in the Azure Search resource. */
     index_name: string;
 
+    authentication:
+      | AzureChatDataSourceApiKeyAuthenticationOptions
+      | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions
+      | AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions
+      | AzureChatDataSourceAccessTokenAuthenticationOptions;
+
     /** The field mappings to use with the Azure Search resource. */
     fields_mapping?: {
       /** The name of the index field to use as a title. */
@@ -84,6 +90,7 @@ model AzureMachineLearningIndexChatDataSource extends AzureChatDataSource {
   type: "azure_ml_index";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
+    authentication: AzureChatDataSourceAccessTokenAuthenticationOptions | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions | AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions;
 
     /** The ID of the Azure Machine Learning index project to use. */
     project_resource_id: string;
@@ -108,6 +115,7 @@ model AzureCosmosDBChatDataSource extends AzureChatDataSource {
     database_name: string;
     embedding_dependency: AzureChatDataSourceVectorizationSource;
     index_name: string;
+    authentication: AzureChatDataSourceConnectionStringAuthenticationOptions;
     fields_mapping: {
       content_fields: string[];
       vector_fields: string[];
@@ -125,6 +133,7 @@ model ElasticsearchChatDataSource extends AzureChatDataSource {
     ...AzureChatDataSourceCommonParameters;
     endpoint: url;
     index_name: string;
+    authentication: AzureChatDataSourceKeyAndKeyIdAuthenticationOptions | AzureChatDataSourceEncodedApiKeyAuthenticationOptions;
     fields_mapping?: {
       title_field?: string;
       url_field?: string;
@@ -140,23 +149,23 @@ model ElasticsearchChatDataSource extends AzureChatDataSource {
 
 model PineconeChatDataSource extends AzureChatDataSource {
   type: "pinecone";
-  ...AzureChatDataSourceCommonParameters;
-  environment: string;
-  index_name: string;
-  embedding_dependency: AzureChatDataSourceVectorizationSource;
-  fields_mapping: {
-    content_fields: string[];
-    title_field?: string;
-    url_field?: string;
-    filepath_field?: string;
-    content_fields_separator?: string;
+  parameters: {
+    ...AzureChatDataSourceCommonParameters;
+    environment: string;
+    index_name: string;
+    authentication: AzureChatDataSourceApiKeyAuthenticationOptions;
+    embedding_dependency: AzureChatDataSourceVectorizationSource;
+    fields_mapping: {
+      content_fields: string[];
+      title_field?: string;
+      url_field?: string;
+      filepath_field?: string;
+      content_fields_separator?: string;
+    };
   };
 }
 
 alias AzureChatDataSourceCommonParameters = {
-  /** The authentication mechanism to use with the data source. */
-  authentication: AzureChatDataSourceAuthenticationOptions;
-
   /** The configured number of documents to feature in the query. */
   top_n_documents?: int32;
 

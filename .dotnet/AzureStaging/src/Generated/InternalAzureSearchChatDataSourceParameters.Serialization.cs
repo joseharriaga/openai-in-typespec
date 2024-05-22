@@ -21,8 +21,6 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("authentication"u8);
-            writer.WriteObjectValue(Authentication, options);
             if (Optional.IsDefined(TopNDocuments))
             {
                 writer.WritePropertyName("top_n_documents"u8);
@@ -67,6 +65,8 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteStringValue(Endpoint.AbsoluteUri);
             writer.WritePropertyName("index_name"u8);
             writer.WriteStringValue(IndexName);
+            writer.WritePropertyName("authentication"u8);
+            writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
             if (Optional.IsDefined(FieldMappings))
             {
                 writer.WritePropertyName("fields_mapping"u8);
@@ -130,7 +130,6 @@ namespace Azure.AI.OpenAI.Chat
             {
                 return null;
             }
-            DataSourceAuthentication authentication = default;
             int? topNDocuments = default;
             bool? inScope = default;
             int? strictness = default;
@@ -140,6 +139,7 @@ namespace Azure.AI.OpenAI.Chat
             IList<string> includeContexts = default;
             Uri endpoint = default;
             string indexName = default;
+            DataSourceAuthentication authentication = default;
             DataSourceFieldMappings fieldsMapping = default;
             DataSourceQueryType? queryType = default;
             string semanticConfiguration = default;
@@ -149,11 +149,6 @@ namespace Azure.AI.OpenAI.Chat
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("authentication"u8))
-                {
-                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
-                    continue;
-                }
                 if (property.NameEquals("top_n_documents"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -228,6 +223,11 @@ namespace Azure.AI.OpenAI.Chat
                     indexName = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("authentication"u8))
+                {
+                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("fields_mapping"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -272,7 +272,6 @@ namespace Azure.AI.OpenAI.Chat
             }
             serializedAdditionalRawData = rawDataDictionary;
             return new InternalAzureSearchChatDataSourceParameters(
-                authentication,
                 topNDocuments,
                 inScope,
                 strictness,
@@ -282,6 +281,7 @@ namespace Azure.AI.OpenAI.Chat
                 includeContexts ?? new ChangeTrackingList<string>(),
                 endpoint,
                 indexName,
+                authentication,
                 fieldsMapping,
                 queryType,
                 semanticConfiguration,

@@ -10,8 +10,7 @@ $patternsToKeep = @(
 )
 $patternsToDelete = @(
     "*Elasticsearch*QueryType*",
-    "*Elasticsearch*FieldsMapping*",
-    "*CosmosDB*FieldsMapping*"
+    "*FieldsMapping*"
 )
 
 Get-ChildItem $generatedCodeRoot -File | ForEach-Object {

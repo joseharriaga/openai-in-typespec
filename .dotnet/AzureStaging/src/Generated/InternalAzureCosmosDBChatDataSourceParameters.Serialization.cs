@@ -21,8 +21,6 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("authentication"u8);
-            writer.WriteObjectValue(Authentication, options);
             if (Optional.IsDefined(TopNDocuments))
             {
                 writer.WritePropertyName("top_n_documents"u8);
@@ -71,6 +69,8 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteObjectValue<DataSourceVectorizer>(VectorizationSource, options);
             writer.WritePropertyName("index_name"u8);
             writer.WriteStringValue(IndexName);
+            writer.WritePropertyName("authentication"u8);
+            writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
             writer.WritePropertyName("fields_mapping"u8);
             writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -111,7 +111,6 @@ namespace Azure.AI.OpenAI.Chat
             {
                 return null;
             }
-            DataSourceAuthentication authentication = default;
             int? topNDocuments = default;
             bool? inScope = default;
             int? strictness = default;
@@ -123,16 +122,12 @@ namespace Azure.AI.OpenAI.Chat
             string databaseName = default;
             DataSourceVectorizer embeddingDependency = default;
             string indexName = default;
+            DataSourceAuthentication authentication = default;
             DataSourceFieldMappings fieldsMapping = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("authentication"u8))
-                {
-                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
-                    continue;
-                }
                 if (property.NameEquals("top_n_documents"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -217,6 +212,11 @@ namespace Azure.AI.OpenAI.Chat
                     indexName = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("authentication"u8))
+                {
+                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("fields_mapping"u8))
                 {
                     fieldsMapping = DataSourceFieldMappings.DeserializeDataSourceFieldMappings(property.Value, options);
@@ -229,7 +229,6 @@ namespace Azure.AI.OpenAI.Chat
             }
             serializedAdditionalRawData = rawDataDictionary;
             return new InternalAzureCosmosDBChatDataSourceParameters(
-                authentication,
                 topNDocuments,
                 inScope,
                 strictness,
@@ -241,6 +240,7 @@ namespace Azure.AI.OpenAI.Chat
                 databaseName,
                 embeddingDependency,
                 indexName,
+                authentication,
                 fieldsMapping,
                 serializedAdditionalRawData);
         }

@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace Azure.AI.OpenAI
+namespace Azure.AI.OpenAI.Chat
 {
     /// <summary> The AzureChatMessageContextCitation. </summary>
-    public partial class AzureChatMessageContextCitation
+    public partial class AzureChatCitation
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,24 +42,24 @@ namespace Azure.AI.OpenAI
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatMessageContextCitation"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureChatCitation"/>. </summary>
         /// <param name="content"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        internal AzureChatMessageContextCitation(string content)
+        internal AzureChatCitation(string content)
         {
             Argument.AssertNotNull(content, nameof(content));
 
             Content = content;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatMessageContextCitation"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AzureChatCitation"/>. </summary>
         /// <param name="content"></param>
         /// <param name="title"></param>
         /// <param name="url"></param>
         /// <param name="filepath"></param>
         /// <param name="chunkId"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatMessageContextCitation(string content, string title, string url, string filepath, string chunkId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureChatCitation(string content, string title, string url, string filepath, string chunkId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Content = content;
             Title = title;
@@ -69,8 +69,8 @@ namespace Azure.AI.OpenAI
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AzureChatMessageContextCitation"/> for deserialization. </summary>
-        internal AzureChatMessageContextCitation()
+        /// <summary> Initializes a new instance of <see cref="AzureChatCitation"/> for deserialization. </summary>
+        internal AzureChatCitation()
         {
         }
 

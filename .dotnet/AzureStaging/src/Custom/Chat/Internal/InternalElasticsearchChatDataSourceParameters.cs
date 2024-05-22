@@ -26,9 +26,34 @@ internal partial class InternalElasticsearchChatDataSourceParameters
         }
     }
 
-    /// <summary> Gets the fields mapping. </summary>
+    /// <summary>
+    /// The authentication options to use with the Elasticsearch data source.
+    /// </summary>
+    /// <remarks>
+    /// Elasticsearch data sources support any of the following options:
+    /// <list type="bullet">
+    /// <item><see cref="DataSourceAuthentication.FromEncodedApiKey(string)"/></item>
+    /// <item><see cref="DataSourceAuthentication.FromKeyAndKeyId(string,string)"/></item>
+    /// </list>
+    /// </remarks>
+    [CodeGenMember("Authentication")]
+    public DataSourceAuthentication Authentication { get; set; }
+
+    /// <summary> Gets the index field mappings. </summary>
+    /// <remarks>
+    /// Supported field mappings for Elasticsearch data sources include:
+    /// <list type="bullet">
+    /// <item><see cref="DataSourceFieldMappings.ContentFieldNames"/></item>
+    /// <item><see cref="DataSourceFieldMappings.ContentFieldSeparator"/></item>
+    /// <item><see cref="DataSourceFieldMappings.TitleFieldName"/></item>
+    /// <item><see cref="DataSourceFieldMappings.UrlFieldName"/></item>
+    /// <item><see cref="DataSourceFieldMappings.FilepathFieldName"/></item>
+    /// <item><see cref="DataSourceFieldMappings.VectorFieldNames"/></item>
+    /// </list>
+    /// <remarks>
     [CodeGenMember("FieldsMapping")]
     public DataSourceFieldMappings FieldMappings { get; set; }
+
     /// <summary>
     /// Gets the query type.
     /// </summary>
@@ -38,9 +63,17 @@ internal partial class InternalElasticsearchChatDataSourceParameters
     [CodeGenMember("QueryType")]
     public DataSourceQueryType? QueryType { get; set; }
     /// <summary>
-    /// Gets the embedding dependency
+    /// The vectorization dependency used for embeddings.
     /// </summary>
+    /// <remarks>
+    /// Supported vectorization dependencies for Elasticsearch data sources include:
+    /// <list type="bullet">
+    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item> 
+    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item> 
+    /// <item><see cref="DataSourceVectorizer.FromModelId(string)"/></item> 
+    /// </list>
+    /// </remarks>
     [CodeGenMember("EmbeddingDependency")]
-    internal DataSourceVectorizer VectorizationSource { get; set; }
+    public DataSourceVectorizer VectorizationSource { get; set; }
 }
 

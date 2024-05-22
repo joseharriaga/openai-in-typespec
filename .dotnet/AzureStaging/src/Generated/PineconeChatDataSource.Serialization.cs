@@ -21,68 +21,8 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("authentication"u8);
-            writer.WriteObjectValue(Authentication, options);
-            if (Optional.IsDefined(TopNDocuments))
-            {
-                writer.WritePropertyName("top_n_documents"u8);
-                writer.WriteNumberValue(TopNDocuments.Value);
-            }
-            if (Optional.IsDefined(InScope))
-            {
-                writer.WritePropertyName("in_scope"u8);
-                writer.WriteBooleanValue(InScope.Value);
-            }
-            if (Optional.IsDefined(Strictness))
-            {
-                writer.WritePropertyName("strictness"u8);
-                writer.WriteNumberValue(Strictness.Value);
-            }
-            if (Optional.IsDefined(RoleInformation))
-            {
-                writer.WritePropertyName("role_information"u8);
-                writer.WriteStringValue(RoleInformation);
-            }
-            if (Optional.IsDefined(MaxSearchQueries))
-            {
-                writer.WritePropertyName("max_search_queries"u8);
-                writer.WriteNumberValue(MaxSearchQueries.Value);
-            }
-            if (Optional.IsDefined(AllowPartialResult))
-            {
-                writer.WritePropertyName("allow_partial_result"u8);
-                writer.WriteBooleanValue(AllowPartialResult.Value);
-            }
-            if (Optional.IsCollectionDefined(IncludeContexts))
-            {
-                writer.WritePropertyName("include_contexts"u8);
-                writer.WriteStartArray();
-                foreach (var item in IncludeContexts)
-                {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-                writer.WriteEndArray();
-            }
-            writer.WritePropertyName("environment"u8);
-            writer.WriteStringValue(Environment);
-            writer.WritePropertyName("index_name"u8);
-            writer.WriteStringValue(IndexName);
-            writer.WritePropertyName("embedding_dependency"u8);
-            writer.WriteObjectValue(EmbeddingDependency, options);
-            writer.WritePropertyName("fields_mapping"u8);
-            writer.WriteObjectValue(FieldsMapping, options);
+            writer.WritePropertyName("parameters"u8);
+            writer.WriteObjectValue<InternalPineconeChatDataSourceParameters>(InternalParameters, options);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -123,117 +63,15 @@ namespace Azure.AI.OpenAI.Chat
             {
                 return null;
             }
-            DataSourceAuthentication authentication = default;
-            int? topNDocuments = default;
-            bool? inScope = default;
-            int? strictness = default;
-            string roleInformation = default;
-            int? maxSearchQueries = default;
-            bool? allowPartialResult = default;
-            IReadOnlyList<BinaryData> includeContexts = default;
-            string environment = default;
-            string indexName = default;
-            DataSourceVectorizer embeddingDependency = default;
-            PineconeChatDataSourceFieldsMapping fieldsMapping = default;
+            InternalPineconeChatDataSourceParameters parameters = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("authentication"u8))
+                if (property.NameEquals("parameters"u8))
                 {
-                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
-                    continue;
-                }
-                if (property.NameEquals("top_n_documents"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    topNDocuments = property.Value.GetInt32();
-                    continue;
-                }
-                if (property.NameEquals("in_scope"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    inScope = property.Value.GetBoolean();
-                    continue;
-                }
-                if (property.NameEquals("strictness"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    strictness = property.Value.GetInt32();
-                    continue;
-                }
-                if (property.NameEquals("role_information"u8))
-                {
-                    roleInformation = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("max_search_queries"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    maxSearchQueries = property.Value.GetInt32();
-                    continue;
-                }
-                if (property.NameEquals("allow_partial_result"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    allowPartialResult = property.Value.GetBoolean();
-                    continue;
-                }
-                if (property.NameEquals("include_contexts"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    List<BinaryData> array = new List<BinaryData>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
-                    }
-                    includeContexts = array;
-                    continue;
-                }
-                if (property.NameEquals("environment"u8))
-                {
-                    environment = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("index_name"u8))
-                {
-                    indexName = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("embedding_dependency"u8))
-                {
-                    embeddingDependency = DataSourceVectorizer.DeserializeDataSourceVectorizer(property.Value, options);
-                    continue;
-                }
-                if (property.NameEquals("fields_mapping"u8))
-                {
-                    fieldsMapping = PineconeChatDataSourceFieldsMapping.DeserializePineconeChatDataSourceFieldsMapping(property.Value, options);
+                    parameters = InternalPineconeChatDataSourceParameters.DeserializeInternalPineconeChatDataSourceParameters(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("type"u8))
@@ -247,21 +85,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new PineconeChatDataSource(
-                type,
-                serializedAdditionalRawData,
-                authentication,
-                topNDocuments,
-                inScope,
-                strictness,
-                roleInformation,
-                maxSearchQueries,
-                allowPartialResult,
-                includeContexts ?? new ChangeTrackingList<BinaryData>(),
-                environment,
-                indexName,
-                embeddingDependency,
-                fieldsMapping);
+            return new PineconeChatDataSource(type, serializedAdditionalRawData, parameters);
         }
 
         BinaryData IPersistableModel<PineconeChatDataSource>.Write(ModelReaderWriterOptions options)

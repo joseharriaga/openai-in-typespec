@@ -10,17 +10,17 @@ namespace Azure.AI.OpenAI.Images;
 public static class AzureGeneratedImageExtensions
 {
     [Experimental("OPENAI002")]
-    public static ImageResponseContentFilterResult GetResponseContentFilterResults(this GeneratedImage image)
+    public static ImageContentFilterResultForResponse GetResponseContentFilterResults(this GeneratedImage image)
     {
-        return AdditionalPropertyHelpers.GetAdditionalProperty<ImageResponseContentFilterResult>(
+        return AdditionalPropertyHelpers.GetAdditionalProperty<ImageContentFilterResultForResponse>(
             image._serializedAdditionalRawData,
             "content_filter_results");
     }
 
     [Experimental("OPENAI002")]
-    public static ImagePromptContentFilterResult GetPromptContentFilterResults(this GeneratedImage image)
+    public static ImageContentFilterResultForPrompt GetPromptContentFilterResults(this GeneratedImage image)
     {
-        return AdditionalPropertyHelpers.GetAdditionalProperty<ImagePromptContentFilterResult>(
+        return AdditionalPropertyHelpers.GetAdditionalProperty<ImageContentFilterResultForPrompt>(
             image._serializedAdditionalRawData,
             "prompt_filter_results");
     }

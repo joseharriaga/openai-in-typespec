@@ -138,13 +138,12 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          api_key: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
+          system_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
+          user_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
+          access_token: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
           connection_string: '#/components/schemas/AzureChatDataSourceConnectionStringAuthenticationOptions'
           key_and_key_id: '#/components/schemas/AzureChatDataSourceKeyAndKeyIdAuthenticationOptions'
           encoded_api_key: '#/components/schemas/AzureChatDataSourceEncodedApiKeyAuthenticationOptions'
-          access_token: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
-          system_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
-          user_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
     AzureChatDataSourceConnectionStringAuthenticationOptions:
       type: object
       required:
@@ -518,10 +517,6 @@ components:
         parameters:
           type: object
           properties:
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-              description: The authentication mechanism to use with the data source.
             top_n_documents:
               type: integer
               format: int32
@@ -578,6 +573,8 @@ components:
               $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
             index_name:
               type: string
+            authentication:
+              $ref: '#/components/schemas/AzureChatDataSourceConnectionStringAuthenticationOptions'
             fields_mapping:
               type: object
               properties:
@@ -601,11 +598,11 @@ components:
                 - content_fields
                 - vector_fields
           required:
-            - authentication
             - container_name
             - database_name
             - embedding_dependency
             - index_name
+            - authentication
             - fields_mapping
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
@@ -662,10 +659,6 @@ components:
         parameters:
           type: object
           properties:
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-              description: The authentication mechanism to use with the data source.
             top_n_documents:
               type: integer
               format: int32
@@ -714,6 +707,11 @@ components:
               default:
                 - citations
                 - intent
+            authentication:
+              anyOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
+                - $ref: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
+                - $ref: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
             project_resource_id:
               type: string
               description: The ID of the Azure Machine Learning index project to use.
@@ -792,10 +790,6 @@ components:
         parameters:
           type: object
           properties:
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-              description: The authentication mechanism to use with the data source.
             top_n_documents:
               type: integer
               format: int32
@@ -851,6 +845,12 @@ components:
             index_name:
               type: string
               description: The name of the index to use, as specified in the Azure Search resource.
+            authentication:
+              anyOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
+                - $ref: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
+                - $ref: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
+                - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
             fields_mapping:
               type: object
               properties:
@@ -900,9 +900,9 @@ components:
             embedding_dependency:
               $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
           required:
-            - authentication
             - endpoint
             - index_name
+            - authentication
           description: The parameter information to control the use of the Azure Search data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
@@ -952,10 +952,6 @@ components:
         parameters:
           type: object
           properties:
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-              description: The authentication mechanism to use with the data source.
             top_n_documents:
               type: integer
               format: int32
@@ -1009,6 +1005,10 @@ components:
               format: uri
             index_name:
               type: string
+            authentication:
+              anyOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceKeyAndKeyIdAuthenticationOptions'
+                - $ref: '#/components/schemas/AzureChatDataSourceEncodedApiKeyAuthenticationOptions'
             fields_mapping:
               type: object
               properties:
@@ -1036,9 +1036,9 @@ components:
             embedding_dependency:
               $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
           required:
-            - authentication
             - endpoint
             - index_name
+            - authentication
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
     OpenAI.ChatCompletionFunctionCallOption:
@@ -1863,91 +1863,94 @@ components:
       type: object
       required:
         - type
-        - authentication
-        - environment
-        - index_name
-        - embedding_dependency
-        - fields_mapping
+        - parameters
       properties:
         type:
           type: string
           enum:
             - pinecone
-        authentication:
-          allOf:
-            - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-          description: The authentication mechanism to use with the data source.
-        top_n_documents:
-          type: integer
-          format: int32
-          description: The configured number of documents to feature in the query.
-        in_scope:
-          type: boolean
-          description: Whether queries should be restricted to use of the indexed data.
-        strictness:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 5
-          description: |-
-            The configured strictness of the search relevance filtering.
-            Higher strictness will increase precision but lower recall of the answer.
-        role_information:
-          type: string
-          description: |-
-            Additional instructions for the model to inform how it should behave and any context it should reference when
-            generating a response. You can describe the assistant's personality and tell it how to format responses.
-            This is limited to 100 tokens and counts against the overall token limit.
-        max_search_queries:
-          type: integer
-          format: int32
-          description: |-
-            The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-            By default, the system will make an automatic determination.
-        allow_partial_result:
-          type: boolean
-          description: |-
-            If set to true, the system will allow partial search results to be used and the request will fail if all
-            partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-          default: false
-        include_contexts:
-          type: array
-          items:
-            type: string
-            enum:
-              - citations
-              - intent
-              - all_retrieved_documents
-          maxItems: 3
-          description: |-
-            The output context properties to include on the response.
-            By default, citations and intent will be requested.
-          default:
-            - citations
-            - intent
-        environment:
-          type: string
-        index_name:
-          type: string
-        embedding_dependency:
-          $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-        fields_mapping:
+        parameters:
           type: object
           properties:
-            content_fields:
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            role_information:
+              type: string
+              description: |-
+                Additional instructions for the model to inform how it should behave and any context it should reference when
+                generating a response. You can describe the assistant's personality and tell it how to format responses.
+                This is limited to 100 tokens and counts against the overall token limit.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
               type: array
               items:
                 type: string
-            title_field:
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            environment:
               type: string
-            url_field:
+            index_name:
               type: string
-            filepath_field:
-              type: string
-            content_fields_separator:
-              type: string
+            authentication:
+              $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
+            embedding_dependency:
+              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+            fields_mapping:
+              type: object
+              properties:
+                content_fields:
+                  type: array
+                  items:
+                    type: string
+                title_field:
+                  type: string
+                url_field:
+                  type: string
+                filepath_field:
+                  type: string
+                content_fields_separator:
+                  type: string
+              required:
+                - content_fields
           required:
-            - content_fields
+            - environment
+            - index_name
+            - authentication
+            - embedding_dependency
+            - fields_mapping
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
   securitySchemes:

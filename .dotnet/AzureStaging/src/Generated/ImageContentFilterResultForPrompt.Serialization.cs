@@ -10,17 +10,29 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI
 {
-    public partial class ImageResponseContentFilterResult : IJsonModel<ImageResponseContentFilterResult>
+    public partial class ImageContentFilterResultForPrompt : IJsonModel<ImageContentFilterResultForPrompt>
     {
-        void IJsonModel<ImageResponseContentFilterResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ImageContentFilterResultForPrompt>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ImageResponseContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageContentFilterResultForPrompt>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ImageResponseContentFilterResult)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ImageContentFilterResultForPrompt)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
+            if (Optional.IsDefined(Profanity))
+            {
+                writer.WritePropertyName("profanity"u8);
+                writer.WriteObjectValue(Profanity, options);
+            }
+            if (Optional.IsDefined(CustomBlocklists))
+            {
+                writer.WritePropertyName("custom_blocklists"u8);
+                writer.WriteObjectValue(CustomBlocklists, options);
+            }
+            writer.WritePropertyName("jailbreak"u8);
+            writer.WriteObjectValue(Jailbreak, options);
             if (Optional.IsDefined(Sexual))
             {
                 writer.WritePropertyName("sexual"u8);
@@ -59,19 +71,19 @@ namespace Azure.AI.OpenAI
             writer.WriteEndObject();
         }
 
-        ImageResponseContentFilterResult IJsonModel<ImageResponseContentFilterResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ImageContentFilterResultForPrompt IJsonModel<ImageContentFilterResultForPrompt>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ImageResponseContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageContentFilterResultForPrompt>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ImageResponseContentFilterResult)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ImageContentFilterResultForPrompt)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeImageResponseContentFilterResult(document.RootElement, options);
+            return DeserializeImageContentFilterResultForPrompt(document.RootElement, options);
         }
 
-        internal static ImageResponseContentFilterResult DeserializeImageResponseContentFilterResult(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ImageContentFilterResultForPrompt DeserializeImageContentFilterResultForPrompt(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -79,6 +91,9 @@ namespace Azure.AI.OpenAI
             {
                 return null;
             }
+            ContentFilterDetectionResult profanity = default;
+            ContentFilterBlocklistResult customBlocklists = default;
+            ContentFilterDetectionResult jailbreak = default;
             ContentFilterSeverityResult sexual = default;
             ContentFilterSeverityResult violence = default;
             ContentFilterSeverityResult hate = default;
@@ -87,6 +102,29 @@ namespace Azure.AI.OpenAI
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("profanity"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    profanity = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(property.Value, options);
+                    continue;
+                }
+                if (property.NameEquals("custom_blocklists"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    customBlocklists = ContentFilterBlocklistResult.DeserializeContentFilterBlocklistResult(property.Value, options);
+                    continue;
+                }
+                if (property.NameEquals("jailbreak"u8))
+                {
+                    jailbreak = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("sexual"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -129,50 +167,58 @@ namespace Azure.AI.OpenAI
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ImageResponseContentFilterResult(sexual, violence, hate, selfHarm, serializedAdditionalRawData);
+            return new ImageContentFilterResultForPrompt(
+                sexual,
+                violence,
+                hate,
+                selfHarm,
+                serializedAdditionalRawData,
+                profanity,
+                customBlocklists,
+                jailbreak);
         }
 
-        BinaryData IPersistableModel<ImageResponseContentFilterResult>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ImageContentFilterResultForPrompt>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ImageResponseContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageContentFilterResultForPrompt>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ImageResponseContentFilterResult)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ImageContentFilterResultForPrompt)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ImageResponseContentFilterResult IPersistableModel<ImageResponseContentFilterResult>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ImageContentFilterResultForPrompt IPersistableModel<ImageContentFilterResultForPrompt>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ImageResponseContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ImageContentFilterResultForPrompt>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeImageResponseContentFilterResult(document.RootElement, options);
+                        return DeserializeImageContentFilterResultForPrompt(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ImageResponseContentFilterResult)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ImageContentFilterResultForPrompt)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ImageResponseContentFilterResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ImageContentFilterResultForPrompt>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static ImageResponseContentFilterResult FromResponse(PipelineResponse response)
+        internal static new ImageContentFilterResultForPrompt FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeImageResponseContentFilterResult(document.RootElement);
+            return DeserializeImageContentFilterResultForPrompt(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

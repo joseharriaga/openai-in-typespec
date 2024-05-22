@@ -8,19 +8,19 @@ using System.Collections.Generic;
 namespace Azure.AI.OpenAI
 {
     /// <summary> The AzureContentFilterImagePromptResults. </summary>
-    public partial class ImagePromptContentFilterResult : ImageResponseContentFilterResult
+    public partial class ImageContentFilterResultForPrompt : ImageContentFilterResultForResponse
     {
-        /// <summary> Initializes a new instance of <see cref="ImagePromptContentFilterResult"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ImageContentFilterResultForPrompt"/>. </summary>
         /// <param name="jailbreak"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="jailbreak"/> is null. </exception>
-        internal ImagePromptContentFilterResult(ContentFilterDetectionResult jailbreak)
+        internal ImageContentFilterResultForPrompt(ContentFilterDetectionResult jailbreak)
         {
             Argument.AssertNotNull(jailbreak, nameof(jailbreak));
 
             Jailbreak = jailbreak;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ImagePromptContentFilterResult"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ImageContentFilterResultForPrompt"/>. </summary>
         /// <param name="sexual"></param>
         /// <param name="violence"></param>
         /// <param name="hate"></param>
@@ -29,15 +29,15 @@ namespace Azure.AI.OpenAI
         /// <param name="profanity"></param>
         /// <param name="customBlocklists"></param>
         /// <param name="jailbreak"></param>
-        internal ImagePromptContentFilterResult(ContentFilterSeverityResult sexual, ContentFilterSeverityResult violence, ContentFilterSeverityResult hate, ContentFilterSeverityResult selfHarm, IDictionary<string, BinaryData> serializedAdditionalRawData, ContentFilterDetectionResult profanity, ContentFilterBlocklistResult customBlocklists, ContentFilterDetectionResult jailbreak) : base(sexual, violence, hate, selfHarm, serializedAdditionalRawData)
+        internal ImageContentFilterResultForPrompt(ContentFilterSeverityResult sexual, ContentFilterSeverityResult violence, ContentFilterSeverityResult hate, ContentFilterSeverityResult selfHarm, IDictionary<string, BinaryData> serializedAdditionalRawData, ContentFilterDetectionResult profanity, ContentFilterBlocklistResult customBlocklists, ContentFilterDetectionResult jailbreak) : base(sexual, violence, hate, selfHarm, serializedAdditionalRawData)
         {
             Profanity = profanity;
             CustomBlocklists = customBlocklists;
             Jailbreak = jailbreak;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ImagePromptContentFilterResult"/> for deserialization. </summary>
-        internal ImagePromptContentFilterResult()
+        /// <summary> Initializes a new instance of <see cref="ImageContentFilterResultForPrompt"/> for deserialization. </summary>
+        internal ImageContentFilterResultForPrompt()
         {
         }
 

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
@@ -74,7 +77,7 @@ public partial class AzureSearchChatDataSource : AzureChatDataSource
     }
 
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.OutputContextFlags"/>
-    DataSourceOutputContextFlags? OutputContextFlags
+    public DataSourceOutputContextFlags? OutputContextFlags
     {
         get => InternalParameters.OutputContextFlags;
         init => InternalParameters.OutputContextFlags = value;

@@ -1,7 +1,7 @@
 namespace Azure.AI.OpenAI.Chat;
 
-[CodeGenModel("AzureSearchChatDataSourceParameters")]
-internal partial class InternalAzureSearchChatDataSourceParameters
+[CodeGenModel("PineconeChatDataSourceParameters")]
+internal partial class InternalPineconeChatDataSourceParameters
 {
     [CodeGenMember("IncludeContexts")]
     private IList<string> _internalIncludeContexts = new ChangeTrackingList<string>();
@@ -22,48 +22,38 @@ internal partial class InternalAzureSearchChatDataSourceParameters
     }
 
     /// <summary>
-    /// The authentication options to use with the Azure Search data source.
+    /// The authentication options to use with the Pinecone data source.
     /// </summary>
     /// <remarks>
-    /// Azure Search data sources support any of the following options:
+    /// Pinecone data sources support any of the following options:
     /// <list type="bullet">
     /// <item><see cref="DataSourceAuthentication.FromApiKey(string)"/></item>
-    /// <item><see cref="DataSourceAuthentication.FromAccessToken(string)"/></item>
-    /// <item><see cref="DataSourceAuthentication.FromSystemManagedIdentity()"/></item>
-    /// <item><see cref="DataSourceAuthentication.FromUserManagedIdentity(string)"/></item>
     /// </list>
     /// </remarks>
     [CodeGenMember("Authentication")]
     public DataSourceAuthentication Authentication { get; set; }
 
-    /// <summary> Gets the index field mappings. </summary>
+    /// <summary> The index field mappings. This is required for Pinecone data sources. </summary>
     /// <remarks>
-    /// Supported field mappings for Azure Search data sources include:
+    /// Supported field mappings for Pinecone data sources include:
     /// <list type="bullet">
-    /// <item><see cref="DataSourceFieldMappings.ContentFieldNames"/></item>
+    /// <item><see cref="DataSourceFieldMappings.ContentFieldNames"/> -- Required</item>
     /// <item><see cref="DataSourceFieldMappings.ContentFieldSeparator"/></item>
     /// <item><see cref="DataSourceFieldMappings.TitleFieldName"/></item>
     /// <item><see cref="DataSourceFieldMappings.UrlFieldName"/></item>
     /// <item><see cref="DataSourceFieldMappings.FilepathFieldName"/></item>
-    /// <item><see cref="DataSourceFieldMappings.VectorFieldNames"/></item>
-    /// <item><see cref="DataSourceFieldMappings.ImageVectorFieldNames"/></item> 
     /// </list>
     /// <remarks>
     [CodeGenMember("FieldsMapping")]
     public DataSourceFieldMappings FieldMappings { get; set; }
 
-    /// <summary> The query type for the Azure Search resource to use. </summary>
-    [CodeGenMember("QueryType")]
-    public DataSourceQueryType? QueryType { get; set; }
-
     /// <summary>
     /// The vectorization dependency used for embeddings.
     /// </summary>
     /// <remarks>
-    /// Supported vectorization dependencies for Azure Search data sources include:
+    /// Supported vectorization dependencies for Pinecone data sources include:
     /// <list type="bullet">
-    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item> 
-    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item> 
+    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/> 
     /// </list>
     /// </remarks>
     [CodeGenMember("EmbeddingDependency")]

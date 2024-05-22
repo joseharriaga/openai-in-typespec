@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    internal partial class InternalElasticsearchChatDataSourceParameters : IJsonModel<InternalElasticsearchChatDataSourceParameters>
+    internal partial class InternalPineconeChatDataSourceParameters : IJsonModel<InternalPineconeChatDataSourceParameters>
     {
-        void IJsonModel<InternalElasticsearchChatDataSourceParameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalPineconeChatDataSourceParameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalElasticsearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalPineconeChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalElasticsearchChatDataSourceParameters)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalPineconeChatDataSourceParameters)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -61,27 +61,16 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            writer.WritePropertyName("endpoint"u8);
-            writer.WriteStringValue(Endpoint.AbsoluteUri);
+            writer.WritePropertyName("environment"u8);
+            writer.WriteStringValue(Environment);
             writer.WritePropertyName("index_name"u8);
             writer.WriteStringValue(IndexName);
             writer.WritePropertyName("authentication"u8);
             writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
-            if (Optional.IsDefined(FieldMappings))
-            {
-                writer.WritePropertyName("fields_mapping"u8);
-                writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
-            }
-            if (Optional.IsDefined(QueryType))
-            {
-                writer.WritePropertyName("query_type"u8);
-                writer.WriteStringValue(QueryType.Value.ToString());
-            }
-            if (Optional.IsDefined(VectorizationSource))
-            {
-                writer.WritePropertyName("embedding_dependency"u8);
-                writer.WriteObjectValue<DataSourceVectorizer>(VectorizationSource, options);
-            }
+            writer.WritePropertyName("embedding_dependency"u8);
+            writer.WriteObjectValue<DataSourceVectorizer>(VectorizationSource, options);
+            writer.WritePropertyName("fields_mapping"u8);
+            writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -100,19 +89,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        InternalElasticsearchChatDataSourceParameters IJsonModel<InternalElasticsearchChatDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalPineconeChatDataSourceParameters IJsonModel<InternalPineconeChatDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalElasticsearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalPineconeChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalElasticsearchChatDataSourceParameters)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalPineconeChatDataSourceParameters)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalElasticsearchChatDataSourceParameters(document.RootElement, options);
+            return DeserializeInternalPineconeChatDataSourceParameters(document.RootElement, options);
         }
 
-        internal static InternalElasticsearchChatDataSourceParameters DeserializeInternalElasticsearchChatDataSourceParameters(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalPineconeChatDataSourceParameters DeserializeInternalPineconeChatDataSourceParameters(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -127,12 +116,11 @@ namespace Azure.AI.OpenAI.Chat
             int? maxSearchQueries = default;
             bool? allowPartialResult = default;
             IList<string> includeContexts = default;
-            Uri endpoint = default;
+            string environment = default;
             string indexName = default;
             DataSourceAuthentication authentication = default;
-            DataSourceFieldMappings fieldsMapping = default;
-            DataSourceQueryType? queryType = default;
             DataSourceVectorizer embeddingDependency = default;
+            DataSourceFieldMappings fieldsMapping = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -201,9 +189,9 @@ namespace Azure.AI.OpenAI.Chat
                     includeContexts = array;
                     continue;
                 }
-                if (property.NameEquals("endpoint"u8))
+                if (property.NameEquals("environment"u8))
                 {
-                    endpoint = new Uri(property.Value.GetString());
+                    environment = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("index_name"u8))
@@ -216,31 +204,14 @@ namespace Azure.AI.OpenAI.Chat
                     authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
                     continue;
                 }
-                if (property.NameEquals("fields_mapping"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    fieldsMapping = DataSourceFieldMappings.DeserializeDataSourceFieldMappings(property.Value, options);
-                    continue;
-                }
-                if (property.NameEquals("query_type"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    queryType = new DataSourceQueryType(property.Value.GetString());
-                    continue;
-                }
                 if (property.NameEquals("embedding_dependency"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     embeddingDependency = DataSourceVectorizer.DeserializeDataSourceVectorizer(property.Value, options);
+                    continue;
+                }
+                if (property.NameEquals("fields_mapping"u8))
+                {
+                    fieldsMapping = DataSourceFieldMappings.DeserializeDataSourceFieldMappings(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -249,7 +220,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalElasticsearchChatDataSourceParameters(
+            return new InternalPineconeChatDataSourceParameters(
                 topNDocuments,
                 inScope,
                 strictness,
@@ -257,52 +228,51 @@ namespace Azure.AI.OpenAI.Chat
                 maxSearchQueries,
                 allowPartialResult,
                 includeContexts ?? new ChangeTrackingList<string>(),
-                endpoint,
+                environment,
                 indexName,
                 authentication,
-                fieldsMapping,
-                queryType,
                 embeddingDependency,
+                fieldsMapping,
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalElasticsearchChatDataSourceParameters>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalPineconeChatDataSourceParameters>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalElasticsearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalPineconeChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalElasticsearchChatDataSourceParameters)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalPineconeChatDataSourceParameters)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalElasticsearchChatDataSourceParameters IPersistableModel<InternalElasticsearchChatDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalPineconeChatDataSourceParameters IPersistableModel<InternalPineconeChatDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalElasticsearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalPineconeChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalElasticsearchChatDataSourceParameters(document.RootElement, options);
+                        return DeserializeInternalPineconeChatDataSourceParameters(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalElasticsearchChatDataSourceParameters)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalPineconeChatDataSourceParameters)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalElasticsearchChatDataSourceParameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalPineconeChatDataSourceParameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static InternalElasticsearchChatDataSourceParameters FromResponse(PipelineResponse response)
+        internal static InternalPineconeChatDataSourceParameters FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalElasticsearchChatDataSourceParameters(document.RootElement);
+            return DeserializeInternalPineconeChatDataSourceParameters(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

@@ -1,119 +1,115 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
-[CodeGenModel("AzureCosmosDBChatDataSource")]
-[CodeGenSuppress(nameof(AzureCosmosDBChatDataSource))]
-[CodeGenSuppress(nameof(AzureCosmosDBChatDataSource), typeof(string), typeof(IDictionary<string, BinaryData>), typeof(InternalAzureCosmosDBChatDataSourceParameters))]
-public partial class AzureCosmosDBChatDataSource : AzureChatDataSource
+[CodeGenModel("PineconeChatDataSource")]
+[CodeGenSuppress(nameof(PineconeChatDataSource))]
+[CodeGenSuppress(nameof(PineconeChatDataSource), typeof(string), typeof(IDictionary<string, BinaryData>), typeof(InternalPineconeChatDataSourceParameters))]
+public partial class PineconeChatDataSource : AzureChatDataSource
 {
     [CodeGenMember("Parameters")]
-    internal InternalAzureCosmosDBChatDataSourceParameters InternalParameters { get; }
+    internal InternalPineconeChatDataSourceParameters InternalParameters { get; }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.ContainerName"/>
-    public required string ContainerName
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.Environment"/>
+    public required string Environment
     {
-        get => InternalParameters.ContainerName;
-        init => InternalParameters.ContainerName = value;
+        get => InternalParameters.Environment;
+        init => InternalParameters.Environment = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.DatabaseName"/>
-    public required string DatabaseName
-    {
-        get => InternalParameters.DatabaseName;
-        init => InternalParameters.DatabaseName = value;
-    }
-
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.IndexName"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.IndexName"/>
     public required string IndexName
     {
         get => InternalParameters.IndexName;
         init => InternalParameters.IndexName = value;
     }
-
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.Authentication"/>
+    
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.Authentication"/>
     public required DataSourceAuthentication Authentication
     {
         get => InternalParameters.Authentication;
         init => InternalParameters.Authentication = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.VectorizationSource"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.VectorizationSource"/>
     public required DataSourceVectorizer VectorizationSource
     {
         get => InternalParameters.VectorizationSource;
         init => InternalParameters.VectorizationSource = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.FieldMappings"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.FieldMappings"/>
     public required DataSourceFieldMappings FieldMappings
     {
         get => InternalParameters.FieldMappings;
         init => InternalParameters.FieldMappings = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.TopNDocuments"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.TopNDocuments"/>
     public int? TopNDocuments
     {
         get => InternalParameters.TopNDocuments;
         init => InternalParameters.TopNDocuments = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.InScope"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.InScope"/>
     public bool? InScope
     {
         get => InternalParameters.InScope;
         init => InternalParameters.InScope = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.Strictness"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.Strictness"/>
     public int? Strictness
     {
         get => InternalParameters.Strictness;
         init => InternalParameters.Strictness = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.RoleInformation"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.RoleInformation"/>
     public string RoleInformation
     {
         get => InternalParameters.RoleInformation;
         init => InternalParameters.RoleInformation = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.MaxSearchQueries"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.MaxSearchQueries"/>
     public int? MaxSearchQueries
     {
         get => InternalParameters.MaxSearchQueries;
         init => InternalParameters.MaxSearchQueries = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.AllowPartialResult"/>
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.AllowPartialResult"/>
     public bool? AllowPartialResult
     {
         get => InternalParameters.AllowPartialResult;
         init => InternalParameters.AllowPartialResult = value;
     }
 
-    /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.OutputContextFlags"/>
-    DataSourceOutputContextFlags? OutputContextFlags
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.OutputContextFlags"/>
+    public DataSourceOutputContextFlags? OutputContextFlags
     {
         get => InternalParameters.OutputContextFlags;
         init => InternalParameters.OutputContextFlags = value;
     }
 
-    public AzureCosmosDBChatDataSource()
+    public PineconeChatDataSource()
     {
-        Type = "azure_cosmos_db";
+        Type = "azure_search";
         InternalParameters = new();
         _serializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
     }
 
-    /// <summary> Initializes a new instance of <see cref="AzureCosmosDBChatDataSource"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="PineconeChatDataSource"/>. </summary>
     /// <param name="type"></param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
     /// <param name="internalParameters"> The parameter information to control the use of the Azure Search data source. </param>
     [SetsRequiredMembers]
-    internal AzureCosmosDBChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalAzureCosmosDBChatDataSourceParameters internalParameters) : base(type, serializedAdditionalRawData)
+    internal PineconeChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalPineconeChatDataSourceParameters internalParameters) : base(type, serializedAdditionalRawData)
     {
         InternalParameters = internalParameters;
     }

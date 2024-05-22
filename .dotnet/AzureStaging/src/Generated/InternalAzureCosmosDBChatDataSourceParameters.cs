@@ -43,41 +43,36 @@ namespace Azure.AI.OpenAI.Chat
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureCosmosDBChatDataSourceParameters"/>. </summary>
-        /// <param name="authentication">
-        /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
-        /// </param>
         /// <param name="containerName"></param>
         /// <param name="databaseName"></param>
         /// <param name="vectorizationSource">
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="indexName"></param>
+        /// <param name="authentication">
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
+        /// </param>
         /// <param name="fieldMappings"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="authentication"/>, <paramref name="containerName"/>, <paramref name="databaseName"/>, <paramref name="vectorizationSource"/>, <paramref name="indexName"/> or <paramref name="fieldMappings"/> is null. </exception>
-        internal InternalAzureCosmosDBChatDataSourceParameters(DataSourceAuthentication authentication, string containerName, string databaseName, DataSourceVectorizer vectorizationSource, string indexName, DataSourceFieldMappings fieldMappings)
+        /// <exception cref="ArgumentNullException"> <paramref name="containerName"/>, <paramref name="databaseName"/>, <paramref name="vectorizationSource"/>, <paramref name="indexName"/>, <paramref name="authentication"/> or <paramref name="fieldMappings"/> is null. </exception>
+        internal InternalAzureCosmosDBChatDataSourceParameters(string containerName, string databaseName, DataSourceVectorizer vectorizationSource, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings)
         {
-            Argument.AssertNotNull(authentication, nameof(authentication));
             Argument.AssertNotNull(containerName, nameof(containerName));
             Argument.AssertNotNull(databaseName, nameof(databaseName));
             Argument.AssertNotNull(vectorizationSource, nameof(vectorizationSource));
             Argument.AssertNotNull(indexName, nameof(indexName));
+            Argument.AssertNotNull(authentication, nameof(authentication));
             Argument.AssertNotNull(fieldMappings, nameof(fieldMappings));
 
-            Authentication = authentication;
             _internalIncludeContexts = new ChangeTrackingList<string>();
             ContainerName = containerName;
             DatabaseName = databaseName;
             VectorizationSource = vectorizationSource;
             IndexName = indexName;
+            Authentication = authentication;
             FieldMappings = fieldMappings;
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureCosmosDBChatDataSourceParameters"/>. </summary>
-        /// <param name="authentication">
-        /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
-        /// </param>
         /// <param name="topNDocuments"> The configured number of documents to feature in the query. </param>
         /// <param name="inScope"> Whether queries should be restricted to use of the indexed data. </param>
         /// <param name="strictness">
@@ -107,11 +102,13 @@ namespace Azure.AI.OpenAI.Chat
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="indexName"></param>
+        /// <param name="authentication">
+        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
+        /// </param>
         /// <param name="fieldMappings"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalAzureCosmosDBChatDataSourceParameters(DataSourceAuthentication authentication, int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IList<string> internalIncludeContexts, string containerName, string databaseName, DataSourceVectorizer vectorizationSource, string indexName, DataSourceFieldMappings fieldMappings, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalAzureCosmosDBChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IList<string> internalIncludeContexts, string containerName, string databaseName, DataSourceVectorizer vectorizationSource, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Authentication = authentication;
             TopNDocuments = topNDocuments;
             InScope = inScope;
             Strictness = strictness;
@@ -123,6 +120,7 @@ namespace Azure.AI.OpenAI.Chat
             DatabaseName = databaseName;
             VectorizationSource = vectorizationSource;
             IndexName = indexName;
+            Authentication = authentication;
             FieldMappings = fieldMappings;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -132,11 +130,6 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary>
-        /// The authentication mechanism to use with the data source.
-        /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
-        /// </summary>
-        internal DataSourceAuthentication Authentication { get; set; }
         /// <summary> The configured number of documents to feature in the query. </summary>
         internal int? TopNDocuments { get; set; }
         /// <summary> Whether queries should be restricted to use of the indexed data. </summary>

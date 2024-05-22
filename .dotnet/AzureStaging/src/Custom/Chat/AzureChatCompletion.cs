@@ -4,7 +4,6 @@
 using Azure.AI.OpenAI.Internal;
 using OpenAI.Chat;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat;
 

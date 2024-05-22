@@ -133,6 +133,7 @@ public class ChatTests : TestBase<ChatClient>
             },
             AllowPartialResult = true,
             QueryType = DataSourceQueryType.Simple,
+            OutputContextFlags = DataSourceOutputContextFlags.AllRetrievedDocuments | DataSourceOutputContextFlags.Citations,
             VectorizationSource = DataSourceVectorizer.FromEndpoint(
                 new Uri("https://my-embedding.com"),
                 DataSourceAuthentication.FromApiKey("embedding-api-key")),
@@ -146,6 +147,8 @@ public class ChatTests : TestBase<ChatClient>
         Assert.That(serialized?.parameters?.fields_mapping?.title_field?.ToString(), Is.EqualTo("hi"));
         Assert.That(bool.TryParse(serialized?.parameters?.allow_partial_result?.ToString(), out bool parsed) && parsed == true);
         Assert.That(serialized?.parameters?.query_type?.ToString(), Is.EqualTo("simple"));
+        Assert.That(serialized?.parameters?.include_contexts?[0]?.ToString(), Is.EqualTo("citations"));
+        Assert.That(serialized?.parameters?.include_contexts?[1]?.ToString(), Is.EqualTo("all_retrieved_documents"));
         Assert.That(serialized?.parameters?.embedding_dependency?.type?.ToString(), Is.EqualTo("endpoint"));
 
 #pragma warning disable OPENAI002

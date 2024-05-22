@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Azure.AI.OpenAI
 {
     /// <summary> The AzureContentFilterImageResponseResults. </summary>
-    public partial class ImageResponseContentFilterResult
+    public partial class ImageContentFilterResultForResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,18 +42,18 @@ namespace Azure.AI.OpenAI
         /// </summary>
         private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ImageResponseContentFilterResult"/>. </summary>
-        internal ImageResponseContentFilterResult()
+        /// <summary> Initializes a new instance of <see cref="ImageContentFilterResultForResponse"/>. </summary>
+        internal ImageContentFilterResultForResponse()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="ImageResponseContentFilterResult"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ImageContentFilterResultForResponse"/>. </summary>
         /// <param name="sexual"></param>
         /// <param name="violence"></param>
         /// <param name="hate"></param>
         /// <param name="selfHarm"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ImageResponseContentFilterResult(ContentFilterSeverityResult sexual, ContentFilterSeverityResult violence, ContentFilterSeverityResult hate, ContentFilterSeverityResult selfHarm, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ImageContentFilterResultForResponse(ContentFilterSeverityResult sexual, ContentFilterSeverityResult violence, ContentFilterSeverityResult hate, ContentFilterSeverityResult selfHarm, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Sexual = sexual;
             Violence = violence;

@@ -22,7 +22,7 @@ namespace Azure.AI.OpenAI.Chat
 
             writer.WriteStartObject();
             writer.WritePropertyName("parameters"u8);
-            writer.WriteObjectValue(Parameters, options);
+            writer.WriteObjectValue<InternalAzureMachineLearningIndexChatDataSourceParameters>(InternalParameters, options);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (options.Format != "W" && _serializedAdditionalRawData != null)
@@ -63,7 +63,7 @@ namespace Azure.AI.OpenAI.Chat
             {
                 return null;
             }
-            AzureMachineLearningIndexChatDataSourceParameters parameters = default;
+            InternalAzureMachineLearningIndexChatDataSourceParameters parameters = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -71,7 +71,7 @@ namespace Azure.AI.OpenAI.Chat
             {
                 if (property.NameEquals("parameters"u8))
                 {
-                    parameters = AzureMachineLearningIndexChatDataSourceParameters.DeserializeAzureMachineLearningIndexChatDataSourceParameters(property.Value, options);
+                    parameters = InternalAzureMachineLearningIndexChatDataSourceParameters.DeserializeInternalAzureMachineLearningIndexChatDataSourceParameters(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("type"u8))

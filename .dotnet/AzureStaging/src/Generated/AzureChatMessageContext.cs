@@ -45,7 +45,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> Initializes a new instance of <see cref="AzureChatMessageContext"/>. </summary>
         internal AzureChatMessageContext()
         {
-            Citations = new ChangeTrackingList<AzureChatMessageContextCitation>();
+            Citations = new ChangeTrackingList<AzureChatCitation>();
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatMessageContext"/>. </summary>
@@ -53,7 +53,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="citations"></param>
         /// <param name="allRetrievedDocuments"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatMessageContext(string intent, IReadOnlyList<AzureChatMessageContextCitation> citations, AzureChatMessageContextAllRetrievedDocuments allRetrievedDocuments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureChatMessageContext(string intent, IReadOnlyList<AzureChatCitation> citations, AzureChatRetrievedDocument allRetrievedDocuments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Intent = intent;
             Citations = citations;
@@ -64,8 +64,8 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> Gets the intent. </summary>
         public string Intent { get; }
         /// <summary> Gets the citations. </summary>
-        public IReadOnlyList<AzureChatMessageContextCitation> Citations { get; }
+        public IReadOnlyList<AzureChatCitation> Citations { get; }
         /// <summary> Gets the all retrieved documents. </summary>
-        public AzureChatMessageContextAllRetrievedDocuments AllRetrievedDocuments { get; }
+        public AzureChatRetrievedDocument AllRetrievedDocuments { get; }
     }
 }

@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureSearchChatDataSourceParameters. </summary>
-    internal partial class InternalAzureSearchChatDataSourceParameters
+    /// <summary> The PineconeChatDataSourceParameters. </summary>
+    internal partial class InternalPineconeChatDataSourceParameters
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,26 +42,34 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/>. </summary>
-        /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
-        /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
+        /// <summary> Initializes a new instance of <see cref="InternalPineconeChatDataSourceParameters"/>. </summary>
+        /// <param name="environment"></param>
+        /// <param name="indexName"></param>
         /// <param name="authentication">
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/>, <paramref name="indexName"/> or <paramref name="authentication"/> is null. </exception>
-        internal InternalAzureSearchChatDataSourceParameters(Uri endpoint, string indexName, DataSourceAuthentication authentication)
+        /// <param name="vectorizationSource">
+        /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
+        /// </param>
+        /// <param name="fieldMappings"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="environment"/>, <paramref name="indexName"/>, <paramref name="authentication"/>, <paramref name="vectorizationSource"/> or <paramref name="fieldMappings"/> is null. </exception>
+        internal InternalPineconeChatDataSourceParameters(string environment, string indexName, DataSourceAuthentication authentication, DataSourceVectorizer vectorizationSource, DataSourceFieldMappings fieldMappings)
         {
-            Argument.AssertNotNull(endpoint, nameof(endpoint));
+            Argument.AssertNotNull(environment, nameof(environment));
             Argument.AssertNotNull(indexName, nameof(indexName));
             Argument.AssertNotNull(authentication, nameof(authentication));
+            Argument.AssertNotNull(vectorizationSource, nameof(vectorizationSource));
+            Argument.AssertNotNull(fieldMappings, nameof(fieldMappings));
 
             _internalIncludeContexts = new ChangeTrackingList<string>();
-            Endpoint = endpoint;
+            Environment = environment;
             IndexName = indexName;
             Authentication = authentication;
+            VectorizationSource = vectorizationSource;
+            FieldMappings = fieldMappings;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalPineconeChatDataSourceParameters"/>. </summary>
         /// <param name="topNDocuments"> The configured number of documents to feature in the query. </param>
         /// <param name="inScope"> Whether queries should be restricted to use of the indexed data. </param>
         /// <param name="strictness">
@@ -85,20 +93,17 @@ namespace Azure.AI.OpenAI.Chat
         /// The output context properties to include on the response.
         /// By default, citations and intent will be requested.
         /// </param>
-        /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
-        /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
+        /// <param name="environment"></param>
+        /// <param name="indexName"></param>
         /// <param name="authentication">
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
-        /// <param name="fieldMappings"> The field mappings to use with the Azure Search resource. </param>
-        /// <param name="queryType"> The query type for the Azure Search resource to use. </param>
-        /// <param name="semanticConfiguration"> Additional semantic configuration for the query. </param>
-        /// <param name="filter"> A filter to apply to the search. </param>
         /// <param name="vectorizationSource">
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
+        /// <param name="fieldMappings"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalAzureSearchChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IList<string> internalIncludeContexts, Uri endpoint, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, DataSourceQueryType? queryType, string semanticConfiguration, string filter, DataSourceVectorizer vectorizationSource, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalPineconeChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IList<string> internalIncludeContexts, string environment, string indexName, DataSourceAuthentication authentication, DataSourceVectorizer vectorizationSource, DataSourceFieldMappings fieldMappings, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             TopNDocuments = topNDocuments;
             InScope = inScope;
@@ -107,19 +112,16 @@ namespace Azure.AI.OpenAI.Chat
             MaxSearchQueries = maxSearchQueries;
             AllowPartialResult = allowPartialResult;
             _internalIncludeContexts = internalIncludeContexts;
-            Endpoint = endpoint;
+            Environment = environment;
             IndexName = indexName;
             Authentication = authentication;
-            FieldMappings = fieldMappings;
-            QueryType = queryType;
-            SemanticConfiguration = semanticConfiguration;
-            Filter = filter;
             VectorizationSource = vectorizationSource;
+            FieldMappings = fieldMappings;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/> for deserialization. </summary>
-        internal InternalAzureSearchChatDataSourceParameters()
+        /// <summary> Initializes a new instance of <see cref="InternalPineconeChatDataSourceParameters"/> for deserialization. </summary>
+        internal InternalPineconeChatDataSourceParameters()
         {
         }
 
@@ -148,14 +150,10 @@ namespace Azure.AI.OpenAI.Chat
         /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
         /// </summary>
         internal bool? AllowPartialResult { get; set; }
-        /// <summary> The absolute endpoint path for the Azure Search resource to use. </summary>
-        internal Uri Endpoint { get; set; }
-        /// <summary> The name of the index to use, as specified in the Azure Search resource. </summary>
+        /// <summary> Gets the environment. </summary>
+        internal string Environment { get; set; }
+        /// <summary> Gets the index name. </summary>
         internal string IndexName { get; set; }
-        /// <summary> Additional semantic configuration for the query. </summary>
-        internal string SemanticConfiguration { get; set; }
-        /// <summary> A filter to apply to the search. </summary>
-        internal string Filter { get; set; }
     }
 }
 

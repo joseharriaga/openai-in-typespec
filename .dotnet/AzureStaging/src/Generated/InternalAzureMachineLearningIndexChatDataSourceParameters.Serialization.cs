@@ -10,19 +10,17 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    public partial class AzureMachineLearningIndexChatDataSourceParameters : IJsonModel<AzureMachineLearningIndexChatDataSourceParameters>
+    internal partial class InternalAzureMachineLearningIndexChatDataSourceParameters : IJsonModel<InternalAzureMachineLearningIndexChatDataSourceParameters>
     {
-        void IJsonModel<AzureMachineLearningIndexChatDataSourceParameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalAzureMachineLearningIndexChatDataSourceParameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureMachineLearningIndexChatDataSourceParameters)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalAzureMachineLearningIndexChatDataSourceParameters)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("authentication"u8);
-            writer.WriteObjectValue(Authentication, options);
             if (Optional.IsDefined(TopNDocuments))
             {
                 writer.WritePropertyName("top_n_documents"u8);
@@ -53,28 +51,18 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("allow_partial_result"u8);
                 writer.WriteBooleanValue(AllowPartialResult.Value);
             }
-            if (Optional.IsCollectionDefined(IncludeContexts))
+            if (Optional.IsCollectionDefined(_internalIncludeContexts))
             {
                 writer.WritePropertyName("include_contexts"u8);
                 writer.WriteStartArray();
-                foreach (var item in IncludeContexts)
+                foreach (var item in _internalIncludeContexts)
                 {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
+            writer.WritePropertyName("authentication"u8);
+            writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
             writer.WritePropertyName("project_resource_id"u8);
             writer.WriteStringValue(ProjectResourceId);
             writer.WritePropertyName("name"u8);
@@ -104,19 +92,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        AzureMachineLearningIndexChatDataSourceParameters IJsonModel<AzureMachineLearningIndexChatDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalAzureMachineLearningIndexChatDataSourceParameters IJsonModel<InternalAzureMachineLearningIndexChatDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureMachineLearningIndexChatDataSourceParameters)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalAzureMachineLearningIndexChatDataSourceParameters)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureMachineLearningIndexChatDataSourceParameters(document.RootElement, options);
+            return DeserializeInternalAzureMachineLearningIndexChatDataSourceParameters(document.RootElement, options);
         }
 
-        internal static AzureMachineLearningIndexChatDataSourceParameters DeserializeAzureMachineLearningIndexChatDataSourceParameters(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalAzureMachineLearningIndexChatDataSourceParameters DeserializeInternalAzureMachineLearningIndexChatDataSourceParameters(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -124,14 +112,14 @@ namespace Azure.AI.OpenAI.Chat
             {
                 return null;
             }
-            DataSourceAuthentication authentication = default;
             int? topNDocuments = default;
             bool? inScope = default;
             int? strictness = default;
             string roleInformation = default;
             int? maxSearchQueries = default;
             bool? allowPartialResult = default;
-            IReadOnlyList<BinaryData> includeContexts = default;
+            IList<string> includeContexts = default;
+            DataSourceAuthentication authentication = default;
             string projectResourceId = default;
             string name = default;
             string version = default;
@@ -140,11 +128,6 @@ namespace Azure.AI.OpenAI.Chat
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("authentication"u8))
-                {
-                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
-                    continue;
-                }
                 if (property.NameEquals("top_n_documents"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -201,19 +184,17 @@ namespace Azure.AI.OpenAI.Chat
                     {
                         continue;
                     }
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(item.GetString());
                     }
                     includeContexts = array;
+                    continue;
+                }
+                if (property.NameEquals("authentication"u8))
+                {
+                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("project_resource_id"u8))
@@ -242,15 +223,15 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureMachineLearningIndexChatDataSourceParameters(
-                authentication,
+            return new InternalAzureMachineLearningIndexChatDataSourceParameters(
                 topNDocuments,
                 inScope,
                 strictness,
                 roleInformation,
                 maxSearchQueries,
                 allowPartialResult,
-                includeContexts ?? new ChangeTrackingList<BinaryData>(),
+                includeContexts ?? new ChangeTrackingList<string>(),
+                authentication,
                 projectResourceId,
                 name,
                 version,
@@ -258,43 +239,43 @@ namespace Azure.AI.OpenAI.Chat
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalAzureMachineLearningIndexChatDataSourceParameters>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureMachineLearningIndexChatDataSourceParameters)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalAzureMachineLearningIndexChatDataSourceParameters)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureMachineLearningIndexChatDataSourceParameters IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalAzureMachineLearningIndexChatDataSourceParameters IPersistableModel<InternalAzureMachineLearningIndexChatDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureMachineLearningIndexChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureMachineLearningIndexChatDataSourceParameters(document.RootElement, options);
+                        return DeserializeInternalAzureMachineLearningIndexChatDataSourceParameters(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureMachineLearningIndexChatDataSourceParameters)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalAzureMachineLearningIndexChatDataSourceParameters)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureMachineLearningIndexChatDataSourceParameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalAzureMachineLearningIndexChatDataSourceParameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AzureMachineLearningIndexChatDataSourceParameters FromResponse(PipelineResponse response)
+        internal static InternalAzureMachineLearningIndexChatDataSourceParameters FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureMachineLearningIndexChatDataSourceParameters(document.RootElement);
+            return DeserializeInternalAzureMachineLearningIndexChatDataSourceParameters(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
@@ -304,3 +285,4 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
+

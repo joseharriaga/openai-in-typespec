@@ -11,31 +11,14 @@ namespace Azure.AI.OpenAI.Chat
     public partial class AzureMachineLearningIndexChatDataSource : AzureChatDataSource
     {
         /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSource"/>. </summary>
-        /// <param name="parameters"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="parameters"/> is null. </exception>
-        internal AzureMachineLearningIndexChatDataSource(AzureMachineLearningIndexChatDataSourceParameters parameters)
+        /// <param name="internalParameters"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="internalParameters"/> is null. </exception>
+        internal AzureMachineLearningIndexChatDataSource(InternalAzureMachineLearningIndexChatDataSourceParameters internalParameters)
         {
-            Argument.AssertNotNull(parameters, nameof(parameters));
+            Argument.AssertNotNull(internalParameters, nameof(internalParameters));
 
             Type = "azure_ml_index";
-            Parameters = parameters;
+            InternalParameters = internalParameters;
         }
-
-        /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSource"/>. </summary>
-        /// <param name="type"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="parameters"></param>
-        internal AzureMachineLearningIndexChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, AzureMachineLearningIndexChatDataSourceParameters parameters) : base(type, serializedAdditionalRawData)
-        {
-            Parameters = parameters;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSource"/> for deserialization. </summary>
-        internal AzureMachineLearningIndexChatDataSource()
-        {
-        }
-
-        /// <summary> Gets the parameters. </summary>
-        public AzureMachineLearningIndexChatDataSourceParameters Parameters { get; }
     }
 }

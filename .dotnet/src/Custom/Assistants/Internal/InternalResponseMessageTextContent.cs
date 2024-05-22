@@ -1,5 +1,4 @@
-﻿using OpenAI.Internal.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace OpenAI.Assistants;
 

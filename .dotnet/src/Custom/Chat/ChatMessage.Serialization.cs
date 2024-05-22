@@ -22,31 +22,14 @@ public abstract partial class ChatMessage : IJsonModel<ChatMessage>
     }
 
     void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ChatMessage>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(ChatMessage)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeChatMessage, writer, options);
 
+    internal static void SerializeChatMessage(ChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
         writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role);
-        if (true && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-            }
-        }
+        writer.WriteStringValue(instance.Role);
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

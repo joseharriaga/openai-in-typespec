@@ -1,7 +1,4 @@
-﻿
-
-
-namespace OpenAI.Assistants;
+﻿namespace OpenAI.Assistants;
 
 public class TextAnnotation
 {

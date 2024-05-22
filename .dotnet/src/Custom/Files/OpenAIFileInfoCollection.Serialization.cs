@@ -12,38 +12,21 @@ public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollect
     // - Serialized the Items property.
     // - Recovered the serialization of _serializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
     void IJsonModel<OpenAIFileInfoCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<OpenAIFileInfoCollection>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(OpenAIFileInfoCollection)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeOpenAIFileInfoCollection, writer, options);
 
+    internal static void SerializeOpenAIFileInfoCollection(OpenAIFileInfoCollection instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
         writer.WritePropertyName("data"u8);
         writer.WriteStartArray();
-        foreach (var item in Items)
+        foreach (var item in instance.Items)
         {
             writer.WriteObjectValue<OpenAIFileInfo>(item, options);
         }
         writer.WriteEndArray();
         writer.WritePropertyName("object"u8);
-        writer.WriteStringValue(Object.ToString());
-        if (true && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-            }
-        }
+        writer.WriteStringValue(instance.Object.ToString());
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

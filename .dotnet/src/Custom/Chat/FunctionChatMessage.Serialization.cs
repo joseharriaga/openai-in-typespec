@@ -9,45 +9,28 @@ namespace OpenAI.Chat;
 public partial class FunctionChatMessage : IJsonModel<FunctionChatMessage>
 {
     void IJsonModel<FunctionChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<FunctionChatMessage>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(FunctionChatMessage)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeFunctionChatMessage, writer, options);
 
+    internal static void SerializeFunctionChatMessage(FunctionChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
         writer.WritePropertyName("name"u8);
-        writer.WriteStringValue(FunctionName);
+        writer.WriteStringValue(instance.FunctionName);
         writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role);
-        if (Optional.IsCollectionDefined(Content))
+        writer.WriteStringValue(instance.Role);
+        if (Optional.IsCollectionDefined(instance.Content))
         {
-            if (Content[0] != null)
+            if (instance.Content[0] != null)
             {
                 writer.WritePropertyName("content"u8);
-                writer.WriteStringValue(Content[0].Text);
+                writer.WriteStringValue(instance.Content[0].Text);
             }
             else
             {
                 writer.WriteNull("content");
             }
         }
-        if (true && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-            }
-        }
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

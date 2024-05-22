@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants;
 

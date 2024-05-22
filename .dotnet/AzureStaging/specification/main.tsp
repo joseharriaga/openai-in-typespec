@@ -7,7 +7,6 @@ import "./images";
 
 using TypeSpec.Http;
 
-/** The OpenAI REST API. Please see https://platform.openai.com/docs/api-reference for more details. */
 @service({
   title: "Azure OpenAI Service",
   termsOfService: "https://openai.com/policies/terms-of-use",

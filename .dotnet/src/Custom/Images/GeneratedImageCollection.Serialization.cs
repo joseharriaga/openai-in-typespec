@@ -13,38 +13,21 @@ public partial class GeneratedImageCollection : IJsonModel<GeneratedImageCollect
     // - Serialized the Items property.
     // - Recovered the serialization of _serializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
     void IJsonModel<GeneratedImageCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<GeneratedImageCollection>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(GeneratedImageCollection)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeGeneratedImageCollection, writer, options);
 
+    internal static void SerializeGeneratedImageCollection(GeneratedImageCollection instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
         writer.WritePropertyName("created"u8);
-        writer.WriteNumberValue(CreatedAt, "U");
+        writer.WriteNumberValue(instance.CreatedAt, "U");
         writer.WritePropertyName("data"u8);
         writer.WriteStartArray();
-        foreach (var item in Items)
+        foreach (var item in instance.Items)
         {
             writer.WriteObjectValue<GeneratedImage>(item, options);
         }
         writer.WriteEndArray();
-        if (true && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                using (JsonDocument document = JsonDocument.Parse(item.Value))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-        }
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

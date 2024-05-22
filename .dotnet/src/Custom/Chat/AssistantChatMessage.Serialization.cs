@@ -9,65 +9,7 @@ namespace OpenAI.Chat;
 public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
 {
     void IJsonModel<AssistantChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<AssistantChatMessage>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(AssistantChatMessage)} does not support writing '{format}' format.");
-        }
-
-        writer.WriteStartObject();
-        if (Optional.IsDefined(ParticipantName))
-        {
-            writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(ParticipantName);
-        }
-        if (Optional.IsCollectionDefined(ToolCalls))
-        {
-            writer.WritePropertyName("tool_calls"u8);
-            writer.WriteStartArray();
-            foreach (var item in ToolCalls)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
-        }
-        if (Optional.IsDefined(FunctionCall))
-        {
-            writer.WritePropertyName("function_call"u8);
-            writer.WriteObjectValue(FunctionCall, options);
-        }
-        writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role);
-        if (Optional.IsCollectionDefined(Content))
-        {
-            if (Content[0] != null)
-            {
-                writer.WritePropertyName("content"u8);
-                writer.WriteStringValue(Content[0].Text);
-            }
-            else
-            {
-                writer.WriteNull("content");
-            }
-        }
-        if (true && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-            }
-        }
-        writer.WriteEndObject();
-    }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeAssistantChatMessage, writer, options);
 
     internal static AssistantChatMessage DeserializeAssistantChatMessage(JsonElement element, ModelReaderWriterOptions options = null)
     {
@@ -143,5 +85,46 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
             name,
             toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
             functionCall);
+    }
+
+    internal static void SerializeAssistantChatMessage(AssistantChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        writer.WriteStartObject();
+        if (Optional.IsDefined(instance.ParticipantName))
+        {
+            writer.WritePropertyName("name"u8);
+            writer.WriteStringValue(instance.ParticipantName);
+        }
+        if (Optional.IsCollectionDefined(instance.ToolCalls))
+        {
+            writer.WritePropertyName("tool_calls"u8);
+            writer.WriteStartArray();
+            foreach (var item in instance.ToolCalls)
+            {
+                writer.WriteObjectValue(item, options);
+            }
+            writer.WriteEndArray();
+        }
+        if (Optional.IsDefined(instance.FunctionCall))
+        {
+            writer.WritePropertyName("function_call"u8);
+            writer.WriteObjectValue(instance.FunctionCall, options);
+        }
+        writer.WritePropertyName("role"u8);
+        writer.WriteStringValue(instance.Role);
+        if (Optional.IsCollectionDefined(instance.Content))
+        {
+            if (instance.Content[0] != null)
+            {
+                writer.WritePropertyName("content"u8);
+                writer.WriteStringValue(instance.Content[0].Text);
+            }
+            else
+            {
+                writer.WriteNull("content");
+            }
+        }
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
+        writer.WriteEndObject();
     }
 }

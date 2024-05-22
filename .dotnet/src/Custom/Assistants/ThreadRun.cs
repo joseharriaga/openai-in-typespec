@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using OpenAI.Internal.Models;
 
 namespace OpenAI.Assistants;
 

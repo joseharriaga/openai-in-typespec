@@ -1,8 +1,3 @@
-
-using OpenAI;
-using OpenAI.Assistants;
-using OpenAI.Internal.Models;
-
 namespace OpenAI.Assistants;
 
 [CodeGenModel("RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]

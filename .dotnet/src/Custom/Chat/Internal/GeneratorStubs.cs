@@ -45,7 +45,7 @@ internal partial class InternalChatCompletionStreamOptions { }
 [CodeGenModel("InternalChatCompletionStreamResponseDeltaFunctionCall")]
 internal partial class ChatCompletionStreamResponseDeltaFunctionCall { }
 
-[CodeGenModel("ChatCompletionStreamResponseDeltaRole")]
+[CodeGenModel("InternalChatCompletionStreamResponseDeltaRole")]
 internal readonly partial struct InternalChatCompletionStreamResponseDeltaRole { }
 
 [CodeGenModel("ChatResponseFormatType")]
@@ -57,7 +57,7 @@ internal partial class InternalCreateChatCompletionFunctionResponse { }
 [CodeGenModel("CreateChatCompletionFunctionResponseChoice")]
 internal partial class InternalCreateChatCompletionFunctionResponseChoice { }
 
-[CodeGenModel("CreateChatCompletionFunctionResponseChoiceFinishReason")]
+[CodeGenModel("InternalCreateChatCompletionFunctionResponseChoiceFinishReason")]
 internal readonly partial struct InternalCreateChatCompletionFunctionResponseChoiceFinishReason { }
 
 [CodeGenModel("CreateChatCompletionFunctionResponseObject")]
@@ -75,7 +75,7 @@ internal readonly partial struct InternalCreateChatCompletionResponseObject { }
 [CodeGenModel("CreateChatCompletionStreamResponseChoice")]
 internal partial class InternalCreateChatCompletionStreamResponseChoice { }
 
-[CodeGenModel("CreateChatCompletionStreamResponseChoiceFinishReason")]
+[CodeGenModel("InternalCreateChatCompletionStreamResponseChoiceFinishReason")]
 internal readonly partial struct InternalCreateChatCompletionStreamResponseChoiceFinishReason { }
 
 [CodeGenModel("CreateChatCompletionStreamResponseChoiceLogprobs")]

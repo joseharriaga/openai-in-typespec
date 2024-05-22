@@ -1,15 +1,9 @@
-using OpenAI.Internal.Models;
 using System;
 using System.ClientModel.Primitives;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
-
-
 
 /// <summary>
 /// The update type presented when a streamed event indicates a thread was created.

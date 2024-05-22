@@ -9,45 +9,27 @@ namespace OpenAI.Chat;
 public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
 {
     void IJsonModel<ChatMessageContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<ChatMessageContentPart>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(ChatMessageContentPart)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeChatMessageContentPart, writer, options);
 
+    internal static void SerializeChatMessageContentPart(ChatMessageContentPart instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
 
-        if (_kind == ChatMessageContentPartKind.Text)
+        if (instance._kind == ChatMessageContentPartKind.Text)
         {
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(_kind.ToString());
+            writer.WriteStringValue(instance._kind.ToString());
             writer.WritePropertyName("text"u8);
-            writer.WriteStringValue(_text);
+            writer.WriteStringValue(instance._text);
         }
-        else if (_kind == ChatMessageContentPartKind.Image)
+        else if (instance._kind == ChatMessageContentPartKind.Image)
         {
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(_kind.ToString());
+            writer.WriteStringValue(instance._kind.ToString());
             writer.WritePropertyName("image_url"u8);
-            writer.WriteObjectValue(_imageUrl, options);
+            writer.WriteObjectValue(instance._imageUrl, options);
         }
-
-        if (true && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-            }
-        }
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

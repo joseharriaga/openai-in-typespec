@@ -54,7 +54,7 @@ public partial class ModerationClient
     {
     }
 
-    /// <summary> Initializes a new instance of FineTuningClient. </summary>
+    /// <summary> Initializes a new instance of <see cref="ModerationClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="model"> The model name to use for moderation operations. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>

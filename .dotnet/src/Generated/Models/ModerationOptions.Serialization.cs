@@ -74,7 +74,7 @@ namespace OpenAI.Moderations
                 return null;
             }
             BinaryData input = default;
-            CreateModerationRequestModel? model = default;
+            InternalCreateModerationRequestModel? model = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -90,7 +90,7 @@ namespace OpenAI.Moderations
                     {
                         continue;
                     }
-                    model = new CreateModerationRequestModel(property.Value.GetString());
+                    model = new InternalCreateModerationRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (true)

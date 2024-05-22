@@ -28,13 +28,10 @@ public class ChatTests : TestBase<ChatClient>
     {
         ChatClient chatClient = GetTestClient("gpt-4");
         StringBuilder contentBuilder = new();
-        foreach (StreamingChatCompletionUpdate chatUpdate in chatClient.CompleteChatStreaming(
+        foreach (StreamingChatUpdate chatUpdate in chatClient.CompleteChatStreaming(
             [new UserChatMessage("Hello, assistant"!)]))
         {
-            foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
-            {
-                contentBuilder.Append(contentPart.Text);
-            }
+            contentBuilder.Append(chatUpdate.ContentUpdate?.Text);
         }
         Assert.That(contentBuilder.ToString(), Is.Not.Null.Or.Empty);
     }
@@ -74,7 +71,7 @@ public class ChatTests : TestBase<ChatClient>
         Exception thrownException = null;
         try
         {
-            foreach (StreamingChatCompletionUpdate update in chatClient.CompleteChatStreaming(
+            foreach (StreamingChatUpdate update in chatClient.CompleteChatStreaming(
                 [new UserChatMessage("oops, this won't work with that key!")]))
             {}
         }
@@ -238,24 +235,21 @@ public class ChatTests : TestBase<ChatClient>
 
         ChatClient client = GetTestClient("gpt-4");
 
-        ResultCollection<StreamingChatCompletionUpdate> chatUpdates = client.CompleteChatStreaming(
+        ResultCollection<StreamingChatUpdate> chatUpdates = client.CompleteChatStreaming(
             [new UserChatMessage("What does the term 'PR complete' mean?")],
             options);
 
         StringBuilder contentBuilder = new();
         List<AzureChatMessageContext> contexts = [];
 
-        foreach (StreamingChatCompletionUpdate chatUpdate in chatUpdates)
+        foreach (StreamingChatUpdate chatUpdate in chatUpdates)
         {
             AzureChatMessageContext context = chatUpdate.GetAzureMessageContext();
             if (context is not null)
             {
                 contexts.Add(context);
             }
-            foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
-            {
-                contentBuilder.Append(contentPart.Text);
-            }
+            contentBuilder.Append(chatUpdate.ContentUpdate.Text);
         }
 
         Assert.That(contentBuilder.ToString(), Is.Not.Null.Or.Empty);

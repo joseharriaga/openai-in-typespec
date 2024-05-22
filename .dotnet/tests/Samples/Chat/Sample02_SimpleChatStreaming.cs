@@ -13,16 +13,13 @@ namespace OpenAI.Samples
         {
             ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            ResultCollection<StreamingChatCompletionUpdate> chatCompletionUpdates =
+            ResultCollection<StreamingChatUpdate> chatUpdates =
                 client.CompleteChatStreaming([new UserChatMessage("How does AI work? Explain it in simple terms.")]);
 
             Console.WriteLine("[ASSISTANT]: ");
-            foreach (StreamingChatCompletionUpdate chatCompletionUpdate in chatCompletionUpdates)
+            foreach (StreamingChatUpdate chatUpdate in chatUpdates)
             {
-                if (chatCompletionUpdate.ContentUpdate.Count > 0)
-                {
-                    Console.Write(chatCompletionUpdate.ContentUpdate[0].Text);
-                }
+                Console.Write(chatUpdate.ContentUpdate?.Text);
             }
         }
     }

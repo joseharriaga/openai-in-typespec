@@ -36,7 +36,7 @@ internal partial class AzureChatClient : ChatClient
     { }
 
     /// <inheritdoc/>
-    public override AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    public override AsyncResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
     {
         options ??= new();
         options.StreamOptions = null;
@@ -44,7 +44,7 @@ internal partial class AzureChatClient : ChatClient
     }
 
     /// <inheritdoc/>
-    public override ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    public override ResultCollection<StreamingChatUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
     {
         options ??= new();
         options.StreamOptions = null;

@@ -9,7 +9,7 @@ namespace Azure.AI.OpenAI.Chat;
 public static partial class AzureStreamingChatCompletionUpdateExtensions
 {
     [Experimental("OPENAI002")]
-    public static AzureChatMessageContext GetAzureMessageContext(this StreamingChatCompletionUpdate chatUpdate)
+    public static AzureChatMessageContext GetAzureMessageContext(this StreamingChatUpdate chatUpdate)
     {
         if (chatUpdate.Choices?.Count > 0)
         {

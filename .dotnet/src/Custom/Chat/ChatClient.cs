@@ -111,7 +111,7 @@ public partial class ChatClient
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    public virtual AsyncResultCollection<StreamingChatUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
     {
         Argument.AssertNotNull(messages, nameof(messages));
 
@@ -136,7 +136,7 @@ public partial class ChatClient
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    public virtual ResultCollection<StreamingChatUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
     {
         Argument.AssertNotNull(messages, nameof(messages));
 

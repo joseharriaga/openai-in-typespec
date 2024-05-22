@@ -58,16 +58,15 @@ public partial class ChatClientTests
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        ResultCollection<StreamingChatCompletionUpdate> streamingResult
+        ResultCollection<StreamingChatUpdate> streamingResult
             = client.CompleteChatStreaming([new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")]);
-        Assert.That(streamingResult, Is.InstanceOf<ResultCollection<StreamingChatCompletionUpdate>>());
+        Assert.That(streamingResult, Is.InstanceOf<ResultCollection<StreamingChatUpdate>>());
         int updateCount = 0;
 
-        foreach (StreamingChatCompletionUpdate chatUpdate in streamingResult)
+        foreach (StreamingChatUpdate chatUpdate in streamingResult)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
-            Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
             updateCount++;
         }
         Assert.That(updateCount, Is.GreaterThan(1));
@@ -82,24 +81,23 @@ public partial class ChatClientTests
     [Test]
     public async Task StreamingChatAsync()
     {
-        ChatClient client = new("gpt-3.5-turbo");
+        ChatClient client = GetTestClient("gpt-4o");
 
         TimeSpan? firstTokenReceiptTime = null;
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        AsyncResultCollection<StreamingChatCompletionUpdate> streamingResult
+        AsyncResultCollection<StreamingChatUpdate> streamingResult
             = client.CompleteChatStreamingAsync([new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")]);
-        Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatCompletionUpdate>>());
+        Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatUpdate>>());
         int updateCount = 0;
         ChatTokenUsage usage = null;
 
-        await foreach (StreamingChatCompletionUpdate chatUpdate in streamingResult)
+        await foreach (StreamingChatUpdate chatUpdate in streamingResult)
         {
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
             usage ??= chatUpdate.Usage;
-            Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
             updateCount++;
         }
         Assert.That(updateCount, Is.GreaterThan(1));
@@ -317,20 +315,18 @@ public partial class ChatClientTests
             options = new();
         }
 
-        AsyncResultCollection<StreamingChatCompletionUpdate> chatCompletionUpdates = client.CompleteChatStreamingAsync(messages, options);
-        Assert.That(chatCompletionUpdates, Is.Not.Null);
+        AsyncResultCollection<StreamingChatUpdate> chatUpdates = client.CompleteChatStreamingAsync(messages, options);
+        Assert.That(chatUpdates, Is.Not.Null);
 
-        await foreach (StreamingChatCompletionUpdate chatCompletionUpdate in chatCompletionUpdates)
+        await foreach (StreamingChatUpdate chatUpdate in chatUpdates)
         {
             // Token log probabilities are streamed together with their corresponding content update.
-            if (includeLogProbabilities
-                && chatCompletionUpdate.ContentUpdate.Count > 0
-                && chatCompletionUpdate.ContentUpdate[0].Text != null)
+            if (includeLogProbabilities && chatUpdate.ContentUpdate?.Text is not null)
             {
-                ChatLogProbabilityInfo logProbs = chatCompletionUpdate.LogProbabilityInfo;
+                ChatLogProbabilityInfo logProbs = chatUpdate.LogProbabilityInfo;
                 Assert.That(logProbs, Is.Not.Null);
 
-                if (!string.IsNullOrWhiteSpace(chatCompletionUpdate.ContentUpdate[0].Text))
+                if (!string.IsNullOrWhiteSpace(chatUpdate.ContentUpdate.Text))
                 {
                     Assert.That(logProbs.ContentTokenLogProbabilities, Is.Not.Null.Or.Empty);
                     Assert.That(logProbs.ContentTokenLogProbabilities, Has.Count.EqualTo(1));
@@ -357,7 +353,7 @@ public partial class ChatClientTests
             }
             else
             {
-                Assert.That(chatCompletionUpdate.LogProbabilityInfo, Is.Null);
+                Assert.That(chatUpdate.LogProbabilityInfo, Is.Null);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Implementation of collection abstraction over streaming chat updates.
 /// </summary>
-internal class StreamingChatCompletionUpdateCollection : ResultCollection<StreamingChatCompletionUpdate>
+internal class StreamingChatCompletionUpdateCollection : ResultCollection<StreamingChatUpdate>
 {
     private readonly Func<ClientResult> _getResult;
 
@@ -24,12 +24,12 @@ internal class StreamingChatCompletionUpdateCollection : ResultCollection<Stream
         _getResult = getResult;
     }
 
-    public override IEnumerator<StreamingChatCompletionUpdate> GetEnumerator()
+    public override IEnumerator<StreamingChatUpdate> GetEnumerator()
     {
         return new StreamingChatUpdateEnumerator(_getResult, this);
     }
 
-    private sealed class StreamingChatUpdateEnumerator : IEnumerator<StreamingChatCompletionUpdate>
+    private sealed class StreamingChatUpdateEnumerator : IEnumerator<StreamingChatUpdate>
     {
         private const string _terminalData = "[DONE]";
 
@@ -44,9 +44,9 @@ internal class StreamingChatCompletionUpdateCollection : ResultCollection<Stream
         //       foreach (var update in _updates) { ... }
         //   }
         private IEnumerator<ServerSentEvent>? _events;
-        private IEnumerator<StreamingChatCompletionUpdate>? _updates;
+        private IEnumerator<StreamingChatUpdate>? _updates;
 
-        private StreamingChatCompletionUpdate? _current;
+        private StreamingChatUpdate? _current;
         private bool _started;
 
         public StreamingChatUpdateEnumerator(Func<ClientResult> getResult,
@@ -59,7 +59,7 @@ internal class StreamingChatCompletionUpdateCollection : ResultCollection<Stream
             _enumerable = enumerable!;
         }
 
-        StreamingChatCompletionUpdate IEnumerator<StreamingChatCompletionUpdate>.Current
+        StreamingChatUpdate IEnumerator<StreamingChatUpdate>.Current
             => _current!;
 
         object IEnumerator.Current => throw new NotImplementedException();
@@ -89,7 +89,7 @@ internal class StreamingChatCompletionUpdateCollection : ResultCollection<Stream
                 }
 
                 using JsonDocument doc = JsonDocument.Parse(_events.Current.Data);
-                var updates = StreamingChatCompletionUpdate.DeserializeStreamingChatCompletionUpdates(doc.RootElement);
+                var updates = StreamingChatUpdate.DeserializeStreamingChatCompletionUpdates(doc.RootElement);
                 _updates = updates.GetEnumerator();
 
                 if (_updates.MoveNext())

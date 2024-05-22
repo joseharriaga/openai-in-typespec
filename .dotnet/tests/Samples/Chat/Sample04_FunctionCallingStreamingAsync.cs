@@ -42,47 +42,43 @@ namespace OpenAI.Samples
                 StringBuilder contentBuilder = new();
                 
                 requiresAction = false;
-                AsyncResultCollection<StreamingChatCompletionUpdate> chatCompletionUpdates = client.CompleteChatStreamingAsync(messages, options);
+                AsyncResultCollection<StreamingChatUpdate> chatUpdates = client.CompleteChatStreamingAsync(messages, options);
 
-                await foreach (StreamingChatCompletionUpdate chatCompletionUpdate in chatCompletionUpdates)
+                await foreach (StreamingChatUpdate chatUpdate in chatUpdates)
                 {
                     // Accumulate the content string as new updates arrive.
-                    if (chatCompletionUpdate.ContentUpdate.Count > 0)
-                    {
-                        contentBuilder.Append(chatCompletionUpdate.ContentUpdate[0].Text);
-                    }
+                    contentBuilder.Append(chatUpdate.ContentUpdate?.Text);
 
                     // Build the tool calls as new updates arrive.
-                    foreach (StreamingChatToolCallUpdate toolCallUpdate in chatCompletionUpdate.ToolCallUpdates)
+                    StreamingChatToolCallUpdate toolUpdate = chatUpdate.ToolCallUpdate;
+
+                    // Keep track of which tool call ID belongs to this update index.
+                    if (toolUpdate.Id is not null)
                     {
-                        // Keep track of which tool call ID belongs to this update index.
-                        if (toolCallUpdate.Id != null)
-                        {
-                            indexToToolCallId[toolCallUpdate.Index] = toolCallUpdate.Id;
-                        }
-
-                        // Keep track of which function name belongs to this update index.
-                        if (toolCallUpdate.FunctionName != null)
-                        {
-                            indexToFunctionName[toolCallUpdate.Index] = toolCallUpdate.FunctionName;
-                        }
-
-                        // Keep track of which function arguments belong to this update index,
-                        // and accumulate the arguments string as new updates arrive.
-                        if (toolCallUpdate.FunctionArgumentsUpdate != null)
-                        {
-                            StringBuilder argumentsBuilder =
-                                indexToFunctionArguments.TryGetValue(toolCallUpdate.Index, out StringBuilder builder)
-                                    ? builder
-                                    : new StringBuilder();
-
-                            argumentsBuilder.Append(toolCallUpdate.FunctionArgumentsUpdate);
-
-                            indexToFunctionArguments[toolCallUpdate.Index] = argumentsBuilder;
-                        }
+                        indexToToolCallId[toolUpdate.Index] = toolUpdate.Id;
                     }
 
-                    switch (chatCompletionUpdate.FinishReason)
+                    // Keep track of which function name belongs to this update index.
+                    if (toolUpdate.FunctionName is not null)
+                    {
+                        indexToFunctionName[toolUpdate.Index] = toolUpdate.FunctionName;
+                    }
+
+                    // Keep track of which function arguments belong to this update index,
+                    // and accumulate the arguments string as new updates arrive.
+                    if (toolUpdate.FunctionArgumentsUpdate is not null)
+                    {
+                        StringBuilder argumentsBuilder =
+                            indexToFunctionArguments.TryGetValue(toolUpdate.Index, out StringBuilder builder)
+                                ? builder
+                                : new StringBuilder();
+
+                        argumentsBuilder.Append(toolUpdate.FunctionArgumentsUpdate);
+
+                        indexToFunctionArguments[toolUpdate.Index] = argumentsBuilder;
+                    }
+
+                    switch (chatUpdate.FinishReason)
                     {
                         case ChatFinishReason.Stop:
                             {

@@ -14,7 +14,7 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Implementation of collection abstraction over streaming chat updates.
 /// </summary>
-internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollection<StreamingChatCompletionUpdate>
+internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollection<StreamingChatUpdate>
 {
     private readonly Func<Task<ClientResult>> _getResultAsync;
 
@@ -25,12 +25,12 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
         _getResultAsync = getResultAsync;
     }
 
-    public override IAsyncEnumerator<StreamingChatCompletionUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+    public override IAsyncEnumerator<StreamingChatUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
         return new AsyncStreamingChatUpdateEnumerator(_getResultAsync, this, cancellationToken);
     }
 
-    private sealed class AsyncStreamingChatUpdateEnumerator : IAsyncEnumerator<StreamingChatCompletionUpdate>
+    private sealed class AsyncStreamingChatUpdateEnumerator : IAsyncEnumerator<StreamingChatUpdate>
     {
         private const string _terminalData = "[DONE]";
 
@@ -46,9 +46,9 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
         //       foreach (var update in _updates) { ... }
         //   }
         private IAsyncEnumerator<ServerSentEvent>? _events;
-        private IEnumerator<StreamingChatCompletionUpdate>? _updates;
+        private IEnumerator<StreamingChatUpdate>? _updates;
 
-        private StreamingChatCompletionUpdate? _current;
+        private StreamingChatUpdate? _current;
         private bool _started;
 
         public AsyncStreamingChatUpdateEnumerator(Func<Task<ClientResult>> getResultAsync,
@@ -63,10 +63,10 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
             _cancellationToken = cancellationToken;
         }
 
-        StreamingChatCompletionUpdate IAsyncEnumerator<StreamingChatCompletionUpdate>.Current
+        StreamingChatUpdate IAsyncEnumerator<StreamingChatUpdate>.Current
             => _current!;
 
-        async ValueTask<bool> IAsyncEnumerator<StreamingChatCompletionUpdate>.MoveNextAsync()
+        async ValueTask<bool> IAsyncEnumerator<StreamingChatUpdate>.MoveNextAsync()
         {
             if (_events is null && _started)
             {
@@ -92,7 +92,7 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
                 }
 
                 using JsonDocument doc = JsonDocument.Parse(_events.Current.Data);
-                var updates = StreamingChatCompletionUpdate.DeserializeStreamingChatCompletionUpdates(doc.RootElement);
+                var updates = StreamingChatUpdate.DeserializeStreamingChatCompletionUpdates(doc.RootElement);
                 _updates = updates.GetEnumerator();
 
                 if (_updates.MoveNext())

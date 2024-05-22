@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Chat
 {
-    public partial class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>
+    public partial class StreamingChatUpdate : IJsonModel<StreamingChatUpdate>
     {
-        void IJsonModel<StreamingChatCompletionUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<StreamingChatUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(StreamingChatCompletionUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(StreamingChatUpdate)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -64,19 +64,19 @@ namespace OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        StreamingChatCompletionUpdate IJsonModel<StreamingChatCompletionUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        StreamingChatUpdate IJsonModel<StreamingChatUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(StreamingChatCompletionUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(StreamingChatUpdate)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeStreamingChatCompletionUpdate(document.RootElement, options);
+            return DeserializeStreamingChatUpdate(document.RootElement, options);
         }
 
-        internal static StreamingChatCompletionUpdate DeserializeStreamingChatCompletionUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static StreamingChatUpdate DeserializeStreamingChatUpdate(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -145,7 +145,7 @@ namespace OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new StreamingChatCompletionUpdate(
+            return new StreamingChatUpdate(
                 id,
                 choices,
                 created,
@@ -156,43 +156,43 @@ namespace OpenAI.Chat
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<StreamingChatCompletionUpdate>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<StreamingChatUpdate>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(StreamingChatCompletionUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StreamingChatUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        StreamingChatCompletionUpdate IPersistableModel<StreamingChatCompletionUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
+        StreamingChatUpdate IPersistableModel<StreamingChatUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeStreamingChatCompletionUpdate(document.RootElement, options);
+                        return DeserializeStreamingChatUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(StreamingChatCompletionUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StreamingChatUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<StreamingChatCompletionUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<StreamingChatUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static StreamingChatCompletionUpdate FromResponse(PipelineResponse response)
+        internal static StreamingChatUpdate FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeStreamingChatCompletionUpdate(document.RootElement);
+            return DeserializeStreamingChatUpdate(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

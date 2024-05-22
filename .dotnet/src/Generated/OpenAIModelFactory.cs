@@ -69,16 +69,6 @@ namespace OpenAI
             return new ChatFunction(functionDescription, functionName, functionParameters, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.ChatLogProbabilityInfo"/>. </summary>
-        /// <param name="contentTokenLogProbabilities"> A list of message content tokens with log probability information. </param>
-        /// <returns> A new <see cref="Chat.ChatLogProbabilityInfo"/> instance for mocking. </returns>
-        public static ChatLogProbabilityInfo ChatLogProbabilityInfo(IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null)
-        {
-            contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
-
-            return new ChatLogProbabilityInfo(contentTokenLogProbabilities?.ToList(), serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Chat.ChatTokenLogProbabilityInfo"/>. </summary>
         /// <param name="token"> The token. </param>
         /// <param name="logProbability"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>

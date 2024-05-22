@@ -53,7 +53,7 @@ namespace OpenAI.Chat
         /// <param name="message"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
-        internal InternalCreateChatCompletionResponseChoice(ChatFinishReason finishReason, int index, InternalChatCompletionResponseMessage message, ChatLogProbabilityInfo logprobs)
+        internal InternalCreateChatCompletionResponseChoice(ChatFinishReason finishReason, int index, InternalChatCompletionResponseMessage message, InternalCreateChatCompletionResponseChoiceLogprobs logprobs)
         {
             Argument.AssertNotNull(message, nameof(message));
 
@@ -74,7 +74,7 @@ namespace OpenAI.Chat
         /// <param name="message"></param>
         /// <param name="logprobs"> Log probability information for the choice. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalCreateChatCompletionResponseChoice(ChatFinishReason finishReason, int index, InternalChatCompletionResponseMessage message, ChatLogProbabilityInfo logprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateChatCompletionResponseChoice(ChatFinishReason finishReason, int index, InternalChatCompletionResponseMessage message, InternalCreateChatCompletionResponseChoiceLogprobs logprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FinishReason = finishReason;
             Index = index;
@@ -100,6 +100,6 @@ namespace OpenAI.Chat
         /// <summary> Gets the message. </summary>
         public InternalChatCompletionResponseMessage Message { get; }
         /// <summary> Log probability information for the choice. </summary>
-        public ChatLogProbabilityInfo Logprobs { get; }
+        public InternalCreateChatCompletionResponseChoiceLogprobs Logprobs { get; }
     }
 }

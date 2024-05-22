@@ -12,6 +12,7 @@ public partial class StreamingChatCompletionUpdate
 {
     private IReadOnlyList<ChatMessageContentPart> _contentUpdate;
     private IReadOnlyList<StreamingChatToolCallUpdate> _toolCallUpdates;
+    private IReadOnlyList<ChatTokenLogProbabilityInfo> _contentTokenLogProbabilities;
 
     // CUSTOM:
     // - Made private. This property does not add value in the context of a strongly-typed class.
@@ -49,15 +50,15 @@ public partial class StreamingChatCompletionUpdate
         ? Choices[0].FinishReason 
         : null;
 
-    // CUSTOM: Flattened choice property.
+    // CUSTOM: Flattened choice logprobs property.
     /// <summary>
-    /// The log probability information for choices in the chat completion response, as requested via
-    /// <see cref="ChatCompletionOptions.IncludeLogProbabilities"/>.
+    /// Log probability information.
     /// </summary>
-    public ChatLogProbabilityInfo LogProbabilityInfo => (Choices.Count > 0)
-        ? Choices[0].Logprobs
-        : null;
+    public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities => (Choices.Count > 0 && Choices[0].Logprobs != null)
+        ? Choices[0].Logprobs.Content
+        : _contentTokenLogProbabilities ??= new ChangeTrackingList<ChatTokenLogProbabilityInfo>();
 
+    // CUSTOM: Flattened choice delta property.
     /// <summary>
     /// Gets the content fragment associated with this update.
     /// </summary>

@@ -72,7 +72,7 @@ namespace OpenAI.Chat
         /// </param>
         /// <param name="index"> The index of the choice in the list of choices. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalCreateChatCompletionStreamResponseChoice(InternalChatCompletionStreamResponseDelta delta, ChatLogProbabilityInfo logprobs, ChatFinishReason? finishReason, int index, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateChatCompletionStreamResponseChoice(InternalChatCompletionStreamResponseDelta delta, InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs, ChatFinishReason? finishReason, int index, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Delta = delta;
             Logprobs = logprobs;
@@ -88,6 +88,8 @@ namespace OpenAI.Chat
 
         /// <summary> Gets the delta. </summary>
         public InternalChatCompletionStreamResponseDelta Delta { get; }
+        /// <summary> Log probability information for the choice. </summary>
+        public InternalCreateChatCompletionStreamResponseChoiceLogprobs Logprobs { get; }
         /// <summary> The index of the choice in the list of choices. </summary>
         public int Index { get; }
     }

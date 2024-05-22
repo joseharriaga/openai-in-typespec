@@ -9,7 +9,7 @@ using System.Linq;
 namespace OpenAI.Chat
 {
     /// <summary> The CreateChatCompletionResponseChoiceLogprobs. </summary>
-    public partial class ChatLogProbabilityInfo
+    internal partial class InternalCreateChatCompletionResponseChoiceLogprobs
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,25 +43,28 @@ namespace OpenAI.Chat
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ChatLogProbabilityInfo"/>. </summary>
-        /// <param name="contentTokenLogProbabilities"> A list of message content tokens with log probability information. </param>
-        internal ChatLogProbabilityInfo(IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities)
+        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionResponseChoiceLogprobs"/>. </summary>
+        /// <param name="content"> A list of message content tokens with log probability information. </param>
+        internal InternalCreateChatCompletionResponseChoiceLogprobs(IEnumerable<ChatTokenLogProbabilityInfo> content)
         {
-            ContentTokenLogProbabilities = contentTokenLogProbabilities?.ToList();
+            Content = content?.ToList();
         }
 
-        /// <summary> Initializes a new instance of <see cref="ChatLogProbabilityInfo"/>. </summary>
-        /// <param name="contentTokenLogProbabilities"> A list of message content tokens with log probability information. </param>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionResponseChoiceLogprobs"/>. </summary>
+        /// <param name="content"> A list of message content tokens with log probability information. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ChatLogProbabilityInfo(IReadOnlyList<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateChatCompletionResponseChoiceLogprobs(IReadOnlyList<ChatTokenLogProbabilityInfo> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            ContentTokenLogProbabilities = contentTokenLogProbabilities;
+            Content = content;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ChatLogProbabilityInfo"/> for deserialization. </summary>
-        internal ChatLogProbabilityInfo()
+        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionResponseChoiceLogprobs"/> for deserialization. </summary>
+        internal InternalCreateChatCompletionResponseChoiceLogprobs()
         {
         }
+
+        /// <summary> A list of message content tokens with log probability information. </summary>
+        public IReadOnlyList<ChatTokenLogProbabilityInfo> Content { get; }
     }
 }

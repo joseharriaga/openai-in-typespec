@@ -77,7 +77,7 @@ namespace OpenAI.Chat
             ChatFinishReason finishReason = default;
             int index = default;
             InternalChatCompletionResponseMessage message = default;
-            ChatLogProbabilityInfo logprobs = default;
+            InternalCreateChatCompletionResponseChoiceLogprobs logprobs = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -104,7 +104,7 @@ namespace OpenAI.Chat
                         logprobs = null;
                         continue;
                     }
-                    logprobs = ChatLogProbabilityInfo.DeserializeChatLogProbabilityInfo(property.Value, options);
+                    logprobs = InternalCreateChatCompletionResponseChoiceLogprobs.DeserializeInternalCreateChatCompletionResponseChoiceLogprobs(property.Value, options);
                     continue;
                 }
                 if (true)

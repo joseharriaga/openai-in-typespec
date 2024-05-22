@@ -11,9 +11,4 @@ internal partial class InternalCreateChatCompletionStreamResponseChoice
     /// </summary>
     [CodeGenMember("FinishReason")]
     public ChatFinishReason? FinishReason { get; }
-
-    // CUSTOM: Changed type from InternalCreateChatCompletionStreamResponseChoiceLogprobs.
-    /// <summary> Log probability information for the choice. </summary>
-    [CodeGenMember("Logprobs")]
-    public ChatLogProbabilityInfo Logprobs { get; }
 }

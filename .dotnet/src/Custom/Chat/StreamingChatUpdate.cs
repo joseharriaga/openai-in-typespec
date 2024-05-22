@@ -26,7 +26,7 @@ public partial class StreamingChatUpdate
     [CodeGenMember("Object")]
     internal InternalCreateChatCompletionStreamResponseObject Object { get; } = InternalCreateChatCompletionStreamResponseObject.ChatCompletionChunk;
 
-    // CUSTOM: Made internal.We only get back a single choice, and instead we flatten the structure for usability.
+    // CUSTOM: Made internal. We flatten the structure for usability.
     /// <summary>
     /// A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
     /// last chunk if you set `stream_options: {"include_usage": true}`.
@@ -100,23 +100,20 @@ public partial class StreamingChatUpdate
     internal static List<StreamingChatUpdate> DeserializeStreamingChatCompletionUpdates(JsonElement element)
     {
         StreamingChatUpdate baseUpdate = DeserializeStreamingChatUpdate(element);
-        if (baseUpdate.Choices.Count == 0)
-        {
-            return [baseUpdate];
-        }
         List<StreamingChatUpdate> biteSizedUpdates = [];
-        for (int i = 0; i < baseUpdate.Choices.Count; i++)
+        for (int choiceIndex = 0; choiceIndex < baseUpdate.Choices?.Count; choiceIndex++)
         {
-            for (int j = 0; j < baseUpdate.Choices[i]?.Delta?.Content?.Count; j++)
+            InternalCreateChatCompletionStreamResponseChoice choice = baseUpdate.Choices[choiceIndex];
+            for (int contentIndex = 0; contentIndex < choice?.Delta?.Content?.Count; contentIndex++)
             {
-                biteSizedUpdates.Add(new(baseUpdate, choiceIndex: i, contentIndex: j, null));
+                biteSizedUpdates.Add(new(baseUpdate, choiceIndex, contentIndex, null));
             }
-            for (int j = 0; j < baseUpdate.Choices[i]?.Delta?.ToolCalls?.Count; j++)
+            for (int toolCallIndex = 0; toolCallIndex < choice?.Delta?.ToolCalls?.Count; toolCallIndex++)
             {
-                biteSizedUpdates.Add(new(baseUpdate, choiceIndex: i, null, toolCallIndex: j));
+                biteSizedUpdates.Add(new(baseUpdate, choiceIndex, null, toolCallIndex));
             }
         }
-        return biteSizedUpdates;
+        return biteSizedUpdates.Count == 0 ? [baseUpdate] : biteSizedUpdates;
     }
 
     internal StreamingChatUpdate(StreamingChatUpdate baseUpdate, int? choiceIndex, int? contentIndex, int? toolCallIndex)

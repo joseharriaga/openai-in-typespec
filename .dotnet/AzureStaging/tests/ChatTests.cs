@@ -249,7 +249,7 @@ public class ChatTests : TestBase<ChatClient>
             {
                 contexts.Add(context);
             }
-            contentBuilder.Append(chatUpdate.ContentUpdate.Text);
+            contentBuilder.Append(chatUpdate.ContentUpdate?.Text);
         }
 
         Assert.That(contentBuilder.ToString(), Is.Not.Null.Or.Empty);

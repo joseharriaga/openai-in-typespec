@@ -41,7 +41,7 @@ namespace OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalRunObjectRequiredActionSubmitToolOutputs"/>. </summary>
         /// <param name="toolCalls"> A list of the relevant tool calls. </param>

@@ -7,18 +7,17 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.AI.OpenAI.Chat;
 
-namespace Azure.AI.OpenAI
+namespace Azure.AI.OpenAI.Chat
 {
-    internal partial class InternalUnknownAzureChatDataSourceAuthenticationOptions : IJsonModel<AzureChatDataSourceAuthenticationOptions>
+    internal partial class InternalUnknownAzureChatDataSourceAuthenticationOptions : IJsonModel<DataSourceAuthentication>
     {
-        void IJsonModel<AzureChatDataSourceAuthenticationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<DataSourceAuthentication>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatDataSourceAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<DataSourceAuthentication>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatDataSourceAuthenticationOptions)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(DataSourceAuthentication)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -42,16 +41,16 @@ namespace Azure.AI.OpenAI
             writer.WriteEndObject();
         }
 
-        AzureChatDataSourceAuthenticationOptions IJsonModel<AzureChatDataSourceAuthenticationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        DataSourceAuthentication IJsonModel<DataSourceAuthentication>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatDataSourceAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<DataSourceAuthentication>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureChatDataSourceAuthenticationOptions)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(DataSourceAuthentication)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureChatDataSourceAuthenticationOptions(document.RootElement, options);
+            return DeserializeDataSourceAuthentication(document.RootElement, options);
         }
 
         internal static InternalUnknownAzureChatDataSourceAuthenticationOptions DeserializeInternalUnknownAzureChatDataSourceAuthenticationOptions(JsonElement element, ModelReaderWriterOptions options = null)
@@ -81,36 +80,36 @@ namespace Azure.AI.OpenAI
             return new InternalUnknownAzureChatDataSourceAuthenticationOptions(type, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AzureChatDataSourceAuthenticationOptions>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<DataSourceAuthentication>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatDataSourceAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<DataSourceAuthentication>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatDataSourceAuthenticationOptions)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(DataSourceAuthentication)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureChatDataSourceAuthenticationOptions IPersistableModel<AzureChatDataSourceAuthenticationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
+        DataSourceAuthentication IPersistableModel<DataSourceAuthentication>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureChatDataSourceAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<DataSourceAuthentication>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureChatDataSourceAuthenticationOptions(document.RootElement, options);
+                        return DeserializeDataSourceAuthentication(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureChatDataSourceAuthenticationOptions)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(DataSourceAuthentication)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureChatDataSourceAuthenticationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<DataSourceAuthentication>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
@@ -123,7 +122,8 @@ namespace Azure.AI.OpenAI
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal override BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create<AzureChatDataSourceAuthenticationOptions>(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create<DataSourceAuthentication>(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }
+

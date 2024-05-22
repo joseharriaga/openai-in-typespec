@@ -9,41 +9,24 @@ namespace OpenAI.Chat;
 public partial class SystemChatMessage : IJsonModel<SystemChatMessage>
 {
     void IJsonModel<SystemChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<SystemChatMessage>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(SystemChatMessage)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeSystemChatMessage, writer, options);
 
+    internal static void SerializeSystemChatMessage(SystemChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
-        if (Optional.IsDefined(ParticipantName))
+        if (Optional.IsDefined(instance.ParticipantName))
         {
             writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(ParticipantName);
+            writer.WriteStringValue(instance.ParticipantName);
         }
         writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role);
-        if (Optional.IsCollectionDefined(Content))
+        writer.WriteStringValue(instance.Role);
+        if (Optional.IsCollectionDefined(instance.Content))
         {
             writer.WritePropertyName("content"u8);
-            writer.WriteStringValue(Content[0].Text);
+            writer.WriteStringValue(instance.Content[0].Text);
         }
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
-            {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-            }
-        }
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 
@@ -79,7 +62,7 @@ public partial class SystemChatMessage : IJsonModel<SystemChatMessage>
                 content = array;
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

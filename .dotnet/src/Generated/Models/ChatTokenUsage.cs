@@ -40,7 +40,7 @@ namespace OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ChatTokenUsage"/>. </summary>
         /// <param name="outputTokens"> Number of tokens in the generated completion. </param>

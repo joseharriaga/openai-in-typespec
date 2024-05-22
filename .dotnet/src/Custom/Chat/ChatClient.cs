@@ -156,8 +156,6 @@ public partial class ChatClient
         options.Stream = stream 
             ? true
             : null;
-        options.StreamOptions = stream
-            ? new InternalChatCompletionStreamOptions() { IncludeUsage = true }
-            : null;
+        options.StreamOptions = stream ? options.StreamOptions : null;
     }
 }

@@ -44,6 +44,7 @@ public partial class ChatCompletionOptions
     /// <summary> Gets or sets the stream options. </summary>
     [CodeGenMember("StreamOptions")]
     internal InternalChatCompletionStreamOptions StreamOptions { get; set; }
+        = new() { IncludeUsage = true };
 
     // CUSTOM: Made public now that there are no required properties.
     /// <summary> Initializes a new instance of <see cref="ChatCompletionOptions"/> for deserialization. </summary>

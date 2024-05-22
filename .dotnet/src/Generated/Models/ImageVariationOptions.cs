@@ -40,7 +40,7 @@ namespace OpenAI.Images
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ImageVariationOptions"/>. </summary>
         /// <param name="image"> The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square. </param>

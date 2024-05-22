@@ -25,7 +25,7 @@ namespace OpenAI.VectorStores
             writer.WriteStringValue(_anchor.ToSerialString());
             writer.WritePropertyName("days"u8);
             writer.WriteNumberValue(_days);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -79,7 +79,7 @@ namespace OpenAI.VectorStores
                     days = property.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -134,3 +134,4 @@ namespace OpenAI.VectorStores
         }
     }
 }
+

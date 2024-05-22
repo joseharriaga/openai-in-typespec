@@ -16,6 +16,10 @@ internal partial class AzureOpenAIDalleError
                 = AzureOpenAIDalleErrorResponse.DeserializeAzureOpenAIDalleErrorResponse(errorDocument.RootElement);
             return errorResponse.Error;
         }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
         catch (JsonException)
         {
             return null;

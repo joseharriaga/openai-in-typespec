@@ -28,7 +28,7 @@ namespace OpenAI.Internal.Models
             writer.WriteStringValue(Object);
             writer.WritePropertyName("delta"u8);
             writer.WriteObjectValue(Delta, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -88,7 +88,7 @@ namespace OpenAI.Internal.Models
                     delta = MessageDeltaObjectDelta.DeserializeMessageDeltaObjectDelta(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -143,3 +143,4 @@ namespace OpenAI.Internal.Models
         }
     }
 }
+

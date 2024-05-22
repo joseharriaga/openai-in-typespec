@@ -27,7 +27,7 @@ namespace OpenAI.Files
             writer.WriteObjectValue<object>(Object, options);
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Deleted);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -87,7 +87,7 @@ namespace OpenAI.Files
                     deleted = property.Value.GetBoolean();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -142,3 +142,4 @@ namespace OpenAI.Files
         }
     }
 }
+

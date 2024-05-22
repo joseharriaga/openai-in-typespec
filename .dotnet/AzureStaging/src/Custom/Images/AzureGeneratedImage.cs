@@ -3,14 +3,25 @@
 
 using Azure.AI.OpenAI.Internal;
 using OpenAI.Images;
-using System.ClientModel.Primitives;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Images;
 
 public static class AzureGeneratedImageExtensions
 {
-    public static ImageResponseContentFilterResult GetResponseContentFilterResults(this GeneratedImage image)
-        => image.TryGetSardValue("content_filter_results", out ImageResponseContentFilterResult result) ? result : null;
-    public static ImagePromptContentFilterResult GetPromptContentFilterResults(this GeneratedImage image)
-        => image.TryGetSardValue("prompt_filter_results", out ImagePromptContentFilterResult result) ? result : null;
+    [Experimental("OPENAI002")]
+    public static ImageContentFilterResultForPrompt GetContentFilterResultForPrompt(this GeneratedImage image)
+    {
+        return AdditionalPropertyHelpers.GetAdditionalProperty<ImageContentFilterResultForPrompt>(
+            image._serializedAdditionalRawData,
+            "prompt_filter_results");
+    }
+
+    [Experimental("OPENAI002")]
+    public static ImageContentFilterResultForResponse GetContentFilterResultForResponse(this GeneratedImage image)
+    {
+        return AdditionalPropertyHelpers.GetAdditionalProperty<ImageContentFilterResultForResponse>(
+            image._serializedAdditionalRawData,
+            "content_filter_results");
+    }
 }

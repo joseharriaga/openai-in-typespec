@@ -244,7 +244,7 @@ public partial class AzureOpenAIClient : OpenAIClient
             ],
             beforeTransportPolicies: []);
 
-    internal static ClientPipeline CreatePipeline(ApiKeyCredential credential, OpenAIClientOptions options = null)
+    internal static new ClientPipeline CreatePipeline(ApiKeyCredential credential, OpenAIClientOptions options = null)
     {
         Argument.AssertNotNull(credential, nameof(credential));
         return CreatePipeline(ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, "api-key"), options);
@@ -256,7 +256,7 @@ public partial class AzureOpenAIClient : OpenAIClient
         return CreatePipeline(new AzureTokenAuthenticationPolicy(credential), options);
     }
 
-    internal static ApiKeyCredential GetApiKey(ApiKeyCredential explicitCredential = null, bool requireExplicitCredential = false)
+    internal static new ApiKeyCredential GetApiKey(ApiKeyCredential explicitCredential = null, bool requireExplicitCredential = false)
     {
         if (explicitCredential is not null)
         {
@@ -269,7 +269,7 @@ public partial class AzureOpenAIClient : OpenAIClient
         }
         else
         {
-            string environmentApiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY");
+            string environmentApiKey = Environment.GetEnvironmentVariable(s_aoaiApiKeyEnvironmentVariable);
             if (string.IsNullOrEmpty(environmentApiKey))
             {
                 throw new InvalidOperationException(
@@ -298,7 +298,7 @@ public partial class AzureOpenAIClient : OpenAIClient
         }
         else
         {
-            string environmentApiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+            string environmentApiKey = Environment.GetEnvironmentVariable(s_aoaiEndpointEnvironmentVariable);
             if (string.IsNullOrEmpty(environmentApiKey))
             {
                 throw new InvalidOperationException(

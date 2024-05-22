@@ -9,46 +9,36 @@ namespace OpenAI.Chat;
 public partial class UserChatMessage : IJsonModel<UserChatMessage>
 {
     void IJsonModel<UserChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        var format = options.Format == "W" ? ((IPersistableModel<UserChatMessage>)this).GetFormatFromOptions(options) : options.Format;
-        if (format != "J")
-        {
-            throw new FormatException($"The model {nameof(UserChatMessage)} does not support writing '{format}' format.");
-        }
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeUserChatMessage, writer, options);
 
+    internal static void SerializeUserChatMessage(UserChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
-        if (Optional.IsDefined(ParticipantName))
+        if (Optional.IsDefined(instance.ParticipantName))
         {
             writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(ParticipantName);
+            writer.WriteStringValue(instance.ParticipantName);
         }
         writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role);
-        if (Optional.IsCollectionDefined(Content))
+        writer.WriteStringValue(instance.Role);
+        if (Optional.IsCollectionDefined(instance.Content))
         {
             writer.WritePropertyName("content"u8);
-            writer.WriteStartArray();
-            foreach (var item in Content)
+            if (instance.Content.Count == 1 && !string.IsNullOrEmpty(instance.Content[0].Text))
             {
-                writer.WriteObjectValue(item, options);
+                writer.WriteStringValue(instance.Content[0].Text);
             }
-            writer.WriteEndArray();
-        }
-        if (options.Format != "W" && _serializedAdditionalRawData != null)
-        {
-            foreach (var item in _serializedAdditionalRawData)
+            else
             {
-                writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                writer.WriteStartArray();
+                foreach (var item in instance.Content)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
         }
+        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 
@@ -96,7 +86,7 @@ public partial class UserChatMessage : IJsonModel<UserChatMessage>
                     continue;
                 }
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

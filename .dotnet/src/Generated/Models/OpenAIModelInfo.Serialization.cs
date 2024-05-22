@@ -29,7 +29,7 @@ namespace OpenAI.Models
             writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("owned_by"u8);
             writer.WriteStringValue(OwnedBy);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -69,7 +69,7 @@ namespace OpenAI.Models
             }
             string id = default;
             DateTimeOffset created = default;
-            ModelObject @object = default;
+            InternalModelObject @object = default;
             string ownedBy = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -87,7 +87,7 @@ namespace OpenAI.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new ModelObject(property.Value.GetString());
+                    @object = new InternalModelObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("owned_by"u8))
@@ -95,7 +95,7 @@ namespace OpenAI.Models
                     ownedBy = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -150,3 +150,4 @@ namespace OpenAI.Models
         }
     }
 }
+

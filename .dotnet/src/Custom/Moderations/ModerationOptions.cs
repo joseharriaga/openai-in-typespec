@@ -61,7 +61,7 @@ internal partial class ModerationOptions
     /// `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy
     /// of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
     /// </summary>
-    internal CreateModerationRequestModel? Model { get; set; }
+    internal InternalCreateModerationRequestModel? Model { get; set; }
 
     // CUSTOM: Made public now that there are no required properties.
     /// <summary> Initializes a new instance of <see cref="ModerationOptions"/> for deserialization. </summary>

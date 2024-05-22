@@ -40,7 +40,7 @@ namespace OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalRunStepDetailsToolCallsFunctionObjectFunction"/>. </summary>
         /// <param name="name"> The name of the function. </param>

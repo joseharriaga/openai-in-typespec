@@ -41,7 +41,7 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="MessageDeltaObject"/>. </summary>
         /// <param name="id"> The identifier of the message, which can be referenced in API endpoints. </param>

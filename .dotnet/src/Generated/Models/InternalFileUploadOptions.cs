@@ -41,7 +41,7 @@ namespace OpenAI.Files
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalFileUploadOptions"/>. </summary>
         /// <param name="file"> The File object (not file name) to be uploaded. </param>

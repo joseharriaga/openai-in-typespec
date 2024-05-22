@@ -41,7 +41,7 @@ namespace OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ChatFunction"/>. </summary>
         /// <param name="functionDescription"> A description of what the function does, used by the model to choose when and how to call the function. </param>

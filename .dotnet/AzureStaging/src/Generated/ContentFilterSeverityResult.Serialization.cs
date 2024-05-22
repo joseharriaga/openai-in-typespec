@@ -24,7 +24,7 @@ namespace Azure.AI.OpenAI
             writer.WritePropertyName("filtered"u8);
             writer.WriteBooleanValue(Filtered);
             writer.WritePropertyName("severity"u8);
-            writer.WriteStringValue(Severity);
+            writer.WriteStringValue(Severity.ToString());
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -64,7 +64,7 @@ namespace Azure.AI.OpenAI
                 return null;
             }
             bool filtered = default;
-            string severity = default;
+            ContentFilterSeverity severity = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -76,7 +76,7 @@ namespace Azure.AI.OpenAI
                 }
                 if (property.NameEquals("severity"u8))
                 {
-                    severity = property.Value.GetString();
+                    severity = new ContentFilterSeverity(property.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

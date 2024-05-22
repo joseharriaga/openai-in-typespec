@@ -38,7 +38,7 @@ namespace OpenAI.Internal.Models
                 }
 #endif
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -100,7 +100,7 @@ namespace OpenAI.Internal.Models
                     fileSearch = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -155,3 +155,4 @@ namespace OpenAI.Internal.Models
         }
     }
 }
+

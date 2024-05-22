@@ -40,7 +40,7 @@ namespace OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalRunStepDelta"/>. </summary>
         /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>

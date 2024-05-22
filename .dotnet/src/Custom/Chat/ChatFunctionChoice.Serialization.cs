@@ -9,37 +9,20 @@ namespace OpenAI.Chat;
 public partial class ChatFunctionChoice : IJsonModel<ChatFunctionChoice>
 {
     void IJsonModel<ChatFunctionChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeChatFunctionChoice, writer, options);
+
+    internal static void SerializeChatFunctionChoice(ChatFunctionChoice instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        if (_isPlainString)
+        if (instance._isPlainString)
         {
-            writer.WriteStringValue(_string);
+            writer.WriteStringValue(instance._string);
         }
         else
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatFunctionChoice>)this).GetFormatFromOptions(options) : options.Format;
-            if (format != "J")
-            {
-                throw new FormatException($"The model {nameof(ChatFunctionChoice)} does not support writing '{format}' format.");
-            }
-
             writer.WriteStartObject();
             writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(_function.Name);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
-            {
-                foreach (var item in _serializedAdditionalRawData)
-                {
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                    writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
+            writer.WriteStringValue(instance._function.Name);
+            writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
             writer.WriteEndObject();
         }
     }
@@ -68,7 +51,7 @@ public partial class ChatFunctionChoice : IJsonModel<ChatFunctionChoice>
                     name = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

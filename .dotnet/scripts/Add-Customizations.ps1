@@ -83,5 +83,37 @@ function Remove-PseudoSuppressedTypes {
     }
 }
 
+function Internalize-SerializedAdditionalRawData {
+    $root = Split-Path $PSScriptRoot -Parent
+    $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
+    Get-ChildItem -Path $directory -Filter "*.cs" | ForEach-Object {
+        $file = $_
+        $filename = $_.FullName
+        $match = Select-String -Path $filename -Pattern "^(\s*)private (IDictionary<string, BinaryData> _serializedAdditionalRawData)"
+        if ($match) {
+            Write-Output "Internalizing _serializedAdditionalRawData: $($_.Name)"
+            $content = Get-Content -Path $file -Raw
+            $content = $content -creplace $match.Matches[0].Groups[0], "$($match.Matches[0].Groups[1])internal $($match.Matches[0].Groups[2])"
+            $content | Set-Content -Path $filename -NoNewline
+        }
+    }
+}
+
+function Enable-Global-AdditionalRawDataSerialization {
+    $root = Split-Path $PSScriptRoot -Parent
+    $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
+    Get-ChildItem -Path $directory -Filter "*.cs" | ForEach-Object {
+        $match = Select-String -Path $_.FullName -Pattern "options.Format != `"W`""
+        if ($match) {
+            Write-Output "Removing `"W`"-format serialization restriction: $($_.Name)"
+            $content = Get-Content -Path $_ -Raw
+            $content = $content -creplace "options.Format != `"W`"", "true"
+            Set-Content $_ -Value $content
+        }
+    }
+}
+
 Edit-RunObjectSerialization
 Remove-PseudoSuppressedTypes
+Internalize-SerializedAdditionalRawData
+Enable-Global-AdditionalRawDataSerialization

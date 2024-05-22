@@ -5,10 +5,10 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Models
+namespace OpenAI.Chat
 {
     /// <summary> Enum for finish_reason in InternalCreateChatCompletionStreamResponseChoice. </summary>
-    public readonly partial struct InternalCreateChatCompletionStreamResponseChoiceFinishReason : IEquatable<InternalCreateChatCompletionStreamResponseChoiceFinishReason>
+    internal readonly partial struct InternalCreateChatCompletionStreamResponseChoiceFinishReason : IEquatable<InternalCreateChatCompletionStreamResponseChoiceFinishReason>
     {
         private readonly string _value;
 

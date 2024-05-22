@@ -4,6 +4,7 @@
 #nullable disable
 
 using OpenAI.Files;
+using System.ClientModel;
 
 namespace Azure.AI.OpenAI.Tests;
 
@@ -20,7 +21,7 @@ public class FileTests : TestBase<FileClient>
         OpenAIFileInfo file = client.UploadFile(
             BinaryData.FromString("hello, world!"),
             "test_file_delete_me.txt",
-            OpenAIFilePurpose.Assistants);
+            FileUploadPurpose.Assistants);
         Validate(file);
         bool deleted = client.DeleteFile(file);
         Assert.IsTrue(deleted);

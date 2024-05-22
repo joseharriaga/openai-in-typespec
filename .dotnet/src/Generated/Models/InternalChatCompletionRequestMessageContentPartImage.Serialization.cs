@@ -25,7 +25,7 @@ namespace OpenAI.Chat
             writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("image_url"u8);
             writer.WriteObjectValue(ImageUrl, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -79,7 +79,7 @@ namespace OpenAI.Chat
                     imageUrl = InternalChatCompletionRequestMessageContentPartImageImageUrl.DeserializeInternalChatCompletionRequestMessageContentPartImageImageUrl(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -134,3 +134,4 @@ namespace OpenAI.Chat
         }
     }
 }
+

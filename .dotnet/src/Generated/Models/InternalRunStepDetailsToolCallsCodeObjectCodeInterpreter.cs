@@ -41,7 +41,7 @@ namespace OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter"/>. </summary>
         /// <param name="input"> The input to the Code Interpreter tool call. </param>

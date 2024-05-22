@@ -40,7 +40,7 @@ namespace OpenAI.Moderations
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ModerationCategoryScores"/>. </summary>
         /// <param name="hate"> The score for the category 'hate'. </param>

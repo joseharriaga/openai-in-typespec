@@ -70,7 +70,7 @@ internal partial class AzureBatchClient : BatchClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    private PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
+    private new PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
             .WithMethod("POST")
             .WithPath("batches")
@@ -79,7 +79,7 @@ internal partial class AzureBatchClient : BatchClient
             .WithOptions(options)
             .Build();
 
-    private PipelineMessage CreateGetBatchesRequest(string after, int? limit, RequestOptions options)
+    private new PipelineMessage CreateGetBatchesRequest(string after, int? limit, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
             .WithMethod("GET")
             .WithPath("batches")
@@ -89,7 +89,7 @@ internal partial class AzureBatchClient : BatchClient
             .WithOptions(options)
             .Build();
 
-    private PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
+    private new PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
             .WithMethod("GET")
             .WithPath("batches", batchId)
@@ -97,7 +97,7 @@ internal partial class AzureBatchClient : BatchClient
             .WithOptions(options)
             .Build();
 
-    private PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
+    private new PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
             .WithMethod("POST")
             .WithPath("batches", batchId, "cancel")

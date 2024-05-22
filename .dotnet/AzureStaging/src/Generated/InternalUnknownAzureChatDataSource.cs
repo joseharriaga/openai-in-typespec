@@ -4,9 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using Azure.AI.OpenAI.Chat;
 
-namespace Azure.AI.OpenAI
+namespace Azure.AI.OpenAI.Chat
 {
     /// <summary> Unknown version of AzureChatDataSource. </summary>
     internal partial class InternalUnknownAzureChatDataSource : AzureChatDataSource
@@ -24,3 +23,4 @@ namespace Azure.AI.OpenAI
         }
     }
 }
+

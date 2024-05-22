@@ -41,7 +41,7 @@ namespace OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ChatLogProbabilityInfo"/>. </summary>
         /// <param name="contentTokenLogProbabilities"> A list of message content tokens with log probability information. </param>

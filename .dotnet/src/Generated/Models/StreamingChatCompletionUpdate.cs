@@ -41,7 +41,7 @@ namespace OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="StreamingChatCompletionUpdate"/>. </summary>
         /// <param name="id"> A unique identifier for the chat completion. Each chunk has the same ID. </param>

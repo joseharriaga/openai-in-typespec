@@ -40,7 +40,7 @@ namespace OpenAI.Embeddings
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="EmbeddingTokenUsage"/>. </summary>
         /// <param name="inputTokens"> The number of tokens used by the prompt. </param>

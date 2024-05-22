@@ -17,6 +17,29 @@ public class ImageTests : TestBase<ImageClient>
     public void CanCreateClient() => Assert.That(GetTestClient<TokenCredential>(), Is.InstanceOf<ImageClient>());
 
     [Test]
+    public void BadKeyGivesHelpfulError()
+    {
+        string endpointFromEnvironment = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+        Uri endpoint = new(endpointFromEnvironment);
+        string mockKey = "not-a-valid-key-and-should-still-be-sanitized";
+        ApiKeyCredential credential = new(mockKey);
+        AzureOpenAIClient topLevelClient = new(endpoint, credential);
+        ImageClient client = topLevelClient.GetImageClient("dall-e-3");
+        Exception thrownException = null;
+        try
+        {
+            _ = client.GenerateImage("a delightful exception message, in contemporary watercolor");
+        }
+        catch (Exception ex)
+        {
+            thrownException = ex;
+        }
+        Assert.That(thrownException, Is.InstanceOf<ClientResultException>());
+        Assert.That(thrownException.Message, Does.Contain("invalid subscription key"));
+        Assert.That(thrownException.Message, Does.Not.Contain(mockKey));
+    }
+
+    [Test]
     public void CanCreateSimpleImage()
     {
         ImageClient client = GetTestClient();
@@ -46,9 +69,10 @@ public class ImageTests : TestBase<ImageClient>
         Assert.That(image, Is.Not.Null);
         Assert.That(image.ImageUri, Is.Not.Null);
         Console.WriteLine($"RESPONSE--\n{imageResult.GetRawResponse().Content}");
-        ImagePromptContentFilterResult promptResults = image.GetPromptContentFilterResults();
-        ImageResponseContentFilterResult responseResults = image.GetResponseContentFilterResults();
-        Assert.That(promptResults?.Sexual?.Severity, Is.EqualTo("safe"));
-        Assert.That(responseResults?.Sexual?.Severity, Is.EqualTo("safe"));
+#pragma warning disable OPENAI002
+        ImageContentFilterResultForPrompt promptResults = image.GetContentFilterResultForPrompt();
+        ImageContentFilterResultForResponse responseResults = image.GetContentFilterResultForResponse();
+        Assert.That(promptResults?.Sexual?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
+        Assert.That(responseResults?.Sexual?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
     }
 }

@@ -22,7 +22,7 @@ model AzureChatDataSource {
 }
 
 /** Represents a data source configuration that will use an Azure Search resource. */
-model AzureChatSearchDataSource extends AzureChatDataSource {
+model AzureSearchChatDataSource extends AzureChatDataSource {
   /** The discriminated type identifier, which is always 'azure_search'. */
   type: "azure_search";
 
@@ -35,6 +35,12 @@ model AzureChatSearchDataSource extends AzureChatDataSource {
 
     /** The name of the index to use, as specified in the Azure Search resource. */
     index_name: string;
+
+    authentication:
+      | AzureChatDataSourceApiKeyAuthenticationOptions
+      | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions
+      | AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions
+      | AzureChatDataSourceAccessTokenAuthenticationOptions;
 
     /** The field mappings to use with the Azure Search resource. */
     fields_mapping?: {
@@ -75,15 +81,16 @@ model AzureChatSearchDataSource extends AzureChatDataSource {
     filter?: string;
 
     /**  */
-    embedding_dependency: AzureChatDataSourceVectorizationSource;
+    embedding_dependency?: AzureChatDataSourceVectorizationSource;
   };
 }
 
 /** Represents a data source configuration that will use an Azure Machine Learning vector index. */
-model AzureChatMachineLearningIndexDataSource extends AzureChatDataSource {
+model AzureMachineLearningIndexChatDataSource extends AzureChatDataSource {
   type: "azure_ml_index";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
+    authentication: AzureChatDataSourceAccessTokenAuthenticationOptions | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions | AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions;
 
     /** The ID of the Azure Machine Learning index project to use. */
     project_resource_id: string;
@@ -100,14 +107,15 @@ model AzureChatMachineLearningIndexDataSource extends AzureChatDataSource {
 }
 
 /** Represents a data source configuration that will use an Azure CosmosDB resource. */
-model AzureChatCosmosDBDataSource extends AzureChatDataSource {
-  type: "AzureCosmosDB";
+model AzureCosmosDBChatDataSource extends AzureChatDataSource {
+  type: "azure_cosmos_db";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
     container_name: string;
     database_name: string;
     embedding_dependency: AzureChatDataSourceVectorizationSource;
     index_name: string;
+    authentication: AzureChatDataSourceConnectionStringAuthenticationOptions;
     fields_mapping: {
       content_fields: string[];
       vector_fields: string[];
@@ -119,12 +127,13 @@ model AzureChatCosmosDBDataSource extends AzureChatDataSource {
   };
 }
 
-model AzureChatElasticsearchDataSource extends AzureChatDataSource {
+model ElasticsearchChatDataSource extends AzureChatDataSource {
   type: "elasticsearch";
   parameters: {
     ...AzureChatDataSourceCommonParameters;
     endpoint: url;
     index_name: string;
+    authentication: AzureChatDataSourceKeyAndKeyIdAuthenticationOptions | AzureChatDataSourceEncodedApiKeyAuthenticationOptions;
     fields_mapping?: {
       title_field?: string;
       url_field?: string;
@@ -138,25 +147,25 @@ model AzureChatElasticsearchDataSource extends AzureChatDataSource {
   };
 }
 
-model AzureChatPineconeDataSource extends AzureChatDataSource {
+model PineconeChatDataSource extends AzureChatDataSource {
   type: "pinecone";
-  ...AzureChatDataSourceCommonParameters;
-  environment: string;
-  index_name: string;
-  embedding_dependency: AzureChatDataSourceVectorizationSource;
-  fields_mapping: {
-    content_fields: string[];
-    title_field?: string;
-    url_field?: string;
-    filepath_field?: string;
-    content_fields_separator?: string;
+  parameters: {
+    ...AzureChatDataSourceCommonParameters;
+    environment: string;
+    index_name: string;
+    authentication: AzureChatDataSourceApiKeyAuthenticationOptions;
+    embedding_dependency: AzureChatDataSourceVectorizationSource;
+    fields_mapping: {
+      content_fields: string[];
+      title_field?: string;
+      url_field?: string;
+      filepath_field?: string;
+      content_fields_separator?: string;
+    };
   };
 }
 
 alias AzureChatDataSourceCommonParameters = {
-  /** The authentication mechanism to use with the data source. */
-  authentication?: AzureChatDataSourceAuthenticationOptions;
-
   /** The configured number of documents to feature in the query. */
   top_n_documents?: int32;
 
@@ -188,7 +197,7 @@ alias AzureChatDataSourceCommonParameters = {
    * If set to true, the system will allow partial search results to be used and the request will fail if all
    * partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
    */
-  allow_partial_result: boolean = false;
+  allow_partial_result?: boolean = false;
 
   /**
    * The output context properties to include on the response.

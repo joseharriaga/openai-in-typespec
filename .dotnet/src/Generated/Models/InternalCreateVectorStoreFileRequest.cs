@@ -40,7 +40,7 @@ namespace OpenAI.VectorStores
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileRequest"/>. </summary>
         /// <param name="fileId"> A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. </param>

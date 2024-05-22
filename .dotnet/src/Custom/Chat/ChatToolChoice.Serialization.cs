@@ -9,39 +9,22 @@ namespace OpenAI.Chat;
 public partial class ChatToolChoice : IJsonModel<ChatToolChoice>
 {
     void IJsonModel<ChatToolChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeChatToolChoice, writer, options);
+
+    internal static void SerializeChatToolChoice(ChatToolChoice instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        if (_isPlainString)
+        if (instance._isPlainString)
         {
-            writer.WriteStringValue(_string);
+            writer.WriteStringValue(instance._string);
         }
         else
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatToolChoice>)this).GetFormatFromOptions(options) : options.Format;
-            if (format != "J")
-            {
-                throw new FormatException($"The model {nameof(ChatToolChoice)} does not support writing '{format}' format.");
-            }
-
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(_type.ToString());
+            writer.WriteStringValue(instance._type.ToString());
             writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue(_function, options);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
-            {
-                foreach (var item in _serializedAdditionalRawData)
-                {
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                    writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
+            writer.WriteObjectValue(instance._function, options);
+            writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
             writer.WriteEndObject();
         }
     }
@@ -76,7 +59,7 @@ public partial class ChatToolChoice : IJsonModel<ChatToolChoice>
                     function = InternalChatCompletionNamedToolChoiceFunction.DeserializeInternalChatCompletionNamedToolChoiceFunction(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

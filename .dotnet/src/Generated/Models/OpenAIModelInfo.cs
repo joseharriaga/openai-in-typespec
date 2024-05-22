@@ -40,7 +40,7 @@ namespace OpenAI.Models
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="OpenAIModelInfo"/>. </summary>
         /// <param name="id"> The model identifier, which can be referenced in the API endpoints. </param>
@@ -63,7 +63,7 @@ namespace OpenAI.Models
         /// <param name="object"> The object type, which is always "model". </param>
         /// <param name="ownedBy"> The organization that owns the model. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal OpenAIModelInfo(string id, DateTimeOffset createdAt, ModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal OpenAIModelInfo(string id, DateTimeOffset createdAt, InternalModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;

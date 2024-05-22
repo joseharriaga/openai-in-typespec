@@ -1,5 +1,3 @@
-using OpenAI.Internal.Models;
-using System;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;

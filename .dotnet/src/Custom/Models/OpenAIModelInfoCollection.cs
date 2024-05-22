@@ -11,12 +11,12 @@ namespace OpenAI.Models;
 [CodeGenModel("ListModelsResponse")]
 [CodeGenSuppress("Data")]
 [CodeGenSuppress(nameof(OpenAIModelInfoCollection))]
-[CodeGenSuppress(nameof(OpenAIModelInfoCollection), typeof(ListModelsResponseObject), typeof(IReadOnlyList<OpenAIModelInfo>))]
+[CodeGenSuppress(nameof(OpenAIModelInfoCollection), typeof(InternalListModelsResponseObject), typeof(IReadOnlyList<OpenAIModelInfo>))]
 public partial class OpenAIModelInfoCollection : ReadOnlyCollection<OpenAIModelInfo>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> Gets the object. </summary>
-    private ListModelsResponseObject Object { get; } = ListModelsResponseObject.List;
+    private InternalListModelsResponseObject Object { get; } = InternalListModelsResponseObject.List;
 
     // CUSTOM: Recovered this field. See https://github.com/Azure/autorest.csharp/issues/4636.
     /// <summary>
@@ -64,7 +64,7 @@ public partial class OpenAIModelInfoCollection : ReadOnlyCollection<OpenAIModelI
     /// <param name="object"></param>
     /// <param name="data"></param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-    internal OpenAIModelInfoCollection(ListModelsResponseObject @object, IReadOnlyList<OpenAIModelInfo> data, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal OpenAIModelInfoCollection(InternalListModelsResponseObject @object, IReadOnlyList<OpenAIModelInfo> data, IDictionary<string, BinaryData> serializedAdditionalRawData)
         : base([.. data])
     {
         Object = @object;

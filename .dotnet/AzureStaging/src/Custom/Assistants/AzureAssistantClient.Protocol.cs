@@ -491,19 +491,19 @@ internal partial class AzureAssistantClient : AssistantClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    private PipelineMessage CreateCreateAssistantRequest(BinaryContent content, RequestOptions options = null)
+    private new PipelineMessage CreateCreateAssistantRequest(BinaryContent content, RequestOptions options = null)
         => NewJsonPostBuilder(content, options).WithPath("assistants").Build();
 
-    private PipelineMessage CreateGetAssistantsRequest(int? limit, string order, string after, string before, RequestOptions options)
+    private new PipelineMessage CreateGetAssistantsRequest(int? limit, string order, string after, string before, RequestOptions options)
         => NewGetListBuilder(limit, order, after, before, options).WithPath("assistants").Build();
 
-    private PipelineMessage CreateGetAssistantRequest(string assistantId, RequestOptions options)
+    private new PipelineMessage CreateGetAssistantRequest(string assistantId, RequestOptions options)
         => NewJsonGetBuilder(options).WithPath("assistants", assistantId).Build();
 
-    private PipelineMessage CreateModifyAssistantRequest(string assistantId, BinaryContent content, RequestOptions options)
+    private new PipelineMessage CreateModifyAssistantRequest(string assistantId, BinaryContent content, RequestOptions options)
         => NewJsonPostBuilder(content, options).WithPath("assistants", assistantId).Build();
 
-    private PipelineMessage CreateDeleteAssistantRequest(string assistantId, RequestOptions options)
+    private new PipelineMessage CreateDeleteAssistantRequest(string assistantId, RequestOptions options)
         => NewJsonDeleteBuilder(options).WithPath("assistants", assistantId).Build();
 
     private PipelineMessage CreateCreateThreadRequest(BinaryContent content, RequestOptions options)

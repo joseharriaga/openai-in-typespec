@@ -76,7 +76,7 @@ namespace Azure.AI.OpenAI
             }
             string code = default;
             string revisedPrompt = default;
-            InternalAzureContentFilterResultForPrompt contentFilterResults = default;
+            ContentFilterResultForPrompt contentFilterResults = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -97,7 +97,7 @@ namespace Azure.AI.OpenAI
                     {
                         continue;
                     }
-                    contentFilterResults = InternalAzureContentFilterResultForPrompt.DeserializeInternalAzureContentFilterResultForPrompt(property.Value, options);
+                    contentFilterResults = ContentFilterResultForPrompt.DeserializeContentFilterResultForPrompt(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -155,3 +155,4 @@ namespace Azure.AI.OpenAI
         }
     }
 }
+

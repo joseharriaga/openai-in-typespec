@@ -3,4 +3,4 @@
 
 using System.Runtime.CompilerServices;
 
-// [assembly: InternalsVisibleTo("OpenAI.Tests")]
+[assembly: InternalsVisibleTo("Azure.AI.OpenAI")]

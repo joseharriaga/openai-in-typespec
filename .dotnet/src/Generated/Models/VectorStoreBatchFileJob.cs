@@ -41,7 +41,7 @@ namespace OpenAI.VectorStores
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="VectorStoreBatchFileJob"/>. </summary>
         /// <param name="batchId"> The identifier, which can be referenced in API endpoints. </param>

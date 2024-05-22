@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.AI.OpenAI.Chat;
 
-namespace Azure.AI.OpenAI
+namespace Azure.AI.OpenAI.Chat
 {
     internal partial class InternalUnknownAzureChatDataSource : IJsonModel<AzureChatDataSource>
     {
@@ -127,3 +126,4 @@ namespace Azure.AI.OpenAI
         }
     }
 }
+

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using OpenAI;
 using OpenAI.Chat;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -15,7 +14,8 @@ internal partial class AzureChatClient : ChatClient
     public override ClientResult CompleteChat(BinaryContent content, RequestOptions options = null)
     {
         using PipelineMessage message = CreateCompleteChatRequestMessage(content, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        PipelineResponse response = Pipeline.ProcessMessage(message, options);
+        return ClientResult.FromResponse(message.BufferResponse ? response : message.ExtractResponse());
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -23,7 +23,7 @@ internal partial class AzureChatClient : ChatClient
     {
         using PipelineMessage message = CreateCompleteChatRequestMessage(content, options);
         PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
-        return ClientResult.FromResponse(response);
+        return ClientResult.FromResponse(message.BufferResponse ? response : message.ExtractResponse());
     }
 
     private PipelineMessage CreateCompleteChatRequestMessage(

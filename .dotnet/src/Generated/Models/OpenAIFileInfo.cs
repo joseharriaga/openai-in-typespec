@@ -40,7 +40,7 @@ namespace OpenAI.Files
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="OpenAIFileInfo"/>. </summary>
         /// <param name="id"> The file identifier, which can be referenced in the API endpoints. </param>

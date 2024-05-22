@@ -40,7 +40,7 @@ namespace OpenAI.Moderations
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ModerationResult"/>. </summary>
         /// <param name="flagged"> Whether any of the below categories are flagged. </param>

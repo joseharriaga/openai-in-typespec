@@ -218,6 +218,151 @@ public partial class ChatClientTests
     }
 
     [Test]
+    public void AuthFailureStreaming()
+    {
+        string fakeApiKey = "not-a-real-key-but-should-be-sanitized";
+        ChatClient client = new("gpt-3.5-turbo", new ApiKeyCredential(fakeApiKey));
+        Exception caughtException = null;
+        try
+        {
+            foreach (var _ in client.CompleteChatStreaming(
+                [new UserChatMessage("Uh oh, this isn't going to work with that key")]))
+            { }
+        }
+        catch (Exception ex)
+        {
+            caughtException = ex;
+        }
+        var clientResultException = caughtException as ClientResultException;
+        Assert.That(clientResultException, Is.Not.Null);
+        Assert.That(clientResultException.Status, Is.EqualTo((int)HttpStatusCode.Unauthorized));
+        Assert.That(clientResultException.Message, Does.Contain("API key"));
+        Assert.That(clientResultException.Message, Does.Not.Contain(fakeApiKey));
+    }
+
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task TokenLogProbabilities(bool includeLogProbabilities)
+    {
+        const int topLogProbabilityCount = 3;
+        ChatClient client = new("gpt-3.5-turbo");
+        IList<ChatMessage> messages = [new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")];
+        ChatCompletionOptions options;
+        
+        if (includeLogProbabilities)
+        {
+            options = new()
+            {
+                IncludeLogProbabilities = true,
+                TopLogProbabilityCount = topLogProbabilityCount
+            };
+        }
+        else
+        {
+            options = new();
+        }
+
+        ChatCompletion chatCompletions = await client.CompleteChatAsync(messages, options);
+        Assert.That(chatCompletions, Is.Not.Null);
+
+        if (includeLogProbabilities)
+        {
+            ChatLogProbabilityInfo logProbs = chatCompletions.LogProbabilityInfo;
+            Assert.That(logProbs, Is.Not.Null);
+
+            IReadOnlyList<ChatTokenLogProbabilityInfo> chatTokenLogProbabilities = logProbs.ContentTokenLogProbabilities;
+            Assert.That(chatTokenLogProbabilities, Is.Not.Null.Or.Empty);
+
+            foreach (ChatTokenLogProbabilityInfo tokenLogProbs in chatTokenLogProbabilities)
+            {
+                Assert.That(tokenLogProbs.Token, Is.Not.Null.Or.Empty);
+                Assert.That(tokenLogProbs.Utf8ByteValues, Is.Not.Null);
+                Assert.That(tokenLogProbs.TopLogProbabilities, Is.Not.Null.Or.Empty);
+                Assert.That(tokenLogProbs.TopLogProbabilities, Has.Count.EqualTo(topLogProbabilityCount));
+
+                foreach (ChatTokenTopLogProbabilityInfo tokenTopLogProbs in tokenLogProbs.TopLogProbabilities)
+                {
+                    Assert.That(tokenTopLogProbs.Token, Is.Not.Null.Or.Empty);
+                    Assert.That(tokenTopLogProbs.Utf8ByteValues, Is.Not.Null);
+                }
+            }
+        }
+        else
+        {
+            Assert.That(chatCompletions.LogProbabilityInfo, Is.Null);
+        }
+    }
+
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task TokenLogProbabilitiesStreaming(bool includeLogProbabilities)
+    {
+        const int topLogProbabilityCount = 3;
+        ChatClient client = new("gpt-3.5-turbo");
+        IList<ChatMessage> messages = [new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")];
+        ChatCompletionOptions options;
+
+        if (includeLogProbabilities)
+        {
+            options = new()
+            {
+                IncludeLogProbabilities = true,
+                TopLogProbabilityCount = topLogProbabilityCount
+            };
+        }
+        else
+        {
+            options = new();
+        }
+
+        AsyncResultCollection<StreamingChatCompletionUpdate> chatCompletionUpdates = client.CompleteChatStreamingAsync(messages, options);
+        Assert.That(chatCompletionUpdates, Is.Not.Null);
+
+        await foreach (StreamingChatCompletionUpdate chatCompletionUpdate in chatCompletionUpdates)
+        {
+            // Token log probabilities are streamed together with their corresponding content update.
+            if (includeLogProbabilities
+                && chatCompletionUpdate.ContentUpdate.Count > 0
+                && chatCompletionUpdate.ContentUpdate[0].Text != null)
+            {
+                ChatLogProbabilityInfo logProbs = chatCompletionUpdate.LogProbabilityInfo;
+                Assert.That(logProbs, Is.Not.Null);
+
+                if (!string.IsNullOrWhiteSpace(chatCompletionUpdate.ContentUpdate[0].Text))
+                {
+                    Assert.That(logProbs.ContentTokenLogProbabilities, Is.Not.Null.Or.Empty);
+                    Assert.That(logProbs.ContentTokenLogProbabilities, Has.Count.EqualTo(1));
+
+                    foreach (ChatTokenLogProbabilityInfo tokenLogProbs in logProbs.ContentTokenLogProbabilities)
+                    {
+                        Assert.That(tokenLogProbs.Token, Is.Not.Null.Or.Empty);
+                        Assert.That(tokenLogProbs.Utf8ByteValues, Is.Not.Null);
+                        Assert.That(tokenLogProbs.TopLogProbabilities, Is.Not.Null.Or.Empty);
+                        Assert.That(tokenLogProbs.TopLogProbabilities, Has.Count.EqualTo(topLogProbabilityCount));
+
+                        foreach (ChatTokenTopLogProbabilityInfo tokenTopLogProbs in tokenLogProbs.TopLogProbabilities)
+                        {
+                            Assert.That(tokenTopLogProbs.Token, Is.Not.Null.Or.Empty);
+                            Assert.That(tokenTopLogProbs.Utf8ByteValues, Is.Not.Null);
+                        }
+                    }
+                }
+                else
+                {
+                    Assert.That(logProbs.ContentTokenLogProbabilities, Is.Not.Null);
+                    Assert.That(logProbs.ContentTokenLogProbabilities, Is.Empty);
+                }
+            }
+            else
+            {
+                Assert.That(chatCompletionUpdate.LogProbabilityInfo, Is.Null);
+            }
+        }
+    }
+
+    [Test]
     [TestCase(true)]
     [TestCase(false)]
     public void SerializeChatToolChoiceAsString(bool fromRawJson)

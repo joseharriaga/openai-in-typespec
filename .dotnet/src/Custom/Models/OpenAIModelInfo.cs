@@ -10,7 +10,7 @@ public partial class OpenAIModelInfo
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> The object type, which is always "model". </summary>
-    private ModelObject Object { get; } = ModelObject.Model;
+    private InternalModelObject Object { get; } = InternalModelObject.Model;
 
     // CUSTOM: Renamed.
     /// <summary> The Unix timestamp (in seconds) when the model was created. </summary>

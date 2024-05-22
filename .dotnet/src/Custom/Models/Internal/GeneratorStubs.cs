@@ -5,7 +5,7 @@ namespace OpenAI.Models;
 internal partial class InternalDeleteModelResponse { private readonly object Object; }
 
 [CodeGenModel("ListModelsResponseObject")]
-internal readonly partial struct ListModelsResponseObject { }
+internal readonly partial struct InternalListModelsResponseObject { }
 
 [CodeGenModel("ModelObject")]
-internal readonly partial struct ModelObject { }
+internal readonly partial struct InternalModelObject { }

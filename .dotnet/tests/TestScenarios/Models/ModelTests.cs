@@ -24,8 +24,7 @@ public partial class ModelTests : SyncAsyncTestBase
         OpenAIModelInfoCollection allModels = IsAsync
             ? await client.GetModelsAsync()
             : client.GetModels();
-        Assert.IsNotNull(allModels);
-        Assert.Greater(allModels.Count, 0);
+        Assert.That(allModels, Is.Not.Null.Or.Empty);
         Assert.That(allModels.Any(modelInfo => modelInfo.Id.Contains("whisper", StringComparison.InvariantCultureIgnoreCase)));
         Console.WriteLine($"Total model count: {allModels.Count}");
     }
@@ -38,7 +37,7 @@ public partial class ModelTests : SyncAsyncTestBase
         OpenAIModelInfo model = IsAsync
             ? await client.GetModelAsync("gpt-3.5-turbo")
             : client.GetModel("gpt-3.5-turbo");
-        Assert.IsNotNull(model);
+        Assert.That(model, Is.Not.Null);
         Assert.That(model.OwnedBy.ToLowerInvariant(), Contains.Substring("openai"));
     }
 

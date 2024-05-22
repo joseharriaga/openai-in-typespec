@@ -579,8 +579,8 @@ function Edit-GeneratedModels {
         # OpenAI.Models namespace
         "InternalDeleteModelResponse.cs",
         "InternalDeleteModelResponse.Serialization.cs",
-        "ListModelsResponseObject.cs",
-        "ModelObject.cs",
+        "InternalListModelsResponseObject.cs",
+        "InternalModelObject.cs",
         "OpenAIModelInfo.cs",
         "OpenAIModelInfo.Serialization.cs",
         "OpenAIModelInfoCollection.cs",

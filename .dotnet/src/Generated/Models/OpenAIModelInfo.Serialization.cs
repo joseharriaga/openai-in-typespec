@@ -69,7 +69,7 @@ namespace OpenAI.Models
             }
             string id = default;
             DateTimeOffset created = default;
-            ModelObject @object = default;
+            InternalModelObject @object = default;
             string ownedBy = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -87,7 +87,7 @@ namespace OpenAI.Models
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new ModelObject(property.Value.GetString());
+                    @object = new InternalModelObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("owned_by"u8))

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureContentFilterImageResponseResults. </summary>
+    /// <summary> A content filter result for an image generation operation's output response content. </summary>
     public partial class ImageContentFilterResultForResponse
     {
         /// <summary>
@@ -48,10 +48,26 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="ImageContentFilterResultForResponse"/>. </summary>
-        /// <param name="sexual"></param>
-        /// <param name="violence"></param>
-        /// <param name="hate"></param>
-        /// <param name="selfHarm"></param>
+        /// <param name="sexual">
+        /// A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+        /// portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+        /// assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
+        /// </param>
+        /// <param name="violence">
+        /// A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+        /// someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+        /// legislation, and so on.
+        /// </param>
+        /// <param name="hate">
+        /// A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+        /// language with reference to a person or identity group based on certain differentiating attributes of these groups
+        /// including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+        /// religion, immigration status, ability status, personal appearance, and body size.
+        /// </param>
+        /// <param name="selfHarm">
+        /// A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+        /// damage one's body or kill oneself.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ImageContentFilterResultForResponse(ContentFilterSeverityResult sexual, ContentFilterSeverityResult violence, ContentFilterSeverityResult hate, ContentFilterSeverityResult selfHarm, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -62,13 +78,29 @@ namespace Azure.AI.OpenAI
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Gets the sexual. </summary>
+        /// <summary>
+        /// A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+        /// portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+        /// assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
+        /// </summary>
         public ContentFilterSeverityResult Sexual { get; }
-        /// <summary> Gets the violence. </summary>
+        /// <summary>
+        /// A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+        /// someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+        /// legislation, and so on.
+        /// </summary>
         public ContentFilterSeverityResult Violence { get; }
-        /// <summary> Gets the hate. </summary>
+        /// <summary>
+        /// A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+        /// language with reference to a person or identity group based on certain differentiating attributes of these groups
+        /// including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+        /// religion, immigration status, ability status, personal appearance, and body size.
+        /// </summary>
         public ContentFilterSeverityResult Hate { get; }
-        /// <summary> Gets the self harm. </summary>
+        /// <summary>
+        /// A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+        /// damage one's body or kill oneself.
+        /// </summary>
         public ContentFilterSeverityResult SelfHarm { get; }
     }
 }

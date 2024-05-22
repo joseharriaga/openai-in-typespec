@@ -26,15 +26,15 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("sexual"u8);
                 writer.WriteObjectValue(Sexual, options);
             }
-            if (Optional.IsDefined(Violence))
-            {
-                writer.WritePropertyName("violence"u8);
-                writer.WriteObjectValue(Violence, options);
-            }
             if (Optional.IsDefined(Hate))
             {
                 writer.WritePropertyName("hate"u8);
                 writer.WriteObjectValue(Hate, options);
+            }
+            if (Optional.IsDefined(Violence))
+            {
+                writer.WritePropertyName("violence"u8);
+                writer.WriteObjectValue(Violence, options);
             }
             if (Optional.IsDefined(SelfHarm))
             {
@@ -51,8 +51,11 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("custom_blocklists"u8);
                 writer.WriteObjectValue(CustomBlocklists, options);
             }
-            writer.WritePropertyName("error"u8);
-            writer.WriteObjectValue<InternalAzureContentFilterResultForPromptContentFilterResultsError>(Error, options);
+            if (Optional.IsDefined(Error))
+            {
+                writer.WritePropertyName("error"u8);
+                writer.WriteObjectValue<InternalAzureContentFilterResultForPromptContentFilterResultsError>(Error, options);
+            }
             if (Optional.IsDefined(ProtectedMaterialText))
             {
                 writer.WritePropertyName("protected_material_text"u8);
@@ -102,8 +105,8 @@ namespace Azure.AI.OpenAI
                 return null;
             }
             ContentFilterSeverityResult sexual = default;
-            ContentFilterSeverityResult violence = default;
             ContentFilterSeverityResult hate = default;
+            ContentFilterSeverityResult violence = default;
             ContentFilterSeverityResult selfHarm = default;
             ContentFilterDetectionResult profanity = default;
             ContentFilterBlocklistResult customBlocklists = default;
@@ -123,15 +126,6 @@ namespace Azure.AI.OpenAI
                     sexual = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
                     continue;
                 }
-                if (property.NameEquals("violence"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    violence = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
-                    continue;
-                }
                 if (property.NameEquals("hate"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -139,6 +133,15 @@ namespace Azure.AI.OpenAI
                         continue;
                     }
                     hate = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    continue;
+                }
+                if (property.NameEquals("violence"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    violence = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("self_harm"u8))
@@ -170,6 +173,10 @@ namespace Azure.AI.OpenAI
                 }
                 if (property.NameEquals("error"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     error = InternalAzureContentFilterResultForPromptContentFilterResultsError.DeserializeInternalAzureContentFilterResultForPromptContentFilterResultsError(property.Value, options);
                     continue;
                 }
@@ -199,8 +206,8 @@ namespace Azure.AI.OpenAI
             serializedAdditionalRawData = rawDataDictionary;
             return new ContentFilterResultForResponse(
                 sexual,
-                violence,
                 hate,
+                violence,
                 selfHarm,
                 profanity,
                 customBlocklists,

@@ -25,6 +25,7 @@ paths:
                     properties:
                       error:
                         $ref: '#/components/schemas/AzureOpenAIChatError'
+                    description: A structured representation of an error an Azure OpenAI request.
       requestBody:
         required: true
         content:
@@ -54,6 +55,7 @@ paths:
                     properties:
                       error:
                         $ref: '#/components/schemas/AzureOpenAIDalleError'
+                    description: A structured representation of an error an Azure OpenAI request.
       requestBody:
         required: true
         content:
@@ -346,8 +348,13 @@ components:
       properties:
         id:
           type: string
+          description: The ID of the custom blocklist associated with the filtered status.
         filtered:
           type: boolean
+          description: Whether the associated blocklist resulted in the content being filtered.
+      description: |-
+        A content filter result item that associates an existing custom blocklist ID with a value indicating whether or not
+        the corresponding blocklist resulted in content being filtered.
     AzureContentFilterBlocklistResult:
       type: object
       required:
@@ -355,6 +362,7 @@ components:
       properties:
         filtered:
           type: boolean
+          description: A value indicating whether any of the detailed blocklists resulted in a filtering action.
         details:
           type: array
           items:
@@ -362,11 +370,15 @@ components:
             properties:
               filtered:
                 type: boolean
+                description: A value indicating whether the blocklist produced a filtering action.
               id:
                 type: string
+                description: The ID of the custom blocklist evaluated.
             required:
               - filtered
               - id
+          description: The pairs of individual blocklist IDs and whether they resulted in a filtering action.
+      description: A collection of true/false filtering results for configured custom blocklists.
     AzureContentFilterDetectionResult:
       type: object
       required:
@@ -375,120 +387,235 @@ components:
       properties:
         filtered:
           type: boolean
+          description: Whether the content detection resulted in a content filtering action.
         detected:
           type: boolean
+          description: Whether the labeled content category was detected in the content.
+      description: |-
+        A labeled content filter result item that indicates whether the content was detected and whether the content was
+        filtered.
     AzureContentFilterImagePromptResults:
       type: object
       required:
         - jailbreak
       properties:
         profanity:
-          $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          description: |-
+            A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
+            content.
         custom_blocklists:
-          $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+          description: A collection of binary filtering outcomes for configured custom blocklists.
         jailbreak:
-          $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          description: |-
+            A detection result that describes user prompt injection attacks, where malicious users deliberately exploit
+            system vulnerabilities to elicit unauthorized behavior from the LLM. This could lead to inappropriate content
+            generation or violations of system-imposed restrictions.
       allOf:
         - $ref: '#/components/schemas/AzureContentFilterImageResponseResults'
+      description: A content filter result for an image generation operation's input request content.
     AzureContentFilterImageResponseResults:
       type: object
       properties:
         sexual:
-          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+            portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+            assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
         violence:
-          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+            someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+            legislation, and so on.
         hate:
-          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+            language with reference to a person or identity group based on certain differentiating attributes of these groups
+            including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+            religion, immigration status, ability status, personal appearance, and body size.
         self_harm:
-          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+            damage one's body or kill oneself.
+      description: A content filter result for an image generation operation's output response content.
     AzureContentFilterResultForChoice:
       type: object
-      required:
-        - error
       properties:
         sexual:
-          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
-        violence:
-          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+            portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+            assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
         hate:
-          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+            language with reference to a person or identity group based on certain differentiating attributes of these groups
+            including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+            religion, immigration status, ability status, personal appearance, and body size.
+        violence:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+            someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+            legislation, and so on.
         self_harm:
-          $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+            damage one's body or kill oneself.
         profanity:
-          $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          description: |-
+            A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
+            content.
         custom_blocklists:
-          $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+          description: A collection of binary filtering outcomes for configured custom blocklists.
         error:
           type: object
           properties:
             code:
               type: integer
               format: int32
+              description: A distinct, machine-readable code associated with the error.
             message:
               type: string
+              description: A human-readable message associated with the error.
           required:
             - code
             - message
+          description: If present, details about an error that prevented content filtering from completing its evaluation.
         protected_material_text:
-          $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          description: A detection result that describes a match against text protected under copyright or other status.
         protected_material_code:
           type: object
           properties:
             filtered:
               type: boolean
+              description: Whether the content detection resulted in a content filtering action.
             detected:
               type: boolean
+              description: Whether the labeled content category was detected in the content.
             citation:
               type: object
               properties:
                 license:
                   type: string
+                  description: The name or identifier of the license associated with the detection.
                 URL:
                   type: string
                   format: uri
+                  description: The URL associated with the license.
+              description: If available, the citation details describing the associated license and its location.
           required:
             - filtered
             - detected
+          description: A detection result that describes a match against licensed code or other protected source material.
+      description: A content filter result for a single response item produced by a generative AI system.
     AzureContentFilterResultForPrompt:
       type: object
       properties:
         prompt_index:
           type: integer
           format: int32
+          description: The index of the input prompt associated with the accompanying content filter result categories.
         content_filter_results:
           type: object
           properties:
             sexual:
-              $ref: '#/components/schemas/AzureContentFilterSeverityResult'
-            violence:
-              $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+              description: |-
+                A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+                portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+                assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
             hate:
-              $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+              description: |-
+                A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+                language with reference to a person or identity group based on certain differentiating attributes of these groups
+                including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+                religion, immigration status, ability status, personal appearance, and body size.
+            violence:
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+              description: |-
+                A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+                someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+                legislation, and so on.
             self_harm:
-              $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+              description: |-
+                A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+                damage one's body or kill oneself.
             profanity:
-              $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+              description: |-
+                A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
+                content.
             custom_blocklists:
-              $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+              description: A collection of binary filtering outcomes for configured custom blocklists.
             error:
               type: object
               properties:
                 code:
                   type: integer
                   format: int32
+                  description: A distinct, machine-readable code associated with the error.
                 message:
                   type: string
+                  description: A human-readable message associated with the error.
               required:
                 - code
                 - message
+              description: If present, details about an error that prevented content filtering from completing its evaluation.
             jailbreak:
-              $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+              description: |-
+                A detection result that describes user prompt injection attacks, where malicious users deliberately exploit
+                system vulnerabilities to elicit unauthorized behavior from the LLM. This could lead to inappropriate content
+                generation or violations of system-imposed restrictions.
             indirect_attack:
-              $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+              description: |-
+                A detection result that describes attacks on systems powered by Generative AI models that can happen every time
+                an application processes information that wasn’t directly authored by either the developer of the application or
+                the user.
           required:
-            - error
             - jailbreak
             - indirect_attack
+          description: The content filter category details for the result.
+      description: A content filter result associated with a single input prompt item into a generative AI system.
     AzureContentFilterSeverityResult:
       type: object
       required:
@@ -497,6 +624,7 @@ components:
       properties:
         filtered:
           type: boolean
+          description: Whether the content severity resulted in a content filtering action.
         severity:
           type: string
           enum:
@@ -504,6 +632,10 @@ components:
             - low
             - medium
             - high
+          description: The labeled severity of the content.
+      description: |-
+        A labeled content filter result item that indicates whether the content was filtered and what the qualitative
+        severity level of the content was, as evaluated against content filter configuration for the category.
     AzureCosmosDBChatDataSource:
       type: object
       required:
@@ -737,12 +869,16 @@ components:
       properties:
         code:
           type: string
+          description: The distinct, machine-generated identifier for the error.
         message:
           type: string
+          description: A human-readable message associated with the error.
         param:
           type: string
+          description: If applicable, the request input parameter associated with the error
         type:
           type: string
+          description: If applicable, the input line number associated with the error.
         inner_error:
           type: object
           properties:
@@ -750,21 +886,31 @@ components:
               type: string
               enum:
                 - ResponsibleAIPolicyViolation
+              description: The code associated with the inner error.
             revised_prompt:
               type: string
+              description: If applicable, the modified prompt used for generation.
             content_filter_results:
-              $ref: '#/components/schemas/AzureContentFilterResultForPrompt'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterResultForPrompt'
+              description: The content filter result details associated with the inner error.
+          description: If applicable, an upstream error that originated this error.
+      description: The structured representation of an error from an Azure OpenAI chat completion request.
     AzureOpenAIDalleError:
       type: object
       properties:
         code:
           type: string
+          description: The distinct, machine-generated identifier for the error.
         message:
           type: string
+          description: A human-readable message associated with the error.
         param:
           type: string
+          description: If applicable, the request input parameter associated with the error
         type:
           type: string
+          description: If applicable, the input line number associated with the error.
         inner_error:
           type: object
           properties:
@@ -772,10 +918,16 @@ components:
               type: string
               enum:
                 - ResponsibleAIPolicyViolation
+              description: The code associated with the inner error.
             revised_prompt:
               type: string
+              description: If applicable, the modified prompt used for generation.
             content_filter_results:
-              $ref: '#/components/schemas/AzureContentFilterImagePromptResults'
+              allOf:
+                - $ref: '#/components/schemas/AzureContentFilterImagePromptResults'
+              description: The content filter result details associated with the inner error.
+          description: If applicable, an upstream error that originated this error.
+      description: The structured representation of an error from an Azure OpenAI image generation request.
     AzureSearchChatDataSource:
       type: object
       required:

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureOpenAIDalleError. </summary>
+    /// <summary> The structured representation of an error from an Azure OpenAI image generation request. </summary>
     internal partial class AzureOpenAIDalleError
     {
         /// <summary>
@@ -48,11 +48,11 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureOpenAIDalleError"/>. </summary>
-        /// <param name="code"></param>
-        /// <param name="message"></param>
-        /// <param name="param"></param>
-        /// <param name="type"></param>
-        /// <param name="innerError"></param>
+        /// <param name="code"> The distinct, machine-generated identifier for the error. </param>
+        /// <param name="message"> A human-readable message associated with the error. </param>
+        /// <param name="param"> If applicable, the request input parameter associated with the error. </param>
+        /// <param name="type"> If applicable, the input line number associated with the error. </param>
+        /// <param name="innerError"> If applicable, an upstream error that originated this error. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AzureOpenAIDalleError(string code, string message, string param, string type, InternalAzureOpenAIDalleErrorInnerError innerError, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -64,15 +64,15 @@ namespace Azure.AI.OpenAI
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Gets the code. </summary>
+        /// <summary> The distinct, machine-generated identifier for the error. </summary>
         public string Code { get; }
-        /// <summary> Gets the message. </summary>
+        /// <summary> A human-readable message associated with the error. </summary>
         public string Message { get; }
-        /// <summary> Gets the param. </summary>
+        /// <summary> If applicable, the request input parameter associated with the error. </summary>
         public string Param { get; }
-        /// <summary> Gets the type. </summary>
+        /// <summary> If applicable, the input line number associated with the error. </summary>
         public string Type { get; }
-        /// <summary> Gets the inner error. </summary>
+        /// <summary> If applicable, an upstream error that originated this error. </summary>
         public InternalAzureOpenAIDalleErrorInnerError InnerError { get; }
     }
 }

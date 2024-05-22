@@ -7,7 +7,10 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureContentFilterBlocklistIdResult. </summary>
+    /// <summary>
+    /// A content filter result item that associates an existing custom blocklist ID with a value indicating whether or not
+    /// the corresponding blocklist resulted in content being filtered.
+    /// </summary>
     internal partial class InternalAzureContentFilterBlocklistIdResult
     {
         /// <summary>
@@ -43,8 +46,8 @@ namespace Azure.AI.OpenAI
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterBlocklistIdResult"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="filtered"></param>
+        /// <param name="id"> The ID of the custom blocklist associated with the filtered status. </param>
+        /// <param name="filtered"> Whether the associated blocklist resulted in the content being filtered. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         internal InternalAzureContentFilterBlocklistIdResult(string id, bool filtered)
         {
@@ -55,8 +58,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterBlocklistIdResult"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="filtered"></param>
+        /// <param name="id"> The ID of the custom blocklist associated with the filtered status. </param>
+        /// <param name="filtered"> Whether the associated blocklist resulted in the content being filtered. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalAzureContentFilterBlocklistIdResult(string id, bool filtered, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -70,9 +73,9 @@ namespace Azure.AI.OpenAI
         {
         }
 
-        /// <summary> Gets the id. </summary>
+        /// <summary> The ID of the custom blocklist associated with the filtered status. </summary>
         internal string Id { get; set; }
-        /// <summary> Gets the filtered. </summary>
+        /// <summary> Whether the associated blocklist resulted in the content being filtered. </summary>
         internal bool Filtered { get; set; }
     }
 }

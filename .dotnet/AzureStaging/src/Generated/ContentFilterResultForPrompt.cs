@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureContentFilterResultForPrompt. </summary>
+    /// <summary> A content filter result associated with a single input prompt item into a generative AI system. </summary>
     public partial class ContentFilterResultForPrompt
     {
         /// <summary>
@@ -48,8 +48,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterResultForPrompt"/>. </summary>
-        /// <param name="promptIndex"></param>
-        /// <param name="internalResults"></param>
+        /// <param name="promptIndex"> The index of the input prompt associated with the accompanying content filter result categories. </param>
+        /// <param name="internalResults"> The content filter category details for the result. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ContentFilterResultForPrompt(int? promptIndex, InternalAzureContentFilterResultForPromptContentFilterResults internalResults, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {

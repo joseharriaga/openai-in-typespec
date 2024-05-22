@@ -106,11 +106,11 @@ public class ChatTests : TestBase<ChatClient>
         Console.WriteLine(chatCompletionResult.GetRawResponse().Content.ToString());
         ChatCompletion chatCompletion = chatCompletionResult.Value;
 #pragma warning disable OPENAI002
-        ContentFilterResultForPrompt promptFilterResult = chatCompletion.GetPromptContentFilterResult();
+        ContentFilterResultForPrompt promptFilterResult = chatCompletion.GetContentFilterResultForPrompt();
         Assert.That(promptFilterResult, Is.Not.Null);
         Assert.That(promptFilterResult.Sexual?.Filtered, Is.False);
         Assert.That(promptFilterResult.Sexual?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-        ContentFilterResultForResponse responseFilterResult = chatCompletion.GetResponseContentFilterResult();
+        ContentFilterResultForResponse responseFilterResult = chatCompletion.GetContentFilterResultForResponse();
         Assert.That(responseFilterResult, Is.Not.Null);
         Assert.That(responseFilterResult.Hate?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
         Assert.That(responseFilterResult.ProtectedMaterialCode, Is.Null);

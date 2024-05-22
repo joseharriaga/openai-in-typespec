@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureOpenAIErrorResponseAzureOpenAiChatError. </summary>
+    /// <summary> A structured representation of an error an Azure OpenAI request. </summary>
     internal partial class AzureOpenAIChatErrorResponse
     {
         /// <summary>

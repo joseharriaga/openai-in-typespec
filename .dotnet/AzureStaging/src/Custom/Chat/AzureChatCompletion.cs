@@ -10,7 +10,7 @@ namespace Azure.AI.OpenAI.Chat;
 public static partial class AzureChatCompletionExtensions
 {
     [Experimental("OPENAI002")]
-    public static ContentFilterResultForPrompt GetPromptContentFilterResult(this ChatCompletion chatCompletion)
+    public static ContentFilterResultForPrompt GetContentFilterResultForPrompt(this ChatCompletion chatCompletion)
     {
         return AdditionalPropertyHelpers.GetAdditionalListProperty<ContentFilterResultForPrompt>(
             chatCompletion._serializedAdditionalRawData,
@@ -18,7 +18,7 @@ public static partial class AzureChatCompletionExtensions
     }
 
     [Experimental("OPENAI002")]
-    public static ContentFilterResultForResponse GetResponseContentFilterResult(this ChatCompletion chatCompletion)
+    public static ContentFilterResultForResponse GetContentFilterResultForResponse(this ChatCompletion chatCompletion)
     {
         return AdditionalPropertyHelpers.GetAdditionalProperty<ContentFilterResultForResponse>(
             chatCompletion.Choices?[0]?._serializedAdditionalRawData,

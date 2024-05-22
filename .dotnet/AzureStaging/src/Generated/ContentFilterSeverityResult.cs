@@ -7,7 +7,10 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureContentFilterSeverityResult. </summary>
+    /// <summary>
+    /// A labeled content filter result item that indicates whether the content was filtered and what the qualitative
+    /// severity level of the content was, as evaluated against content filter configuration for the category.
+    /// </summary>
     public partial class ContentFilterSeverityResult
     {
         /// <summary>
@@ -43,8 +46,8 @@ namespace Azure.AI.OpenAI
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterSeverityResult"/>. </summary>
-        /// <param name="filtered"></param>
-        /// <param name="severity"></param>
+        /// <param name="filtered"> Whether the content severity resulted in a content filtering action. </param>
+        /// <param name="severity"> The labeled severity of the content. </param>
         internal ContentFilterSeverityResult(bool filtered, ContentFilterSeverity severity)
         {
             Filtered = filtered;
@@ -52,8 +55,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterSeverityResult"/>. </summary>
-        /// <param name="filtered"></param>
-        /// <param name="severity"></param>
+        /// <param name="filtered"> Whether the content severity resulted in a content filtering action. </param>
+        /// <param name="severity"> The labeled severity of the content. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ContentFilterSeverityResult(bool filtered, ContentFilterSeverity severity, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -67,7 +70,7 @@ namespace Azure.AI.OpenAI
         {
         }
 
-        /// <summary> Gets the filtered. </summary>
+        /// <summary> Whether the content severity resulted in a content filtering action. </summary>
         public bool Filtered { get; }
     }
 }

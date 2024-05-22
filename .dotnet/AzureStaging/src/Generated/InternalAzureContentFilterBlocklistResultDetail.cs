@@ -43,8 +43,8 @@ namespace Azure.AI.OpenAI
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterBlocklistResultDetail"/>. </summary>
-        /// <param name="filtered"></param>
-        /// <param name="id"></param>
+        /// <param name="filtered"> A value indicating whether the blocklist produced a filtering action. </param>
+        /// <param name="id"> The ID of the custom blocklist evaluated. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         internal InternalAzureContentFilterBlocklistResultDetail(bool filtered, string id)
         {
@@ -55,8 +55,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterBlocklistResultDetail"/>. </summary>
-        /// <param name="filtered"></param>
-        /// <param name="id"></param>
+        /// <param name="filtered"> A value indicating whether the blocklist produced a filtering action. </param>
+        /// <param name="id"> The ID of the custom blocklist evaluated. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalAzureContentFilterBlocklistResultDetail(bool filtered, string id, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -70,9 +70,9 @@ namespace Azure.AI.OpenAI
         {
         }
 
-        /// <summary> Gets the filtered. </summary>
+        /// <summary> A value indicating whether the blocklist produced a filtering action. </summary>
         internal bool Filtered { get; set; }
-        /// <summary> Gets the id. </summary>
+        /// <summary> The ID of the custom blocklist evaluated. </summary>
         internal string Id { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureContentFilterResultForChoice. </summary>
+    /// <summary> A content filter result for a single response item produced by a generative AI system. </summary>
     public partial class ContentFilterResultForResponse
     {
         /// <summary>
@@ -43,31 +43,45 @@ namespace Azure.AI.OpenAI
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterResultForResponse"/>. </summary>
-        /// <param name="error"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="error"/> is null. </exception>
-        internal ContentFilterResultForResponse(InternalAzureContentFilterResultForPromptContentFilterResultsError error)
+        internal ContentFilterResultForResponse()
         {
-            Argument.AssertNotNull(error, nameof(error));
-
-            Error = error;
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterResultForResponse"/>. </summary>
-        /// <param name="sexual"></param>
-        /// <param name="violence"></param>
-        /// <param name="hate"></param>
-        /// <param name="selfHarm"></param>
-        /// <param name="profanity"></param>
-        /// <param name="customBlocklists"></param>
-        /// <param name="error"></param>
-        /// <param name="protectedMaterialText"></param>
-        /// <param name="protectedMaterialCode"></param>
+        /// <param name="sexual">
+        /// A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+        /// portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+        /// assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
+        /// </param>
+        /// <param name="hate">
+        /// A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+        /// language with reference to a person or identity group based on certain differentiating attributes of these groups
+        /// including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+        /// religion, immigration status, ability status, personal appearance, and body size.
+        /// </param>
+        /// <param name="violence">
+        /// A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+        /// someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+        /// legislation, and so on.
+        /// </param>
+        /// <param name="selfHarm">
+        /// A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+        /// damage one's body or kill oneself.
+        /// </param>
+        /// <param name="profanity">
+        /// A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
+        /// content.
+        /// </param>
+        /// <param name="customBlocklists"> A collection of binary filtering outcomes for configured custom blocklists. </param>
+        /// <param name="error"> If present, details about an error that prevented content filtering from completing its evaluation. </param>
+        /// <param name="protectedMaterialText"> A detection result that describes a match against text protected under copyright or other status. </param>
+        /// <param name="protectedMaterialCode"> A detection result that describes a match against licensed code or other protected source material. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ContentFilterResultForResponse(ContentFilterSeverityResult sexual, ContentFilterSeverityResult violence, ContentFilterSeverityResult hate, ContentFilterSeverityResult selfHarm, ContentFilterDetectionResult profanity, ContentFilterBlocklistResult customBlocklists, InternalAzureContentFilterResultForPromptContentFilterResultsError error, ContentFilterDetectionResult protectedMaterialText, ContentFilterProtectedMaterialResult protectedMaterialCode, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ContentFilterResultForResponse(ContentFilterSeverityResult sexual, ContentFilterSeverityResult hate, ContentFilterSeverityResult violence, ContentFilterSeverityResult selfHarm, ContentFilterDetectionResult profanity, ContentFilterBlocklistResult customBlocklists, InternalAzureContentFilterResultForPromptContentFilterResultsError error, ContentFilterDetectionResult protectedMaterialText, ContentFilterProtectedMaterialResult protectedMaterialCode, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Sexual = sexual;
-            Violence = violence;
             Hate = hate;
+            Violence = violence;
             SelfHarm = selfHarm;
             Profanity = profanity;
             CustomBlocklists = customBlocklists;
@@ -77,26 +91,40 @@ namespace Azure.AI.OpenAI
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ContentFilterResultForResponse"/> for deserialization. </summary>
-        internal ContentFilterResultForResponse()
-        {
-        }
-
-        /// <summary> Gets the sexual. </summary>
+        /// <summary>
+        /// A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+        /// portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+        /// assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
+        /// </summary>
         public ContentFilterSeverityResult Sexual { get; }
-        /// <summary> Gets the violence. </summary>
-        public ContentFilterSeverityResult Violence { get; }
-        /// <summary> Gets the hate. </summary>
+        /// <summary>
+        /// A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+        /// language with reference to a person or identity group based on certain differentiating attributes of these groups
+        /// including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+        /// religion, immigration status, ability status, personal appearance, and body size.
+        /// </summary>
         public ContentFilterSeverityResult Hate { get; }
-        /// <summary> Gets the self harm. </summary>
+        /// <summary>
+        /// A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+        /// someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+        /// legislation, and so on.
+        /// </summary>
+        public ContentFilterSeverityResult Violence { get; }
+        /// <summary>
+        /// A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+        /// damage one's body or kill oneself.
+        /// </summary>
         public ContentFilterSeverityResult SelfHarm { get; }
-        /// <summary> Gets the profanity. </summary>
+        /// <summary>
+        /// A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
+        /// content.
+        /// </summary>
         public ContentFilterDetectionResult Profanity { get; }
-        /// <summary> Gets the custom blocklists. </summary>
+        /// <summary> A collection of binary filtering outcomes for configured custom blocklists. </summary>
         public ContentFilterBlocklistResult CustomBlocklists { get; }
-        /// <summary> Gets the protected material text. </summary>
+        /// <summary> A detection result that describes a match against text protected under copyright or other status. </summary>
         public ContentFilterDetectionResult ProtectedMaterialText { get; }
-        /// <summary> Gets the protected material code. </summary>
+        /// <summary> A detection result that describes a match against licensed code or other protected source material. </summary>
         public ContentFilterProtectedMaterialResult ProtectedMaterialCode { get; }
     }
 }

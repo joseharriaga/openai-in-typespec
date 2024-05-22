@@ -43,8 +43,8 @@ namespace Azure.AI.OpenAI
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterResultForPromptContentFilterResultsError"/>. </summary>
-        /// <param name="code"></param>
-        /// <param name="message"></param>
+        /// <param name="code"> A distinct, machine-readable code associated with the error. </param>
+        /// <param name="message"> A human-readable message associated with the error. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="message"/> is null. </exception>
         internal InternalAzureContentFilterResultForPromptContentFilterResultsError(int code, string message)
         {
@@ -55,8 +55,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterResultForPromptContentFilterResultsError"/>. </summary>
-        /// <param name="code"></param>
-        /// <param name="message"></param>
+        /// <param name="code"> A distinct, machine-readable code associated with the error. </param>
+        /// <param name="message"> A human-readable message associated with the error. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalAzureContentFilterResultForPromptContentFilterResultsError(int code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -70,9 +70,9 @@ namespace Azure.AI.OpenAI
         {
         }
 
-        /// <summary> Gets the code. </summary>
+        /// <summary> A distinct, machine-readable code associated with the error. </summary>
         internal int Code { get; set; }
-        /// <summary> Gets the message. </summary>
+        /// <summary> A human-readable message associated with the error. </summary>
         internal string Message { get; set; }
     }
 }

@@ -43,37 +43,69 @@ namespace Azure.AI.OpenAI
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterResultForPromptContentFilterResults"/>. </summary>
-        /// <param name="error"></param>
-        /// <param name="jailbreak"></param>
-        /// <param name="indirectAttack"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="error"/>, <paramref name="jailbreak"/> or <paramref name="indirectAttack"/> is null. </exception>
-        internal InternalAzureContentFilterResultForPromptContentFilterResults(InternalAzureContentFilterResultForPromptContentFilterResultsError error, ContentFilterDetectionResult jailbreak, ContentFilterDetectionResult indirectAttack)
+        /// <param name="jailbreak">
+        /// A detection result that describes user prompt injection attacks, where malicious users deliberately exploit
+        /// system vulnerabilities to elicit unauthorized behavior from the LLM. This could lead to inappropriate content
+        /// generation or violations of system-imposed restrictions.
+        /// </param>
+        /// <param name="indirectAttack">
+        /// A detection result that describes attacks on systems powered by Generative AI models that can happen every time
+        /// an application processes information that wasn’t directly authored by either the developer of the application or
+        /// the user.
+        /// </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="jailbreak"/> or <paramref name="indirectAttack"/> is null. </exception>
+        internal InternalAzureContentFilterResultForPromptContentFilterResults(ContentFilterDetectionResult jailbreak, ContentFilterDetectionResult indirectAttack)
         {
-            Argument.AssertNotNull(error, nameof(error));
             Argument.AssertNotNull(jailbreak, nameof(jailbreak));
             Argument.AssertNotNull(indirectAttack, nameof(indirectAttack));
 
-            Error = error;
             Jailbreak = jailbreak;
             IndirectAttack = indirectAttack;
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterResultForPromptContentFilterResults"/>. </summary>
-        /// <param name="sexual"></param>
-        /// <param name="violence"></param>
-        /// <param name="hate"></param>
-        /// <param name="selfHarm"></param>
-        /// <param name="profanity"></param>
-        /// <param name="customBlocklists"></param>
-        /// <param name="error"></param>
-        /// <param name="jailbreak"></param>
-        /// <param name="indirectAttack"></param>
+        /// <param name="sexual">
+        /// A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+        /// portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+        /// assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
+        /// </param>
+        /// <param name="hate">
+        /// A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+        /// language with reference to a person or identity group based on certain differentiating attributes of these groups
+        /// including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+        /// religion, immigration status, ability status, personal appearance, and body size.
+        /// </param>
+        /// <param name="violence">
+        /// A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+        /// someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+        /// legislation, and so on.
+        /// </param>
+        /// <param name="selfHarm">
+        /// A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+        /// damage one's body or kill oneself.
+        /// </param>
+        /// <param name="profanity">
+        /// A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
+        /// content.
+        /// </param>
+        /// <param name="customBlocklists"> A collection of binary filtering outcomes for configured custom blocklists. </param>
+        /// <param name="error"> If present, details about an error that prevented content filtering from completing its evaluation. </param>
+        /// <param name="jailbreak">
+        /// A detection result that describes user prompt injection attacks, where malicious users deliberately exploit
+        /// system vulnerabilities to elicit unauthorized behavior from the LLM. This could lead to inappropriate content
+        /// generation or violations of system-imposed restrictions.
+        /// </param>
+        /// <param name="indirectAttack">
+        /// A detection result that describes attacks on systems powered by Generative AI models that can happen every time
+        /// an application processes information that wasn’t directly authored by either the developer of the application or
+        /// the user.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalAzureContentFilterResultForPromptContentFilterResults(ContentFilterSeverityResult sexual, ContentFilterSeverityResult violence, ContentFilterSeverityResult hate, ContentFilterSeverityResult selfHarm, ContentFilterDetectionResult profanity, ContentFilterBlocklistResult customBlocklists, InternalAzureContentFilterResultForPromptContentFilterResultsError error, ContentFilterDetectionResult jailbreak, ContentFilterDetectionResult indirectAttack, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalAzureContentFilterResultForPromptContentFilterResults(ContentFilterSeverityResult sexual, ContentFilterSeverityResult hate, ContentFilterSeverityResult violence, ContentFilterSeverityResult selfHarm, ContentFilterDetectionResult profanity, ContentFilterBlocklistResult customBlocklists, InternalAzureContentFilterResultForPromptContentFilterResultsError error, ContentFilterDetectionResult jailbreak, ContentFilterDetectionResult indirectAttack, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Sexual = sexual;
-            Violence = violence;
             Hate = hate;
+            Violence = violence;
             SelfHarm = selfHarm;
             Profanity = profanity;
             CustomBlocklists = customBlocklists;
@@ -88,23 +120,50 @@ namespace Azure.AI.OpenAI
         {
         }
 
-        /// <summary> Gets the sexual. </summary>
+        /// <summary>
+        /// A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+        /// portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+        /// assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
+        /// </summary>
         internal ContentFilterSeverityResult Sexual { get; set; }
-        /// <summary> Gets the violence. </summary>
-        internal ContentFilterSeverityResult Violence { get; set; }
-        /// <summary> Gets the hate. </summary>
+        /// <summary>
+        /// A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+        /// language with reference to a person or identity group based on certain differentiating attributes of these groups
+        /// including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+        /// religion, immigration status, ability status, personal appearance, and body size.
+        /// </summary>
         internal ContentFilterSeverityResult Hate { get; set; }
-        /// <summary> Gets the self harm. </summary>
+        /// <summary>
+        /// A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+        /// someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+        /// legislation, and so on.
+        /// </summary>
+        internal ContentFilterSeverityResult Violence { get; set; }
+        /// <summary>
+        /// A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+        /// damage one's body or kill oneself.
+        /// </summary>
         internal ContentFilterSeverityResult SelfHarm { get; set; }
-        /// <summary> Gets the profanity. </summary>
+        /// <summary>
+        /// A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
+        /// content.
+        /// </summary>
         internal ContentFilterDetectionResult Profanity { get; set; }
-        /// <summary> Gets the custom blocklists. </summary>
+        /// <summary> A collection of binary filtering outcomes for configured custom blocklists. </summary>
         internal ContentFilterBlocklistResult CustomBlocklists { get; set; }
-        /// <summary> Gets the error. </summary>
+        /// <summary> If present, details about an error that prevented content filtering from completing its evaluation. </summary>
         internal InternalAzureContentFilterResultForPromptContentFilterResultsError Error { get; set; }
-        /// <summary> Gets the jailbreak. </summary>
+        /// <summary>
+        /// A detection result that describes user prompt injection attacks, where malicious users deliberately exploit
+        /// system vulnerabilities to elicit unauthorized behavior from the LLM. This could lead to inappropriate content
+        /// generation or violations of system-imposed restrictions.
+        /// </summary>
         internal ContentFilterDetectionResult Jailbreak { get; set; }
-        /// <summary> Gets the indirect attack. </summary>
+        /// <summary>
+        /// A detection result that describes attacks on systems powered by Generative AI models that can happen every time
+        /// an application processes information that wasn’t directly authored by either the developer of the application or
+        /// the user.
+        /// </summary>
         internal ContentFilterDetectionResult IndirectAttack { get; set; }
     }
 }

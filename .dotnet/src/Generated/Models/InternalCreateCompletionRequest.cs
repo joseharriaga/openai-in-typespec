@@ -9,7 +9,7 @@ using OpenAI.Chat;
 namespace OpenAI.LegacyCompletions
 {
     /// <summary> The CreateCompletionRequest. </summary>
-    internal partial class CreateCompletionRequest
+    internal partial class InternalCreateCompletionRequest
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -43,7 +43,7 @@ namespace OpenAI.LegacyCompletions
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionRequest"/>. </summary>
         /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="prompt">
         /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
@@ -51,7 +51,7 @@ namespace OpenAI.LegacyCompletions
         /// Note that &lt;|endoftext|&gt; is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="prompt"/> is null. </exception>
-        public CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt)
+        public InternalCreateCompletionRequest(InternalCreateCompletionRequestModel model, BinaryData prompt)
         {
             Argument.AssertNotNull(prompt, nameof(prompt));
 
@@ -60,7 +60,7 @@ namespace OpenAI.LegacyCompletions
             LogitBias = new ChangeTrackingDictionary<string, int>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionRequest"/>. </summary>
         /// <param name="model"> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </param>
         /// <param name="prompt">
         /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
@@ -132,7 +132,7 @@ namespace OpenAI.LegacyCompletions
         /// </param>
         /// <param name="user"> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionRequest(CreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, float? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, float? presencePenalty, long? seed, BinaryData stop, bool? stream, InternalChatCompletionStreamOptions streamOptions, string suffix, float? temperature, float? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateCompletionRequest(InternalCreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, float? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, float? presencePenalty, long? seed, BinaryData stop, bool? stream, InternalChatCompletionStreamOptions streamOptions, string suffix, float? temperature, float? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Prompt = prompt;
@@ -155,13 +155,13 @@ namespace OpenAI.LegacyCompletions
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionRequest"/> for deserialization. </summary>
-        internal CreateCompletionRequest()
+        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionRequest"/> for deserialization. </summary>
+        internal InternalCreateCompletionRequest()
         {
         }
 
         /// <summary> ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. </summary>
-        public CreateCompletionRequestModel Model { get; }
+        public InternalCreateCompletionRequestModel Model { get; }
         /// <summary>
         /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
         ///

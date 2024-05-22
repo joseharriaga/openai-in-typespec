@@ -11,14 +11,14 @@ using OpenAI.Chat;
 
 namespace OpenAI.LegacyCompletions
 {
-    internal partial class CreateCompletionRequest : IJsonModel<CreateCompletionRequest>
+    internal partial class InternalCreateCompletionRequest : IJsonModel<InternalCreateCompletionRequest>
     {
-        void IJsonModel<CreateCompletionRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalCreateCompletionRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateCompletionRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateCompletionRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateCompletionRequest)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCreateCompletionRequest)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -242,19 +242,19 @@ namespace OpenAI.LegacyCompletions
             writer.WriteEndObject();
         }
 
-        CreateCompletionRequest IJsonModel<CreateCompletionRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalCreateCompletionRequest IJsonModel<InternalCreateCompletionRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateCompletionRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateCompletionRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateCompletionRequest)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCreateCompletionRequest)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateCompletionRequest(document.RootElement, options);
+            return DeserializeInternalCreateCompletionRequest(document.RootElement, options);
         }
 
-        internal static CreateCompletionRequest DeserializeCreateCompletionRequest(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalCreateCompletionRequest DeserializeInternalCreateCompletionRequest(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -262,7 +262,7 @@ namespace OpenAI.LegacyCompletions
             {
                 return null;
             }
-            CreateCompletionRequestModel model = default;
+            InternalCreateCompletionRequestModel model = default;
             BinaryData prompt = default;
             int? bestOf = default;
             bool? echo = default;
@@ -286,7 +286,7 @@ namespace OpenAI.LegacyCompletions
             {
                 if (property.NameEquals("model"u8))
                 {
-                    model = new CreateCompletionRequestModel(property.Value.GetString());
+                    model = new InternalCreateCompletionRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("prompt"u8))
@@ -458,7 +458,7 @@ namespace OpenAI.LegacyCompletions
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateCompletionRequest(
+            return new InternalCreateCompletionRequest(
                 model,
                 prompt,
                 bestOf,
@@ -480,43 +480,43 @@ namespace OpenAI.LegacyCompletions
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateCompletionRequest>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalCreateCompletionRequest>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateCompletionRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateCompletionRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateCompletionRequest)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCreateCompletionRequest)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateCompletionRequest IPersistableModel<CreateCompletionRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalCreateCompletionRequest IPersistableModel<InternalCreateCompletionRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateCompletionRequest>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateCompletionRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateCompletionRequest(document.RootElement, options);
+                        return DeserializeInternalCreateCompletionRequest(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateCompletionRequest)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCreateCompletionRequest)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateCompletionRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalCreateCompletionRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateCompletionRequest FromResponse(PipelineResponse response)
+        internal static InternalCreateCompletionRequest FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateCompletionRequest(document.RootElement);
+            return DeserializeInternalCreateCompletionRequest(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

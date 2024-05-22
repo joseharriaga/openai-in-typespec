@@ -39,29 +39,29 @@ namespace OpenAI.LegacyCompletions
         }
 
         /// <summary> Creates a completion for the provided prompt and parameters. </summary>
-        /// <param name="createCompletionRequest"> The <see cref="CreateCompletionRequest"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="createCompletionRequest"/> is null. </exception>
+        /// <param name="internalCreateCompletionRequest"> The <see cref="InternalCreateCompletionRequest"/> to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="internalCreateCompletionRequest"/> is null. </exception>
         /// <remarks> Create completion. </remarks>
-        public virtual async Task<ClientResult<CreateCompletionResponse>> CreateCompletionAsync(CreateCompletionRequest createCompletionRequest)
+        public virtual async Task<ClientResult<InternalCreateCompletionResponse>> CreateCompletionAsync(InternalCreateCompletionRequest internalCreateCompletionRequest)
         {
-            Argument.AssertNotNull(createCompletionRequest, nameof(createCompletionRequest));
+            Argument.AssertNotNull(internalCreateCompletionRequest, nameof(internalCreateCompletionRequest));
 
-            using BinaryContent content = createCompletionRequest.ToBinaryContent();
+            using BinaryContent content = internalCreateCompletionRequest.ToBinaryContent();
             ClientResult result = await CreateCompletionAsync(content, null).ConfigureAwait(false);
-            return ClientResult.FromValue(CreateCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            return ClientResult.FromValue(InternalCreateCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary> Creates a completion for the provided prompt and parameters. </summary>
-        /// <param name="createCompletionRequest"> The <see cref="CreateCompletionRequest"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="createCompletionRequest"/> is null. </exception>
+        /// <param name="internalCreateCompletionRequest"> The <see cref="InternalCreateCompletionRequest"/> to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="internalCreateCompletionRequest"/> is null. </exception>
         /// <remarks> Create completion. </remarks>
-        public virtual ClientResult<CreateCompletionResponse> CreateCompletion(CreateCompletionRequest createCompletionRequest)
+        public virtual ClientResult<InternalCreateCompletionResponse> CreateCompletion(InternalCreateCompletionRequest internalCreateCompletionRequest)
         {
-            Argument.AssertNotNull(createCompletionRequest, nameof(createCompletionRequest));
+            Argument.AssertNotNull(internalCreateCompletionRequest, nameof(internalCreateCompletionRequest));
 
-            using BinaryContent content = createCompletionRequest.ToBinaryContent();
+            using BinaryContent content = internalCreateCompletionRequest.ToBinaryContent();
             ClientResult result = CreateCompletion(content, null);
-            return ClientResult.FromValue(CreateCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            return ClientResult.FromValue(InternalCreateCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace OpenAI.LegacyCompletions
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="CreateCompletionAsync(CreateCompletionRequest)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="CreateCompletionAsync(InternalCreateCompletionRequest)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>
@@ -102,7 +102,7 @@ namespace OpenAI.LegacyCompletions
         /// </item>
         /// <item>
         /// <description>
-        /// Please try the simpler <see cref="CreateCompletion(CreateCompletionRequest)"/> convenience overload with strongly typed models first.
+        /// Please try the simpler <see cref="CreateCompletion(InternalCreateCompletionRequest)"/> convenience overload with strongly typed models first.
         /// </description>
         /// </item>
         /// </list>

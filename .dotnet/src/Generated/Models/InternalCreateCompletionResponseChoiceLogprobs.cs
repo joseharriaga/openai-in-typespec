@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI.LegacyCompletions
 {
     /// <summary> The CreateCompletionResponseChoiceLogprobs. </summary>
-    internal partial class CreateCompletionResponseChoiceLogprobs
+    internal partial class InternalCreateCompletionResponseChoiceLogprobs
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,8 +42,8 @@ namespace OpenAI.LegacyCompletions
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionResponseChoiceLogprobs"/>. </summary>
-        internal CreateCompletionResponseChoiceLogprobs()
+        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionResponseChoiceLogprobs"/>. </summary>
+        internal InternalCreateCompletionResponseChoiceLogprobs()
         {
             TextOffset = new ChangeTrackingList<int>();
             TokenLogprobs = new ChangeTrackingList<float>();
@@ -51,13 +51,13 @@ namespace OpenAI.LegacyCompletions
             TopLogprobs = new ChangeTrackingList<IDictionary<string, float>>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionResponseChoiceLogprobs"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionResponseChoiceLogprobs"/>. </summary>
         /// <param name="textOffset"></param>
         /// <param name="tokenLogprobs"></param>
         /// <param name="tokens"></param>
         /// <param name="topLogprobs"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionResponseChoiceLogprobs(IReadOnlyList<int> textOffset, IReadOnlyList<float> tokenLogprobs, IReadOnlyList<string> tokens, IReadOnlyList<IDictionary<string, float>> topLogprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateCompletionResponseChoiceLogprobs(IReadOnlyList<int> textOffset, IReadOnlyList<float> tokenLogprobs, IReadOnlyList<string> tokens, IReadOnlyList<IDictionary<string, float>> topLogprobs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             TextOffset = textOffset;
             TokenLogprobs = tokenLogprobs;

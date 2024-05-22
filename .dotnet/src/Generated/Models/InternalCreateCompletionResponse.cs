@@ -10,7 +10,7 @@ using OpenAI.Chat;
 namespace OpenAI.LegacyCompletions
 {
     /// <summary> Represents a completion response from the API. Note: both the streamed and non-streamed response objects share the same shape (unlike the chat endpoint). </summary>
-    internal partial class CreateCompletionResponse
+    internal partial class InternalCreateCompletionResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -44,13 +44,13 @@ namespace OpenAI.LegacyCompletions
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the completion. </param>
         /// <param name="choices"> The list of completion choices the model generated for the input prompt. </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the completion was created. </param>
         /// <param name="model"> The model used for completion. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="choices"/> or <paramref name="model"/> is null. </exception>
-        internal CreateCompletionResponse(string id, IEnumerable<CreateCompletionResponseChoice> choices, DateTimeOffset created, string model)
+        internal InternalCreateCompletionResponse(string id, IEnumerable<InternalCreateCompletionResponseChoice> choices, DateTimeOffset created, string model)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(choices, nameof(choices));
@@ -62,7 +62,7 @@ namespace OpenAI.LegacyCompletions
             Model = model;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionResponse"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionResponse"/>. </summary>
         /// <param name="id"> A unique identifier for the completion. </param>
         /// <param name="choices"> The list of completion choices the model generated for the input prompt. </param>
         /// <param name="created"> The Unix timestamp (in seconds) of when the completion was created. </param>
@@ -75,7 +75,7 @@ namespace OpenAI.LegacyCompletions
         /// <param name="object"> The object type, which is always "text_completion". </param>
         /// <param name="usage"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal CreateCompletionResponse(string id, IReadOnlyList<CreateCompletionResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, CreateCompletionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateCompletionResponse(string id, IReadOnlyList<InternalCreateCompletionResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, InternalCreateCompletionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Choices = choices;
@@ -87,15 +87,15 @@ namespace OpenAI.LegacyCompletions
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="CreateCompletionResponse"/> for deserialization. </summary>
-        internal CreateCompletionResponse()
+        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionResponse"/> for deserialization. </summary>
+        internal InternalCreateCompletionResponse()
         {
         }
 
         /// <summary> A unique identifier for the completion. </summary>
         public string Id { get; }
         /// <summary> The list of completion choices the model generated for the input prompt. </summary>
-        public IReadOnlyList<CreateCompletionResponseChoice> Choices { get; }
+        public IReadOnlyList<InternalCreateCompletionResponseChoice> Choices { get; }
         /// <summary> The Unix timestamp (in seconds) of when the completion was created. </summary>
         public DateTimeOffset Created { get; }
         /// <summary> The model used for completion. </summary>
@@ -107,7 +107,7 @@ namespace OpenAI.LegacyCompletions
         /// </summary>
         public string SystemFingerprint { get; }
         /// <summary> The object type, which is always "text_completion". </summary>
-        public CreateCompletionResponseObject Object { get; } = CreateCompletionResponseObject.TextCompletion;
+        public InternalCreateCompletionResponseObject Object { get; } = InternalCreateCompletionResponseObject.TextCompletion;
 
         /// <summary> Gets the usage. </summary>
         public ChatTokenUsage Usage { get; }

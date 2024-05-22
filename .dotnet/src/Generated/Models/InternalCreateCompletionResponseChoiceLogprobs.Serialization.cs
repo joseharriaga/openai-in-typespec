@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.LegacyCompletions
 {
-    internal partial class CreateCompletionResponseChoiceLogprobs : IJsonModel<CreateCompletionResponseChoiceLogprobs>
+    internal partial class InternalCreateCompletionResponseChoiceLogprobs : IJsonModel<InternalCreateCompletionResponseChoiceLogprobs>
     {
-        void IJsonModel<CreateCompletionResponseChoiceLogprobs>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalCreateCompletionResponseChoiceLogprobs>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateCompletionResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateCompletionResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateCompletionResponseChoiceLogprobs)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCreateCompletionResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -90,19 +90,19 @@ namespace OpenAI.LegacyCompletions
             writer.WriteEndObject();
         }
 
-        CreateCompletionResponseChoiceLogprobs IJsonModel<CreateCompletionResponseChoiceLogprobs>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalCreateCompletionResponseChoiceLogprobs IJsonModel<InternalCreateCompletionResponseChoiceLogprobs>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateCompletionResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateCompletionResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateCompletionResponseChoiceLogprobs)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCreateCompletionResponseChoiceLogprobs)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateCompletionResponseChoiceLogprobs(document.RootElement, options);
+            return DeserializeInternalCreateCompletionResponseChoiceLogprobs(document.RootElement, options);
         }
 
-        internal static CreateCompletionResponseChoiceLogprobs DeserializeCreateCompletionResponseChoiceLogprobs(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalCreateCompletionResponseChoiceLogprobs DeserializeInternalCreateCompletionResponseChoiceLogprobs(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -192,46 +192,46 @@ namespace OpenAI.LegacyCompletions
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateCompletionResponseChoiceLogprobs(textOffset ?? new ChangeTrackingList<int>(), tokenLogprobs ?? new ChangeTrackingList<float>(), tokens ?? new ChangeTrackingList<string>(), topLogprobs ?? new ChangeTrackingList<IDictionary<string, float>>(), serializedAdditionalRawData);
+            return new InternalCreateCompletionResponseChoiceLogprobs(textOffset ?? new ChangeTrackingList<int>(), tokenLogprobs ?? new ChangeTrackingList<float>(), tokens ?? new ChangeTrackingList<string>(), topLogprobs ?? new ChangeTrackingList<IDictionary<string, float>>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateCompletionResponseChoiceLogprobs>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalCreateCompletionResponseChoiceLogprobs>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateCompletionResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateCompletionResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateCompletionResponseChoiceLogprobs)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCreateCompletionResponseChoiceLogprobs)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateCompletionResponseChoiceLogprobs IPersistableModel<CreateCompletionResponseChoiceLogprobs>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalCreateCompletionResponseChoiceLogprobs IPersistableModel<InternalCreateCompletionResponseChoiceLogprobs>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateCompletionResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateCompletionResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateCompletionResponseChoiceLogprobs(document.RootElement, options);
+                        return DeserializeInternalCreateCompletionResponseChoiceLogprobs(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateCompletionResponseChoiceLogprobs)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCreateCompletionResponseChoiceLogprobs)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateCompletionResponseChoiceLogprobs>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalCreateCompletionResponseChoiceLogprobs>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static CreateCompletionResponseChoiceLogprobs FromResponse(PipelineResponse response)
+        internal static InternalCreateCompletionResponseChoiceLogprobs FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateCompletionResponseChoiceLogprobs(document.RootElement);
+            return DeserializeInternalCreateCompletionResponseChoiceLogprobs(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

@@ -1,4 +1,3 @@
-using OpenAI.FineTuning;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -39,7 +38,7 @@ public partial class ModelClient
     /// </summary>
     /// <remarks>
     /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
-    /// <see cref="FineTuningClient(ApiKeyCredential,OpenAIClientOptions)"/>.
+    /// <see cref="ModelClient(ApiKeyCredential,OpenAIClientOptions)"/>.
     /// </remarks>
     /// <param name="options"> Additional options to customize the client. </param>
     /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
@@ -51,7 +50,7 @@ public partial class ModelClient
     {
     }
 
-    /// <summary> Initializes a new instance of FineTuningClient. </summary>
+    /// <summary> Initializes a new instance of <see cref="ModelClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
     /// <param name="endpoint"> OpenAI Endpoint. </param>
     protected internal ModelClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)

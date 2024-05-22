@@ -227,7 +227,7 @@ public partial class AssistantTests
 
         AssistantThread thread = client.CreateThread(new()
         {
-            InitialMessages = { new(["Please graph the equation y = 3x + 4"]), },
+            InitialMessages = { "Please graph the equation y = 3x + 4", },
         });
         Validate(thread);
 

@@ -11,7 +11,7 @@ namespace Azure.AI.OpenAI.Chat
     internal partial class InternalUnknownAzureChatDataSourceVectorizationSource : DataSourceVectorizer
     {
         /// <summary> Initializes a new instance of <see cref="InternalUnknownAzureChatDataSourceVectorizationSource"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="type"> The differentiating identifier for the concrete vectorization source. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalUnknownAzureChatDataSourceVectorizationSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, serializedAdditionalRawData)
         {

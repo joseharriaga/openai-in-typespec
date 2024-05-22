@@ -13,13 +13,14 @@ public partial class AzureMachineLearningIndexChatDataSource : AzureChatDataSour
     [CodeGenMember("Parameters")]
     internal InternalAzureMachineLearningIndexChatDataSourceParameters InternalParameters { get; }
 
-    /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.IndexName"/>
+    /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.Name"/>
     public required string IndexName
     {
         get => InternalParameters.Name;
         init => InternalParameters.Name = value;
     }
 
+    /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.ProjectResourceId"/>
     public required string ProjectResourceId
     {
         get => InternalParameters.ProjectResourceId;
@@ -33,6 +34,7 @@ public partial class AzureMachineLearningIndexChatDataSource : AzureChatDataSour
         init => InternalParameters.Authentication = value;
     }
 
+    /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.Version"/>
     public required string Version
     {
         get => InternalParameters.Version;
@@ -95,6 +97,9 @@ public partial class AzureMachineLearningIndexChatDataSource : AzureChatDataSour
         init => InternalParameters.Filter = value;
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="AzureMachineLearningIndexChatDataSource"/>.
+    /// </summary>
     public AzureMachineLearningIndexChatDataSource()
     {
         Type = "azure_ml_index";

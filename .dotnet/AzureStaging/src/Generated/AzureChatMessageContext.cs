@@ -7,7 +7,10 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatMessageContext. </summary>
+    /// <summary>
+    /// An additional property, added to chat completion response messages, produced by the Azure OpenAI service when using
+    /// extension behavior. This includes intent and citation information from the On Your Data feature.
+    /// </summary>
     public partial class AzureChatMessageContext
     {
         /// <summary>
@@ -49,9 +52,9 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatMessageContext"/>. </summary>
-        /// <param name="intent"></param>
-        /// <param name="citations"></param>
-        /// <param name="allRetrievedDocuments"></param>
+        /// <param name="intent"> The detected intent from the chat history, which is used to carry conversation context between interactions. </param>
+        /// <param name="citations"> The citations produced by the data retrieval. </param>
+        /// <param name="allRetrievedDocuments"> Summary information about documents retrieved by the data retrieval operation. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AzureChatMessageContext(string intent, IReadOnlyList<AzureChatCitation> citations, AzureChatRetrievedDocument allRetrievedDocuments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -61,11 +64,11 @@ namespace Azure.AI.OpenAI.Chat
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Gets the intent. </summary>
+        /// <summary> The detected intent from the chat history, which is used to carry conversation context between interactions. </summary>
         public string Intent { get; }
-        /// <summary> Gets the citations. </summary>
+        /// <summary> The citations produced by the data retrieval. </summary>
         public IReadOnlyList<AzureChatCitation> Citations { get; }
-        /// <summary> Gets the all retrieved documents. </summary>
+        /// <summary> Summary information about documents retrieved by the data retrieval operation. </summary>
         public AzureChatRetrievedDocument AllRetrievedDocuments { get; }
     }
 }

@@ -118,6 +118,9 @@ public partial class AzureSearchChatDataSource : AzureChatDataSource
         init => InternalParameters.VectorizationSource = value;
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="AzureSearchChatDataSource"/>.
+    /// </summary>
     public AzureSearchChatDataSource()
     {
         Type = "azure_search";

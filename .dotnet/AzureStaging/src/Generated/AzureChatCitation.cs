@@ -43,7 +43,7 @@ namespace Azure.AI.OpenAI.Chat
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="AzureChatCitation"/>. </summary>
-        /// <param name="content"></param>
+        /// <param name="content"> The content of the citation. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         internal AzureChatCitation(string content)
         {
@@ -53,11 +53,11 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatCitation"/>. </summary>
-        /// <param name="content"></param>
-        /// <param name="title"></param>
-        /// <param name="url"></param>
-        /// <param name="filepath"></param>
-        /// <param name="chunkId"></param>
+        /// <param name="content"> The content of the citation. </param>
+        /// <param name="title"> The title for the citation. </param>
+        /// <param name="url"> The URL of the citation. </param>
+        /// <param name="filepath"> The file path for the citation. </param>
+        /// <param name="chunkId"> The chunk ID for the citation. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AzureChatCitation(string content, string title, string url, string filepath, string chunkId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -74,15 +74,15 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary> Gets the content. </summary>
+        /// <summary> The content of the citation. </summary>
         public string Content { get; }
-        /// <summary> Gets the title. </summary>
+        /// <summary> The title for the citation. </summary>
         public string Title { get; }
-        /// <summary> Gets the url. </summary>
+        /// <summary> The URL of the citation. </summary>
         public string Url { get; }
-        /// <summary> Gets the filepath. </summary>
+        /// <summary> The file path for the citation. </summary>
         public string Filepath { get; }
-        /// <summary> Gets the chunk id. </summary>
+        /// <summary> The chunk ID for the citation. </summary>
         public string ChunkId { get; }
     }
 }

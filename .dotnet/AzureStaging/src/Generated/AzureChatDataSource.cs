@@ -55,7 +55,7 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatDataSource"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="type"> The differentiating type identifier for the data source. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AzureChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -63,7 +63,7 @@ namespace Azure.AI.OpenAI.Chat
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Gets or sets the type. </summary>
+        /// <summary> The differentiating type identifier for the data source. </summary>
         internal string Type { get; set; }
     }
 }

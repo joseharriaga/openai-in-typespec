@@ -1,7 +1,6 @@
 openapi: 3.0.0
 info:
   title: Azure OpenAI Service
-  description: The OpenAI REST API. Please see https://platform.openai.com/docs/api-reference for more details.
   version: 0.0.0
 tags:
   - name: Chat
@@ -72,16 +71,28 @@ components:
       type: object
       properties:
         context:
-          $ref: '#/components/schemas/AzureChatMessageContext'
+          allOf:
+            - $ref: '#/components/schemas/AzureChatMessageContext'
+          description: The Azure-specific context information associated with the chat completion response message.
       allOf:
         - $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
+      description: |-
+        The extended response model component for chat completion response messages on the Azure OpenAI service.
+        This model adds support for chat message context, used by the On Your Data feature for intent, citations, and other
+        information related to retrieval-augmented generation performed.
     AzureChatCompletionStreamResponseDelta:
       type: object
       properties:
         context:
-          $ref: '#/components/schemas/AzureChatMessageContext'
+          allOf:
+            - $ref: '#/components/schemas/AzureChatMessageContext'
+          description: The Azure-specific context information associated with the chat completion response message.
       allOf:
         - $ref: '#/components/schemas/OpenAI.ChatCompletionStreamResponseDelta'
+      description: |-
+        The extended response model for a streaming chat response message on the Azure OpenAI service.
+        This model adds support for chat message context, used by the On Your Data feature for intent, citations, and other
+        information related to retrieval-augmented generation performed.
     AzureChatDataSource:
       type: object
       required:
@@ -89,6 +100,7 @@ components:
       properties:
         type:
           type: string
+          description: The differentiating type identifier for the data source.
       discriminator:
         propertyName: type
         mapping:
@@ -170,13 +182,24 @@ components:
           type: string
           enum:
             - deployment_name
+          description: The type identifier, always 'deployment_name' for this vectorization source type.
         deployment_name:
           type: string
+          description: |-
+            The embedding model deployment to use for vectorization. This deployment must exist within the same Azure OpenAI
+            resource as the model deployment being used for chat completions.
         dimensions:
           type: integer
           format: int32
+          description: |-
+            The number of dimensions to request on embeddings.
+            Only supported in 'text-embedding-3' and later models.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+      description: |-
+        Represents a vectorization source that makes internal service calls against an Azure OpenAI embedding model
+        deployment. In contrast with the endpoint-based vectorization source, a deployment-name-based vectorization source
+        must be part of the same Azure OpenAI resource but can be used even in private networks.
     AzureChatDataSourceEncodedApiKeyAuthenticationOptions:
       type: object
       required:
@@ -202,18 +225,31 @@ components:
           type: string
           enum:
             - endpoint
+          description: The type identifier, always 'endpoint' for this vectorization source type.
         endpoint:
           type: string
           format: uri
+          description: |-
+            Specifies the resource endpoint URL from which embeddings should be retrieved.
+            It should be in the format of:
+            https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/embeddings.
+            The api-version query parameter is not allowed.
         authentication:
           anyOf:
             - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
             - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
+          description: |-
+            The authentication mechanism to use with the endpoint-based vectorization source.
+            Endpoint authentication supports API key and access token mechanisms.
         dimensions:
           type: integer
           format: int32
+          description: |-
+            The number of dimensions to request on embeddings.
+            Only supported in 'text-embedding-3' and later models.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+      description: Represents a vectorization source that makes public service calls against an Azure OpenAI embedding model deployment.
     AzureChatDataSourceKeyAndKeyIdAuthenticationOptions:
       type: object
       required:
@@ -241,10 +277,15 @@ components:
           type: string
           enum:
             - model_id
+          description: The type identifier, always 'model_id' for this vectorization source type.
         model_id:
           type: string
+          description: The embedding model build ID to use for vectorization.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+      description: |-
+        Represents a vectorization source that makes service calls based on a search service model ID.
+        This source type is currently only supported by Elasticsearch.
     AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions:
       type: object
       required:
@@ -277,17 +318,19 @@ components:
       properties:
         type:
           type: string
+          description: The differentiating identifier for the concrete vectorization source.
       discriminator:
         propertyName: type
         mapping:
-          endpoint: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
           deployment_name: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
           model_id: '#/components/schemas/AzureChatDataSourceModelIdVectorizationSource'
+      description: A representation of a data vectorization source usable as an embedding resource with a data source.
     AzureChatMessageContext:
       type: object
       properties:
         intent:
           type: string
+          description: The detected intent from the chat history, which is used to carry conversation context between interactions
         citations:
           type: array
           items:
@@ -295,51 +338,71 @@ components:
             properties:
               content:
                 type: string
+                description: The content of the citation.
               title:
                 type: string
+                description: The title for the citation.
               url:
                 type: string
+                description: The URL of the citation.
               filepath:
                 type: string
+                description: The file path for the citation.
               chunk_id:
                 type: string
+                description: The chunk ID for the citation.
             required:
               - content
+          description: The citations produced by the data retrieval.
         all_retrieved_documents:
           type: object
           properties:
             content:
               type: string
+              description: The content of the citation.
             title:
               type: string
+              description: The title for the citation.
             url:
               type: string
+              description: The URL of the citation.
             filepath:
               type: string
+              description: The file path for the citation.
             chunk_id:
               type: string
+              description: The chunk ID for the citation.
             search_queries:
               type: array
               items:
                 type: string
+              description: The search queries executed to retrieve documents.
             data_source_index:
               type: integer
               format: int32
+              description: The index of the data source used for retrieval.
             original_search_score:
               type: number
               format: double
+              description: The original search score for the retrieval.
             rerank_score:
               type: number
               format: double
+              description: The rerank score for the retrieval.
             filter_reason:
               type: string
               enum:
                 - score
                 - rerank
+              description: If applicable, an indication of why the document was filtered.
           required:
             - content
             - search_queries
             - data_source_index
+          description: Summary information about documents retrieved by the data retrieval operation.
+      description: |-
+        An additional property, added to chat completion response messages, produced by the Azure OpenAI service when using
+        extension behavior. This includes intent and citation information from the On Your Data feature.
     AzureContentFilterBlocklistIdResult:
       type: object
       required:
@@ -646,6 +709,7 @@ components:
           type: string
           enum:
             - azure_cosmos_db
+          description: The discriminated type identifier, which is always 'azure_cosmos_db'.
         parameters:
           type: object
           properties:
@@ -736,6 +800,7 @@ components:
             - index_name
             - authentication
             - fields_mapping
+          description: The parameter information to control the use of the Azure CosmosDB data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
       description: Represents a data source configuration that will use an Azure CosmosDB resource.
@@ -746,8 +811,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AzureChatDataSource'
+          description: The data sources to use for the On Your Data feature, exclusive to Azure OpenAI.
       allOf:
         - $ref: '#/components/schemas/OpenAI.CreateChatCompletionRequest'
+      description: |-
+        The extended request model for chat completions against the Azure OpenAI service.
+        This adds the ability to provide data sources for the On Your Data feature.
     AzureCreateChatCompletionResponse:
       type: object
       properties:
@@ -759,13 +828,20 @@ components:
               prompt_index:
                 type: integer
                 format: int32
+                description: The index of the input prompt that this content filter result corresponds to.
               content_filter_results:
-                $ref: '#/components/schemas/AzureContentFilterResultForPrompt'
+                allOf:
+                  - $ref: '#/components/schemas/AzureContentFilterResultForPrompt'
+                description: The content filter results associated with the indexed input prompt.
             required:
               - prompt_index
               - content_filter_results
+          description: The Responsible AI content filter annotations associated with prompt inputs into chat completions.
       allOf:
         - $ref: '#/components/schemas/OpenAI.CreateChatCompletionResponse'
+      description: |-
+        The extended top-level chat completion response model for the Azure OpenAI service.
+        This model adds Responsible AI content filter annotations for prompt input.
     AzureImage:
       type: object
       required:
@@ -788,6 +864,7 @@ components:
           type: string
           enum:
             - azure_ml_index
+          description: The discriminated type identifier, which is always 'azure_ml_index'.
         parameters:
           type: object
           properties:
@@ -861,6 +938,7 @@ components:
             - project_resource_id
             - name
             - version
+          description: The parameter information to control the use of the Azure Machine Learning Index data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
       description: Represents a data source configuration that will use an Azure Machine Learning vector index.
@@ -1003,6 +1081,7 @@ components:
                 - $ref: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
                 - $ref: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
                 - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
+              description: The authentication mechanism to use with Azure Search.
             fields_mapping:
               type: object
               properties:
@@ -1027,7 +1106,7 @@ components:
                   type: array
                   items:
                     type: string
-                  description: THe names of fields that represent vector data.
+                  description: The names of fields that represent vector data.
                 image_vector_fields:
                   type: array
                   items:
@@ -1050,7 +1129,12 @@ components:
               type: string
               description: A filter to apply to the search.
             embedding_dependency:
-              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+              anyOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
+                - $ref: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
+              description: |-
+                The vectorization source to use with Azure Search.
+                Supported sources for Azure Search include endpoint and deployment name.
           required:
             - endpoint
             - index_name
@@ -1101,6 +1185,7 @@ components:
           type: string
           enum:
             - elasticsearch
+          description: The discriminated type identifier, which is always 'elasticsearch'.
         parameters:
           type: object
           properties:
@@ -1191,6 +1276,7 @@ components:
             - endpoint
             - index_name
             - authentication
+          description: The parameter information to control the use of the Elasticsearch data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
     OpenAI.ChatCompletionFunctionCallOption:
@@ -2021,6 +2107,7 @@ components:
           type: string
           enum:
             - pinecone
+          description: The discriminated type identifier, which is always 'pinecone'.
         parameters:
           type: object
           properties:
@@ -2074,12 +2161,22 @@ components:
                 - intent
             environment:
               type: string
+              description: The environment name to use with Pinecone.
             index_name:
               type: string
+              description: The name of the Pinecone database index to use.
             authentication:
-              $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
+              description: |-
+                The authentication mechanism to use with Pinecone.
+                Supported authentication mechanisms for Pinecone include: API key.
             embedding_dependency:
-              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+              description: |-
+                The vectorization source to use as an embedding dependency for the Pinecone data source.
+                Supported vectorization sources for Pinecone include: deployment name.
             fields_mapping:
               type: object
               properties:
@@ -2097,12 +2194,16 @@ components:
                   type: string
               required:
                 - content_fields
+              description: |-
+                Field mappings to apply to data used by the Pinecone data source.
+                Note that content field mappings are required for Pinecone.
           required:
             - environment
             - index_name
             - authentication
             - embedding_dependency
             - fields_mapping
+          description: The parameter information to control the use of the Pinecone data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
   securitySchemes:

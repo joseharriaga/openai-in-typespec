@@ -46,6 +46,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
         /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
         /// <param name="authentication">
+        /// The authentication mechanism to use with Azure Search.
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/>, <paramref name="indexName"/> or <paramref name="authentication"/> is null. </exception>
@@ -88,6 +89,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
         /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
         /// <param name="authentication">
+        /// The authentication mechanism to use with Azure Search.
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="fieldMappings"> The field mappings to use with the Azure Search resource. </param>
@@ -95,6 +97,8 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="semanticConfiguration"> Additional semantic configuration for the query. </param>
         /// <param name="filter"> A filter to apply to the search. </param>
         /// <param name="vectorizationSource">
+        /// The vectorization source to use with Azure Search.
+        /// Supported sources for Azure Search include endpoint and deployment name.
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>

@@ -44,9 +44,9 @@ namespace Azure.AI.OpenAI.Chat
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="AzureChatRetrievedDocument"/>. </summary>
-        /// <param name="content"></param>
-        /// <param name="searchQueries"></param>
-        /// <param name="dataSourceIndex"></param>
+        /// <param name="content"> The content of the citation. </param>
+        /// <param name="searchQueries"> The search queries executed to retrieve documents. </param>
+        /// <param name="dataSourceIndex"> The index of the data source used for retrieval. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> or <paramref name="searchQueries"/> is null. </exception>
         internal AzureChatRetrievedDocument(string content, IEnumerable<string> searchQueries, int dataSourceIndex)
         {
@@ -59,16 +59,16 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatRetrievedDocument"/>. </summary>
-        /// <param name="content"></param>
-        /// <param name="title"></param>
-        /// <param name="url"></param>
-        /// <param name="filepath"></param>
-        /// <param name="chunkId"></param>
-        /// <param name="searchQueries"></param>
-        /// <param name="dataSourceIndex"></param>
-        /// <param name="originalSearchScore"></param>
-        /// <param name="rerankScore"></param>
-        /// <param name="filterReason"></param>
+        /// <param name="content"> The content of the citation. </param>
+        /// <param name="title"> The title for the citation. </param>
+        /// <param name="url"> The URL of the citation. </param>
+        /// <param name="filepath"> The file path for the citation. </param>
+        /// <param name="chunkId"> The chunk ID for the citation. </param>
+        /// <param name="searchQueries"> The search queries executed to retrieve documents. </param>
+        /// <param name="dataSourceIndex"> The index of the data source used for retrieval. </param>
+        /// <param name="originalSearchScore"> The original search score for the retrieval. </param>
+        /// <param name="rerankScore"> The rerank score for the retrieval. </param>
+        /// <param name="filterReason"> If applicable, an indication of why the document was filtered. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AzureChatRetrievedDocument(string content, string title, string url, string filepath, string chunkId, IReadOnlyList<string> searchQueries, int dataSourceIndex, double? originalSearchScore, double? rerankScore, string filterReason, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -90,25 +90,25 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary> Gets the content. </summary>
+        /// <summary> The content of the citation. </summary>
         public string Content { get; }
-        /// <summary> Gets the title. </summary>
+        /// <summary> The title for the citation. </summary>
         public string Title { get; }
-        /// <summary> Gets the url. </summary>
+        /// <summary> The URL of the citation. </summary>
         public string Url { get; }
-        /// <summary> Gets the filepath. </summary>
+        /// <summary> The file path for the citation. </summary>
         public string Filepath { get; }
-        /// <summary> Gets the chunk id. </summary>
+        /// <summary> The chunk ID for the citation. </summary>
         public string ChunkId { get; }
-        /// <summary> Gets the search queries. </summary>
+        /// <summary> The search queries executed to retrieve documents. </summary>
         public IReadOnlyList<string> SearchQueries { get; }
-        /// <summary> Gets the data source index. </summary>
+        /// <summary> The index of the data source used for retrieval. </summary>
         public int DataSourceIndex { get; }
-        /// <summary> Gets the original search score. </summary>
+        /// <summary> The original search score for the retrieval. </summary>
         public double? OriginalSearchScore { get; }
-        /// <summary> Gets the rerank score. </summary>
+        /// <summary> The rerank score for the retrieval. </summary>
         public double? RerankScore { get; }
-        /// <summary> Gets the filter reason. </summary>
+        /// <summary> If applicable, an indication of why the document was filtered. </summary>
         public string FilterReason { get; }
     }
 }

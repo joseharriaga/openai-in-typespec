@@ -12,10 +12,7 @@ internal partial class InternalElasticsearchChatDataSourceParameters
     private IList<string> _internalIncludeContexts = new ChangeTrackingList<string>();
     private DataSourceOutputContextFlags? _outputContextFlags;
 
-    /// <summary>
-    /// The output context properties to include on the response.
-    /// By default, citations and intent will be requested.
-    /// </summary>
+    /// <inheritdoc cref="DataSourceOutputContextFlags"/>
     public DataSourceOutputContextFlags? OutputContextFlags
     {
         get => DataSourceOutputContextFlagsExtensions.FromStringList(_internalIncludeContexts);
@@ -50,7 +47,7 @@ internal partial class InternalElasticsearchChatDataSourceParameters
     /// <item><see cref="DataSourceFieldMappings.FilepathFieldName"/></item>
     /// <item><see cref="DataSourceFieldMappings.VectorFieldNames"/></item>
     /// </list>
-    /// <remarks>
+    /// </remarks>
     [CodeGenMember("FieldsMapping")]
     public DataSourceFieldMappings FieldMappings { get; set; }
 

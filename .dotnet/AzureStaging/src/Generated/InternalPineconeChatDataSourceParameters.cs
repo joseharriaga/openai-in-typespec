@@ -43,15 +43,22 @@ namespace Azure.AI.OpenAI.Chat
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalPineconeChatDataSourceParameters"/>. </summary>
-        /// <param name="environment"></param>
-        /// <param name="indexName"></param>
+        /// <param name="environment"> The environment name to use with Pinecone. </param>
+        /// <param name="indexName"> The name of the Pinecone database index to use. </param>
         /// <param name="authentication">
+        /// The authentication mechanism to use with Pinecone.
+        /// Supported authentication mechanisms for Pinecone include: API key.
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="vectorizationSource">
+        /// The vectorization source to use as an embedding dependency for the Pinecone data source.
+        /// Supported vectorization sources for Pinecone include: deployment name.
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
-        /// <param name="fieldMappings"></param>
+        /// <param name="fieldMappings">
+        /// Field mappings to apply to data used by the Pinecone data source.
+        /// Note that content field mappings are required for Pinecone.
+        /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="environment"/>, <paramref name="indexName"/>, <paramref name="authentication"/>, <paramref name="vectorizationSource"/> or <paramref name="fieldMappings"/> is null. </exception>
         internal InternalPineconeChatDataSourceParameters(string environment, string indexName, DataSourceAuthentication authentication, DataSourceVectorizer vectorizationSource, DataSourceFieldMappings fieldMappings)
         {
@@ -93,15 +100,22 @@ namespace Azure.AI.OpenAI.Chat
         /// The output context properties to include on the response.
         /// By default, citations and intent will be requested.
         /// </param>
-        /// <param name="environment"></param>
-        /// <param name="indexName"></param>
+        /// <param name="environment"> The environment name to use with Pinecone. </param>
+        /// <param name="indexName"> The name of the Pinecone database index to use. </param>
         /// <param name="authentication">
+        /// The authentication mechanism to use with Pinecone.
+        /// Supported authentication mechanisms for Pinecone include: API key.
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="vectorizationSource">
+        /// The vectorization source to use as an embedding dependency for the Pinecone data source.
+        /// Supported vectorization sources for Pinecone include: deployment name.
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
-        /// <param name="fieldMappings"></param>
+        /// <param name="fieldMappings">
+        /// Field mappings to apply to data used by the Pinecone data source.
+        /// Note that content field mappings are required for Pinecone.
+        /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalPineconeChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, string roleInformation, int? maxSearchQueries, bool? allowPartialResult, IList<string> internalIncludeContexts, string environment, string indexName, DataSourceAuthentication authentication, DataSourceVectorizer vectorizationSource, DataSourceFieldMappings fieldMappings, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -150,9 +164,9 @@ namespace Azure.AI.OpenAI.Chat
         /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
         /// </summary>
         internal bool? AllowPartialResult { get; set; }
-        /// <summary> Gets the environment. </summary>
+        /// <summary> The environment name to use with Pinecone. </summary>
         internal string Environment { get; set; }
-        /// <summary> Gets the index name. </summary>
+        /// <summary> The name of the Pinecone database index to use. </summary>
         internal string IndexName { get; set; }
     }
 }

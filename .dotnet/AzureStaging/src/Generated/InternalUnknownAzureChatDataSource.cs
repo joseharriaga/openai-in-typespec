@@ -11,7 +11,7 @@ namespace Azure.AI.OpenAI.Chat
     internal partial class InternalUnknownAzureChatDataSource : AzureChatDataSource
     {
         /// <summary> Initializes a new instance of <see cref="InternalUnknownAzureChatDataSource"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="type"> The differentiating type identifier for the data source. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalUnknownAzureChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, serializedAdditionalRawData)
         {

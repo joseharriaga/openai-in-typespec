@@ -7,11 +7,14 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatDataSourceModelIdVectorizationSource. </summary>
+    /// <summary>
+    /// Represents a vectorization source that makes service calls based on a search service model ID.
+    /// This source type is currently only supported by Elasticsearch.
+    /// </summary>
     internal partial class InternalAzureChatDataSourceModelIdVectorizationSource : DataSourceVectorizer
     {
         /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceModelIdVectorizationSource"/>. </summary>
-        /// <param name="modelId"></param>
+        /// <param name="modelId"> The embedding model build ID to use for vectorization. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="modelId"/> is null. </exception>
         internal InternalAzureChatDataSourceModelIdVectorizationSource(string modelId)
         {
@@ -22,9 +25,9 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceModelIdVectorizationSource"/>. </summary>
-        /// <param name="type"></param>
+        /// <param name="type"> The differentiating identifier for the concrete vectorization source. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="modelId"></param>
+        /// <param name="modelId"> The embedding model build ID to use for vectorization. </param>
         internal InternalAzureChatDataSourceModelIdVectorizationSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string modelId) : base(type, serializedAdditionalRawData)
         {
             ModelId = modelId;
@@ -35,7 +38,7 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary> Gets the model id. </summary>
+        /// <summary> The embedding model build ID to use for vectorization. </summary>
         internal string ModelId { get; set; }
     }
 }

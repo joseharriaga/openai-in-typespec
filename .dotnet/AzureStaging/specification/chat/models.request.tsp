@@ -6,7 +6,14 @@ using OpenAI;
 
 namespace AzureOpenAI;
 
+/**
+ * The extended request model for chat completions against the Azure OpenAI service.
+ * This adds the ability to provide data sources for the On Your Data feature.
+ */
 model AzureCreateChatCompletionRequest extends CreateChatCompletionRequest {
+  /**
+   * The data sources to use for the On Your Data feature, exclusive to Azure OpenAI.
+   */
   data_sources?: AzureChatDataSource[];
 }
 
@@ -18,6 +25,7 @@ model AzureCreateChatCompletionRequest extends CreateChatCompletionRequest {
  */
 @discriminator("type")
 model AzureChatDataSource {
+  /** The differentiating type identifier for the data source. */
   type: string;
 }
 
@@ -36,6 +44,9 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
     /** The name of the index to use, as specified in the Azure Search resource. */
     index_name: string;
 
+    /**
+     * The authentication mechanism to use with Azure Search.
+     */
     authentication:
       | AzureChatDataSourceApiKeyAuthenticationOptions
       | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions
@@ -59,7 +70,7 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
       /** The separator pattern that content fields should use. */
       content_fields_separator?: string;
 
-      /** THe names of fields that represent vector data. */
+      /** The names of fields that represent vector data. */
       vector_fields?: string[];
 
       /** The names of fields that represent image vector data. */
@@ -80,14 +91,20 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
     /** A filter to apply to the search. */
     filter?: string;
 
-    /**  */
-    embedding_dependency?: AzureChatDataSourceVectorizationSource;
+    /**
+     * The vectorization source to use with Azure Search.
+     * Supported sources for Azure Search include endpoint and deployment name.
+     */
+    embedding_dependency?: AzureChatDataSourceEndpointVectorizationSource | AzureChatDataSourceDeploymentNameVectorizationSource;
   };
 }
 
 /** Represents a data source configuration that will use an Azure Machine Learning vector index. */
 model AzureMachineLearningIndexChatDataSource extends AzureChatDataSource {
+  /** The discriminated type identifier, which is always 'azure_ml_index'. */
   type: "azure_ml_index";
+
+  /** The parameter information to control the use of the Azure Machine Learning Index data source. */
   parameters: {
     ...AzureChatDataSourceCommonParameters;
     authentication: AzureChatDataSourceAccessTokenAuthenticationOptions | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions | AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions;
@@ -108,7 +125,10 @@ model AzureMachineLearningIndexChatDataSource extends AzureChatDataSource {
 
 /** Represents a data source configuration that will use an Azure CosmosDB resource. */
 model AzureCosmosDBChatDataSource extends AzureChatDataSource {
+  /** The discriminated type identifier, which is always 'azure_cosmos_db'. */
   type: "azure_cosmos_db";
+
+  /** The parameter information to control the use of the Azure CosmosDB data source. */
   parameters: {
     ...AzureChatDataSourceCommonParameters;
     container_name: string;
@@ -128,7 +148,10 @@ model AzureCosmosDBChatDataSource extends AzureChatDataSource {
 }
 
 model ElasticsearchChatDataSource extends AzureChatDataSource {
+  /** The discriminated type identifier, which is always 'elasticsearch'. */
   type: "elasticsearch";
+
+  /** The parameter information to control the use of the Elasticsearch data source. */
   parameters: {
     ...AzureChatDataSourceCommonParameters;
     endpoint: url;
@@ -148,13 +171,35 @@ model ElasticsearchChatDataSource extends AzureChatDataSource {
 }
 
 model PineconeChatDataSource extends AzureChatDataSource {
+  /** The discriminated type identifier, which is always 'pinecone'. */
   type: "pinecone";
+
+  /** The parameter information to control the use of the Pinecone data source. */
   parameters: {
     ...AzureChatDataSourceCommonParameters;
+
+    /** The environment name to use with Pinecone. */
     environment: string;
+
+    /** The name of the Pinecone database index to use. */
     index_name: string;
+
+    /**
+     * The authentication mechanism to use with Pinecone.
+     * Supported authentication mechanisms for Pinecone include: API key.
+     */
     authentication: AzureChatDataSourceApiKeyAuthenticationOptions;
+
+    /**
+     * The vectorization source to use as an embedding dependency for the Pinecone data source.
+     * Supported vectorization sources for Pinecone include: deployment name.
+     */
     embedding_dependency: AzureChatDataSourceVectorizationSource;
+
+    /**
+     * Field mappings to apply to data used by the Pinecone data source.
+     * Note that content field mappings are required for Pinecone.
+     */
     fields_mapping: {
       content_fields: string[];
       title_field?: string;

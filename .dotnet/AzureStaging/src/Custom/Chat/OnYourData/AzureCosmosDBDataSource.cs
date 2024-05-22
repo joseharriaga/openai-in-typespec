@@ -104,6 +104,9 @@ public partial class AzureCosmosDBChatDataSource : AzureChatDataSource
         init => InternalParameters.OutputContextFlags = value;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="AzureCosmosDBChatDataSource"/>.
+    /// </summary>
     public AzureCosmosDBChatDataSource()
     {
         Type = "azure_cosmos_db";

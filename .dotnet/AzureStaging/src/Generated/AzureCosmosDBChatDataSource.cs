@@ -11,7 +11,7 @@ namespace Azure.AI.OpenAI.Chat
     public partial class AzureCosmosDBChatDataSource : AzureChatDataSource
     {
         /// <summary> Initializes a new instance of <see cref="AzureCosmosDBChatDataSource"/>. </summary>
-        /// <param name="internalParameters"></param>
+        /// <param name="internalParameters"> The parameter information to control the use of the Azure CosmosDB data source. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="internalParameters"/> is null. </exception>
         internal AzureCosmosDBChatDataSource(InternalAzureCosmosDBChatDataSourceParameters internalParameters)
         {

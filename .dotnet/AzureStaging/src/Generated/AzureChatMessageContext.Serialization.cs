@@ -41,7 +41,7 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("all_retrieved_documents"u8);
                 writer.WriteObjectValue(AllRetrievedDocuments, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -114,7 +114,7 @@ namespace Azure.AI.OpenAI.Chat
                     allRetrievedDocuments = AzureChatMessageContextAllRetrievedDocuments.DeserializeAzureChatMessageContextAllRetrievedDocuments(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -169,4 +169,3 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
-

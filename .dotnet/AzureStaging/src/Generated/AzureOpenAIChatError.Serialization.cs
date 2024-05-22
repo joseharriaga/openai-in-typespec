@@ -24,7 +24,7 @@ namespace Azure.AI.OpenAI
             if (Optional.IsDefined(Code))
             {
                 writer.WritePropertyName("code"u8);
-                writer.WriteNumberValue(Code.Value);
+                writer.WriteStringValue(Code);
             }
             if (Optional.IsDefined(Message))
             {
@@ -46,7 +46,7 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("inner_error"u8);
                 writer.WriteObjectValue(InnerError, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -84,7 +84,7 @@ namespace Azure.AI.OpenAI
             {
                 return null;
             }
-            int? code = default;
+            string code = default;
             string message = default;
             string param = default;
             string type = default;
@@ -95,11 +95,7 @@ namespace Azure.AI.OpenAI
             {
                 if (property.NameEquals("code"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    code = property.Value.GetInt32();
+                    code = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("message"u8))
@@ -126,7 +122,7 @@ namespace Azure.AI.OpenAI
                     innerError = InternalAzureOpenAIChatErrorInnerError.DeserializeInternalAzureOpenAIChatErrorInnerError(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -187,4 +183,3 @@ namespace Azure.AI.OpenAI
         }
     }
 }
-

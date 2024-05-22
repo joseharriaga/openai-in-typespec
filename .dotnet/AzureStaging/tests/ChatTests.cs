@@ -63,6 +63,31 @@ public class ChatTests : TestBase<ChatClient>
     }
 
     [Test]
+    public void BadKeyGivesHelpfulErrorStreaming()
+    {
+        string endpointFromEnvironment = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+        Uri endpoint = new(endpointFromEnvironment);
+        string mockKey = "not-a-valid-key-and-should-still-be-sanitized";
+        ApiKeyCredential credential = new(mockKey);
+        AzureOpenAIClient topLevelClient = new(endpoint, credential);
+        ChatClient chatClient = topLevelClient.GetChatClient("gpt-35-turbo");
+        Exception thrownException = null;
+        try
+        {
+            foreach (StreamingChatCompletionUpdate update in chatClient.CompleteChatStreaming(
+                [new UserChatMessage("oops, this won't work with that key!")]))
+            {}
+        }
+        catch (Exception ex)
+        {
+            thrownException = ex;
+        }
+        Assert.That(thrownException, Is.InstanceOf<ClientResultException>());
+        Assert.That(thrownException.Message, Does.Contain("invalid subscription key"));
+        Assert.That(thrownException.Message, Does.Not.Contain(mockKey));
+    }
+
+    [Test]
     public void DefaultAzureCredentialWorks()
     {
         ChatClient chatClient = GetTestClient<TokenCredential>();
@@ -214,13 +239,26 @@ public class ChatTests : TestBase<ChatClient>
             [new UserChatMessage("What does the term 'PR complete' mean?")],
             options);
 
+        StringBuilder contentBuilder = new();
+        List<AzureChatMessageContext> contexts = [];
+
         foreach (StreamingChatCompletionUpdate chatUpdate in chatUpdates)
         {
             AzureChatMessageContext context = chatUpdate.GetAzureMessageContext();
+            if (context is not null)
+            {
+                contexts.Add(context);
+            }
             foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
             {
-                Console.WriteLine(contentPart.Text);
+                contentBuilder.Append(contentPart.Text);
             }
         }
+
+        Assert.That(contentBuilder.ToString(), Is.Not.Null.Or.Empty);
+        Assert.That(contexts, Has.Count.EqualTo(1));
+        Assert.That(contexts[0].Intent, Is.Not.Null.Or.Empty);
+        Assert.That(contexts[0].Citations, Has.Count.GreaterThan(0));
+        Assert.That(contexts[0].Citations[0].Content, Is.Not.Null.Or.Empty);
     }
 }

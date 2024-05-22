@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using OpenAI.Chat;
+using System.ClientModel;
 using System.ClientModel.Primitives;
 
 namespace Azure.AI.OpenAI.Chat;
@@ -33,4 +34,20 @@ internal partial class AzureChatClient : ChatClient
 
     protected AzureChatClient()
     { }
+
+    /// <inheritdoc/>
+    public override AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    {
+        options ??= new();
+        options.StreamOptions = null;
+        return base.CompleteChatStreamingAsync(messages, options);
+    }
+
+    /// <inheritdoc/>
+    public override ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null)
+    {
+        options ??= new();
+        options.StreamOptions = null;
+        return base.CompleteChatStreaming(messages, options);
+    }
 }

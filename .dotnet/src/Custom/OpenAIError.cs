@@ -1,3 +1,4 @@
+using System;
 using System.ClientModel.Primitives;
 using System.Text;
 using System.Text.Json;
@@ -20,6 +21,10 @@ internal partial class OpenAIError
             OpenAIErrorResponse errorResponse
                 = OpenAIErrorResponse.DeserializeOpenAIErrorResponse(errorDocument.RootElement);
             return errorResponse.Error;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
         }
         catch (JsonException)
         {

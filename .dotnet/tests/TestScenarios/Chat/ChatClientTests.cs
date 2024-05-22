@@ -218,6 +218,29 @@ public partial class ChatClientTests
     }
 
     [Test]
+    public void AuthFailureStreaming()
+    {
+        string fakeApiKey = "not-a-real-key-but-should-be-sanitized";
+        ChatClient client = new("gpt-3.5-turbo", new ApiKeyCredential(fakeApiKey));
+        Exception caughtException = null;
+        try
+        {
+            foreach (var _ in client.CompleteChatStreaming(
+                [new UserChatMessage("Uh oh, this isn't going to work with that key")]))
+            { }
+        }
+        catch (Exception ex)
+        {
+            caughtException = ex;
+        }
+        var clientResultException = caughtException as ClientResultException;
+        Assert.That(clientResultException, Is.Not.Null);
+        Assert.That(clientResultException.Status, Is.EqualTo((int)HttpStatusCode.Unauthorized));
+        Assert.That(clientResultException.Message, Does.Contain("API key"));
+        Assert.That(clientResultException.Message, Does.Not.Contain(fakeApiKey));
+    }
+
+    [Test]
     [TestCase(true)]
     [TestCase(false)]
     public void SerializeChatToolChoiceAsString(bool fromRawJson)

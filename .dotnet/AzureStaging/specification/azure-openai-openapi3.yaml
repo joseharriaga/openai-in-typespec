@@ -738,8 +738,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
         message:
           type: string
         param:
@@ -761,8 +760,7 @@ components:
       type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
         message:
           type: string
         param:

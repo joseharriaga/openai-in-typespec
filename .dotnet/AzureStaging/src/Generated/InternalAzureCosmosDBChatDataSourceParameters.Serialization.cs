@@ -73,7 +73,7 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteStringValue(IndexName);
             writer.WritePropertyName("fields_mapping"u8);
             writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -222,7 +222,7 @@ namespace Azure.AI.OpenAI.Chat
                     fieldsMapping = DataSourceFieldMappings.DeserializeDataSourceFieldMappings(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -291,5 +291,4 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
-
 

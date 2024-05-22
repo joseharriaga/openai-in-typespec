@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI
 {
@@ -44,18 +42,6 @@ namespace Azure.AI.OpenAI
         /// </summary>
         private IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary>
-        /// Gets the dictionary containing additional raw data to serialize.
-        /// </summary>
-        /// <remarks>
-        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
-        ///       It is subject to change and not intended for stable use.
-        /// </remarks>
-        [Experimental("OPENAI002")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public IDictionary<string, BinaryData> SerializedAdditionalRawData
-            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
-
         /// <summary> Initializes a new instance of <see cref="AzureOpenAIChatError"/>. </summary>
         internal AzureOpenAIChatError()
         {
@@ -68,7 +54,7 @@ namespace Azure.AI.OpenAI
         /// <param name="type"></param>
         /// <param name="innerError"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureOpenAIChatError(int? code, string message, string param, string type, InternalAzureOpenAIChatErrorInnerError innerError, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureOpenAIChatError(string code, string message, string param, string type, InternalAzureOpenAIChatErrorInnerError innerError, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             Message = message;
@@ -79,7 +65,7 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Gets the code. </summary>
-        public int? Code { get; }
+        public string Code { get; }
         /// <summary> Gets the message. </summary>
         public string Message { get; }
         /// <summary> Gets the param. </summary>
@@ -90,4 +76,3 @@ namespace Azure.AI.OpenAI
         public InternalAzureOpenAIChatErrorInnerError InnerError { get; }
     }
 }
-

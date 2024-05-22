@@ -82,7 +82,7 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("embedding_dependency"u8);
                 writer.WriteObjectValue<DataSourceVectorizer>(VectorizationSource, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -243,7 +243,7 @@ namespace Azure.AI.OpenAI.Chat
                     embeddingDependency = DataSourceVectorizer.DeserializeDataSourceVectorizer(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -312,5 +312,4 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
-
 

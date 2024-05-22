@@ -8,27 +8,30 @@ namespace Azure.AI.OpenAI.Internal;
 
 internal static class AdditionalPropertyHelpers
 {
-    internal static bool TryGetAdditionalProperty<T>(IDictionary<string, BinaryData> additionalProperties, string key, out T value)
+    internal static T GetAdditionalProperty<T>(IDictionary<string, BinaryData> additionalProperties, string key)
+        where T : class, IJsonModel<T>
     {
-        value = default;
-        if (!additionalProperties.TryGetValue(key, out BinaryData binaryValue)) return false;
-        value = (T)ModelReaderWriter.Read(binaryValue, typeof(T));
-        return true;
+        if (additionalProperties?.TryGetValue(key, out BinaryData binaryProperty) != true)
+        {
+            return null;
+        }
+        return (T)ModelReaderWriter.Read(binaryProperty, typeof(T));
     }
 
-    internal static bool TryGetAdditionalProperty<T,U>(IDictionary<string, BinaryData> additionalProperties, string key, out T value)
-        where T : IList<U>
+    internal static IList<T> GetAdditionalListProperty<T>(IDictionary<string, BinaryData> additionalProperties, string key)
+        where T : class, IJsonModel<T>
     {
-        value = default;
-        if (!additionalProperties.TryGetValue(key, out BinaryData binaryValue)) return false;
-        List<U> items = [];
-        using JsonDocument document = JsonDocument.Parse(binaryValue);
+        if (additionalProperties?.TryGetValue(key, out BinaryData binaryProperty) != true)
+        {
+            return null;
+        }
+        List<T> items = [];
+        using JsonDocument document = JsonDocument.Parse(binaryProperty);
         foreach (JsonElement element in document.RootElement.EnumerateArray())
         {
-            items.Add((U)ModelReaderWriter.Read(BinaryData.FromObjectAsJson(element), typeof(U)));
+            items.Add((T)ModelReaderWriter.Read(BinaryData.FromObjectAsJson(element), typeof(T)));
         }
-        value = (T)(IList<U>)items;
-        return true;
+        return items;
     }
 
     internal static void SetAdditionalProperty<T>(IDictionary<string, BinaryData> additionalProperties, string key, T value)

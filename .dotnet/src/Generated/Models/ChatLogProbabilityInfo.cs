@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace OpenAI.Chat
@@ -43,19 +41,7 @@ namespace OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
-        /// <summary>
-        /// Gets the dictionary containing additional raw data to serialize.
-        /// </summary>
-        /// <remarks>
-        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
-        ///       It is subject to change and not intended for stable use.
-        /// </remarks>
-        [Experimental("OPENAI002")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public IDictionary<string, BinaryData> SerializedAdditionalRawData
-            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ChatLogProbabilityInfo"/>. </summary>
         /// <param name="contentTokenLogProbabilities"> A list of message content tokens with log probability information. </param>
@@ -79,4 +65,3 @@ namespace OpenAI.Chat
         }
     }
 }
-

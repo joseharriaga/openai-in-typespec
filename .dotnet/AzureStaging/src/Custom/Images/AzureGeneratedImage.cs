@@ -11,18 +11,17 @@ public static class AzureGeneratedImageExtensions
 {
     [Experimental("OPENAI002")]
     public static ImageResponseContentFilterResult GetResponseContentFilterResults(this GeneratedImage image)
-        => AdditionalPropertyHelpers.TryGetAdditionalProperty(
-            image.SerializedAdditionalRawData,
-            "content_filter_results",
-            out ImageResponseContentFilterResult result)
-                ? result 
-                : null;
+    {
+        return AdditionalPropertyHelpers.GetAdditionalProperty<ImageResponseContentFilterResult>(
+            image._serializedAdditionalRawData,
+            "content_filter_results");
+    }
+
     [Experimental("OPENAI002")]
     public static ImagePromptContentFilterResult GetPromptContentFilterResults(this GeneratedImage image)
-        => AdditionalPropertyHelpers.TryGetAdditionalProperty(
-            image.SerializedAdditionalRawData,
-            "prompt_filter_results",
-            out ImagePromptContentFilterResult result)
-                ? result
-                : null;
+    {
+        return AdditionalPropertyHelpers.GetAdditionalProperty<ImagePromptContentFilterResult>(
+            image._serializedAdditionalRawData,
+            "prompt_filter_results");
+    }
 }

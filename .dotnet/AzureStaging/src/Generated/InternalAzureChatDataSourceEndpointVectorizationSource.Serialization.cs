@@ -32,7 +32,7 @@ namespace Azure.AI.OpenAI.Chat
             }
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -102,7 +102,7 @@ namespace Azure.AI.OpenAI.Chat
                     type = property.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -157,5 +157,4 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
-
 

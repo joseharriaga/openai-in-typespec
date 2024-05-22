@@ -86,7 +86,7 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("filter"u8);
                 writer.WriteStringValue(Filter);
             }
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -236,7 +236,7 @@ namespace Azure.AI.OpenAI.Chat
                     filter = property.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -304,4 +304,3 @@ namespace Azure.AI.OpenAI.Chat
         }
     }
 }
-

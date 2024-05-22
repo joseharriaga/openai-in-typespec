@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using OpenAI.Models;
 
 namespace OpenAI.Assistants
@@ -43,19 +41,7 @@ namespace OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
-        /// <summary>
-        /// Gets the dictionary containing additional raw data to serialize.
-        /// </summary>
-        /// <remarks>
-        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
-        ///       It is subject to change and not intended for stable use.
-        /// </remarks>
-        [Experimental("OPENAI002")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public IDictionary<string, BinaryData> SerializedAdditionalRawData
-            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalRunRequiredAction"/>. </summary>
         /// <param name="submitToolOutputs"> Details on the tool outputs needed for this run to continue. </param>
@@ -87,4 +73,3 @@ namespace OpenAI.Assistants
         public InternalRunObjectRequiredActionSubmitToolOutputs SubmitToolOutputs { get; }
     }
 }
-

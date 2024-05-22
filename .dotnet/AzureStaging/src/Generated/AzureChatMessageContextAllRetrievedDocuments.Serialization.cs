@@ -67,7 +67,7 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("filter_reason"u8);
                 writer.WriteStringValue(FilterReason);
             }
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -182,7 +182,7 @@ namespace Azure.AI.OpenAI
                     filterReason = property.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -248,4 +248,3 @@ namespace Azure.AI.OpenAI
         }
     }
 }
-

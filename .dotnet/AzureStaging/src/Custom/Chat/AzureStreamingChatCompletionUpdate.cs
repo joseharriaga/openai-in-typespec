@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.AI.OpenAI.Internal;
 using OpenAI.Chat;
 using System.Diagnostics.CodeAnalysis;
 
@@ -10,14 +11,12 @@ public static partial class AzureStreamingChatCompletionUpdateExtensions
     [Experimental("OPENAI002")]
     public static AzureChatMessageContext GetAzureMessageContext(this StreamingChatCompletionUpdate chatUpdate)
     {
-        throw new NotImplementedException();
+        if (chatUpdate.Choices?.Count > 0)
+        {
+            return AdditionalPropertyHelpers.GetAdditionalProperty<AzureChatMessageContext>(
+                chatUpdate.Choices[0].Delta?._serializedAdditionalRawData,
+                "context");
+        }
+        return null;
     }
-
-    private static Type InternalChoiceType =>
-        s_internalChoiceType ??= typeof(StreamingChatCompletionUpdate).Assembly.GetType("InternalCreateChatCompletionStreamResponseChoice");
-    private static Type InternalDeltaType =>
-        s_internalDeltaType ??= typeof(StreamingChatCompletionUpdate).Assembly.GetType("InternalChatCompletionStreamResponseDelta");
-
-    private static Type s_internalChoiceType;
-    private static Type s_internalDeltaType;
 }

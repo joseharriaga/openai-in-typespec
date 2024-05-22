@@ -83,65 +83,37 @@ function Remove-PseudoSuppressedTypes {
     }
 }
 
-function Experimentally-Publicize-SerializedAdditionalRawData {
+function Internalize-SerializedAdditionalRawData {
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
-
-    $originalString = "private IDictionary<string, BinaryData> _serializedAdditionalRawData;"
-    $publicString = "public IDictionary<string, BinaryData> SerializedAdditionalRawData"
-    $additionalLines = @(
-        "/// <summary>"
-        "/// Gets the dictionary containing additional raw data to serialize."
-        "/// </summary>"
-        "/// <remarks>"
-        "/// NOTE: This mechanism added for subclients pending availability of a C# language feature."
-        "///       It is subject to change and not intended for stable use."
-        "/// </remarks>"
-        "[Experimental(`"OPENAI002`")]"
-        "[EditorBrowsable(EditorBrowsableState.Never)]"
-        $publicString
-        "    => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();"
-    )
-
     Get-ChildItem -Path $directory -Filter "*.cs" | ForEach-Object {
         $file = $_
         $filename = $_.FullName
-        $match = Select-String -Path $filename -Pattern "^(\s*)$originalString([`r`n]*)"
-        $alreadyMatched = Select-String -Path $filename -Pattern "^.*$publicString.*"
-        if ($match -and (-not $alreadyMatched)) {
-            Write-Output "Adding SerializedAdditionalRawData: $($_.Name)"
-            $line = $match.Matches[0].Groups[0]
-            $spaces = $match.Matches[0].Groups[1]
-            $trailingNewlines = $match.Matches[0].Groups[2]
-            $replacement = "$line`n"
-            foreach ($additionalLine in $additionalLines) {
-                $replacement += "`n$spaces$additionalLine"
-            }
-            $replacement += "$trailingNewlines"
+        $match = Select-String -Path $filename -Pattern "^(\s*)private (IDictionary<string, BinaryData> _serializedAdditionalRawData)"
+        if ($match) {
+            Write-Output "Internalizing _serializedAdditionalRawData: $($_.Name)"
             $content = Get-Content -Path $file -Raw
-            $content = $content -creplace "$line", "$replacement"
-
-            $componentModelMatch = Select-String -Path $filename -Pattern "^using System.ComponentModel"
-            if (-not $componentModelMatch) {
-                $content = $content -creplace `
-                    "using System.Collections.Generic;", `
-                    ("using System.Collections.Generic;`n" `
-                    + "using System.ComponentModel;`n" `
-                    + "using System.Diagnostics.CodeAnalysis;")
-            }
-
-            Set-Content $filename -Value $content
+            $content = $content -creplace $match.Matches[0].Groups[0], "$($match.Matches[0].Groups[1])internal $($match.Matches[0].Groups[2])"
+            $content | Set-Content -Path $filename -NoNewline
         }
-        $match = Select-String -Path $filename -Pattern "options.Format != `"W`""
+    }
+}
+
+function Enable-Global-AdditionalRawDataSerialization {
+    $root = Split-Path $PSScriptRoot -Parent
+    $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
+    Get-ChildItem -Path $directory -Filter "*.cs" | ForEach-Object {
+        $match = Select-String -Path $_.FullName -Pattern "options.Format != `"W`""
         if ($match) {
             Write-Output "Removing `"W`"-format serialization restriction: $($_.Name)"
-            $content = Get-Content -Path $file -Raw
+            $content = Get-Content -Path $_ -Raw
             $content = $content -creplace "options.Format != `"W`"", "true"
-            Set-Content $filename -Value $content
+            Set-Content $_ -Value $content
         }
     }
 }
 
 Edit-RunObjectSerialization
 Remove-PseudoSuppressedTypes
-Experimentally-Publicize-SerializedAdditionalRawData
+Internalize-SerializedAdditionalRawData
+Enable-Global-AdditionalRawDataSerialization

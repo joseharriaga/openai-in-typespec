@@ -3,7 +3,7 @@ import "./models.rai.tsp";
 namespace AzureOpenAI;
 
 model AzureOpenAIError<T> {
-  code?: int32;
+  code?: string;
   message?: string;
   param?: string;
   type?: string;

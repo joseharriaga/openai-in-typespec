@@ -41,7 +41,7 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("self_harm"u8);
                 writer.WriteObjectValue(SelfHarm, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -123,7 +123,7 @@ namespace Azure.AI.OpenAI
                     selfHarm = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -178,4 +178,3 @@ namespace Azure.AI.OpenAI
         }
     }
 }
-

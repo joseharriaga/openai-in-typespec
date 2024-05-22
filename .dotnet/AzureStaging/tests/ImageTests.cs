@@ -17,6 +17,29 @@ public class ImageTests : TestBase<ImageClient>
     public void CanCreateClient() => Assert.That(GetTestClient<TokenCredential>(), Is.InstanceOf<ImageClient>());
 
     [Test]
+    public void BadKeyGivesHelpfulError()
+    {
+        string endpointFromEnvironment = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+        Uri endpoint = new(endpointFromEnvironment);
+        string mockKey = "not-a-valid-key-and-should-still-be-sanitized";
+        ApiKeyCredential credential = new(mockKey);
+        AzureOpenAIClient topLevelClient = new(endpoint, credential);
+        ImageClient client = topLevelClient.GetImageClient("dall-e-3");
+        Exception thrownException = null;
+        try
+        {
+            _ = client.GenerateImage("a delightful exception message, in contemporary watercolor");
+        }
+        catch (Exception ex)
+        {
+            thrownException = ex;
+        }
+        Assert.That(thrownException, Is.InstanceOf<ClientResultException>());
+        Assert.That(thrownException.Message, Does.Contain("invalid subscription key"));
+        Assert.That(thrownException.Message, Does.Not.Contain(mockKey));
+    }
+
+    [Test]
     public void CanCreateSimpleImage()
     {
         ImageClient client = GetTestClient();

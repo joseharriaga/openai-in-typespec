@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Chat
 {
@@ -42,19 +40,7 @@ namespace OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
-        /// <summary>
-        /// Gets the dictionary containing additional raw data to serialize.
-        /// </summary>
-        /// <remarks>
-        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
-        ///       It is subject to change and not intended for stable use.
-        /// </remarks>
-        [Experimental("OPENAI002")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public IDictionary<string, BinaryData> SerializedAdditionalRawData
-            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionFunctionResponseChoice"/>. </summary>
         /// <param name="finishReason"> The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function. </param>
@@ -97,4 +83,3 @@ namespace OpenAI.Chat
         public InternalChatCompletionResponseMessage Message { get; }
     }
 }
-

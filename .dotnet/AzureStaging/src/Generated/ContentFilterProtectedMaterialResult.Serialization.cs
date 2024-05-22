@@ -30,7 +30,7 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("citation"u8);
                 writer.WriteObjectValue(Citation, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
                 {
@@ -94,7 +94,7 @@ namespace Azure.AI.OpenAI
                     citation = ContentFilterProtectedMaterialCitedResult.DeserializeContentFilterProtectedMaterialCitedResult(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
@@ -149,4 +149,3 @@ namespace Azure.AI.OpenAI
         }
     }
 }
-

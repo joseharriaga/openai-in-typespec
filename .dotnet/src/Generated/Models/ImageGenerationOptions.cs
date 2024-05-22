@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Images
 {
@@ -42,19 +40,7 @@ namespace OpenAI.Images
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
-        /// <summary>
-        /// Gets the dictionary containing additional raw data to serialize.
-        /// </summary>
-        /// <remarks>
-        /// NOTE: This mechanism added for subclients pending availability of a C# language feature.
-        ///       It is subject to change and not intended for stable use.
-        /// </remarks>
-        [Experimental("OPENAI002")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public IDictionary<string, BinaryData> SerializedAdditionalRawData
-            => _serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="ImageGenerationOptions"/>. </summary>
         /// <param name="prompt"> A text description of the desired image(s). The maximum length is 1000 characters for `dall-e-2` and 4000 characters for `dall-e-3`. </param>
@@ -90,4 +76,3 @@ namespace OpenAI.Images
         public string User { get; set; }
     }
 }
-

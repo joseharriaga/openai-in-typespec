@@ -1,22 +1,34 @@
 ﻿using NUnit.Framework;
 using OpenAI.Moderations;
+using OpenAI.Tests.Utility;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OpenAI.Tests.Moderations;
 
-public partial class ModerationTests
+[TestFixture(true)]
+[TestFixture(false)]
+public partial class ModerationTests : SyncAsyncTestBase
 {
+    public ModerationTests(bool isAsync)
+    : base(isAsync)
+    {
+    }
+
     [Test]
     public async Task ClassifySingleInput()
     {
         ModerationClient client = new("text-moderation-stable");
 
-        ModerationResult moderation = await client.ClassifyTextInputAsync("I am killing all my houseplants!");
-        Assert.IsNotNull(moderation);
-        Assert.IsTrue(moderation.Flagged);
-        Assert.IsTrue(moderation.Categories.Violence);
-        Assert.Greater(moderation.CategoryScores.Violence, 0.5);
+        const string input = "I am killing all my houseplants!";
+
+        ModerationResult moderation = IsAsync
+            ? await client.ClassifyTextInputAsync(input)
+            : client.ClassifyTextInput(input);
+        Assert.That(moderation, Is.Not.Null);
+        Assert.That(moderation.Flagged, Is.True);
+        Assert.That(moderation.Categories.Violence, Is.True);
+        Assert.That(moderation.CategoryScores.Violence, Is.GreaterThan(0.5));
     }
 
     [Test]
@@ -30,19 +42,21 @@ public partial class ModerationTests
                 "I am killing all my houseplants!"
             ];
 
-        ModerationCollection moderations = await client.ClassifyTextInputsAsync(inputs);
-        Assert.IsNotNull(moderations);
-        Assert.AreEqual(2, moderations.Count);
-        Assert.IsTrue(moderations.Model.StartsWith("text-moderation"));
-        Assert.IsNotEmpty(moderations.Id);
+        ModerationCollection moderations = IsAsync
+            ? await client.ClassifyTextInputsAsync(inputs)
+            : client.ClassifyTextInputs(inputs);
+        Assert.That(moderations, Is.Not.Null);
+        Assert.That(moderations.Count, Is.EqualTo(2));
+        Assert.That(moderations.Model, Does.StartWith("text-moderation"));
+        Assert.That(moderations.Id, Is.Not.Null.Or.Empty);
 
-        Assert.IsNotNull(moderations[0]);
-        Assert.IsFalse(moderations[0].Flagged);
+        Assert.That(moderations[0], Is.Not.Null);
+        Assert.That(moderations[0].Flagged, Is.False);
 
-        Assert.IsNotNull(moderations[1]);
-        Assert.IsTrue(moderations[1].Flagged);
-        Assert.IsTrue(moderations[1].Categories.Violence);
-        Assert.Greater(moderations[1].CategoryScores.Violence, 0.5);
+        Assert.That(moderations[1], Is.Not.Null);
+        Assert.That(moderations[1].Flagged, Is.True);
+        Assert.That(moderations[1].Categories.Violence, Is.True);
+        Assert.That(moderations[1].CategoryScores.Violence, Is.GreaterThan(0.5));
     }
 
     [Test]

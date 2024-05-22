@@ -587,7 +587,7 @@ function Edit-GeneratedModels {
         "OpenAIModelInfoCollection.Serialization.cs",
 
         # OpenAI.Moderation namespace
-        "CreateModerationRequestModel.cs",
+        "InternalCreateModerationRequestModel.cs",
         "ModerationCategories.cs",
         "ModerationCategories.Serialization.cs",
         "ModerationCategoryScores.cs",

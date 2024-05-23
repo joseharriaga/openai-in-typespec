@@ -274,9 +274,9 @@ public partial class OpenAIClient
             {
                 Assembly assembly = typeof(OpenAIClient).Assembly;
                 string version = FileVersionInfo.GetVersionInfo(assembly.Location)?.ProductVersion;
-                string framework = assembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
+                string framework = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
                 string os = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
-                _userAgentHeader = $"OpenAI-dotnet/{version}/{framework}/{os}";
+                _userAgentHeader = $"OpenAI-dotnet/{version} ({framework}; {os})";
             }
             return _userAgentHeader;
         }

@@ -119,7 +119,7 @@ function Update-Set-Accessors {
     Get-ChildItem -Path $directory -Filter "*.cs" | Where-Object { $_.Name -notlike 'Internal*' } | ForEach-Object {
         $content = Get-Content -Path $_.FullName -Raw
 
-        $pattern = '([\s\w<>\?]*){ get; set; }'
+        $pattern = '([^{]*){ get; set; }'
         $matches = [regex]::Matches($content, $pattern)
 
         if ($matches) {

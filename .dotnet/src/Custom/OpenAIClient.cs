@@ -43,12 +43,6 @@ namespace OpenAI;
 [CodeGenSuppress("GetVectorStoreClientClient")]
 public partial class OpenAIClient
 {
-    private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
-    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v2";
-    private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
-    private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
-    private const string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
-
     private readonly OpenAIClientOptions _options;
 
     /// <summary>
@@ -237,7 +231,7 @@ public partial class OpenAIClient
 
     internal static Uri GetEndpoint(OpenAIClientOptions options)
     {
-        return options?.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIEndpointEnvironmentVariable) ?? s_defaultOpenAIV1Endpoint);
+        return options?.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIEndpointEnvironmentVariable) ?? OpenAIV1Endpoint);
     }
 
     internal static ApiKeyCredential GetApiKey(ApiKeyCredential explicitCredential = null, bool requireExplicitCredential = false)
@@ -266,9 +260,9 @@ public partial class OpenAIClient
 
     private static void SetUserAgentHeader(PipelineRequest request)
     {
-        if (request?.Headers?.TryGetValue("User-Agent", out string _) == false)
+        if (request?.Headers?.TryGetValue(UserAgentHeaderKey, out string _) == false)
         {
-            request.Headers.Set("User-Agent", UserAgentHeader);
+            request.Headers.Set(UserAgentHeaderKey, UserAgentHeader);
         }
     }
 
@@ -287,5 +281,13 @@ public partial class OpenAIClient
             return _userAgentHeader;
         }
     }
+
     private static string _userAgentHeader;
+
+    private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
+    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v2";
+    private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
+    private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
+    private const string OpenAIV1Endpoint = "https://api.openai.com/v1";
+    private const string UserAgentHeaderKey = "User-Agent";
 }

@@ -12,7 +12,10 @@ using OpenAI.VectorStores;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Runtime.Versioning;
 
 namespace OpenAI;
 
@@ -227,6 +230,7 @@ public partial class OpenAIClient
             [
                 ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, AuthorizationHeader, AuthorizationApiKeyPrefix),
                 new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set(OpenAIBetaFeatureHeader, OpenAIBetaAssistantsV1HeaderValue)),
+                new GenericActionPipelinePolicy((m) => SetUserAgentHeader(m.Request)),
             ],
             beforeTransportPolicies: []);
     }
@@ -259,4 +263,29 @@ public partial class OpenAIClient
             return new(environmentApiKey);
         }
     }
+
+    private static void SetUserAgentHeader(PipelineRequest request)
+    {
+        if (request?.Headers?.TryGetValue("User-Agent", out string _) == false)
+        {
+            request.Headers.Set("User-Agent", UserAgentHeader);
+        }
+    }
+
+    private static string UserAgentHeader
+    {
+        get
+        {
+            if (_userAgentHeader is null)
+            {
+                Assembly assembly = typeof(OpenAIClient).Assembly;
+                string version = FileVersionInfo.GetVersionInfo(assembly.Location)?.ProductVersion;
+                string framework = assembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
+                string os = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+                _userAgentHeader = $"OpenAI-dotnet/{version}/{framework}/{os}";
+            }
+            return _userAgentHeader;
+        }
+    }
+    private static string _userAgentHeader;
 }

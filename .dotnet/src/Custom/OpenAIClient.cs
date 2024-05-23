@@ -223,8 +223,8 @@ public partial class OpenAIClient
             perTryPolicies:
             [
                 ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, AuthorizationHeader, AuthorizationApiKeyPrefix),
-                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set(OpenAIBetaFeatureHeader, OpenAIBetaAssistantsV1HeaderValue)),
-                new GenericActionPipelinePolicy((m) => SetUserAgentHeader(m.Request)),
+                CreateAddBetaFeatureHeaderPolicy(),
+                CreateAddUserAgentHeaderPolicy(options),
             ],
             beforeTransportPolicies: []);
     }
@@ -258,33 +258,30 @@ public partial class OpenAIClient
         }
     }
 
-    private static void SetUserAgentHeader(PipelineRequest request)
+    private static PipelinePolicy CreateAddBetaFeatureHeaderPolicy()
     {
-        if (request?.Headers?.TryGetValue(UserAgentHeaderKey, out string _) == false)
+        return new GenericActionPipelinePolicy((message) =>
         {
-            request.Headers.Set(UserAgentHeaderKey, UserAgentHeader);
-        }
-    }
-
-    private static string UserAgentHeader
-    {
-        get
-        {
-            if (_userAgentHeader is null)
+            if (message?.Request?.Headers?.TryGetValue(OpenAIBetaFeatureHeaderKey, out string _) == false)
             {
-                Assembly assembly = typeof(OpenAIClient).Assembly;
-                string version = FileVersionInfo.GetVersionInfo(assembly.Location)?.ProductVersion;
-                string framework = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
-                string os = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
-                _userAgentHeader = $"OpenAI-dotnet/{version} ({framework}; {os})";
+                message.Request.Headers.Set(OpenAIBetaFeatureHeaderKey, OpenAIBetaAssistantsV1HeaderValue);
             }
-            return _userAgentHeader;
-        }
+        });
     }
 
-    private static string _userAgentHeader;
+    private static PipelinePolicy CreateAddUserAgentHeaderPolicy(OpenAIClientOptions options = null)
+    {
+        TelemetryDetails telemetryDetails = new(typeof(OpenAIClientOptions).Assembly, options?.ApplicationId);
+        return new GenericActionPipelinePolicy((message) =>
+        {
+            if (message?.Request?.Headers?.TryGetValue(UserAgentHeaderKey, out string _) == false)
+            {
+                message.Request.Headers.Set(UserAgentHeaderKey, telemetryDetails.ToString());
+            }
+        });
+    }
 
-    private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
+    private const string OpenAIBetaFeatureHeaderKey = "OpenAI-Beta";
     private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v2";
     private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
     private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";

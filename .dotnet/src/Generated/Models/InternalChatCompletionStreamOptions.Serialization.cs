@@ -133,4 +133,3 @@ namespace OpenAI.Chat
         }
     }
 }
-

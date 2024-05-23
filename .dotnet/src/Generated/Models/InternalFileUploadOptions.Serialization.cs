@@ -167,4 +167,3 @@ namespace OpenAI.Files
         }
     }
 }
-

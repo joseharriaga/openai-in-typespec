@@ -86,8 +86,8 @@ function Edit-GeneratedModels {
         "OpenAIError.Serialization.cs",
         "OpenAIErrorResponse.cs",
         "OpenAIErrorResponse.Serialization.cs",
-        "FunctionDefinition.cs",
-        "FunctionDefinition.Serialization.cs",
+        "InternalFunctionDefinition.cs",
+        "InternalFunctionDefinition.Serialization.cs",
 
         # OpenAI.Assistants namespace
         "Assistant.cs",

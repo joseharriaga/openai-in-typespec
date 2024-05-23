@@ -203,4 +203,3 @@ namespace OpenAI.LegacyCompletions
         }
     }
 }
-

@@ -145,4 +145,3 @@ namespace OpenAI.Assistants
         }
     }
 }
-

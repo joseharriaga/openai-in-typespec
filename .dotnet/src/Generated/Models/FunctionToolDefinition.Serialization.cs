@@ -22,7 +22,7 @@ namespace OpenAI.Assistants
 
             writer.WriteStartObject();
             writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue<FunctionDefinition>(_internalFunction, options);
+            writer.WriteObjectValue<InternalFunctionDefinition>(_internalFunction, options);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (true && _serializedAdditionalRawData != null)
@@ -63,7 +63,7 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            FunctionDefinition function = default;
+            InternalFunctionDefinition function = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -71,7 +71,7 @@ namespace OpenAI.Assistants
             {
                 if (property.NameEquals("function"u8))
                 {
-                    function = FunctionDefinition.DeserializeFunctionDefinition(property.Value, options);
+                    function = InternalFunctionDefinition.DeserializeInternalFunctionDefinition(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("type"u8))
@@ -134,4 +134,3 @@ namespace OpenAI.Assistants
         }
     }
 }
-

@@ -108,7 +108,24 @@ function Enable-Global-AdditionalRawDataSerialization {
             Write-Output "Removing `"W`"-format serialization restriction: $($_.Name)"
             $content = Get-Content -Path $_ -Raw
             $content = $content -creplace "options.Format != `"W`"", "true"
-            Set-Content $_ -Value $content
+            Set-Content $_ -Value $content -NoNewline
+        }
+    }
+}
+
+function Change-Set-To-Init {
+    $root = Split-Path $PSScriptRoot -Parent
+    $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
+    Get-ChildItem -Path $directory -Filter "*.cs" | Where-Object { $_.Name -notlike 'Internal*' } | ForEach-Object {
+        $match = Select-String -Path $_.FullName -Pattern "(.*public.*) (.*) { get; set; }"
+        if ($match) {
+            foreach ($fileMatch in $match.Matches)
+            {
+                Write-Output "Editing $($_.Name) : $($fileMatch.Groups[2]): set --> init"
+                $content = Get-Content -Path $_ -Raw
+                $content = $content -creplace $fileMatch.Groups[0], "$($fileMatch.Groups[1]) $($fileMatch.Groups[2]) { get; init; }"
+                Set-Content $_ -Value $content -NoNewline
+            }
         }
     }
 }
@@ -117,3 +134,4 @@ Edit-RunObjectSerialization
 Remove-PseudoSuppressedTypes
 Internalize-SerializedAdditionalRawData
 Enable-Global-AdditionalRawDataSerialization
+Change-Set-To-Init

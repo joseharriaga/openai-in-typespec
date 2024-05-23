@@ -59,8 +59,8 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> The ID of the tool call in the `required_action` object within the run object the output is being submitted for. </summary>
-        public string ToolCallId { get; set; }
+        public string ToolCallId { get; init; }
         /// <summary> The output of the tool call to be submitted to continue the run. </summary>
-        public string Output { get; set; }
+        public string Output { get; init; }
     }
 }

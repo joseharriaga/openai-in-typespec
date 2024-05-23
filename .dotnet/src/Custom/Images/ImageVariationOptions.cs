@@ -48,11 +48,11 @@ public partial class ImageVariationOptions
 
     // CUSTOM: Changed property type.
     /// <summary> The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`. </summary>
-    public GeneratedImageSize? Size { get; set; }
+    public GeneratedImageSize? Size { get; init; }
 
     // CUSTOM: Changed property type.
     /// <summary> The format in which the generated images are returned. Must be one of `url` or `b64_json`. </summary>
-    public GeneratedImageFormat? ResponseFormat { get; set; }
+    public GeneratedImageFormat? ResponseFormat { get; init; }
 
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream image, string imageFilename)
     {

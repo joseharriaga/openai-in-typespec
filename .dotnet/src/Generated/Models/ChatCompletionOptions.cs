@@ -167,7 +167,7 @@ namespace OpenAI.Chat
         ///
         /// **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
         /// </summary>
-        public ChatResponseFormat ResponseFormat { get; set; }
+        public ChatResponseFormat ResponseFormat { get; init; }
         /// <summary>
         /// This feature is in Beta.
         /// If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
@@ -189,7 +189,7 @@ namespace OpenAI.Chat
         /// <summary> A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported. </summary>
         public IList<ChatTool> Tools { get; }
         /// <summary> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </summary>
-        public string User { get; set; }
+        public string User { get; init; }
         /// <summary>
         /// Deprecated in favor of `tools`.
         ///

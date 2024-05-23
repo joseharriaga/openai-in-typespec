@@ -218,4 +218,3 @@ namespace OpenAI.Moderations
         }
     }
 }
-

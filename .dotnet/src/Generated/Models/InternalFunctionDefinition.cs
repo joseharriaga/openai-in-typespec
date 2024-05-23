@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI
 {
     /// <summary> The FunctionObject. </summary>
-    public partial class FunctionDefinition
+    internal partial class InternalFunctionDefinition
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,22 +42,22 @@ namespace OpenAI
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="FunctionDefinition"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalFunctionDefinition"/>. </summary>
         /// <param name="name"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public FunctionDefinition(string name)
+        public InternalFunctionDefinition(string name)
         {
             Argument.AssertNotNull(name, nameof(name));
 
             Name = name;
         }
 
-        /// <summary> Initializes a new instance of <see cref="FunctionDefinition"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="InternalFunctionDefinition"/>. </summary>
         /// <param name="description"> A description of what the function does, used by the model to choose when and how to call the function. </param>
         /// <param name="name"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
         /// <param name="parameters"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal FunctionDefinition(string description, string name, BinaryData parameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalFunctionDefinition(string description, string name, BinaryData parameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Description = description;
             Name = name;
@@ -65,8 +65,8 @@ namespace OpenAI
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="FunctionDefinition"/> for deserialization. </summary>
-        internal FunctionDefinition()
+        /// <summary> Initializes a new instance of <see cref="InternalFunctionDefinition"/> for deserialization. </summary>
+        internal InternalFunctionDefinition()
         {
         }
 

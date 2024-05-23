@@ -400,4 +400,3 @@ namespace OpenAI.Batch
         }
     }
 }
-

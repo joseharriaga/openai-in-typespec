@@ -210,4 +210,3 @@ namespace OpenAI.VectorStores
         }
     }
 }
-

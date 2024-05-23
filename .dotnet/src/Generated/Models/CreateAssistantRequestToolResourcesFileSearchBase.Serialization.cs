@@ -118,4 +118,3 @@ namespace OpenAI.Internal.Models
         }
     }
 }
-

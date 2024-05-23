@@ -181,4 +181,3 @@ namespace OpenAI.Batch
         }
     }
 }
-

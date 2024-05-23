@@ -2509,6 +2509,7 @@ components:
           assistant: '#/components/schemas/ChatCompletionRequestAssistantMessage'
           tool: '#/components/schemas/ChatCompletionRequestToolMessage'
           function: '#/components/schemas/ChatCompletionRequestFunctionMessage'
+      x-oaiExpandable: true
     ChatCompletionRequestMessageContentPart:
       anyOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
@@ -3758,6 +3759,7 @@ components:
             - assistants
             - batch
             - fine-tune
+            - vision
           description: |-
             The intended purpose of the uploaded file.
 

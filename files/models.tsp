@@ -13,12 +13,13 @@ model CreateFileRequest {
   @encode("binary")
   file: bytes;
 
+  // Tool customization: add yet-unspecified enum value
   /**
    * The intended purpose of the uploaded file.
    *
    * Use "assistants" for [Assistants](/docs/api-reference/assistants) and [Message](/docs/api-reference/messages) files, "vision" for Assistants image file inputs, "batch" for [Batch API](/docs/guides/batch), and "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
    */
-  purpose: "assistants" | "batch" | "fine-tune";
+  purpose: "assistants" | "batch" | "fine-tune" | "vision";
 }
 
 model ListFilesResponse {

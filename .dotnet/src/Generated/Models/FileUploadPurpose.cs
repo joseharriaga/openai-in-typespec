@@ -22,6 +22,7 @@ namespace OpenAI.Files
         private const string AssistantsValue = "assistants";
         private const string BatchValue = "batch";
         private const string FineTuneValue = "fine-tune";
+        private const string VisionValue = "vision";
 
         /// <summary> assistants. </summary>
         public static FileUploadPurpose Assistants { get; } = new FileUploadPurpose(AssistantsValue);
@@ -29,6 +30,8 @@ namespace OpenAI.Files
         public static FileUploadPurpose Batch { get; } = new FileUploadPurpose(BatchValue);
         /// <summary> fine-tune. </summary>
         public static FileUploadPurpose FineTune { get; } = new FileUploadPurpose(FineTuneValue);
+        /// <summary> vision. </summary>
+        public static FileUploadPurpose Vision { get; } = new FileUploadPurpose(VisionValue);
         /// <summary> Determines if two <see cref="FileUploadPurpose"/> values are the same. </summary>
         public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right) => left.Equals(right);
         /// <summary> Determines if two <see cref="FileUploadPurpose"/> values are not the same. </summary>

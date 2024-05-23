@@ -188,4 +188,3 @@ namespace OpenAI.Embeddings
         }
     }
 }
-

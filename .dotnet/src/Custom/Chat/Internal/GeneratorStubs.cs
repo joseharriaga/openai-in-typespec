@@ -69,6 +69,9 @@ internal readonly partial struct InternalCreateChatCompletionRequestModel { }
 [CodeGenModel("CreateChatCompletionResponseChoice")]
 internal partial class InternalCreateChatCompletionResponseChoice { }
 
+[CodeGenModel("CreateChatCompletionResponseChoiceLogprobs")]
+internal partial class InternalCreateChatCompletionResponseChoiceLogprobs { }
+
 [CodeGenModel("CreateChatCompletionResponseObject")]
 internal readonly partial struct InternalCreateChatCompletionResponseObject { }
 

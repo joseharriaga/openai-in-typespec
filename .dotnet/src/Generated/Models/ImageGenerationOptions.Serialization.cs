@@ -252,4 +252,3 @@ namespace OpenAI.Images
         }
     }
 }
-

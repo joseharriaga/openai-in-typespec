@@ -60,6 +60,6 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> The discriminated type identifier for the details object. </summary>
-        internal string Type { get; set; }
+        internal string Type { get; init; }
     }
 }

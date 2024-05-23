@@ -61,6 +61,6 @@ namespace OpenAI.Chat
         }
 
         /// <summary> The ID of the tool call. </summary>
-        public string Id { get; set; }
+        public string Id { get; init; }
     }
 }

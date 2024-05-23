@@ -46,7 +46,7 @@ namespace OpenAI.Chat
         /// <param name="kind"> The type of the tool. Currently, only `function` is supported. </param>
         /// <param name="function"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ChatTool(ChatToolKind kind, FunctionDefinition function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatTool(ChatToolKind kind, InternalFunctionDefinition function, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Kind = kind;
             Function = function;

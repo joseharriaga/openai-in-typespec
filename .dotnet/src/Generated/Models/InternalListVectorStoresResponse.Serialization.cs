@@ -174,4 +174,3 @@ namespace OpenAI.VectorStores
         }
     }
 }
-

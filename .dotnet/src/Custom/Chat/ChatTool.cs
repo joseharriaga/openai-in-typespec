@@ -12,13 +12,13 @@ public partial class ChatTool
     // CUSTOM: Made internal.
     /// <summary> Gets the function. </summary>
     [CodeGenMember("Function")]
-    internal FunctionDefinition Function { get; }
+    internal InternalFunctionDefinition Function { get; }
 
     // CUSTOM: Made internal.
     /// <summary> Initializes a new instance of <see cref="ChatTool"/>. </summary>
     /// <param name="function"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="function"/> is null. </exception>
-    internal ChatTool(FunctionDefinition function)
+    internal ChatTool(InternalFunctionDefinition function)
     {
         Kind = ChatToolKind.Function;
 
@@ -79,7 +79,7 @@ public partial class ChatTool
     {
         Argument.AssertNotNull(functionName, nameof(functionName));
 
-        FunctionDefinition function = new(functionName)
+        InternalFunctionDefinition function = new(functionName)
         {
             Description = functionDescription,
             Parameters = functionParameters

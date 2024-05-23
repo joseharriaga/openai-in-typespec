@@ -315,4 +315,3 @@ namespace OpenAI.Images
         }
     }
 }
-

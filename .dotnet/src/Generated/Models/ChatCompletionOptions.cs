@@ -147,19 +147,19 @@ namespace OpenAI.Chat
         ///
         /// [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         /// </summary>
-        public float? FrequencyPenalty { get; set; }
+        public float? FrequencyPenalty { get; init; }
         /// <summary>
         /// The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
         ///
         /// The total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
         /// </summary>
-        public int? MaxTokens { get; set; }
+        public int? MaxTokens { get; init; }
         /// <summary>
         /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
         ///
         /// [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         /// </summary>
-        public float? PresencePenalty { get; set; }
+        public float? PresencePenalty { get; init; }
         /// <summary>
         /// An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
         ///
@@ -167,29 +167,29 @@ namespace OpenAI.Chat
         ///
         /// **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
         /// </summary>
-        public ChatResponseFormat ResponseFormat { get; set; }
+        public ChatResponseFormat ResponseFormat { get; init; }
         /// <summary>
         /// This feature is in Beta.
         /// If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
         /// Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
         /// </summary>
-        public long? Seed { get; set; }
+        public long? Seed { get; init; }
         /// <summary>
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
         /// We generally recommend altering this or `top_p` but not both.
         /// </summary>
-        public float? Temperature { get; set; }
+        public float? Temperature { get; init; }
         /// <summary>
         /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
         ///
         /// We generally recommend altering this or `temperature` but not both.
         /// </summary>
-        public float? TopP { get; set; }
+        public float? TopP { get; init; }
         /// <summary> A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported. </summary>
         public IList<ChatTool> Tools { get; }
         /// <summary> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </summary>
-        public string User { get; set; }
+        public string User { get; init; }
         /// <summary>
         /// Deprecated in favor of `tools`.
         ///

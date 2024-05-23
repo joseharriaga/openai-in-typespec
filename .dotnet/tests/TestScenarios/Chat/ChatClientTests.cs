@@ -268,10 +268,7 @@ public partial class ChatClientTests
 
         if (includeLogProbabilities)
         {
-            ChatLogProbabilityInfo logProbs = chatCompletions.LogProbabilityInfo;
-            Assert.That(logProbs, Is.Not.Null);
-
-            IReadOnlyList<ChatTokenLogProbabilityInfo> chatTokenLogProbabilities = logProbs.ContentTokenLogProbabilities;
+            IReadOnlyList<ChatTokenLogProbabilityInfo> chatTokenLogProbabilities = chatCompletions.ContentTokenLogProbabilities;
             Assert.That(chatTokenLogProbabilities, Is.Not.Null.Or.Empty);
 
             foreach (ChatTokenLogProbabilityInfo tokenLogProbs in chatTokenLogProbabilities)
@@ -290,7 +287,8 @@ public partial class ChatClientTests
         }
         else
         {
-            Assert.That(chatCompletions.LogProbabilityInfo, Is.Null);
+            Assert.That(chatCompletions.ContentTokenLogProbabilities, Is.Not.Null);
+            Assert.That(chatCompletions.ContentTokenLogProbabilities, Is.Empty);
         }
     }
 
@@ -325,39 +323,29 @@ public partial class ChatClientTests
             // Token log probabilities are streamed together with their corresponding content update.
             if (includeLogProbabilities
                 && chatCompletionUpdate.ContentUpdate.Count > 0
-                && chatCompletionUpdate.ContentUpdate[0].Text != null)
+                && !string.IsNullOrWhiteSpace(chatCompletionUpdate.ContentUpdate[0].Text))
             {
-                ChatLogProbabilityInfo logProbs = chatCompletionUpdate.LogProbabilityInfo;
-                Assert.That(logProbs, Is.Not.Null);
+                Assert.That(chatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.Or.Empty);
+                Assert.That(chatCompletionUpdate.ContentTokenLogProbabilities, Has.Count.EqualTo(1));
 
-                if (!string.IsNullOrWhiteSpace(chatCompletionUpdate.ContentUpdate[0].Text))
+                foreach (ChatTokenLogProbabilityInfo tokenLogProbs in chatCompletionUpdate.ContentTokenLogProbabilities)
                 {
-                    Assert.That(logProbs.ContentTokenLogProbabilities, Is.Not.Null.Or.Empty);
-                    Assert.That(logProbs.ContentTokenLogProbabilities, Has.Count.EqualTo(1));
+                    Assert.That(tokenLogProbs.Token, Is.Not.Null.Or.Empty);
+                    Assert.That(tokenLogProbs.Utf8ByteValues, Is.Not.Null);
+                    Assert.That(tokenLogProbs.TopLogProbabilities, Is.Not.Null.Or.Empty);
+                    Assert.That(tokenLogProbs.TopLogProbabilities, Has.Count.EqualTo(topLogProbabilityCount));
 
-                    foreach (ChatTokenLogProbabilityInfo tokenLogProbs in logProbs.ContentTokenLogProbabilities)
+                    foreach (ChatTokenTopLogProbabilityInfo tokenTopLogProbs in tokenLogProbs.TopLogProbabilities)
                     {
-                        Assert.That(tokenLogProbs.Token, Is.Not.Null.Or.Empty);
-                        Assert.That(tokenLogProbs.Utf8ByteValues, Is.Not.Null);
-                        Assert.That(tokenLogProbs.TopLogProbabilities, Is.Not.Null.Or.Empty);
-                        Assert.That(tokenLogProbs.TopLogProbabilities, Has.Count.EqualTo(topLogProbabilityCount));
-
-                        foreach (ChatTokenTopLogProbabilityInfo tokenTopLogProbs in tokenLogProbs.TopLogProbabilities)
-                        {
-                            Assert.That(tokenTopLogProbs.Token, Is.Not.Null.Or.Empty);
-                            Assert.That(tokenTopLogProbs.Utf8ByteValues, Is.Not.Null);
-                        }
+                        Assert.That(tokenTopLogProbs.Token, Is.Not.Null.Or.Empty);
+                        Assert.That(tokenTopLogProbs.Utf8ByteValues, Is.Not.Null);
                     }
-                }
-                else
-                {
-                    Assert.That(logProbs.ContentTokenLogProbabilities, Is.Not.Null);
-                    Assert.That(logProbs.ContentTokenLogProbabilities, Is.Empty);
                 }
             }
             else
             {
-                Assert.That(chatCompletionUpdate.LogProbabilityInfo, Is.Null);
+                Assert.That(chatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null);
+                Assert.That(chatCompletionUpdate.ContentTokenLogProbabilities, Is.Empty);
             }
         }
     }

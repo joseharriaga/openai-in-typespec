@@ -59,8 +59,8 @@ namespace OpenAI.Audio
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
         /// <summary> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`. </summary>
-        public GeneratedSpeechFormat? ResponseFormat { get; set; }
+        public GeneratedSpeechFormat? ResponseFormat { get; init; }
         /// <summary> The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. </summary>
-        public float? Speed { get; set; }
+        public float? Speed { get; init; }
     }
 }

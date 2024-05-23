@@ -23,7 +23,7 @@ internal partial class InternalCreateChatCompletionStreamResponseChoice : IJsonM
             if (instance.Logprobs != null)
             {
                 writer.WritePropertyName("logprobs"u8);
-                writer.WriteObjectValue<ChatLogProbabilityInfo>(instance.Logprobs, options);
+                writer.WriteObjectValue(instance.Logprobs, options);
             }
             else
             {
@@ -57,7 +57,7 @@ internal partial class InternalCreateChatCompletionStreamResponseChoice : IJsonM
             return null;
         }
         InternalChatCompletionStreamResponseDelta delta = default;
-        ChatLogProbabilityInfo logprobs = default;
+        InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs = default;
         ChatFinishReason? finishReason = default;
         int index = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -76,7 +76,7 @@ internal partial class InternalCreateChatCompletionStreamResponseChoice : IJsonM
                     logprobs = null;
                     continue;
                 }
-                logprobs = ChatLogProbabilityInfo.DeserializeChatLogProbabilityInfo(property.Value, options);
+                logprobs = InternalCreateChatCompletionStreamResponseChoiceLogprobs.DeserializeInternalCreateChatCompletionStreamResponseChoiceLogprobs(property.Value, options);
                 continue;
             }
             if (property.NameEquals("finish_reason"u8))

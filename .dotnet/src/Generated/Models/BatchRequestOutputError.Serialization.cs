@@ -140,4 +140,3 @@ namespace OpenAI.Internal.Models
         }
     }
 }
-

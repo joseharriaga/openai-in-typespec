@@ -173,4 +173,3 @@ namespace OpenAI.Internal.Models
         }
     }
 }
-

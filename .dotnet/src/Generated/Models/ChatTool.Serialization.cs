@@ -24,7 +24,7 @@ namespace OpenAI.Chat
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Kind.ToString());
             writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue<FunctionDefinition>(Function, options);
+            writer.WriteObjectValue<InternalFunctionDefinition>(Function, options);
             if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -64,7 +64,7 @@ namespace OpenAI.Chat
                 return null;
             }
             ChatToolKind type = default;
-            FunctionDefinition function = default;
+            InternalFunctionDefinition function = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -76,7 +76,7 @@ namespace OpenAI.Chat
                 }
                 if (property.NameEquals("function"u8))
                 {
-                    function = FunctionDefinition.DeserializeFunctionDefinition(property.Value, options);
+                    function = InternalFunctionDefinition.DeserializeInternalFunctionDefinition(property.Value, options);
                     continue;
                 }
                 if (true)
@@ -134,4 +134,3 @@ namespace OpenAI.Chat
         }
     }
 }
-

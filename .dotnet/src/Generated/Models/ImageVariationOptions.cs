@@ -61,6 +61,6 @@ namespace OpenAI.Images
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
         /// <summary> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </summary>
-        public string User { get; set; }
+        public string User { get; init; }
     }
 }

@@ -6,6 +6,8 @@ namespace OpenAI.Chat;
 [CodeGenModel("CreateChatCompletionResponse")]
 public partial class ChatCompletion
 {
+    private IReadOnlyList<ChatTokenLogProbabilityInfo> _contentTokenLogProbabilities;
+
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> The object type, which is always `chat.completion`. </summary>
     [CodeGenMember("Object")]
@@ -30,11 +32,13 @@ public partial class ChatCompletion
     /// </summary>
     public ChatFinishReason FinishReason => Choices[0].FinishReason;
 
-    // CUSTOM: Flattened choice property.
+    // CUSTOM: Flattened choice logprobs property.
     /// <summary>
     /// Log probability information.
     /// </summary>
-    public ChatLogProbabilityInfo LogProbabilityInfo => Choices[0].Logprobs;
+    public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities => (Choices[0].Logprobs != null)
+        ? Choices[0].Logprobs.Content
+        : _contentTokenLogProbabilities ??= new ChangeTrackingList<ChatTokenLogProbabilityInfo>();
 
     // CUSTOM: Flattened choice message property.
     /// <summary>

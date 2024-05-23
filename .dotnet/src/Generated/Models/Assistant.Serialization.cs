@@ -365,4 +365,3 @@ namespace OpenAI.Assistants
         }
     }
 }
-

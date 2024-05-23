@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI
 {
-    public partial class FunctionDefinition : IJsonModel<FunctionDefinition>
+    internal partial class InternalFunctionDefinition : IJsonModel<InternalFunctionDefinition>
     {
-        void IJsonModel<FunctionDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalFunctionDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FunctionDefinition)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalFunctionDefinition)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -58,19 +58,19 @@ namespace OpenAI
             writer.WriteEndObject();
         }
 
-        FunctionDefinition IJsonModel<FunctionDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalFunctionDefinition IJsonModel<InternalFunctionDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FunctionDefinition)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalFunctionDefinition)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeFunctionDefinition(document.RootElement, options);
+            return DeserializeInternalFunctionDefinition(document.RootElement, options);
         }
 
-        internal static FunctionDefinition DeserializeFunctionDefinition(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalFunctionDefinition DeserializeInternalFunctionDefinition(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -110,46 +110,46 @@ namespace OpenAI
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FunctionDefinition(description, name, parameters, serializedAdditionalRawData);
+            return new InternalFunctionDefinition(description, name, parameters, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<FunctionDefinition>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalFunctionDefinition>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(FunctionDefinition)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalFunctionDefinition)} does not support writing '{options.Format}' format.");
             }
         }
 
-        FunctionDefinition IPersistableModel<FunctionDefinition>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalFunctionDefinition IPersistableModel<InternalFunctionDefinition>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeFunctionDefinition(document.RootElement, options);
+                        return DeserializeInternalFunctionDefinition(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(FunctionDefinition)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalFunctionDefinition)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<FunctionDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalFunctionDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static FunctionDefinition FromResponse(PipelineResponse response)
+        internal static InternalFunctionDefinition FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeFunctionDefinition(document.RootElement);
+            return DeserializeInternalFunctionDefinition(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
@@ -159,4 +159,3 @@ namespace OpenAI
         }
     }
 }
-

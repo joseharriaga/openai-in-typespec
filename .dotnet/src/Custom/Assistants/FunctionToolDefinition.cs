@@ -5,29 +5,29 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.Assistants;
 
 [CodeGenModel("AssistantToolsFunction")]
-[CodeGenSuppress(nameof(FunctionToolDefinition), typeof(FunctionDefinition))]
+[CodeGenSuppress(nameof(FunctionToolDefinition), typeof(InternalFunctionDefinition))]
 public partial class FunctionToolDefinition : ToolDefinition
 {
     // CUSTOM: the visibility of the underlying function object is hidden to simplify the structure of the tool.
 
     [CodeGenMember("Function")]
-    private readonly FunctionDefinition _internalFunction;
+    private readonly InternalFunctionDefinition _internalFunction;
 
-    /// <inheritdoc cref="FunctionDefinition.Name"/>
+    /// <inheritdoc cref="InternalFunctionDefinition.Name"/>
     public required string FunctionName
     {
         get => _internalFunction.Name;
         init => _internalFunction.Name = value;
     }
 
-    /// <inheritdoc cref="FunctionDefinition.Description"/>
+    /// <inheritdoc cref="InternalFunctionDefinition.Description"/>
     public string Description
     {
         get => _internalFunction.Description;
         init => _internalFunction.Description = value;
     }
 
-    /// <inheritdoc cref="FunctionDefinition.Parameters"/>
+    /// <inheritdoc cref="InternalFunctionDefinition.Parameters"/>
     public BinaryData Parameters
     {
         get => _internalFunction.Parameters;
@@ -39,7 +39,7 @@ public partial class FunctionToolDefinition : ToolDefinition
     /// </summary>
     [SetsRequiredMembers]
     public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null)
-        : this("function", null, new FunctionDefinition(description, name, parameters, null))
+        : this("function", null, new InternalFunctionDefinition(description, name, parameters, null))
     {}
 
     /// <summary>
@@ -48,11 +48,11 @@ public partial class FunctionToolDefinition : ToolDefinition
     public FunctionToolDefinition()
         : base("function", null)
     {
-        _internalFunction = new FunctionDefinition();
+        _internalFunction = new InternalFunctionDefinition();
     }
 
     [SetsRequiredMembers]
-    internal FunctionToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, FunctionDefinition function)
+    internal FunctionToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalFunctionDefinition function)
         : base(type, serializedAdditionalRawData)
     {
         _internalFunction = function;

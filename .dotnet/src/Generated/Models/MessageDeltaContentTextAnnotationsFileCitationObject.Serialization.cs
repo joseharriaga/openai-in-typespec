@@ -197,4 +197,3 @@ namespace OpenAI.Assistants
         }
     }
 }
-

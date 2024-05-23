@@ -69,8 +69,8 @@ namespace OpenAI.Assistants
         /// </summary>
         public MessageRole Role { get; }
         /// <summary> A list of files attached to the message, and the tools they should be added to. </summary>
-        public IList<MessageCreationAttachment> Attachments { get; set; }
+        public IList<MessageCreationAttachment> Attachments { get; }
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
     }
 }

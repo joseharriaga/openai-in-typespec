@@ -86,8 +86,8 @@ function Edit-GeneratedModels {
         "OpenAIError.Serialization.cs",
         "OpenAIErrorResponse.cs",
         "OpenAIErrorResponse.Serialization.cs",
-        "FunctionDefinition.cs",
-        "FunctionDefinition.Serialization.cs",
+        "InternalFunctionDefinition.cs",
+        "InternalFunctionDefinition.Serialization.cs",
 
         # OpenAI.Assistants namespace
         "Assistant.cs",
@@ -380,8 +380,6 @@ function Edit-GeneratedModels {
         "ChatFunctionCall.Serialization.cs",
         "ChatFunctionChoice.cs",
         "ChatFunctionChoice.Serialization.cs",
-        "ChatLogProbabilityInfo.cs",
-        "ChatLogProbabilityInfo.Serialization.cs",
         "ChatMessage.cs",
         "ChatMessage.Serialization.cs",
         "ChatMessageContentPart.cs",
@@ -446,6 +444,8 @@ function Edit-GeneratedModels {
         "InternalCreateChatCompletionRequestModel.cs",
         "InternalCreateChatCompletionResponseChoice.cs",
         "InternalCreateChatCompletionResponseChoice.Serialization.cs",
+        "InternalCreateChatCompletionResponseChoiceLogprobs.cs",
+        "InternalCreateChatCompletionResponseChoiceLogprobs.Serialization.cs",
         "InternalCreateChatCompletionResponseObject.cs",
         "InternalCreateChatCompletionStreamResponseChoice.cs",
         "InternalCreateChatCompletionStreamResponseChoice.Serialization.cs",

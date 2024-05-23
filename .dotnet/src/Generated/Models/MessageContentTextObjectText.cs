@@ -79,7 +79,7 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> The data that makes up the text. </summary>
-        public string Value { get; set; }
+        public string Value { get; init; }
         /// <summary>
         /// Gets the annotations
         /// Please note <see cref="MessageContentTextObjectAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.

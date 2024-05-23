@@ -59,7 +59,7 @@ namespace OpenAI.Internal.Models
         }
 
         /// <summary> Gets or sets the code interpreter. </summary>
-        public CreateAssistantRequestToolResourcesCodeInterpreter CodeInterpreter { get; set; }
+        public CreateAssistantRequestToolResourcesCodeInterpreter CodeInterpreter { get; init; }
         /// <summary>
         /// Gets or sets the file search
         /// <para>
@@ -101,6 +101,6 @@ namespace OpenAI.Internal.Models
         /// </list>
         /// </para>
         /// </summary>
-        public BinaryData FileSearch { get; set; }
+        public BinaryData FileSearch { get; init; }
     }
 }

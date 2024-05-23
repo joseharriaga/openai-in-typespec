@@ -49,12 +49,12 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> The text in the message content that needs to be replaced. </summary>
-        public string Text { get; set; }
+        public string Text { get; init; }
         /// <summary> Gets or sets the file citation. </summary>
-        public InternalMessageContentTextAnnotationsFileCitationObjectFileCitation FileCitation { get; set; }
+        public InternalMessageContentTextAnnotationsFileCitationObjectFileCitation FileCitation { get; init; }
         /// <summary> Gets or sets the start index. </summary>
-        public int StartIndex { get; set; }
+        public int StartIndex { get; init; }
         /// <summary> Gets or sets the end index. </summary>
-        public int EndIndex { get; set; }
+        public int EndIndex { get; init; }
     }
 }

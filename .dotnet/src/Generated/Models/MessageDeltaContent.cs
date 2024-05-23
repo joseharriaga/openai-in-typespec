@@ -61,6 +61,6 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> The discriminated type identifier for the content item. </summary>
-        internal string Type { get; set; }
+        internal string Type { get; init; }
     }
 }

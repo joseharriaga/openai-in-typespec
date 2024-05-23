@@ -113,20 +113,29 @@ function Enable-Global-AdditionalRawDataSerialization {
     }
 }
 
-function Change-Set-To-Init {
+function Update-Set-Accessors {
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
     Get-ChildItem -Path $directory -Filter "*.cs" | Where-Object { $_.Name -notlike 'Internal*' } | ForEach-Object {
-        $match = Select-String -Path $_.FullName -Pattern "(.*public.*) (.*) { get; set; }"
-        if ($match) {
-            foreach ($fileMatch in $match.Matches)
-            {
-                Write-Output "Editing $($_.Name) : $($fileMatch.Groups[2]): set --> init"
-                $content = Get-Content -Path $_ -Raw
-                $content = $content -creplace $fileMatch.Groups[0], "$($fileMatch.Groups[1]) $($fileMatch.Groups[2]) { get; init; }"
-                Set-Content $_ -Value $content -NoNewline
-            }
+        $content = Get-Content -Path $_.FullName -Raw
+
+        $pattern = '([\s\w<>\?]*){ get; set; }'
+        $matches = [regex]::Matches($content, $pattern)
+
+        if ($matches) {
+            Write-Output "Editing $($_.Name): adjusting { set; } accessors"
         }
+        foreach ($match in $matches) {
+            $propertyDeclaration = $match.Groups[1].Value
+            if ($propertyDeclaration -like "*List<*" -or $propertyDeclaration -like "*Dictionary<*") {
+                $newPropertyDeclaration = "$propertyDeclaration{ get; }"
+            } else {
+                $newPropertyDeclaration = "$propertyDeclaration{ get; init; }"
+            }
+            $content = $content -replace [regex]::Escape($match.Value), $newPropertyDeclaration
+        }
+
+        Set-Content -Path $_.FullName -Value $content -NoNewline
     }
 }
 
@@ -134,4 +143,4 @@ Edit-RunObjectSerialization
 Remove-PseudoSuppressedTypes
 Internalize-SerializedAdditionalRawData
 Enable-Global-AdditionalRawDataSerialization
-Change-Set-To-Init
+Update-Set-Accessors

@@ -61,8 +61,8 @@ namespace OpenAI.Audio
         /// <summary> An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in English. </summary>
         public string Prompt { get; init; }
         /// <summary> The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`. </summary>
-        public AudioTranslationFormat? ResponseFormat { get; set; }
+        public AudioTranslationFormat? ResponseFormat { get; init; }
         /// <summary> The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit. </summary>
-        public float? Temperature { get; set; }
+        public float? Temperature { get; init; }
     }
 }

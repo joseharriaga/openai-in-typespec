@@ -10,19 +10,7 @@ namespace OpenAI;
 public partial class OpenAIClientOptions : ClientPipelineOptions
 {
     /// <summary>
-    /// Gets or sets a non-default base endpoint that clients should use when connecting.
+    /// Gets a non-default base endpoint that clients should use when connecting.
     /// </summary>
-    public Uri Endpoint
-    {
-        get
-        {
-            return _endpoint;
-        }
-        set
-        {
-            AssertNotFrozen();
-            _endpoint = value;
-        }
-    }
-    private Uri _endpoint;
+    public Uri Endpoint { get; init; }
 }

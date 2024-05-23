@@ -64,6 +64,6 @@ namespace OpenAI.Chat
         }
 
         /// <summary> The role of the author of this message. </summary>
-        internal string Role { get; set; }
+        internal string Role { get; init; }
     }
 }

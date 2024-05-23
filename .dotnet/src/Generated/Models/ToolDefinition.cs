@@ -61,6 +61,6 @@ namespace OpenAI.Assistants
         }
 
         /// <summary> Gets or sets the type. </summary>
-        internal string Type { get; set; }
+        internal string Type { get; init; }
     }
 }

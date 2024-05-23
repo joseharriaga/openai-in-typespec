@@ -59,7 +59,7 @@ namespace OpenAI.Embeddings
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
         /// <summary> The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models. </summary>
-        public int? Dimensions { get; set; }
+        public int? Dimensions { get; init; }
         /// <summary> A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). </summary>
         public string User { get; init; }
     }

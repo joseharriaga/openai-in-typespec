@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
 
+// TODO: add hooks for cancel run?
+
 internal class AssistantRunOperation : ResultOperation<ThreadRun>
 {
     private readonly string _threadId;
@@ -27,6 +29,7 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
         base(GetIdFromResult(createResult), GetResponseFromResult(createResult))
     {
         _result = createResult;
+        Value = _result.Value;
 
         _threadId = createResult.Value.ThreadId;
         _runId = createResult.Value.Id;
@@ -52,6 +55,7 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
         }
 
         _result = _getRun(_threadId, _runId);
+
         Value = _result.Value;
 
         if (_result.Value.Status.IsTerminal)
@@ -72,6 +76,7 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
         }
 
         _result = await _getRunAsync(_threadId, _runId).ConfigureAwait(false);
+
         Value = _result.Value;
 
         if (_result.Value.Status.IsTerminal)

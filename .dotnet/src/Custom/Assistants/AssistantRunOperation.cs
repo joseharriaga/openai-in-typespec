@@ -21,15 +21,15 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
     private readonly Func<string, string, Task<ClientResult<ThreadRun>>> _getRunAsync;
 
     private TimeSpan _pollingInterval = TimeSpan.FromSeconds(2);
-    private ClientResult<ThreadRun> _result;
+    private ClientResult<ThreadRun> _lastSeenResult;
 
     public AssistantRunOperation(ClientResult<ThreadRun> createResult, 
         Func<string, string, ClientResult<ThreadRun>> getRun,
         Func<string, string, Task<ClientResult<ThreadRun>>> getRunAsync) :
         base(GetIdFromResult(createResult), GetResponseFromResult(createResult))
     {
-        _result = createResult;
-        Value = _result.Value;
+        _lastSeenResult = createResult;
+        Value = _lastSeenResult.Value;
 
         _threadId = createResult.Value.ThreadId;
         _runId = createResult.Value.Id;
@@ -51,42 +51,44 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
     {
         if (HasCompleted)
         {
-            return _result;
+            return _lastSeenResult;
         }
 
-        _result = _getRun(_threadId, _runId);
+        ClientResult<ThreadRun> result = _getRun(_threadId, _runId);
 
-        Value = _result.Value;
+        // Compute delta between result and _lastResult
 
-        if (_result.Value.Status.IsTerminal)
+        Value = _lastSeenResult.Value;
+
+        if (_lastSeenResult.Value.Status.IsTerminal)
         {
             HasCompleted = true;
         }
 
-        SetRawResponse(_result.GetRawResponse());
+        SetRawResponse(_lastSeenResult.GetRawResponse());
 
-        return _result;
+        return _lastSeenResult;
     }
 
     public override async ValueTask<ClientResult> UpdateStatusAsync()
     {
         if (HasCompleted)
         {
-            return _result;
+            return _lastSeenResult;
         }
 
-        _result = await _getRunAsync(_threadId, _runId).ConfigureAwait(false);
+        _lastSeenResult = await _getRunAsync(_threadId, _runId).ConfigureAwait(false);
 
-        Value = _result.Value;
+        Value = _lastSeenResult.Value;
 
-        if (_result.Value.Status.IsTerminal)
+        if (_lastSeenResult.Value.Status.IsTerminal)
         {
             HasCompleted = true;
         }
 
-        SetRawResponse(_result.GetRawResponse());
+        SetRawResponse(_lastSeenResult.GetRawResponse());
 
-        return _result;
+        return _lastSeenResult;
     }
 
     public override ClientResult<ThreadRun> WaitForCompletion(CancellationToken cancellationToken = default)
@@ -102,7 +104,7 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
 
             if (HasCompleted)
             {
-                return _result;
+                return _lastSeenResult;
             }
 
             cancellationToken.WaitHandle.WaitOne(_pollingInterval);
@@ -122,7 +124,7 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
 
             if (HasCompleted)
             {
-                return _result;
+                return _lastSeenResult;
             }
 
             await Task.Delay(pollingInterval, cancellationToken).ConfigureAwait(false);

@@ -15,14 +15,19 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
     private readonly string _threadId;
     private readonly string _runId;
 
-    private readonly Func<ClientResult<ThreadRun>> _getRun;
-    private readonly Func<Task<ClientResult<ThreadRun>>> _getRunAsync;
+    private readonly Func<string, string, ClientResult<ThreadRun>> _getRun;
+    private readonly Func<string, string, Task<ClientResult<ThreadRun>>> _getRunAsync;
+
+    private TimeSpan _pollingInterval = TimeSpan.FromSeconds(2);
+    private ClientResult<ThreadRun> _result;
 
     public AssistantRunOperation(ClientResult<ThreadRun> createResult, 
-        Func<ClientResult<ThreadRun>> getRun,
-        Func<Task<ClientResult<ThreadRun>>> getRunAsync) :
+        Func<string, string, ClientResult<ThreadRun>> getRun,
+        Func<string, string, Task<ClientResult<ThreadRun>>> getRunAsync) :
         base(GetIdFromResult(createResult), GetResponseFromResult(createResult))
     {
+        _result = createResult;
+
         _threadId = createResult.Value.ThreadId;
         _runId = createResult.Value.Id;
 
@@ -39,87 +44,96 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
     private static PipelineResponse GetResponseFromResult(ClientResult<ThreadRun> result)
         => result.GetRawResponse();
 
-    public override PipelineResponse UpdateStatus()
+    public override ClientResult UpdateStatus()
     {
         if (HasCompleted)
         {
-            return GetRawResponse();
+            return _result;
         }
 
-        ClientResult<ThreadRun> result = _getRun();
+        _result = _getRun(_threadId, _runId);
+        Value = _result.Value;
 
-        PipelineResponse response = result.GetRawResponse();
-        Value = result.Value;
-
-        if (result.Value.Status.IsTerminal)
+        if (_result.Value.Status.IsTerminal)
         {
             HasCompleted = true;
         }
 
-        SetRawResponse(response);
+        SetRawResponse(_result.GetRawResponse());
 
-        return response;
+        return _result;
     }
 
-    public override async ValueTask<PipelineResponse> UpdateStatusAsync()
+    public override async ValueTask<ClientResult> UpdateStatusAsync()
     {
         if (HasCompleted)
         {
-            return GetRawResponse();
+            return _result;
         }
 
-        ClientResult<ThreadRun> result = await _getRunAsync().ConfigureAwait(false);
+        _result = await _getRunAsync(_threadId, _runId).ConfigureAwait(false);
+        Value = _result.Value;
 
-        PipelineResponse response = result.GetRawResponse();
-        Value = result.Value;
-
-        if (result.Value.Status.IsTerminal)
+        if (_result.Value.Status.IsTerminal)
         {
             HasCompleted = true;
         }
 
-        SetRawResponse(response);
+        SetRawResponse(_result.GetRawResponse());
 
-        return response;
+        return _result;
     }
 
-    public override ClientResult<ThreadRun> WaitForCompletion()
+    public override ClientResult<ThreadRun> WaitForCompletion(CancellationToken cancellationToken = default)
+        => WaitForCompletion(_pollingInterval, cancellationToken);
+
+    public override ClientResult<ThreadRun> WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        while (true)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            UpdateStatus();
+
+            if (HasCompleted)
+            {
+                return _result;
+            }
+
+            cancellationToken.WaitHandle.WaitOne(_pollingInterval);
+        }
     }
 
-    public override ClientResult<ThreadRun> WaitForCompletion(TimeSpan pollingInterval)
+    public override async Task<ClientResult<ThreadRun>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+        => await WaitForCompletionAsync(_pollingInterval, cancellationToken).ConfigureAwait(false);
+
+    public override async Task<ClientResult<ThreadRun>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        while (true)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await UpdateStatusAsync().ConfigureAwait(false);
+
+            if (HasCompleted)
+            {
+                return _result;
+            }
+
+            await Task.Delay(pollingInterval, cancellationToken).ConfigureAwait(false);
+        }
     }
 
-    public override Task<ClientResult<ThreadRun>> WaitForCompletionAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public override ClientResult WaitForCompletionResult(CancellationToken cancellationToken = default)
+        => WaitForCompletion(_pollingInterval, cancellationToken);
 
-    public override Task<ClientResult<ThreadRun>> WaitForCompletionAsync(TimeSpan pollingInterval)
-    {
-        throw new NotImplementedException();
-    }
+    public override ClientResult WaitForCompletionResult(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+        => WaitForCompletion(pollingInterval, cancellationToken);
 
-    public override PipelineResponse WaitForCompletionResponse(TimeSpan pollingInterval)
-    {
-        throw new NotImplementedException();
-    }
+    public override async ValueTask<ClientResult> WaitForCompletionResultAsync(CancellationToken cancellationToken = default)
+        => await WaitForCompletionAsync(_pollingInterval, cancellationToken).ConfigureAwait(false);
 
-    public override PipelineResponse WaitForCompletionResponse()
-    {
-        throw new NotImplementedException();
-    }
 
-    public override ValueTask<PipelineResponse> WaitForCompletionResponseAsync(TimeSpan pollingInterval)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override ValueTask<PipelineResponse> WaitForCompletionResponseAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public override async ValueTask<ClientResult> WaitForCompletionResultAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+        => await WaitForCompletionAsync(pollingInterval, cancellationToken).ConfigureAwait(false);
 }

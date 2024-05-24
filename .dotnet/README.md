@@ -6,6 +6,8 @@ The OpenAI .NET library provides convenient access to the OpenAI REST API from .
 
 It is generated from our [OpenAPI specification](https://github.com/openai/openai-openapi) in collaboration with Microsoft.
 
+To learn
+
 ## Getting started
 
 ### Prerequisites
@@ -14,60 +16,47 @@ To call the OpenAI REST API, you will need an API key. To obtain one, first [cre
 
 ### Install the NuGet package
 
-Add the client library to your .NET project with [NuGet](https://www.nuget.org/):
+Add the client library to your .NET project with [NuGet](https://www.nuget.org/) using your IDE or the dotnet CLI:
 
 ```cli
-dotnet add package OpenAI.OpenAI --prerelease
+dotnet add package OpenAI --prerelease
 ```
 
-Note that the code samples included below were written using [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0).
+Note that the code samples included below were written using [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0). The OpenAI .NET library is compatible with all .NET Standard 2.1 applications but some of the demonstrated usage may depend on newer language features.
 
 ## Using the client library
 
-For convenience, the client library is organized by feature area into ten different namespaces, each with a corresponding client class:
-
-| Namespace                     | Client class                 |
-| ------------------------------|------------------------------|
-| `OpenAI.Assistants`           | `AssistantsClient`           |
-| `OpenAI.Audio`                | `AudioClient`                |
-| `OpenAI.Chat`                 | `ChatClient`                 |
-| `OpenAI.Embeddings`           | `EmbeddingClient`            |
-| `OpenAI.FineTuningManagement` | `FineTuningManagementClient` |
-| `OpenAI.Files`                | `FileClient`                 |
-| `OpenAI.Images`               | `ImageClient`                |
-| `OpenAI.LegacyCompletions`    | `LegacyCompletionClient`     |
-| `OpenAI.ModelManagement`      | `ModelManagementClient`      |
-| `OpenAI.Moderations`          | `ModerationClient`           |
-
-To use chat completions, for example, start by adding the corresponding `using` statement and create an instance of the `ChatClient` by specifying both:
-
-1. The name of the OpenAI model that the client will use in its API calls (e.g., `"gpt-3.5-turbo"`)
-2. The API key that the client will use to authenticate
-
-Then, call its `CompleteChat` method by passing the user message that you would like to generate completions for:
+The full API of this library can be found in the [OpenAI.netstandard2.0.cs](https://github.com/openai/openai-dotnet/api/OpenAI.netstandard2.0.cs) file and there are many [code examples](https://github.com/openai/openai-dotnet/examples) to help. This code shows a basic use of the chat completions API:
 
 ```csharp
 using OpenAI.Chat;
 
-ChatClient client = new("gpt-3.5-turbo", "<insert your OpenAI API key here>");
+ChatClient client = new(
+    "gpt-3.5-turbo",
+    // This is the default key used and the line can be omitted
+    Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-ChatCompletion chatCompletion = client.CompleteChat("How does AI work? Explain it in simple terms.");
-
-Console.WriteLine($"[ASSISTANT]:");
-Console.WriteLine($"{chatCompletion.Content}");
+ChatCompletion chatCompletion = client.CompleteChat(
+    [
+        new UserChatMessage("Say 'this is a test.'"),
+    ]);
 ```
 
-For illustrative purposes, the code above prints the `Content` property of the resulting `ChatCompletion` object, yielding something like this:
+For convenience, the client library is organized by feature area into scenario namespaces, each with a corresponding client class:
 
-```text
-[ASSISTANT]:
-AI, or artificial intelligence, is a technology that allows machines to mimic human behaviors and intelligence.
-It works by using algorithms and data to make decisions and perform tasks. These algorithms are designed to analyze
-data, recognize patterns, and learn from past experiences to make predictions and solve problems. AI can be trained
-to perform specific tasks, such as recognizing images or translating languages, by using vast amounts of data to
-make accurate decisions. Essentially, AI works by processing data and using it to make informed decisions and solve
-problems, much like a human brain would.
-```
+| Namespace                     | Client class                 | Notes               |
+| ------------------------------|------------------------------|---------------------|
+| `OpenAI.Assistants`           | `AssistantClient`            | Features in Beta    |
+| `OpenAI.Audio`                | `AudioClient`                |                     |
+| `OpenAI.Batch`                | `BatchClient`                |                     |
+| `OpenAI.Chat`                 | `ChatClient`                 |                     |
+| `OpenAI.Embeddings`           | `EmbeddingClient`            |                     |
+| `OpenAI.FineTuningManagement` | `FineTuningClient`           |                     |
+| `OpenAI.Files`                | `FileClient`                 |                     |
+| `OpenAI.Images`               | `ImageClient`                |                     |
+| `OpenAI.Models`               | `ModelClient`                |                     |
+| `OpenAI.Moderations`          | `ModerationClient`           |                     |
+| `OpenAI.VectorStores`         | `VectorStoreClient`          | Features in Beta    |
 
 ### Making async API calls
 

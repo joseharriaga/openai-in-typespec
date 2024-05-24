@@ -1,21 +1,24 @@
 ﻿using NUnit.Framework;
 using OpenAI.Chat;
 using System;
+using System.ClientModel;
 
-namespace OpenAI.Samples
+namespace OpenAI.Samples;
+
+public partial class ChatSamples
 {
-    public partial class ChatSamples
+    [Test]
+    [Ignore("Compilation validation only")]
+    public void Sample01_SimpleChat()
     {
-        [Test]
-        [Ignore("Compilation validation only")]
-        public void Sample01_SimpleChat()
-        {
-            ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+        ChatClient client = new(
+            "gpt-3.5-turbo",
+            // This is the default key used and the line can be omitted
+            Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            ChatCompletion chatCompletion = client.CompleteChat([new UserChatMessage("How does AI work? Explain it in simple terms.")]);
-
-            Console.WriteLine($"[ASSISTANT]:");
-            Console.WriteLine($"{chatCompletion.Content[0].Text}");
-        }
+        ChatCompletion chatCompletion = client.CompleteChat(
+            [
+                new UserChatMessage("Say 'this is a test.'"),
+            ]);
     }
 }

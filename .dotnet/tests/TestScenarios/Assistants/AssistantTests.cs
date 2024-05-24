@@ -182,7 +182,7 @@ public partial class AssistantTests
         Assert.That(runs.Count, Is.EqualTo(0));
         ThreadMessage message = client.CreateMessage(thread.Id, ["Hello, assistant!"]);
         Validate(message);
-        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread.Id, assistant.Id);
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread.Id, assistant.Id);
         Validate(runOperation.Value);
         Assert.That(runOperation.Value.Status, Is.EqualTo(RunStatus.Queued));
         Assert.That(runOperation.Value.CreatedAt, Is.GreaterThan(s_2024));
@@ -195,7 +195,7 @@ public partial class AssistantTests
         Assert.That(messages.Count, Is.GreaterThanOrEqualTo(1));
 
         ThreadRun run = runOperation.WaitForCompletion();
-        
+
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
         Assert.That(run.CompletedAt, Is.GreaterThan(s_2024));
         Assert.That(run.RequiredActions.Count, Is.EqualTo(0));
@@ -228,7 +228,7 @@ public partial class AssistantTests
         });
         Validate(thread);
 
-        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread, assistant);
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant);
         Validate(runOperation);
 
         ThreadRun run = runOperation.WaitForCompletion();
@@ -280,7 +280,7 @@ public partial class AssistantTests
         Validate(thread);
         ThreadMessage message = client.CreateMessage(thread, ["Write some JSON for me!"]);
         Validate(message);
-        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread, assistant, new()
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant, new()
         {
             ResponseFormat = AssistantResponseFormat.JsonObject,
         });
@@ -555,11 +555,45 @@ public partial class AssistantTests
         Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
         Assert.That(thread.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
 
-        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread, assistant);
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant);
         Validate(runOperation);
 
-        ThreadRun run = runOperation.WaitForCompletion();
-        
+        while (true)
+        {
+            (RunStatus Status, ThreadRun Value) update = runOperation.WaitForStatusUpdate();
+
+            if (update.Status == RunStatus.RequiresAction)
+            {
+                List<ToolOutput> outputs = new();
+
+                foreach (RequiredAction action in update.Value.RequiredActions)
+                {
+                    string output = action.FunctionName switch
+                    {
+                        string s when s == getTemperatureTool.FunctionName
+                            => GetTemperature(("Seattle", "Farenheit")),
+                        string s when s == getRainProbabilityTool.FunctionName
+                            => GetRainProbability("Seattle, WA"),
+                        _ => throw new InvalidOperationException()
+                    };
+
+                    outputs.Add(new ToolOutput(action.ToolCallId, output));
+
+                }
+
+                client.SubmitToolOutputsToRun(update.Value, outputs);
+            }
+
+            if (update.Status.IsTerminal)
+            {
+                break;
+            }
+        }
+
+        Assert.That(runOperation.Value, Is.Not.Null);
+
+        ThreadRun run = runOperation.Value;
+
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
@@ -576,6 +610,57 @@ public partial class AssistantTests
         }
         Assert.That(messages.Count() > 1);
         Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("cake"))));
+    }
+
+    FunctionToolDefinition getTemperatureTool = new()
+    {
+        FunctionName = "get_current_temperature",
+        Description = "Gets the current temperature at a specific location.",
+        Parameters = BinaryData.FromString("""
+            {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "The city and state, e.g., San Francisco, CA"
+                },
+                "unit": {
+                  "type": "string",
+                  "enum": ["Celsius", "Fahrenheit"],
+                  "description": "The temperature unit to use. Infer this from the user's location."
+                }
+              }
+            }
+            """),
+    };
+
+    FunctionToolDefinition getRainProbabilityTool = new()
+    {
+        FunctionName = "get_current_rain_probability",
+        Description = "Gets the current forecasted probability of rain at a specific location,"
+            + " represented as a percent chance in the range of 0 to 100.",
+        Parameters = BinaryData.FromString("""
+            {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "The city and state, e.g., San Francisco, CA"
+                }
+              },
+              "required": ["location"]
+            }
+            """),
+    };
+
+    private string GetTemperature((string City, string Unit) input)
+    {
+        return "57";
+    }
+
+    private string GetRainProbability(string location)
+    {
+        return "25%";
     }
 
     [Test]

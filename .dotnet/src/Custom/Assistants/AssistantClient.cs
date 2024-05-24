@@ -451,7 +451,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual async Task<ResultOperation<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null)
+    public virtual async Task<StatusBasedOperation<RunStatus, ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
@@ -474,7 +474,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual ResultOperation<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null)
+    public virtual StatusBasedOperation<RunStatus, ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));

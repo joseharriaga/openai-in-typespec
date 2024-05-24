@@ -147,24 +147,24 @@ namespace OpenAI.Assistants
                     writer.WriteNull("stream");
                 }
             }
-            if (Optional.IsDefined(MaxPromptTokens))
+            if (Optional.IsDefined(MaxInputTokens))
             {
-                if (MaxPromptTokens != null)
+                if (MaxInputTokens != null)
                 {
                     writer.WritePropertyName("max_prompt_tokens"u8);
-                    writer.WriteNumberValue(MaxPromptTokens.Value);
+                    writer.WriteNumberValue(MaxInputTokens.Value);
                 }
                 else
                 {
                     writer.WriteNull("max_prompt_tokens");
                 }
             }
-            if (Optional.IsDefined(MaxCompletionTokens))
+            if (Optional.IsDefined(MaxOutputTokens))
             {
-                if (MaxCompletionTokens != null)
+                if (MaxOutputTokens != null)
                 {
                     writer.WritePropertyName("max_completion_tokens"u8);
-                    writer.WriteNumberValue(MaxCompletionTokens.Value);
+                    writer.WriteNumberValue(MaxOutputTokens.Value);
                 }
                 else
                 {

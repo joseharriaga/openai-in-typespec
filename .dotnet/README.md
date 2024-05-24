@@ -26,7 +26,7 @@ Note that the code samples included below were written using [.NET 8](https://do
 
 ## Using the client library
 
-The full API of this library can be found in the [OpenAI.netstandard2.0.cs](https://github.com/openai/openai-dotnet/api/OpenAI.netstandard2.0.cs) file and there are many [code examples](https://github.com/openai/openai-dotnet/examples) to help. This code shows a basic use of the chat completions API:
+The full API of this library can be found in the [api.md](https://github.com/openai/openai-dotnet/api.md) file and there are many [code examples](https://github.com/openai/openai-dotnet/examples) to help. This code shows a basic use of the chat completions API:
 
 ```csharp
 using OpenAI.Chat;

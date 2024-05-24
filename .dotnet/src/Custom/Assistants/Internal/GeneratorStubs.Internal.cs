@@ -61,6 +61,9 @@ internal partial class MessageDeltaTextContentAnnotation { }
 [CodeGenModel("MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation")]
 internal partial class MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation { }
 
+[CodeGenModel("RunStepCompletionUsage")]
+internal readonly partial struct InternalRunStepCompletionUsage { }
+
 [CodeGenModel("RunStepDeltaObject")]
 internal partial class InternalRunStepDelta { private readonly object Object; }
 
@@ -247,3 +250,12 @@ internal partial class UnknownRunStepDeltaStepDetails { }
 
 [CodeGenModel("RunStepDeltaStepDetailsToolCallsFunctionObjectFunction")]
 internal partial class InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction { }
+
+[CodeGenModel("ThreadObjectToolResources")]
+internal partial class InternalThreadObjectToolResources { }
+
+[CodeGenModel("ThreadObjectToolResourcesCodeInterpreter")]
+internal partial class InternalThreadObjectToolResourcesCodeInterpreter { }
+
+[CodeGenModel("ThreadObjectToolResourcesFileSearch")]
+internal partial class InternalThreadObjectToolResourcesFileSearch { }

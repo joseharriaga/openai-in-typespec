@@ -272,45 +272,6 @@ namespace OpenAI
             return new RunStepError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.RunStepCompletionUsage"/>. </summary>
-        /// <param name="completionTokens"> Number of completion tokens used over the course of the run step. </param>
-        /// <param name="promptTokens"> Number of prompt tokens used over the course of the run step. </param>
-        /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        /// <returns> A new <see cref="Models.RunStepCompletionUsage"/> instance for mocking. </returns>
-        public static RunStepCompletionUsage RunStepCompletionUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
-        {
-            return new RunStepCompletionUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResources"/>. </summary>
-        /// <param name="codeInterpreter"></param>
-        /// <param name="fileSearch"></param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResources"/> instance for mocking. </returns>
-        public static ThreadObjectToolResources ThreadObjectToolResources(ThreadObjectToolResourcesCodeInterpreter codeInterpreter = null, ThreadObjectToolResourcesFileSearch fileSearch = null)
-        {
-            return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/>. </summary>
-        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool. </param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/> instance for mocking. </returns>
-        public static ThreadObjectToolResourcesCodeInterpreter ThreadObjectToolResourcesCodeInterpreter(IEnumerable<string> fileIds = null)
-        {
-            fileIds ??= new List<string>();
-
-            return new ThreadObjectToolResourcesCodeInterpreter(fileIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesFileSearch"/>. </summary>
-        /// <param name="vectorStoreIds"> The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. </param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesFileSearch"/> instance for mocking. </returns>
-        public static ThreadObjectToolResourcesFileSearch ThreadObjectToolResourcesFileSearch(IEnumerable<string> vectorStoreIds = null)
-        {
-            vectorStoreIds ??= new List<string>();
-
-            return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileCounts"/>. </summary>
         /// <param name="inProgress"> The number of files that are currently being processed. </param>
         /// <param name="completed"> The number of files that have been successfully processed. </param>

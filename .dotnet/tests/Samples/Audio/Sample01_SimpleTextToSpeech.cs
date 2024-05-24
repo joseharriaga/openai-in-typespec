@@ -11,7 +11,10 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public void Sample01_SimpleTextToSpeech()
         {
-            AudioClient client = new("tts-1", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+            AudioClient client = new(
+                "tts-1",
+                // This is the default key used and the line can be omitted
+                Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
             string input = "The sun rises in the east and sets in the west. This simple fact has been"
                 + " observed by humans for thousands of years.";

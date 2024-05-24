@@ -152,7 +152,7 @@ namespace OpenAI.Assistants
             string assistantId = default;
             string threadId = default;
             string runId = default;
-            RunStepType type = default;
+            RunStepKind type = default;
             RunStepStatus status = default;
             RunStepDetails stepDetails = default;
             RunStepError lastError = default;
@@ -198,7 +198,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("type"u8))
                 {
-                    type = new RunStepType(property.Value.GetString());
+                    type = new RunStepKind(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("status"u8))

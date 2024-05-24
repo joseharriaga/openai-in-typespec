@@ -33,7 +33,7 @@ public partial class RunIncompleteDetails { }
 public readonly partial struct RunIncompleteReason { }
 
 [CodeGenModel("RunStepType")]
-public readonly partial struct RunStepType { }
+public readonly partial struct RunStepKind { }
 
 [CodeGenModel("RunStepStatus")]
 public readonly partial struct RunStepStatus { }

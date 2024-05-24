@@ -293,7 +293,7 @@ function Edit-GeneratedModels {
         "RunStepTokenUsage.Serialization.cs",
         "RunStepToolCall.cs",
         "RunStepToolCall.Serialization.cs",
-        "RunStepType.cs",
+        "RunStepKind.cs",
         "RunStepUpdateCodeInterpreterOutput.cs",
         "RunStepUpdateCodeInterpreterOutput.Serialization.cs",
         "RunTokenUsage.cs",

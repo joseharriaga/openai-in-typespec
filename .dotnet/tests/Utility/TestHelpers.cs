@@ -71,11 +71,23 @@ internal static class TestHelpers
             Console.WriteLine($"{message?.Request?.Method} URI: {message?.Request?.Uri}");
             if (message.Request?.Content != null)
             {
-                using MemoryStream stream = new();
-                message.Request.Content.WriteTo(stream, default);
-                stream.Position = 0;
-                using StreamReader reader = new(stream);
-                Console.WriteLine(reader.ReadToEnd());
+                string contentType = "Unknown Content Type";
+                if (message.Request.Headers?.TryGetValue("Content-Type", out contentType) == true
+                    && contentType == "application/json")
+                {
+                    using MemoryStream stream = new();
+                    message.Request.Content.WriteTo(stream, default);
+                    stream.Position = 0;
+                    using StreamReader reader = new(stream);
+                    Console.WriteLine(reader.ReadToEnd());
+                }
+                else
+                {
+                    string length = message.Request.Content.TryComputeLength(out long numberLength)
+                        ? $"{numberLength} bytes"
+                        : "unknown length";
+                    Console.WriteLine($"<< Non-JSON content: {contentType} >> {length}");
+                }
             }
             if (message.Response != null)
             {

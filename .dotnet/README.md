@@ -69,13 +69,13 @@ ChatCompletion chatCompletion = await client.CompleteChatAsync(
 
 ### Using the `OpenAIClient` class
 
-In addition to the ten namespaces mentioned above, there is also the parent `OpenAI` namespace itself:
+In addition to the scenario namespaces mentioned above, there is also the parent `OpenAI` namespace itself:
 
 ```csharp
 using OpenAI;
 ```
 
-This namespace contains the `OpenAIClient` class, which offers certain conveniences when you need to work with multiple clients. More specifically, you can use an instance of this class to create instances of the other clients that would share the same HTTP pipeline.
+This namespace contains the `OpenAIClient` class, which offers certain conveniences when you need to work with multiple scenario clients. Specifically, you can use an instance of this class to create instances of the other clients that would share the same HTTP pipeline.
 
 You can create an `OpenAIClient` by specifying the API key that all clients will use for authentication:
 
@@ -83,7 +83,7 @@ You can create an `OpenAIClient` by specifying the API key that all clients will
 OpenAIClient client = new("<insert your OpenAI API key here>");
 ```
 
-Next, to create an instance of an `AudioClient`, for example, you can call the `OpenAIClient`'s `GetAudioClient` method by passing the OpenAI model that the `AudioClient` will use in its API calls. If necessary, you can create additional clients of the same type to target different models.
+Next, to create an instance of an `AudioClient`, for example, you can call the `OpenAIClient`'s `GetAudioClient` method by passing the OpenAI model that the `AudioClient` will use in its API calls -- just as if you were using the `AudioClient` constructor directly. If necessary, you can create additional clients of the same type to target different models.
 
 ```csharp
 AudioClient ttsClient = client.GetAudioClient("tts-1");
@@ -554,6 +554,91 @@ The sales trend for Product 113045 over the past three months shows that:
 - In March, sales dropped slightly to 16 units.
 
 The graph above visualizes this trend, showing a peak in sales during February.
+```
+
+## Streaming with assistants using gpt-4o vision support
+
+This sample shows how to use the v2 Assistants API to provide image data to an assistant and then stream the run's response.
+
+As before, we'll use a `FileClient` and an `AssistantClient`:
+
+```csharp
+// Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
+#pragma warning disable OPENAI001
+OpenAIClient openAIClient = new(
+    // This is the default key used and the line can be omitted
+    Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+FileClient fileClient = openAIClient.GetFileClient();
+AssistantClient assistantClient = openAIClient.GetAssistantClient();
+```
+
+For this example, we'll use both image data from a local file as well as an image located at a URL. For the local data, we upload the file with the `Vision` upload purpose, which would also allow it to be downloaded and retrieved later.
+
+```csharp
+OpenAIFileInfo pictureOfAppleFile = fileClient.UploadFile(
+    "picture-of-apple.jpg",
+    FileUploadPurpose.Vision);
+Uri linkToPictureOfOrange = new("https://platform.openai.com/fictitious-files/picture-of-orange.png");
+```
+
+Next, create a new assistant with a vision-capable model like `gpt-4o` and a thread with the image information referenced:
+
+```csharp
+Assistant assistant = assistantClient.CreateAssistant(
+    "gpt-4o",
+    new AssistantCreationOptions()
+    {
+        Instructions = "When asked a question, attempt to answer very concisely. "
+            + "Prefer one-sentence answers whenever feasible."
+    });
+
+AssistantThread thread = assistantClient.CreateThread(new ThreadCreationOptions()
+{
+    InitialMessages =
+        {
+            new ThreadInitializationMessage(
+                [
+                    "Hello, assistant! Please compare these two images for me:",
+                    MessageContent.FromImageFileId(pictureOfAppleFile.Id),
+                    MessageContent.FromImageUrl(linkToPictureOfOrange),
+                ]),
+        }
+});
+```
+
+With the assistant and thread prepared, use the `CreateRunStreaming` method to get an enumerable `ResultCollection<StreamingUpdate>`. You can then iterate over this collection with `foreach`. For async calling patterns, use `CreateRunStreamingAsync` and iterate over the `AsyncResultCollection<StreamingUpdate>` with `await foreach`, instead. Note that streaming variants also exist for `CreateThreadAndRunStreaming` and `SubmitToolOutputsToRunStreaming`.
+
+```csharp
+ResultCollection<StreamingUpdate> streamingUpdates = assistantClient.CreateRunStreaming(
+    thread,
+    assistant,
+    new RunCreationOptions()
+    {
+        AdditionalInstructions = "When possible, try to sneak in puns if you're asked to compare things.",
+    });
+```
+
+Finally, to handle the `StreamingUpdates` as they arrive, you can use the `UpdateKind` property on the base `StreamingUpdate` and/or downcast to a specifically desired update type, like `MessageContentUpdate` for `thread.message.delta` events or `RequiredActionUpdate` for streaming tool calls.
+
+```csharp
+foreach (StreamingUpdate streamingUpdate in streamingUpdates)
+{
+    if (streamingUpdate.UpdateKind == StreamingUpdateReason.RunCreated)
+    {
+        Console.WriteLine($"--- Run started! ---");
+    }
+    if (streamingUpdate is MessageContentUpdate contentUpdate)
+    {
+        Console.Write(contentUpdate.Text);
+    }
+}
+```
+
+This will yield streamed output from the run like the following:
+
+```text
+--- Run started! ---
+The first image shows a red apple with a smooth skin and a single leaf, while the second image depicts an orange with a rough, textured skin and a leaf with droplets of water. Comparing them might seem impossible - it's like apples and oranges!
 ```
 
 ## Audio transcription

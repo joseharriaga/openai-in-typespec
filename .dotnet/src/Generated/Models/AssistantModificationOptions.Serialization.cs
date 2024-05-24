@@ -62,11 +62,11 @@ namespace OpenAI.Assistants
                     writer.WriteNull("instructions");
                 }
             }
-            if (Optional.IsCollectionDefined(DefaultTools))
+            if (Optional.IsCollectionDefined(Tools))
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
-                foreach (var item in DefaultTools)
+                foreach (var item in Tools)
                 {
                     writer.WriteObjectValue<AssistantTool>(item, options);
                 }

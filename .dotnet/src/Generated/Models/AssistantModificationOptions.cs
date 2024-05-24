@@ -45,7 +45,7 @@ namespace OpenAI.Assistants
         /// <summary> Initializes a new instance of <see cref="AssistantModificationOptions"/>. </summary>
         public AssistantModificationOptions()
         {
-            DefaultTools = new ChangeTrackingList<AssistantTool>();
+            Tools = new ChangeTrackingList<AssistantTool>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
@@ -54,7 +54,7 @@ namespace OpenAI.Assistants
         /// <param name="name"> The name of the assistant. The maximum length is 256 characters. </param>
         /// <param name="description"> The description of the assistant. The maximum length is 512 characters. </param>
         /// <param name="instructions"> The system instructions that the assistant uses. The maximum length is 256,000 characters. </param>
-        /// <param name="defaultTools">
+        /// <param name="tools">
         /// A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
         /// Please note <see cref="AssistantTool"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
         /// The available derived classes include <see cref="CodeInterpreterTool"/>, <see cref="FileSearchTool"/> and <see cref="FunctionTool"/>.
@@ -69,13 +69,13 @@ namespace OpenAI.Assistants
         /// </param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<AssistantTool> defaultTools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<AssistantTool> tools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
             Name = name;
             Description = description;
             Instructions = instructions;
-            DefaultTools = defaultTools;
+            Tools = tools;
             ToolResources = toolResources;
             Metadata = metadata;
             Temperature = temperature;

@@ -7,7 +7,7 @@ namespace OpenAI.Samples;
 public partial class AudioSamples
 {
     [Test]
-    // [Ignore("Compilation validation only")]
+    [Ignore("Compilation validation only")]
     public void Sample02_SimpleTranscription()
     {
         AudioClient client = new(

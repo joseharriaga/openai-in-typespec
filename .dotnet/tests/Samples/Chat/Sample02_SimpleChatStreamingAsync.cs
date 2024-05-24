@@ -12,17 +12,22 @@ namespace OpenAI.Samples
         [Ignore("Compilation validation only")]
         public async Task Sample02_SimpleChatStreamingAsync()
         {
-            ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+            ChatClient client = new(
+                "gpt-4o",
+                // This is the default key used and the line can be omitted
+                Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            AsyncResultCollection<StreamingChatCompletionUpdate> chatCompletionUpdates =
-                client.CompleteChatStreamingAsync([new UserChatMessage("How does AI work? Explain it in simple terms.")]);
+            AsyncResultCollection<StreamingChatCompletionUpdate> asyncChatUpdates
+                = client.CompleteChatStreamingAsync(
+                    [
+                        new UserChatMessage("Say 'this is a test.'"),
+                    ]);
 
-            Console.WriteLine("[ASSISTANT]: ");
-            await foreach (StreamingChatCompletionUpdate chatCompletionUpdate in chatCompletionUpdates)
+            await foreach (StreamingChatCompletionUpdate chatUpdate in asyncChatUpdates)
             {
-                if (chatCompletionUpdate.ContentUpdate.Count > 0)
+                foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
                 {
-                    Console.Write(chatCompletionUpdate.ContentUpdate[0].Text);
+                    Console.Write(contentPart.Text);
                 }
             }
         }

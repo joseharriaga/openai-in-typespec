@@ -22,7 +22,7 @@ Add the client library to your .NET project with [NuGet](https://www.nuget.org/)
 dotnet add package OpenAI --prerelease
 ```
 
-Note that the code samples included below were written using [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0). The OpenAI .NET library is compatible with all .NET Standard 2.1 applications but some of the demonstrated usage may depend on newer language features.
+Note that the code samples included below were written using [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0). The OpenAI .NET library is compatible with all .NET Standard 2.0 applications but some of the demonstrated usage may depend on newer language features.
 
 ## Using the client library
 
@@ -58,12 +58,15 @@ For convenience, the client library is organized by feature area into scenario n
 | `OpenAI.Moderations`          | `ModerationClient`           |                     |
 | `OpenAI.VectorStores`         | `VectorStoreClient`          | Features in Beta    |
 
-### Making async API calls
+### Async usage
 
-Note that every client method that performs a synchronous API call has an asynchronous variant in the same client class. For instance, the asynchronous variant of the `ChatClient`'s `CompleteChat` method is the `ChatClient`'s `CompleteChatAsync` method. If you wanted to re-write the sample above as async code, all that you would need to do is modify the client method call like this:
+Every client method that performs a synchronous API call has an asynchronous variant in the same client class. For instance, the asynchronous variant of `ChatClient`'s `CompleteChat` method is `CompleteChatAsync`. To rewrite the call above using the asynchronous counterpart, simply `await` the corresponding call from an async method:
 
 ```csharp
-ChatCompletion chatCompletion = await client.CompleteChatAsync("How does AI work? Explain it in simple terms.");
+ChatCompletion chatCompletion = await client.CompleteChatAsync(
+    [
+        new UserChatMessage("Say 'this is a test.'"),
+    ]);
 ```
 
 ### Using the `OpenAIClient` class
@@ -96,21 +99,43 @@ When you request a chat completion, the default behavior is for the server to ge
 The client library offers a convenient approach to working with streaming chat completions. If you wanted to re-write the sample from the previous section using streaming, rather than calling the `ChatClient`'s `CompleteChat` method, you would call its `CompleteChatStreaming` method instead:
 
 ```csharp
-StreamingClientResult<StreamingChatUpdate> result =
-    client.CompleteChatStreaming("How does AI work? Explain it in simple terms.");
+ResultCollection<StreamingChatCompletionUpdate> chatUpdates = client.CompleteChatStreaming(
+    [
+        new UserChatMessage("Say 'this is a test.'"),
+    ]);
 ```
 
-Notice that the returned value is a `StreamingClientResult<StreamingChatUpdate>` object, which can be iterated on to receive the streaming updates as they arrive:
+Notice that the returned value is a `ResultCollection<StreamingChatCompletionUpdate>` instance, which can be enumerated to process the streaming response chunks as they arrive:
 
 ```csharp
-Console.WriteLine("[ASSISTANT]: ");
-await foreach (StreamingChatUpdate chatUpdate in result)
+foreach (StreamingChatCompletionUpdate chatUpdate in chatUpdates)
 {
-    Console.Write(chatUpdate.ContentUpdate);
+    foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
+    {
+        Console.Write(contentPart.Text);
+    }
 }
 ```
 
-## How to use chat completions with function calling
+To do this streaming using asynchronous calling patterns, use `CompleteChatStreamingAsync` to get an `AsyncResultCollection<StreamingChatCompletionUpdate>` and enumerate via `await foreach`:
+
+```csharp
+AsyncResultCollection<StreamingChatCompletionUpdate> asyncChatUpdates
+    = client.CompleteChatStreamingAsync(
+        [
+            new UserChatMessage("Say 'this is a test.'"),
+        ]);
+
+await foreach (StreamingChatCompletionUpdate chatUpdate in asyncChatUpdates)
+{
+    foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
+    {
+        Console.Write(contentPart.Text);
+    }
+}
+```
+
+## How to use chat completions with tools
 
 In this sample, you have two functions. The first function can retrieve a user's current geographic location (e.g., by polling the location service APIs of the user's device), while the second function can query the weather in a given location (e.g., by making an API call to some third-party weather service). You want chat completions to be able to call these functions if the model deems it necessary to have this information in order to respond to a user request. For illustrative purposes, consider the following:
 
@@ -128,24 +153,18 @@ private static string GetCurrentWeather(string location, string unit = "celsius"
 }
 ```
 
-Start by creating two instances of the `ChatFunctionToolDefinition` class to describe each function:
+Start by creating two instances of the `ChatTool` abstract class to describe each function:
 
 ```csharp
-private const string GetCurrentLocationFunctionName = "get_current_location";
+private static readonly ChatTool getCurrentLocationTool = ChatTool.CreateFunctionTool(
+    functionName: nameof(GetCurrentLocation),
+    functionDescription: "Get the user's current location"
+);
 
-private const string GetCurrentWeatherFunctionName = "get_current_weather";
-
-private static readonly ChatFunctionToolDefinition getCurrentLocationFunction = new()
-{
-    FunctionName = GetCurrentLocationFunctionName,
-    Description = "Get the user's current location"
-};
-
-private static readonly ChatFunctionToolDefinition getCurrentWeatherFunction = new()
-{
-    FunctionName = GetCurrentWeatherFunctionName,
-    Description = "Get the current weather in a given location",
-    Parameters = BinaryData.FromString("""
+private static readonly ChatTool getCurrentWeatherTool = ChatTool.CreateFunctionTool(
+    functionName: nameof(GetCurrentWeather),
+    functionDescription: "Get the current weather in a given location",
+    functionParameters: BinaryData.FromString("""
         {
             "type": "object",
             "properties": {
@@ -161,23 +180,23 @@ private static readonly ChatFunctionToolDefinition getCurrentWeatherFunction = n
             },
             "required": [ "location" ]
         }
-        """),
-};
+        """)
+);
 ```
 
-Next, create a `ChatCompletionsOptions` instance and add both function definitions to its `Tools` property. You will pass this instance as an argument in your calls to the `ChatClient`'s `CompleteChat` method.
+Next, create a `ChatCompletionOptions` instance and add both function definitions to its `Tools` property. You will pass this instance as an argument in your calls to `ChatClient`'s `CompleteChat` method.
 
 ```csharp
-List<ChatRequestMessage> messages = [
-    new ChatRequestSystemMessage(
-       "Don't make assumptions about what values to plug into functions."
-       + " Ask for clarification if a user request is ambiguous."),
-    new ChatRequestUserMessage("What's the weather like today?"),
+List<ChatMessage> messages = [
+    new SystemChatMessage(
+        "Don't make assumptions about what values to plug into functions."
+        + " Ask for clarification if a user request is ambiguous."),
+    new UserChatMessage("What's the weather like today?"),
 ];
 
 ChatCompletionOptions options = new()
 {
-    Tools = { getCurrentLocationFunction, getCurrentWeatherFunction },
+    Tools = { getCurrentLocationTool, getCurrentWeatherTool },
 };
 ```
 
@@ -193,39 +212,37 @@ do
 
     switch (chatCompletion.FinishReason)
     {
-        case ChatFinishReason.Stopped:
+        case ChatFinishReason.Stop:
             {
                 // Add the assistant message to the conversation history.
-                messages.Add(new ChatRequestAssistantMessage(chatCompletion));
+                messages.Add(new AssistantChatMessage(chatCompletion));
                 break;
             }
 
         case ChatFinishReason.ToolCalls:
             {
                 // First, add the assistant message with tool calls to the conversation history.
-                messages.Add(new ChatRequestAssistantMessage(chatCompletion));
+                messages.Add(new AssistantChatMessage(chatCompletion));
 
                 // Then, add a new tool message for each tool call that is resolved.
                 foreach (ChatToolCall toolCall in chatCompletion.ToolCalls)
                 {
-                    ChatFunctionToolCall functionToolCall = toolCall as ChatFunctionToolCall;
-
-                    switch (functionToolCall?.Name)
+                    switch (toolCall.FunctionName)
                     {
-                        case GetCurrentLocationFunctionName:
+                        case nameof(GetCurrentLocation):
                             {
                                 string toolResult = GetCurrentLocation();
-                                messages.Add(new ChatRequestToolMessage(toolCall.Id, toolResult));
+                                messages.Add(new ToolChatMessage(toolCall.Id, toolResult));
                                 break;
                             }
 
-                        case GetCurrentWeatherFunctionName:
+                        case nameof(GetCurrentWeather):
                             {
                                 // The arguments that the model wants to use to call the function are specified as a
                                 // stringified JSON object based on the schema defined in the tool definition. Note that
                                 // the model may hallucinate arguments too. Consequently, it is important to do the
                                 // appropriate parsing and validation before calling the function.
-                                using JsonDocument argumentsJson = JsonDocument.Parse(functionToolCall.Arguments);
+                                using JsonDocument argumentsJson = JsonDocument.Parse(toolCall.FunctionArguments);
                                 bool hasLocation = argumentsJson.RootElement.TryGetProperty("location", out JsonElement location);
                                 bool hasUnit = argumentsJson.RootElement.TryGetProperty("unit", out JsonElement unit);
 
@@ -237,13 +254,13 @@ do
                                 string toolResult = hasUnit
                                     ? GetCurrentWeather(location.GetString(), unit.GetString())
                                     : GetCurrentWeather(location.GetString());
-                                messages.Add(new ChatRequestToolMessage(toolCall.Id, toolResult));
+                                messages.Add(new ToolChatMessage(toolCall.Id, toolResult));
                                 break;
                             }
 
                         default:
                             {
-                                // Handle other or unexpected calls.
+                                // Handle other unexpected calls.
                                 throw new NotImplementedException();
                             }
                     }

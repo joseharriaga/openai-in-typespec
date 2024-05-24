@@ -12,7 +12,7 @@ public partial class ChatSamples
     public async Task Sample01_SimpleChatAsync()
     {
         ChatClient client = new(
-            "gpt-3.5-turbo",
+            "gpt-4o",
             // This is the default key used and the line can be omitted
             Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 

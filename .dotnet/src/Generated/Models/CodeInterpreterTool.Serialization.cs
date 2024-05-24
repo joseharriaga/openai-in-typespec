@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants
 {
-    public partial class FileSearchToolDefinition : IJsonModel<FileSearchToolDefinition>
+    public partial class CodeInterpreterTool : IJsonModel<CodeInterpreterTool>
     {
-        void IJsonModel<FileSearchToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<CodeInterpreterTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FileSearchToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterTool>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FileSearchToolDefinition)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(CodeInterpreterTool)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -41,19 +41,19 @@ namespace OpenAI.Assistants
             writer.WriteEndObject();
         }
 
-        FileSearchToolDefinition IJsonModel<FileSearchToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        CodeInterpreterTool IJsonModel<CodeInterpreterTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FileSearchToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterTool>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FileSearchToolDefinition)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(CodeInterpreterTool)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeFileSearchToolDefinition(document.RootElement, options);
+            return DeserializeCodeInterpreterTool(document.RootElement, options);
         }
 
-        internal static FileSearchToolDefinition DeserializeFileSearchToolDefinition(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static CodeInterpreterTool DeserializeCodeInterpreterTool(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -77,46 +77,46 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FileSearchToolDefinition(type, serializedAdditionalRawData);
+            return new CodeInterpreterTool(type, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<FileSearchToolDefinition>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<CodeInterpreterTool>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FileSearchToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterTool>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(FileSearchToolDefinition)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CodeInterpreterTool)} does not support writing '{options.Format}' format.");
             }
         }
 
-        FileSearchToolDefinition IPersistableModel<FileSearchToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options)
+        CodeInterpreterTool IPersistableModel<CodeInterpreterTool>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FileSearchToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterTool>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeFileSearchToolDefinition(document.RootElement, options);
+                        return DeserializeCodeInterpreterTool(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(FileSearchToolDefinition)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CodeInterpreterTool)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<FileSearchToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<CodeInterpreterTool>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new FileSearchToolDefinition FromResponse(PipelineResponse response)
+        internal static new CodeInterpreterTool FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeFileSearchToolDefinition(document.RootElement);
+            return DeserializeCodeInterpreterTool(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

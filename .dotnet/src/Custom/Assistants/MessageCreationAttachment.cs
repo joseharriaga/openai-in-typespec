@@ -11,21 +11,21 @@ public partial class MessageCreationAttachment
     /// The tools to which the attachment applies to.
     /// </summary>
     /// <remarks>
-    /// These are <see cref="ToolDefinition"/> instances that can be checked via downcast, e.g.:
+    /// These are <see cref="AssistantTool"/> instances that can be checked via downcast, e.g.:
     /// <code>
-    /// if (message.Attachments[0].Tools[0] is <see cref="CodeInterpreterToolDefinition"/>)
+    /// if (message.Attachments[0].Tools[0] is <see cref="CodeInterpreterTool"/>)
     /// {
     ///     // The attachment applies to the code interpreter tool
     /// }
     /// </code>
     /// </remarks>
     [CodeGenMember("Tools")]
-    public IReadOnlyList<ToolDefinition> Tools { get; } = new ChangeTrackingList<ToolDefinition>();
+    public IReadOnlyList<AssistantTool> Tools { get; } = new ChangeTrackingList<AssistantTool>();
 
     private void SerializeTools(Utf8JsonWriter writer)
         => writer.WriteObjectValue(Tools);
 
-    private static void DeserializeTools(JsonProperty property, ref IReadOnlyList<ToolDefinition> tools)
+    private static void DeserializeTools(JsonProperty property, ref IReadOnlyList<AssistantTool> tools)
     {
         if (property.Value.ValueKind == JsonValueKind.Null)
         {
@@ -33,10 +33,10 @@ public partial class MessageCreationAttachment
         }
         else
         {
-            List<ToolDefinition> deserializedTools = [];
+            List<AssistantTool> deserializedTools = [];
             foreach (JsonElement toolElement in property.Value.EnumerateArray())
             {
-                deserializedTools.Add(ToolDefinition.DeserializeToolDefinition(toolElement));
+                deserializedTools.Add(AssistantTool.DeserializeAssistantTool(toolElement));
             }
             tools = deserializedTools;
         }

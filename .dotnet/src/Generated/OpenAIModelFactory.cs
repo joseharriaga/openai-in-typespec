@@ -254,13 +254,13 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Assistants.RunTokenUsage"/>. </summary>
-        /// <param name="completionTokens"> Number of completion tokens used over the course of the run. </param>
-        /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
+        /// <param name="outputTokens"> Number of completion tokens used over the course of the run. </param>
+        /// <param name="inputTokens"> Number of prompt tokens used over the course of the run. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
         /// <returns> A new <see cref="Assistants.RunTokenUsage"/> instance for mocking. </returns>
-        public static RunTokenUsage RunTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
+        public static RunTokenUsage RunTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default)
         {
-            return new RunTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+            return new RunTokenUsage(outputTokens, inputTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Assistants.RunStepError"/>. </summary>

@@ -20,7 +20,7 @@ public partial class AssistantModificationOptions
     /// There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
     /// </summary>
     [CodeGenMember("Tools")]
-    public IList<ToolDefinition> DefaultTools { get; init; } = new ChangeTrackingList<ToolDefinition>();
+    public IList<AssistantTool> DefaultTools { get; init; } = new ChangeTrackingList<AssistantTool>();
 
     // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
     //          response models (which do not contain resource initialization helpers).

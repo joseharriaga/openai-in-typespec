@@ -77,7 +77,7 @@ internal partial class MessageDeltaContentTextAnnotationsFilePathObjectFilePath 
 internal partial class UnknownMessageDeltaContent { }
 
 [CodeGenModel("UnknownAssistantToolDefinition")]
-internal partial class UnknownAssistantToolDefinition { }
+internal partial class UnknownAssistantTool { }
 
 [CodeGenModel("UnknownRunStepDeltaStepDetailsToolCallsObjectToolCallsObject")]
 internal partial class UnknownRunStepDeltaStepDetailsToolCallsObjectToolCallsObject { }

@@ -6,10 +6,10 @@
  */
 
 [CodeGenModel("AssistantToolsCode")]
-public partial class CodeInterpreterToolDefinition : ToolDefinition { }
+public partial class CodeInterpreterTool : AssistantTool { }
 
 [CodeGenModel("AssistantToolsFileSearch")]
-public partial class FileSearchToolDefinition : ToolDefinition { }
+public partial class FileSearchTool : AssistantTool { }
 
 [CodeGenModel("ThreadMessageStatus")]
 public readonly partial struct MessageStatus { }
@@ -19,9 +19,6 @@ public partial class MessageFailureDetails { }
 
 [CodeGenModel("MessageFailureDetailsReason")]
 public readonly partial struct MessageFailureReason { }
-
-[CodeGenModel("RunCompletionUsage")]
-public partial class RunTokenUsage { }
 
 [CodeGenModel("RunObjectLastError")]
 public partial class RunError { }

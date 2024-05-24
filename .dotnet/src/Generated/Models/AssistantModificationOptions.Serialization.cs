@@ -68,7 +68,7 @@ namespace OpenAI.Assistants
                 writer.WriteStartArray();
                 foreach (var item in DefaultTools)
                 {
-                    writer.WriteObjectValue<ToolDefinition>(item, options);
+                    writer.WriteObjectValue<AssistantTool>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -180,7 +180,7 @@ namespace OpenAI.Assistants
             string name = default;
             string description = default;
             string instructions = default;
-            IList<ToolDefinition> tools = default;
+            IList<AssistantTool> tools = default;
             ToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
@@ -231,10 +231,10 @@ namespace OpenAI.Assistants
                     {
                         continue;
                     }
-                    List<ToolDefinition> array = new List<ToolDefinition>();
+                    List<AssistantTool> array = new List<AssistantTool>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
+                        array.Add(AssistantTool.DeserializeAssistantTool(item, options));
                     }
                     tools = array;
                     continue;
@@ -304,7 +304,7 @@ namespace OpenAI.Assistants
                 name,
                 description,
                 instructions,
-                tools ?? new ChangeTrackingList<ToolDefinition>(),
+                tools ?? new ChangeTrackingList<AssistantTool>(),
                 toolResources,
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 temperature,

@@ -43,25 +43,25 @@ namespace OpenAI.Assistants
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         /// <summary> Initializes a new instance of <see cref="RunTokenUsage"/>. </summary>
-        /// <param name="completionTokens"> Number of completion tokens used over the course of the run. </param>
-        /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
+        /// <param name="outputTokens"> Number of completion tokens used over the course of the run. </param>
+        /// <param name="inputTokens"> Number of prompt tokens used over the course of the run. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        internal RunTokenUsage(int completionTokens, int promptTokens, int totalTokens)
+        internal RunTokenUsage(int outputTokens, int inputTokens, int totalTokens)
         {
-            CompletionTokens = completionTokens;
-            PromptTokens = promptTokens;
+            OutputTokens = outputTokens;
+            InputTokens = inputTokens;
             TotalTokens = totalTokens;
         }
 
         /// <summary> Initializes a new instance of <see cref="RunTokenUsage"/>. </summary>
-        /// <param name="completionTokens"> Number of completion tokens used over the course of the run. </param>
-        /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
+        /// <param name="outputTokens"> Number of completion tokens used over the course of the run. </param>
+        /// <param name="inputTokens"> Number of prompt tokens used over the course of the run. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunTokenUsage(int completionTokens, int promptTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunTokenUsage(int outputTokens, int inputTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            CompletionTokens = completionTokens;
-            PromptTokens = promptTokens;
+            OutputTokens = outputTokens;
+            InputTokens = inputTokens;
             TotalTokens = totalTokens;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -70,11 +70,6 @@ namespace OpenAI.Assistants
         internal RunTokenUsage()
         {
         }
-
-        /// <summary> Number of completion tokens used over the course of the run. </summary>
-        public int CompletionTokens { get; }
-        /// <summary> Number of prompt tokens used over the course of the run. </summary>
-        public int PromptTokens { get; }
         /// <summary> Total number of tokens used (prompt + completion). </summary>
         public int TotalTokens { get; }
     }

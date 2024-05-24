@@ -316,7 +316,7 @@ public class AssistantTests : TestBase<AssistantClient>
         AssistantClient client = GetTestClient();
         Assistant assistant = client.CreateAssistant("gpt-35-turbo-latest", new AssistantCreationOptions()
         {
-            Tools = { new CodeInterpreterToolDefinition() },
+            Tools = { new CodeInterpreterTool() },
             Instructions = "Call the code interpreter tool when asked to visualize mathematical concepts.",
         });
         Validate(assistant);

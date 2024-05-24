@@ -237,7 +237,7 @@ namespace OpenAI.Assistants
             ThreadCreationOptions thread = default;
             string model = default;
             string instructions = default;
-            IList<ToolDefinition> tools = default;
+            IList<AssistantTool> tools = default;
             ToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
@@ -292,10 +292,10 @@ namespace OpenAI.Assistants
                     {
                         continue;
                     }
-                    List<ToolDefinition> array = new List<ToolDefinition>();
+                    List<AssistantTool> array = new List<AssistantTool>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
+                        array.Add(AssistantTool.DeserializeAssistantTool(item, options));
                     }
                     tools = array;
                     continue;
@@ -415,7 +415,7 @@ namespace OpenAI.Assistants
                 thread,
                 model,
                 instructions,
-                tools ?? new ChangeTrackingList<ToolDefinition>(),
+                tools ?? new ChangeTrackingList<AssistantTool>(),
                 toolResources,
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 temperature,

@@ -84,7 +84,7 @@ namespace OpenAI.Assistants
                     writer.WriteStartArray();
                     foreach (var item in ToolsOverride)
                     {
-                        writer.WriteObjectValue<ToolDefinition>(item, options);
+                        writer.WriteObjectValue<AssistantTool>(item, options);
                     }
                     writer.WriteEndArray();
                 }
@@ -250,7 +250,7 @@ namespace OpenAI.Assistants
             string instructions = default;
             string additionalInstructions = default;
             IList<MessageCreationOptions> additionalMessages = default;
-            IList<ToolDefinition> tools = default;
+            IList<AssistantTool> tools = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
@@ -319,10 +319,10 @@ namespace OpenAI.Assistants
                     {
                         continue;
                     }
-                    List<ToolDefinition> array = new List<ToolDefinition>();
+                    List<AssistantTool> array = new List<AssistantTool>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
+                        array.Add(AssistantTool.DeserializeAssistantTool(item, options));
                     }
                     tools = array;
                     continue;
@@ -433,7 +433,7 @@ namespace OpenAI.Assistants
                 instructions,
                 additionalInstructions,
                 additionalMessages ?? new ChangeTrackingList<MessageCreationOptions>(),
-                tools ?? new ChangeTrackingList<ToolDefinition>(),
+                tools ?? new ChangeTrackingList<AssistantTool>(),
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 temperature,
                 topP,

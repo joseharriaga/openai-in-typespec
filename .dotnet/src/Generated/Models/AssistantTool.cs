@@ -9,10 +9,10 @@ namespace OpenAI.Assistants
 {
     /// <summary>
     /// The AssistantToolDefinition.
-    /// Please note <see cref="ToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-    /// The available derived classes include <see cref="CodeInterpreterToolDefinition"/>, <see cref="FileSearchToolDefinition"/> and <see cref="FunctionToolDefinition"/>.
+    /// Please note <see cref="AssistantTool"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+    /// The available derived classes include <see cref="CodeInterpreterTool"/>, <see cref="FileSearchTool"/> and <see cref="FunctionTool"/>.
     /// </summary>
-    public abstract partial class ToolDefinition
+    public abstract partial class AssistantTool
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -46,15 +46,15 @@ namespace OpenAI.Assistants
         /// </summary>
         private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ToolDefinition"/>. </summary>
-        protected ToolDefinition()
+        /// <summary> Initializes a new instance of <see cref="AssistantTool"/>. </summary>
+        protected AssistantTool()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="ToolDefinition"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AssistantTool"/>. </summary>
         /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantTool(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             _serializedAdditionalRawData = serializedAdditionalRawData;

@@ -63,7 +63,7 @@ namespace OpenAI.Assistants
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="assistantId"/>, <paramref name="threadId"/>, <paramref name="runId"/> or <paramref name="details"/> is null. </exception>
-        internal RunStep(string id, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepKind type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage)
+        internal RunStep(string id, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepKind type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunTokenUsage usage)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(assistantId, nameof(assistantId));
@@ -109,7 +109,7 @@ namespace OpenAI.Assistants
         /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
         /// <param name="usage"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStep(string id, object @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepKind type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStep(string id, object @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepKind type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -162,7 +162,5 @@ namespace OpenAI.Assistants
         public DateTimeOffset? CompletedAt { get; }
         /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; }
-        /// <summary> Gets the usage. </summary>
-        public RunStepTokenUsage Usage { get; }
     }
 }

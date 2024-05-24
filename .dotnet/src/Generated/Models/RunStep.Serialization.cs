@@ -102,7 +102,7 @@ namespace OpenAI.Assistants
             if (Usage != null)
             {
                 writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue(Usage, options);
+                writer.WriteObjectValue<RunTokenUsage>(Usage, options);
             }
             else
             {
@@ -161,7 +161,7 @@ namespace OpenAI.Assistants
             DateTimeOffset? failedAt = default;
             DateTimeOffset? completedAt = default;
             IReadOnlyDictionary<string, string> metadata = default;
-            RunStepTokenUsage usage = default;
+            RunTokenUsage usage = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -289,7 +289,7 @@ namespace OpenAI.Assistants
                         usage = null;
                         continue;
                     }
-                    usage = RunStepTokenUsage.DeserializeRunStepTokenUsage(property.Value, options);
+                    usage = RunTokenUsage.DeserializeRunTokenUsage(property.Value, options);
                     continue;
                 }
                 if (true)

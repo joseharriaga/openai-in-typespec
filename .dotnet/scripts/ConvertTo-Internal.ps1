@@ -289,8 +289,6 @@ function Edit-GeneratedModels {
         "RunStepError.Serialization.cs",
         "RunStepErrorCode.cs",
         "RunStepStatus.cs",
-        "RunStepTokenUsage.cs",
-        "RunStepTokenUsage.Serialization.cs",
         "RunStepToolCall.cs",
         "RunStepToolCall.Serialization.cs",
         "RunStepKind.cs",

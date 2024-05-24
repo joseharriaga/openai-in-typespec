@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
-    public partial class RunStepTokenUsage : IJsonModel<RunStepTokenUsage>
+    internal partial class RunStepCompletionUsage : IJsonModel<RunStepCompletionUsage>
     {
-        void IJsonModel<RunStepTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<RunStepCompletionUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepCompletionUsage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RunStepTokenUsage)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(RunStepCompletionUsage)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -45,19 +45,19 @@ namespace OpenAI.Assistants
             writer.WriteEndObject();
         }
 
-        RunStepTokenUsage IJsonModel<RunStepTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        RunStepCompletionUsage IJsonModel<RunStepCompletionUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepCompletionUsage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RunStepTokenUsage)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(RunStepCompletionUsage)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeRunStepTokenUsage(document.RootElement, options);
+            return DeserializeRunStepCompletionUsage(document.RootElement, options);
         }
 
-        internal static RunStepTokenUsage DeserializeRunStepTokenUsage(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static RunStepCompletionUsage DeserializeRunStepCompletionUsage(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -93,46 +93,46 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData);
+            return new RunStepCompletionUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<RunStepTokenUsage>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<RunStepCompletionUsage>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepCompletionUsage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(RunStepTokenUsage)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(RunStepCompletionUsage)} does not support writing '{options.Format}' format.");
             }
         }
 
-        RunStepTokenUsage IPersistableModel<RunStepTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options)
+        RunStepCompletionUsage IPersistableModel<RunStepCompletionUsage>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepCompletionUsage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeRunStepTokenUsage(document.RootElement, options);
+                        return DeserializeRunStepCompletionUsage(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(RunStepTokenUsage)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(RunStepCompletionUsage)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<RunStepTokenUsage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<RunStepCompletionUsage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static RunStepTokenUsage FromResponse(PipelineResponse response)
+        internal static RunStepCompletionUsage FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeRunStepTokenUsage(document.RootElement);
+            return DeserializeRunStepCompletionUsage(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

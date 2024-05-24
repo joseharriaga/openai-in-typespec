@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Internal.Models
 {
     /// <summary> Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`. </summary>
-    public partial class RunStepTokenUsage
+    internal partial class RunStepCompletionUsage
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,23 +42,23 @@ namespace OpenAI.Assistants
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="RunStepTokenUsage"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="RunStepCompletionUsage"/>. </summary>
         /// <param name="completionTokens"> Number of completion tokens used over the course of the run step. </param>
         /// <param name="promptTokens"> Number of prompt tokens used over the course of the run step. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        internal RunStepTokenUsage(int completionTokens, int promptTokens, int totalTokens)
+        internal RunStepCompletionUsage(int completionTokens, int promptTokens, int totalTokens)
         {
             CompletionTokens = completionTokens;
             PromptTokens = promptTokens;
             TotalTokens = totalTokens;
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunStepTokenUsage"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="RunStepCompletionUsage"/>. </summary>
         /// <param name="completionTokens"> Number of completion tokens used over the course of the run step. </param>
         /// <param name="promptTokens"> Number of prompt tokens used over the course of the run step. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal RunStepTokenUsage(int completionTokens, int promptTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepCompletionUsage(int completionTokens, int promptTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             CompletionTokens = completionTokens;
             PromptTokens = promptTokens;
@@ -66,8 +66,8 @@ namespace OpenAI.Assistants
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="RunStepTokenUsage"/> for deserialization. </summary>
-        internal RunStepTokenUsage()
+        /// <summary> Initializes a new instance of <see cref="RunStepCompletionUsage"/> for deserialization. </summary>
+        internal RunStepCompletionUsage()
         {
         }
 

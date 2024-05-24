@@ -22,4 +22,10 @@ public partial class RunStep
     /// </remarks>
     [CodeGenMember("StepDetails")]
     public RunStepDetails Details { get; }
+
+    /// <summary>
+    /// Gets the token usage associated with the run step.
+    /// </summary>
+    [CodeGenMember("Usage")]
+    public RunTokenUsage Usage { get; }
 }

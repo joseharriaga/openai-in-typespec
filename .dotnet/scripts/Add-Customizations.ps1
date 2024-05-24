@@ -70,6 +70,7 @@ function Remove-PseudoSuppressedTypes {
         "ModifyThreadRequestToolResources",
         "RunObjectObject",
         "RunStepObjectObject",
+        "RunStepTokenUsage",
         "ThreadObjectObject",
         "ToolConstraint",
         "VectorStoreFileObjectObject",

@@ -44,8 +44,5 @@ public partial class RunStepError { }
 [CodeGenModel("RunStepErrorCode")]
 public readonly partial struct RunStepErrorCode { }
 
-[CodeGenModel("RunStepCompletionUsage")]
-public partial class RunStepTokenUsage { }
-
 [CodeGenModel("RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]
 public partial class RunStepCodeInterpreterOutput { }

@@ -54,15 +54,12 @@ namespace OpenAI.Files
 
         string IPersistableModel<OpenAIFileInfoCollection>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
         internal static OpenAIFileInfoCollection FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeOpenAIFileInfoCollection(document.RootElement);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal virtual BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);

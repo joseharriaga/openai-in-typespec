@@ -9,7 +9,6 @@ using System.Linq;
 
 namespace OpenAI.Files
 {
-    /// <summary> The ListFilesResponse. </summary>
     public partial class OpenAIFileInfoCollection : ReadOnlyCollection<OpenAIFileInfo>
     {
     }

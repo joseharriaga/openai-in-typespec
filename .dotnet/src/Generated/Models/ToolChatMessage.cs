@@ -7,25 +7,17 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    /// <summary> The ChatCompletionRequestToolMessage. </summary>
     public partial class ToolChatMessage : ChatMessage
     {
-        /// <summary> Initializes a new instance of <see cref="ToolChatMessage"/>. </summary>
-        /// <param name="role"> The role of the author of this message. </param>
-        /// <param name="content"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="toolCallId"> Tool call that this message is responding to. </param>
         internal ToolChatMessage(string role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData, string toolCallId) : base(role, content, serializedAdditionalRawData)
         {
             ToolCallId = toolCallId;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ToolChatMessage"/> for deserialization. </summary>
         internal ToolChatMessage()
         {
         }
 
-        /// <summary> Tool call that this message is responding to. </summary>
         public string ToolCallId { get; }
     }
 }

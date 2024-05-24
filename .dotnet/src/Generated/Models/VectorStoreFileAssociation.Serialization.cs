@@ -179,15 +179,12 @@ namespace OpenAI.VectorStores
 
         string IPersistableModel<VectorStoreFileAssociation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
         internal static VectorStoreFileAssociation FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeVectorStoreFileAssociation(document.RootElement);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal virtual BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);

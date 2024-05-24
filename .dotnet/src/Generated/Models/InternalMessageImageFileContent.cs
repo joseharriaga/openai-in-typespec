@@ -8,20 +8,14 @@ using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> References an image [File](/docs/api-reference/files) in the content of a message. </summary>
     internal partial class InternalMessageImageFileContent : MessageContent
     {
-        /// <summary> Initializes a new instance of <see cref="InternalMessageImageFileContent"/>. </summary>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="type"> Always `image_file`. </param>
-        /// <param name="imageFile"></param>
         internal InternalMessageImageFileContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string type, InternalMessageContentItemFileObjectImageFile imageFile) : base(serializedAdditionalRawData)
         {
             _type = type;
             _imageFile = imageFile;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalMessageImageFileContent"/> for deserialization. </summary>
         internal InternalMessageImageFileContent()
         {
         }

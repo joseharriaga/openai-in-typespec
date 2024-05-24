@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.FineTuning
 {
-    /// <summary> Enum for level in InternalFineTuningJobEvent. </summary>
     internal readonly partial struct InternalFineTuningJobEventLevel : IEquatable<InternalFineTuningJobEventLevel>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalFineTuningJobEventLevel"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalFineTuningJobEventLevel(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -23,29 +20,19 @@ namespace OpenAI.FineTuning
         private const string WarnValue = "warn";
         private const string ErrorValue = "error";
 
-        /// <summary> info. </summary>
         public static InternalFineTuningJobEventLevel Info { get; } = new InternalFineTuningJobEventLevel(InfoValue);
-        /// <summary> warn. </summary>
         public static InternalFineTuningJobEventLevel Warn { get; } = new InternalFineTuningJobEventLevel(WarnValue);
-        /// <summary> error. </summary>
         public static InternalFineTuningJobEventLevel Error { get; } = new InternalFineTuningJobEventLevel(ErrorValue);
-        /// <summary> Determines if two <see cref="InternalFineTuningJobEventLevel"/> values are the same. </summary>
         public static bool operator ==(InternalFineTuningJobEventLevel left, InternalFineTuningJobEventLevel right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalFineTuningJobEventLevel"/> values are not the same. </summary>
         public static bool operator !=(InternalFineTuningJobEventLevel left, InternalFineTuningJobEventLevel right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalFineTuningJobEventLevel"/>. </summary>
         public static implicit operator InternalFineTuningJobEventLevel(string value) => new InternalFineTuningJobEventLevel(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalFineTuningJobEventLevel other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalFineTuningJobEventLevel other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

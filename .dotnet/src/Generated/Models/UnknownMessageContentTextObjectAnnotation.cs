@@ -7,17 +7,12 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Unknown version of MessageContentTextObjectAnnotation. </summary>
     internal partial class UnknownMessageContentTextObjectAnnotation : MessageContentTextObjectAnnotation
     {
-        /// <summary> Initializes a new instance of <see cref="UnknownMessageContentTextObjectAnnotation"/>. </summary>
-        /// <param name="type"> The discriminated type identifier for the content item. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal UnknownMessageContentTextObjectAnnotation(string type, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, serializedAdditionalRawData)
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="UnknownMessageContentTextObjectAnnotation"/> for deserialization. </summary>
         internal UnknownMessageContentTextObjectAnnotation()
         {
         }

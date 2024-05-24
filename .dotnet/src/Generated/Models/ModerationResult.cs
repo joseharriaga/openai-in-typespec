@@ -7,46 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.Moderations
 {
-    /// <summary> The CreateModerationResponseResult. </summary>
     public partial class ModerationResult
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="ModerationResult"/>. </summary>
-        /// <param name="flagged"> Whether any of the below categories are flagged. </param>
-        /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
-        /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="categories"/> or <paramref name="categoryScores"/> is null. </exception>
         internal ModerationResult(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores)
         {
             Argument.AssertNotNull(categories, nameof(categories));
@@ -57,11 +21,6 @@ namespace OpenAI.Moderations
             CategoryScores = categoryScores;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ModerationResult"/>. </summary>
-        /// <param name="flagged"> Whether any of the below categories are flagged. </param>
-        /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
-        /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ModerationResult(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Flagged = flagged;
@@ -70,16 +29,12 @@ namespace OpenAI.Moderations
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ModerationResult"/> for deserialization. </summary>
         internal ModerationResult()
         {
         }
 
-        /// <summary> Whether any of the below categories are flagged. </summary>
         public bool Flagged { get; }
-        /// <summary> A list of the categories, and whether they are flagged or not. </summary>
         public ModerationCategories Categories { get; }
-        /// <summary> A list of the categories along with their scores as predicted by model. </summary>
         public ModerationCategoryScores CategoryScores { get; }
     }
 }

@@ -9,7 +9,6 @@ using System.Linq;
 
 namespace OpenAI.Models
 {
-    /// <summary> The ListModelsResponse. </summary>
     public partial class OpenAIModelInfoCollection : ReadOnlyCollection<OpenAIModelInfo>
     {
     }

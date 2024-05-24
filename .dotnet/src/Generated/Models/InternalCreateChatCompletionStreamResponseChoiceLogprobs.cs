@@ -8,63 +8,25 @@ using System.Linq;
 
 namespace OpenAI.Chat
 {
-    /// <summary> The CreateChatCompletionStreamResponseChoiceLogprobs. </summary>
     internal partial class InternalCreateChatCompletionStreamResponseChoiceLogprobs
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionStreamResponseChoiceLogprobs"/>. </summary>
-        /// <param name="content"> A list of message content tokens with log probability information. </param>
         internal InternalCreateChatCompletionStreamResponseChoiceLogprobs(IEnumerable<ChatTokenLogProbabilityInfo> content)
         {
             Content = content?.ToList();
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionStreamResponseChoiceLogprobs"/>. </summary>
-        /// <param name="content"> A list of message content tokens with log probability information. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalCreateChatCompletionStreamResponseChoiceLogprobs(IReadOnlyList<ChatTokenLogProbabilityInfo> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Content = content;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionStreamResponseChoiceLogprobs"/> for deserialization. </summary>
         internal InternalCreateChatCompletionStreamResponseChoiceLogprobs()
         {
         }
 
-        /// <summary> A list of message content tokens with log probability information. </summary>
         public IReadOnlyList<ChatTokenLogProbabilityInfo> Content { get; }
     }
 }

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.Assistants
 {
     // Data plane generated sub-client.
-    /// <summary> The Assistant sub-client. </summary>
     public partial class AssistantClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,19 +18,12 @@ namespace OpenAI.Assistants
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of AssistantClient for mocking. </summary>
         protected AssistantClient()
         {
         }
 
-        /// <summary> Retrieves an assistant. </summary>
-        /// <param name="assistantId"> The ID of the assistant to retrieve. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Get assistant. </remarks>
         public virtual async Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
@@ -40,11 +32,6 @@ namespace OpenAI.Assistants
             return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Retrieves an assistant. </summary>
-        /// <param name="assistantId"> The ID of the assistant to retrieve. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Get assistant. </remarks>
         public virtual ClientResult<Assistant> GetAssistant(string assistantId)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
@@ -53,12 +40,6 @@ namespace OpenAI.Assistants
             return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Modifies an assistant. </summary>
-        /// <param name="assistantId"> The ID of the assistant to modify. </param>
-        /// <param name="assistant"> The <see cref="AssistantModificationOptions"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="assistant"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Modify assistant. </remarks>
         public virtual async Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions assistant)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
@@ -69,12 +50,6 @@ namespace OpenAI.Assistants
             return ClientResult.FromValue(Assistant.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Modifies an assistant. </summary>
-        /// <param name="assistantId"> The ID of the assistant to modify. </param>
-        /// <param name="assistant"> The <see cref="AssistantModificationOptions"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="assistantId"/> or <paramref name="assistant"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="assistantId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Modify assistant. </remarks>
         public virtual ClientResult<Assistant> ModifyAssistant(string assistantId, AssistantModificationOptions assistant)
         {
             Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));

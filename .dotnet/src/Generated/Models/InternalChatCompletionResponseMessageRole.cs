@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Chat
 {
-    /// <summary> The ChatCompletionResponseMessage_role. </summary>
     internal readonly partial struct InternalChatCompletionResponseMessageRole : IEquatable<InternalChatCompletionResponseMessageRole>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalChatCompletionResponseMessageRole"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalChatCompletionResponseMessageRole(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Chat
 
         private const string AssistantValue = "assistant";
 
-        /// <summary> assistant. </summary>
         public static InternalChatCompletionResponseMessageRole Assistant { get; } = new InternalChatCompletionResponseMessageRole(AssistantValue);
-        /// <summary> Determines if two <see cref="InternalChatCompletionResponseMessageRole"/> values are the same. </summary>
         public static bool operator ==(InternalChatCompletionResponseMessageRole left, InternalChatCompletionResponseMessageRole right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalChatCompletionResponseMessageRole"/> values are not the same. </summary>
         public static bool operator !=(InternalChatCompletionResponseMessageRole left, InternalChatCompletionResponseMessageRole right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalChatCompletionResponseMessageRole"/>. </summary>
         public static implicit operator InternalChatCompletionResponseMessageRole(string value) => new InternalChatCompletionResponseMessageRole(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalChatCompletionResponseMessageRole other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalChatCompletionResponseMessageRole other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

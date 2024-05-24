@@ -8,48 +8,10 @@ using System.Linq;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> The MessageContentTextObjectText. </summary>
     internal partial class MessageContentTextObjectText
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextObjectText"/>. </summary>
-        /// <param name="value"> The data that makes up the text. </param>
-        /// <param name="annotations">
-        /// Please note <see cref="MessageContentTextObjectAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="MessageContentTextAnnotationsFileCitationObject"/> and <see cref="MessageContentTextAnnotationsFilePathObject"/>.
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> or <paramref name="annotations"/> is null. </exception>
         public MessageContentTextObjectText(string value, IEnumerable<MessageContentTextObjectAnnotation> annotations)
         {
             Argument.AssertNotNull(value, nameof(value));
@@ -59,13 +21,6 @@ namespace OpenAI.Assistants
             Annotations = annotations.ToList();
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextObjectText"/>. </summary>
-        /// <param name="value"> The data that makes up the text. </param>
-        /// <param name="annotations">
-        /// Please note <see cref="MessageContentTextObjectAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="MessageContentTextAnnotationsFileCitationObject"/> and <see cref="MessageContentTextAnnotationsFilePathObject"/>.
-        /// </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal MessageContentTextObjectText(string value, IList<MessageContentTextObjectAnnotation> annotations, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Value = value;
@@ -73,18 +28,11 @@ namespace OpenAI.Assistants
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextObjectText"/> for deserialization. </summary>
         internal MessageContentTextObjectText()
         {
         }
 
-        /// <summary> The data that makes up the text. </summary>
         public string Value { get; init; }
-        /// <summary>
-        /// Gets the annotations
-        /// Please note <see cref="MessageContentTextObjectAnnotation"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="MessageContentTextAnnotationsFileCitationObject"/> and <see cref="MessageContentTextAnnotationsFilePathObject"/>.
-        /// </summary>
         public IList<MessageContentTextObjectAnnotation> Annotations { get; }
     }
 }

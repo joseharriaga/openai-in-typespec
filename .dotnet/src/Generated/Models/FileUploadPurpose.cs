@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Files
 {
-    /// <summary> Enum for purpose in InternalFileUploadOptions. </summary>
     public readonly partial struct FileUploadPurpose : IEquatable<FileUploadPurpose>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="FileUploadPurpose"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public FileUploadPurpose(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -24,31 +21,20 @@ namespace OpenAI.Files
         private const string FineTuneValue = "fine-tune";
         private const string VisionValue = "vision";
 
-        /// <summary> assistants. </summary>
         public static FileUploadPurpose Assistants { get; } = new FileUploadPurpose(AssistantsValue);
-        /// <summary> batch. </summary>
         public static FileUploadPurpose Batch { get; } = new FileUploadPurpose(BatchValue);
-        /// <summary> fine-tune. </summary>
         public static FileUploadPurpose FineTune { get; } = new FileUploadPurpose(FineTuneValue);
-        /// <summary> vision. </summary>
         public static FileUploadPurpose Vision { get; } = new FileUploadPurpose(VisionValue);
-        /// <summary> Determines if two <see cref="FileUploadPurpose"/> values are the same. </summary>
         public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="FileUploadPurpose"/> values are not the same. </summary>
         public static bool operator !=(FileUploadPurpose left, FileUploadPurpose right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="FileUploadPurpose"/>. </summary>
         public static implicit operator FileUploadPurpose(string value) => new FileUploadPurpose(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is FileUploadPurpose other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(FileUploadPurpose other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

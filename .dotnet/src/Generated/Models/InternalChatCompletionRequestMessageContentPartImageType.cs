@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Chat
 {
-    /// <summary> The ChatCompletionRequestMessageContentPartImage_type. </summary>
     internal readonly partial struct InternalChatCompletionRequestMessageContentPartImageType : IEquatable<InternalChatCompletionRequestMessageContentPartImageType>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalChatCompletionRequestMessageContentPartImageType"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalChatCompletionRequestMessageContentPartImageType(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Chat
 
         private const string ImageUrlValue = "image_url";
 
-        /// <summary> image_url. </summary>
         public static InternalChatCompletionRequestMessageContentPartImageType ImageUrl { get; } = new InternalChatCompletionRequestMessageContentPartImageType(ImageUrlValue);
-        /// <summary> Determines if two <see cref="InternalChatCompletionRequestMessageContentPartImageType"/> values are the same. </summary>
         public static bool operator ==(InternalChatCompletionRequestMessageContentPartImageType left, InternalChatCompletionRequestMessageContentPartImageType right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalChatCompletionRequestMessageContentPartImageType"/> values are not the same. </summary>
         public static bool operator !=(InternalChatCompletionRequestMessageContentPartImageType left, InternalChatCompletionRequestMessageContentPartImageType right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalChatCompletionRequestMessageContentPartImageType"/>. </summary>
         public static implicit operator InternalChatCompletionRequestMessageContentPartImageType(string value) => new InternalChatCompletionRequestMessageContentPartImageType(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalChatCompletionRequestMessageContentPartImageType other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalChatCompletionRequestMessageContentPartImageType other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

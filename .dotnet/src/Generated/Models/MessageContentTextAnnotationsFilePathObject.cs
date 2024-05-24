@@ -7,15 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> A URL for the file that's generated when the assistant used the `code_interpreter` tool to generate a file. </summary>
     internal partial class MessageContentTextAnnotationsFilePathObject : MessageContentTextObjectAnnotation
     {
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFilePathObject"/>. </summary>
-        /// <param name="text"> The text in the message content that needs to be replaced. </param>
-        /// <param name="filePath"></param>
-        /// <param name="startIndex"></param>
-        /// <param name="endIndex"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="filePath"/> is null. </exception>
         public MessageContentTextAnnotationsFilePathObject(string text, InternalMessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex)
         {
             Argument.AssertNotNull(text, nameof(text));
@@ -28,13 +21,6 @@ namespace OpenAI.Assistants
             EndIndex = endIndex;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFilePathObject"/>. </summary>
-        /// <param name="type"> The discriminated type identifier for the content item. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="text"> The text in the message content that needs to be replaced. </param>
-        /// <param name="filePath"></param>
-        /// <param name="startIndex"></param>
-        /// <param name="endIndex"></param>
         internal MessageContentTextAnnotationsFilePathObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string text, InternalMessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex) : base(type, serializedAdditionalRawData)
         {
             Text = text;
@@ -43,18 +29,13 @@ namespace OpenAI.Assistants
             EndIndex = endIndex;
         }
 
-        /// <summary> Initializes a new instance of <see cref="MessageContentTextAnnotationsFilePathObject"/> for deserialization. </summary>
         internal MessageContentTextAnnotationsFilePathObject()
         {
         }
 
-        /// <summary> The text in the message content that needs to be replaced. </summary>
         public string Text { get; init; }
-        /// <summary> Gets or sets the file path. </summary>
         public InternalMessageContentTextAnnotationsFilePathObjectFilePath FilePath { get; init; }
-        /// <summary> Gets or sets the start index. </summary>
         public int StartIndex { get; init; }
-        /// <summary> Gets or sets the end index. </summary>
         public int EndIndex { get; init; }
     }
 }

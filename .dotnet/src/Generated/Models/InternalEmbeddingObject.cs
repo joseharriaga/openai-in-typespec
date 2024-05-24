@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Embeddings
 {
-    /// <summary> The Embedding_object. </summary>
     internal readonly partial struct InternalEmbeddingObject : IEquatable<InternalEmbeddingObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalEmbeddingObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalEmbeddingObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Embeddings
 
         private const string EmbeddingValue = "embedding";
 
-        /// <summary> embedding. </summary>
         public static InternalEmbeddingObject Embedding { get; } = new InternalEmbeddingObject(EmbeddingValue);
-        /// <summary> Determines if two <see cref="InternalEmbeddingObject"/> values are the same. </summary>
         public static bool operator ==(InternalEmbeddingObject left, InternalEmbeddingObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalEmbeddingObject"/> values are not the same. </summary>
         public static bool operator !=(InternalEmbeddingObject left, InternalEmbeddingObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalEmbeddingObject"/>. </summary>
         public static implicit operator InternalEmbeddingObject(string value) => new InternalEmbeddingObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalEmbeddingObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalEmbeddingObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

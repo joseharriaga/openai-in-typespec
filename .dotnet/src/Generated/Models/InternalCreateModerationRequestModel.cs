@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Moderations
 {
-    /// <summary> The CreateModerationRequestModel. </summary>
     internal readonly partial struct InternalCreateModerationRequestModel : IEquatable<InternalCreateModerationRequestModel>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateModerationRequestModel"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalCreateModerationRequestModel(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -22,27 +19,18 @@ namespace OpenAI.Moderations
         private const string TextModerationLatestValue = "text-moderation-latest";
         private const string TextModerationStableValue = "text-moderation-stable";
 
-        /// <summary> text-moderation-latest. </summary>
         public static InternalCreateModerationRequestModel TextModerationLatest { get; } = new InternalCreateModerationRequestModel(TextModerationLatestValue);
-        /// <summary> text-moderation-stable. </summary>
         public static InternalCreateModerationRequestModel TextModerationStable { get; } = new InternalCreateModerationRequestModel(TextModerationStableValue);
-        /// <summary> Determines if two <see cref="InternalCreateModerationRequestModel"/> values are the same. </summary>
         public static bool operator ==(InternalCreateModerationRequestModel left, InternalCreateModerationRequestModel right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalCreateModerationRequestModel"/> values are not the same. </summary>
         public static bool operator !=(InternalCreateModerationRequestModel left, InternalCreateModerationRequestModel right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalCreateModerationRequestModel"/>. </summary>
         public static implicit operator InternalCreateModerationRequestModel(string value) => new InternalCreateModerationRequestModel(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalCreateModerationRequestModel other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalCreateModerationRequestModel other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

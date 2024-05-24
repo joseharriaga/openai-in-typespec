@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.Images
 {
     // Data plane generated sub-client.
-    /// <summary> The Image sub-client. </summary>
     public partial class ImageClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,10 +18,8 @@ namespace OpenAI.Images
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of ImageClient for mocking. </summary>
         protected ImageClient()
         {
         }

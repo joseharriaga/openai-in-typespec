@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.Assistants
 {
     // Data plane generated sub-client.
-    /// <summary> The InternalAssistantRun sub-client. </summary>
     internal partial class InternalAssistantRunClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,10 +18,8 @@ namespace OpenAI.Assistants
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of InternalAssistantRunClient for mocking. </summary>
         protected InternalAssistantRunClient()
         {
         }

@@ -111,15 +111,12 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<MessageContentTextObjectAnnotation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
         internal static new UnknownMessageContentTextObjectAnnotation FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeUnknownMessageContentTextObjectAnnotation(document.RootElement);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create<MessageContentTextObjectAnnotation>(this, ModelSerializationExtensions.WireOptions);

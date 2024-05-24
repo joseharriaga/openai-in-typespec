@@ -16,31 +16,13 @@ using OpenAI.VectorStores;
 
 namespace OpenAI
 {
-    /// <summary> Model factory for models. </summary>
     internal static partial class OpenAIModelFactory
     {
-        /// <summary> Initializes a new instance of <see cref="Audio.TranscribedWord"/>. </summary>
-        /// <param name="word"> The text content of the word. </param>
-        /// <param name="start"> Start time of the word in seconds. </param>
-        /// <param name="end"> End time of the word in seconds. </param>
-        /// <returns> A new <see cref="Audio.TranscribedWord"/> instance for mocking. </returns>
         public static TranscribedWord TranscribedWord(string word = null, TimeSpan start = default, TimeSpan end = default)
         {
             return new TranscribedWord(word, start, end, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Audio.TranscribedSegment"/>. </summary>
-        /// <param name="id"> Unique identifier of the segment. </param>
-        /// <param name="seekOffset"> Seek offset of the segment. </param>
-        /// <param name="start"> Start time of the segment in seconds. </param>
-        /// <param name="end"> End time of the segment in seconds. </param>
-        /// <param name="text"> Text content of the segment. </param>
-        /// <param name="tokenIds"> Array of token IDs for the text content. </param>
-        /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
-        /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
-        /// <param name="compressionRatio"> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </param>
-        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
-        /// <returns> A new <see cref="Audio.TranscribedSegment"/> instance for mocking. </returns>
         public static TranscribedSegment TranscribedSegment(int id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = default, double averageLogProbability = default, float compressionRatio = default, double noSpeechProbability = default)
         {
             tokenIds ??= new List<long>();
@@ -59,22 +41,11 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.ChatFunction"/>. </summary>
-        /// <param name="functionDescription"> A description of what the function does, used by the model to choose when and how to call the function. </param>
-        /// <param name="functionName"> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </param>
-        /// <param name="functionParameters"></param>
-        /// <returns> A new <see cref="Chat.ChatFunction"/> instance for mocking. </returns>
         public static ChatFunction ChatFunction(string functionDescription = null, string functionName = null, BinaryData functionParameters = null)
         {
             return new ChatFunction(functionDescription, functionName, functionParameters, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.ChatTokenLogProbabilityInfo"/>. </summary>
-        /// <param name="token"> The token. </param>
-        /// <param name="logProbability"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
-        /// <param name="utf8ByteValues"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
-        /// <param name="topLogProbabilities"> List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned. </param>
-        /// <returns> A new <see cref="Chat.ChatTokenLogProbabilityInfo"/> instance for mocking. </returns>
         public static ChatTokenLogProbabilityInfo ChatTokenLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null, IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = null)
         {
             utf8ByteValues ??= new List<int>();
@@ -83,11 +54,6 @@ namespace OpenAI
             return new ChatTokenLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), topLogProbabilities?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.ChatTokenTopLogProbabilityInfo"/>. </summary>
-        /// <param name="token"> The token. </param>
-        /// <param name="logProbability"> The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. </param>
-        /// <param name="utf8ByteValues"> A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. </param>
-        /// <returns> A new <see cref="Chat.ChatTokenTopLogProbabilityInfo"/> instance for mocking. </returns>
         public static ChatTokenTopLogProbabilityInfo ChatTokenTopLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null)
         {
             utf8ByteValues ??= new List<int>();
@@ -95,29 +61,16 @@ namespace OpenAI
             return new ChatTokenTopLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.ChatTokenUsage"/>. </summary>
-        /// <param name="outputTokens"> Number of tokens in the generated completion. </param>
-        /// <param name="inputTokens"> Number of tokens in the prompt. </param>
-        /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
-        /// <returns> A new <see cref="Chat.ChatTokenUsage"/> instance for mocking. </returns>
         public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default)
         {
             return new ChatTokenUsage(outputTokens, inputTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Embeddings.EmbeddingTokenUsage"/>. </summary>
-        /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
-        /// <param name="totalTokens"> The total number of tokens used by the request. </param>
-        /// <returns> A new <see cref="Embeddings.EmbeddingTokenUsage"/> instance for mocking. </returns>
         public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
         {
             return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Images.GeneratedImageCollection"/>. </summary>
-        /// <param name="created"></param>
-        /// <param name="data"></param>
-        /// <returns> A new <see cref="Images.GeneratedImageCollection"/> instance for mocking. </returns>
         public static GeneratedImageCollection GeneratedImageCollection(DateTimeOffset created = default, IEnumerable<GeneratedImage> data = null)
         {
             data ??= new List<GeneratedImage>();
@@ -125,28 +78,16 @@ namespace OpenAI
             return new GeneratedImageCollection(created, data?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Images.GeneratedImage"/>. </summary>
-        /// <param name="imageBytes"> The base64-encoded JSON of the generated image, if `response_format` is `b64_json`. </param>
-        /// <param name="imageUri"> The URL of the generated image, if `response_format` is `url` (default). </param>
-        /// <param name="revisedPrompt"> The prompt that was used to generate the image, if there was any revision to the prompt. </param>
-        /// <returns> A new <see cref="Images.GeneratedImage"/> instance for mocking. </returns>
         public static GeneratedImage GeneratedImage(BinaryData imageBytes = null, Uri imageUri = null, string revisedPrompt = null)
         {
             return new GeneratedImage(imageBytes, imageUri, revisedPrompt, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.MessageFailureDetails"/>. </summary>
-        /// <param name="reason"> The reason the message is incomplete. </param>
-        /// <returns> A new <see cref="Assistants.MessageFailureDetails"/> instance for mocking. </returns>
         public static MessageFailureDetails MessageFailureDetails(MessageFailureReason reason = default)
         {
             return new MessageFailureDetails(reason, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.MessageObjectAttachment"/>. </summary>
-        /// <param name="fileId"> The ID of the file to attach to the message. </param>
-        /// <param name="tools"> The tools to add this file to. </param>
-        /// <returns> A new <see cref="Models.MessageObjectAttachment"/> instance for mocking. </returns>
         public static MessageObjectAttachment MessageObjectAttachment(string fileId = null, IEnumerable<BinaryData> tools = null)
         {
             tools ??= new List<BinaryData>();
@@ -154,11 +95,6 @@ namespace OpenAI
             return new MessageObjectAttachment(fileId, tools?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCollection"/>. </summary>
-        /// <param name="id"> The unique identifier for the moderation request. </param>
-        /// <param name="model"> The model used to generate the moderation results. </param>
-        /// <param name="results"> A list of moderation objects. </param>
-        /// <returns> A new <see cref="Moderations.ModerationCollection"/> instance for mocking. </returns>
         public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
         {
             results ??= new List<ModerationResult>();
@@ -166,29 +102,11 @@ namespace OpenAI
             return new ModerationCollection(id, model, results?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationResult"/>. </summary>
-        /// <param name="flagged"> Whether any of the below categories are flagged. </param>
-        /// <param name="categories"> A list of the categories, and whether they are flagged or not. </param>
-        /// <param name="categoryScores"> A list of the categories along with their scores as predicted by model. </param>
-        /// <returns> A new <see cref="Moderations.ModerationResult"/> instance for mocking. </returns>
         public static ModerationResult ModerationResult(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
         {
             return new ModerationResult(flagged, categories, categoryScores, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCategories"/>. </summary>
-        /// <param name="hate"> Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment. </param>
-        /// <param name="hateThreatening"> Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. </param>
-        /// <param name="harassment"> Content that expresses, incites, or promotes harassing language towards any target. </param>
-        /// <param name="harassmentThreatening"> Harassment content that also includes violence or serious harm towards any target. </param>
-        /// <param name="selfHarm"> Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders. </param>
-        /// <param name="selfHarmIntent"> Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders. </param>
-        /// <param name="selfHarmInstructions"> Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts. </param>
-        /// <param name="sexual"> Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness). </param>
-        /// <param name="sexualMinors"> Sexual content that includes an individual who is under 18 years old. </param>
-        /// <param name="violence"> Content that depicts death, violence, or physical injury. </param>
-        /// <param name="violenceGraphic"> Content that depicts death, violence, or physical injury in graphic detail. </param>
-        /// <returns> A new <see cref="Moderations.ModerationCategories"/> instance for mocking. </returns>
         public static ModerationCategories ModerationCategories(bool hate = default, bool hateThreatening = default, bool harassment = default, bool harassmentThreatening = default, bool selfHarm = default, bool selfHarmIntent = default, bool selfHarmInstructions = default, bool sexual = default, bool sexualMinors = default, bool violence = default, bool violenceGraphic = default)
         {
             return new ModerationCategories(
@@ -206,19 +124,6 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCategoryScores"/>. </summary>
-        /// <param name="hate"> The score for the category 'hate'. </param>
-        /// <param name="hateThreatening"> The score for the category 'hate/threatening'. </param>
-        /// <param name="harassment"> The score for the category 'harassment'. </param>
-        /// <param name="harassmentThreatening"> The score for the category 'harassment/threatening'. </param>
-        /// <param name="selfHarm"> The score for the category 'self-harm'. </param>
-        /// <param name="selfHarmIntent"> The score for the category 'self-harm/intent'. </param>
-        /// <param name="selfHarmInstructions"> The score for the category 'self-harm/instructions'. </param>
-        /// <param name="sexual"> The score for the category 'sexual'. </param>
-        /// <param name="sexualMinors"> The score for the category 'sexual/minors'. </param>
-        /// <param name="violence"> The score for the category 'violence'. </param>
-        /// <param name="violenceGraphic"> The score for the category 'violence/graphic'. </param>
-        /// <returns> A new <see cref="Moderations.ModerationCategoryScores"/> instance for mocking. </returns>
         public static ModerationCategoryScores ModerationCategoryScores(float hate = default, float hateThreatening = default, float harassment = default, float harassmentThreatening = default, float selfHarm = default, float selfHarmIntent = default, float selfHarmInstructions = default, float sexual = default, float sexualMinors = default, float violence = default, float violenceGraphic = default)
         {
             return new ModerationCategoryScores(
@@ -236,64 +141,36 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunError"/>. </summary>
-        /// <param name="code"> One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`. </param>
-        /// <param name="message"> A human-readable description of the error. </param>
-        /// <returns> A new <see cref="Assistants.RunError"/> instance for mocking. </returns>
         public static RunError RunError(RunErrorCode code = default, string message = null)
         {
             return new RunError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunIncompleteDetails"/>. </summary>
-        /// <param name="reason"> The reason why the run is incomplete. This will point to which specific token limit was reached over the course of the run. </param>
-        /// <returns> A new <see cref="Assistants.RunIncompleteDetails"/> instance for mocking. </returns>
         public static RunIncompleteDetails RunIncompleteDetails(RunIncompleteReason? reason = null)
         {
             return new RunIncompleteDetails(reason, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunTokenUsage"/>. </summary>
-        /// <param name="completionTokens"> Number of completion tokens used over the course of the run. </param>
-        /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
-        /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        /// <returns> A new <see cref="Assistants.RunTokenUsage"/> instance for mocking. </returns>
         public static RunTokenUsage RunTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
             return new RunTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunStepError"/>. </summary>
-        /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
-        /// <param name="message"> A human-readable description of the error. </param>
-        /// <returns> A new <see cref="Assistants.RunStepError"/> instance for mocking. </returns>
         public static RunStepError RunStepError(RunStepErrorCode code = default, string message = null)
         {
             return new RunStepError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunStepTokenUsage"/>. </summary>
-        /// <param name="completionTokens"> Number of completion tokens used over the course of the run step. </param>
-        /// <param name="promptTokens"> Number of prompt tokens used over the course of the run step. </param>
-        /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        /// <returns> A new <see cref="Assistants.RunStepTokenUsage"/> instance for mocking. </returns>
         public static RunStepTokenUsage RunStepTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
         {
             return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResources"/>. </summary>
-        /// <param name="codeInterpreter"></param>
-        /// <param name="fileSearch"></param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResources"/> instance for mocking. </returns>
         public static ThreadObjectToolResources ThreadObjectToolResources(ThreadObjectToolResourcesCodeInterpreter codeInterpreter = null, ThreadObjectToolResourcesFileSearch fileSearch = null)
         {
             return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/>. </summary>
-        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool. </param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/> instance for mocking. </returns>
         public static ThreadObjectToolResourcesCodeInterpreter ThreadObjectToolResourcesCodeInterpreter(IEnumerable<string> fileIds = null)
         {
             fileIds ??= new List<string>();
@@ -301,9 +178,6 @@ namespace OpenAI
             return new ThreadObjectToolResourcesCodeInterpreter(fileIds?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesFileSearch"/>. </summary>
-        /// <param name="vectorStoreIds"> The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. </param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesFileSearch"/> instance for mocking. </returns>
         public static ThreadObjectToolResourcesFileSearch ThreadObjectToolResourcesFileSearch(IEnumerable<string> vectorStoreIds = null)
         {
             vectorStoreIds ??= new List<string>();
@@ -311,13 +185,6 @@ namespace OpenAI
             return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileCounts"/>. </summary>
-        /// <param name="inProgress"> The number of files that are currently being processed. </param>
-        /// <param name="completed"> The number of files that have been successfully processed. </param>
-        /// <param name="failed"> The number of files that have failed to process. </param>
-        /// <param name="cancelled"> The number of files that were cancelled. </param>
-        /// <param name="total"> The total number of files. </param>
-        /// <returns> A new <see cref="VectorStores.VectorStoreFileCounts"/> instance for mocking. </returns>
         public static VectorStoreFileCounts VectorStoreFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
         {
             return new VectorStoreFileCounts(
@@ -329,22 +196,11 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileAssociationError"/>. </summary>
-        /// <param name="code"> One of `server_error` or `rate_limit_exceeded`. </param>
-        /// <param name="message"> A human-readable description of the error. </param>
-        /// <returns> A new <see cref="VectorStores.VectorStoreFileAssociationError"/> instance for mocking. </returns>
         public static VectorStoreFileAssociationError VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code = default, string message = null)
         {
             return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.VectorStoreFileBatchObjectFileCounts"/>. </summary>
-        /// <param name="inProgress"> The number of files that are currently being processed. </param>
-        /// <param name="completed"> The number of files that have been processed. </param>
-        /// <param name="failed"> The number of files that have failed to process. </param>
-        /// <param name="cancelled"> The number of files that where cancelled. </param>
-        /// <param name="total"> The total number of files. </param>
-        /// <returns> A new <see cref="Models.VectorStoreFileBatchObjectFileCounts"/> instance for mocking. </returns>
         public static VectorStoreFileBatchObjectFileCounts VectorStoreFileBatchObjectFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
         {
             return new VectorStoreFileBatchObjectFileCounts(
@@ -356,48 +212,26 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranscriptionResponseJson"/>. </summary>
-        /// <param name="text"> The transcribed text. </param>
-        /// <returns> A new <see cref="Models.CreateTranscriptionResponseJson"/> instance for mocking. </returns>
         public static CreateTranscriptionResponseJson CreateTranscriptionResponseJson(string text = null)
         {
             return new CreateTranscriptionResponseJson(text, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranslationResponseJson"/>. </summary>
-        /// <param name="text"></param>
-        /// <returns> A new <see cref="Models.CreateTranslationResponseJson"/> instance for mocking. </returns>
         public static CreateTranslationResponseJson CreateTranslationResponseJson(string text = null)
         {
             return new CreateTranslationResponseJson(text, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestInput"/>. </summary>
-        /// <param name="customId"> A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch. </param>
-        /// <param name="method"> The HTTP method to be used for the request. Currently only `POST` is supported. </param>
-        /// <param name="url"> The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported. </param>
-        /// <returns> A new <see cref="Models.BatchRequestInput"/> instance for mocking. </returns>
         public static BatchRequestInput BatchRequestInput(string customId = null, string method = null, Uri url = null)
         {
             return new BatchRequestInput(customId, method, url, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestOutput"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="customId"> A developer-provided per-request id that will be used to match outputs to inputs. </param>
-        /// <param name="response"></param>
-        /// <param name="error"> For requests that failed with a non-HTTP error, this will contain more information on the cause of the failure. </param>
-        /// <returns> A new <see cref="Models.BatchRequestOutput"/> instance for mocking. </returns>
         public static BatchRequestOutput BatchRequestOutput(string id = null, string customId = null, BatchRequestOutputResponse response = null, BatchRequestOutputError error = null)
         {
             return new BatchRequestOutput(id, customId, response, error, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestOutputResponse"/>. </summary>
-        /// <param name="statusCode"> The HTTP status code of the response. </param>
-        /// <param name="requestId"> An unique identifier for the OpenAI API request. Please include this request ID when contacting support. </param>
-        /// <param name="body"> The JSON body of the response. </param>
-        /// <returns> A new <see cref="Models.BatchRequestOutputResponse"/> instance for mocking. </returns>
         public static BatchRequestOutputResponse BatchRequestOutputResponse(int? statusCode = null, string requestId = null, IReadOnlyDictionary<string, string> body = null)
         {
             body ??= new Dictionary<string, string>();
@@ -405,19 +239,11 @@ namespace OpenAI
             return new BatchRequestOutputResponse(statusCode, requestId, body, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.BatchRequestOutputError"/>. </summary>
-        /// <param name="code"> A machine-readable error code. </param>
-        /// <param name="message"> A human-readable error message. </param>
-        /// <returns> A new <see cref="Models.BatchRequestOutputError"/> instance for mocking. </returns>
         public static BatchRequestOutputError BatchRequestOutputError(string code = null, string message = null)
         {
             return new BatchRequestOutputError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.ToolChatMessage"/>. </summary>
-        /// <param name="content"></param>
-        /// <param name="toolCallId"> Tool call that this message is responding to. </param>
-        /// <returns> A new <see cref="Chat.ToolChatMessage"/> instance for mocking. </returns>
         public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)
         {
             content ??= new List<ChatMessageContentPart>();
@@ -425,10 +251,6 @@ namespace OpenAI
             return new ToolChatMessage("tool", content?.ToList(), serializedAdditionalRawData: null, toolCallId);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.FunctionChatMessage"/>. </summary>
-        /// <param name="content"></param>
-        /// <param name="functionName"> The name of the function to call. </param>
-        /// <returns> A new <see cref="Chat.FunctionChatMessage"/> instance for mocking. </returns>
         public static FunctionChatMessage FunctionChatMessage(IEnumerable<ChatMessageContentPart> content = null, string functionName = null)
         {
             content ??= new List<ChatMessageContentPart>();
@@ -436,10 +258,6 @@ namespace OpenAI
             return new FunctionChatMessage("function", content?.ToList(), serializedAdditionalRawData: null, functionName);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.StreamingChatFunctionCallUpdate"/>. </summary>
-        /// <param name="functionArgumentsUpdate"> The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. </param>
-        /// <param name="functionName"> The name of the function to call. </param>
-        /// <returns> A new <see cref="Chat.StreamingChatFunctionCallUpdate"/> instance for mocking. </returns>
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null)
         {
             return new StreamingChatFunctionCallUpdate(functionArgumentsUpdate, functionName, serializedAdditionalRawData: null);

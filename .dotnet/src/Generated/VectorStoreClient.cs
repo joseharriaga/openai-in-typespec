@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.VectorStores
 {
     // Data plane generated sub-client.
-    /// <summary> The VectorStore sub-client. </summary>
     public partial class VectorStoreClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,18 +18,12 @@ namespace OpenAI.VectorStores
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of VectorStoreClient for mocking. </summary>
         protected VectorStoreClient()
         {
         }
 
-        /// <summary> Initializes a new instance of VectorStoreClient. </summary>
-        /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
-        /// <param name="endpoint"> OpenAI Endpoint. </param>
         internal VectorStoreClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
         {
             _pipeline = pipeline;
@@ -38,11 +31,6 @@ namespace OpenAI.VectorStores
             _endpoint = endpoint;
         }
 
-        /// <summary> Retrieves a vector store. </summary>
-        /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Get vector store. </remarks>
         public virtual async Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId)
         {
             Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -51,11 +39,6 @@ namespace OpenAI.VectorStores
             return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Retrieves a vector store. </summary>
-        /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Get vector store. </remarks>
         public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId)
         {
             Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -64,12 +47,6 @@ namespace OpenAI.VectorStores
             return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Modifies a vector store. </summary>
-        /// <param name="vectorStoreId"> The ID of the vector store to modify. </param>
-        /// <param name="vectorStore"> The <see cref="VectorStoreModificationOptions"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="vectorStore"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Modify vector store. </remarks>
         public virtual async Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore)
         {
             Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -80,12 +57,6 @@ namespace OpenAI.VectorStores
             return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Modifies a vector store. </summary>
-        /// <param name="vectorStoreId"> The ID of the vector store to modify. </param>
-        /// <param name="vectorStore"> The <see cref="VectorStoreModificationOptions"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="vectorStore"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
-        /// <remarks> Modify vector store. </remarks>
         public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore)
         {
             Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));

@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.LegacyCompletions
 {
-    /// <summary> The CreateCompletionResponse_object. </summary>
     internal readonly partial struct InternalCreateCompletionResponseObject : IEquatable<InternalCreateCompletionResponseObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateCompletionResponseObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalCreateCompletionResponseObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.LegacyCompletions
 
         private const string TextCompletionValue = "text_completion";
 
-        /// <summary> text_completion. </summary>
         public static InternalCreateCompletionResponseObject TextCompletion { get; } = new InternalCreateCompletionResponseObject(TextCompletionValue);
-        /// <summary> Determines if two <see cref="InternalCreateCompletionResponseObject"/> values are the same. </summary>
         public static bool operator ==(InternalCreateCompletionResponseObject left, InternalCreateCompletionResponseObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalCreateCompletionResponseObject"/> values are not the same. </summary>
         public static bool operator !=(InternalCreateCompletionResponseObject left, InternalCreateCompletionResponseObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalCreateCompletionResponseObject"/>. </summary>
         public static implicit operator InternalCreateCompletionResponseObject(string value) => new InternalCreateCompletionResponseObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalCreateCompletionResponseObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalCreateCompletionResponseObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

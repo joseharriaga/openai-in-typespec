@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Embeddings
 {
-    /// <summary> The CreateEmbeddingRequestModel. </summary>
     internal readonly partial struct InternalCreateEmbeddingRequestModel : IEquatable<InternalCreateEmbeddingRequestModel>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateEmbeddingRequestModel"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalCreateEmbeddingRequestModel(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -23,29 +20,19 @@ namespace OpenAI.Embeddings
         private const string TextEmbedding3SmallValue = "text-embedding-3-small";
         private const string TextEmbedding3LargeValue = "text-embedding-3-large";
 
-        /// <summary> text-embedding-ada-002. </summary>
         public static InternalCreateEmbeddingRequestModel TextEmbeddingAda002 { get; } = new InternalCreateEmbeddingRequestModel(TextEmbeddingAda002Value);
-        /// <summary> text-embedding-3-small. </summary>
         public static InternalCreateEmbeddingRequestModel TextEmbedding3Small { get; } = new InternalCreateEmbeddingRequestModel(TextEmbedding3SmallValue);
-        /// <summary> text-embedding-3-large. </summary>
         public static InternalCreateEmbeddingRequestModel TextEmbedding3Large { get; } = new InternalCreateEmbeddingRequestModel(TextEmbedding3LargeValue);
-        /// <summary> Determines if two <see cref="InternalCreateEmbeddingRequestModel"/> values are the same. </summary>
         public static bool operator ==(InternalCreateEmbeddingRequestModel left, InternalCreateEmbeddingRequestModel right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalCreateEmbeddingRequestModel"/> values are not the same. </summary>
         public static bool operator !=(InternalCreateEmbeddingRequestModel left, InternalCreateEmbeddingRequestModel right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalCreateEmbeddingRequestModel"/>. </summary>
         public static implicit operator InternalCreateEmbeddingRequestModel(string value) => new InternalCreateEmbeddingRequestModel(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalCreateEmbeddingRequestModel other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalCreateEmbeddingRequestModel other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

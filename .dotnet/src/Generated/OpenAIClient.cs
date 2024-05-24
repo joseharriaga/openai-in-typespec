@@ -22,7 +22,6 @@ using OpenAI.VectorStores;
 namespace OpenAI
 {
     // Data plane generated client.
-    /// <summary> The OpenAI service client. </summary>
     public partial class OpenAIClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -31,10 +30,8 @@ namespace OpenAI
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of OpenAIClient for mocking. </summary>
         protected OpenAIClient()
         {
         }

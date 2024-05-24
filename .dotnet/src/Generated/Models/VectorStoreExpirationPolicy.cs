@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace OpenAI.VectorStores
 {
-    /// <summary> The expiration policy for a vector store. </summary>
     public partial class VectorStoreExpirationPolicy
     {
     }

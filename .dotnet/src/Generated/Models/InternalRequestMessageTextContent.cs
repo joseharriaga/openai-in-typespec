@@ -8,12 +8,8 @@ using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> The text content that is part of a message. </summary>
     internal partial class InternalRequestMessageTextContent : MessageContent
     {
-        /// <summary> Initializes a new instance of <see cref="InternalRequestMessageTextContent"/>. </summary>
-        /// <param name="internalText"> Text content to be sent to the model. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalText"/> is null. </exception>
         public InternalRequestMessageTextContent(string internalText)
         {
             Argument.AssertNotNull(internalText, nameof(internalText));
@@ -21,17 +17,12 @@ namespace OpenAI.Assistants
             InternalText = internalText;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRequestMessageTextContent"/>. </summary>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="internalType"> Always `text`. </param>
-        /// <param name="internalText"> Text content to be sent to the model. </param>
         internal InternalRequestMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string internalType, string internalText) : base(serializedAdditionalRawData)
         {
             InternalType = internalType;
             InternalText = internalText;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRequestMessageTextContent"/> for deserialization. </summary>
         internal InternalRequestMessageTextContent()
         {
         }

@@ -155,15 +155,12 @@ namespace OpenAI.VectorStores
 
         string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options) => ((IPersistableModel<VectorStoreFileCounts>)this).GetFormatFromOptions(options);
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
         internal static VectorStoreFileCounts FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeVectorStoreFileCounts(document.RootElement);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);

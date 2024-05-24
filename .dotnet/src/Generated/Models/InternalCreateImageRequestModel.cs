@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Images
 {
-    /// <summary> The CreateImageRequestModel. </summary>
     internal readonly partial struct InternalCreateImageRequestModel : IEquatable<InternalCreateImageRequestModel>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateImageRequestModel"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalCreateImageRequestModel(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -22,27 +19,18 @@ namespace OpenAI.Images
         private const string DallE2Value = "dall-e-2";
         private const string DallE3Value = "dall-e-3";
 
-        /// <summary> dall-e-2. </summary>
         public static InternalCreateImageRequestModel DallE2 { get; } = new InternalCreateImageRequestModel(DallE2Value);
-        /// <summary> dall-e-3. </summary>
         public static InternalCreateImageRequestModel DallE3 { get; } = new InternalCreateImageRequestModel(DallE3Value);
-        /// <summary> Determines if two <see cref="InternalCreateImageRequestModel"/> values are the same. </summary>
         public static bool operator ==(InternalCreateImageRequestModel left, InternalCreateImageRequestModel right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalCreateImageRequestModel"/> values are not the same. </summary>
         public static bool operator !=(InternalCreateImageRequestModel left, InternalCreateImageRequestModel right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalCreateImageRequestModel"/>. </summary>
         public static implicit operator InternalCreateImageRequestModel(string value) => new InternalCreateImageRequestModel(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalCreateImageRequestModel other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalCreateImageRequestModel other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

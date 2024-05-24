@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Files
 {
-    /// <summary> Enum for status in OpenAIFileInfo. </summary>
     public readonly partial struct OpenAIFileStatus : IEquatable<OpenAIFileStatus>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="OpenAIFileStatus"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public OpenAIFileStatus(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -23,29 +20,19 @@ namespace OpenAI.Files
         private const string ProcessedValue = "processed";
         private const string ErrorValue = "error";
 
-        /// <summary> uploaded. </summary>
         public static OpenAIFileStatus Uploaded { get; } = new OpenAIFileStatus(UploadedValue);
-        /// <summary> processed. </summary>
         public static OpenAIFileStatus Processed { get; } = new OpenAIFileStatus(ProcessedValue);
-        /// <summary> error. </summary>
         public static OpenAIFileStatus Error { get; } = new OpenAIFileStatus(ErrorValue);
-        /// <summary> Determines if two <see cref="OpenAIFileStatus"/> values are the same. </summary>
         public static bool operator ==(OpenAIFileStatus left, OpenAIFileStatus right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="OpenAIFileStatus"/> values are not the same. </summary>
         public static bool operator !=(OpenAIFileStatus left, OpenAIFileStatus right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="OpenAIFileStatus"/>. </summary>
         public static implicit operator OpenAIFileStatus(string value) => new OpenAIFileStatus(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is OpenAIFileStatus other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(OpenAIFileStatus other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

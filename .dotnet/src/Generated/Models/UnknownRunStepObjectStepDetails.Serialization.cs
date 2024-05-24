@@ -111,15 +111,12 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<RunStepDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
         internal static new UnknownRunStepObjectStepDetails FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeUnknownRunStepObjectStepDetails(document.RootElement);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create<RunStepDetails>(this, ModelSerializationExtensions.WireOptions);

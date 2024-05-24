@@ -7,17 +7,12 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Unknown version of MessageDeltaContent. </summary>
     internal partial class UnknownMessageDeltaContent : MessageDeltaContent
     {
-        /// <summary> Initializes a new instance of <see cref="UnknownMessageDeltaContent"/>. </summary>
-        /// <param name="type"> The discriminated type identifier for the content item. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal UnknownMessageDeltaContent(string type, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, serializedAdditionalRawData)
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="UnknownMessageDeltaContent"/> for deserialization. </summary>
         internal UnknownMessageDeltaContent()
         {
         }

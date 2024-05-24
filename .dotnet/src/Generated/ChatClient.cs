@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.Chat
 {
     // Data plane generated sub-client.
-    /// <summary> The Chat sub-client. </summary>
     public partial class ChatClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,18 +18,12 @@ namespace OpenAI.Chat
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of ChatClient for mocking. </summary>
         protected ChatClient()
         {
         }
 
-        /// <summary> Initializes a new instance of ChatClient. </summary>
-        /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
-        /// <param name="endpoint"> OpenAI Endpoint. </param>
         internal ChatClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
         {
             _pipeline = pipeline;

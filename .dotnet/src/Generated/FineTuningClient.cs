@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.FineTuning
 {
     // Data plane generated sub-client.
-    /// <summary> The FineTuning sub-client. </summary>
     public partial class FineTuningClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,18 +18,12 @@ namespace OpenAI.FineTuning
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of FineTuningClient for mocking. </summary>
         protected FineTuningClient()
         {
         }
 
-        /// <summary> Initializes a new instance of FineTuningClient. </summary>
-        /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
-        /// <param name="endpoint"> OpenAI Endpoint. </param>
         internal FineTuningClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
         {
             _pipeline = pipeline;

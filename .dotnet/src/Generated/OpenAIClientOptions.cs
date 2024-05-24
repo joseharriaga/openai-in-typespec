@@ -6,7 +6,6 @@ using System.ClientModel.Primitives;
 
 namespace OpenAI
 {
-    /// <summary> Client options for OpenAIClient. </summary>
     public partial class OpenAIClientOptions : ClientPipelineOptions
     {
     }

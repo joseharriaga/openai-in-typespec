@@ -8,53 +8,10 @@ using System.Linq;
 
 namespace OpenAI.Audio
 {
-    /// <summary> The TranscriptionSegment. </summary>
     public readonly partial struct TranscribedSegment
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
         private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="TranscribedSegment"/>. </summary>
-        /// <param name="id"> Unique identifier of the segment. </param>
-        /// <param name="seekOffset"> Seek offset of the segment. </param>
-        /// <param name="start"> Start time of the segment in seconds. </param>
-        /// <param name="end"> End time of the segment in seconds. </param>
-        /// <param name="text"> Text content of the segment. </param>
-        /// <param name="tokenIds"> Array of token IDs for the text content. </param>
-        /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
-        /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
-        /// <param name="compressionRatio"> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </param>
-        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="text"/> or <paramref name="tokenIds"/> is null. </exception>
         internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IEnumerable<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability)
         {
             Argument.AssertNotNull(text, nameof(text));
@@ -72,18 +29,6 @@ namespace OpenAI.Audio
             NoSpeechProbability = noSpeechProbability;
         }
 
-        /// <summary> Initializes a new instance of <see cref="TranscribedSegment"/>. </summary>
-        /// <param name="id"> Unique identifier of the segment. </param>
-        /// <param name="seekOffset"> Seek offset of the segment. </param>
-        /// <param name="start"> Start time of the segment in seconds. </param>
-        /// <param name="end"> End time of the segment in seconds. </param>
-        /// <param name="text"> Text content of the segment. </param>
-        /// <param name="tokenIds"> Array of token IDs for the text content. </param>
-        /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
-        /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
-        /// <param name="compressionRatio"> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </param>
-        /// <param name="noSpeechProbability"> Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
@@ -99,22 +44,15 @@ namespace OpenAI.Audio
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="TranscribedSegment"/> for deserialization. </summary>
         public TranscribedSegment()
         {
         }
 
-        /// <summary> Unique identifier of the segment. </summary>
         public int Id { get; }
-        /// <summary> Start time of the segment in seconds. </summary>
         public TimeSpan Start { get; }
-        /// <summary> End time of the segment in seconds. </summary>
         public TimeSpan End { get; }
-        /// <summary> Text content of the segment. </summary>
         public string Text { get; }
-        /// <summary> Temperature parameter used for generating the segment. </summary>
         public float Temperature { get; }
-        /// <summary> Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed. </summary>
         public float CompressionRatio { get; }
     }
 }

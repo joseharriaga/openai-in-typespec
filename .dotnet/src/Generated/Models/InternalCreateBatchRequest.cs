@@ -7,53 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.Batch
 {
-    /// <summary> The CreateBatchRequest. </summary>
     internal readonly partial struct InternalCreateBatchRequest
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
         private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateBatchRequest"/>. </summary>
-        /// <param name="inputFileId">
-        /// The ID of an uploaded file that contains requests for the new batch.
-        ///
-        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
-        ///
-        /// Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/requestInput), and must be uploaded with the purpose `batch`.
-        /// </param>
-        /// <param name="endpoint"> The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and `/v1/embeddings` are supported. </param>
-        /// <param name="completionWindow"> The time frame within which the batch should be processed. Currently only `24h` is supported. </param>
-        /// <param name="metadata"> Optional custom metadata for the batch. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="inputFileId"/> is null. </exception>
         public InternalCreateBatchRequest(string inputFileId, InternalBatchOperationEndpoint endpoint, InternalBatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata)
         {
             Argument.AssertNotNull(inputFileId, nameof(inputFileId));
@@ -64,18 +21,6 @@ namespace OpenAI.Batch
             Metadata = metadata;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateBatchRequest"/>. </summary>
-        /// <param name="inputFileId">
-        /// The ID of an uploaded file that contains requests for the new batch.
-        ///
-        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
-        ///
-        /// Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/requestInput), and must be uploaded with the purpose `batch`.
-        /// </param>
-        /// <param name="endpoint"> The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and `/v1/embeddings` are supported. </param>
-        /// <param name="completionWindow"> The time frame within which the batch should be processed. Currently only `24h` is supported. </param>
-        /// <param name="metadata"> Optional custom metadata for the batch. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalCreateBatchRequest(string inputFileId, InternalBatchOperationEndpoint endpoint, InternalBatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             InputFileId = inputFileId;
@@ -85,25 +30,14 @@ namespace OpenAI.Batch
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateBatchRequest"/> for deserialization. </summary>
         public InternalCreateBatchRequest()
         {
         }
 
-        /// <summary>
-        /// The ID of an uploaded file that contains requests for the new batch.
-        ///
-        /// See [upload file](/docs/api-reference/files/create) for how to upload a file.
-        ///
-        /// Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/requestInput), and must be uploaded with the purpose `batch`.
-        /// </summary>
         public string InputFileId { get; }
-        /// <summary> The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and `/v1/embeddings` are supported. </summary>
         public InternalBatchOperationEndpoint Endpoint { get; }
-        /// <summary> The time frame within which the batch should be processed. Currently only `24h` is supported. </summary>
         public InternalBatchCompletionTimeframe CompletionWindow { get; } = InternalBatchCompletionTimeframe._24h;
 
-        /// <summary> Optional custom metadata for the batch. </summary>
         public IDictionary<string, string> Metadata { get; }
     }
 }

@@ -7,12 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Text output from the Code Interpreter tool call as part of a run step. </summary>
     internal partial class InternalRunStepDetailsToolCallsCodeOutputLogsObject : RunStepCodeInterpreterOutput
     {
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDetailsToolCallsCodeOutputLogsObject"/>. </summary>
-        /// <param name="internalLogs"> The text output from the Code Interpreter tool call. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalLogs"/> is null. </exception>
         internal InternalRunStepDetailsToolCallsCodeOutputLogsObject(string internalLogs)
         {
             Argument.AssertNotNull(internalLogs, nameof(internalLogs));
@@ -21,16 +17,11 @@ namespace OpenAI.Assistants
             InternalLogs = internalLogs;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDetailsToolCallsCodeOutputLogsObject"/>. </summary>
-        /// <param name="type"> The discriminated type identifier for the details object. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="internalLogs"> The text output from the Code Interpreter tool call. </param>
         internal InternalRunStepDetailsToolCallsCodeOutputLogsObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string internalLogs) : base(type, serializedAdditionalRawData)
         {
             InternalLogs = internalLogs;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDetailsToolCallsCodeOutputLogsObject"/> for deserialization. </summary>
         internal InternalRunStepDetailsToolCallsCodeOutputLogsObject()
         {
         }

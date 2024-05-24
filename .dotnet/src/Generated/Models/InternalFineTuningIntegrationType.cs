@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.FineTuning
 {
-    /// <summary> The FineTuningIntegration_type. </summary>
     internal readonly partial struct InternalFineTuningIntegrationType : IEquatable<InternalFineTuningIntegrationType>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalFineTuningIntegrationType"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalFineTuningIntegrationType(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.FineTuning
 
         private const string WandbValue = "wandb";
 
-        /// <summary> wandb. </summary>
         public static InternalFineTuningIntegrationType Wandb { get; } = new InternalFineTuningIntegrationType(WandbValue);
-        /// <summary> Determines if two <see cref="InternalFineTuningIntegrationType"/> values are the same. </summary>
         public static bool operator ==(InternalFineTuningIntegrationType left, InternalFineTuningIntegrationType right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalFineTuningIntegrationType"/> values are not the same. </summary>
         public static bool operator !=(InternalFineTuningIntegrationType left, InternalFineTuningIntegrationType right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalFineTuningIntegrationType"/>. </summary>
         public static implicit operator InternalFineTuningIntegrationType(string value) => new InternalFineTuningIntegrationType(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalFineTuningIntegrationType other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalFineTuningIntegrationType other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

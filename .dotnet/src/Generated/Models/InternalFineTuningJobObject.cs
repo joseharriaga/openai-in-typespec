@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.FineTuning
 {
-    /// <summary> The FineTuningJob_object. </summary>
     internal readonly partial struct InternalFineTuningJobObject : IEquatable<InternalFineTuningJobObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalFineTuningJobObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalFineTuningJobObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.FineTuning
 
         private const string FineTuningJobValue = "fine_tuning.job";
 
-        /// <summary> fine_tuning.job. </summary>
         public static InternalFineTuningJobObject FineTuningJob { get; } = new InternalFineTuningJobObject(FineTuningJobValue);
-        /// <summary> Determines if two <see cref="InternalFineTuningJobObject"/> values are the same. </summary>
         public static bool operator ==(InternalFineTuningJobObject left, InternalFineTuningJobObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalFineTuningJobObject"/> values are not the same. </summary>
         public static bool operator !=(InternalFineTuningJobObject left, InternalFineTuningJobObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalFineTuningJobObject"/>. </summary>
         public static implicit operator InternalFineTuningJobObject(string value) => new InternalFineTuningJobObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalFineTuningJobObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalFineTuningJobObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

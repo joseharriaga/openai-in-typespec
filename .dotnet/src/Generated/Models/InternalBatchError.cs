@@ -7,52 +7,14 @@ using System.Collections.Generic;
 
 namespace OpenAI.Batch
 {
-    /// <summary> The BatchErrorsDatum. </summary>
     internal partial class InternalBatchError
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchError"/>. </summary>
         internal InternalBatchError()
         {
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchError"/>. </summary>
-        /// <param name="code"> An error code identifying the error type. </param>
-        /// <param name="message"> A human-readable message providing more details about the error. </param>
-        /// <param name="param"> The name of the parameter that caused the error, if applicable. </param>
-        /// <param name="line"> The line number of the input file where the error occurred, if applicable. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalBatchError(string code, string message, string param, int? line, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
@@ -62,13 +24,9 @@ namespace OpenAI.Batch
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> An error code identifying the error type. </summary>
         public string Code { get; }
-        /// <summary> A human-readable message providing more details about the error. </summary>
         public string Message { get; }
-        /// <summary> The name of the parameter that caused the error, if applicable. </summary>
         public string Param { get; }
-        /// <summary> The line number of the input file where the error occurred, if applicable. </summary>
         public int? Line { get; }
     }
 }

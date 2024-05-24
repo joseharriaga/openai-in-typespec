@@ -7,44 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.VectorStores
 {
-    /// <summary> The CreateVectorStoreFileRequest. </summary>
     internal partial class InternalCreateVectorStoreFileRequest
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileRequest"/>. </summary>
-        /// <param name="fileId"> A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
         public InternalCreateVectorStoreFileRequest(string fileId)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
@@ -52,21 +18,16 @@ namespace OpenAI.VectorStores
             FileId = fileId;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileRequest"/>. </summary>
-        /// <param name="fileId"> A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalCreateVectorStoreFileRequest(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateVectorStoreFileRequest"/> for deserialization. </summary>
         internal InternalCreateVectorStoreFileRequest()
         {
         }
 
-        /// <summary> A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. </summary>
         public string FileId { get; }
     }
 }

@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The BatchRequestInput_method. </summary>
     internal readonly partial struct BatchRequestInputMethod : IEquatable<BatchRequestInputMethod>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="BatchRequestInputMethod"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public BatchRequestInputMethod(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Internal.Models
 
         private const string POSTValue = "POST";
 
-        /// <summary> POST. </summary>
         public static BatchRequestInputMethod POST { get; } = new BatchRequestInputMethod(POSTValue);
-        /// <summary> Determines if two <see cref="BatchRequestInputMethod"/> values are the same. </summary>
         public static bool operator ==(BatchRequestInputMethod left, BatchRequestInputMethod right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="BatchRequestInputMethod"/> values are not the same. </summary>
         public static bool operator !=(BatchRequestInputMethod left, BatchRequestInputMethod right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="BatchRequestInputMethod"/>. </summary>
         public static implicit operator BatchRequestInputMethod(string value) => new BatchRequestInputMethod(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is BatchRequestInputMethod other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(BatchRequestInputMethod other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

@@ -7,23 +7,14 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Details of the Code Interpreter tool call the run step was involved in. </summary>
     internal partial class InternalRunStepDeltaStepDetailsToolCallsCodeObject : InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject
     {
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDeltaStepDetailsToolCallsCodeObject"/>. </summary>
-        /// <param name="index"> The index of the tool call in the tool calls array. </param>
         internal InternalRunStepDeltaStepDetailsToolCallsCodeObject(int index)
         {
             Type = "code_interpreter";
             Index = index;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDeltaStepDetailsToolCallsCodeObject"/>. </summary>
-        /// <param name="type"> The discriminated type identifier for the details object. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="id"> The ID of the tool call. </param>
-        /// <param name="codeInterpreter"> The Code Interpreter tool call definition. </param>
         internal InternalRunStepDeltaStepDetailsToolCallsCodeObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, int index, string id, InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter) : base(type, serializedAdditionalRawData)
         {
             Index = index;
@@ -31,16 +22,12 @@ namespace OpenAI.Assistants
             CodeInterpreter = codeInterpreter;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDeltaStepDetailsToolCallsCodeObject"/> for deserialization. </summary>
         internal InternalRunStepDeltaStepDetailsToolCallsCodeObject()
         {
         }
 
-        /// <summary> The index of the tool call in the tool calls array. </summary>
         public int Index { get; }
-        /// <summary> The ID of the tool call. </summary>
         public string Id { get; }
-        /// <summary> The Code Interpreter tool call definition. </summary>
         public InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter CodeInterpreter { get; }
     }
 }

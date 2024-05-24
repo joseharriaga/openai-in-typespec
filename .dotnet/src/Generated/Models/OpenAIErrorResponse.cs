@@ -7,44 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.Internal
 {
-    /// <summary> The ErrorResponse. </summary>
     internal partial class OpenAIErrorResponse
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="OpenAIErrorResponse"/>. </summary>
-        /// <param name="error"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="error"/> is null. </exception>
         internal OpenAIErrorResponse(OpenAIError error)
         {
             Argument.AssertNotNull(error, nameof(error));
@@ -52,21 +18,16 @@ namespace OpenAI.Internal
             Error = error;
         }
 
-        /// <summary> Initializes a new instance of <see cref="OpenAIErrorResponse"/>. </summary>
-        /// <param name="error"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal OpenAIErrorResponse(OpenAIError error, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Error = error;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="OpenAIErrorResponse"/> for deserialization. </summary>
         internal OpenAIErrorResponse()
         {
         }
 
-        /// <summary> Gets the error. </summary>
         public OpenAIError Error { get; }
     }
 }

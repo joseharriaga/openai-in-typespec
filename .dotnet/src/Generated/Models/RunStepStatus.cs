@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Enum for status in RunStep. </summary>
     public readonly partial struct RunStepStatus : IEquatable<RunStepStatus>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="RunStepStatus"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public RunStepStatus(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -25,33 +22,21 @@ namespace OpenAI.Assistants
         private const string CompletedValue = "completed";
         private const string ExpiredValue = "expired";
 
-        /// <summary> in_progress. </summary>
         public static RunStepStatus InProgress { get; } = new RunStepStatus(InProgressValue);
-        /// <summary> cancelled. </summary>
         public static RunStepStatus Cancelled { get; } = new RunStepStatus(CancelledValue);
-        /// <summary> failed. </summary>
         public static RunStepStatus Failed { get; } = new RunStepStatus(FailedValue);
-        /// <summary> completed. </summary>
         public static RunStepStatus Completed { get; } = new RunStepStatus(CompletedValue);
-        /// <summary> expired. </summary>
         public static RunStepStatus Expired { get; } = new RunStepStatus(ExpiredValue);
-        /// <summary> Determines if two <see cref="RunStepStatus"/> values are the same. </summary>
         public static bool operator ==(RunStepStatus left, RunStepStatus right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="RunStepStatus"/> values are not the same. </summary>
         public static bool operator !=(RunStepStatus left, RunStepStatus right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="RunStepStatus"/>. </summary>
         public static implicit operator RunStepStatus(string value) => new RunStepStatus(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is RunStepStatus other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(RunStepStatus other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

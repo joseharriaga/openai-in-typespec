@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.VectorStores
 {
-    /// <summary> Enum for status in VectorStoreBatchFileJob. </summary>
     public readonly partial struct VectorStoreBatchFileJobStatus : IEquatable<VectorStoreBatchFileJobStatus>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="VectorStoreBatchFileJobStatus"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public VectorStoreBatchFileJobStatus(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -24,31 +21,20 @@ namespace OpenAI.VectorStores
         private const string CancelledValue = "cancelled";
         private const string FailedValue = "failed";
 
-        /// <summary> in_progress. </summary>
         public static VectorStoreBatchFileJobStatus InProgress { get; } = new VectorStoreBatchFileJobStatus(InProgressValue);
-        /// <summary> completed. </summary>
         public static VectorStoreBatchFileJobStatus Completed { get; } = new VectorStoreBatchFileJobStatus(CompletedValue);
-        /// <summary> cancelled. </summary>
         public static VectorStoreBatchFileJobStatus Cancelled { get; } = new VectorStoreBatchFileJobStatus(CancelledValue);
-        /// <summary> failed. </summary>
         public static VectorStoreBatchFileJobStatus Failed { get; } = new VectorStoreBatchFileJobStatus(FailedValue);
-        /// <summary> Determines if two <see cref="VectorStoreBatchFileJobStatus"/> values are the same. </summary>
         public static bool operator ==(VectorStoreBatchFileJobStatus left, VectorStoreBatchFileJobStatus right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="VectorStoreBatchFileJobStatus"/> values are not the same. </summary>
         public static bool operator !=(VectorStoreBatchFileJobStatus left, VectorStoreBatchFileJobStatus right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="VectorStoreBatchFileJobStatus"/>. </summary>
         public static implicit operator VectorStoreBatchFileJobStatus(string value) => new VectorStoreBatchFileJobStatus(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is VectorStoreBatchFileJobStatus other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(VectorStoreBatchFileJobStatus other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

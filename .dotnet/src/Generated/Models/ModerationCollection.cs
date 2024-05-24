@@ -9,12 +9,9 @@ using System.Linq;
 
 namespace OpenAI.Moderations
 {
-    /// <summary> Represents if a given text input is potentially harmful. </summary>
     public partial class ModerationCollection : ReadOnlyCollection<ModerationResult>
     {
-        /// <summary> The unique identifier for the moderation request. </summary>
         public string Id { get; }
-        /// <summary> The model used to generate the moderation results. </summary>
         public string Model { get; }
     }
 }

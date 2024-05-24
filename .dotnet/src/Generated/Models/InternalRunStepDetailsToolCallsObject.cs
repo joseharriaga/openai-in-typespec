@@ -8,15 +8,8 @@ using System.Linq;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Details of the tool call. </summary>
     internal partial class InternalRunStepDetailsToolCallsObject : RunStepDetails
     {
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDetailsToolCallsObject"/>. </summary>
-        /// <param name="internalToolCalls">
-        /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-        /// Please note <see cref="RunStepToolCall"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
-        /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalToolCalls"/> is null. </exception>
         internal InternalRunStepDetailsToolCallsObject(IEnumerable<RunStepToolCall> internalToolCalls)
         {
             Argument.AssertNotNull(internalToolCalls, nameof(internalToolCalls));
@@ -25,19 +18,11 @@ namespace OpenAI.Assistants
             InternalToolCalls = internalToolCalls.ToList();
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDetailsToolCallsObject"/>. </summary>
-        /// <param name="type"> The discriminated type identifier for the details object. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="internalToolCalls">
-        /// An array of tool calls the run step was involved in. These can be associated with one of three types of tools: `code_interpreter`, `file_search`, or `function`.
-        /// Please note <see cref="RunStepToolCall"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
-        /// </param>
         internal InternalRunStepDetailsToolCallsObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, IReadOnlyList<RunStepToolCall> internalToolCalls) : base(type, serializedAdditionalRawData)
         {
             InternalToolCalls = internalToolCalls;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDetailsToolCallsObject"/> for deserialization. </summary>
         internal InternalRunStepDetailsToolCallsObject()
         {
         }

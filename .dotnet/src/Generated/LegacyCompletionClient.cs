@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.LegacyCompletions
 {
     // Data plane generated sub-client.
-    /// <summary> The LegacyCompletion sub-client. </summary>
     internal partial class LegacyCompletionClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,18 +18,12 @@ namespace OpenAI.LegacyCompletions
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of LegacyCompletionClient for mocking. </summary>
         protected LegacyCompletionClient()
         {
         }
 
-        /// <summary> Initializes a new instance of LegacyCompletionClient. </summary>
-        /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="keyCredential"> The key credential to copy. </param>
-        /// <param name="endpoint"> OpenAI Endpoint. </param>
         internal LegacyCompletionClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
         {
             _pipeline = pipeline;
@@ -38,10 +31,6 @@ namespace OpenAI.LegacyCompletions
             _endpoint = endpoint;
         }
 
-        /// <summary> Creates a completion for the provided prompt and parameters. </summary>
-        /// <param name="internalCreateCompletionRequest"> The <see cref="InternalCreateCompletionRequest"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalCreateCompletionRequest"/> is null. </exception>
-        /// <remarks> Create completion. </remarks>
         public virtual async Task<ClientResult<InternalCreateCompletionResponse>> CreateCompletionAsync(InternalCreateCompletionRequest internalCreateCompletionRequest)
         {
             Argument.AssertNotNull(internalCreateCompletionRequest, nameof(internalCreateCompletionRequest));
@@ -51,10 +40,6 @@ namespace OpenAI.LegacyCompletions
             return ClientResult.FromValue(InternalCreateCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary> Creates a completion for the provided prompt and parameters. </summary>
-        /// <param name="internalCreateCompletionRequest"> The <see cref="InternalCreateCompletionRequest"/> to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="internalCreateCompletionRequest"/> is null. </exception>
-        /// <remarks> Create completion. </remarks>
         public virtual ClientResult<InternalCreateCompletionResponse> CreateCompletion(InternalCreateCompletionRequest internalCreateCompletionRequest)
         {
             Argument.AssertNotNull(internalCreateCompletionRequest, nameof(internalCreateCompletionRequest));
@@ -64,26 +49,6 @@ namespace OpenAI.LegacyCompletions
             return ClientResult.FromValue(InternalCreateCompletionResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
         }
 
-        /// <summary>
-        /// [Protocol Method] Creates a completion for the provided prompt and parameters.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="CreateCompletionAsync(InternalCreateCompletionRequest)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
         public virtual async Task<ClientResult> CreateCompletionAsync(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
@@ -92,26 +57,6 @@ namespace OpenAI.LegacyCompletions
             return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        /// <summary>
-        /// [Protocol Method] Creates a completion for the provided prompt and parameters.
-        /// <list type="bullet">
-        /// <item>
-        /// <description>
-        /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <description>
-        /// Please try the simpler <see cref="CreateCompletion(InternalCreateCompletionRequest)"/> convenience overload with strongly typed models first.
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-        /// <returns> The response returned from the service. </returns>
         public virtual ClientResult CreateCompletion(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));

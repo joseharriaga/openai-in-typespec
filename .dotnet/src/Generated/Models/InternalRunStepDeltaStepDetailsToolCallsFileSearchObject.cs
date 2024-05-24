@@ -7,13 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> The RunStepDeltaStepDetailsToolCallsFileSearchObject. </summary>
     internal partial class InternalRunStepDeltaStepDetailsToolCallsFileSearchObject : InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject
     {
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDeltaStepDetailsToolCallsFileSearchObject"/>. </summary>
-        /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="fileSearch"> For now, this is always going to be an empty object. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="fileSearch"/> is null. </exception>
         internal InternalRunStepDeltaStepDetailsToolCallsFileSearchObject(int index, IReadOnlyDictionary<string, string> fileSearch)
         {
             Argument.AssertNotNull(fileSearch, nameof(fileSearch));
@@ -23,12 +18,6 @@ namespace OpenAI.Assistants
             FileSearch = fileSearch;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDeltaStepDetailsToolCallsFileSearchObject"/>. </summary>
-        /// <param name="type"> The discriminated type identifier for the details object. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="index"> The index of the tool call in the tool calls array. </param>
-        /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="fileSearch"> For now, this is always going to be an empty object. </param>
         internal InternalRunStepDeltaStepDetailsToolCallsFileSearchObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, int index, string id, IReadOnlyDictionary<string, string> fileSearch) : base(type, serializedAdditionalRawData)
         {
             Index = index;
@@ -36,16 +25,12 @@ namespace OpenAI.Assistants
             FileSearch = fileSearch;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepDeltaStepDetailsToolCallsFileSearchObject"/> for deserialization. </summary>
         internal InternalRunStepDeltaStepDetailsToolCallsFileSearchObject()
         {
         }
 
-        /// <summary> The index of the tool call in the tool calls array. </summary>
         public int Index { get; }
-        /// <summary> The ID of the tool call object. </summary>
         public string Id { get; }
-        /// <summary> For now, this is always going to be an empty object. </summary>
         public IReadOnlyDictionary<string, string> FileSearch { get; }
     }
 }

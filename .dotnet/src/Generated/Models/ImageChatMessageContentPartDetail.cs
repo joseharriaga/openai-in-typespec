@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Chat
 {
-    /// <summary> Enum for detail in InternalChatCompletionRequestMessageContentPartImageImageUrl. </summary>
     public readonly partial struct ImageChatMessageContentPartDetail : IEquatable<ImageChatMessageContentPartDetail>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="ImageChatMessageContentPartDetail"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public ImageChatMessageContentPartDetail(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -23,29 +20,19 @@ namespace OpenAI.Chat
         private const string LowValue = "low";
         private const string HighValue = "high";
 
-        /// <summary> auto. </summary>
         public static ImageChatMessageContentPartDetail Auto { get; } = new ImageChatMessageContentPartDetail(AutoValue);
-        /// <summary> low. </summary>
         public static ImageChatMessageContentPartDetail Low { get; } = new ImageChatMessageContentPartDetail(LowValue);
-        /// <summary> high. </summary>
         public static ImageChatMessageContentPartDetail High { get; } = new ImageChatMessageContentPartDetail(HighValue);
-        /// <summary> Determines if two <see cref="ImageChatMessageContentPartDetail"/> values are the same. </summary>
         public static bool operator ==(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="ImageChatMessageContentPartDetail"/> values are not the same. </summary>
         public static bool operator !=(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="ImageChatMessageContentPartDetail"/>. </summary>
         public static implicit operator ImageChatMessageContentPartDetail(string value) => new ImageChatMessageContentPartDetail(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is ImageChatMessageContentPartDetail other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(ImageChatMessageContentPartDetail other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.Files
 {
     // Data plane generated sub-client.
-    /// <summary> The File sub-client. </summary>
     public partial class FileClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,10 +18,8 @@ namespace OpenAI.Files
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of FileClient for mocking. </summary>
         protected FileClient()
         {
         }

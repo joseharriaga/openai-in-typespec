@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace OpenAI.Audio
 {
     // Data plane generated sub-client.
-    /// <summary> The Audio sub-client. </summary>
     public partial class AudioClient
     {
         private const string AuthorizationHeader = "Authorization";
@@ -19,10 +18,8 @@ namespace OpenAI.Audio
         private readonly ClientPipeline _pipeline;
         private readonly Uri _endpoint;
 
-        /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual ClientPipeline Pipeline => _pipeline;
 
-        /// <summary> Initializes a new instance of AudioClient for mocking. </summary>
         protected AudioClient()
         {
         }

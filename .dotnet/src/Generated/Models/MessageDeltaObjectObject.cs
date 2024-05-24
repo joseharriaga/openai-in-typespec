@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Internal.Models
 {
-    /// <summary> The MessageDeltaObject_object. </summary>
     internal readonly partial struct MessageDeltaObjectObject : IEquatable<MessageDeltaObjectObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="MessageDeltaObjectObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public MessageDeltaObjectObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Internal.Models
 
         private const string ThreadMessageDeltaValue = "thread.message.delta";
 
-        /// <summary> thread.message.delta. </summary>
         public static MessageDeltaObjectObject ThreadMessageDelta { get; } = new MessageDeltaObjectObject(ThreadMessageDeltaValue);
-        /// <summary> Determines if two <see cref="MessageDeltaObjectObject"/> values are the same. </summary>
         public static bool operator ==(MessageDeltaObjectObject left, MessageDeltaObjectObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="MessageDeltaObjectObject"/> values are not the same. </summary>
         public static bool operator !=(MessageDeltaObjectObject left, MessageDeltaObjectObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="MessageDeltaObjectObject"/>. </summary>
         public static implicit operator MessageDeltaObjectObject(string value) => new MessageDeltaObjectObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is MessageDeltaObjectObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(MessageDeltaObjectObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Chat
 {
-    /// <summary> The CreateChatCompletionStreamResponse_object. </summary>
     internal readonly partial struct InternalCreateChatCompletionStreamResponseObject : IEquatable<InternalCreateChatCompletionStreamResponseObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateChatCompletionStreamResponseObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalCreateChatCompletionStreamResponseObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Chat
 
         private const string ChatCompletionChunkValue = "chat.completion.chunk";
 
-        /// <summary> chat.completion.chunk. </summary>
         public static InternalCreateChatCompletionStreamResponseObject ChatCompletionChunk { get; } = new InternalCreateChatCompletionStreamResponseObject(ChatCompletionChunkValue);
-        /// <summary> Determines if two <see cref="InternalCreateChatCompletionStreamResponseObject"/> values are the same. </summary>
         public static bool operator ==(InternalCreateChatCompletionStreamResponseObject left, InternalCreateChatCompletionStreamResponseObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalCreateChatCompletionStreamResponseObject"/> values are not the same. </summary>
         public static bool operator !=(InternalCreateChatCompletionStreamResponseObject left, InternalCreateChatCompletionStreamResponseObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalCreateChatCompletionStreamResponseObject"/>. </summary>
         public static implicit operator InternalCreateChatCompletionStreamResponseObject(string value) => new InternalCreateChatCompletionStreamResponseObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalCreateChatCompletionStreamResponseObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalCreateChatCompletionStreamResponseObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

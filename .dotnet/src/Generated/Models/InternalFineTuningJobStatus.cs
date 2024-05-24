@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.FineTuning
 {
-    /// <summary> Enum for status in InternalFineTuningJob. </summary>
     internal readonly partial struct InternalFineTuningJobStatus : IEquatable<InternalFineTuningJobStatus>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalFineTuningJobStatus"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalFineTuningJobStatus(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -26,35 +23,22 @@ namespace OpenAI.FineTuning
         private const string FailedValue = "failed";
         private const string CancelledValue = "cancelled";
 
-        /// <summary> validating_files. </summary>
         public static InternalFineTuningJobStatus ValidatingFiles { get; } = new InternalFineTuningJobStatus(ValidatingFilesValue);
-        /// <summary> queued. </summary>
         public static InternalFineTuningJobStatus Queued { get; } = new InternalFineTuningJobStatus(QueuedValue);
-        /// <summary> running. </summary>
         public static InternalFineTuningJobStatus Running { get; } = new InternalFineTuningJobStatus(RunningValue);
-        /// <summary> succeeded. </summary>
         public static InternalFineTuningJobStatus Succeeded { get; } = new InternalFineTuningJobStatus(SucceededValue);
-        /// <summary> failed. </summary>
         public static InternalFineTuningJobStatus Failed { get; } = new InternalFineTuningJobStatus(FailedValue);
-        /// <summary> cancelled. </summary>
         public static InternalFineTuningJobStatus Cancelled { get; } = new InternalFineTuningJobStatus(CancelledValue);
-        /// <summary> Determines if two <see cref="InternalFineTuningJobStatus"/> values are the same. </summary>
         public static bool operator ==(InternalFineTuningJobStatus left, InternalFineTuningJobStatus right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalFineTuningJobStatus"/> values are not the same. </summary>
         public static bool operator !=(InternalFineTuningJobStatus left, InternalFineTuningJobStatus right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalFineTuningJobStatus"/>. </summary>
         public static implicit operator InternalFineTuningJobStatus(string value) => new InternalFineTuningJobStatus(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalFineTuningJobStatus other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalFineTuningJobStatus other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

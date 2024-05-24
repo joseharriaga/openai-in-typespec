@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Audio
 {
-    /// <summary> The CreateTranscriptionResponseVerboseJson_task. </summary>
     internal readonly partial struct InternalCreateTranscriptionResponseVerboseJsonTask : IEquatable<InternalCreateTranscriptionResponseVerboseJsonTask>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateTranscriptionResponseVerboseJsonTask"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalCreateTranscriptionResponseVerboseJsonTask(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Audio
 
         private const string TranscribeValue = "transcribe";
 
-        /// <summary> transcribe. </summary>
         public static InternalCreateTranscriptionResponseVerboseJsonTask Transcribe { get; } = new InternalCreateTranscriptionResponseVerboseJsonTask(TranscribeValue);
-        /// <summary> Determines if two <see cref="InternalCreateTranscriptionResponseVerboseJsonTask"/> values are the same. </summary>
         public static bool operator ==(InternalCreateTranscriptionResponseVerboseJsonTask left, InternalCreateTranscriptionResponseVerboseJsonTask right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalCreateTranscriptionResponseVerboseJsonTask"/> values are not the same. </summary>
         public static bool operator !=(InternalCreateTranscriptionResponseVerboseJsonTask left, InternalCreateTranscriptionResponseVerboseJsonTask right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalCreateTranscriptionResponseVerboseJsonTask"/>. </summary>
         public static implicit operator InternalCreateTranscriptionResponseVerboseJsonTask(string value) => new InternalCreateTranscriptionResponseVerboseJsonTask(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalCreateTranscriptionResponseVerboseJsonTask other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalCreateTranscriptionResponseVerboseJsonTask other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

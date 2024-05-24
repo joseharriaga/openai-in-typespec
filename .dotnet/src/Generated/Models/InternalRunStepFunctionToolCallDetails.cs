@@ -7,13 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> The RunStepDetailsToolCallsFunctionObject. </summary>
     internal partial class InternalRunStepFunctionToolCallDetails : RunStepToolCall
     {
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepFunctionToolCallDetails"/>. </summary>
-        /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="internalFunction"> The definition of the function that was called. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="internalFunction"/> is null. </exception>
         internal InternalRunStepFunctionToolCallDetails(string id, InternalRunStepDetailsToolCallsFunctionObjectFunction internalFunction)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -24,23 +19,16 @@ namespace OpenAI.Assistants
             _internalFunction = internalFunction;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepFunctionToolCallDetails"/>. </summary>
-        /// <param name="type"> The discriminated type identifier for the details object. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="id"> The ID of the tool call object. </param>
-        /// <param name="internalFunction"> The definition of the function that was called. </param>
         internal InternalRunStepFunctionToolCallDetails(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string id, InternalRunStepDetailsToolCallsFunctionObjectFunction internalFunction) : base(type, serializedAdditionalRawData)
         {
             Id = id;
             _internalFunction = internalFunction;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRunStepFunctionToolCallDetails"/> for deserialization. </summary>
         internal InternalRunStepFunctionToolCallDetails()
         {
         }
 
-        /// <summary> The ID of the tool call object. </summary>
         public string Id { get; }
     }
 }

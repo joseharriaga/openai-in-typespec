@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Audio
 {
-    /// <summary> The CreateSpeechRequestModel. </summary>
     internal readonly partial struct InternalCreateSpeechRequestModel : IEquatable<InternalCreateSpeechRequestModel>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalCreateSpeechRequestModel"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalCreateSpeechRequestModel(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -22,27 +19,18 @@ namespace OpenAI.Audio
         private const string Tts1Value = "tts-1";
         private const string Tts1HdValue = "tts-1-hd";
 
-        /// <summary> tts-1. </summary>
         public static InternalCreateSpeechRequestModel Tts1 { get; } = new InternalCreateSpeechRequestModel(Tts1Value);
-        /// <summary> tts-1-hd. </summary>
         public static InternalCreateSpeechRequestModel Tts1Hd { get; } = new InternalCreateSpeechRequestModel(Tts1HdValue);
-        /// <summary> Determines if two <see cref="InternalCreateSpeechRequestModel"/> values are the same. </summary>
         public static bool operator ==(InternalCreateSpeechRequestModel left, InternalCreateSpeechRequestModel right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalCreateSpeechRequestModel"/> values are not the same. </summary>
         public static bool operator !=(InternalCreateSpeechRequestModel left, InternalCreateSpeechRequestModel right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalCreateSpeechRequestModel"/>. </summary>
         public static implicit operator InternalCreateSpeechRequestModel(string value) => new InternalCreateSpeechRequestModel(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalCreateSpeechRequestModel other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalCreateSpeechRequestModel other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

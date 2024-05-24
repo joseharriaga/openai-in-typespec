@@ -16,22 +16,22 @@ public partial class ToolConstraint
     public static ToolConstraint Auto { get; } = new("auto");
     public static ToolConstraint Required { get; } = new("required");
 
-    public ToolConstraint(ToolDefinition toolDefinition)
+    public ToolConstraint(AssistantTool tool)
     {
-        switch (toolDefinition)
+        switch (tool)
         {
-            case CodeInterpreterToolDefinition:
+            case CodeInterpreterTool:
                 _objectType = "code_interpreter";
                 break;
-            case FileSearchToolDefinition:
+            case FileSearchTool:
                 _objectType = "file_search";
                 break;
-            case FunctionToolDefinition functionTool:
+            case FunctionTool functionTool:
                 _objectType = "function";
                 _objectFunctionName = functionTool.FunctionName;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(toolDefinition));
+                throw new ArgumentOutOfRangeException(nameof(tool));
         }
         _serializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
     }

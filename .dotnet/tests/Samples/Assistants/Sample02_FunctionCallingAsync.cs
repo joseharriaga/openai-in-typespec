@@ -24,7 +24,7 @@ public partial class AssistantSamples
 
         const string GetCurrentLocationFunctionName = "get_current_location";
 
-        FunctionToolDefinition getLocationTool = new()
+        FunctionTool getLocationTool = new()
         {
             FunctionName = GetCurrentLocationFunctionName,
             Description = "Get the user's current location"
@@ -38,7 +38,7 @@ public partial class AssistantSamples
 
         const string GetCurrentWeatherFunctionName = "get_current_weather";
 
-        FunctionToolDefinition getWeatherTool = new()
+        FunctionTool getWeatherTool = new()
         {
             FunctionName = GetCurrentWeatherFunctionName,
             Description = "Get the current weather in a given location",

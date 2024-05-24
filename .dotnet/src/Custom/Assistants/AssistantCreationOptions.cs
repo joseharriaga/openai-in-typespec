@@ -19,7 +19,7 @@ public partial class AssistantCreationOptions
     /// There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
     /// </summary>
     [CodeGenMember("Tools")]
-    public IList<ToolDefinition> Tools { get; } = new ChangeTrackingList<ToolDefinition>();
+    public IList<AssistantTool> Tools { get; } = new ChangeTrackingList<AssistantTool>();
 
     /// <inheritdoc cref="ToolResources"/>
     [CodeGenMember("ToolResources")]
@@ -49,7 +49,6 @@ public partial class AssistantCreationOptions
     public AssistantCreationOptions()
     {
         Metadata = new ChangeTrackingDictionary<string, string>();
-        Tools = new ChangeTrackingList<ToolDefinition>();
-        ToolResources = new();
+        Tools = new ChangeTrackingList<AssistantTool>();
     }
 }

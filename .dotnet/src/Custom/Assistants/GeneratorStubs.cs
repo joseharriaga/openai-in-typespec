@@ -6,10 +6,10 @@
  */
 
 [CodeGenModel("AssistantToolsCode")]
-public partial class CodeInterpreterToolDefinition : ToolDefinition { }
+public partial class CodeInterpreterTool : AssistantTool { }
 
 [CodeGenModel("AssistantToolsFileSearch")]
-public partial class FileSearchToolDefinition : ToolDefinition { }
+public partial class FileSearchTool : AssistantTool { }
 
 [CodeGenModel("ThreadMessageStatus")]
 public readonly partial struct MessageStatus { }
@@ -19,9 +19,6 @@ public partial class MessageFailureDetails { }
 
 [CodeGenModel("MessageFailureDetailsReason")]
 public readonly partial struct MessageFailureReason { }
-
-[CodeGenModel("RunCompletionUsage")]
-public partial class RunTokenUsage { }
 
 [CodeGenModel("RunObjectLastError")]
 public partial class RunError { }
@@ -36,7 +33,7 @@ public partial class RunIncompleteDetails { }
 public readonly partial struct RunIncompleteReason { }
 
 [CodeGenModel("RunStepType")]
-public readonly partial struct RunStepType { }
+public readonly partial struct RunStepKind { }
 
 [CodeGenModel("RunStepStatus")]
 public readonly partial struct RunStepStatus { }
@@ -46,9 +43,6 @@ public partial class RunStepError { }
 
 [CodeGenModel("RunStepErrorCode")]
 public readonly partial struct RunStepErrorCode { }
-
-[CodeGenModel("RunStepCompletionUsage")]
-public partial class RunStepTokenUsage { }
 
 [CodeGenModel("RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]
 public partial class RunStepCodeInterpreterOutput { }

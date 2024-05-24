@@ -52,7 +52,8 @@ public partial class RunCreationOptions
     [CodeGenMember("AdditionalMessages")]
     internal IList<MessageCreationOptions> InternalMessages
     {
-        get => AdditionalMessages.Select(initializationMessage => initializationMessage as MessageCreationOptions).ToList();
+        get => (AdditionalMessages is null || AdditionalMessages.Count == 0) ? new ChangeTrackingList<MessageCreationOptions>()
+            : AdditionalMessages.Select(initializationMessage => initializationMessage as MessageCreationOptions).ToList();
         private set
         {
             // Note: this path is exclusively used in a test or deserialization case; here, we'll convert the
@@ -72,22 +73,22 @@ public partial class RunCreationOptions
     /// <para>
     /// <list type="bullet">
     /// <item>
-    ///     <c>code_interpreter</c> - <see cref="CodeInterpreterToolDefinition"/> 
+    ///     <c>code_interpreter</c> - <see cref="CodeInterpreterTool"/> 
     ///     - works with data, math, and computer code
     /// </item>
     /// <item>
-    ///     <c>file_search</c> - <see cref="FileSearchToolDefinition"/> 
+    ///     <c>file_search</c> - <see cref="FileSearchTool"/> 
     ///     - dynamically enriches an Run's context with content from vector stores
     /// </item>
     /// <item>
-    ///     <c>function</c> - <see cref="FunctionToolDefinition"/>
+    ///     <c>function</c> - <see cref="FunctionTool"/>
     ///     - enables caller-provided custom functions for actions and enrichment
     /// </item>
     /// </list>
     /// </para>
     /// </summary>
     [CodeGenMember("Tools")]
-    public IList<ToolDefinition> ToolsOverride { get; } = new ChangeTrackingList<ToolDefinition>();
+    public IList<AssistantTool> ToolsOverride { get; } = new ChangeTrackingList<AssistantTool>();
 
     /// <summary> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </summary>
     public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
@@ -104,10 +105,12 @@ public partial class RunCreationOptions
     public float? NucleusSamplingFactor { get; init; }
 
     /// <summary> The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
-    public int? MaxPromptTokens { get; init; }
+    [CodeGenMember("MaxPromptTokens")]
+    public int? MaxInputTokens { get; init; }
 
     /// <summary> The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info. </summary>
-    public int? MaxCompletionTokens { get; init; }
+    [CodeGenMember("MaxCompletionTokens")]
+    public int? MaxOutputTokens { get; init; }
 
     /// <summary> Gets or sets the truncation strategy. </summary>
     public RunTruncationStrategy TruncationStrategy { get; init; }

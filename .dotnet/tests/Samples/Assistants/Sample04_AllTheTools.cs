@@ -27,7 +27,7 @@ public partial class AssistantSamples
                 _ => throw new ArgumentException(relation, nameof(relation))
             };
 
-        FunctionToolDefinition getNameOfFamilyMemberTool = new()
+        FunctionTool getNameOfFamilyMemberTool = new()
         {
             FunctionName = nameof(GetNameOfFamilyMember),
             Description = "Provided a family relation type like 'father' or 'mother', "
@@ -66,7 +66,7 @@ public partial class AssistantSamples
         {
             Instructions = "Use functions to resolve family relations into the names of people. Use file search to "
                 + " look up the favorite numbers of people. Use code interpreter to create graphs of lines.",
-            Tools = { getNameOfFamilyMemberTool, new FileSearchToolDefinition(), new CodeInterpreterToolDefinition() },
+            Tools = { getNameOfFamilyMemberTool, new FileSearchTool(), new CodeInterpreterTool() },
             ToolResources = new()
             {
                 FileSearch = new()

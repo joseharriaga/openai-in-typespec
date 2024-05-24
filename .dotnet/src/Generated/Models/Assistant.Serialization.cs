@@ -171,7 +171,7 @@ namespace OpenAI.Assistants
             string description = default;
             string model = default;
             string instructions = default;
-            IReadOnlyList<ToolDefinition> tools = default;
+            IReadOnlyList<AssistantTool> tools = default;
             ToolResources toolResources = default;
             IReadOnlyDictionary<string, string> metadata = default;
             float? temperature = default;
@@ -233,10 +233,10 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("tools"u8))
                 {
-                    List<ToolDefinition> array = new List<ToolDefinition>();
+                    List<AssistantTool> array = new List<AssistantTool>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
+                        array.Add(AssistantTool.DeserializeAssistantTool(item, options));
                     }
                     tools = array;
                     continue;

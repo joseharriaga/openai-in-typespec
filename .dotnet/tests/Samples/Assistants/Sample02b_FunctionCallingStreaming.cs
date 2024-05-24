@@ -19,7 +19,7 @@ public partial class AssistantSamples
         
         // First, define the functions that the assistant will use in its defined tools.
 
-        FunctionToolDefinition getTemperatureTool = new()
+        FunctionTool getTemperatureTool = new()
         {
             FunctionName = "get_current_temperature",
             Description = "Gets the current temperature at a specific location.",
@@ -41,7 +41,7 @@ public partial class AssistantSamples
             """),
         };
 
-        FunctionToolDefinition getRainProbabilityTool = new()
+        FunctionTool getRainProbabilityTool = new()
         {
             FunctionName = "get_current_rain_probability",
             Description = "Gets the current forecasted probability of rain at a specific location,"

@@ -220,7 +220,7 @@ public partial class AssistantTests
         AssistantClient client = GetTestClient();
         Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
         {
-            Tools = { new CodeInterpreterToolDefinition() },
+            Tools = { new CodeInterpreterTool() },
             Instructions = "Call the code interpreter tool when asked to visualize mathematical concepts.",
         });
         Validate(assistant);
@@ -302,7 +302,7 @@ public partial class AssistantTests
         {
             Tools =
             {
-                new FunctionToolDefinition()
+                new FunctionTool()
                 {
                     FunctionName = "get_favorite_food_for_day_of_week",
                     Description = "gets the user's favorite food for a given day of the week, like Tuesday",
@@ -324,7 +324,7 @@ public partial class AssistantTests
         Validate(assistant);
         Assert.That(assistant.Tools?.Count, Is.EqualTo(1));
 
-        FunctionToolDefinition responseToolDefinition = assistant.Tools[0] as FunctionToolDefinition;
+        FunctionTool responseToolDefinition = assistant.Tools[0] as FunctionTool;
         Assert.That(responseToolDefinition?.FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
         Assert.That(responseToolDefinition?.Parameters, Is.Not.Null);
 
@@ -420,7 +420,7 @@ public partial class AssistantTests
     public async Task StreamingToolCall()
     {
         AssistantClient client = GetTestClient();
-        FunctionToolDefinition getWeatherTool = new("get_current_weather", "Gets the user's current weather");
+        FunctionTool getWeatherTool = new("get_current_weather", "Gets the user's current weather");
         Assistant assistant = await client.CreateAssistantAsync("gpt-3.5-turbo", new()
         {
             Tools = { getWeatherTool }
@@ -496,7 +496,7 @@ public partial class AssistantTests
         // Create an assistant, using the creation helper to make a new vector store
         Assistant assistant = client.CreateAssistant("gpt-4-turbo", new()
         {
-            Tools = { new FileSearchToolDefinition() },
+            Tools = { new FileSearchTool() },
             ToolResources = new()
             {
                 FileSearch = new()

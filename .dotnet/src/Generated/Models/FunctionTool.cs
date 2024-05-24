@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OpenAI.Assistants
 {
     /// <summary> The AssistantToolsFunction. </summary>
-    public partial class FunctionToolDefinition : ToolDefinition
+    public partial class FunctionTool : AssistantTool
     {
     }
 }

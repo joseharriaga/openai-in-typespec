@@ -10,19 +10,17 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants
 {
-    public partial class FunctionToolDefinition : IJsonModel<FunctionToolDefinition>
+    public partial class FileSearchTool : IJsonModel<FileSearchTool>
     {
-        void IJsonModel<FunctionToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<FileSearchTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FunctionToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FileSearchTool>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FunctionToolDefinition)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(FileSearchTool)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue<InternalFunctionDefinition>(_internalFunction, options);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (true && _serializedAdditionalRawData != null)
@@ -43,19 +41,19 @@ namespace OpenAI.Assistants
             writer.WriteEndObject();
         }
 
-        FunctionToolDefinition IJsonModel<FunctionToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        FileSearchTool IJsonModel<FileSearchTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FunctionToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FileSearchTool>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FunctionToolDefinition)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(FileSearchTool)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeFunctionToolDefinition(document.RootElement, options);
+            return DeserializeFileSearchTool(document.RootElement, options);
         }
 
-        internal static FunctionToolDefinition DeserializeFunctionToolDefinition(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static FileSearchTool DeserializeFileSearchTool(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -63,17 +61,11 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalFunctionDefinition function = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("function"u8))
-                {
-                    function = InternalFunctionDefinition.DeserializeInternalFunctionDefinition(property.Value, options);
-                    continue;
-                }
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString();
@@ -85,46 +77,46 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FunctionToolDefinition(type, serializedAdditionalRawData, function);
+            return new FileSearchTool(type, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<FunctionToolDefinition>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<FileSearchTool>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FunctionToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FileSearchTool>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(FunctionToolDefinition)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FileSearchTool)} does not support writing '{options.Format}' format.");
             }
         }
 
-        FunctionToolDefinition IPersistableModel<FunctionToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options)
+        FileSearchTool IPersistableModel<FileSearchTool>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FunctionToolDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FileSearchTool>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeFunctionToolDefinition(document.RootElement, options);
+                        return DeserializeFileSearchTool(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(FunctionToolDefinition)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FileSearchTool)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<FunctionToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<FileSearchTool>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new FunctionToolDefinition FromResponse(PipelineResponse response)
+        internal static new FileSearchTool FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeFunctionToolDefinition(document.RootElement);
+            return DeserializeFileSearchTool(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

@@ -5,8 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.Assistants;
 
 [CodeGenModel("AssistantToolsFunction")]
-[CodeGenSuppress(nameof(FunctionToolDefinition), typeof(InternalFunctionDefinition))]
-public partial class FunctionToolDefinition : ToolDefinition
+[CodeGenSuppress(nameof(FunctionTool), typeof(InternalFunctionDefinition))]
+public partial class FunctionTool : AssistantTool
 {
     // CUSTOM: the visibility of the underlying function object is hidden to simplify the structure of the tool.
 
@@ -35,24 +35,24 @@ public partial class FunctionToolDefinition : ToolDefinition
     }
 
     /// <summary>
-    /// Creates a new instance of <see cref="FunctionToolDefinition"/>. 
+    /// Creates a new instance of <see cref="FunctionTool"/>. 
     /// </summary>
     [SetsRequiredMembers]
-    public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null)
+    public FunctionTool(string name, string description = null, BinaryData parameters = null)
         : this("function", null, new InternalFunctionDefinition(description, name, parameters, null))
     {}
 
     /// <summary>
-    /// Creates a new instance of <see cref="FunctionToolDefinition"/>. 
+    /// Creates a new instance of <see cref="FunctionTool"/>. 
     /// </summary>
-    public FunctionToolDefinition()
+    public FunctionTool()
         : base("function", null)
     {
         _internalFunction = new InternalFunctionDefinition();
     }
 
     [SetsRequiredMembers]
-    internal FunctionToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalFunctionDefinition function)
+    internal FunctionTool(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalFunctionDefinition function)
         : base(type, serializedAdditionalRawData)
     {
         _internalFunction = function;

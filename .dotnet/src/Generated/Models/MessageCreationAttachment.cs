@@ -47,11 +47,11 @@ namespace OpenAI.Assistants
         /// <param name="fileId"> The ID of the file to attach to the message. </param>
         /// <param name="tools">
         /// The tools to add this file to.
-        /// Please note <see cref="ToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="CodeInterpreterToolDefinition"/>, <see cref="FileSearchToolDefinition"/> and <see cref="FunctionToolDefinition"/>.
+        /// Please note <see cref="AssistantTool"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="CodeInterpreterTool"/>, <see cref="FileSearchTool"/> and <see cref="FunctionTool"/>.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> or <paramref name="tools"/> is null. </exception>
-        public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
+        public MessageCreationAttachment(string fileId, IEnumerable<AssistantTool> tools)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
             Argument.AssertNotNull(tools, nameof(tools));
@@ -64,11 +64,11 @@ namespace OpenAI.Assistants
         /// <param name="fileId"> The ID of the file to attach to the message. </param>
         /// <param name="tools">
         /// The tools to add this file to.
-        /// Please note <see cref="ToolDefinition"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="CodeInterpreterToolDefinition"/>, <see cref="FileSearchToolDefinition"/> and <see cref="FunctionToolDefinition"/>.
+        /// Please note <see cref="AssistantTool"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="CodeInterpreterTool"/>, <see cref="FileSearchTool"/> and <see cref="FunctionTool"/>.
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal MessageCreationAttachment(string fileId, IReadOnlyList<ToolDefinition> tools, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageCreationAttachment(string fileId, IReadOnlyList<AssistantTool> tools, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Tools = tools;

@@ -75,10 +75,10 @@ namespace OpenAI.Internal.Models
         /// Supported types:
         /// <list type="bullet">
         /// <item>
-        /// <description><see cref="CodeInterpreterToolDefinition"/></description>
+        /// <description><see cref="CodeInterpreterTool"/></description>
         /// </item>
         /// <item>
-        /// <description><see cref="FileSearchToolDefinition"/></description>
+        /// <description><see cref="FileSearchTool"/></description>
         /// </item>
         /// </list>
         /// </remarks>

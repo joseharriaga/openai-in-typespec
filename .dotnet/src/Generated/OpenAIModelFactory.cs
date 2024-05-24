@@ -254,13 +254,13 @@ namespace OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="Assistants.RunTokenUsage"/>. </summary>
-        /// <param name="completionTokens"> Number of completion tokens used over the course of the run. </param>
-        /// <param name="promptTokens"> Number of prompt tokens used over the course of the run. </param>
+        /// <param name="outputTokens"> Number of completion tokens used over the course of the run. </param>
+        /// <param name="inputTokens"> Number of prompt tokens used over the course of the run. </param>
         /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
         /// <returns> A new <see cref="Assistants.RunTokenUsage"/> instance for mocking. </returns>
-        public static RunTokenUsage RunTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
+        public static RunTokenUsage RunTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default)
         {
-            return new RunTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+            return new RunTokenUsage(outputTokens, inputTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Assistants.RunStepError"/>. </summary>
@@ -270,45 +270,6 @@ namespace OpenAI
         public static RunStepError RunStepError(RunStepErrorCode code = default, string message = null)
         {
             return new RunStepError(code, message, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Assistants.RunStepTokenUsage"/>. </summary>
-        /// <param name="completionTokens"> Number of completion tokens used over the course of the run step. </param>
-        /// <param name="promptTokens"> Number of prompt tokens used over the course of the run step. </param>
-        /// <param name="totalTokens"> Total number of tokens used (prompt + completion). </param>
-        /// <returns> A new <see cref="Assistants.RunStepTokenUsage"/> instance for mocking. </returns>
-        public static RunStepTokenUsage RunStepTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
-        {
-            return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResources"/>. </summary>
-        /// <param name="codeInterpreter"></param>
-        /// <param name="fileSearch"></param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResources"/> instance for mocking. </returns>
-        public static ThreadObjectToolResources ThreadObjectToolResources(ThreadObjectToolResourcesCodeInterpreter codeInterpreter = null, ThreadObjectToolResourcesFileSearch fileSearch = null)
-        {
-            return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/>. </summary>
-        /// <param name="fileIds"> A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool. </param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesCodeInterpreter"/> instance for mocking. </returns>
-        public static ThreadObjectToolResourcesCodeInterpreter ThreadObjectToolResourcesCodeInterpreter(IEnumerable<string> fileIds = null)
-        {
-            fileIds ??= new List<string>();
-
-            return new ThreadObjectToolResourcesCodeInterpreter(fileIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ThreadObjectToolResourcesFileSearch"/>. </summary>
-        /// <param name="vectorStoreIds"> The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. </param>
-        /// <returns> A new <see cref="Models.ThreadObjectToolResourcesFileSearch"/> instance for mocking. </returns>
-        public static ThreadObjectToolResourcesFileSearch ThreadObjectToolResourcesFileSearch(IEnumerable<string> vectorStoreIds = null)
-        {
-            vectorStoreIds ??= new List<string>();
-
-            return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileCounts"/>. </summary>

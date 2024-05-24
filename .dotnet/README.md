@@ -1,6 +1,10 @@
-# OpenAI client library for .NET
+# OpenAI .NET API library
 
-The OpenAI client library for .NET provides convenient access to the OpenAI REST API from .NET applications.
+[![NuGet version](https://img.shields.io/nuget/v/openai.svg)](https://www.nuget.org/packages/OpenAI/)
+
+The OpenAI .NET library provides convenient access to the OpenAI REST API from .NET applications. It includes scenario-specific client abstractions built atop the [System.ClientModel](https://learn.microsoft.com/dotnet/api/overview/azure/system.clientmodel-readme) library, well-defined types for OpenAI request and response models, and targeted adaptations of direct REST usage patterns to aid ease of use and better align with .NET conventions.
+
+It is generated from our [OpenAPI specification](https://github.com/openai/openai-openapi) in collaboration with Microsoft.
 
 ## Getting started
 

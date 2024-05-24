@@ -8,7 +8,6 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
@@ -556,11 +555,58 @@ public partial class AssistantTests
         Assert.That(thread.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
 
         StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant);
-        Validate(runOperation);
+        ThreadRun run = runOperation.WaitForCompletion();
 
-        while (true)
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+
+        PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
+        foreach (ThreadMessage message in messages)
         {
-            (RunStatus Status, ThreadRun Value) update = runOperation.WaitForStatusUpdate();
+            foreach (MessageContent content in message.Content)
+            {
+                Console.WriteLine(content.Text);
+                foreach (TextAnnotation annotation in content.TextAnnotations)
+                {
+                    Console.WriteLine($"  --> From file: {annotation.InputFileId}, quote: {annotation.InputQuote}, replacement: {annotation.TextToReplace}");
+                }
+            }
+        }
+        Assert.That(messages.Count() > 1);
+        Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("cake"))));
+    }
+
+    [Test]
+    public void RunStepsWithActionsWork()
+    {
+        AssistantClient client = GetTestClient();
+
+        // Create an assistant that can call the function tools.
+        AssistantCreationOptions assistantOptions = new()
+        {
+            Name = "Sample: Function Calling",
+            Instructions =
+                "Don't make assumptions about what values to plug into functions."
+                + " Ask for clarification if a user request is ambiguous.",
+            Tools = { getTemperatureTool, getRainProbabilityTool },
+        };
+
+        Assistant assistant = client.CreateAssistant("gpt-4-turbo", assistantOptions);
+        Validate(assistant);
+
+        // Create a thread with an override vector store
+        AssistantThread thread = client.CreateThread();
+        ThreadMessage message = client.CreateMessage(
+            thread,
+            [
+                "What's the weather in Seattle today and the likelihood it'll rain?"
+            ]);
+
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant);
+
+        (RunStatus Status, ThreadRun Value) update;
+        do
+        {
+            update = runOperation.WaitForStatusUpdate();
 
             if (update.Status == RunStatus.RequiresAction)
             {
@@ -583,12 +629,8 @@ public partial class AssistantTests
 
                 client.SubmitToolOutputsToRun(update.Value, outputs);
             }
-
-            if (update.Status.IsTerminal)
-            {
-                break;
-            }
         }
+        while (!update.Status.IsTerminal);
 
         Assert.That(runOperation.Value, Is.Not.Null);
 
@@ -597,19 +639,8 @@ public partial class AssistantTests
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
-        foreach (ThreadMessage message in messages)
-        {
-            foreach (MessageContent content in message.Content)
-            {
-                Console.WriteLine(content.Text);
-                foreach (TextAnnotation annotation in content.TextAnnotations)
-                {
-                    Console.WriteLine($"  --> From file: {annotation.InputFileId}, quote: {annotation.InputQuote}, replacement: {annotation.TextToReplace}");
-                }
-            }
-        }
         Assert.That(messages.Count() > 1);
-        Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("cake"))));
+        Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("weather"))));
     }
 
     FunctionToolDefinition getTemperatureTool = new()

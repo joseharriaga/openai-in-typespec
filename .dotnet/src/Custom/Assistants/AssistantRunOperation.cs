@@ -111,10 +111,10 @@ internal class AssistantRunOperation : ResultOperation<ThreadRun>
         }
     }
 
-    public override async Task<ClientResult<ThreadRun>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<ClientResult<ThreadRun>> WaitForCompletionAsync(CancellationToken cancellationToken = default)
         => await WaitForCompletionAsync(_pollingInterval, cancellationToken).ConfigureAwait(false);
 
-    public override async Task<ClientResult<ThreadRun>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+    public override async ValueTask<ClientResult<ThreadRun>> WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
     {
         while (true)
         {

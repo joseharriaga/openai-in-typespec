@@ -563,6 +563,8 @@ function Edit-GeneratedModels {
         "InternalCreateImageEditRequestModel.cs",
         "InternalCreateImageRequestModel.cs",
         "InternalCreateImageVariationRequestModel.cs",
+        "InternalImageEditOptionsResponseFormat.cs",
+        "InternalImageEditOptionsSize.cs",
         "InternalImageVariationOptionsResponseFormat.cs",
         "InternalImageVariationOptionsSize.cs",
 

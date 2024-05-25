@@ -48,8 +48,6 @@ function Remove-PseudoSuppressedTypes {
         "DeleteThreadResponseObject",
         "DeleteVectorStoreFileResponseObject",
         "DeleteVectorStoreResponseObject",
-        "ImageEditOptionsResponseFormat",
-        "ImageEditOptionsSize",
         "InternalBatchJobObject",
         "InternalMessageContentImageUrlObjectImageUrlDetail",
         "InternalMessageContentItemFileObjectImageFileDetail",

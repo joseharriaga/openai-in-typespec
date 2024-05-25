@@ -24,7 +24,7 @@ namespace OpenAI.VectorStores
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(FileId);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<object>(Object, options);
+            writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("usage_bytes"u8);
             writer.WriteNumberValue(Size);
             writer.WritePropertyName("created_at"u8);
@@ -81,7 +81,7 @@ namespace OpenAI.VectorStores
                 return null;
             }
             string id = default;
-            object @object = default;
+            InternalVectorStoreFileObjectObject @object = default;
             int usageBytes = default;
             DateTimeOffset createdAt = default;
             string vectorStoreId = default;
@@ -98,7 +98,7 @@ namespace OpenAI.VectorStores
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetObject();
+                    @object = new InternalVectorStoreFileObjectObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("usage_bytes"u8))

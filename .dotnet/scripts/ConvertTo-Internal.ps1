@@ -635,6 +635,9 @@ function Edit-GeneratedModels {
         "InternalListBatchesResponseObject.cs",
         
         # VectorStoreClient types
+        "InternalVectorStoreObjectObject.cs",
+        "InternalVectorStoreFileObjectObject.cs",
+
         "InternalCreateVectorStoreFileBatchRequest.cs",
         "InternalCreateVectorStoreFileBatchRequest.Serialization.cs",
         "InternalCreateVectorStoreFileRequest.cs",

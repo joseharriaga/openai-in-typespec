@@ -55,9 +55,7 @@ function Remove-PseudoSuppressedTypes {
         "RunObjectObject",
         "RunStepObjectObject",
         "ThreadObjectObject",
-        "ToolConstraint",
-        "VectorStoreFileObjectObject",
-        "VectorStoreObjectObject"
+        "ToolConstraint"
     )
     foreach ($target in $targets) {
         Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {

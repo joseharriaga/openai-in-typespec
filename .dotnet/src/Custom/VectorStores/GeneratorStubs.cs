@@ -44,3 +44,9 @@ internal readonly partial struct InternalListVectorStoreFilesResponseObject { }
 
 [CodeGenModel("VectorStoreBatchFileJobStatus")]
 public readonly partial struct VectorStoreBatchFileJobStatus { }
+
+[CodeGenModel("VectorStoreObjectObject")]
+internal readonly partial struct InternalVectorStoreObjectObject { }
+
+[CodeGenModel("VectorStoreFileObjectObject")]
+internal readonly partial struct InternalVectorStoreFileObjectObject { }

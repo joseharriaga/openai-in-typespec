@@ -6,7 +6,10 @@
 [CodeGenModel("VectorStoreFileObject")]
 public partial class VectorStoreFileAssociation
 {
-    private readonly object Object;
+    // CUSTOM: Made internal.
+    /// <summary> The object type, which is always `vector_store.file`. </summary>
+    [CodeGenMember("Object")]
+    internal InternalVectorStoreFileObjectObject Object { get; } = InternalVectorStoreFileObjectObject.VectorStoreFile;
 
     /// <summary>
     /// The ID of the file that is associated with the vector store.

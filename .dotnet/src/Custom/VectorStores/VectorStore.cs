@@ -6,7 +6,10 @@
 [CodeGenModel("VectorStoreObject")]
 public partial class VectorStore
 {
-    private readonly object Object;
+    // CUSTOM: Made internal.
+    /// <summary> The object type, which is always `vector_store`. </summary>
+    [CodeGenMember("Object")]
+    internal InternalVectorStoreObjectObject Object { get; } = InternalVectorStoreObjectObject.VectorStore;
 
     /// <summary>
     /// Gets the policy that controls when this vector store will be automatically deleted.

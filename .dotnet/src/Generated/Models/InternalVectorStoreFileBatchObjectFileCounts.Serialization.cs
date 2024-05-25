@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class VectorStoreFileBatchObjectFileCounts : IJsonModel<VectorStoreFileBatchObjectFileCounts>
+    internal partial class InternalVectorStoreFileBatchObjectFileCounts : IJsonModel<InternalVectorStoreFileBatchObjectFileCounts>
     {
-        void IJsonModel<VectorStoreFileBatchObjectFileCounts>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalVectorStoreFileBatchObjectFileCounts>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileBatchObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalVectorStoreFileBatchObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreFileBatchObjectFileCounts)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalVectorStoreFileBatchObjectFileCounts)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -49,19 +49,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        VectorStoreFileBatchObjectFileCounts IJsonModel<VectorStoreFileBatchObjectFileCounts>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalVectorStoreFileBatchObjectFileCounts IJsonModel<InternalVectorStoreFileBatchObjectFileCounts>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileBatchObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalVectorStoreFileBatchObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(VectorStoreFileBatchObjectFileCounts)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalVectorStoreFileBatchObjectFileCounts)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeVectorStoreFileBatchObjectFileCounts(document.RootElement, options);
+            return DeserializeInternalVectorStoreFileBatchObjectFileCounts(document.RootElement, options);
         }
 
-        internal static VectorStoreFileBatchObjectFileCounts DeserializeVectorStoreFileBatchObjectFileCounts(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalVectorStoreFileBatchObjectFileCounts DeserializeInternalVectorStoreFileBatchObjectFileCounts(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -109,7 +109,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new VectorStoreFileBatchObjectFileCounts(
+            return new InternalVectorStoreFileBatchObjectFileCounts(
                 inProgress,
                 completed,
                 failed,
@@ -118,41 +118,43 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<VectorStoreFileBatchObjectFileCounts>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalVectorStoreFileBatchObjectFileCounts>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileBatchObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalVectorStoreFileBatchObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreFileBatchObjectFileCounts)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalVectorStoreFileBatchObjectFileCounts)} does not support writing '{options.Format}' format.");
             }
         }
 
-        VectorStoreFileBatchObjectFileCounts IPersistableModel<VectorStoreFileBatchObjectFileCounts>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalVectorStoreFileBatchObjectFileCounts IPersistableModel<InternalVectorStoreFileBatchObjectFileCounts>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStoreFileBatchObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalVectorStoreFileBatchObjectFileCounts>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeVectorStoreFileBatchObjectFileCounts(document.RootElement, options);
+                        return DeserializeInternalVectorStoreFileBatchObjectFileCounts(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(VectorStoreFileBatchObjectFileCounts)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalVectorStoreFileBatchObjectFileCounts)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<VectorStoreFileBatchObjectFileCounts>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalVectorStoreFileBatchObjectFileCounts>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static VectorStoreFileBatchObjectFileCounts FromResponse(PipelineResponse response)
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The result to deserialize the model from. </param>
+        internal static InternalVectorStoreFileBatchObjectFileCounts FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeVectorStoreFileBatchObjectFileCounts(document.RootElement);
+            return DeserializeInternalVectorStoreFileBatchObjectFileCounts(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

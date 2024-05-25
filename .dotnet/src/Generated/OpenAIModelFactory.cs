@@ -201,17 +201,9 @@ namespace OpenAI
             return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
         }
 
-        public static VectorStoreFileBatchObjectFileCounts VectorStoreFileBatchObjectFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
-        {
-            return new VectorStoreFileBatchObjectFileCounts(
-                inProgress,
-                completed,
-                failed,
-                cancelled,
-                total,
-                serializedAdditionalRawData: null);
-        }
-
+        /// <summary> Initializes a new instance of <see cref="Models.CreateTranscriptionResponseJson"/>. </summary>
+        /// <param name="text"> The transcribed text. </param>
+        /// <returns> A new <see cref="Models.CreateTranscriptionResponseJson"/> instance for mocking. </returns>
         public static CreateTranscriptionResponseJson CreateTranscriptionResponseJson(string text = null)
         {
             return new CreateTranscriptionResponseJson(text, serializedAdditionalRawData: null);

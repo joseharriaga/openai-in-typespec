@@ -301,3 +301,48 @@ internal readonly partial struct InternalMessageDeltaContentImageFileObjectImage
 
 [CodeGenModel("MessageDeltaContentImageUrlObjectImageUrlDetail")]
 internal readonly partial struct InternalMessageDeltaContentImageUrlObjectImageUrlDetail { }
+
+[CodeGenModel("CreateThreadAndRunRequestToolResources")]
+internal partial class InternalCreateThreadAndRunRequestToolResources { }
+
+[CodeGenModel("CreateThreadAndRunRequestToolResourcesCodeInterpreter")]
+internal partial class InternalCreateThreadAndRunRequestToolResourcesCodeInterpreter { }
+
+[CodeGenModel("CreateThreadAndRunRequestToolResourcesFileSearch")]
+internal partial class InternalCreateThreadAndRunRequestToolResourcesFileSearch { }
+
+[CodeGenModel("CreateThreadRequestToolResources")]
+internal partial class InternalCreateThreadRequestToolResources { }
+
+[CodeGenModel("CreateThreadRequestToolResourcesCodeInterpreter")]
+internal partial class InternalCreateThreadRequestToolResourcesCodeInterpreter { }
+
+[CodeGenModel("CreateThreadRequestToolResourcesFileSearchBase")]
+internal partial class InternalCreateThreadRequestToolResourcesFileSearchBase { }
+
+[CodeGenModel("CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers")]
+internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers { }
+
+[CodeGenModel("CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore")]
+internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore { }
+
+[CodeGenModel("CreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences")]
+internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences { }
+
+[CodeGenModel("ModifyAssistantRequestToolResources")]
+internal partial class InternalModifyAssistantRequestToolResources { }
+
+[CodeGenModel("ModifyAssistantRequestToolResourcesCodeInterpreter")]
+internal partial class InternalModifyAssistantRequestToolResourcesCodeInterpreter { }
+
+[CodeGenModel("ModifyAssistantRequestToolResourcesFileSearch")]
+internal partial class InternalModifyAssistantRequestToolResourcesFileSearch { }
+
+[CodeGenModel("ModifyThreadRequestToolResources")]
+internal partial class InternalModifyThreadRequestToolResources { }
+
+[CodeGenModel("ModifyThreadRequestToolResourcesCodeInterpreter")]
+internal partial class InternalModifyThreadRequestToolResourcesCodeInterpreter { }
+
+[CodeGenModel("ModifyThreadRequestToolResourcesFileSearch")]
+internal partial class InternalModifyThreadRequestToolResourcesFileSearch { }

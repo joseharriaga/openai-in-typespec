@@ -86,13 +86,22 @@ internal partial class UnknownRunStepDeltaStepDetailsToolCallsObjectToolCallsObj
 internal partial class MessageDeltaContent { }
 
 [CodeGenModel("DeleteAssistantResponse")]
-internal partial class InternalDeleteAssistantResponse { private readonly object Object; }
+internal partial class InternalDeleteAssistantResponse { }
+
+[CodeGenModel("DeleteAssistantResponseObject")]
+internal readonly partial struct InternalDeleteAssistantResponseObject { }
 
 [CodeGenModel("DeleteThreadResponse")]
-internal partial class InternalDeleteThreadResponse { private readonly object Object; }
+internal partial class InternalDeleteThreadResponse { }
+
+[CodeGenModel("DeleteThreadResponseObject")]
+internal readonly partial struct InternalDeleteThreadResponseObject { }
 
 [CodeGenModel("DeleteMessageResponse")]
-internal partial class InternalDeleteMessageResponse { private readonly object Object; }
+internal partial class InternalDeleteMessageResponse { }
+
+[CodeGenModel("DeleteMessageResponseObject")]
+internal readonly partial struct InternalDeleteMessageResponseObject { }
 
 [CodeGenModel("CreateThreadAndRunRequest")]
 internal partial class InternalCreateThreadAndRunRequest

@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Files
 {
@@ -20,7 +19,12 @@ namespace OpenAI.Files
             Deleted = deleted;
         }
 
-        internal InternalDeleteFileResponse(string id, object @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="InternalDeleteFileResponse"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="object"></param>
+        /// <param name="deleted"></param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal InternalDeleteFileResponse(string id, InternalDeleteFileResponseObject @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -32,8 +36,12 @@ namespace OpenAI.Files
         {
         }
 
+        /// <summary> Gets the id. </summary>
         public string Id { get; }
+        /// <summary> Gets the object. </summary>
+        public InternalDeleteFileResponseObject Object { get; } = InternalDeleteFileResponseObject.File;
 
+        /// <summary> Gets the deleted. </summary>
         public bool Deleted { get; }
     }
 }

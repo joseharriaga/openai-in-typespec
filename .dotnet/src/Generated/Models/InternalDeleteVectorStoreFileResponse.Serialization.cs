@@ -26,7 +26,7 @@ namespace OpenAI.VectorStores
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Deleted);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<object>(Object, options);
+            writer.WriteStringValue(Object.ToString());
             if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -67,7 +67,7 @@ namespace OpenAI.VectorStores
             }
             string id = default;
             bool deleted = default;
-            object @object = default;
+            InternalDeleteVectorStoreFileResponseObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -84,7 +84,7 @@ namespace OpenAI.VectorStores
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetObject();
+                    @object = new InternalDeleteVectorStoreFileResponseObject(property.Value.GetString());
                     continue;
                 }
                 if (true)

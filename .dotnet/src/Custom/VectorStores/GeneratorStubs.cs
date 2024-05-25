@@ -10,10 +10,16 @@ internal partial class InternalCreateVectorStoreFileRequest {}
 internal partial class InternalCreateVectorStoreFileBatchRequest {}
 
 [CodeGenModel("DeleteVectorStoreResponse")]
-internal partial class InternalDeleteVectorStoreResponse { private readonly object Object; }
+internal partial class InternalDeleteVectorStoreResponse { }
+
+[CodeGenModel("DeleteVectorStoreResponseObject")]
+internal readonly partial struct InternalDeleteVectorStoreResponseObject { }
 
 [CodeGenModel("DeleteVectorStoreFileResponse")]
-internal partial class InternalDeleteVectorStoreFileResponse { private readonly object Object; }
+internal partial class InternalDeleteVectorStoreFileResponse { }
+
+[CodeGenModel("DeleteVectorStoreFileResponseObject")]
+internal readonly partial struct InternalDeleteVectorStoreFileResponseObject { }
 
 [CodeGenModel("VectorStoreObjectFileCounts")]
 public readonly partial struct VectorStoreFileCounts {}

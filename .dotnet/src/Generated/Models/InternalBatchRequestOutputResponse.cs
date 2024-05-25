@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Batch
 {
-    /// <summary> The BatchRequestCounts. </summary>
-    internal partial class InternalBatchRequestCounts
+    /// <summary> The BatchRequestOutputResponse. </summary>
+    internal partial class InternalBatchRequestOutputResponse
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,32 +42,27 @@ namespace OpenAI.Batch
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/>. </summary>
-        /// <param name="total"> Total number of requests in the batch. </param>
-        /// <param name="completed"> Number of requests that have been completed successfully. </param>
-        /// <param name="failed"> Number of requests that have failed. </param>
-        internal InternalBatchRequestCounts(int total, int completed, int failed)
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestOutputResponse"/>. </summary>
+        internal InternalBatchRequestOutputResponse()
         {
-            Total = total;
-            Completed = completed;
-            Failed = failed;
+            Body = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal InternalBatchRequestCounts(int total, int completed, int failed, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestOutputResponse"/>. </summary>
+        /// <param name="statusCode"> The HTTP status code of the response. </param>
+        /// <param name="requestId"> An unique identifier for the OpenAI API request. Please include this request ID when contacting support. </param>
+        /// <param name="body"> The JSON body of the response. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal InternalBatchRequestOutputResponse(int? statusCode, string requestId, IReadOnlyDictionary<string, string> body, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Total = total;
-            Completed = completed;
-            Failed = failed;
+            StatusCode = statusCode;
+            RequestId = requestId;
+            Body = body;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/> for deserialization. </summary>
-        internal InternalBatchRequestCounts()
-        {
-        }
-
-        public int Total { get; }
-        public int Completed { get; }
-        public int Failed { get; }
+        public int? StatusCode { get; }
+        public string RequestId { get; }
+        public IReadOnlyDictionary<string, string> Body { get; }
     }
 }

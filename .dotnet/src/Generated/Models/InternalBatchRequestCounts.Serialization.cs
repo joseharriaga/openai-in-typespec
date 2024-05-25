@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.Batch
 {
-    internal partial struct InternalBatchRequestCounts : IJsonModel<InternalBatchRequestCounts>, IJsonModel<object>
+    internal partial class InternalBatchRequestCounts : IJsonModel<InternalBatchRequestCounts>
     {
         void IJsonModel<InternalBatchRequestCounts>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -57,14 +57,14 @@ namespace OpenAI.Batch
             return DeserializeInternalBatchRequestCounts(document.RootElement, options);
         }
 
-        void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options) => ((IJsonModel<InternalBatchRequestCounts>)this).Write(writer, options);
-
-        object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => ((IJsonModel<InternalBatchRequestCounts>)this).Create(ref reader, options);
-
         internal static InternalBatchRequestCounts DeserializeInternalBatchRequestCounts(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
             int total = default;
             int completed = default;
             int failed = default;
@@ -127,19 +127,16 @@ namespace OpenAI.Batch
 
         string IPersistableModel<InternalBatchRequestCounts>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options) => ((IPersistableModel<InternalBatchRequestCounts>)this).Write(options);
-
-        object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options) => ((IPersistableModel<InternalBatchRequestCounts>)this).Create(data, options);
-
-        string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options) => ((IPersistableModel<InternalBatchRequestCounts>)this).GetFormatFromOptions(options);
-
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The result to deserialize the model from. </param>
         internal static InternalBatchRequestCounts FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeInternalBatchRequestCounts(document.RootElement);
         }
 
-        internal BinaryContent ToBinaryContent()
+        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
+        internal virtual BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

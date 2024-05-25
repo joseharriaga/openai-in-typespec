@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Batch
 {
-    /// <summary> The BatchRequestCounts. </summary>
-    internal partial class InternalBatchRequestCounts
+    /// <summary> The per-line object of the batch input file. </summary>
+    internal partial class InternalBatchRequestInput
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,32 +42,26 @@ namespace OpenAI.Batch
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/>. </summary>
-        /// <param name="total"> Total number of requests in the batch. </param>
-        /// <param name="completed"> Number of requests that have been completed successfully. </param>
-        /// <param name="failed"> Number of requests that have failed. </param>
-        internal InternalBatchRequestCounts(int total, int completed, int failed)
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestInput"/>. </summary>
+        internal InternalBatchRequestInput()
         {
-            Total = total;
-            Completed = completed;
-            Failed = failed;
         }
 
-        internal InternalBatchRequestCounts(int total, int completed, int failed, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestInput"/>. </summary>
+        /// <param name="customId"> A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch. </param>
+        /// <param name="method"> The HTTP method to be used for the request. Currently only `POST` is supported. </param>
+        /// <param name="url"> The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal InternalBatchRequestInput(string customId, string method, Uri url, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Total = total;
-            Completed = completed;
-            Failed = failed;
+            CustomId = customId;
+            Method = method;
+            Url = url;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/> for deserialization. </summary>
-        internal InternalBatchRequestCounts()
-        {
-        }
-
-        public int Total { get; }
-        public int Completed { get; }
-        public int Failed { get; }
+        public string CustomId { get; }
+        public string Method { get; }
+        public Uri Url { get; }
     }
 }

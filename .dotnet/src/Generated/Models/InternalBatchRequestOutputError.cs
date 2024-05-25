@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Batch
 {
-    /// <summary> The BatchRequestCounts. </summary>
-    internal partial class InternalBatchRequestCounts
+    /// <summary> The BatchRequestOutputError. </summary>
+    internal partial class InternalBatchRequestOutputError
     {
         /// <summary>
         /// Keeps track of any properties unknown to the library.
@@ -42,32 +42,23 @@ namespace OpenAI.Batch
         /// </summary>
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/>. </summary>
-        /// <param name="total"> Total number of requests in the batch. </param>
-        /// <param name="completed"> Number of requests that have been completed successfully. </param>
-        /// <param name="failed"> Number of requests that have failed. </param>
-        internal InternalBatchRequestCounts(int total, int completed, int failed)
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestOutputError"/>. </summary>
+        internal InternalBatchRequestOutputError()
         {
-            Total = total;
-            Completed = completed;
-            Failed = failed;
         }
 
-        internal InternalBatchRequestCounts(int total, int completed, int failed, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestOutputError"/>. </summary>
+        /// <param name="code"> A machine-readable error code. </param>
+        /// <param name="message"> A human-readable error message. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal InternalBatchRequestOutputError(string code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Total = total;
-            Completed = completed;
-            Failed = failed;
+            Code = code;
+            Message = message;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchRequestCounts"/> for deserialization. </summary>
-        internal InternalBatchRequestCounts()
-        {
-        }
-
-        public int Total { get; }
-        public int Completed { get; }
-        public int Failed { get; }
+        public string Code { get; }
+        public string Message { get; }
     }
 }

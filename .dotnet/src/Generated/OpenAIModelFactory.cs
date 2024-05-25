@@ -222,28 +222,10 @@ namespace OpenAI
             return new CreateTranslationResponseJson(text, serializedAdditionalRawData: null);
         }
 
-        public static BatchRequestInput BatchRequestInput(string customId = null, string method = null, Uri url = null)
-        {
-            return new BatchRequestInput(customId, method, url, serializedAdditionalRawData: null);
-        }
-
-        public static BatchRequestOutput BatchRequestOutput(string id = null, string customId = null, BatchRequestOutputResponse response = null, BatchRequestOutputError error = null)
-        {
-            return new BatchRequestOutput(id, customId, response, error, serializedAdditionalRawData: null);
-        }
-
-        public static BatchRequestOutputResponse BatchRequestOutputResponse(int? statusCode = null, string requestId = null, IReadOnlyDictionary<string, string> body = null)
-        {
-            body ??= new Dictionary<string, string>();
-
-            return new BatchRequestOutputResponse(statusCode, requestId, body, serializedAdditionalRawData: null);
-        }
-
-        public static BatchRequestOutputError BatchRequestOutputError(string code = null, string message = null)
-        {
-            return new BatchRequestOutputError(code, message, serializedAdditionalRawData: null);
-        }
-
+        /// <summary> Initializes a new instance of <see cref="Chat.ToolChatMessage"/>. </summary>
+        /// <param name="content"></param>
+        /// <param name="toolCallId"> Tool call that this message is responding to. </param>
+        /// <returns> A new <see cref="Chat.ToolChatMessage"/> instance for mocking. </returns>
         public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)
         {
             content ??= new List<ChatMessageContentPart>();

@@ -169,7 +169,7 @@ namespace OpenAI.Batch
             DateTimeOffset? expiredAt = default;
             DateTimeOffset? cancellingAt = default;
             DateTimeOffset? cancelledAt = default;
-            InternalBatchRequestCounts? requestCounts = default;
+            InternalBatchRequestCounts requestCounts = default;
             IReadOnlyDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();

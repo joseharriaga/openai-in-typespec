@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Batch
 {
-    internal partial class BatchRequestOutputError : IJsonModel<BatchRequestOutputError>
+    internal partial class InternalBatchRequestOutputError : IJsonModel<InternalBatchRequestOutputError>
     {
-        void IJsonModel<BatchRequestOutputError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalBatchRequestOutputError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchRequestOutputError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchRequestOutputError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(BatchRequestOutputError)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalBatchRequestOutputError)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -49,19 +49,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        BatchRequestOutputError IJsonModel<BatchRequestOutputError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalBatchRequestOutputError IJsonModel<InternalBatchRequestOutputError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchRequestOutputError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchRequestOutputError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(BatchRequestOutputError)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalBatchRequestOutputError)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeBatchRequestOutputError(document.RootElement, options);
+            return DeserializeInternalBatchRequestOutputError(document.RootElement, options);
         }
 
-        internal static BatchRequestOutputError DeserializeBatchRequestOutputError(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalBatchRequestOutputError DeserializeInternalBatchRequestOutputError(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -91,44 +91,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new BatchRequestOutputError(code, message, serializedAdditionalRawData);
+            return new InternalBatchRequestOutputError(code, message, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<BatchRequestOutputError>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalBatchRequestOutputError>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchRequestOutputError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchRequestOutputError>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(BatchRequestOutputError)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalBatchRequestOutputError)} does not support writing '{options.Format}' format.");
             }
         }
 
-        BatchRequestOutputError IPersistableModel<BatchRequestOutputError>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalBatchRequestOutputError IPersistableModel<InternalBatchRequestOutputError>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<BatchRequestOutputError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchRequestOutputError>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeBatchRequestOutputError(document.RootElement, options);
+                        return DeserializeInternalBatchRequestOutputError(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(BatchRequestOutputError)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalBatchRequestOutputError)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<BatchRequestOutputError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalBatchRequestOutputError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static BatchRequestOutputError FromResponse(PipelineResponse response)
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The result to deserialize the model from. </param>
+        internal static InternalBatchRequestOutputError FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeBatchRequestOutputError(document.RootElement);
+            return DeserializeInternalBatchRequestOutputError(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

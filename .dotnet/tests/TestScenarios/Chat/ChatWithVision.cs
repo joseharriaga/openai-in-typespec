@@ -22,8 +22,10 @@ public partial class ChatWithVision
         ClientResult<ChatCompletion> result = client.CompleteChat(
             [
                 new UserChatMessage(
-                    ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me"),
-                    ChatMessageContentPart.CreateImageMessageContentPart(imageData, mediaType)),
+                [
+                    "Describe this image for me",
+                    ChatMessageContentPart.CreateImageMessageContentPart(imageData, mediaType)
+                ]),
             ], new ChatCompletionOptions()
             {
                 MaxTokens = 2048,

@@ -24,7 +24,14 @@ namespace OpenAI.Assistants
             HasMore = hasMore;
         }
 
-        internal InternalListThreadsResponse(object @object, IReadOnlyList<AssistantThread> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="InternalListThreadsResponse"/>. </summary>
+        /// <param name="object"></param>
+        /// <param name="data"></param>
+        /// <param name="firstId"></param>
+        /// <param name="lastId"></param>
+        /// <param name="hasMore"></param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal InternalListThreadsResponse(string @object, IReadOnlyList<AssistantThread> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -38,9 +45,16 @@ namespace OpenAI.Assistants
         {
         }
 
+        /// <summary> Gets the object. </summary>
+        public string Object { get; } = "list";
+
+        /// <summary> Gets the data. </summary>
         public IReadOnlyList<AssistantThread> Data { get; }
+        /// <summary> Gets the first id. </summary>
         public string FirstId { get; }
+        /// <summary> Gets the last id. </summary>
         public string LastId { get; }
+        /// <summary> Gets the has more. </summary>
         public bool HasMore { get; }
     }
 }

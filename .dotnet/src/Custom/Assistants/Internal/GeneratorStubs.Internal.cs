@@ -175,19 +175,34 @@ internal partial class InternalRunObjectRequiredActionSubmitToolOutputs { privat
 internal partial class InternalRunToolCallObjectFunction { }
 
 [CodeGenModel("ListAssistantsResponse")]
-internal partial class InternalListAssistantsResponse : IInternalListResponse<Assistant> { private readonly object Object; }
+internal partial class InternalListAssistantsResponse : IInternalListResponse<Assistant> { }
+
+[CodeGenModel("ListAssistantsResponseObject")]
+internal readonly partial struct InternalListAssistantsResponseObject {}
 
 [CodeGenModel("ListThreadsResponse")]
-internal partial class InternalListThreadsResponse : IInternalListResponse<AssistantThread> { private readonly object Object; }
+internal partial class InternalListThreadsResponse : IInternalListResponse<AssistantThread> { }
+
+[CodeGenModel("ListThreadsResponseObject")]
+internal readonly partial struct InternalListThreadsResponseObject {}
 
 [CodeGenModel("ListMessagesResponse")]
-internal partial class InternalListMessagesResponse : IInternalListResponse<ThreadMessage> { private readonly object Object; }
+internal partial class InternalListMessagesResponse : IInternalListResponse<ThreadMessage> { }
+
+[CodeGenModel("ListMessagesResponseObject")]
+internal readonly partial struct InternalListMessagesResponseObject {}
 
 [CodeGenModel("ListRunsResponse")]
-internal partial class InternalListRunsResponse : IInternalListResponse<ThreadRun> { private readonly object Object; }
+internal partial class InternalListRunsResponse : IInternalListResponse<ThreadRun> { }
+
+[CodeGenModel("ListRunsResponseObject")]
+internal readonly partial struct InternalListRunsResponseObject {}
 
 [CodeGenModel("ListRunStepsResponse")]
-internal partial class InternalListRunStepsResponse : IInternalListResponse<RunStep> { private readonly object Object; }
+internal partial class InternalListRunStepsResponse : IInternalListResponse<RunStep> { }
+
+[CodeGenModel("ListRunStepsResponseObject")]
+internal readonly partial struct InternalListRunStepsResponseObject {}
 
 [CodeGenModel("RunStepDetailsToolCallsFileSearchObject")]
 internal partial class InternalRunStepFileSearchToolCallDetails { }

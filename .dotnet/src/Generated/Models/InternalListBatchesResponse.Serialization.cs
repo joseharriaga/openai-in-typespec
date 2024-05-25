@@ -41,7 +41,7 @@ namespace OpenAI.Batch
             writer.WritePropertyName("has_more"u8);
             writer.WriteBooleanValue(HasMore);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<object>(Object, options);
+            writer.WriteStringValue(Object.ToString());
             if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -84,7 +84,7 @@ namespace OpenAI.Batch
             string firstId = default;
             string lastId = default;
             bool hasMore = default;
-            object @object = default;
+            InternalListBatchesResponseObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -116,7 +116,7 @@ namespace OpenAI.Batch
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetObject();
+                    @object = new InternalListBatchesResponseObject(property.Value.GetString());
                     continue;
                 }
                 if (true)

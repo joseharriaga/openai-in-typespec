@@ -25,22 +25,22 @@ internal readonly partial struct InternalDeleteVectorStoreFileResponseObject { }
 public readonly partial struct VectorStoreFileCounts {}
 
 [CodeGenModel("ListVectorStoresResponse")]
-internal partial class InternalListVectorStoresResponse : IInternalListResponse<VectorStore>
-{
-    private readonly object Object;
-}
+internal partial class InternalListVectorStoresResponse : IInternalListResponse<VectorStore> { }
+
+[CodeGenModel("ListVectorStoresResponseObject")]
+internal readonly partial struct InternalListVectorStoresResponseObject { }
 
 [CodeGenModel("VectorStoreFileAssociationErrorCode")]
-public readonly partial struct VectorStoreFileAssociationErrorCode {}
+public readonly partial struct VectorStoreFileAssociationErrorCode { }
 
 [CodeGenModel("VectorStoreFileObjectLastError")]
-public partial struct VectorStoreFileAssociationError {}
+public partial struct VectorStoreFileAssociationError { }
 
 [CodeGenModel("ListVectorStoreFilesResponse")]
-internal partial class InternalListVectorStoreFilesResponse : IInternalListResponse<VectorStoreFileAssociation>
-{
-    private readonly object Object;
-}
+internal partial class InternalListVectorStoreFilesResponse : IInternalListResponse<VectorStoreFileAssociation> { }
+
+[CodeGenModel("ListVectorStoreFilesResponseObject")]
+internal readonly partial struct InternalListVectorStoreFilesResponseObject { }
 
 [CodeGenModel("VectorStoreBatchFileJobStatus")]
-public readonly partial struct VectorStoreBatchFileJobStatus {}
+public readonly partial struct VectorStoreBatchFileJobStatus { }

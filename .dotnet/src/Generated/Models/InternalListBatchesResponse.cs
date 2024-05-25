@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Models;
 
 namespace OpenAI.Batch
 {
@@ -21,7 +20,14 @@ namespace OpenAI.Batch
             HasMore = hasMore;
         }
 
-        internal InternalListBatchesResponse(IReadOnlyList<InternalBatchJob> data, string firstId, string lastId, bool hasMore, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="InternalListBatchesResponse"/>. </summary>
+        /// <param name="data"></param>
+        /// <param name="firstId"></param>
+        /// <param name="lastId"></param>
+        /// <param name="hasMore"></param>
+        /// <param name="object"></param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal InternalListBatchesResponse(IReadOnlyList<InternalBatchJob> data, string firstId, string lastId, bool hasMore, InternalListBatchesResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Data = data;
             FirstId = firstId;
@@ -35,9 +41,15 @@ namespace OpenAI.Batch
         {
         }
 
+        /// <summary> Gets the data. </summary>
         public IReadOnlyList<InternalBatchJob> Data { get; }
+        /// <summary> Gets the first id. </summary>
         public string FirstId { get; }
+        /// <summary> Gets the last id. </summary>
         public string LastId { get; }
+        /// <summary> Gets the has more. </summary>
         public bool HasMore { get; }
+        /// <summary> Gets the object. </summary>
+        public InternalListBatchesResponseObject Object { get; } = InternalListBatchesResponseObject.List;
     }
 }

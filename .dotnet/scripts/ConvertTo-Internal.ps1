@@ -355,6 +355,10 @@ function Edit-GeneratedModels {
         "InternalRunStepObjectObject.cs",
         "InternalThreadObjectObject.cs",
         "InternalMessageRequestContentTextObjectType.cs",
+        "InternalMessageContentImageUrlObjectImageUrlDetail.cs",
+        "InternalMessageContentItemFileObjectImageFileDetail.cs",
+        "InternalMessageDeltaContentImageFileObjectImageFileDetail.cs",
+        "InternalMessageDeltaContentImageUrlObjectImageUrlDetail.cs",
 
         # OpenAI.Audio namespace
         "AudioTranscription.cs",

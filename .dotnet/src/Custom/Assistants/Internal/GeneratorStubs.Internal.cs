@@ -289,3 +289,15 @@ internal readonly partial struct InternalThreadObjectObject { }
 
 [CodeGenModel("MessageRequestContentTextObjectType")]
 internal readonly partial struct InternalMessageRequestContentTextObjectType { }
+
+[CodeGenModel("InternalMessageContentImageUrlObjectImageUrlDetail")]
+internal readonly partial struct InternalMessageContentImageUrlObjectImageUrlDetail { }
+
+[CodeGenModel("InternalMessageContentItemFileObjectImageFileDetail")]
+internal readonly partial struct InternalMessageContentItemFileObjectImageFileDetail { }
+
+[CodeGenModel("MessageDeltaContentImageFileObjectImageFileDetail")]
+internal readonly partial struct InternalMessageDeltaContentImageFileObjectImageFileDetail { }
+
+[CodeGenModel("MessageDeltaContentImageUrlObjectImageUrlDetail")]
+internal readonly partial struct InternalMessageDeltaContentImageUrlObjectImageUrlDetail { }

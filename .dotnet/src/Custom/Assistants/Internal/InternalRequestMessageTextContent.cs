@@ -10,9 +10,6 @@
 [CodeGenModel("MessageRequestContentTextObject")]
 internal partial class InternalRequestMessageTextContent
 {
-    [CodeGenMember("Type")]
-    private string InternalType { get; } = "text";
-
     [CodeGenMember("Text")]
     internal string InternalText { get; }
 }

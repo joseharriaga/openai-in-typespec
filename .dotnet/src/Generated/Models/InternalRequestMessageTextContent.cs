@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -17,14 +16,21 @@ namespace OpenAI.Assistants
             InternalText = internalText;
         }
 
-        internal InternalRequestMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string internalType, string internalText) : base(serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="InternalRequestMessageTextContent"/>. </summary>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        /// <param name="type"> Always `text`. </param>
+        /// <param name="internalText"> Text content to be sent to the model. </param>
+        internal InternalRequestMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, InternalMessageRequestContentTextObjectType type, string internalText) : base(serializedAdditionalRawData)
         {
-            InternalType = internalType;
+            Type = type;
             InternalText = internalText;
         }
 
         internal InternalRequestMessageTextContent()
         {
         }
+
+        /// <summary> Always `text`. </summary>
+        public InternalMessageRequestContentTextObjectType Type { get; } = InternalMessageRequestContentTextObjectType.Text;
     }
 }

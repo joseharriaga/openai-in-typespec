@@ -286,3 +286,6 @@ internal readonly partial struct InternalRunStepObjectObject { }
 
 [CodeGenModel("ThreadObjectObject")]
 internal readonly partial struct InternalThreadObjectObject { }
+
+[CodeGenModel("MessageRequestContentTextObjectType")]
+internal readonly partial struct InternalMessageRequestContentTextObjectType { }

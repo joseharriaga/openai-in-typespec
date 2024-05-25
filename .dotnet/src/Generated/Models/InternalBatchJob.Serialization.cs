@@ -24,7 +24,7 @@ namespace OpenAI.Batch
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<object>(Object, options);
+            writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("endpoint"u8);
             writer.WriteStringValue(Endpoint);
             if (Optional.IsDefined(Errors))
@@ -152,7 +152,7 @@ namespace OpenAI.Batch
                 return null;
             }
             string id = default;
-            object @object = default;
+            InternalBatchObject @object = default;
             string endpoint = default;
             InternalBatchErrors errors = default;
             string inputFileId = default;
@@ -182,7 +182,7 @@ namespace OpenAI.Batch
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetObject();
+                    @object = new InternalBatchObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("endpoint"u8))

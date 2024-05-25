@@ -354,6 +354,7 @@ function Edit-GeneratedModels {
         "InternalRunObjectObject.cs",
         "InternalRunStepObjectObject.cs",
         "InternalThreadObjectObject.cs",
+        "InternalMessageRequestContentTextObjectType.cs",
 
         # OpenAI.Audio namespace
         "AudioTranscription.cs",
@@ -639,6 +640,8 @@ function Edit-GeneratedModels {
         "InternalListBatchesResponse.cs",
         "InternalListBatchesResponse.Serialization.cs",
         "InternalListBatchesResponseObject.cs",
+
+        "InternalBatchObject.cs",
         
         # VectorStoreClient types
         "InternalVectorStoreObjectObject.cs",

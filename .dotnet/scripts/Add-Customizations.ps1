@@ -32,7 +32,6 @@ function Remove-PseudoSuppressedTypes {
     $targets = @(
         # "Unknown",
         "AssistantApiResponseFormat",
-        "AssistantObjectObject",
         "AssistantResponseFormat",
         "AssistantsApiResponseFormat",
         "AssistantsNamedToolChoiceFunction",
@@ -48,13 +47,9 @@ function Remove-PseudoSuppressedTypes {
         "MessageDeltaContentImageFileObjectImageFileDetail",
         "MessageDeltaContentImageUrlObjectImageUrlDetail",
         "MessageDeltaObjectDeltaRole",
-        "MessageObjectObject",
         "MessageRequestContentTextObjectType",
         "ModifyAssistantRequestToolResources",
         "ModifyThreadRequestToolResources",
-        "RunObjectObject",
-        "RunStepObjectObject",
-        "ThreadObjectObject",
         "ToolConstraint"
     )
     foreach ($target in $targets) {

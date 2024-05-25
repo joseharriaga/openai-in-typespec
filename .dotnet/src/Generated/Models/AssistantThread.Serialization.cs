@@ -24,7 +24,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<object>(Object, options);
+            writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             if (ToolResources != null)
@@ -90,7 +90,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            object @object = default;
+            InternalThreadObjectObject @object = default;
             DateTimeOffset createdAt = default;
             ToolResources toolResources = default;
             IReadOnlyDictionary<string, string> metadata = default;
@@ -105,7 +105,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetObject();
+                    @object = new InternalThreadObjectObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("created_at"u8))

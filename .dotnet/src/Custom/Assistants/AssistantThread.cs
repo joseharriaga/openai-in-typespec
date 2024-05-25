@@ -3,7 +3,11 @@
 [CodeGenModel("ThreadObject")]
 public partial class AssistantThread
 {
-    private readonly object Object;
+    // CUSTOM: Made internal.
+    /// <summary> The object type, which is always `thread`. </summary>
+    [CodeGenMember("Object")]
+    internal InternalThreadObjectObject Object { get; } = InternalThreadObjectObject.Thread;
+
 
     /// <summary>
     /// The set of resources that are made available to the assistant's tools on this thread.

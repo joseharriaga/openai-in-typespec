@@ -3,9 +3,10 @@
 [CodeGenModel("AssistantObject")]
 public partial class Assistant
 {
-    // CUSTOM: hide non-discriminated object/type labels, as they're not necessary in the context of strongly typed
-    //          representations
-    private readonly object Object;
+    // CUSTOM: Made internal.
+    /// <summary> The object type, which is always `assistant`. </summary>
+    [CodeGenMember("Object")]
+    internal InternalAssistantObjectObject Object { get; } = InternalAssistantObjectObject.Assistant;
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     public AssistantResponseFormat ResponseFormat { get; }

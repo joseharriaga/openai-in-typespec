@@ -3,7 +3,10 @@ namespace OpenAI.Assistants;
 [CodeGenModel("RunStepObject")]
 public partial class RunStep
 {
-    private readonly object Object;
+    // CUSTOM: Made internal.
+    /// <summary> The object type, which is always `thread.run.step`. </summary>
+    [CodeGenMember("Object")]
+    internal InternalRunStepObjectObject Object { get; } = InternalRunStepObjectObject.ThreadRunStep;
 
     /// <summary>
     /// The <c>step_details</c> associated with this run step.

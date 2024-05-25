@@ -24,7 +24,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<object>(Object, options);
+            writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("assistant_id"u8);
@@ -147,7 +147,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            object @object = default;
+            InternalRunStepObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string assistantId = default;
             string threadId = default;
@@ -173,7 +173,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetObject();
+                    @object = new InternalRunStepObjectObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("created_at"u8))

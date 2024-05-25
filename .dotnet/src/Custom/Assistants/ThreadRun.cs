@@ -9,8 +9,12 @@ namespace OpenAI.Assistants;
 [CodeGenModel("RunObject")]
 public partial class ThreadRun
 {
+    // CUSTOM: Made internal.
+    /// <summary> The object type, which is always `thread.run`. </summary>
     [CodeGenMember("Object")]
-    private readonly object _object;
+    internal InternalRunObjectObject Object { get; } = InternalRunObjectObject.ThreadRun;
+
+
     [CodeGenMember("RequiredAction")]
     internal readonly InternalRunRequiredAction _internalRequiredAction;
 

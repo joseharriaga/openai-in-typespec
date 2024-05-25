@@ -349,6 +349,12 @@ function Edit-GeneratedModels {
         "VectorStoreCreationHelper.cs",
         "VectorStoreCreationHelper.Serialization.cs",
 
+        "InternalAssistantObjectObject.cs",
+        "InternalMessageObjectObject.cs",
+        "InternalRunObjectObject.cs",
+        "InternalRunStepObjectObject.cs",
+        "InternalThreadObjectObject.cs",
+
         # OpenAI.Audio namespace
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",

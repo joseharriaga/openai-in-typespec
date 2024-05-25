@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -37,7 +36,28 @@ namespace OpenAI.Assistants
             Usage = usage;
         }
 
-        internal RunStep(string id, object @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        /// <summary> Initializes a new instance of <see cref="RunStep"/>. </summary>
+        /// <param name="id"> The identifier of the run step, which can be referenced in API endpoints. </param>
+        /// <param name="object"> The object type, which is always `thread.run.step`. </param>
+        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the run step was created. </param>
+        /// <param name="assistantId"> The ID of the [assistant](/docs/api-reference/assistants) associated with the run step. </param>
+        /// <param name="threadId"> The ID of the [thread](/docs/api-reference/threads) that was run. </param>
+        /// <param name="runId"> The ID of the [run](/docs/api-reference/runs) that this run step is a part of. </param>
+        /// <param name="type"> The type of run step, which can be either `message_creation` or `tool_calls`. </param>
+        /// <param name="status"> The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`. </param>
+        /// <param name="details">
+        /// The details of the run step.
+        /// Please note <see cref="RunStepDetails"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
+        /// </param>
+        /// <param name="lastError"> The last error associated with this run step. Will be `null` if there are no errors. </param>
+        /// <param name="expiredAt"> The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired. </param>
+        /// <param name="cancelledAt"> The Unix timestamp (in seconds) for when the run step was cancelled. </param>
+        /// <param name="failedAt"> The Unix timestamp (in seconds) for when the run step failed. </param>
+        /// <param name="completedAt"> The Unix timestamp (in seconds) for when the run step completed. </param>
+        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
+        /// <param name="usage"></param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        internal RunStep(string id, InternalRunStepObjectObject @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;

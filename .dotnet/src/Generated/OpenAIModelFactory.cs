@@ -201,19 +201,6 @@ namespace OpenAI
             return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranscriptionResponseJson"/>. </summary>
-        /// <param name="text"> The transcribed text. </param>
-        /// <returns> A new <see cref="Models.CreateTranscriptionResponseJson"/> instance for mocking. </returns>
-        public static CreateTranscriptionResponseJson CreateTranscriptionResponseJson(string text = null)
-        {
-            return new CreateTranscriptionResponseJson(text, serializedAdditionalRawData: null);
-        }
-
-        public static CreateTranslationResponseJson CreateTranslationResponseJson(string text = null)
-        {
-            return new CreateTranslationResponseJson(text, serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Chat.ToolChatMessage"/>. </summary>
         /// <param name="content"></param>
         /// <param name="toolCallId"> Tool call that this message is responding to. </param>

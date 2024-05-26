@@ -403,8 +403,12 @@ function Edit-GeneratedModels {
         "AudioTranslationOptions.Serialization.cs",
         "InternalCreateSpeechRequestModel.cs",
         "InternalCreateTranscriptionRequestModel.cs",
+        "InternalCreateTranscriptionResponseJson.cs",
+        "InternalCreateTranscriptionResponseJson.Serialization.cs",
         "InternalCreateTranscriptionResponseVerboseJsonTask.cs",
         "InternalCreateTranslationRequestModel.cs"
+        "InternalCreateTranslationResponseJson.cs",
+        "InternalCreateTranslationResponseJson.Serialization.cs",
         "InternalCreateTranslationResponseVerboseJsonTask.cs",
         "GeneratedSpeechFormat.Serialization.cs",
         "GeneratedSpeechVoice.Serialization.cs",

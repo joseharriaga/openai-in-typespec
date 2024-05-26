@@ -302,6 +302,21 @@ internal readonly partial struct InternalMessageDeltaContentImageFileObjectImage
 [CodeGenModel("MessageDeltaContentImageUrlObjectImageUrlDetail")]
 internal readonly partial struct InternalMessageDeltaContentImageUrlObjectImageUrlDetail { }
 
+[CodeGenModel("CreateAssistantRequestToolResources")]
+internal partial class InternalCreateAssistantRequestToolResources { }
+
+[CodeGenModel("CreateAssistantRequestToolResourcesCodeInterpreter")]
+internal partial class InternalCreateAssistantRequestToolResourcesCodeInterpreter { }
+
+[CodeGenModel("CreateAssistantRequestToolResourcesFileSearchBase")]
+internal partial class InternalCreateAssistantRequestToolResourcesFileSearchBase { }
+
+[CodeGenModel("CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers")]
+internal partial class InternalCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers { }
+
+[CodeGenModel("CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences")]
+internal partial class InternalCreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences { }
+
 [CodeGenModel("CreateThreadAndRunRequestToolResources")]
 internal partial class InternalCreateThreadAndRunRequestToolResources { }
 
@@ -346,3 +361,12 @@ internal partial class InternalModifyThreadRequestToolResourcesCodeInterpreter {
 
 [CodeGenModel("ModifyThreadRequestToolResourcesFileSearch")]
 internal partial class InternalModifyThreadRequestToolResourcesFileSearch { }
+
+[CodeGenModel("ThreadObjectToolResources")]
+internal partial class InternalThreadObjectToolResources { }
+
+[CodeGenModel("ThreadObjectToolResourcesCodeInterpreter")]
+internal partial class InternalThreadObjectToolResourcesCodeInterpreter { }
+
+[CodeGenModel("ThreadObjectToolResourcesFileSearch")]
+internal partial class InternalThreadObjectToolResourcesFileSearch { }

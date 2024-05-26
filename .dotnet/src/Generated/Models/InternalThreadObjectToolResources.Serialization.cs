@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class ThreadObjectToolResources : IJsonModel<ThreadObjectToolResources>
+    internal partial class InternalThreadObjectToolResources : IJsonModel<InternalThreadObjectToolResources>
     {
-        void IJsonModel<ThreadObjectToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalThreadObjectToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ThreadObjectToolResources>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalThreadObjectToolResources>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ThreadObjectToolResources)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalThreadObjectToolResources)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -49,19 +49,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        ThreadObjectToolResources IJsonModel<ThreadObjectToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalThreadObjectToolResources IJsonModel<InternalThreadObjectToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ThreadObjectToolResources>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalThreadObjectToolResources>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ThreadObjectToolResources)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalThreadObjectToolResources)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeThreadObjectToolResources(document.RootElement, options);
+            return DeserializeInternalThreadObjectToolResources(document.RootElement, options);
         }
 
-        internal static ThreadObjectToolResources DeserializeThreadObjectToolResources(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalThreadObjectToolResources DeserializeInternalThreadObjectToolResources(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -69,8 +69,8 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            ThreadObjectToolResourcesCodeInterpreter codeInterpreter = default;
-            ThreadObjectToolResourcesFileSearch fileSearch = default;
+            InternalThreadObjectToolResourcesCodeInterpreter codeInterpreter = default;
+            InternalThreadObjectToolResourcesFileSearch fileSearch = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -81,7 +81,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    codeInterpreter = ThreadObjectToolResourcesCodeInterpreter.DeserializeThreadObjectToolResourcesCodeInterpreter(property.Value, options);
+                    codeInterpreter = InternalThreadObjectToolResourcesCodeInterpreter.DeserializeInternalThreadObjectToolResourcesCodeInterpreter(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("file_search"u8))
@@ -90,7 +90,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    fileSearch = ThreadObjectToolResourcesFileSearch.DeserializeThreadObjectToolResourcesFileSearch(property.Value, options);
+                    fileSearch = InternalThreadObjectToolResourcesFileSearch.DeserializeInternalThreadObjectToolResourcesFileSearch(property.Value, options);
                     continue;
                 }
                 if (true)
@@ -99,44 +99,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData);
+            return new InternalThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ThreadObjectToolResources>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalThreadObjectToolResources>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ThreadObjectToolResources>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalThreadObjectToolResources>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ThreadObjectToolResources)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalThreadObjectToolResources)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ThreadObjectToolResources IPersistableModel<ThreadObjectToolResources>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalThreadObjectToolResources IPersistableModel<InternalThreadObjectToolResources>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ThreadObjectToolResources>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalThreadObjectToolResources>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeThreadObjectToolResources(document.RootElement, options);
+                        return DeserializeInternalThreadObjectToolResources(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ThreadObjectToolResources)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalThreadObjectToolResources)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ThreadObjectToolResources>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalThreadObjectToolResources>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static ThreadObjectToolResources FromResponse(PipelineResponse response)
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The result to deserialize the model from. </param>
+        internal static InternalThreadObjectToolResources FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeThreadObjectToolResources(document.RootElement);
+            return DeserializeInternalThreadObjectToolResources(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

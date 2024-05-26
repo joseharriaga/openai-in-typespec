@@ -166,25 +166,13 @@ namespace OpenAI
             return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        public static ThreadObjectToolResources ThreadObjectToolResources(ThreadObjectToolResourcesCodeInterpreter codeInterpreter = null, ThreadObjectToolResourcesFileSearch fileSearch = null)
-        {
-            return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
-        }
-
-        public static ThreadObjectToolResourcesCodeInterpreter ThreadObjectToolResourcesCodeInterpreter(IEnumerable<string> fileIds = null)
-        {
-            fileIds ??= new List<string>();
-
-            return new ThreadObjectToolResourcesCodeInterpreter(fileIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        public static ThreadObjectToolResourcesFileSearch ThreadObjectToolResourcesFileSearch(IEnumerable<string> vectorStoreIds = null)
-        {
-            vectorStoreIds ??= new List<string>();
-
-            return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
+        /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileCounts"/>. </summary>
+        /// <param name="inProgress"> The number of files that are currently being processed. </param>
+        /// <param name="completed"> The number of files that have been successfully processed. </param>
+        /// <param name="failed"> The number of files that have failed to process. </param>
+        /// <param name="cancelled"> The number of files that were cancelled. </param>
+        /// <param name="total"> The total number of files. </param>
+        /// <returns> A new <see cref="VectorStores.VectorStoreFileCounts"/> instance for mocking. </returns>
         public static VectorStoreFileCounts VectorStoreFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
         {
             return new VectorStoreFileCounts(

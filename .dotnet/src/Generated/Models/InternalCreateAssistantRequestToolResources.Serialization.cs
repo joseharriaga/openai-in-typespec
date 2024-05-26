@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class CreateAssistantRequestToolResources : IJsonModel<CreateAssistantRequestToolResources>
+    internal partial class InternalCreateAssistantRequestToolResources : IJsonModel<InternalCreateAssistantRequestToolResources>
     {
-        void IJsonModel<CreateAssistantRequestToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalCreateAssistantRequestToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResources>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateAssistantRequestToolResources>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateAssistantRequestToolResources)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCreateAssistantRequestToolResources)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -56,19 +56,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        CreateAssistantRequestToolResources IJsonModel<CreateAssistantRequestToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalCreateAssistantRequestToolResources IJsonModel<InternalCreateAssistantRequestToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResources>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateAssistantRequestToolResources>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(CreateAssistantRequestToolResources)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCreateAssistantRequestToolResources)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeCreateAssistantRequestToolResources(document.RootElement, options);
+            return DeserializeInternalCreateAssistantRequestToolResources(document.RootElement, options);
         }
 
-        internal static CreateAssistantRequestToolResources DeserializeCreateAssistantRequestToolResources(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalCreateAssistantRequestToolResources DeserializeInternalCreateAssistantRequestToolResources(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -76,7 +76,7 @@ namespace OpenAI.Internal.Models
             {
                 return null;
             }
-            CreateAssistantRequestToolResourcesCodeInterpreter codeInterpreter = default;
+            InternalCreateAssistantRequestToolResourcesCodeInterpreter codeInterpreter = default;
             BinaryData fileSearch = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -88,7 +88,7 @@ namespace OpenAI.Internal.Models
                     {
                         continue;
                     }
-                    codeInterpreter = CreateAssistantRequestToolResourcesCodeInterpreter.DeserializeCreateAssistantRequestToolResourcesCodeInterpreter(property.Value, options);
+                    codeInterpreter = InternalCreateAssistantRequestToolResourcesCodeInterpreter.DeserializeInternalCreateAssistantRequestToolResourcesCodeInterpreter(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("file_search"u8))
@@ -106,44 +106,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new CreateAssistantRequestToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData);
+            return new InternalCreateAssistantRequestToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<CreateAssistantRequestToolResources>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalCreateAssistantRequestToolResources>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResources>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateAssistantRequestToolResources>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(CreateAssistantRequestToolResources)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCreateAssistantRequestToolResources)} does not support writing '{options.Format}' format.");
             }
         }
 
-        CreateAssistantRequestToolResources IPersistableModel<CreateAssistantRequestToolResources>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalCreateAssistantRequestToolResources IPersistableModel<InternalCreateAssistantRequestToolResources>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CreateAssistantRequestToolResources>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateAssistantRequestToolResources>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeCreateAssistantRequestToolResources(document.RootElement, options);
+                        return DeserializeInternalCreateAssistantRequestToolResources(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(CreateAssistantRequestToolResources)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCreateAssistantRequestToolResources)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<CreateAssistantRequestToolResources>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalCreateAssistantRequestToolResources>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static CreateAssistantRequestToolResources FromResponse(PipelineResponse response)
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The result to deserialize the model from. </param>
+        internal static InternalCreateAssistantRequestToolResources FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCreateAssistantRequestToolResources(document.RootElement);
+            return DeserializeInternalCreateAssistantRequestToolResources(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

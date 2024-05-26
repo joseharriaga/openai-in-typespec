@@ -106,7 +106,6 @@ internal readonly partial struct InternalDeleteMessageResponseObject { }
 [CodeGenModel("CreateThreadAndRunRequest")]
 internal partial class InternalCreateThreadAndRunRequest
 {
-    public string Model { get; set; }
     public ToolResources ToolResources { get; set; }
     public AssistantResponseFormat ResponseFormat { get; set; }
     public ToolConstraint ToolChoice { get; set; }
@@ -301,6 +300,21 @@ internal readonly partial struct InternalMessageDeltaContentImageFileObjectImage
 
 [CodeGenModel("MessageDeltaContentImageUrlObjectImageUrlDetail")]
 internal readonly partial struct InternalMessageDeltaContentImageUrlObjectImageUrlDetail { }
+
+[CodeGenModel("CreateRunRequestModel")]
+internal readonly partial struct InternalCreateRunRequestModel { }
+
+[CodeGenModel("CreateThreadAndRunRequestModel")]
+internal readonly partial struct InternalCreateThreadAndRunRequestModel { }
+
+[CodeGenModel("MessageContentImageFileObjectType")]
+internal readonly partial struct InternalMessageContentImageFileObjectType { }
+
+[CodeGenModel("MessageContentImageUrlObjectType")]
+internal readonly partial struct InternalMessageContentImageUrlObjectType { }
+
+[CodeGenModel("MessageContentTextObjectType")]
+internal readonly partial struct InternalMessageContentTextObjectType { }
 
 [CodeGenModel("CreateAssistantRequestToolResources")]
 internal partial class InternalCreateAssistantRequestToolResources { }

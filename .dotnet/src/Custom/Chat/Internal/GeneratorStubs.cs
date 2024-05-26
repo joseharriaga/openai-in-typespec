@@ -90,4 +90,7 @@ internal readonly partial struct InternalCreateChatCompletionStreamResponseObjec
 [CodeGenModel("CreateChatCompletionStreamResponseUsage")]
 internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 
+[CodeGenModel("FunctionParameters")]
+internal partial class InternalFunctionParameters { }
+
 

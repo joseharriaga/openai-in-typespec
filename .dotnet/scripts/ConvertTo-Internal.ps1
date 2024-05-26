@@ -568,6 +568,8 @@ function Edit-GeneratedModels {
         "InternalCreateChatCompletionStreamResponseObject.cs",
         "InternalCreateChatCompletionStreamResponseUsage.cs",
         "InternalCreateChatCompletionStreamResponseUsage.Serialization.cs",
+        "InternalFunctionParameters.cs",
+        "InternalFunctionParameters.Serialization.cs",
         "SystemChatMessage.cs",
         "SystemChatMessage.Serialization.cs",
         "StreamingChatCompletionUpdate.cs",

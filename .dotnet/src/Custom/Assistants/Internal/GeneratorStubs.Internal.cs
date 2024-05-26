@@ -301,11 +301,17 @@ internal readonly partial struct InternalMessageDeltaContentImageFileObjectImage
 [CodeGenModel("MessageDeltaContentImageUrlObjectImageUrlDetail")]
 internal readonly partial struct InternalMessageDeltaContentImageUrlObjectImageUrlDetail { }
 
-[CodeGenModel("CreateRunRequestModel")]
-internal readonly partial struct InternalCreateRunRequestModel { }
+[CodeGenModel("MessageDeltaObject")]
+internal partial class InternalMessageDeltaObject { }
 
-[CodeGenModel("CreateThreadAndRunRequestModel")]
-internal readonly partial struct InternalCreateThreadAndRunRequestModel { }
+[CodeGenModel("MessageDeltaObjectDeltaRole")]
+internal readonly partial struct InternalMessageDeltaObjectDeltaRole { }
+
+[CodeGenModel("MessageDeltaObjectObject")]
+internal readonly partial struct InternalMessageDeltaObjectObject { }
+
+[CodeGenModel("MessageObjectAttachment")]
+internal partial class InternalMessageObjectAttachment { }
 
 [CodeGenModel("MessageContentImageFileObjectType")]
 internal readonly partial struct InternalMessageContentImageFileObjectType { }
@@ -315,6 +321,24 @@ internal readonly partial struct InternalMessageContentImageUrlObjectType { }
 
 [CodeGenModel("MessageContentTextObjectType")]
 internal readonly partial struct InternalMessageContentTextObjectType { }
+
+[CodeGenModel("RunObjectRequiredActionType")]
+internal readonly partial struct InternalRunObjectRequiredActionType { }
+
+[CodeGenModel("RunStepDeltaObjectObject")]
+internal readonly partial struct InternalRunStepDeltaObjectObject { }
+
+[CodeGenModel("RunToolCallObjectType")]
+internal readonly partial struct InternalRunToolCallObjectType { }
+
+[CodeGenModel("ThreadMessageRole")]
+internal readonly partial struct InternalThreadMessageRole { }
+
+[CodeGenModel("CreateRunRequestModel")]
+internal readonly partial struct InternalCreateRunRequestModel { }
+
+[CodeGenModel("CreateThreadAndRunRequestModel")]
+internal readonly partial struct InternalCreateThreadAndRunRequestModel { }
 
 [CodeGenModel("CreateAssistantRequestToolResources")]
 internal partial class InternalCreateAssistantRequestToolResources { }

@@ -46,9 +46,9 @@ public partial class MessageContentUpdate : StreamingUpdate
     private readonly MessageDeltaContentImageFileObject _imageFileContent;
     private readonly MessageDeltaContentTextObject _textContent;
     private readonly MessageDeltaContentImageUrlObject _imageUrlContent;
-    private readonly MessageDeltaObject _delta;
+    private readonly InternalMessageDeltaObject _delta;
 
-    internal MessageContentUpdate(MessageDeltaObject delta, MessageDeltaContent content)
+    internal MessageContentUpdate(InternalMessageDeltaObject delta, MessageDeltaContent content)
         : base(StreamingUpdateReason.MessageUpdated)
     {
         _delta = delta;
@@ -57,7 +57,7 @@ public partial class MessageContentUpdate : StreamingUpdate
         _imageUrlContent = content as MessageDeltaContentImageUrlObject;
     }
 
-    internal MessageContentUpdate(MessageDeltaObject delta, TextAnnotationUpdate annotation)
+    internal MessageContentUpdate(InternalMessageDeltaObject delta, TextAnnotationUpdate annotation)
         : base(StreamingUpdateReason.MessageUpdated)
     {
         _delta = delta;
@@ -69,7 +69,7 @@ public partial class MessageContentUpdate : StreamingUpdate
         StreamingUpdateReason _,
         ModelReaderWriterOptions options = null)
     {
-        MessageDeltaObject deltaObject = MessageDeltaObject.DeserializeMessageDeltaObject(element, options);
+        InternalMessageDeltaObject deltaObject = InternalMessageDeltaObject.DeserializeInternalMessageDeltaObject(element, options);
         List<MessageContentUpdate> updates = [];
         foreach (MessageDeltaContent deltaContent in deltaObject.Delta.Content ?? [])
         {

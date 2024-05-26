@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Assistants
 {
-    internal partial class MessageObjectAttachment : IJsonModel<MessageObjectAttachment>
+    internal partial class InternalMessageObjectAttachment : IJsonModel<InternalMessageObjectAttachment>
     {
-        void IJsonModel<MessageObjectAttachment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalMessageObjectAttachment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObjectAttachment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageObjectAttachment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageObjectAttachment)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalMessageObjectAttachment)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -66,19 +66,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        MessageObjectAttachment IJsonModel<MessageObjectAttachment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalMessageObjectAttachment IJsonModel<InternalMessageObjectAttachment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObjectAttachment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageObjectAttachment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(MessageObjectAttachment)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalMessageObjectAttachment)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeMessageObjectAttachment(document.RootElement, options);
+            return DeserializeInternalMessageObjectAttachment(document.RootElement, options);
         }
 
-        internal static MessageObjectAttachment DeserializeMessageObjectAttachment(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalMessageObjectAttachment DeserializeInternalMessageObjectAttachment(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -124,44 +124,46 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new MessageObjectAttachment(fileId, tools ?? new ChangeTrackingList<BinaryData>(), serializedAdditionalRawData);
+            return new InternalMessageObjectAttachment(fileId, tools ?? new ChangeTrackingList<BinaryData>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<MessageObjectAttachment>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalMessageObjectAttachment>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObjectAttachment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageObjectAttachment>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(MessageObjectAttachment)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalMessageObjectAttachment)} does not support writing '{options.Format}' format.");
             }
         }
 
-        MessageObjectAttachment IPersistableModel<MessageObjectAttachment>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalMessageObjectAttachment IPersistableModel<InternalMessageObjectAttachment>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<MessageObjectAttachment>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageObjectAttachment>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeMessageObjectAttachment(document.RootElement, options);
+                        return DeserializeInternalMessageObjectAttachment(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(MessageObjectAttachment)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalMessageObjectAttachment)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<MessageObjectAttachment>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalMessageObjectAttachment>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static MessageObjectAttachment FromResponse(PipelineResponse response)
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The result to deserialize the model from. </param>
+        internal static InternalMessageObjectAttachment FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeMessageObjectAttachment(document.RootElement);
+            return DeserializeInternalMessageObjectAttachment(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

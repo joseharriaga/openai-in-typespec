@@ -10,7 +10,6 @@ using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Images;
-using OpenAI.Internal.Models;
 using OpenAI.Moderations;
 using OpenAI.VectorStores;
 
@@ -88,13 +87,11 @@ namespace OpenAI
             return new MessageFailureDetails(reason, serializedAdditionalRawData: null);
         }
 
-        public static MessageObjectAttachment MessageObjectAttachment(string fileId = null, IEnumerable<BinaryData> tools = null)
-        {
-            tools ??= new List<BinaryData>();
-
-            return new MessageObjectAttachment(fileId, tools?.ToList(), serializedAdditionalRawData: null);
-        }
-
+        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCollection"/>. </summary>
+        /// <param name="id"> The unique identifier for the moderation request. </param>
+        /// <param name="model"> The model used to generate the moderation results. </param>
+        /// <param name="results"> A list of moderation objects. </param>
+        /// <returns> A new <see cref="Moderations.ModerationCollection"/> instance for mocking. </returns>
         public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
         {
             results ??= new List<ModerationResult>();

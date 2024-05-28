@@ -4,6 +4,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static OpenAI.InternalListHelpers;
@@ -451,7 +452,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual async Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null)
+    public virtual async Task<ResultOperation<StatusBasedResult<RunStatus, ThreadRun>>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
@@ -461,7 +462,9 @@ public partial class AssistantClient
 
         ClientResult protocolResult = await CreateRunAsync(threadId, options.ToBinaryContent(), null)
             .ConfigureAwait(false);
-        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+        ClientResult<ThreadRun> createResult = CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+
+        return new AssistantRunOperation(createResult, GetRun, GetRunAsync);
     }
 
     /// <summary>
@@ -472,7 +475,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual ClientResult<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null)
+    public virtual ResultOperation<StatusBasedResult<RunStatus, ThreadRun>> CreateRun(string threadId, string assistantId, RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
@@ -481,7 +484,9 @@ public partial class AssistantClient
         options.Stream = null;
 
         ClientResult protocolResult = CreateRun(threadId, options.ToBinaryContent(), null);
-        return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+        ClientResult<ThreadRun> createResult = CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
+
+        return new AssistantRunOperation(createResult, GetRun, GetRunAsync);
     }
 
     /// <summary>
@@ -662,7 +667,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread to retrieve the run from. </param>
     /// <param name="runId"> The ID of the run to retrieve. </param>
     /// <returns> The existing <see cref="ThreadRun"/> instance. </returns>
-    public virtual async Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId)
+    internal virtual async Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -677,7 +682,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread to retrieve the run from. </param>
     /// <param name="runId"> The ID of the run to retrieve. </param>
     /// <returns> The existing <see cref="ThreadRun"/> instance. </returns>
-    public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId)
+    internal virtual ClientResult<ThreadRun> GetRun(string threadId, string runId)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));

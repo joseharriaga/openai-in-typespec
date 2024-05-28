@@ -140,8 +140,6 @@ namespace OpenAI.Batch
 
         string IPersistableModel<InternalBatchRequestInput>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
         internal static InternalBatchRequestInput FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);

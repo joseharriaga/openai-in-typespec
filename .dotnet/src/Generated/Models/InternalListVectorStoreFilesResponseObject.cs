@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.VectorStores
 {
-    /// <summary> The ListVectorStoreFilesResponse_object. </summary>
     internal readonly partial struct InternalListVectorStoreFilesResponseObject : IEquatable<InternalListVectorStoreFilesResponseObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalListVectorStoreFilesResponseObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalListVectorStoreFilesResponseObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.VectorStores
 
         private const string ListValue = "list";
 
-        /// <summary> list. </summary>
         public static InternalListVectorStoreFilesResponseObject List { get; } = new InternalListVectorStoreFilesResponseObject(ListValue);
-        /// <summary> Determines if two <see cref="InternalListVectorStoreFilesResponseObject"/> values are the same. </summary>
         public static bool operator ==(InternalListVectorStoreFilesResponseObject left, InternalListVectorStoreFilesResponseObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalListVectorStoreFilesResponseObject"/> values are not the same. </summary>
         public static bool operator !=(InternalListVectorStoreFilesResponseObject left, InternalListVectorStoreFilesResponseObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalListVectorStoreFilesResponseObject"/>. </summary>
         public static implicit operator InternalListVectorStoreFilesResponseObject(string value) => new InternalListVectorStoreFilesResponseObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalListVectorStoreFilesResponseObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalListVectorStoreFilesResponseObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

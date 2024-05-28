@@ -24,13 +24,6 @@ namespace OpenAI.Assistants
             HasMore = hasMore;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalListRunStepsResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalListRunStepsResponse(InternalListRunStepsResponseObject @object, IReadOnlyList<RunStep> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
@@ -45,16 +38,11 @@ namespace OpenAI.Assistants
         {
         }
 
-        /// <summary> Gets the object. </summary>
         public InternalListRunStepsResponseObject Object { get; } = InternalListRunStepsResponseObject.List;
 
-        /// <summary> Gets the data. </summary>
         public IReadOnlyList<RunStep> Data { get; }
-        /// <summary> Gets the first id. </summary>
         public string FirstId { get; }
-        /// <summary> Gets the last id. </summary>
         public string LastId { get; }
-        /// <summary> Gets the has more. </summary>
         public bool HasMore { get; }
     }
 }

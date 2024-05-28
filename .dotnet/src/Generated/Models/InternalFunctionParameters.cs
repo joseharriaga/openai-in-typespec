@@ -7,21 +7,13 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    /// <summary>
-    /// The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/text-generation/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
-    ///
-    /// Omitting `parameters` defines a function with an empty parameter list.
-    /// </summary>
     internal partial class InternalFunctionParameters
     {
-        /// <summary> Initializes a new instance of <see cref="InternalFunctionParameters"/>. </summary>
         public InternalFunctionParameters()
         {
             AdditionalProperties = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalFunctionParameters"/>. </summary>
-        /// <param name="additionalProperties"> Additional Properties. </param>
         internal InternalFunctionParameters(IDictionary<string, BinaryData> additionalProperties)
         {
             AdditionalProperties = additionalProperties;

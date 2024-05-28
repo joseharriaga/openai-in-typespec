@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.VectorStores
 {
-    /// <summary> The VectorStoreObject_object. </summary>
     internal readonly partial struct InternalVectorStoreObjectObject : IEquatable<InternalVectorStoreObjectObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalVectorStoreObjectObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalVectorStoreObjectObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.VectorStores
 
         private const string VectorStoreValue = "vector_store";
 
-        /// <summary> vector_store. </summary>
         public static InternalVectorStoreObjectObject VectorStore { get; } = new InternalVectorStoreObjectObject(VectorStoreValue);
-        /// <summary> Determines if two <see cref="InternalVectorStoreObjectObject"/> values are the same. </summary>
         public static bool operator ==(InternalVectorStoreObjectObject left, InternalVectorStoreObjectObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalVectorStoreObjectObject"/> values are not the same. </summary>
         public static bool operator !=(InternalVectorStoreObjectObject left, InternalVectorStoreObjectObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalVectorStoreObjectObject"/>. </summary>
         public static implicit operator InternalVectorStoreObjectObject(string value) => new InternalVectorStoreObjectObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalVectorStoreObjectObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalVectorStoreObjectObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

@@ -7,11 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> The AssistantResponseFormat. </summary>
     public partial class AssistantResponseFormat
     {
-        /// <summary> Initializes a new instance of <see cref="AssistantResponseFormat"/>. </summary>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AssistantResponseFormat(IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             _serializedAdditionalRawData = serializedAdditionalRawData;

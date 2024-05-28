@@ -24,13 +24,6 @@ namespace OpenAI.Assistants
             HasMore = hasMore;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalListMessagesResponse"/>. </summary>
-        /// <param name="object"></param>
-        /// <param name="data"></param>
-        /// <param name="firstId"></param>
-        /// <param name="lastId"></param>
-        /// <param name="hasMore"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalListMessagesResponse(InternalListMessagesResponseObject @object, IReadOnlyList<ThreadMessage> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
@@ -45,7 +38,6 @@ namespace OpenAI.Assistants
         {
         }
 
-        /// <summary> Gets the object. </summary>
         public InternalListMessagesResponseObject Object { get; } = InternalListMessagesResponseObject.List;
 
         public IReadOnlyList<ThreadMessage> Data { get; }

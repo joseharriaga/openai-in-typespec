@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Enum for type in ToolConstraint. </summary>
     internal readonly partial struct InternalToolConstraintType : IEquatable<InternalToolConstraintType>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalToolConstraintType"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalToolConstraintType(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -23,29 +20,19 @@ namespace OpenAI.Assistants
         private const string CodeInterpreterValue = "code_interpreter";
         private const string FileSearchValue = "file_search";
 
-        /// <summary> function. </summary>
         public static InternalToolConstraintType Function { get; } = new InternalToolConstraintType(FunctionValue);
-        /// <summary> code_interpreter. </summary>
         public static InternalToolConstraintType CodeInterpreter { get; } = new InternalToolConstraintType(CodeInterpreterValue);
-        /// <summary> file_search. </summary>
         public static InternalToolConstraintType FileSearch { get; } = new InternalToolConstraintType(FileSearchValue);
-        /// <summary> Determines if two <see cref="InternalToolConstraintType"/> values are the same. </summary>
         public static bool operator ==(InternalToolConstraintType left, InternalToolConstraintType right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalToolConstraintType"/> values are not the same. </summary>
         public static bool operator !=(InternalToolConstraintType left, InternalToolConstraintType right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalToolConstraintType"/>. </summary>
         public static implicit operator InternalToolConstraintType(string value) => new InternalToolConstraintType(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalToolConstraintType other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalToolConstraintType other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.VectorStores
 {
-    /// <summary> The VectorStoreFileBatchObject_object. </summary>
     internal readonly partial struct InternalVectorStoreFileBatchObjectObject : IEquatable<InternalVectorStoreFileBatchObjectObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalVectorStoreFileBatchObjectObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalVectorStoreFileBatchObjectObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.VectorStores
 
         private const string VectorStoreFilesBatchValue = "vector_store.files_batch";
 
-        /// <summary> vector_store.files_batch. </summary>
         public static InternalVectorStoreFileBatchObjectObject VectorStoreFilesBatch { get; } = new InternalVectorStoreFileBatchObjectObject(VectorStoreFilesBatchValue);
-        /// <summary> Determines if two <see cref="InternalVectorStoreFileBatchObjectObject"/> values are the same. </summary>
         public static bool operator ==(InternalVectorStoreFileBatchObjectObject left, InternalVectorStoreFileBatchObjectObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalVectorStoreFileBatchObjectObject"/> values are not the same. </summary>
         public static bool operator !=(InternalVectorStoreFileBatchObjectObject left, InternalVectorStoreFileBatchObjectObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalVectorStoreFileBatchObjectObject"/>. </summary>
         public static implicit operator InternalVectorStoreFileBatchObjectObject(string value) => new InternalVectorStoreFileBatchObjectObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalVectorStoreFileBatchObjectObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalVectorStoreFileBatchObjectObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

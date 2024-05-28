@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Images
 {
-    /// <summary> Enum for size in ImageEditOptions. </summary>
     internal readonly partial struct InternalImageEditOptionsSize : IEquatable<InternalImageEditOptionsSize>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalImageEditOptionsSize"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalImageEditOptionsSize(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -23,29 +20,19 @@ namespace OpenAI.Images
         private const string _512x512Value = "512x512";
         private const string _1024x1024Value = "1024x1024";
 
-        /// <summary> 256x256. </summary>
         public static InternalImageEditOptionsSize _256x256 { get; } = new InternalImageEditOptionsSize(_256x256Value);
-        /// <summary> 512x512. </summary>
         public static InternalImageEditOptionsSize _512x512 { get; } = new InternalImageEditOptionsSize(_512x512Value);
-        /// <summary> 1024x1024. </summary>
         public static InternalImageEditOptionsSize _1024x1024 { get; } = new InternalImageEditOptionsSize(_1024x1024Value);
-        /// <summary> Determines if two <see cref="InternalImageEditOptionsSize"/> values are the same. </summary>
         public static bool operator ==(InternalImageEditOptionsSize left, InternalImageEditOptionsSize right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalImageEditOptionsSize"/> values are not the same. </summary>
         public static bool operator !=(InternalImageEditOptionsSize left, InternalImageEditOptionsSize right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalImageEditOptionsSize"/>. </summary>
         public static implicit operator InternalImageEditOptionsSize(string value) => new InternalImageEditOptionsSize(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalImageEditOptionsSize other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalImageEditOptionsSize other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

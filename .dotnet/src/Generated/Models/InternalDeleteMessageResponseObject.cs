@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> The DeleteMessageResponse_object. </summary>
     internal readonly partial struct InternalDeleteMessageResponseObject : IEquatable<InternalDeleteMessageResponseObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalDeleteMessageResponseObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalDeleteMessageResponseObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Assistants
 
         private const string ThreadMessageDeletedValue = "thread.message.deleted";
 
-        /// <summary> thread.message.deleted. </summary>
         public static InternalDeleteMessageResponseObject ThreadMessageDeleted { get; } = new InternalDeleteMessageResponseObject(ThreadMessageDeletedValue);
-        /// <summary> Determines if two <see cref="InternalDeleteMessageResponseObject"/> values are the same. </summary>
         public static bool operator ==(InternalDeleteMessageResponseObject left, InternalDeleteMessageResponseObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalDeleteMessageResponseObject"/> values are not the same. </summary>
         public static bool operator !=(InternalDeleteMessageResponseObject left, InternalDeleteMessageResponseObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalDeleteMessageResponseObject"/>. </summary>
         public static implicit operator InternalDeleteMessageResponseObject(string value) => new InternalDeleteMessageResponseObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalDeleteMessageResponseObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalDeleteMessageResponseObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

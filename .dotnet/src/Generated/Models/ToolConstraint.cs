@@ -7,13 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Specifies a tool the model should use. Use to force the model to call a specific tool. </summary>
     public partial class ToolConstraint
     {
-        /// <summary> Initializes a new instance of <see cref="ToolConstraint"/>. </summary>
-        /// <param name="objectType"> The type of the tool. If type is `function`, the function name must be set. </param>
-        /// <param name="function"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ToolConstraint(string objectType, InternalAssistantsNamedToolChoiceFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             _objectType = objectType;
@@ -21,7 +16,6 @@ namespace OpenAI.Assistants
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ToolConstraint"/> for deserialization. </summary>
         internal ToolConstraint()
         {
         }

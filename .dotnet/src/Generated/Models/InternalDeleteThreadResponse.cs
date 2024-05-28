@@ -19,11 +19,6 @@ namespace OpenAI.Assistants
             Deleted = deleted;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalDeleteThreadResponse"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="deleted"></param>
-        /// <param name="object"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalDeleteThreadResponse(string id, bool deleted, InternalDeleteThreadResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
@@ -36,11 +31,8 @@ namespace OpenAI.Assistants
         {
         }
 
-        /// <summary> Gets the id. </summary>
         public string Id { get; }
-        /// <summary> Gets the deleted. </summary>
         public bool Deleted { get; }
-        /// <summary> Gets the object. </summary>
         public InternalDeleteThreadResponseObject Object { get; } = InternalDeleteThreadResponseObject.ThreadDeleted;
     }
 }

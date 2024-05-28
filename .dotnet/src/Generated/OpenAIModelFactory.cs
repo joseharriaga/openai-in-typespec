@@ -87,11 +87,6 @@ namespace OpenAI
             return new MessageFailureDetails(reason, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Moderations.ModerationCollection"/>. </summary>
-        /// <param name="id"> The unique identifier for the moderation request. </param>
-        /// <param name="model"> The model used to generate the moderation results. </param>
-        /// <param name="results"> A list of moderation objects. </param>
-        /// <returns> A new <see cref="Moderations.ModerationCollection"/> instance for mocking. </returns>
         public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
         {
             results ??= new List<ModerationResult>();
@@ -163,13 +158,6 @@ namespace OpenAI
             return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStores.VectorStoreFileCounts"/>. </summary>
-        /// <param name="inProgress"> The number of files that are currently being processed. </param>
-        /// <param name="completed"> The number of files that have been successfully processed. </param>
-        /// <param name="failed"> The number of files that have failed to process. </param>
-        /// <param name="cancelled"> The number of files that were cancelled. </param>
-        /// <param name="total"> The total number of files. </param>
-        /// <returns> A new <see cref="VectorStores.VectorStoreFileCounts"/> instance for mocking. </returns>
         public static VectorStoreFileCounts VectorStoreFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
         {
             return new VectorStoreFileCounts(
@@ -186,10 +174,6 @@ namespace OpenAI
             return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Chat.ToolChatMessage"/>. </summary>
-        /// <param name="content"></param>
-        /// <param name="toolCallId"> Tool call that this message is responding to. </param>
-        /// <returns> A new <see cref="Chat.ToolChatMessage"/> instance for mocking. </returns>
         public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)
         {
             content ??= new List<ChatMessageContentPart>();

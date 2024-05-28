@@ -16,10 +16,6 @@ namespace OpenAI.Assistants
             InternalText = internalText;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalRequestMessageTextContent"/>. </summary>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="type"> Always `text`. </param>
-        /// <param name="internalText"> Text content to be sent to the model. </param>
         internal InternalRequestMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, InternalMessageRequestContentTextObjectType type, string internalText) : base(serializedAdditionalRawData)
         {
             Type = type;
@@ -30,7 +26,6 @@ namespace OpenAI.Assistants
         {
         }
 
-        /// <summary> Always `text`. </summary>
         public InternalMessageRequestContentTextObjectType Type { get; } = InternalMessageRequestContentTextObjectType.Text;
     }
 }

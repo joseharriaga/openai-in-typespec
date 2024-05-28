@@ -26,19 +26,6 @@ namespace OpenAI.VectorStores
             Metadata = metadata;
         }
 
-        /// <summary> Initializes a new instance of <see cref="VectorStore"/>. </summary>
-        /// <param name="id"> The identifier, which can be referenced in API endpoints. </param>
-        /// <param name="object"> The object type, which is always `vector_store`. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the vector store was created. </param>
-        /// <param name="name"> The name of the vector store. </param>
-        /// <param name="usageBytes"> The total number of bytes used by the files in the vector store. </param>
-        /// <param name="fileCounts"></param>
-        /// <param name="status"> The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. </param>
-        /// <param name="expirationPolicy"></param>
-        /// <param name="expiresAt"> The Unix timestamp (in seconds) for when the vector store will expire. </param>
-        /// <param name="lastActiveAt"> The Unix timestamp (in seconds) for when the vector store was last active. </param>
-        /// <param name="metadata"> Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal VectorStore(string id, InternalVectorStoreObjectObject @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStoreStatus status, VectorStoreExpirationPolicy expirationPolicy, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;

@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> The AssistantObject_object. </summary>
     internal readonly partial struct InternalAssistantObjectObject : IEquatable<InternalAssistantObjectObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalAssistantObjectObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalAssistantObjectObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Assistants
 
         private const string AssistantValue = "assistant";
 
-        /// <summary> assistant. </summary>
         public static InternalAssistantObjectObject Assistant { get; } = new InternalAssistantObjectObject(AssistantValue);
-        /// <summary> Determines if two <see cref="InternalAssistantObjectObject"/> values are the same. </summary>
         public static bool operator ==(InternalAssistantObjectObject left, InternalAssistantObjectObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalAssistantObjectObject"/> values are not the same. </summary>
         public static bool operator !=(InternalAssistantObjectObject left, InternalAssistantObjectObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalAssistantObjectObject"/>. </summary>
         public static implicit operator InternalAssistantObjectObject(string value) => new InternalAssistantObjectObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalAssistantObjectObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalAssistantObjectObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

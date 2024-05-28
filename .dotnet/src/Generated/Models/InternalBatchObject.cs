@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Batch
 {
-    /// <summary> The Batch_object. </summary>
     internal readonly partial struct InternalBatchObject : IEquatable<InternalBatchObject>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalBatchObject"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalBatchObject(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -21,25 +18,17 @@ namespace OpenAI.Batch
 
         private const string BatchValue = "batch";
 
-        /// <summary> batch. </summary>
         public static InternalBatchObject Batch { get; } = new InternalBatchObject(BatchValue);
-        /// <summary> Determines if two <see cref="InternalBatchObject"/> values are the same. </summary>
         public static bool operator ==(InternalBatchObject left, InternalBatchObject right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalBatchObject"/> values are not the same. </summary>
         public static bool operator !=(InternalBatchObject left, InternalBatchObject right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalBatchObject"/>. </summary>
         public static implicit operator InternalBatchObject(string value) => new InternalBatchObject(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalBatchObject other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalBatchObject other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

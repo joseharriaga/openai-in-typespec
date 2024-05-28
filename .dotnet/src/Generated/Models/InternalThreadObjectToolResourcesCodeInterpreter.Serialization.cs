@@ -128,8 +128,6 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<InternalThreadObjectToolResourcesCodeInterpreter>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
         internal static InternalThreadObjectToolResourcesCodeInterpreter FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);

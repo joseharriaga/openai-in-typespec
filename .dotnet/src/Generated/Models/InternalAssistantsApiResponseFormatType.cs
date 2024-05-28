@@ -7,13 +7,10 @@ using System.ComponentModel;
 
 namespace OpenAI.Assistants
 {
-    /// <summary> Enum for type in InternalAssistantsApiResponseFormat. </summary>
     internal readonly partial struct InternalAssistantsApiResponseFormatType : IEquatable<InternalAssistantsApiResponseFormatType>
     {
         private readonly string _value;
 
-        /// <summary> Initializes a new instance of <see cref="InternalAssistantsApiResponseFormatType"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
         public InternalAssistantsApiResponseFormatType(string value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
@@ -22,27 +19,18 @@ namespace OpenAI.Assistants
         private const string TextValue = "text";
         private const string JsonObjectValue = "json_object";
 
-        /// <summary> text. </summary>
         public static InternalAssistantsApiResponseFormatType Text { get; } = new InternalAssistantsApiResponseFormatType(TextValue);
-        /// <summary> json_object. </summary>
         public static InternalAssistantsApiResponseFormatType JsonObject { get; } = new InternalAssistantsApiResponseFormatType(JsonObjectValue);
-        /// <summary> Determines if two <see cref="InternalAssistantsApiResponseFormatType"/> values are the same. </summary>
         public static bool operator ==(InternalAssistantsApiResponseFormatType left, InternalAssistantsApiResponseFormatType right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalAssistantsApiResponseFormatType"/> values are not the same. </summary>
         public static bool operator !=(InternalAssistantsApiResponseFormatType left, InternalAssistantsApiResponseFormatType right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="InternalAssistantsApiResponseFormatType"/>. </summary>
         public static implicit operator InternalAssistantsApiResponseFormatType(string value) => new InternalAssistantsApiResponseFormatType(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalAssistantsApiResponseFormatType other && Equals(other);
-        /// <inheritdoc />
         public bool Equals(InternalAssistantsApiResponseFormatType other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
-        /// <inheritdoc />
         public override string ToString() => _value;
     }
 }

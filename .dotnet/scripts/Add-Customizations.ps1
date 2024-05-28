@@ -31,7 +31,6 @@ function Remove-PseudoSuppressedTypes {
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
     $targets = @(
         # "Unknown",
-        "ToolConstraint"
     )
     foreach ($target in $targets) {
         Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {

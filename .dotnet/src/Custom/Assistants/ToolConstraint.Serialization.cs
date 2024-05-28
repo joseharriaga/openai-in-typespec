@@ -5,6 +5,10 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
+[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Assistants.ToolConstraint>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
+[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Assistants.ToolConstraint>.Create", typeof(Utf8JsonReader), typeof(ModelReaderWriterOptions))]
+[CodeGenSuppress("global::System.ClientModel.Primitives.IPersistableModel<OpenAI.Assistants.ToolConstraint>.Write", typeof(ModelReaderWriterOptions))]
+[CodeGenSuppress("global::System.ClientModel.Primitives.IPersistableModel<OpenAI.Assistants.ToolConstraint>.Create", typeof(BinaryData), typeof(ModelReaderWriterOptions))]
 public partial class ToolConstraint : IJsonModel<ToolConstraint>
 {
     void IJsonModel<ToolConstraint>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -18,8 +22,6 @@ public partial class ToolConstraint : IJsonModel<ToolConstraint>
 
     ToolConstraint IPersistableModel<ToolConstraint>.Create(BinaryData data, ModelReaderWriterOptions options)
         => CustomSerializationHelpers.DeserializeNewInstance(this, DeserializeToolConstraint, data, options);
-
-    string IPersistableModel<ToolConstraint>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
     internal static void SerializeToolConstraint(ToolConstraint instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {

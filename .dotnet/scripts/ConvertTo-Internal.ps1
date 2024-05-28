@@ -73,6 +73,21 @@ function Edit-GeneratedSubclients {
     }
 }
 
+function Edit-GeneratedModelFactory {
+    $root = Split-Path $PSScriptRoot -Parent
+
+    $directory = Join-Path -Path $root -ChildPath "src\Generated"
+    $file = Get-ChildItem -Path $directory -Filter "OpenAIModelFactory.cs"
+
+    $content = Get-Content -Path $file -Raw
+
+    Write-Output "Editing $($file.FullName)"
+
+    $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
+
+    $content | Set-Content -Path $file.FullName -NoNewline
+}
+
 function Edit-GeneratedModels {
     $root = Split-Path $PSScriptRoot -Parent
 
@@ -351,6 +366,7 @@ function Edit-GeneratedModels {
 
         "AssistantResponseFormat.cs",
         "AssistantResponseFormat.Serialization.cs",
+        "InternalToolConstraintType.cs",
         "InternalAssistantsApiResponseFormat.cs",
         "InternalAssistantsApiResponseFormat.Serialization.cs",
         "InternalAssistantsApiResponseFormatType.cs",
@@ -797,22 +813,7 @@ function Edit-GeneratedModels {
     }
 }
 
-function Edit-GeneratedModelFactory {
-    $root = Split-Path $PSScriptRoot -Parent
-
-    $directory = Join-Path -Path $root -ChildPath "src\Generated"
-    $file = Get-ChildItem -Path $directory -Filter "OpenAIModelFactory.cs"
-
-    $content = Get-Content -Path $file -Raw
-
-    Write-Output "Editing $($file.FullName)"
-
-    $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
-
-    $content | Set-Content -Path $file.FullName -NoNewline
-}
-
 Edit-GeneratedOpenAIClient
 Edit-GeneratedSubclients
-Edit-GeneratedModels
 Edit-GeneratedModelFactory
+Edit-GeneratedModels

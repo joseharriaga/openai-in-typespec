@@ -280,6 +280,9 @@ internal readonly partial struct InternalAssistantsApiResponseFormatType { }
 [CodeGenModel("AssistantsNamedToolChoiceFunction")]
 internal partial class InternalAssistantsNamedToolChoiceFunction { }
 
+[CodeGenModel("ToolConstraintType")]
+internal readonly partial struct InternalToolConstraintType { }
+
 [CodeGenModel("AssistantObjectObject")]
 internal readonly partial struct InternalAssistantObjectObject { }
 

@@ -12,6 +12,11 @@ public partial class ToolConstraint
     private readonly string _objectFunctionName;
     private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
+    // CUSTOM: Made internal.
+    /// <summary> Gets or sets the function. </summary>
+    [CodeGenMember("Function")]
+    internal InternalAssistantsNamedToolChoiceFunction Function { get; set; }
+
     public static ToolConstraint None { get; } = new("none");
     public static ToolConstraint Auto { get; } = new("auto");
     public static ToolConstraint Required { get; } = new("required");

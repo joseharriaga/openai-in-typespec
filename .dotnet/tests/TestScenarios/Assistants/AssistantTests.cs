@@ -610,6 +610,9 @@ public partial class AssistantTests
 
             if (update.Status == RunStatus.RequiresAction)
             {
+                // Temporarily stop polling
+                runOperation.Pause();
+
                 List<ToolOutput> outputs = new();
 
                 foreach (RequiredAction action in update.Value.RequiredActions)
@@ -628,6 +631,9 @@ public partial class AssistantTests
                 }
 
                 client.SubmitToolOutputsToRun(update.Value, outputs);
+
+                // Start polling again
+                runOperation.Resume();
             }
         }
         while (!update.Status.IsTerminal);

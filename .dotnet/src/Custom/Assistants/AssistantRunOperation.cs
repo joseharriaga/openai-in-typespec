@@ -23,6 +23,7 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
     private ClientResult<ThreadRun> _lastSeenResult;
 
     private bool _statusChanged;
+    private bool _paused;
 
     public AssistantRunOperation(ClientResult<ThreadRun> createResult,
         Func<string, string, ClientResult<ThreadRun>> getRun,
@@ -107,13 +108,18 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            UpdateStatus();
-
-            if (HasCompleted)
+            if (!_paused)
             {
-                return _lastSeenResult;
+                UpdateStatus();
+
+                if (HasCompleted)
+                {
+                    return _lastSeenResult;
+                }
             }
 
+            // TODO: note pollling interval logic may change for e.g. exponential
+            // backoff if the operation is paused.
             cancellationToken.WaitHandle.WaitOne(pollingInterval.Value);
         }
     }
@@ -126,11 +132,14 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            await UpdateStatusAsync().ConfigureAwait(false);
-
-            if (HasCompleted)
+            if (!_paused)
             {
-                return _lastSeenResult;
+                await UpdateStatusAsync().ConfigureAwait(false);
+
+                if (HasCompleted)
+                {
+                    return _lastSeenResult;
+                }
             }
 
             await Task.Delay(pollingInterval.Value, cancellationToken).ConfigureAwait(false);
@@ -157,12 +166,15 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            ClientResult result = await UpdateStatusAsync().ConfigureAwait(false);
-
-            if (_statusChanged)
+            if (!_paused)
             {
-                (RunStatus Status, ThreadRun? Value) tuple = new(_lastSeenResult.Value.Status, _lastSeenResult.Value);
-                return FromValue(tuple, result.GetRawResponse());
+                ClientResult result = await UpdateStatusAsync().ConfigureAwait(false);
+
+                if (_statusChanged)
+                {
+                    (RunStatus Status, ThreadRun? Value) tuple = new(_lastSeenResult.Value.Status, _lastSeenResult.Value);
+                    return FromValue(tuple, result.GetRawResponse());
+                }
             }
 
             await Task.Delay(pollingInterval.Value, cancellationToken).ConfigureAwait(false);
@@ -177,15 +189,22 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            ClientResult result = UpdateStatus();
-
-            if (_statusChanged)
+            if (!_paused)
             {
-                (RunStatus Status, ThreadRun? Value) tuple = new(_lastSeenResult.Value.Status, _lastSeenResult.Value);
-                return FromValue(tuple, result.GetRawResponse());
+                ClientResult result = UpdateStatus();
+
+                if (_statusChanged)
+                {
+                    (RunStatus Status, ThreadRun? Value) tuple = new(_lastSeenResult.Value.Status, _lastSeenResult.Value);
+                    return FromValue(tuple, result.GetRawResponse());
+                }
             }
 
             cancellationToken.WaitHandle.WaitOne(pollingInterval.Value);
         }
     }
+
+    public override void Pause() => _paused = true;
+
+    public override void Resume() => _paused = false;
 }

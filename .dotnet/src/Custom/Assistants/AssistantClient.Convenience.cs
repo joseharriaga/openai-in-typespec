@@ -215,7 +215,7 @@ public partial class AssistantClient
     /// <param name="assistant"> The assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual Task<ResultOperation<StatusBasedResult<RunStatus, ThreadRun>>> CreateRunAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null)
+    public virtual Task<ResultOperation<ThreadRun>> CreateRunAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null)
         => CreateRunAsync(thread?.Id, assistant?.Id, options);
 
     /// <summary>
@@ -226,7 +226,7 @@ public partial class AssistantClient
     /// <param name="assistant"> The assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual ResultOperation<StatusBasedResult<RunStatus, ThreadRun>> CreateRun(AssistantThread thread, Assistant assistant, RunCreationOptions options = null)
+    public virtual ResultOperation<ThreadRun> CreateRun(AssistantThread thread, Assistant assistant, RunCreationOptions options = null)
         => CreateRun(thread?.Id, assistant?.Id, options);
 
     /// <summary>

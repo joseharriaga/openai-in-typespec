@@ -10,7 +10,7 @@ namespace OpenAI.Assistants;
 
 // TODO: add hooks for cancel run?
 
-internal class AssistantRunOperation : ResultOperation<StatusBasedResult<RunStatus, ThreadRun>>
+internal class AssistantRunOperation : ResultOperation<ThreadRun>
 {
     private static readonly TimeSpan DefaultPollingInterval = TimeSpan.FromSeconds(2);
 
@@ -137,4 +137,24 @@ internal class AssistantRunOperation : ResultOperation<StatusBasedResult<RunStat
 
     public override async ValueTask<ClientResult> WaitForCompletionResultAsync(TimeSpan? pollingInterval = default, CancellationToken cancellationToken = default)
         => await WaitForCompletionAsync(pollingInterval, cancellationToken).ConfigureAwait(false);
+
+    public override ClientResult<(string Status, ThreadRun? Value)> WaitForStatusChange(TimeSpan? pollingInterval = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override ValueTask<ClientResult<(string Status, ThreadRun? Value)>> WaitForStatusChangeAsync(TimeSpan? pollingInterval = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override ClientResult<string> WaitForStatusChangeResult(TimeSpan? pollingInterval = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override ValueTask<ClientResult<string>> WaitForStatusChangeResultAsync(TimeSpan? pollingInterval = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

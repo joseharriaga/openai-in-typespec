@@ -215,7 +215,7 @@ public partial class AssistantClient
     /// <param name="assistant"> The assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null)
+    public virtual Task<StatusBasedOperation<RunStatus, ThreadRun>> CreateRunAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null)
         => CreateRunAsync(thread?.Id, assistant?.Id, options);
 
     /// <summary>
@@ -226,7 +226,7 @@ public partial class AssistantClient
     /// <param name="assistant"> The assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual ClientResult<ThreadRun> CreateRun(AssistantThread thread, Assistant assistant, RunCreationOptions options = null)
+    public virtual StatusBasedOperation<RunStatus, ThreadRun> CreateRun(AssistantThread thread, Assistant assistant, RunCreationOptions options = null)
         => CreateRun(thread?.Id, assistant?.Id, options);
 
     /// <summary>
@@ -346,7 +346,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="run"> The run to get a refreshed instance of. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance with updated information. </returns>
-    public virtual Task<ClientResult<ThreadRun>> GetRunAsync(ThreadRun run)
+    internal virtual Task<ClientResult<ThreadRun>> GetRunAsync(ThreadRun run)
         => GetRunAsync(run?.ThreadId, run?.Id);
 
     /// <summary>
@@ -354,7 +354,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="run"> The run to get a refreshed instance of. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance with updated information. </returns>
-    public virtual ClientResult<ThreadRun> GetRun(ThreadRun run)
+    internal virtual ClientResult<ThreadRun> GetRun(ThreadRun run)
         => GetRun(run?.ThreadId, run?.Id);
 
     /// <summary>

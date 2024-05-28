@@ -8,7 +8,6 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
@@ -182,23 +181,20 @@ public partial class AssistantTests
         Assert.That(runs.Count, Is.EqualTo(0));
         ThreadMessage message = client.CreateMessage(thread.Id, ["Hello, assistant!"]);
         Validate(message);
-        ThreadRun run = client.CreateRun(thread.Id, assistant.Id);
-        Validate(run);
-        Assert.That(run.Status, Is.EqualTo(RunStatus.Queued));
-        Assert.That(run.CreatedAt, Is.GreaterThan(s_2024));
-        ThreadRun retrievedRun = client.GetRun(thread.Id, run.Id);
-        Assert.That(retrievedRun.Id, Is.EqualTo(run.Id));
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread.Id, assistant.Id);
+        Validate(runOperation.Value);
+        Assert.That(runOperation.Value.Status, Is.EqualTo(RunStatus.Queued));
+        Assert.That(runOperation.Value.CreatedAt, Is.GreaterThan(s_2024));
+
         runs = client.GetRuns(thread);
         Assert.That(runs.Count, Is.EqualTo(1));
-        Assert.That(runs.First().Id, Is.EqualTo(run.Id));
+        Assert.That(runs.First().Id, Is.EqualTo(runOperation.Value.Id));
 
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread);
         Assert.That(messages.Count, Is.GreaterThanOrEqualTo(1));
-        for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
-        {
-            Thread.Sleep(500);
-            run = client.GetRun(run);
-        }
+
+        ThreadRun run = runOperation.WaitForCompletion();
+
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
         Assert.That(run.CompletedAt, Is.GreaterThan(s_2024));
         Assert.That(run.RequiredActions.Count, Is.EqualTo(0));
@@ -231,14 +227,11 @@ public partial class AssistantTests
         });
         Validate(thread);
 
-        ThreadRun run = client.CreateRun(thread, assistant);
-        Validate(run);
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant);
+        Validate(runOperation);
 
-        while (!run.Status.IsTerminal)
-        {
-            Thread.Sleep(1000);
-            run = client.GetRun(run);
-        }
+        ThreadRun run = runOperation.WaitForCompletion();
+
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
         Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
 
@@ -286,87 +279,87 @@ public partial class AssistantTests
         Validate(thread);
         ThreadMessage message = client.CreateMessage(thread, ["Write some JSON for me!"]);
         Validate(message);
-        ThreadRun run = client.CreateRun(thread, assistant, new()
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant, new()
         {
             ResponseFormat = AssistantResponseFormat.JsonObject,
         });
-        Validate(run);
-        Assert.That(run.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        Validate(runOperation);
+        Assert.That(runOperation.Value.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
     }
 
-    [Test]
-    public void FunctionToolsWork()
-    {
-        AssistantClient client = GetTestClient();
-        Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
-        {
-            Tools =
-            {
-                new FunctionToolDefinition()
-                {
-                    FunctionName = "get_favorite_food_for_day_of_week",
-                    Description = "gets the user's favorite food for a given day of the week, like Tuesday",
-                    Parameters = BinaryData.FromObjectAsJson(new
-                    {
-                        type = "object",
-                        properties = new
-                        {
-                            day_of_week = new
-                            {
-                                type = "string",
-                                description = "a day of the week, like Tuesday or Saturday",
-                            }
-                        }
-                    }),
-                },
-            },
-        });
-        Validate(assistant);
-        Assert.That(assistant.Tools?.Count, Is.EqualTo(1));
+    //[Test]
+    //public void FunctionToolsWork()
+    //{
+    //    AssistantClient client = GetTestClient();
+    //    Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+    //    {
+    //        Tools =
+    //        {
+    //            new FunctionToolDefinition()
+    //            {
+    //                FunctionName = "get_favorite_food_for_day_of_week",
+    //                Description = "gets the user's favorite food for a given day of the week, like Tuesday",
+    //                Parameters = BinaryData.FromObjectAsJson(new
+    //                {
+    //                    type = "object",
+    //                    properties = new
+    //                    {
+    //                        day_of_week = new
+    //                        {
+    //                            type = "string",
+    //                            description = "a day of the week, like Tuesday or Saturday",
+    //                        }
+    //                    }
+    //                }),
+    //            },
+    //        },
+    //    });
+    //    Validate(assistant);
+    //    Assert.That(assistant.Tools?.Count, Is.EqualTo(1));
 
-        FunctionToolDefinition responseToolDefinition = assistant.Tools[0] as FunctionToolDefinition;
-        Assert.That(responseToolDefinition?.FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
-        Assert.That(responseToolDefinition?.Parameters, Is.Not.Null);
+    //    FunctionToolDefinition responseToolDefinition = assistant.Tools[0] as FunctionToolDefinition;
+    //    Assert.That(responseToolDefinition?.FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
+    //    Assert.That(responseToolDefinition?.Parameters, Is.Not.Null);
 
-        ThreadRun run = client.CreateThreadAndRun(
-            assistant,
-            new ThreadCreationOptions()
-            {
-                InitialMessages = { new(["What should I eat on Thursday?"]) },
-            },
-            new RunCreationOptions()
-            {
-                AdditionalInstructions = "Call provided tools when appropriate.",
-            });
-        Validate(run);
+    //    ThreadRun run = client.CreateThreadAndRun(
+    //        assistant,
+    //        new ThreadCreationOptions()
+    //        {
+    //            InitialMessages = { new(["What should I eat on Thursday?"]) },
+    //        },
+    //        new RunCreationOptions()
+    //        {
+    //            AdditionalInstructions = "Call provided tools when appropriate.",
+    //        });
+    //    Validate(run);
 
-        for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
-        {
-            Thread.Sleep(500);
-            run = client.GetRun(run);
-        }
-        Assert.That(run.Status, Is.EqualTo(RunStatus.RequiresAction));
-        Assert.That(run.RequiredActions?.Count, Is.EqualTo(1));
-        Assert.That(run.RequiredActions[0].ToolCallId, Is.Not.Null.Or.Empty);
-        Assert.That(run.RequiredActions[0].FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
-        Assert.That(run.RequiredActions[0].FunctionArguments, Is.Not.Null.Or.Empty);
+    //    for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
+    //    {
+    //        Thread.Sleep(500);
+    //        run = client.GetRun(run);
+    //    }
+    //    Assert.That(run.Status, Is.EqualTo(RunStatus.RequiresAction));
+    //    Assert.That(run.RequiredActions?.Count, Is.EqualTo(1));
+    //    Assert.That(run.RequiredActions[0].ToolCallId, Is.Not.Null.Or.Empty);
+    //    Assert.That(run.RequiredActions[0].FunctionName, Is.EqualTo("get_favorite_food_for_day_of_week"));
+    //    Assert.That(run.RequiredActions[0].FunctionArguments, Is.Not.Null.Or.Empty);
 
-        run = client.SubmitToolOutputsToRun(run, [new(run.RequiredActions[0].ToolCallId, "tacos")]);
-        Assert.That(run.Status.IsTerminal, Is.False);
+    //    run = client.SubmitToolOutputsToRun(run, [new(run.RequiredActions[0].ToolCallId, "tacos")]);
+    //    Assert.That(run.Status.IsTerminal, Is.False);
 
-        for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
-        {
-            Thread.Sleep(500);
-            run = client.GetRun(run);
-        }
-        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+    //    for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
+    //    {
+    //        Thread.Sleep(500);
+    //        run = client.GetRun(run);
+    //    }
+    //    Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageableCollection<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
-        Assert.That(messages.Count, Is.GreaterThan(1));
-        Assert.That(messages.First().Role, Is.EqualTo(MessageRole.Assistant));
-        Assert.That(messages.First().Content?[0], Is.Not.Null);
-        Assert.That(messages.First().Content[0].Text, Does.Contain("tacos"));
-    }
+    //    PageableCollection<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
+    //    Assert.That(messages.Count, Is.GreaterThan(1));
+    //    Assert.That(messages.First().Role, Is.EqualTo(MessageRole.Assistant));
+    //    Assert.That(messages.First().Content?[0], Is.Not.Null);
+    //    Assert.That(messages.First().Content[0].Text, Does.Contain("tacos"));
+    //}
 
     [Test]
     public async Task StreamingRunWorks()
@@ -561,13 +554,9 @@ public partial class AssistantTests
         Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
         Assert.That(thread.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
 
-        ThreadRun run = client.CreateRun(thread, assistant);
-        Validate(run);
-        do
-        {
-            Thread.Sleep(1000);
-            run = client.GetRun(run);
-        } while (run?.Status.IsTerminal == false);
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant);
+        ThreadRun run = runOperation.WaitForCompletion();
+
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
@@ -584,6 +573,131 @@ public partial class AssistantTests
         }
         Assert.That(messages.Count() > 1);
         Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("cake"))));
+    }
+
+    [Test]
+    public void RunStepsWithActionsWork()
+    {
+        AssistantClient client = GetTestClient();
+
+        // Create an assistant that can call the function tools.
+        AssistantCreationOptions assistantOptions = new()
+        {
+            Name = "Sample: Function Calling",
+            Instructions =
+                "Don't make assumptions about what values to plug into functions."
+                + " Ask for clarification if a user request is ambiguous.",
+            Tools = { getTemperatureTool, getRainProbabilityTool },
+        };
+
+        Assistant assistant = client.CreateAssistant("gpt-4-turbo", assistantOptions);
+        Validate(assistant);
+
+        // Create a thread with an override vector store
+        AssistantThread thread = client.CreateThread();
+        ThreadMessage message = client.CreateMessage(
+            thread,
+            [
+                "What's the weather in Seattle today and the likelihood it'll rain?"
+            ]);
+
+        StatusBasedOperation<RunStatus, ThreadRun> runOperation = client.CreateRun(thread, assistant);
+
+        (RunStatus Status, ThreadRun Value) update;
+        do
+        {
+            update = runOperation.WaitForStatusUpdate();
+
+            if (update.Status == RunStatus.RequiresAction)
+            {
+                // Temporarily stop polling
+                runOperation.Pause();
+
+                List<ToolOutput> outputs = new();
+
+                foreach (RequiredAction action in update.Value.RequiredActions)
+                {
+                    string output = action.FunctionName switch
+                    {
+                        string s when s == getTemperatureTool.FunctionName
+                            => GetTemperature(("Seattle", "Farenheit")),
+                        string s when s == getRainProbabilityTool.FunctionName
+                            => GetRainProbability("Seattle, WA"),
+                        _ => throw new InvalidOperationException()
+                    };
+
+                    outputs.Add(new ToolOutput(action.ToolCallId, output));
+
+                }
+
+                client.SubmitToolOutputsToRun(update.Value, outputs);
+
+                // Start polling again
+                runOperation.Resume();
+            }
+        }
+        while (!update.Status.IsTerminal);
+
+        Assert.That(runOperation.Value, Is.Not.Null);
+
+        ThreadRun run = runOperation.Value;
+
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+
+        PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
+        Assert.That(messages.Count() > 1);
+        Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("weather"))));
+    }
+
+    FunctionToolDefinition getTemperatureTool = new()
+    {
+        FunctionName = "get_current_temperature",
+        Description = "Gets the current temperature at a specific location.",
+        Parameters = BinaryData.FromString("""
+            {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "The city and state, e.g., San Francisco, CA"
+                },
+                "unit": {
+                  "type": "string",
+                  "enum": ["Celsius", "Fahrenheit"],
+                  "description": "The temperature unit to use. Infer this from the user's location."
+                }
+              }
+            }
+            """),
+    };
+
+    FunctionToolDefinition getRainProbabilityTool = new()
+    {
+        FunctionName = "get_current_rain_probability",
+        Description = "Gets the current forecasted probability of rain at a specific location,"
+            + " represented as a percent chance in the range of 0 to 100.",
+        Parameters = BinaryData.FromString("""
+            {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "The city and state, e.g., San Francisco, CA"
+                }
+              },
+              "required": ["location"]
+            }
+            """),
+    };
+
+    private string GetTemperature((string City, string Unit) input)
+    {
+        return "57";
+    }
+
+    private string GetRainProbability(string location)
+    {
+        return "25%";
     }
 
     [Test]

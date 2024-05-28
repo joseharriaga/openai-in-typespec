@@ -10,7 +10,7 @@ namespace OpenAI.Assistants;
 
 // TODO: add hooks for cancel run?
 
-internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun>
+internal class AssistantRunOperation : ResultOperation<StatusBasedResult<RunStatus, ThreadRun>>
 {
     private static readonly TimeSpan DefaultPollingInterval = TimeSpan.FromSeconds(2);
 
@@ -22,16 +22,13 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
 
     private ClientResult<ThreadRun> _lastSeenResult;
 
-    private bool _statusChanged;
-    private bool _paused;
-
     public AssistantRunOperation(ClientResult<ThreadRun> createResult,
         Func<string, string, ClientResult<ThreadRun>> getRun,
         Func<string, string, Task<ClientResult<ThreadRun>>> getRunAsync) :
-        base(GetIdFromResult(createResult), createResult.Value.Status, GetResponseFromResult(createResult))
+        base(GetIdFromResult(createResult), GetResponseFromResult(createResult))
     {
         _lastSeenResult = createResult;
-        Value = _lastSeenResult.Value;
+        Value = new ThreadRunStatusResult(createResult.Value, this);
 
         _threadId = createResult.Value.ThreadId;
         _runId = createResult.Value.Id;
@@ -56,27 +53,20 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
             return _lastSeenResult;
         }
 
-        ClientResult<ThreadRun> result = _getRun(_threadId, _runId);
+        _lastSeenResult = _getRun(_threadId, _runId);
 
-        // Compute delta between result and _lastSeenResult
-        if (_lastSeenResult.Value.Status != result.Value.Status)
-        {
-            Status = result.Value.Status;
-            _statusChanged = true;
-        }
+        // TODO: we can probably avoid an allocation, but might need to make
+        // status setter protected
+        Value = new ThreadRunStatusResult(_lastSeenResult.Value, this);
 
-        _lastSeenResult = result;
-
-        Value = result.Value;
-
-        if (result.Value.Status.IsTerminal)
+        if (Value.Status.IsTerminal)
         {
             HasCompleted = true;
         }
 
-        SetRawResponse(result.GetRawResponse());
+        SetRawResponse(_lastSeenResult.GetRawResponse());
 
-        return result;
+        return _lastSeenResult;
     }
 
     public override async ValueTask<ClientResult> UpdateStatusAsync()
@@ -88,9 +78,9 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
 
         _lastSeenResult = await _getRunAsync(_threadId, _runId).ConfigureAwait(false);
 
-        Value = _lastSeenResult.Value;
+        Value = new ThreadRunStatusResult(_lastSeenResult.Value, this);
 
-        if (_lastSeenResult.Value.Status.IsTerminal)
+        if (Value.Status.IsTerminal)
         {
             HasCompleted = true;
         }
@@ -100,7 +90,7 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
         return _lastSeenResult;
     }
 
-    public override ClientResult<ThreadRun> WaitForCompletion(TimeSpan? pollingInterval = default, CancellationToken cancellationToken = default)
+    public override ClientResult<StatusBasedResult<RunStatus, ThreadRun>> WaitForCompletion(TimeSpan? pollingInterval = default, CancellationToken cancellationToken = default)
     {
         pollingInterval ??= DefaultPollingInterval;
 
@@ -108,14 +98,12 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_paused)
-            {
-                UpdateStatus();
+            UpdateStatus();
 
-                if (HasCompleted)
-                {
-                    return _lastSeenResult;
-                }
+            if (HasCompleted)
+            {
+                StatusBasedResult<RunStatus, ThreadRun> value = new ThreadRunStatusResult(_lastSeenResult.Value, this);
+                return FromValue(value, _lastSeenResult.GetRawResponse());
             }
 
             // TODO: note pollling interval logic may change for e.g. exponential
@@ -124,7 +112,7 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
         }
     }
 
-    public override async ValueTask<ClientResult<ThreadRun>> WaitForCompletionAsync(TimeSpan? pollingInterval = default, CancellationToken cancellationToken = default)
+    public override async ValueTask<ClientResult<StatusBasedResult<RunStatus, ThreadRun>>> WaitForCompletionAsync(TimeSpan? pollingInterval = default, CancellationToken cancellationToken = default)
     {
         pollingInterval ??= DefaultPollingInterval;
 
@@ -132,79 +120,21 @@ internal class AssistantRunOperation : StatusBasedOperation<RunStatus, ThreadRun
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_paused)
-            {
-                await UpdateStatusAsync().ConfigureAwait(false);
+            await UpdateStatusAsync().ConfigureAwait(false);
 
-                if (HasCompleted)
-                {
-                    return _lastSeenResult;
-                }
+            if (HasCompleted)
+            {
+                StatusBasedResult<RunStatus, ThreadRun> value = new ThreadRunStatusResult(_lastSeenResult.Value, this);
+                return FromValue(value, _lastSeenResult.GetRawResponse());
             }
 
             await Task.Delay(pollingInterval.Value, cancellationToken).ConfigureAwait(false);
         }
     }
 
-    public override ClientResult WaitForCompletionResult(CancellationToken cancellationToken = default)
-        => WaitForCompletion(DefaultPollingInterval, cancellationToken);
-
-    public override ClientResult WaitForCompletionResult(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+    public override ClientResult WaitForCompletionResult(TimeSpan? pollingInterval = default, CancellationToken cancellationToken = default)
         => WaitForCompletion(pollingInterval, cancellationToken);
 
-    public override async ValueTask<ClientResult> WaitForCompletionResultAsync(CancellationToken cancellationToken = default)
-        => await WaitForCompletionAsync(DefaultPollingInterval, cancellationToken).ConfigureAwait(false);
-
-
-    public override async ValueTask<ClientResult> WaitForCompletionResultAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+    public override async ValueTask<ClientResult> WaitForCompletionResultAsync(TimeSpan? pollingInterval = default, CancellationToken cancellationToken = default)
         => await WaitForCompletionAsync(pollingInterval, cancellationToken).ConfigureAwait(false);
-
-    public override async ValueTask<ClientResult<(RunStatus Status, ThreadRun? Value)>> WaitForStatusUpdateAsync(TimeSpan? pollingInterval = null, CancellationToken cancellationToken = default)
-    {
-        pollingInterval ??= DefaultPollingInterval;
-        while (true)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (!_paused)
-            {
-                ClientResult result = await UpdateStatusAsync().ConfigureAwait(false);
-
-                if (_statusChanged)
-                {
-                    (RunStatus Status, ThreadRun? Value) tuple = new(_lastSeenResult.Value.Status, _lastSeenResult.Value);
-                    return FromValue(tuple, result.GetRawResponse());
-                }
-            }
-
-            await Task.Delay(pollingInterval.Value, cancellationToken).ConfigureAwait(false);
-        }
-    }
-
-    public override ClientResult<(RunStatus Status, ThreadRun? Value)> WaitForStatusUpdate(TimeSpan? pollingInterval = null, CancellationToken cancellationToken = default)
-    {
-        pollingInterval ??= DefaultPollingInterval;
-
-        while (true)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (!_paused)
-            {
-                ClientResult result = UpdateStatus();
-
-                if (_statusChanged)
-                {
-                    (RunStatus Status, ThreadRun? Value) tuple = new(_lastSeenResult.Value.Status, _lastSeenResult.Value);
-                    return FromValue(tuple, result.GetRawResponse());
-                }
-            }
-
-            cancellationToken.WaitHandle.WaitOne(pollingInterval.Value);
-        }
-    }
-
-    public override void Pause() => _paused = true;
-
-    public override void Resume() => _paused = false;
 }

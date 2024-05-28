@@ -4,6 +4,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static OpenAI.InternalListHelpers;
@@ -451,7 +452,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual async Task<StatusBasedOperation<RunStatus, ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null)
+    public virtual async Task<ResultOperation<StatusBasedResult<RunStatus, ThreadRun>>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
@@ -474,7 +475,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
     /// <returns> A new <see cref="ThreadRun"/> instance. </returns>
-    public virtual StatusBasedOperation<RunStatus, ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null)
+    public virtual ResultOperation<StatusBasedResult<RunStatus, ThreadRun>> CreateRun(string threadId, string assistantId, RunCreationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));

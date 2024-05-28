@@ -32,8 +32,6 @@ function Remove-PseudoSuppressedTypes {
     $targets = @(
         # "Unknown",
         "AssistantResponseFormat",
-        "AssistantsApiResponseFormat",
-        "AssistantsNamedToolChoiceFunction",
         "ToolConstraint"
     )
     foreach ($target in $targets) {

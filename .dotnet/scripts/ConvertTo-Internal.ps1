@@ -349,6 +349,11 @@ function Edit-GeneratedModels {
         "VectorStoreCreationHelper.cs",
         "VectorStoreCreationHelper.Serialization.cs",
 
+        "InternalAssistantsApiResponseFormat.cs",
+        "InternalAssistantsApiResponseFormat.Serialization.cs",
+        "InternalAssistantsApiResponseFormatType.cs",
+        "InternalAssistantsNamedToolChoiceFunction.cs",
+        "InternalAssistantsNamedToolChoiceFunction.Serialization.cs",
         "InternalAssistantObjectObject.cs",
         "InternalMessageObjectObject.cs",
         "InternalRunObjectObject.cs",

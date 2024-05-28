@@ -271,6 +271,15 @@ internal partial class UnknownRunStepDeltaStepDetails { }
 [CodeGenModel("RunStepDeltaStepDetailsToolCallsFunctionObjectFunction")]
 internal partial class InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction { }
 
+[CodeGenModel("AssistantsApiResponseFormat")]
+internal partial class InternalAssistantsApiResponseFormat { }
+
+[CodeGenModel("InternalAssistantsApiResponseFormatType")]
+internal readonly partial struct InternalAssistantsApiResponseFormatType { }
+
+[CodeGenModel("AssistantsNamedToolChoiceFunction")]
+internal partial class InternalAssistantsNamedToolChoiceFunction { }
+
 [CodeGenModel("AssistantObjectObject")]
 internal readonly partial struct InternalAssistantObjectObject { }
 

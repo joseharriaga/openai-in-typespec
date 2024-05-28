@@ -5,6 +5,10 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
+[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Assistants.AssistantResponseFormat>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
+[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Assistants.AssistantResponseFormat>.Create", typeof(Utf8JsonReader), typeof(ModelReaderWriterOptions))]
+[CodeGenSuppress("global::System.ClientModel.Primitives.IPersistableModel<OpenAI.Assistants.AssistantResponseFormat>.Write", typeof(ModelReaderWriterOptions))]
+[CodeGenSuppress("global::System.ClientModel.Primitives.IPersistableModel<OpenAI.Assistants.AssistantResponseFormat>.Create", typeof(BinaryData), typeof(ModelReaderWriterOptions))]
 public partial class AssistantResponseFormat : IJsonModel<AssistantResponseFormat>
 {
     void IJsonModel<AssistantResponseFormat>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -18,8 +22,6 @@ public partial class AssistantResponseFormat : IJsonModel<AssistantResponseForma
 
     AssistantResponseFormat IPersistableModel<AssistantResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options)
         => CustomSerializationHelpers.DeserializeNewInstance(this, DeserializeAssistantResponseFormat, data, options);
-
-    string IPersistableModel<AssistantResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
     internal static void SerializeAssistantResponseFormat(AssistantResponseFormat formatInstance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {

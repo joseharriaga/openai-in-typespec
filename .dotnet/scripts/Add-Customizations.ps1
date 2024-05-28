@@ -31,7 +31,6 @@ function Remove-PseudoSuppressedTypes {
     $directory = Join-Path -Path $root -ChildPath "src\Generated\Models"
     $targets = @(
         # "Unknown",
-        "AssistantResponseFormat",
         "ToolConstraint"
     )
     foreach ($target in $targets) {

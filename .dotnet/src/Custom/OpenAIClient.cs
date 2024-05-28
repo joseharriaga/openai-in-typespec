@@ -6,6 +6,7 @@ using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Images;
+using OpenAI.LegacyCompletions;
 using OpenAI.Models;
 using OpenAI.Moderations;
 using OpenAI.VectorStores;
@@ -44,6 +45,25 @@ namespace OpenAI;
 public partial class OpenAIClient
 {
     private readonly OpenAIClientOptions _options;
+
+    // CUSTOM: Applied the Experimental attribute as needed.
+    private AudioClient _cachedAudioClient;
+    [Experimental("OPENAI001")]
+    private AssistantClient _cachedAssistantClient;
+    private BatchClient _cachedBatchClient;
+    private ChatClient _cachedChatClient;
+    private LegacyCompletionClient _cachedLegacyCompletionClient;
+    private EmbeddingClient _cachedEmbeddingClient;
+    private FileClient _cachedFileClient;
+    private FineTuningClient _cachedFineTuningClient;
+    private ImageClient _cachedImageClient;
+    private InternalAssistantMessageClient _cachedInternalAssistantMessageClient;
+    private ModelClient _cachedModelClient;
+    private ModerationClient _cachedModerationClient;
+    private InternalAssistantRunClient _cachedInternalAssistantRunClient;
+    private InternalAssistantThreadClient _cachedInternalAssistantThreadClient;
+    [Experimental("OPENAI001")]
+    private VectorStoreClient _cachedVectorStoreClient;
 
     /// <summary>
     /// The configured connection endpoint.

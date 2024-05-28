@@ -45,7 +45,7 @@ namespace OpenAI.Assistants
         /// <param name="toolChoice"></param>
         /// <param name="responseFormat"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, InternalCreateThreadAndRunRequestModel? model, string instructions, IList<ToolDefinition> tools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, ToolConstraint toolChoice, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, string model, string instructions, IList<ToolDefinition> tools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, ToolConstraint toolChoice, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             Thread = thread;
@@ -73,8 +73,6 @@ namespace OpenAI.Assistants
         public string AssistantId { get; }
         /// <summary> If no thread is provided, an empty thread will be created. </summary>
         public ThreadCreationOptions Thread { get; set; }
-        /// <summary> The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. </summary>
-        public InternalCreateThreadAndRunRequestModel? Model { get; set; }
         /// <summary> Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis. </summary>
         public string Instructions { get; set; }
         /// <summary>

@@ -813,7 +813,7 @@ function Edit-GeneratedModels {
     }
 }
 
-Edit-GeneratedOpenAIClient
-Edit-GeneratedSubclients
-Edit-GeneratedModelFactory
+# Edit-GeneratedOpenAIClient
+# Edit-GeneratedSubclients
+# Edit-GeneratedModelFactory
 Edit-GeneratedModels

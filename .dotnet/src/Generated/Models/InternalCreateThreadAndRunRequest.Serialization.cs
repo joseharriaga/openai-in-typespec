@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
                 if (Model != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteStringValue(Model.Value.ToString());
+                    writer.WriteStringValue(Model);
                 }
                 else
                 {
@@ -235,7 +235,7 @@ namespace OpenAI.Assistants
             }
             string assistantId = default;
             ThreadCreationOptions thread = default;
-            InternalCreateThreadAndRunRequestModel? model = default;
+            string model = default;
             string instructions = default;
             IList<ToolDefinition> tools = default;
             ToolResources toolResources = default;
@@ -273,7 +273,7 @@ namespace OpenAI.Assistants
                         model = null;
                         continue;
                     }
-                    model = new InternalCreateThreadAndRunRequestModel(property.Value.GetString());
+                    model = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("instructions"u8))

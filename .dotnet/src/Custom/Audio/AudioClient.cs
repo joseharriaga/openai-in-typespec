@@ -76,20 +76,16 @@ public partial class AudioClient
     #region GenerateSpeech
 
     /// <summary>
-    /// Creates text-to-speech audio that reflects the specified voice speaking the provided input text.
+    /// Generates text-to-speech audio using the specified voice speaking the provided input text.
     /// </summary>
     /// <remarks>
-    /// Unless otherwise specified via <see cref="SpeechGenerationOptions.ResponseFormat"/>, the <c>mp3</c> format of
-    /// <see cref="GeneratedSpeechFormat.Mp3"/> will be used for the generated audio.
+    /// The default format of the generated audio is <see cref="GeneratedSpeechFormat.Mp3"/> unless otherwise specified
+    /// via <see cref="SpeechGenerationOptions.ResponseFormat"/>.
     /// </remarks>
     /// <param name="text"> The text for the voice to speak. </param>
     /// <param name="voice"> The voice to use. </param>
-    /// <param name="options"> Additional options to control the text-to-speech operation. </param>
-    /// <returns>
-    ///     A result containing generated, spoken audio in the specified output format.
-    ///     Unless otherwise specified via <see cref="SpeechGenerationOptions.ResponseFormat"/>, the <c>mp3</c> format of
-    ///     <see cref="GeneratedSpeechFormat.Mp3"/> will be used for the generated audio.
-    /// </returns>
+    /// <param name="options"> Additional options to tailor the text-to-speech request. </param>
+    /// <returns> The generated audio in the specified output format. </returns>
     public virtual async Task<ClientResult<BinaryData>> GenerateSpeechFromTextAsync(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null)
     {
         Argument.AssertNotNull(text, nameof(text));
@@ -103,20 +99,16 @@ public partial class AudioClient
     }
 
     /// <summary>
-    /// Creates text-to-speech audio that reflects the specified voice speaking the provided input text.
+    /// Generates text-to-speech audio using the specified voice speaking the provided input text.
     /// </summary>
     /// <remarks>
-    /// Unless otherwise specified via <see cref="SpeechGenerationOptions.ResponseFormat"/>, the <c>mp3</c> format of
-    /// <see cref="GeneratedSpeechFormat.Mp3"/> will be used for the generated audio.
+    /// The default format of the generated audio is <see cref="GeneratedSpeechFormat.Mp3"/> unless otherwise specified
+    /// via <see cref="SpeechGenerationOptions.ResponseFormat"/>.
     /// </remarks>
     /// <param name="text"> The text for the voice to speak. </param>
     /// <param name="voice"> The voice to use. </param>
-    /// <param name="options"> Additional options to control the text-to-speech operation. </param>
-    /// <returns>
-    ///     A result containing generated, spoken audio in the specified output format.
-    ///     Unless otherwise specified via <see cref="SpeechGenerationOptions.ResponseFormat"/>, the <c>mp3</c> format of
-    ///     <see cref="GeneratedSpeechFormat.Mp3"/> will be used for the generated audio.
-    /// </returns>
+    /// <param name="options"> Additional options to tailor the text-to-speech request. </param>
+    /// <returns> The generated audio in the specified output format. </returns>
     public virtual ClientResult<BinaryData> GenerateSpeechFromText(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null)
     {
         Argument.AssertNotNull(text, nameof(text));
@@ -133,16 +125,23 @@ public partial class AudioClient
 
     #region TranscribeAudio
 
-    /// <summary> TODO. </summary>
-    /// <param name="audio"> TODO. </param>
-    /// <param name="audioFilename"> TODO. </param>
-    /// <param name="options"> TODO. </param>
+    /// <summary>
+    /// Transcribes audio from a stream.
+    /// </summary>
+    /// <param name="audio"> The audio to transcribe. </param>
+    /// <param name="audioFilename">
+    /// The filename associated with the audio stream. The filename's extension (for example: .mp3) will be used to
+    /// validate the format of the input audio. The request may fail if the file extension and input audio format do
+    /// not match.
+    /// </param>
+    /// <param name="options"> Additional options to tailor the audio transcription request. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="audio"/> or <paramref name="audioFilename"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> The audio transcription. </returns>
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string audioFilename, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
-        Argument.AssertNotNull(audioFilename, nameof(audioFilename));
+        Argument.AssertNotNullOrEmpty(audioFilename, nameof(audioFilename));
 
         options ??= new();
         CreateAudioTranscriptionOptions(audio, audioFilename, ref options);
@@ -152,16 +151,23 @@ public partial class AudioClient
         return ClientResult.FromValue(AudioTranscription.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    /// <summary> TODO. </summary>
-    /// <param name="audio"> TODO. </param>
-    /// <param name="audioFilename"> TODO. </param>
-    /// <param name="options"> TODO. </param>
+    /// <summary>
+    /// Transcribes audio from a stream.
+    /// </summary>
+    /// <param name="audio"> The audio to transcribe. </param>
+    /// <param name="audioFilename">
+    /// The filename associated with the audio stream. The filename's extension (for example: .mp3) will be used to
+    /// validate the format of the input audio. The request may fail if the file extension and input audio format do
+    /// not match.
+    /// </param>
+    /// <param name="options"> Additional options to tailor the audio transcription request. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="audio"/> or <paramref name="audioFilename"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> The audio transcription. </returns>
     public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string audioFilename, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
-        Argument.AssertNotNull(audioFilename, nameof(audioFilename));
+        Argument.AssertNotNullOrEmpty(audioFilename, nameof(audioFilename));
 
         options ??= new();
         CreateAudioTranscriptionOptions(audio, audioFilename, ref options);
@@ -174,15 +180,15 @@ public partial class AudioClient
     /// <summary>
     /// Transcribes audio from a file with a known path.
     /// </summary>
-    /// <remarks>
-    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
-    /// operation may fail if the file extension and input audio format do not match.
-    /// </remarks>
-    /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
-    /// <param name="options"> Options for the transcription. </param>
+    /// <param name="audioFilePath">
+    /// The path of the audio file to transcribe. The provided file path's extension (for example: .mp3) will be used
+    /// to validate the format of the input audio. The request may fail if the file extension and input audio format
+    /// do not match.
+    /// </param>
+    /// <param name="options"> Additional options to tailor the audio transcription request. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <returns> Audio transcription data for the provided file. </returns>
+    /// <returns> The audio transcription. </returns>
     public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(audioFilePath, nameof(audioFilePath));
@@ -194,15 +200,15 @@ public partial class AudioClient
     /// <summary>
     /// Transcribes audio from a file with a known path.
     /// </summary>
-    /// <remarks>
-    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
-    /// operation may fail if the file extension and input audio format do not match.
-    /// </remarks>
-    /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
-    /// <param name="options"> Options for the transcription. </param>
+    /// <param name="audioFilePath">
+    /// The path of the audio file to transcribe. The provided file path's extension (for example: .mp3) will be used
+    /// to validate the format of the input audio. The request may fail if the file extension and input audio format
+    /// do not match.
+    /// </param>
+    /// <param name="options"> Additional options to tailor the audio transcription request. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <returns> Audio transcription data for the provided file. </returns>
+    /// <returns> The audio transcription. </returns>
     public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(audioFilePath, nameof(audioFilePath));
@@ -215,16 +221,21 @@ public partial class AudioClient
 
     #region TranslateAudio
 
-    /// <summary> TODO. </summary>
-    /// <param name="audio"> TODO. </param>
-    /// <param name="audioFilename"> TODO. </param>
-    /// <param name="options"> TODO. </param>
+    /// <summary> Translates audio from a stream into English. </summary>
+    /// <param name="audio"> The audio to translate. </param>
+    /// <param name="audioFilename">
+    /// The filename associated with the audio stream. The filename's extension (for example: .mp3) will be used to
+    /// validate the format of the input audio. The request may fail if the file extension and input audio format do
+    /// not match.
+    /// </param>
+    /// <param name="options"> Additional options to tailor the audio translation request. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="audio"/> or <paramref name="audioFilename"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> The audio translation. </returns>
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string audioFilename, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
-        Argument.AssertNotNull(audioFilename, nameof(audioFilename));
+        Argument.AssertNotNullOrEmpty(audioFilename, nameof(audioFilename));
 
         options ??= new();
         CreateAudioTranslationOptions(audio, audioFilename, ref options);
@@ -234,16 +245,21 @@ public partial class AudioClient
         return ClientResult.FromValue(AudioTranslation.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    /// <summary> TODO. </summary>
-    /// <param name="audio"> TODO. </param>
-    /// <param name="audioFilename"> TODO. </param>
-    /// <param name="options"> TODO. </param>
+    /// <summary> Translates audio from a stream into English. </summary>
+    /// <param name="audio"> The audio to translate. </param>
+    /// <param name="audioFilename">
+    /// The filename associated with the audio stream. The filename's extension (for example: .mp3) will be used to
+    /// validate the format of the input audio. The request may fail if the file extension and input audio format do
+    /// not match.
+    /// </param>
+    /// <param name="options"> Additional options to tailor the audio translation request. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="audio"/> or <paramref name="audioFilename"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> The audio translation. </returns>
     public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string audioFilename, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audio, nameof(audio));
-        Argument.AssertNotNull(audioFilename, nameof(audioFilename));
+        Argument.AssertNotNullOrEmpty(audioFilename, nameof(audioFilename));
 
         options ??= new();
         CreateAudioTranslationOptions(audio, audioFilename, ref options);
@@ -254,17 +270,17 @@ public partial class AudioClient
     }
 
     /// <summary>
-    /// Translates audio into English from a file with a known path.
+    /// Translates audio from a file with a known path into English.
     /// </summary>
-    /// <remarks>
-    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
-    /// operation may fail if the file extension and input audio format do not match.
-    /// </remarks>
-    /// <param name="audioFilePath"> The path of the audio file to translate. </param>
-    /// <param name="options"> Options for the translation. </param>
+    /// <param name="audioFilePath">
+    /// The path of the audio file to translate. The provided file path's extension (for example: .mp3) will be used
+    /// to validate the format of the input audio. The request may fail if the file extension and input audio format
+    /// do not match.
+    /// </param>
+    /// <param name="options"> Additional options to tailor the audio translation request. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <returns> Audio translation data for the provided file. </returns>
+    /// <returns> The audio translation. </returns>
     public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(audioFilePath, nameof(audioFilePath));
@@ -274,17 +290,17 @@ public partial class AudioClient
     }
 
     /// <summary>
-    /// Translates audio into English from a file with a known path.
+    /// Translates audio from a file with a known path into English.
     /// </summary>
-    /// <remarks>
-    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
-    /// operation may fail if the file extension and input audio format do not match.
-    /// </remarks>
-    /// <param name="audioFilePath"> The path of the audio file to translate. </param>
-    /// <param name="options"> Options for the translation. </param>
+    /// <param name="audioFilePath">
+    /// The path of the audio file to translate. The provided file path's extension (for example: .mp3) will be used
+    /// to validate the format of the input audio. The request may fail if the file extension and input audio format
+    /// do not match.
+    /// </param>
+    /// <param name="options"> Additional options to tailor the audio translation request. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="audioFilePath"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <returns> Audio translation data for the provided file. </returns>
+    /// <returns> The audio translation. </returns>
     public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null)
     {
         Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));

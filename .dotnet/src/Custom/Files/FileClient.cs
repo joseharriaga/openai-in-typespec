@@ -71,15 +71,21 @@ public partial class FileClient
     /// one organization can be up to 100 GB.
     ///
     /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
-    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
-    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    /// the <see href="https://platform.openai.com/docs/assistants/tools">Assistants Tools guide</see> to
+    /// learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.
     ///
-    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// Please <see href="https://help.openai.com/">contact us</see> if you need to increase these
+    /// storage limits.
     /// </summary>
-    /// <param name="file"> TODO. </param>
-    /// <param name="filename"> TODO. </param>
-    /// <param name="purpose"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    /// <param name="file"> The file to upload. </param>
+    /// <param name="filename">
+    /// The filename associated with the file stream. The filename's extension (for example: .json) will be used to
+    /// validate the file format. The request may fail if the file extension and file format do not match.
+    /// </param>
+    /// <param name="purpose"> The intended purpose of the uploaded file. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> or <paramref name="filename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="filename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Information about the uploaded file. </returns>
     public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
@@ -100,15 +106,21 @@ public partial class FileClient
     /// one organization can be up to 100 GB.
     ///
     /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
-    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
-    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    /// the <see href="https://platform.openai.com/docs/assistants/tools">Assistants Tools guide</see> to
+    /// learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.
     ///
-    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// Please <see href="https://help.openai.com/">contact us</see> if you need to increase these
+    /// storage limits.
     /// </summary>
-    /// <param name="file"> TODO. </param>
-    /// <param name="filename"> TODO. </param>
-    /// <param name="purpose"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    /// <param name="file"> The file to upload. </param>
+    /// <param name="filename">
+    /// The filename associated with the file stream. The filename's extension (for example: .json) will be used to
+    /// validate the file format. The request may fail if the file extension and file format do not match.
+    /// </param>
+    /// <param name="purpose"> The intended purpose of the uploaded file. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> or <paramref name="filename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="filename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Information about the uploaded file. </returns>
     public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
@@ -129,15 +141,21 @@ public partial class FileClient
     /// one organization can be up to 100 GB.
     ///
     /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
-    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
-    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    /// the <see href="https://platform.openai.com/docs/assistants/tools">Assistants Tools guide</see> to
+    /// learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.
     ///
-    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// Please <see href="https://help.openai.com/">contact us</see> if you need to increase these
+    /// storage limits.
     /// </summary>
-    /// <param name="file"> TODO. </param>
-    /// <param name="filename"> TODO. </param>
-    /// <param name="purpose"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    /// <param name="file"> The file to upload. </param>
+    /// <param name="filename">
+    /// The filename associated with the file binary data. The filename's extension (for example: .json) will be used to
+    /// validate the file format. The request may fail if the file extension and file format do not match.
+    /// </param>
+    /// <param name="purpose"> The intended purpose of the uploaded file. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> or <paramref name="filename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="filename"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Information about the uploaded file. </returns>
     public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
@@ -146,21 +164,26 @@ public partial class FileClient
         return UploadFileAsync(file?.ToStream(), filename, purpose);
     }
 
-
     /// <summary>
     /// Upload a file that can be used across various endpoints. The size of all the files uploaded by
     /// one organization can be up to 100 GB.
     ///
     /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
-    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
-    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    /// the <see href="https://platform.openai.com/docs/assistants/tools">Assistants Tools guide</see> to
+    /// learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.
     ///
-    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// Please <see href="https://help.openai.com/">contact us</see> if you need to increase these
+    /// storage limits.
     /// </summary>
-    /// <param name="file"> TODO. </param>
-    /// <param name="filename"> TODO. </param>
-    /// <param name="purpose"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    /// <param name="file"> The file to upload. </param>
+    /// <param name="filename">
+    /// The filename associated with the file binary data. The filename's extension (for example: .json) will be used to
+    /// validate the file format. The request may fail if the file extension and file format do not match.
+    /// </param>
+    /// <param name="purpose"> The intended purpose of the uploaded file. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> or <paramref name="filename"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="filename"/> is an empty string, and was expected to be non-empty. </exception>
+    ///
     public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose)
     {
         Argument.AssertNotNull(file, nameof(file));
@@ -174,14 +197,20 @@ public partial class FileClient
     /// one organization can be up to 100 GB.
     ///
     /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
-    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
-    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    /// the <see href="https://platform.openai.com/docs/assistants/tools">Assistants Tools guide</see> to
+    /// learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.
     ///
-    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// Please <see href="https://help.openai.com/">contact us</see> if you need to increase these
+    /// storage limits.
     /// </summary>
-    /// <param name="filePath"> TODO. </param>
-    /// <param name="purpose"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="filePath"/> is null. </exception>
+    /// <param name="filePath">
+    /// The path of the file to upload. The provided file path's extension (for example: .json) will be used
+    /// to validate the file format. The request may fail if the file extension and file format do not match.
+    /// </param>
+    /// <param name="purpose"> The intended purpose of the uploaded file. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="filePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="filePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Information about the uploaded file. </returns>
     public virtual async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, FileUploadPurpose purpose)
     {
         Argument.AssertNotNullOrEmpty(filePath, nameof(filePath));
@@ -195,14 +224,20 @@ public partial class FileClient
     /// one organization can be up to 100 GB.
     ///
     /// The size of individual files can be a maximum of 512 MB or 2 million tokens for Assistants. See
-    /// the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files
-    /// supported. The Fine-tuning API only supports `.jsonl` files.
+    /// the <see href="https://platform.openai.com/docs/assistants/tools">Assistants Tools guide</see> to
+    /// learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.
     ///
-    /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
+    /// Please <see href="https://help.openai.com/">contact us</see> if you need to increase these
+    /// storage limits.
     /// </summary>
-    /// <param name="filePath"> TODO. </param>
-    /// <param name="purpose"> TODO. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="filePath"/> is null. </exception>
+    /// <param name="filePath">
+    /// The path of the file to upload. The provided file path's extension (for example: .json) will be used
+    /// to validate the file format. The request may fail if the file extension and file format do not match.
+    /// </param>
+    /// <param name="purpose"> The intended purpose of the uploaded file. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="filePath"/> was null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="filePath"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> Information about the uploaded file. </returns>
     public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, FileUploadPurpose purpose)
     {
         Argument.AssertNotNullOrEmpty(filePath, nameof(filePath));
@@ -211,29 +246,29 @@ public partial class FileClient
         return UploadFile(stream, filePath, purpose);
     }
 
-    /// <summary> Returns a list of files that belong to the user's organization. </summary>
+    /// <summary> Retrieves a list of files that belong to the user's organization. </summary>
     /// <param name="purpose"> Only return files with the given purpose. </param>
-    /// <remarks> List files. </remarks>
+    /// <returns> Information about the files in the user's organization. </returns>
     public virtual async Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose? purpose = null)
     {
         ClientResult result = await GetFilesAsync(purpose?.ToString(), null).ConfigureAwait(false);
         return ClientResult.FromValue(OpenAIFileInfoCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    /// <summary> Returns a list of files that belong to the user's organization. </summary>
+    /// <summary> Retrieves a list of files that belong to the user's organization. </summary>
     /// <param name="purpose"> Only return files with the given purpose. </param>
-    /// <remarks> List files. </remarks>
+    /// <returns> Information about the files in the user's organization. </returns>
     public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose? purpose = null)
     {
         ClientResult result = GetFiles(purpose?.ToString(), null);
         return ClientResult.FromValue(OpenAIFileInfoCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    /// <summary> Returns information about a specific file. </summary>
-    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <summary> Retrieves information about a specified file. </summary>
+    /// <param name="fileId"> The ID of the file to retrieve. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <remarks> Retrieve file. </remarks>
+    /// <returns> Information about the specified file. </returns>
     public virtual async Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -242,11 +277,11 @@ public partial class FileClient
         return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    /// <summary> Returns information about a specific file. </summary>
-    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <summary> Retrieves information about a specified file. </summary>
+    /// <param name="fileId"> The ID of the file to retrieve. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <remarks> Retrieve file. </remarks>
+    /// <returns> Information about the specified file. </returns>
     public virtual ClientResult<OpenAIFileInfo> GetFile(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -255,13 +290,11 @@ public partial class FileClient
         return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    /// <summary>
-    /// Deletes a previously uploaded file.
-    /// </summary>
+    /// <summary> Deletes a previously uploaded file. </summary>
     /// <param name="fileId"> The ID of the file to delete. </param>
-    /// <returns>
-    /// A value indicating whether the deletion operation was successful.
-    /// </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> A boolean value indicating whether the deletion request was successful. </returns>
     public virtual async Task<ClientResult<bool>> DeleteFileAsync(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -271,13 +304,11 @@ public partial class FileClient
         return ClientResult.FromValue(internalDeletion.Deleted, result.GetRawResponse());
     }
 
-    /// <summary>
-    /// Deletes a previously uploaded file.
-    /// </summary>
+    /// <summary> Deletes a previously uploaded file. </summary>
     /// <param name="fileId"> The ID of the file to delete. </param>
-    /// <returns>
-    /// A value indicating whether the deletion operation was successful.
-    /// </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <returns> A boolean value indicating whether the deletion request was successful. </returns>
     public virtual ClientResult<bool> DeleteFile(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -287,37 +318,31 @@ public partial class FileClient
         return ClientResult.FromValue(internalDeletion.Deleted, result.GetRawResponse());
     }
 
-    /// <summary>
-    /// Deletes a previously uploaded file.
-    /// </summary>
+    /// <summary> Deletes a previously uploaded file. </summary>
     /// <param name="file"> The file to delete. </param>
-    /// <returns>
-    /// A value indicating whether the deletion operation was successful.
-    /// </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    /// <returns> A boolean value indicating whether the deletion request was successful. </returns>
     public virtual Task<ClientResult<bool>> DeleteFileAsync(OpenAIFileInfo file)
     {
         Argument.AssertNotNull(file, nameof(file));
         return DeleteFileAsync(file.Id);
     }
 
-    /// <summary>
-    /// Deletes a previously uploaded file.
-    /// </summary>
+    /// <summary> Deletes a previously uploaded file. </summary>
     /// <param name="file"> The file to delete. </param>
-    /// <returns>
-    /// A value indicating whether the deletion operation was successful.
-    /// </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
+    /// <returns> A boolean value indicating whether the deletion request was successful. </returns>
     public virtual ClientResult<bool> DeleteFile(OpenAIFileInfo file)
     {
         Argument.AssertNotNull(file.Id, nameof(file));
         return DeleteFile(file.Id);
     }
 
-    /// <summary> Returns the contents of the specified file. </summary>
-    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <summary> Downloads the binary content of the specified file. </summary>
+    /// <param name="fileId"> The ID of the file to download. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <remarks> Download file. </remarks>
+    /// <returns> The contents of the specified file. </returns>
     public virtual async Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -326,11 +351,11 @@ public partial class FileClient
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
-    /// <summary> Returns the contents of the specified file. </summary>
-    /// <param name="fileId"> The ID of the file to use for this request. </param>
+    /// <summary> Downloads the binary content of the specified file. </summary>
+    /// <param name="fileId"> The ID of the file to download. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <remarks> Download file. </remarks>
+    /// <returns> The bionary content of the specified file. </returns>
     public virtual ClientResult<BinaryData> DownloadFile(string fileId)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
@@ -339,20 +364,20 @@ public partial class FileClient
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
-    /// <summary> Returns the contents of the specified file. </summary>
-    /// <param name="file"> The the file to download the contents of. </param>
+    /// <summary> Downloads the binary content of the specified file. </summary>
+    /// <param name="file"> The file to download. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-    /// <remarks> The binary content of the uploaded file. </remarks>
+    /// <returns> The binary content of the uploaded file. </returns>
     public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(OpenAIFileInfo file)
     {
         Argument.AssertNotNull(file, nameof(file));
         return DownloadFileAsync(file.Id);
     }
 
-    /// <summary> Returns the contents of the specified file. </summary>
-    /// <param name="file"> The the file to download the contents of. </param>
+    /// <summary> Downloads the binary content of the specified file. </summary>
+    /// <param name="file"> The file to download. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="file"/> is null. </exception>
-    /// <remarks> The binary content of the uploaded file. </remarks>
+    /// <returns> The binary content of the uploaded file. </returns>
     public virtual ClientResult<BinaryData> DownloadFile(OpenAIFileInfo file)
     {
         Argument.AssertNotNull(file, nameof(file));

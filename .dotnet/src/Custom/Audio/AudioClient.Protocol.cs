@@ -19,7 +19,7 @@ public partial class AudioClient
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     /// <summary>
-    /// [Protocol Method] Generates audio from the input text.
+    /// [Protocol Method] Generates text-to-speech audio using the specified voice speaking the provided input text.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -40,7 +40,7 @@ public partial class AudioClient
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     /// <summary>
-    /// [Protocol Method] Generates audio from the input text.
+    /// [Protocol Method] Generates text-to-speech audio using the specified voice speaking the provided input text.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -62,7 +62,7 @@ public partial class AudioClient
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     // - Added "contentType" parameter.
     /// <summary>
-    /// [Protocol Method] Transcribes audio into the input language.
+    /// [Protocol Method] Transcribes audio.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -87,7 +87,7 @@ public partial class AudioClient
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     // - Added "contentType" parameter.
     /// <summary>
-    /// [Protocol Method] Transcribes audio into the input language.
+    /// [Protocol Method] Transcribes audio.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>

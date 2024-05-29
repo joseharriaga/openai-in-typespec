@@ -41,9 +41,9 @@ public partial class ChatMessageContentPart
     }
 
     /// <summary> Initializes a new instance of <see cref="ChatMessageContentPart"/>. </summary>
-    /// <param name="kind"> TODO. </param>
-    /// <param name="text"> TODO. </param>
-    /// <param name="imageUrl"> TODO. </param>
+    /// <param name="kind"> The kind. </param>
+    /// <param name="text"> The text. </param>
+    /// <param name="imageUrl"> The image URI. </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
     internal ChatMessageContentPart(string kind, string text, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUrl, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
@@ -99,8 +99,8 @@ public partial class ChatMessageContentPart
     /// Creates a new instance of <see cref="ChatMessageContentPart"/> that encapsulates image content obtained from
     /// an internet location that will be accessible to the model when evaluating a message with this content.
     /// </summary>
-    /// <param name="imageUri">An internet location pointing to an image. This must be accessible to the model.</param>\
-    /// <param name="imageDetail">TODO.</param>
+    /// <param name="imageUri"> An internet location pointing to an image. This must be accessible to the model. </param>
+    /// <param name="imageDetail"> The detail level of the image. </param>
     /// <returns> A new instance of <see cref="ChatMessageContentPart"/>. </returns>
     public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ImageChatMessageContentPartDetail? imageDetail = null)
     {
@@ -115,7 +115,7 @@ public partial class ChatMessageContentPart
     /// </summary>
     /// <param name="imageBytes"> The readable stream containing the image data to use as content. </param>
     /// <param name="imageBytesMediaType">The MIME descriptor, like <c>image/png</c>, corresponding to the image data format of the provided data.</param>
-    /// <param name="imageDetail">TODO.</param>
+    /// <param name="imageDetail"> The detail level of the image. </param>
     /// <returns> A new instance of <see cref="ChatMessageContentPart"/>. </returns>
     public static ChatMessageContentPart CreateImageMessageContentPart(BinaryData imageBytes, string imageBytesMediaType, ImageChatMessageContentPartDetail? imageDetail = null)
     {

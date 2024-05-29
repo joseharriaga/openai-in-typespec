@@ -9,6 +9,6 @@ public partial class AudioTranslation
     private InternalCreateTranslationResponseVerboseJsonTask Task { get; } = InternalCreateTranslationResponseVerboseJsonTask.Translate;
 
     // CUSTOM: Made nullable because this is an optional property.
-    /// <summary> TODO. </summary>
+    /// <summary> The duration of the input audio. </summary>
     public TimeSpan? Duration { get; }
 }

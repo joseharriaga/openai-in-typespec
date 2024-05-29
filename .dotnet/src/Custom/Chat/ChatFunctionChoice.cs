@@ -28,7 +28,7 @@ public partial class ChatFunctionChoice
 
     // CUSTOM: Added the function name parameter to the constructor that takes additional data to handle the object representation.
     /// <summary> Initializes a new instance of <see cref="ChatFunctionChoice"/>. </summary>
-    /// <param name="functionName"> TODO </param>
+    /// <param name="functionName"> The function name. </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
     internal ChatFunctionChoice(string functionName, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {

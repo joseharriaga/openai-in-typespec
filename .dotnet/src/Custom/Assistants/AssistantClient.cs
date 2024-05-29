@@ -319,12 +319,26 @@ public partial class AssistantClient
     /// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
     public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(
         string threadId,
-        ListOrder? resultOrder = null)
+        int? maxResults = null,
+        ListOrder? resultOrder = null,
+        string previousId = null,
+        string subsequentId = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return CreateAsyncPageable<ThreadMessage, InternalListMessagesResponse>((continuationToken, pageSize)
-            => GetMessagesAsync(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        bool pagingForward = previousId != null || subsequentId == null;
+
+        return CreateAsyncPageable<ThreadMessage, InternalListMessagesResponse>(
+            (continuationToken, pageSizeHint) =>
+            {
+                return GetMessagesAsync(threadId,
+                    limit: maxResults ?? pageSizeHint, 
+                    order: resultOrder?.ToString(), 
+                    after: pagingForward ? continuationToken ?? previousId : null, 
+                    // TODO: we may need to plumb this through differently?
+                    before: !pagingForward ? continuationToken ?? subsequentId : null,
+                    options: null);
+            });
     }
 
     /// <summary>

@@ -181,26 +181,26 @@ public partial class AssistantTests
         Assert.That(runs.Count, Is.EqualTo(0));
         ThreadMessage message = client.CreateMessage(thread.Id, ["Hello, assistant!"]);
         Validate(message);
-        ResultOperation<StatusBasedResult<RunStatus, ThreadRun>> runOperation = client.CreateRun(thread.Id, assistant.Id);
+        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread.Id, assistant.Id);
         Validate(runOperation.Value);
-        Assert.That(runOperation.Value.Status, Is.EqualTo(RunStatus.Queued));
-        Assert.That(runOperation.Value.Value.CreatedAt, Is.GreaterThan(s_2024));
+        Assert.That(runOperation.Status, Is.EqualTo(RunStatus.Queued.ToString()));
+        Assert.That(runOperation.Value.CreatedAt, Is.GreaterThan(s_2024));
 
         runs = client.GetRuns(thread);
         Assert.That(runs.Count, Is.EqualTo(1));
-        Assert.That(runs.First().Id, Is.EqualTo(runOperation.Value.Value.Id));
+        Assert.That(runs.First().Id, Is.EqualTo(runOperation.Value.Id));
 
         PageableCollection<ThreadMessage> messages = client.GetMessages(thread);
         Assert.That(messages.Count, Is.GreaterThanOrEqualTo(1));
 
-        ClientResult<StatusBasedResult<RunStatus, ThreadRun>> run = runOperation.WaitForCompletion();
+        ThreadRun run = runOperation.WaitForCompletion();
 
-        Assert.That(run.Value.Status, Is.EqualTo(RunStatus.Completed));
-        Assert.That(run.Value.Value.CompletedAt, Is.GreaterThan(s_2024));
-        Assert.That(run.Value.Value.RequiredActions.Count, Is.EqualTo(0));
-        Assert.That(run.Value.Value.AssistantId, Is.EqualTo(assistant.Id));
-        Assert.That(run.Value.Value.FailedAt, Is.Null);
-        Assert.That(run.Value.Value.IncompleteDetails, Is.Null);
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+        Assert.That(run.CompletedAt, Is.GreaterThan(s_2024));
+        Assert.That(run.RequiredActions.Count, Is.EqualTo(0));
+        Assert.That(run.AssistantId, Is.EqualTo(assistant.Id));
+        Assert.That(run.FailedAt, Is.Null);
+        Assert.That(run.IncompleteDetails, Is.Null);
 
         messages = client.GetMessages(thread);
         Assert.That(messages.Count, Is.EqualTo(2));
@@ -227,11 +227,10 @@ public partial class AssistantTests
         });
         Validate(thread);
 
-        ResultOperation<StatusBasedResult<RunStatus, ThreadRun>> runOperation = client.CreateRun(thread, assistant);
+        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread, assistant);
         Validate(runOperation);
 
-        StatusBasedResult<RunStatus, ThreadRun> statusAndValue = runOperation.WaitForCompletion();
-        ThreadRun run = statusAndValue.Value;
+        ThreadRun run = runOperation.WaitForCompletion();
 
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
         Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
@@ -280,12 +279,12 @@ public partial class AssistantTests
         Validate(thread);
         ThreadMessage message = client.CreateMessage(thread, ["Write some JSON for me!"]);
         Validate(message);
-        ResultOperation<StatusBasedResult<RunStatus, ThreadRun>> runOperation = client.CreateRun(thread, assistant, new()
+        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread, assistant, new()
         {
             ResponseFormat = AssistantResponseFormat.JsonObject,
         });
         Validate(runOperation);
-        Assert.That(runOperation.Value.Value.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        Assert.That(runOperation.Value.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
     }
 
     //[Test]
@@ -555,9 +554,8 @@ public partial class AssistantTests
         Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
         Assert.That(thread.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
 
-        ResultOperation<StatusBasedResult<RunStatus, ThreadRun>> runOperation = client.CreateRun(thread, assistant);
-        StatusBasedResult<RunStatus, ThreadRun> resultAndStatus = runOperation.WaitForCompletion();
-        ThreadRun run = resultAndStatus.Value;
+        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread, assistant);
+        ThreadRun run = runOperation.WaitForCompletion();
 
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
@@ -603,7 +601,7 @@ public partial class AssistantTests
                 "What's the weather in Seattle today and the likelihood it'll rain?"
             ]);
 
-        ResultOperation<StatusBasedResult<RunStatus, ThreadRun>> runOperation = client.CreateRun(thread, assistant);
+        ResultOperation<ThreadRun> runOperation = client.CreateRun(thread, assistant);
 
         StatusBasedResult<RunStatus, ThreadRun> update;
         do

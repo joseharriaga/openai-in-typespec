@@ -26,33 +26,33 @@ public partial class AssistantSamples
 
         // First, let's contrive a document we'll use retrieval with and upload it.
         using Stream document = BinaryData.FromString("""
-             {
-                 "description": "This document contains the sale history data for Contoso products.",
-                 "sales": [
-                     {
-                         "month": "January",
-                         "by_product": {
-                             "113043": 15,
-                             "113045": 12,
-                             "113049": 2
-                         }
-                     },
-                     {
-                         "month": "February",
-                         "by_product": {
-                             "113045": 22
-                         }
-                     },
-                     {
-                         "month": "March",
-                         "by_product": {
-                             "113045": 16,
-                             "113055": 5
-                         }
-                     }
-                 ]
-             }
-             """).ToStream();
+            {
+                "description": "This document contains the sale history data for Contoso products.",
+                "sales": [
+                    {
+                        "month": "January",
+                        "by_product": {
+                            "113043": 15,
+                            "113045": 12,
+                            "113049": 2
+                        }
+                    },
+                    {
+                        "month": "February",
+                        "by_product": {
+                            "113045": 22
+                        }
+                    },
+                    {
+                        "month": "March",
+                        "by_product": {
+                            "113045": 16,
+                            "113055": 5
+                        }
+                    }
+                ]
+            }
+            """).ToStream();
 
         OpenAIFileInfo salesFile = fileClient.UploadFile(
             document,

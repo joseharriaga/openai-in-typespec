@@ -23,6 +23,7 @@ namespace OpenAI {
     }
     public class OpenAIClientOptions : ClientPipelineOptions {
         public OpenAIClientOptions();
+        public string ApplicationId { get; init; }
         public Uri Endpoint { get; init; }
     }
     public readonly struct ListOrder : IEquatable<ListOrder> {
@@ -1146,6 +1147,7 @@ namespace OpenAI.Files {
         public static FileUploadPurpose Assistants { get; }
         public static FileUploadPurpose Batch { get; }
         public static FileUploadPurpose FineTune { get; }
+        public static FileUploadPurpose Vision { get; }
         public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right);
         public static implicit operator FileUploadPurpose(string value);
         public static bool operator !=(FileUploadPurpose left, FileUploadPurpose right);
@@ -1322,8 +1324,8 @@ namespace OpenAI.Models {
         protected ModelClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         protected ModelClient();
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<bool> Delete(string model);
-        public virtual ClientResult Delete(string model, RequestOptions options);
+        public virtual ClientResult<bool> DeleteModel(string model);
+        public virtual ClientResult DeleteModel(string model, RequestOptions options);
         public virtual Task<ClientResult<bool>> DeleteModelAsync(string model);
         public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
         public virtual ClientResult<OpenAIModelInfo> GetModel(string model);

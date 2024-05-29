@@ -13,7 +13,6 @@ model CreateFileRequest {
   @encode("binary")
   file: bytes;
 
-  // Tool customization: add yet-unspecified enum value
   /**
    * The intended purpose of the uploaded file.
    *

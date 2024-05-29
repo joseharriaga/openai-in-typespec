@@ -71,6 +71,10 @@ union RunStreamEvent {
     data: RunObject,
   },
   {
+    event: "thread.run.incomplete",
+    data: RunObject,
+  },
+  {
     event: "thread.run.failed",
     data: RunObject,
   },

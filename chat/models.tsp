@@ -386,7 +386,7 @@ model ChatCompletionRequestAssistantMessage
 
     /** The name of the function to call. */
     name: string;
-  };
+  } | null;
 }
 
 // Tool customization: apply discriminated type base

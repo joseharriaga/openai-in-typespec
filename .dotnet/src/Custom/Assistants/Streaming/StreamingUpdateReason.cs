@@ -45,6 +45,10 @@ public enum StreamingUpdateReason
     /// </summary>
     RunCompleted,
     /// <summary>
+    /// Indicates that an update was generated as part of a <c>thread.run.incomplete</c> event.
+    /// </summary>
+    RunIncomplete,
+    /// <summary>
     /// Indicates that an update was generated as part of a <c>thread.run.failed</c> event.
     /// </summary>
     RunFailed,

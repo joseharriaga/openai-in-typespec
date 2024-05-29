@@ -166,12 +166,6 @@ namespace OpenAI.Audio
 
         string IPersistableModel<AudioTranslation>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static AudioTranslation FromResponse(PipelineResponse response)
-        {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAudioTranslation(document.RootElement);
-        }
-
         internal virtual BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);

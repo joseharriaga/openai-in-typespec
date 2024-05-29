@@ -53,5 +53,27 @@ public partial class TranslationTests : SyncAsyncTestBase
         Assert.That(translation?.Text, Is.Not.Null);
     }
 
+    [Test]
+    [TestCase(AudioTranslationFormat.Simple)]
+    [TestCase(AudioTranslationFormat.Verbose)]
+    [TestCase(AudioTranslationFormat.Srt)]
+    [TestCase(AudioTranslationFormat.Vtt)]
+    public async Task TranslationFormatsWork(AudioTranslationFormat formatToTest)
+    {
+        AudioClient client = GetTestClient();
+        string path = Path.Combine("Assets", "french.wav");
+
+        AudioTranslationOptions options = new()
+        {
+            ResponseFormat = formatToTest,
+        };
+
+        AudioTranslation translation = IsAsync
+            ? await client.TranslateAudioAsync(path, options)
+            : client.TranslateAudio(path, options);
+
+        Assert.That(translation?.Text?.ToLowerInvariant(), Does.Contain("recognition"));
+    }
+
     private static AudioClient GetTestClient() => GetTestClient<AudioClient>(TestScenario.Transcription);
 }

@@ -126,6 +126,29 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     }
 
     [Test]
+    [TestCase(AudioTranscriptionFormat.Simple)]
+    [TestCase(AudioTranscriptionFormat.Verbose)]
+    [TestCase(AudioTranscriptionFormat.Srt)]
+    [TestCase(AudioTranscriptionFormat.Vtt)]
+    public async Task TranscriptionFormatsWork(AudioTranscriptionFormat formatToTest)
+    {
+        AudioClient client = GetTestClient();
+        string path = Path.Combine("Assets", "hello_world.m4a");
+
+        AudioTranscriptionOptions options = new()
+        {
+            ResponseFormat = formatToTest,
+        };
+
+        AudioTranscription transcription = IsAsync
+            ? await client.TranscribeAudioAsync(path, options)
+            : client.TranscribeAudio(path, options);
+        Assert.That(transcription, Is.Not.Null);
+        Assert.That(transcription.Text, Is.Not.Null.And.Not.Empty);
+        Assert.That(transcription.Text.ToLowerInvariant(), Does.Contain("hello"));
+    }
+
+    [Test]
     public async Task BadTranscriptionRequest()
     {
         AudioClient client = GetTestClient();

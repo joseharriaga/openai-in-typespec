@@ -163,11 +163,11 @@ public partial class AssistantTests
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.User));
         Assert.That(messages.First().Content?.Count, Is.EqualTo(1));
         Assert.That(messages.First().Content[0].Text, Is.EqualTo("Hello, world!"));
-        Assert.That(messages.ElementAt(1).Content?.Count, Is.EqualTo(2));
-        Assert.That(messages.ElementAt(1).Content[0], Is.Not.Null);
-        Assert.That(messages.ElementAt(1).Content[0].Text, Is.EqualTo("Can you describe this image for me?"));
-        Assert.That(messages.ElementAt(1).Content[1], Is.Not.Null);
-        Assert.That(messages.ElementAt(1).Content[1].ImageUrl.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
+        Assert.That(messages.AsPages().First().Values[1].Content?.Count, Is.EqualTo(2));
+        Assert.That(messages.AsPages().First().Values[1].Content[0], Is.Not.Null);
+        Assert.That(messages.AsPages().First().Values[1].Content[0].Text, Is.EqualTo("Can you describe this image for me?"));
+        Assert.That(messages.AsPages().First().Values[1].Content[1], Is.Not.Null);
+        Assert.That(messages.AsPages().First().Values[1].Content[1].ImageUrl.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
     }
 
     [Test]
@@ -384,7 +384,7 @@ public partial class AssistantTests
         Stopwatch stopwatch = Stopwatch.StartNew();
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
-        AsyncResultCollection<StreamingUpdate> streamingResult
+        AsyncCollectionResult<StreamingUpdate> streamingResult
             = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
 
         Print(">>> Connected <<<");
@@ -431,7 +431,7 @@ public partial class AssistantTests
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
         Print(" >>> Beginning call ... ");
-        AsyncResultCollection<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
+        AsyncCollectionResult<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
             assistant,
             new()
             {
@@ -647,13 +647,13 @@ public partial class AssistantTests
         int count = 0;
         int pageCount = 0;
         AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst);
-        IAsyncEnumerable<ResultPage<Assistant>> pages = assistants.AsPages(pageSizeHint: 2);
+        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPagesAsync(pageSizeHint: 2);
 
         int lastIdSeen = int.MaxValue;
 
-        await foreach (ResultPage<Assistant> page in pages)
+        await foreach (PageResult<Assistant> page in pages)
         {
-            foreach (Assistant assistant in page)
+            foreach (Assistant assistant in page.Values)
             {
                 Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
                 if (assistant.Name?.StartsWith("Test Assistant ") == true)

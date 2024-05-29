@@ -27,9 +27,6 @@ public partial class FileClient
     /// supported. The Fine-tuning API only supports `.jsonl` files.
     ///
     /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
-    /// <description>
-    /// This <see href="https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/samples/ProtocolMethods.md">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -57,9 +54,6 @@ public partial class FileClient
     /// supported. The Fine-tuning API only supports `.jsonl` files.
     ///
     /// Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
-    /// <description>
-    /// This <see href="https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/samples/ProtocolMethods.md">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -80,9 +74,6 @@ public partial class FileClient
 
     /// <summary>
     /// [Protocol Method] Returns a list of files that belong to the user's organization.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="purpose"> Only return files with the given purpose. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -97,9 +88,6 @@ public partial class FileClient
 
     /// <summary>
     /// [Protocol Method] Returns a list of files that belong to the user's organization.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="purpose"> Only return files with the given purpose. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -114,9 +102,6 @@ public partial class FileClient
 
     /// <summary>
     /// [Protocol Method] Returns information about a specific file.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="fileId"> The ID of the file to use for this request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -135,9 +120,6 @@ public partial class FileClient
 
     /// <summary>
     /// [Protocol Method] Returns information about a specific file.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="fileId"> The ID of the file to use for this request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -156,9 +138,6 @@ public partial class FileClient
 
     /// <summary>
     /// [Protocol Method] Delete a file
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="fileId"> The ID of the file to use for this request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -177,9 +156,6 @@ public partial class FileClient
 
     /// <summary>
     /// [Protocol Method] Delete a file
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="fileId"> The ID of the file to use for this request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -198,9 +174,6 @@ public partial class FileClient
 
     /// <summary>
     /// [Protocol Method] Returns the contents of the specified file.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="fileId"> The ID of the file to use for this request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -219,9 +192,6 @@ public partial class FileClient
 
     /// <summary>
     /// [Protocol Method] Returns the contents of the specified file.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="fileId"> The ID of the file to use for this request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>

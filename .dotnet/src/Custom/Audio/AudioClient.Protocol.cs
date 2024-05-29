@@ -20,18 +20,6 @@ public partial class AudioClient
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     /// <summary>
     /// [Protocol Method] Generates audio from the input text.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateSpeechAsync(CreateSpeechRequest,CancellationToken)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -53,18 +41,6 @@ public partial class AudioClient
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     /// <summary>
     /// [Protocol Method] Generates audio from the input text.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateSpeech(CreateSpeechRequest,CancellationToken)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -87,18 +63,6 @@ public partial class AudioClient
     // - Added "contentType" parameter.
     /// <summary>
     /// [Protocol Method] Transcribes audio into the input language.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateTranscriptionAsync(CreateTranscriptionRequest,CancellationToken)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -124,18 +88,6 @@ public partial class AudioClient
     // - Added "contentType" parameter.
     /// <summary>
     /// [Protocol Method] Transcribes audio into the input language.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateTranscription(CreateTranscriptionRequest,CancellationToken)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -160,19 +112,7 @@ public partial class AudioClient
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     // - Added "contentType" parameter.
     /// <summary>
-    /// [Protocol Method] Translates audio into English..
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateTranslationAsync(CreateTranslationRequest,CancellationToken)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
+    /// [Protocol Method] Translates audio into English.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -196,19 +136,7 @@ public partial class AudioClient
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     // - Added "contentType" parameter.
     /// <summary>
-    /// [Protocol Method] Translates audio into English..
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="CreateTranslation(CreateTranslationRequest,CancellationToken)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
+    /// [Protocol Method] Translates audio into English.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>

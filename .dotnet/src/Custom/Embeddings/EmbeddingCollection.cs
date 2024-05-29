@@ -12,6 +12,7 @@ public partial class EmbeddingCollection : ReadOnlyCollection<Embedding>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> The object type, which is always "list". </summary>
+    [CodeGenMember("Object")]
     private InternalCreateEmbeddingResponseObject Object { get; } = InternalCreateEmbeddingResponseObject.List;
 
     // CUSTOM: Recovered this field. See https://github.com/Azure/autorest.csharp/issues/4636.

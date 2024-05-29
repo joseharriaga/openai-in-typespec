@@ -17,9 +17,6 @@ public partial class ModelClient
     /// <summary>
     /// [Protocol Method] Lists the currently available models, and provides basic information about each one such as the
     /// owner and availability.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
@@ -34,9 +31,6 @@ public partial class ModelClient
     /// <summary>
     /// [Protocol Method] Lists the currently available models, and provides basic information about each one such as the
     /// owner and availability.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
@@ -51,9 +45,6 @@ public partial class ModelClient
     /// <summary>
     /// [Protocol Method] Retrieves a model instance, providing basic information about the model such as the owner and
     /// permissioning.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="model"> The ID of the model to use for this request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -73,9 +64,6 @@ public partial class ModelClient
     /// <summary>
     /// [Protocol Method] Retrieves a model instance, providing basic information about the model such as the owner and
     /// permissioning.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="model"> The ID of the model to use for this request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -94,9 +82,6 @@ public partial class ModelClient
 
     /// <summary>
     /// [Protocol Method] Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="model"> The model to delete. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -115,9 +100,6 @@ public partial class ModelClient
 
     /// <summary>
     /// [Protocol Method] Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
     /// </summary>
     /// <param name="model"> The model to delete. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -126,7 +108,7 @@ public partial class ModelClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult Delete(string model, RequestOptions options)
+    public virtual ClientResult DeleteModel(string model, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 

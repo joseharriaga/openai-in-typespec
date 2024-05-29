@@ -133,11 +133,11 @@ public partial class ModelClient
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
     /// <remarks> A value indicating whether the deletion operation was successful. </remarks>
-    public virtual ClientResult<bool> Delete(string model)
+    public virtual ClientResult<bool> DeleteModel(string model)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
-        ClientResult result = Delete(model, null);
+        ClientResult result = DeleteModel(model, null);
         PipelineResponse response = result?.GetRawResponse();
         InternalDeleteModelResponse value = InternalDeleteModelResponse.FromResponse(response);
         return ClientResult.FromValue(value.Deleted, response);

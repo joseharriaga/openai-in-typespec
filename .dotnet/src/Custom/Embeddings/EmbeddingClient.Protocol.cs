@@ -17,18 +17,6 @@ public partial class EmbeddingClient
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     /// <summary>
     /// [Protocol Method] Creates an embedding vector representing the input text.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GenerateEmbeddings(IEnumerable{string}, EmbeddingGenerationOptions)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -50,18 +38,6 @@ public partial class EmbeddingClient
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     /// <summary>
     /// [Protocol Method] Creates an embedding vector representing the input text.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GenerateEmbeddingsAsync(IEnumerable{string}, EmbeddingGenerationOptions)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>

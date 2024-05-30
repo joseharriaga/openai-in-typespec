@@ -109,7 +109,12 @@ public partial class AssistantClient
     {
         return CreateAsyncPageable<Assistant, InternalListAssistantsResponse>(
             continuationToken =>
-                GetAssistantsAsync(limit: pageSize, order: resultOrder?.ToString(), continuationToken, null, null)
+                GetAssistantsAsync(
+                    limit: pageSize, 
+                    order: resultOrder?.ToString(), 
+                    after: continuationToken, 
+                    before: null, 
+                    options: null)
             );
     }
 

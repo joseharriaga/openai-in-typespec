@@ -608,6 +608,8 @@ public partial class AssistantTests
 
         int lastIdSeen = int.MaxValue;
 
+        List<string> todelete = new();
+
         await foreach (Assistant assistant in assistants)
         {
             Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
@@ -616,6 +618,8 @@ public partial class AssistantTests
                 Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
                 Assert.That(seenId, Is.LessThan(lastIdSeen));
                 lastIdSeen = seenId;
+
+                todelete.Add(assistant.Id);
             }
             count++;
             if (lastIdSeen == 0 || count > 100)
@@ -624,11 +628,17 @@ public partial class AssistantTests
             }
         }
 
+        // delete them all!
+        foreach(var a in todelete)
+        {
+            await client.DeleteAssistantAsync(a);
+        }
+
         Assert.That(count, Is.GreaterThanOrEqualTo(10));
     }
 
     [Test]
-    public async Task CanPageThroughAssistantCollection()
+    public async Task CanEnumerateAssistantsByPage()
     {
         AssistantClient client = GetTestClient();
 
@@ -675,6 +685,81 @@ public partial class AssistantTests
         Assert.That(count, Is.GreaterThanOrEqualTo(10));
         Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
     }
+
+#nullable enable
+
+    [Test]
+    public async Task CanResumeAssistantEnumerationMidCollection()
+    {
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        }
+
+        // Get a count of the assistants as a baseline.
+        PageableCollection<Assistant> enumerable = client.GetAssistants(pageSize: 100, ListOrder.NewestFirst);
+        int totalCount = enumerable.Count();
+
+        // Page through collection
+        int itemCount = 0;
+        int pageCount = 0;
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPagesAsync();
+
+        string? continuationToken = default;
+
+        // First iteration - stop after two pages
+        await foreach (PageResult<Assistant> page in pages)
+        {
+            foreach (Assistant assistant in page.Values)
+            {
+                itemCount++;
+            }
+
+            pageCount++;
+
+            if (pageCount > 1)
+            {
+                continuationToken = page.ContinuationToken;
+                break;
+            }
+        }
+
+        // Second iteration - resume from continuation token.
+
+        // First: call the service method to get the pageable collection.  This makes no service calls,
+        // but sets up the closures needed to replicate the collection from the first call.
+        assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+
+        // Next: call AsPagesAsync, passing the continuation token we reserved from the previous iteration.
+        // This does make a service call - it should make a request to the service for the next page
+        // after where we stopped in the prior iteration.
+        pages = assistants.AsPagesAsync(continuationToken);
+
+        // Now iterate again, continuing the counts.
+        await foreach (PageResult<Assistant> page in pages)
+        {
+            foreach (Assistant assistant in page.Values)
+            {
+                itemCount++;
+            }
+
+            pageCount++;
+        }
+
+        // Counts should equal the number of items and pages we expect.
+        Assert.That(itemCount, Is.EqualTo(totalCount));
+        Assert.That(pageCount, Is.EqualTo(Math.Ceiling(totalCount / 2.0)));
+    }
+#nullable disable
 
     [TearDown]
     protected void Cleanup()

@@ -15,7 +15,7 @@ internal static class InternalListHelpers
     {
         async Task<PageResult<T>> pageFunc(string continuationToken)
             => GetPageFromProtocol<T,U>(await listResponseFunc(continuationToken).ConfigureAwait(false));
-        return PageableResultHelpers.Create(() => pageFunc(null), pageFunc);
+        return PageableResultHelpers.Create(pageFunc, pageFunc);
     }
 
     internal static PageableCollection<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
@@ -23,7 +23,7 @@ internal static class InternalListHelpers
     {
         PageResult<T> pageFunc(string continuationToken)
             => GetPageFromProtocol<T, U>(listResponseFunc(continuationToken));
-        return PageableResultHelpers.Create(() => pageFunc(null), pageFunc);
+        return PageableResultHelpers.Create(pageFunc, pageFunc);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

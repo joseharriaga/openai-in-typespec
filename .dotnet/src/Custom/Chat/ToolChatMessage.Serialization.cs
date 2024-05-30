@@ -13,17 +13,22 @@ public partial class ToolChatMessage : IJsonModel<ToolChatMessage>
 
     internal static void SerializeToolChatMessage(ToolChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        instance.SerializeChatMessage(writer, options);
+    }
+
+    protected override void SerializeChatMessage(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
         writer.WritePropertyName("tool_call_id"u8);
-        writer.WriteStringValue(instance.ToolCallId);
+        writer.WriteStringValue(ToolCallId);
         writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(instance.Role);
-        if (Optional.IsCollectionDefined(instance.Content))
+        writer.WriteStringValue(Role);
+        if (Optional.IsCollectionDefined(Content))
         {
             writer.WritePropertyName("content"u8);
-            writer.WriteStringValue(instance.Content[0].Text);
+            writer.WriteStringValue(Content[0].Text);
         }
-        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
+        writer.WriteSerializedAdditionalRawData(_serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

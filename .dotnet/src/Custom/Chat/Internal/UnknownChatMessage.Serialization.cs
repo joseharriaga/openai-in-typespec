@@ -13,20 +13,25 @@ internal partial class UnknownChatMessage : IJsonModel<ChatMessage>
 
     internal static void SerializeChatMessage(UnknownChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        instance.SerializeChatMessage(writer, options);
+    }
+
+    protected override void SerializeChatMessage(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
         writer.WriteStartObject();
         writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(instance.Role);
-        if (Optional.IsCollectionDefined(instance.Content))
+        writer.WriteStringValue(Role);
+        if (Optional.IsCollectionDefined(Content))
         {
             writer.WritePropertyName("content"u8);
             writer.WriteStartArray();
-            foreach (var item in instance.Content)
+            foreach (var item in Content)
             {
                 writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
         }
-        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
+        writer.WriteSerializedAdditionalRawData(_serializedAdditionalRawData, options);
         writer.WriteEndObject();
     }
 

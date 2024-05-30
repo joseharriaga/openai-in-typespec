@@ -604,7 +604,7 @@ public partial class AssistantTests
 
         // Page through collection
         int count = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, ListOrder.NewestFirst);
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst, pageSize: 2);
 
         int lastIdSeen = int.MaxValue;
 
@@ -689,7 +689,7 @@ public partial class AssistantTests
 #nullable enable
 
     [Test]
-    public async Task CanResumeAssistantEnumerationMidCollection()
+    public async Task CanEnumerateAssistantsByPageAndResume()
     {
         AssistantClient client = GetTestClient();
 
@@ -760,6 +760,44 @@ public partial class AssistantTests
         Assert.That(pageCount, Is.EqualTo(Math.Ceiling(totalCount / 2.0)));
     }
 #nullable disable
+
+    [Test]
+    public async Task CanGetPrevPageOfAssistants()
+    {
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}",
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        }
+
+        // Get a count of the assistants as a baseline.
+        PageableCollection<Assistant> enumerable = client.GetAssistants(pageSize: 100, ListOrder.NewestFirst);
+        List<Assistant> assistantList = enumerable.ToList();
+        int totalCount = assistantList.Count;
+
+        // Page through collection
+        int count = 0;
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(
+            ListOrder.NewestFirst, 
+            pageSize: 100,
+            itemsAfter: assistantList[9].Id,
+            itemsBefore: assistantList[1].Id);
+
+        await foreach (Assistant assistant in assistants)
+        {
+            count++;
+        }
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+    }
+
 
     [TearDown]
     protected void Cleanup()

@@ -105,17 +105,19 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(int? pageSize = null, ListOrder? resultOrder = null)
+    public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
         return CreateAsyncPageable<Assistant, InternalListAssistantsResponse>(
-            continuationToken =>
-                GetAssistantsAsync(
-                    limit: pageSize, 
-                    order: resultOrder?.ToString(), 
-                    after: continuationToken, 
-                    before: null, 
-                    options: null)
-            );
+            continuationToken => GetAssistantsAsync(
+                limit: pageSize,
+                order: resultOrder?.ToString(),
+                after: continuationToken ?? itemsAfter,
+                before: itemsBefore,
+                options: null));
     }
 
     /// <summary>
@@ -129,7 +131,7 @@ public partial class AssistantClient
     public virtual PageableCollection<Assistant> GetAssistants(int? pageSize = null, ListOrder? resultOrder = null)
     {
         return CreatePageable<Assistant, InternalListAssistantsResponse>(
-            continuationToken => 
+            continuationToken =>
                 GetAssistants(limit: pageSize, resultOrder?.ToString(), continuationToken, null, null)
             );
     }
@@ -342,8 +344,8 @@ public partial class AssistantClient
             {
                 return GetMessagesAsync(threadId,
                     limit: pageSize,
-                    order: resultOrder?.ToString(), 
-                    after: pagingForward ? continuationToken ?? previousId : null, 
+                    order: resultOrder?.ToString(),
+                    after: pagingForward ? continuationToken ?? previousId : null,
                     // TODO: we may need to plumb this through differently?
                     before: !pagingForward ? continuationToken ?? subsequentId : null,
                     options: null);
@@ -367,7 +369,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         return CreatePageable<ThreadMessage, InternalListMessagesResponse>(
-            continuationToken => 
+            continuationToken =>
                 GetMessages(threadId, limit: pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
@@ -614,7 +616,7 @@ public partial class AssistantClient
         runOptions.Stream = true;
         BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
 
-        async Task<ClientResult> getResultAsync() => 
+        async Task<ClientResult> getResultAsync() =>
             await CreateThreadAndRunAsync(protocolContent, StreamRequestOptions)
             .ConfigureAwait(false);
 
@@ -660,7 +662,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         return CreateAsyncPageable<ThreadRun, InternalListRunsResponse>(
-            continuationToken => 
+            continuationToken =>
                 GetRunsAsync(threadId, limit: pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 
@@ -681,7 +683,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         return CreatePageable<ThreadRun, InternalListRunsResponse>(
-            continuationToken => 
+            continuationToken =>
                 GetRuns(threadId, limit: pageSize, resultOrder?.ToString(), continuationToken, null, null));
     }
 

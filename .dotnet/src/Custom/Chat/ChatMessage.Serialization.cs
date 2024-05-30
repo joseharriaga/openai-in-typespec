@@ -26,11 +26,12 @@ public abstract partial class ChatMessage : IJsonModel<ChatMessage>
 
     internal static void SerializeChatMessage(ChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        writer.WriteStartObject();
-        writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(instance.Role);
-        writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
-        writer.WriteEndObject();
+        instance.SerializeChatMessage(writer, options);
+    }
+
+    protected virtual void SerializeChatMessage(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        throw new NotImplementedException();
     }
 
     internal static ChatMessage DeserializeChatMessage(JsonElement element, ModelReaderWriterOptions options = null)

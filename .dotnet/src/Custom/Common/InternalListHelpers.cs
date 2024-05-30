@@ -32,6 +32,6 @@ internal static class InternalListHelpers
     {
         PipelineResponse response = protocolResult.GetRawResponse();
         IInternalListResponse<TInstance> values = ModelReaderWriter.Read<UInternalList>(response.Content);
-        return PageResult<TInstance>.Create(values.Data, values.HasMore ? values.LastId : null, response);
+        return PageResult<TInstance>.Create(values.Data, values.LastId, response);
     }
 }

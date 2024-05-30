@@ -604,7 +604,7 @@ public partial class AssistantTests
 
         // Page through collection
         int count = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst);
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, ListOrder.NewestFirst);
 
         int lastIdSeen = int.MaxValue;
 
@@ -646,8 +646,8 @@ public partial class AssistantTests
         // Page through collection
         int count = 0;
         int pageCount = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst);
-        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPagesAsync(pageSizeHint: 2);
+        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPagesAsync();
 
         int lastIdSeen = int.MaxValue;
 

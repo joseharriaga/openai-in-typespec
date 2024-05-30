@@ -100,9 +100,10 @@ public partial class VectorStoreClient
     /// </returns>
     public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStore vectorStore,
+        int? pageSize = null,
         ListOrder? resultOrder = null,
         VectorStoreFileStatusFilter? filter = null)
-            => GetFileAssociationsAsync(vectorStore?.Id, resultOrder, filter);
+            => GetFileAssociationsAsync(vectorStore?.Id, pageSize, resultOrder, filter);
 
     /// <summary>
     /// Gets the collection of <see cref="VectorStoreFileAssociation"/> instances representing file inclusions in the
@@ -124,9 +125,10 @@ public partial class VectorStoreClient
     /// </returns>
     public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(
         VectorStore vectorStore,
+        int? pageSize = null,
         ListOrder? resultOrder = null,
         VectorStoreFileStatusFilter? filter = null)
-            => GetFileAssociations(vectorStore?.Id, resultOrder);
+            => GetFileAssociations(vectorStore?.Id, pageSize, resultOrder);
 
     /// <summary>
     /// Gets a <see cref="VectorStoreFileAssociation"/> instance representing an existing association between a known
@@ -245,9 +247,10 @@ public partial class VectorStoreClient
     /// </returns>
     public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStoreBatchFileJob batchJob,
+        int? pageSize = null,
         ListOrder? resultOrder = null,
         VectorStoreFileStatusFilter? filter = null)
-            => GetFileAssociationsAsync(batchJob?.VectorStoreId, batchJob?.BatchId, resultOrder, filter);
+            => GetFileAssociationsAsync(batchJob?.VectorStoreId, batchJob?.BatchId, pageSize, resultOrder, filter);
 
     /// <summary>
     /// Gets the collection of file associations associated with a vector store batch file job, representing the files
@@ -267,8 +270,9 @@ public partial class VectorStoreClient
     /// </returns>
     public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(
         VectorStoreBatchFileJob batchJob,
+        int? pageSize = null,
         ListOrder? resultOrder = null,
         VectorStoreFileStatusFilter? filter = null)
-            => GetFileAssociations(batchJob?.VectorStoreId, batchJob?.BatchId, resultOrder, filter);
+            => GetFileAssociations(batchJob?.VectorStoreId, batchJob?.BatchId, pageSize, resultOrder, filter);
 
 }

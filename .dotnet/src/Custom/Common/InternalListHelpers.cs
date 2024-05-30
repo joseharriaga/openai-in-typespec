@@ -7,23 +7,23 @@ namespace OpenAI;
 
 internal static class InternalListHelpers
 {
-    internal delegate Task<ClientResult> AsyncListResponseFunc(string continuationToken, int? pageSize);
-    internal delegate ClientResult ListResponseFunc(string continuationToken, int? pageSize);
+    internal delegate Task<ClientResult> AsyncListResponseFunc(string continuationToken);
+    internal delegate ClientResult ListResponseFunc(string continuationToken);
 
     internal static AsyncPageableCollection<T> CreateAsyncPageable<T, U>(AsyncListResponseFunc listResponseFunc)
         where U : IJsonModel<U>, IInternalListResponse<T>
     {
-        async Task<PageResult<T>> pageFunc(string continuationToken, int? pageSize)
-            => GetPageFromProtocol<T,U>(await listResponseFunc(continuationToken, pageSize).ConfigureAwait(false));
-        return PageableResultHelpers.Create((pageSize) => pageFunc(null, pageSize), pageFunc);
+        async Task<PageResult<T>> pageFunc(string continuationToken)
+            => GetPageFromProtocol<T,U>(await listResponseFunc(continuationToken).ConfigureAwait(false));
+        return PageableResultHelpers.Create(() => pageFunc(null), pageFunc);
     }
 
     internal static PageableCollection<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
         where U : IJsonModel<U>, IInternalListResponse<T>
     {
-        PageResult<T> pageFunc(string continuationToken, int? pageSize)
-            => GetPageFromProtocol<T, U>(listResponseFunc(continuationToken, pageSize));
-        return PageableResultHelpers.Create((pageSize) => pageFunc(null, pageSize), pageFunc);
+        PageResult<T> pageFunc(string continuationToken)
+            => GetPageFromProtocol<T, U>(listResponseFunc(continuationToken));
+        return PageableResultHelpers.Create(() => pageFunc(null), pageFunc);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

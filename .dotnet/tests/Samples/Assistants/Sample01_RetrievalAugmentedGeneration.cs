@@ -109,7 +109,7 @@ public partial class AssistantSamples
 
         // Finally, we'll print out the full history for the thread that includes the augmented generation
         PageableCollection<ThreadMessage> messages
-            = assistantClient.GetMessages(threadRun.ThreadId, ListOrder.OldestFirst);
+            = assistantClient.GetMessages(threadRun.ThreadId, resultOrder: ListOrder.OldestFirst);
 
         foreach (ThreadMessage message in messages)
         {

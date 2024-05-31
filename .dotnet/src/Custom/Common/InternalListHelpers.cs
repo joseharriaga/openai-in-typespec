@@ -7,22 +7,22 @@ namespace OpenAI;
 
 internal static class InternalListHelpers
 {
-    internal delegate Task<ClientResult> AsyncListResponseFunc(string continuationToken);
-    internal delegate ClientResult ListResponseFunc(string continuationToken);
+    internal delegate Task<ClientResult> AsyncListResponseFunc(string pageToken);
+    internal delegate ClientResult ListResponseFunc(string pageToken);
 
     internal static AsyncPageableCollection<T> CreateAsyncPageable<T, U>(AsyncListResponseFunc listResponseFunc)
         where U : IJsonModel<U>, IInternalListResponse<T>
     {
-        async Task<PageResult<T>> pageFunc(string continuationToken)
-            => GetPageFromProtocol<T,U>(await listResponseFunc(continuationToken).ConfigureAwait(false));
+        async Task<PageResult<T>> pageFunc(string pageToken)
+            => GetPageFromProtocol<T,U>(await listResponseFunc(pageToken).ConfigureAwait(false));
         return PageableResultHelpers.Create(pageFunc, pageFunc);
     }
 
     internal static PageableCollection<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
         where U : IJsonModel<U>, IInternalListResponse<T>
     {
-        PageResult<T> pageFunc(string continuationToken)
-            => GetPageFromProtocol<T, U>(listResponseFunc(continuationToken));
+        PageResult<T> pageFunc(string pageToken)
+            => GetPageFromProtocol<T, U>(listResponseFunc(pageToken));
         return PageableResultHelpers.Create(pageFunc, pageFunc);
     }
 

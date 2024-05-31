@@ -112,10 +112,10 @@ public partial class AssistantClient
         int? pageSize = null)
     {
         return CreateAsyncPageable<Assistant, InternalListAssistantsResponse>(
-            continuationToken => GetAssistantsAsync(
+            pageToken => GetAssistantsAsync(
                 limit: pageSize,
                 order: resultOrder?.ToString(),
-                after: continuationToken ?? itemsAfter,
+                after: pageToken ?? itemsAfter,
                 before: itemsBefore,
                 options: null));
     }
@@ -131,8 +131,8 @@ public partial class AssistantClient
     public virtual PageableCollection<Assistant> GetAssistants(int? pageSize = null, ListOrder? resultOrder = null)
     {
         return CreatePageable<Assistant, InternalListAssistantsResponse>(
-            continuationToken =>
-                GetAssistants(limit: pageSize, resultOrder?.ToString(), continuationToken, null, null)
+            pageToken =>
+                GetAssistants(limit: pageSize, resultOrder?.ToString(), pageToken, null, null)
             );
     }
 
@@ -340,14 +340,14 @@ public partial class AssistantClient
         bool pagingForward = previousId != null || subsequentId == null;
 
         return CreateAsyncPageable<ThreadMessage, InternalListMessagesResponse>(
-            continuationToken =>
+            pageToken =>
             {
                 return GetMessagesAsync(threadId,
                     limit: pageSize,
                     order: resultOrder?.ToString(),
-                    after: pagingForward ? continuationToken ?? previousId : null,
+                    after: pagingForward ? pageToken ?? previousId : null,
                     // TODO: we may need to plumb this through differently?
-                    before: !pagingForward ? continuationToken ?? subsequentId : null,
+                    before: !pagingForward ? pageToken ?? subsequentId : null,
                     options: null);
             });
     }
@@ -369,8 +369,8 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         return CreatePageable<ThreadMessage, InternalListMessagesResponse>(
-            continuationToken =>
-                GetMessages(threadId, limit: pageSize, resultOrder?.ToString(), continuationToken, null, null));
+            pageToken =>
+                GetMessages(threadId, limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>
@@ -662,8 +662,8 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         return CreateAsyncPageable<ThreadRun, InternalListRunsResponse>(
-            continuationToken =>
-                GetRunsAsync(threadId, limit: pageSize, resultOrder?.ToString(), continuationToken, null, null));
+            pageToken =>
+                GetRunsAsync(threadId, limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>
@@ -683,8 +683,8 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         return CreatePageable<ThreadRun, InternalListRunsResponse>(
-            continuationToken =>
-                GetRuns(threadId, limit: pageSize, resultOrder?.ToString(), continuationToken, null, null));
+            pageToken =>
+                GetRuns(threadId, limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>
@@ -862,8 +862,8 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
         return CreateAsyncPageable<RunStep, InternalListRunStepsResponse>(
-            continuationToken =>
-                GetRunStepsAsync(threadId, runId, limit: pageSize, resultOrder?.ToString(), continuationToken, null, null));
+            pageToken =>
+                GetRunStepsAsync(threadId, runId, limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>
@@ -886,8 +886,8 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
         return CreatePageable<RunStep, InternalListRunStepsResponse>(
-            continuationToken =>
-                GetRunSteps(threadId, runId, limit: pageSize, resultOrder?.ToString(), continuationToken, null, null));
+            pageToken =>
+                GetRunSteps(threadId, runId, limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>

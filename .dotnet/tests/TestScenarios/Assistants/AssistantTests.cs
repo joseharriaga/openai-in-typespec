@@ -708,7 +708,7 @@ public partial class AssistantTests
         AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
         IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPagesAsync();
 
-        string? continuationToken = default;
+        string? pageToken = default;
 
         // First iteration - stop after two pages
         await foreach (PageResult<Assistant> page in pages)
@@ -722,7 +722,7 @@ public partial class AssistantTests
 
             if (pageCount > 1)
             {
-                continuationToken = page.ContinuationToken;
+                pageToken = page.NextPageToken;
                 break;
             }
         }
@@ -736,7 +736,7 @@ public partial class AssistantTests
         // Next: call AsPagesAsync, passing the continuation token we reserved from the previous iteration.
         // This does make a service call - it should make a request to the service for the next page
         // after where we stopped in the prior iteration.
-        pages = assistants.AsPagesAsync(continuationToken);
+        pages = assistants.AsPagesAsync(pageToken);
 
         // Now iterate again, continuing the counts.
         await foreach (PageResult<Assistant> page in pages)

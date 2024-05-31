@@ -153,7 +153,7 @@ public partial class AssistantSamples
         // With the run complete, list the messages and display their content
         if (run.Status == RunStatus.Completed)
         {
-            PageableCollection<ThreadMessage> messages
+            PageableResult<ThreadMessage> messages
                 = client.GetMessages(run.ThreadId, resultOrder: ListOrder.OldestFirst);
 
             foreach (ThreadMessage message in messages)

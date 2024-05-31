@@ -105,7 +105,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(
+    public virtual AsyncPageableResult<Assistant> GetAssistantsAsync(
         ListOrder? resultOrder = null,
         string itemsAfter = default,
         string itemsBefore = default,
@@ -128,12 +128,19 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<Assistant> GetAssistants(int? pageSize = null, ListOrder? resultOrder = null)
+    public virtual PageableResult<Assistant> GetAssistants(
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
         return CreatePageable<Assistant, InternalListAssistantsResponse>(
-            pageToken =>
-                GetAssistants(limit: pageSize, resultOrder?.ToString(), pageToken, null, null)
-            );
+            pageToken => GetAssistants(
+                limit: pageSize,
+                order: resultOrder?.ToString(),
+                after: pageToken ?? itemsAfter,
+                before: itemsBefore,
+                options: null));
     }
 
     /// <summary>
@@ -328,7 +335,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(
+    public virtual AsyncPageableResult<ThreadMessage> GetMessagesAsync(
         string threadId,
         int? pageSize = null,
         ListOrder? resultOrder = null,
@@ -361,7 +368,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<ThreadMessage> GetMessages(
+    public virtual PageableResult<ThreadMessage> GetMessages(
         string threadId,
         int? pageSize = null,
         ListOrder? resultOrder = null)
@@ -654,7 +661,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of runs that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(
+    public virtual AsyncPageableResult<ThreadRun> GetRunsAsync(
         string threadId,
         int? pageSize = null,
         ListOrder? resultOrder = default)
@@ -675,7 +682,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of runs that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<ThreadRun> GetRuns(
+    public virtual PageableResult<ThreadRun> GetRuns(
         string threadId,
         int? pageSize = null,
         ListOrder? resultOrder = default)
@@ -852,7 +859,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of run steps that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(
+    public virtual AsyncPageableResult<RunStep> GetRunStepsAsync(
         string threadId,
         string runId,
         int? pageSize = null,
@@ -876,7 +883,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of run steps that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<RunStep> GetRunSteps(
+    public virtual PageableResult<RunStep> GetRunSteps(
         string threadId,
         string runId,
         int? pageSize = null,

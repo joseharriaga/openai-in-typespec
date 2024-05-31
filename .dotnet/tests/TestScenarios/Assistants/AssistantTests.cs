@@ -51,7 +51,7 @@ public partial class AssistantTests
             },
         });
         Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        PageableCollection<Assistant> recentAssistants = client.GetAssistants();
+        PageableResult<Assistant> recentAssistants = client.GetAssistants();
         Assistant listedAssistant = recentAssistants.FirstOrDefault(pageItem => pageItem.Id == assistant.Id);
         Assert.That(listedAssistant, Is.Not.Null);
         Assert.That(listedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string newMetadataValue) && newMetadataValue == "goodbye!");
@@ -128,7 +128,7 @@ public partial class AssistantTests
         });
         Assert.That(message.Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
 
-        PageableCollection<ThreadMessage> messagePage = client.GetMessages(thread);
+        PageableResult<ThreadMessage> messagePage = client.GetMessages(thread);
         Assert.That(messagePage.Count, Is.EqualTo(1));
         Assert.That(messagePage.First().Id, Is.EqualTo(message.Id));
         Assert.That(messagePage.First().Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
@@ -158,7 +158,7 @@ public partial class AssistantTests
         };
         AssistantThread thread = client.CreateThread(options);
         Validate(thread);
-        PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
         Assert.That(messages.Count, Is.EqualTo(2));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.User));
         Assert.That(messages.First().Content?.Count, Is.EqualTo(1));
@@ -178,7 +178,7 @@ public partial class AssistantTests
         Validate(assistant);
         AssistantThread thread = client.CreateThread();
         Validate(thread);
-        PageableCollection<ThreadRun> runs = client.GetRuns(thread);
+        PageableResult<ThreadRun> runs = client.GetRuns(thread);
         Assert.That(runs.Count, Is.EqualTo(0));
         ThreadMessage message = client.CreateMessage(thread.Id, ["Hello, assistant!"]);
         Validate(message);
@@ -192,7 +192,7 @@ public partial class AssistantTests
         Assert.That(runs.Count, Is.EqualTo(1));
         Assert.That(runs.First().Id, Is.EqualTo(run.Id));
 
-        PageableCollection<ThreadMessage> messages = client.GetMessages(thread);
+        PageableResult<ThreadMessage> messages = client.GetMessages(thread);
         Assert.That(messages.Count, Is.GreaterThanOrEqualTo(1));
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
         {
@@ -242,7 +242,7 @@ public partial class AssistantTests
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
         Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
 
-        PageableCollection<RunStep> runSteps = client.GetRunSteps(run);
+        PageableResult<RunStep> runSteps = client.GetRunSteps(run);
         Assert.That(runSteps.Count, Is.GreaterThan(1));
         Assert.Multiple(() =>
         {
@@ -361,7 +361,7 @@ public partial class AssistantTests
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageableCollection<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
         Assert.That(messages.Count, Is.GreaterThan(1));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.Assistant));
         Assert.That(messages.First().Content?[0], Is.Not.Null);
@@ -570,7 +570,7 @@ public partial class AssistantTests
         } while (run?.Status.IsTerminal == false);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
         foreach (ThreadMessage message in messages)
         {
             foreach (MessageContent content in message.Content)
@@ -604,7 +604,7 @@ public partial class AssistantTests
 
         // Page through collection
         int count = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst, pageSize: 2);
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst, pageSize: 2);
 
         int lastIdSeen = int.MaxValue;
 
@@ -654,14 +654,14 @@ public partial class AssistantTests
         }
 
         // Get a count of the assistants as a baseline.
-        PageableCollection<Assistant> enumerable = client.GetAssistants(pageSize: 100, ListOrder.NewestFirst);
+        PageableResult<Assistant> enumerable = client.GetAssistants(ListOrder.NewestFirst, pageSize: 100);
         int totalCount = enumerable.Count();
 
         // Page through collection
         int itemCount = 0;
         int pageCount = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
-        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPagesAsync();
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
 
         await foreach (PageResult<Assistant> page in pages)
         {
@@ -699,14 +699,14 @@ public partial class AssistantTests
         }
 
         // Get a count of the assistants as a baseline.
-        PageableCollection<Assistant> enumerable = client.GetAssistants(pageSize: 100, ListOrder.NewestFirst);
+        PageableResult<Assistant> enumerable = client.GetAssistants(ListOrder.NewestFirst, pageSize: 100);
         int totalCount = enumerable.Count();
 
         // Page through collection
         int itemCount = 0;
         int pageCount = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
-        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPagesAsync();
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
 
         string? pageToken = default;
 
@@ -733,10 +733,10 @@ public partial class AssistantTests
         // but sets up the closures needed to replicate the collection from the first call.
         assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
 
-        // Next: call AsPagesAsync, passing the continuation token we reserved from the previous iteration.
+        // Next: call AsPages, passing the continuation token we reserved from the previous iteration.
         // This does make a service call - it should make a request to the service for the next page
         // after where we stopped in the prior iteration.
-        pages = assistants.AsPagesAsync(pageToken);
+        pages = assistants.AsPages(pageToken);
 
         // Now iterate again, continuing the counts.
         await foreach (PageResult<Assistant> page in pages)
@@ -774,13 +774,13 @@ public partial class AssistantTests
     //    }
 
     //    // Get a count of the assistants as a baseline.
-    //    PageableCollection<Assistant> enumerable = client.GetAssistants(pageSize: 100, ListOrder.NewestFirst);
+    //    PageableResult<Assistant> enumerable = client.GetAssistants(pageSize: 100, ListOrder.NewestFirst);
     //    List<Assistant> assistantList = enumerable.ToList();
     //    int totalCount = assistantList.Count;
 
     //    // Page through collection
     //    int count = 0;
-    //    AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(
+    //    AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(
     //        ListOrder.NewestFirst, 
     //        pageSize: 100,
     //        itemsAfter: assistantList[9].Id,

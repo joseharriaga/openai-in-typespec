@@ -10,13 +10,13 @@ namespace OpenAI;
 
 internal class PageableResultHelpers
 {
-    public static PageableCollection<T> Create<T>(Func<string?, PageResult<T>> firstPageFunc, Func<string?, PageResult<T>>? nextPageFunc) where T : notnull
+    public static PageableResult<T> Create<T>(Func<string?, PageResult<T>> firstPageFunc, Func<string?, PageResult<T>>? nextPageFunc) where T : notnull
         => new FuncPageable<T>(firstPageFunc, nextPageFunc);
 
-    public static AsyncPageableCollection<T> Create<T>(Func<string?, Task<PageResult<T>>> firstPageFunc, Func<string?, Task<PageResult<T>>>? nextPageFunc) where T : notnull
+    public static AsyncPageableResult<T> Create<T>(Func<string?, Task<PageResult<T>>> firstPageFunc, Func<string?, Task<PageResult<T>>>? nextPageFunc) where T : notnull
         => new FuncAsyncPageable<T>(firstPageFunc, nextPageFunc);
 
-    private class FuncAsyncPageable<T> : AsyncPageableCollection<T> where T : notnull
+    private class FuncAsyncPageable<T> : AsyncPageableResult<T> where T : notnull
     {
         private readonly Func<string?, Task<PageResult<T>>> _firstPageFunc;
         private readonly Func<string?, Task<PageResult<T>>>? _nextPageFunc;
@@ -27,7 +27,7 @@ internal class PageableResultHelpers
             _nextPageFunc = nextPageFunc;
         }
 
-        public override async IAsyncEnumerable<PageResult<T>> AsPagesAsync(string? pageToken = default)
+        public override async IAsyncEnumerable<PageResult<T>> AsPages(string? pageToken = default)
         {
             Func<string?, Task<PageResult<T>>>? pageFunc = _firstPageFunc;
 
@@ -48,7 +48,7 @@ internal class PageableResultHelpers
         }
     }
 
-    private class FuncPageable<T> : PageableCollection<T> where T : notnull
+    private class FuncPageable<T> : PageableResult<T> where T : notnull
     {
         private readonly Func<string?, PageResult<T>> _firstPageFunc;
         private readonly Func<string?, PageResult<T>>? _nextPageFunc;

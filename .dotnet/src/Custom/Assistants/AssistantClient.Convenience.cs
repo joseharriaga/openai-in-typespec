@@ -130,7 +130,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(
+    public virtual AsyncPageableResult<ThreadMessage> GetMessagesAsync(
         AssistantThread thread,
         int? pageSize = null,
         ListOrder? resultOrder = default)
@@ -149,7 +149,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<ThreadMessage> GetMessages(
+    public virtual PageableResult<ThreadMessage> GetMessages(
         AssistantThread thread,
         int? pageSize = null,
         ListOrder? resultOrder = default)
@@ -316,7 +316,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of runs that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(
+    public virtual AsyncPageableResult<ThreadRun> GetRunsAsync(
         AssistantThread thread,
         int? pageSize = null,
         ListOrder? resultOrder = default)
@@ -335,7 +335,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of runs that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<ThreadRun> GetRuns(
+    public virtual PageableResult<ThreadRun> GetRuns(
         AssistantThread thread,
         int? pageSize = null,
         ListOrder? resultOrder = default)
@@ -436,7 +436,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of run steps that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual PageableCollection<RunStep> GetRunSteps(
+    public virtual PageableResult<RunStep> GetRunSteps(
         ThreadRun run,
         int? pageSize = null,
         ListOrder? resultOrder = default)
@@ -455,7 +455,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of run steps that can be enumerated using <c>foreach</c>. </returns>
-    public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(
+    public virtual AsyncPageableResult<RunStep> GetRunStepsAsync(
         ThreadRun run,
         int? pageSize = null,
         ListOrder? resultOrder = default)

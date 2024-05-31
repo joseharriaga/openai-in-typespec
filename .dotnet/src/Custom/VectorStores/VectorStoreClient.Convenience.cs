@@ -98,7 +98,7 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStore vectorStore,
         int? pageSize = null,
         ListOrder? resultOrder = null,
@@ -123,7 +123,7 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
     /// <c>foreach</c>.
     /// </returns>
-    public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(
         VectorStore vectorStore,
         int? pageSize = null,
         ListOrder? resultOrder = null,
@@ -245,7 +245,7 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStoreBatchFileJob batchJob,
         int? pageSize = null,
         ListOrder? resultOrder = null,
@@ -268,7 +268,7 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
     /// <c>foreach</c>.
     /// </returns>
-    public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(
         VectorStoreBatchFileJob batchJob,
         int? pageSize = null,
         ListOrder? resultOrder = null,

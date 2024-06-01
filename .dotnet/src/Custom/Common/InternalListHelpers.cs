@@ -14,13 +14,13 @@ internal static class InternalListHelpers
     internal delegate Task<ClientResult> AsyncListResponseFunc(string? pageToken);
     internal delegate ClientResult ListResponseFunc(string? pageToken);
 
-    internal static AsyncPageableResult<T> CreateAsyncPageable<T, U>(AsyncListResponseFunc listResponseFunc)
-        where U : IJsonModel<U>, IInternalListResponse<T>
-    {
-        async Task<PageResult<T>> pageFunc(string? pageToken)
-            => GetPageFromProtocol<T,U>(pageToken, await listResponseFunc(pageToken).ConfigureAwait(false));
-        return PageableResultHelpers.Create(pageFunc, pageFunc);
-    }
+    //internal static AsyncPageableResult<T> CreateAsyncPageable<T, U>(AsyncListResponseFunc listResponseFunc)
+    //    where U : IJsonModel<U>, IInternalListResponse<T>
+    //{
+    //    async Task<PageResult<T>> pageFunc(string? pageToken)
+    //        => GetPageFromProtocol<T,U>(pageToken, await listResponseFunc(pageToken).ConfigureAwait(false));
+    //    return PageableResultHelpers.Create(pageFunc, pageFunc);
+    //}
 
     //internal static AsyncPageableResult<T> CreateAsyncPageable<T, U>(
     //AsyncListResponseFunc firstListResponseFunc,
@@ -34,31 +34,31 @@ internal static class InternalListHelpers
     //    return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
     //}
 
-    internal static PageableResult<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
-        where U : IJsonModel<U>, IInternalListResponse<T>
-    {
-        PageResult<T> pageFunc(string? pageToken)
-            => GetPageFromProtocol<T, U>(pageToken, listResponseFunc(pageToken));
-        return PageableResultHelpers.Create(pageFunc, pageFunc);
-    }
+    //internal static PageableResult<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
+    //    where U : IJsonModel<U>, IInternalListResponse<T>
+    //{
+    //    PageResult<T> pageFunc(string? pageToken)
+    //        => GetPageFromProtocol<T, U>(pageToken, listResponseFunc(pageToken));
+    //    return PageableResultHelpers.Create(pageFunc, pageFunc);
+    //}
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PageResult<TInstance> GetPageFromProtocol<TInstance, UInternalList>(
-        string? pageToken, ClientResult protocolResult) 
-        where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
-    {
-        PageToken token = ToPageToken(pageToken);
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //private static PageResult<TInstance> GetPageFromProtocol<TInstance, UInternalList>(
+    //    string? pageToken, ClientResult protocolResult) 
+    //    where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
+    //{
+    //    PageToken token = ToPageToken(pageToken);
 
-        PipelineResponse response = protocolResult.GetRawResponse();
-        IInternalListResponse<TInstance> values = ModelReaderWriter.Read<UInternalList>(response.Content)!;
+    //    PipelineResponse response = protocolResult.GetRawResponse();
+    //    IInternalListResponse<TInstance> values = ModelReaderWriter.Read<UInternalList>(response.Content)!;
 
-        PageToken nextPageToken = new(token.Order, values.LastId, token.Before, values.HasMore);
-        PageToken prevPageToken = new(token.Order, token.After, values.FirstId, values.HasMore);
+    //    PageToken nextPageToken = new(token.Order, values.LastId, token.Before, values.HasMore);
+    //    PageToken prevPageToken = new(token.Order, token.After, values.FirstId, values.HasMore);
 
-        return PageResult<TInstance>.Create(values.Data, response, 
-            FromPageToken(nextPageToken), 
-            FromPageToken(prevPageToken));
-    }
+    //    return PageResult<TInstance>.Create(values.Data, response, 
+    //        FromPageToken(nextPageToken), 
+    //        FromPageToken(prevPageToken));
+    //}
 
     internal static PageToken ToPageToken(string? pageToken)
     {

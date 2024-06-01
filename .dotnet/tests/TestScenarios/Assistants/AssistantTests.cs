@@ -757,42 +757,65 @@ public partial class AssistantTests
     }
 #nullable disable
 
-    //[Test]
-    //public async Task CanGetPrevPageOfAssistants()
-    //{
-    //    AssistantClient client = GetTestClient();
+    [Test]
+    public async Task CanGetPrevPageOfAssistants()
+    {
+        AssistantClient client = GetTestClient();
 
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}",
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
+        //// Create assistant collection
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+        //    {
+        //        Name = $"Test Assistant {i}",
+        //    });
+        //    Validate(assistant);
+        //    Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        //}
 
-    //    // Get a count of the assistants as a baseline.
-    //    PageableResult<Assistant> enumerable = client.GetAssistants(pageSize: 100, ListOrder.NewestFirst);
-    //    List<Assistant> assistantList = enumerable.ToList();
-    //    int totalCount = assistantList.Count;
+        // Get the full list of assistants in the order they were created.
+        PageableResult<Assistant> enumerable = client.GetAssistants(ListOrder.OldestFirst, pageSize: 100);
+        List<Assistant> assistantList = enumerable.ToList();
+        int totalCount = assistantList.Count;
 
-    //    // Page through collection
-    //    int count = 0;
-    //    AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(
-    //        ListOrder.NewestFirst, 
-    //        pageSize: 100,
-    //        itemsAfter: assistantList[9].Id,
-    //        itemsBefore: assistantList[1].Id);
+        // Get the collection in smaller pages so we can traverse the pages.
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(
+            ListOrder.OldestFirst,
+            pageSize: 2);
 
-    //    await foreach (Assistant assistant in assistants)
-    //    {
-    //        count++;
-    //    }
+        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
 
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //}
+        // Get first page
+        PageResult<Assistant> firstPage = default;
+        await foreach(var page in pages)
+        {
+            firstPage = page;
+            break;
+        }
+
+        // Get second page
+        pages = assistants.AsPages(firstPage.NextPageToken);
+        PageResult<Assistant> secondPage = default;
+        await foreach (var page in pages)
+        {
+            secondPage = page;
+            break;
+        }
+
+        // Get previous page (from second page) -- this should be the first page
+        pages = assistants.AsPages(secondPage.PreviousPageToken);
+        PageResult<Assistant> prevPage = default;
+        await foreach (var page in pages)
+        {
+            prevPage = page;
+            break;
+        }
+
+        Assert.AreEqual(firstPage.Values[0].Id, prevPage.Values[0].Id);
+        Assert.AreEqual(firstPage.Values[^1].Id, prevPage.Values[^1].Id);
+        Assert.AreEqual(firstPage.NextPageToken, prevPage.NextPageToken);
+        Assert.AreEqual(firstPage.PreviousPageToken, prevPage.PreviousPageToken);
+    }
 
     [TearDown]
     protected void Cleanup()

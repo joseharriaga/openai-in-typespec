@@ -9,6 +9,8 @@ namespace OpenAI;
 
 internal class PageToken : IJsonModel<PageToken>
 {
+    public PageToken() { }
+
     public PageToken(ListOrder? order, string? after, string? before, bool hasMore)
     {
         Order = order;

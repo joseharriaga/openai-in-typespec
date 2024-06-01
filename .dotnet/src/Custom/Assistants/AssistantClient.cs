@@ -112,12 +112,19 @@ public partial class AssistantClient
         int? pageSize = null)
     {
         return CreateAsyncPageable<Assistant, InternalListAssistantsResponse>(
-            pageToken => GetAssistantsAsync(
-                limit: pageSize,
-                order: resultOrder?.ToString(),
-                after: pageToken ?? itemsAfter,
-                before: itemsBefore,
-                options: null));
+            pageToken =>
+            {
+                PageToken token = pageToken is null ? 
+                    new(resultOrder, itemsAfter, itemsBefore, true) :
+                    ToPageToken(pageToken);
+
+                return GetAssistantsAsync(
+                    limit: pageSize,
+                    order: token.Order?.ToString(),
+                    after: token.After,
+                    before: token.Before,
+                    options: null);
+            });
     }
 
     /// <summary>

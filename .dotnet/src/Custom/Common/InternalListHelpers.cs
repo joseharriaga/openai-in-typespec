@@ -22,6 +22,18 @@ internal static class InternalListHelpers
         return PageableResultHelpers.Create(pageFunc, pageFunc);
     }
 
+    //internal static AsyncPageableResult<T> CreateAsyncPageable<T, U>(
+    //AsyncListResponseFunc firstListResponseFunc,
+    //AsyncListResponseFunc nextListResponseFunc)
+    //where U : IJsonModel<U>, IInternalListResponse<T>
+    //{
+    //    async Task<PageResult<T>> firstPageFunc(string? pageToken)
+    //        => GetPageFromProtocol<T, U>(pageToken, await firstListResponseFunc(pageToken).ConfigureAwait(false));
+    //    async Task<PageResult<T>> nextPageFunc(string? pageToken)
+    //        => GetPageFromProtocol<T, U>(pageToken, await nextListResponseFunc(pageToken).ConfigureAwait(false));
+    //    return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
+    //}
+
     internal static PageableResult<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
         where U : IJsonModel<U>, IInternalListResponse<T>
     {
@@ -48,7 +60,7 @@ internal static class InternalListHelpers
             FromPageToken(prevPageToken));
     }
 
-    private static PageToken ToPageToken(string? pageToken)
+    internal static PageToken ToPageToken(string? pageToken)
     {
         if (pageToken is null)
         {
@@ -60,7 +72,7 @@ internal static class InternalListHelpers
         return token!;
     }
 
-    private static string? FromPageToken(PageToken pageToken)
+    internal static string? FromPageToken(PageToken pageToken)
     {
         if (!pageToken.HasMore)
         {

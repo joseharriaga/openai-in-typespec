@@ -43,7 +43,7 @@ internal partial class MessageDeltaContentImageUrlObject { private readonly stri
 internal partial class MessageDeltaObjectDelta
 {
     [CodeGenMember("Role")]
-    internal MessageRole Role { get; }
+    internal MessageRole? Role { get; }
 }
 
 [CodeGenModel("MessageDeltaContentTextObject")]

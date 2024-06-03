@@ -21,8 +21,11 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role.ToSerialString());
+            if (Optional.IsDefined(Role))
+            {
+                writer.WritePropertyName("role"u8);
+                writer.WriteStringValue(Role.Value.ToSerialString());
+            }
             if (Optional.IsCollectionDefined(Content))
             {
                 writer.WritePropertyName("content"u8);
@@ -71,7 +74,7 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            MessageRole role = default;
+            MessageRole? role = default;
             IReadOnlyList<MessageDeltaContent> content = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();

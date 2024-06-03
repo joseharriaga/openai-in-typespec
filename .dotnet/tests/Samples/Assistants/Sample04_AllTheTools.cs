@@ -142,7 +142,7 @@ public partial class AssistantSamples
         // With the run complete, list the messages and display their content
         if (run.Status == RunStatus.Completed)
         {
-            PageableCollection<ThreadMessage> messages
+            PageableResult<ThreadMessage> messages
                 = client.GetMessages(run.ThreadId, resultOrder: ListOrder.OldestFirst);
 
             foreach (ThreadMessage message in messages)
@@ -177,7 +177,7 @@ public partial class AssistantSamples
             #endregion
 
             #region List run steps for details about tool calls
-            PageableCollection<RunStep> runSteps = client.GetRunSteps(run, resultOrder: ListOrder.OldestFirst);
+            PageableResult<RunStep> runSteps = client.GetRunSteps(run, resultOrder: ListOrder.OldestFirst);
             foreach (RunStep step in runSteps)
             {
                 Console.WriteLine($"Run step: {step.Status}");

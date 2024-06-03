@@ -16,7 +16,7 @@ public partial class AssistantSamples
 
         int count = 0;
 
-        PageableCollection<Assistant> assistants = client.GetAssistants();
+        PageableResult<Assistant> assistants = client.GetAssistants();
         foreach (Assistant assistant in assistants)
         {
             Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");

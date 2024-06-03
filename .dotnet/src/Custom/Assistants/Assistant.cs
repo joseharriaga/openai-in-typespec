@@ -18,4 +18,9 @@ public partial class Assistant
     /// </summary>
     [CodeGenMember("TopP")]
     public float? NucleusSamplingFactor { get; }
+
+    public override string ToString()
+    {
+        return Id;
+    }
 }

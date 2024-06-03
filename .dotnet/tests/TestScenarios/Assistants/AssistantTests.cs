@@ -51,7 +51,7 @@ public partial class AssistantTests
             },
         });
         Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        PageableCollection<Assistant> recentAssistants = client.GetAssistants();
+        PageableResult<Assistant> recentAssistants = client.GetAssistants();
         Assistant listedAssistant = recentAssistants.FirstOrDefault(pageItem => pageItem.Id == assistant.Id);
         Assert.That(listedAssistant, Is.Not.Null);
         Assert.That(listedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string newMetadataValue) && newMetadataValue == "goodbye!");
@@ -128,7 +128,7 @@ public partial class AssistantTests
         });
         Assert.That(message.Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
 
-        PageableCollection<ThreadMessage> messagePage = client.GetMessages(thread);
+        PageableResult<ThreadMessage> messagePage = client.GetMessages(thread);
         Assert.That(messagePage.Count, Is.EqualTo(1));
         Assert.That(messagePage.First().Id, Is.EqualTo(message.Id));
         Assert.That(messagePage.First().Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
@@ -158,16 +158,16 @@ public partial class AssistantTests
         };
         AssistantThread thread = client.CreateThread(options);
         Validate(thread);
-        PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
         Assert.That(messages.Count, Is.EqualTo(2));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.User));
         Assert.That(messages.First().Content?.Count, Is.EqualTo(1));
         Assert.That(messages.First().Content[0].Text, Is.EqualTo("Hello, world!"));
-        Assert.That(messages.ElementAt(1).Content?.Count, Is.EqualTo(2));
-        Assert.That(messages.ElementAt(1).Content[0], Is.Not.Null);
-        Assert.That(messages.ElementAt(1).Content[0].Text, Is.EqualTo("Can you describe this image for me?"));
-        Assert.That(messages.ElementAt(1).Content[1], Is.Not.Null);
-        Assert.That(messages.ElementAt(1).Content[1].ImageUrl.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
+        Assert.That(messages.AsPages().First().Values[1].Content?.Count, Is.EqualTo(2));
+        Assert.That(messages.AsPages().First().Values[1].Content[0], Is.Not.Null);
+        Assert.That(messages.AsPages().First().Values[1].Content[0].Text, Is.EqualTo("Can you describe this image for me?"));
+        Assert.That(messages.AsPages().First().Values[1].Content[1], Is.Not.Null);
+        Assert.That(messages.AsPages().First().Values[1].Content[1].ImageUrl.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
     }
 
     [Test]
@@ -178,7 +178,7 @@ public partial class AssistantTests
         Validate(assistant);
         AssistantThread thread = client.CreateThread();
         Validate(thread);
-        PageableCollection<ThreadRun> runs = client.GetRuns(thread);
+        PageableResult<ThreadRun> runs = client.GetRuns(thread);
         Assert.That(runs.Count, Is.EqualTo(0));
         ThreadMessage message = client.CreateMessage(thread.Id, ["Hello, assistant!"]);
         Validate(message);
@@ -192,7 +192,7 @@ public partial class AssistantTests
         Assert.That(runs.Count, Is.EqualTo(1));
         Assert.That(runs.First().Id, Is.EqualTo(run.Id));
 
-        PageableCollection<ThreadMessage> messages = client.GetMessages(thread);
+        PageableResult<ThreadMessage> messages = client.GetMessages(thread);
         Assert.That(messages.Count, Is.GreaterThanOrEqualTo(1));
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
         {
@@ -242,7 +242,7 @@ public partial class AssistantTests
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
         Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
 
-        PageableCollection<RunStep> runSteps = client.GetRunSteps(run);
+        PageableResult<RunStep> runSteps = client.GetRunSteps(run);
         Assert.That(runSteps.Count, Is.GreaterThan(1));
         Assert.Multiple(() =>
         {
@@ -361,7 +361,7 @@ public partial class AssistantTests
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageableCollection<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
         Assert.That(messages.Count, Is.GreaterThan(1));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.Assistant));
         Assert.That(messages.First().Content?[0], Is.Not.Null);
@@ -384,7 +384,7 @@ public partial class AssistantTests
         Stopwatch stopwatch = Stopwatch.StartNew();
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
-        AsyncResultCollection<StreamingUpdate> streamingResult
+        AsyncCollectionResult<StreamingUpdate> streamingResult
             = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
 
         Print(">>> Connected <<<");
@@ -431,7 +431,7 @@ public partial class AssistantTests
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
         Print(" >>> Beginning call ... ");
-        AsyncResultCollection<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
+        AsyncCollectionResult<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
             assistant,
             new()
             {
@@ -570,7 +570,7 @@ public partial class AssistantTests
         } while (run?.Status.IsTerminal == false);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageableCollection<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
         foreach (ThreadMessage message in messages)
         {
             foreach (MessageContent content in message.Content)
@@ -604,9 +604,11 @@ public partial class AssistantTests
 
         // Page through collection
         int count = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst);
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst, pageSize: 2);
 
         int lastIdSeen = int.MaxValue;
+
+        List<string> todelete = new();
 
         await foreach (Assistant assistant in assistants)
         {
@@ -616,6 +618,8 @@ public partial class AssistantTests
                 Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
                 Assert.That(seenId, Is.LessThan(lastIdSeen));
                 lastIdSeen = seenId;
+
+                todelete.Add(assistant.Id);
             }
             count++;
             if (lastIdSeen == 0 || count > 100)
@@ -624,11 +628,17 @@ public partial class AssistantTests
             }
         }
 
+        // delete them all!
+        foreach(var a in todelete)
+        {
+            await client.DeleteAssistantAsync(a);
+        }
+
         Assert.That(count, Is.GreaterThanOrEqualTo(10));
     }
 
     [Test]
-    public async Task CanPageThroughAssistantCollection()
+    public async Task CanEnumerateAssistantsByPage()
     {
         AssistantClient client = GetTestClient();
 
@@ -643,37 +653,280 @@ public partial class AssistantTests
             Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
         }
 
+        // Get a count of the assistants as a baseline.
+        PageableResult<Assistant> enumerable = client.GetAssistants(ListOrder.NewestFirst, pageSize: 100);
+        int totalCount = enumerable.Count();
+
         // Page through collection
-        int count = 0;
+        int itemCount = 0;
         int pageCount = 0;
-        AsyncPageableCollection<Assistant> assistants = client.GetAssistantsAsync(ListOrder.NewestFirst);
-        IAsyncEnumerable<ResultPage<Assistant>> pages = assistants.AsPages(pageSizeHint: 2);
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
 
-        int lastIdSeen = int.MaxValue;
-
-        await foreach (ResultPage<Assistant> page in pages)
+        await foreach (PageResult<Assistant> page in pages)
         {
-            foreach (Assistant assistant in page)
+            foreach (Assistant assistant in page.Values)
             {
-                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-                if (assistant.Name?.StartsWith("Test Assistant ") == true)
-                {
-                    Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-                    Assert.That(seenId, Is.LessThan(lastIdSeen));
-                    lastIdSeen = seenId;
-                }
-                count++;
+                itemCount++;
             }
 
             pageCount++;
-            if (lastIdSeen == 0 || count > 100)
+        }
+
+        // Counts should equal the number of items and pages we expect.
+        Assert.That(itemCount, Is.EqualTo(totalCount));
+
+        // Add one for the last empty page that sets continuation token to null.
+        Assert.That(pageCount, Is.EqualTo(Math.Ceiling(totalCount / 2.0) + 1));
+    }
+
+#nullable enable
+
+    [Test]
+    public async Task CanEnumerateAssistantsByPageAndResume()
+    {
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
             {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        }
+
+        // Get a count of the assistants as a baseline.
+        PageableResult<Assistant> enumerable = client.GetAssistants(ListOrder.NewestFirst, pageSize: 100);
+        int totalCount = enumerable.Count();
+
+        // Page through collection
+        int itemCount = 0;
+        int pageCount = 0;
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
+
+        string? pageToken = default;
+
+        // First iteration - stop after two pages
+        await foreach (PageResult<Assistant> page in pages)
+        {
+            foreach (Assistant assistant in page.Values)
+            {
+                itemCount++;
+            }
+
+            pageCount++;
+
+            if (pageCount > 1)
+            {
+                pageToken = page.NextPageToken;
                 break;
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+        // Second iteration - resume from continuation token.
+
+        // First: call the service method to get the pageable collection.  This makes no service calls,
+        // but sets up the closures needed to replicate the collection from the first call.
+        assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+
+        // Next: call AsPages, passing the continuation token we reserved from the previous iteration.
+        // This does make a service call - it should make a request to the service for the next page
+        // after where we stopped in the prior iteration.
+        pages = assistants.AsPages(pageToken);
+
+        // Now iterate again, continuing the counts.
+        await foreach (PageResult<Assistant> page in pages)
+        {
+            foreach (Assistant assistant in page.Values)
+            {
+                itemCount++;
+            }
+
+            pageCount++;
+        }
+
+        // Counts should equal the number of items and pages we expect.
+        Assert.That(itemCount, Is.EqualTo(totalCount));
+
+        // Add one for the last empty page that sets continuation token to null.
+        Assert.That(pageCount, Is.EqualTo(Math.Ceiling(totalCount / 2.0) + 1));
+    }
+#nullable disable
+
+
+    [Test]
+    public void CanGetPrevPageWhenEnumeratingPages()
+    {
+        AssistantClient client = GetTestClient();
+
+        //// Create assistant collection
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+        //    {
+        //        Name = $"Test Assistant {i}",
+        //    });
+        //    Validate(assistant);
+        //    Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        //}
+
+        //// Get the full list of assistants in the order they were created.
+        //PageableResult<Assistant> enumerable = client.GetAssistants(ListOrder.OldestFirst, pageSize: 100);
+        //List<Assistant> assistantList = enumerable.ToList();
+        //int totalCount = assistantList.Count;
+
+        // Get the collection in smaller pages so we can traverse the pages.
+        PageableResult<Assistant> assistants = client.GetAssistants(
+            ListOrder.OldestFirst,
+            pageSize: 2);
+
+        IEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
+
+        // Get first page
+        PageResult<Assistant> firstPage = default;
+        PageResult<Assistant> secondPage = default;
+        PageResult<Assistant> thirdPage = default;
+        int pageCount = 0;
+        foreach (var page in pages)
+        {
+            if (pageCount == 0)
+            {
+                firstPage = page;
+            }
+
+            if (pageCount == 1)
+            {
+                secondPage = page;
+            }
+
+            if (pageCount== 2)
+            {
+                thirdPage = page;
+                break;
+            }
+
+            pageCount++;
+        }
+
+        // Get previous page (from second page) -- this should be the first page
+        pages = assistants.AsPages(secondPage.PreviousPageToken);
+        PageResult<Assistant> secondPrevPage = default;
+        foreach (var page in pages)
+        {
+            secondPrevPage = page;
+            break;
+        }
+
+        // Get previous page (from third page) -- this should be the second page
+        pages = assistants.AsPages(thirdPage.PreviousPageToken);
+        PageResult<Assistant> thirdPrevPage = default;
+        foreach (var page in pages)
+        {
+            thirdPrevPage = page;
+            break;
+        }
+
+        Assert.AreEqual(firstPage.Values[0].Id, secondPrevPage.Values[0].Id);
+        Assert.AreEqual(firstPage.Values[^1].Id, secondPrevPage.Values[^1].Id);
+
+        Assert.AreEqual(secondPage.Values[0].Id, thirdPrevPage.Values[0].Id);
+        Assert.AreEqual(secondPage.Values[^1].Id, thirdPrevPage.Values[^1].Id);
+
+        // Because we're constructing this a priori.
+        Assert.IsNotNull(secondPage.PreviousPageToken);
+
+        // These should both point to the second page
+        Assert.AreEqual(thirdPage.PreviousPageToken, firstPage.NextPageToken);
+    }
+
+
+    [Test]
+    public void CanGetPrevPageOfAssistants()
+    {
+        AssistantClient client = GetTestClient();
+
+        //// Create assistant collection
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
+        //    {
+        //        Name = $"Test Assistant {i}",
+        //    });
+        //    Validate(assistant);
+        //    Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        //}
+
+        //// Get the full list of assistants in the order they were created.
+        //PageableResult<Assistant> enumerable = client.GetAssistants(ListOrder.OldestFirst, pageSize: 100);
+        //List<Assistant> assistantList = enumerable.ToList();
+        //int totalCount = assistantList.Count;
+
+        // Get the collection in smaller pages so we can traverse the pages.
+        PageableResult<Assistant> assistants = client.GetAssistants(
+            ListOrder.OldestFirst,
+            pageSize: 2);
+
+        IEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
+
+        // Get first page
+        PageResult<Assistant> firstPage = default;
+        foreach (var page in pages)
+        {
+            firstPage = page;
+            break;
+        }
+
+        // Get second page
+        pages = assistants.AsPages(firstPage.NextPageToken);
+        PageResult<Assistant> secondPage = default;
+        foreach (var page in pages)
+        {
+            secondPage = page;
+            break;
+        }
+
+        // Get third page
+        pages = assistants.AsPages(secondPage.NextPageToken);
+        PageResult<Assistant> thirdPage = default;
+        foreach (var page in pages)
+        {
+            thirdPage = page;
+            break;
+        }
+
+        // Get previous page (from second page) -- this should be the first page
+        pages = assistants.AsPages(secondPage.PreviousPageToken);
+        PageResult<Assistant> secondPrevPage = default;
+        foreach (var page in pages)
+        {
+            secondPrevPage = page;
+            break;
+        }
+
+        // Get previous page (from third page) -- this should be the second page
+        pages = assistants.AsPages(thirdPage.PreviousPageToken);
+        PageResult<Assistant> thirdPrevPage = default;
+        foreach (var page in pages)
+        {
+            thirdPrevPage = page;
+            break;
+        }
+
+        Assert.AreEqual(firstPage.Values[0].Id, secondPrevPage.Values[0].Id);
+        Assert.AreEqual(firstPage.Values[^1].Id, secondPrevPage.Values[^1].Id);
+
+        Assert.AreEqual(secondPage.Values[0].Id, thirdPrevPage.Values[0].Id);
+        Assert.AreEqual(secondPage.Values[^1].Id, thirdPrevPage.Values[^1].Id);
+
+        // Because we're constructing this a priori.
+        Assert.IsNotNull(secondPage.PreviousPageToken);
+
+        // These should both point to the second page
+        Assert.AreEqual(thirdPage.PreviousPageToken, firstPage.NextPageToken);
     }
 
     [TearDown]

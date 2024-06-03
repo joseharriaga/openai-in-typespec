@@ -105,10 +105,34 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null)
+    public virtual AsyncPageableResult<Assistant> GetAssistantsAsync(
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
-        return CreateAsyncPageable<Assistant, InternalListAssistantsResponse>((continuationToken, pageSize)
-            => GetAssistantsAsync(pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        async Task<PageResult<Assistant>> pageFuncAsync(string? pageToken = default, string? prevPageToken = default)
+        {
+            PageToken requestPageToken = pageToken is null ?
+                new(itemsAfter, itemsBefore, true) :
+                ToPageToken(pageToken);
+
+            ClientResult result = await GetAssistantsAsync(
+                limit: pageSize,
+                order: resultOrder.ToString(),
+                after: requestPageToken.After,
+                before: requestPageToken.Before,
+                options: null).ConfigureAwait(false);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
+
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            prevPageToken ??= FromPageToken(new PageToken(itemsAfter, list.FirstId, itemsAfter != list.FirstId));
+
+            return PageResult<Assistant>.Create(list.Data, response, nextPageToken, prevPageToken);
+        }
+
+        return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
     }
 
     /// <summary>
@@ -119,10 +143,38 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null)
+    public virtual PageableResult<Assistant> GetAssistants(
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
-        return CreatePageable<Assistant, InternalListAssistantsResponse>((continuationToken, pageSize)
-            => GetAssistants(pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        PageResult<Assistant> getPage(string? pageToken = default, string? prevPageToken = default)
+        {
+            PageToken requestPageToken = pageToken is null ?
+                new(itemsAfter, itemsBefore, null) :
+                ToPageToken(pageToken);
+
+            ClientResult result = GetAssistants(
+                limit: pageSize,
+                order: resultOrder.ToString(),
+                after: requestPageToken.After,
+                before: requestPageToken.Before,
+                options: null);
+
+            PipelineResponse response = result.GetRawResponse();
+            InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
+
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, itemsBefore, hasMore: true /*list.HasMore*/));
+            prevPageToken ??= pageToken is null ?
+                // We're requesting the first page, so prev page should be null.
+                null : 
+                FromPageToken(new PageToken(itemsAfter, list.FirstId, hasMore: true));
+
+            return PageResult<Assistant>.Create(list.Data, response, nextPageToken, prevPageToken);
+        }
+
+        return PageableResultHelpers.Create(getPage, getPage);
     }
 
     /// <summary>
@@ -317,14 +369,35 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(
+    public virtual AsyncPageableResult<ThreadMessage> GetMessagesAsync(
         string threadId,
-        ListOrder? resultOrder = null)
+        int? pageSize = null,
+        ListOrder? resultOrder = null,
+        string itemsAfter = null,
+        string itemsBefore = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return CreateAsyncPageable<ThreadMessage, InternalListMessagesResponse>((continuationToken, pageSize)
-            => GetMessagesAsync(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        async Task<PageResult<ThreadMessage>> pageFuncAsync(string? pageToken = default, string? prevPageToken = default)
+        {
+            PageToken requestPageToken = pageToken is null ?
+                new(itemsAfter, itemsBefore, true) :
+                ToPageToken(pageToken);
+
+            ClientResult result = await GetMessagesAsync(threadId,
+                limit: pageSize,
+                order: resultOrder.ToString(),
+                after: requestPageToken.After,
+                before: requestPageToken.Before,
+                options: null).ConfigureAwait(false);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
+
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            return PageResult<ThreadMessage>.Create(list.Data, response, nextPageToken, prevPageToken);
+        }
+
+        return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
     }
 
     /// <summary>
@@ -336,14 +409,36 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<ThreadMessage> GetMessages(
+    public virtual PageableResult<ThreadMessage> GetMessages(
         string threadId,
-        ListOrder? resultOrder = null)
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return CreatePageable<ThreadMessage, InternalListMessagesResponse>((continuationToken, pageSize)
-            => GetMessages(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        PageResult<ThreadMessage> getPage(string? pageToken = default, string? prevPageToken = default)
+        {
+            PageToken requestPageToken = pageToken is null ?
+                new(itemsAfter, itemsBefore, true) :
+                ToPageToken(pageToken);
+
+            ClientResult result = GetMessages(threadId,
+                limit: pageSize,
+                order: resultOrder.ToString(),
+                after: requestPageToken.After,
+                before: requestPageToken.Before,
+                options: null);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
+
+
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            return PageResult<ThreadMessage>.Create(list.Data, response, nextPageToken, prevPageToken);
+        }
+
+        return PageableResultHelpers.Create(getPage, getPage);
     }
 
     /// <summary>
@@ -491,7 +586,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(
+    public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
@@ -517,7 +612,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(
+    public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
@@ -578,7 +673,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
+    public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -589,7 +684,7 @@ public partial class AssistantClient
         runOptions.Stream = true;
         BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
 
-        async Task<ClientResult> getResultAsync() => 
+        async Task<ClientResult> getResultAsync() =>
             await CreateThreadAndRunAsync(protocolContent, StreamRequestOptions)
             .ConfigureAwait(false);
 
@@ -602,7 +697,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(
+    public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -627,14 +722,36 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of runs that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(
+    public virtual AsyncPageableResult<ThreadRun> GetRunsAsync(
         string threadId,
-        ListOrder? resultOrder = default)
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return CreateAsyncPageable<ThreadRun, InternalListRunsResponse>((continuationToken, pageSize)
-            => GetRunsAsync(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        async Task<PageResult<ThreadRun>> pageFuncAsync(string? pageToken = default, string? prevPageToken = default)
+        {
+            PageToken requestPageToken = pageToken is null ?
+                new(itemsAfter, itemsBefore, true) :
+                ToPageToken(pageToken);
+
+            ClientResult result = await GetRunsAsync(
+                threadId,
+                 limit: pageSize,
+                        order: resultOrder.ToString(),
+                after: requestPageToken.After,
+                before: requestPageToken.Before,
+                        options: null).ConfigureAwait(false);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
+
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            return PageResult<ThreadRun>.Create(list.Data, response, nextPageToken, prevPageToken);
+        }
+
+        return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
     }
 
     /// <summary>
@@ -646,14 +763,36 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of runs that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<ThreadRun> GetRuns(
+    public virtual PageableResult<ThreadRun> GetRuns(
         string threadId,
-        ListOrder? resultOrder = default)
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return CreatePageable<ThreadRun, InternalListRunsResponse>((continuationToken, pageSize)
-            => GetRuns(threadId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        PageResult<ThreadRun> pageFunc(string? pageToken = default, string? prevPageToken = default)
+        {
+            PageToken requestPageToken = pageToken is null ?
+                new(itemsAfter, itemsBefore, true) :
+                ToPageToken(pageToken);
+
+            ClientResult result = GetRuns(threadId,
+                limit: pageSize,
+                order: resultOrder.ToString(),
+
+                after: requestPageToken.After,
+                before: requestPageToken.Before,
+                options: null);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
+
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            return PageResult<ThreadRun>.Create(list.Data, response, nextPageToken, prevPageToken);
+        }
+
+        return PageableResultHelpers.Create(pageFunc, pageFunc);
     }
 
     /// <summary>
@@ -739,7 +878,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
+    public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
         string threadId,
         string runId,
         IEnumerable<ToolOutput> toolOutputs)
@@ -765,7 +904,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
+    public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(
         string threadId,
         string runId,
         IEnumerable<ToolOutput> toolOutputs)
@@ -821,16 +960,37 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of run steps that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(
+    public virtual AsyncPageableResult<RunStep> GetRunStepsAsync(
         string threadId,
         string runId,
-        ListOrder? resultOrder = default)
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return CreateAsyncPageable<RunStep, InternalListRunStepsResponse>((continuationToken, pageSize)
-            => GetRunStepsAsync(threadId, runId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        async Task<PageResult<RunStep>> pageFuncAsync(string? pageToken = default, string? prevPageToken = default)
+        {
+            PageToken requestPageToken = pageToken is null ?
+                new(itemsAfter, itemsBefore, true) :
+                ToPageToken(pageToken);
+
+            ClientResult result = await GetRunStepsAsync(threadId, runId,
+                limit: pageSize,
+                order: resultOrder.ToString(),
+                after: requestPageToken.After,
+                before: requestPageToken.Before,
+                options: null).ConfigureAwait(false);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
+
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            return PageResult<RunStep>.Create(list.Data, response, nextPageToken, prevPageToken);
+        }
+
+        return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
     }
 
     /// <summary>
@@ -843,16 +1003,38 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of run steps that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageableCollection<RunStep> GetRunSteps(
+    public virtual PageableResult<RunStep> GetRunSteps(
         string threadId,
         string runId,
-        ListOrder? resultOrder = default)
+        ListOrder? resultOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return CreatePageable<RunStep, InternalListRunStepsResponse>((continuationToken, pageSize)
-            => GetRunSteps(threadId, runId, pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        PageResult<RunStep> pageFunc(string? pageToken = default, string? prevPageToken = default)
+        {
+            PageToken requestPageToken = pageToken is null ?
+                new(itemsAfter, itemsBefore, true) :
+                ToPageToken(pageToken);
+
+            ClientResult result = GetRunSteps(threadId, runId,
+                limit: pageSize,
+                order: resultOrder.ToString(),
+                after: requestPageToken.After,
+                before: requestPageToken.Before,
+                options: null);
+            PipelineResponse response = result.GetRawResponse();
+            InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
+
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            prevPageToken ??= FromPageToken(new PageToken(itemsAfter, list.FirstId, itemsAfter != list.FirstId));
+            return PageResult<RunStep>.Create(list.Data, response, nextPageToken, prevPageToken);
+        }
+
+        return PageableResultHelpers.Create(pageFunc, pageFunc);
     }
 
     /// <summary>
@@ -864,7 +1046,7 @@ public partial class AssistantClient
     /// <returns> A <see cref="RunStep"/> instance corresponding to the specified step. </returns>
     public virtual async Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId)
     {
-        ClientResult protocolResult = await GetRunStepAsync(threadId, runId, stepId, null).ConfigureAwait(false);
+        ClientResult protocolResult = await GetRunStepAsync(runId, stepId, null).ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, RunStep.FromResponse);
     }
 
@@ -877,7 +1059,7 @@ public partial class AssistantClient
     /// <returns> A <see cref="RunStep"/> instance corresponding to the specified step. </returns>
     public virtual ClientResult<RunStep> GetRunStep(string threadId, string runId, string stepId)
     {
-        ClientResult protocolResult = GetRunStep(threadId, runId, stepId, null);
+        ClientResult protocolResult = GetRunStep(runId, stepId, null);
         return CreateResultFromProtocol(protocolResult, RunStep.FromResponse);
     }
 

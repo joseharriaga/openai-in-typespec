@@ -42,7 +42,7 @@ public partial class ChatSamples
             Dictionary<int, string> indexToFunctionName = [];
             Dictionary<int, StringBuilder> indexToFunctionArguments = [];
             StringBuilder contentBuilder = new();
-            ResultCollection<StreamingChatCompletionUpdate> chatUpdates
+            CollectionResult<StreamingChatCompletionUpdate> chatUpdates
                 = client.CompleteChatStreaming(messages, options);
 
             foreach (StreamingChatCompletionUpdate chatUpdate in chatUpdates)

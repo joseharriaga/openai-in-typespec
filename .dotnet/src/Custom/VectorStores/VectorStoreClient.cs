@@ -47,7 +47,7 @@ public partial class VectorStoreClient
               OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
               OpenAIClient.GetEndpoint(options),
               options)
-    {}
+    { }
 
     /// <summary>
     /// Initializes a new instance of <see cref="VectorStoreClient"/> that will use an API key from the OPENAI_API_KEY
@@ -64,7 +64,7 @@ public partial class VectorStoreClient
               OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
               OpenAIClient.GetEndpoint(options),
               options)
-    {}
+    { }
 
     /// <summary> Initializes a new instance of VectorStoreClient. </summary>
     /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
@@ -138,10 +138,14 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStore"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null)
+    public virtual AsyncPageableResult<VectorStore> GetVectorStoresAsync(
+        int? pageSize = null,
+        ListOrder? resultOrder = null)
     {
-        return CreateAsyncPageable<VectorStore, InternalListVectorStoresResponse>((continuationToken, pageSize)
-            => GetVectorStoresAsync(pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        throw new NotImplementedException();
+        //return CreateAsyncPageable<VectorStore, InternalListVectorStoresResponse>(
+        //    pageToken =>
+        //        GetVectorStoresAsync(limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>
@@ -154,10 +158,12 @@ public partial class VectorStoreClient
     /// <returns>
     /// A collection of <see cref="VectorStore"/> instances that can be synchronously enumerated via <c>foreach</c>.
     /// </returns>
-    public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null)
+    public virtual PageableResult<VectorStore> GetVectorStores(int? pageSize = null, ListOrder? resultOrder = null)
     {
-        return CreatePageable<VectorStore, InternalListVectorStoresResponse>((continuationToken, pageSize)
-            => GetVectorStores(pageSize, resultOrder?.ToString(), continuationToken, null, null));
+        throw new NotImplementedException();
+        //return CreatePageable<VectorStore, InternalListVectorStoresResponse>(
+        //    pageToken =>
+        //        GetVectorStores(limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>
@@ -212,15 +218,19 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         string vectorStoreId,
+        int? pageSize = null,
         ListOrder? resultOrder = null,
         VectorStoreFileStatusFilter? filter = null)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
-            (continuationToken, pageSize) => GetFileAssociationsAsync(
-                vectorStoreId, pageSize, resultOrder?.ToString(), continuationToken, null, filter?.ToString(), null));
+        throw new NotImplementedException();
+
+        //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+
+        //return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+        //    pageToken =>
+        //        GetFileAssociationsAsync(vectorStoreId, limit: pageSize, resultOrder?.ToString(), pageToken, null, filter?.ToString(), null));
     }
 
     /// <summary>
@@ -241,12 +251,16 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
     /// <c>foreach</c>.
     /// </returns>
-    public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null)
+    public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId,
+        int? pageSize = null,
+        ListOrder? resultOrder = null,
+        VectorStoreFileStatusFilter? filter = null)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
-            (continuationToken, pageSize) => GetFileAssociations(
-                vectorStoreId, pageSize, resultOrder?.ToString(), continuationToken, null, filter?.ToString(), null));
+        throw new NotImplementedException();
+        //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        //return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+        //    pageToken =>
+        //        GetFileAssociations(vectorStoreId, limit: pageSize, resultOrder?.ToString(), pageToken, null, filter?.ToString(), null));
     }
 
     /// <summary>
@@ -458,18 +472,21 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         string vectorStoreId,
         string batchJobId,
+        int? pageSize = null,
         ListOrder? resultOrder = null,
         VectorStoreFileStatusFilter? filter = null)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+        throw new NotImplementedException();
 
-        return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
-            (continuationToken, pageSize) => GetFileAssociationsAsync
-                (vectorStoreId, batchJobId, pageSize, resultOrder?.ToString(), continuationToken, null, filter?.ToString(), null));
+        //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        //Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+
+        //return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+        //    pageToken
+        //        => GetFileAssociationsAsync(vectorStoreId, batchJobId, limit: pageSize, resultOrder?.ToString(), pageToken, null, filter?.ToString(), null));
     }
 
     /// <summary>
@@ -493,17 +510,20 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
     /// <c>foreach</c>.
     /// </returns>
-    public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(
         string vectorStoreId,
         string batchJobId,
+        int? pageSize = null,
         ListOrder? resultOrder = null,
         VectorStoreFileStatusFilter? filter = null)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+        throw new NotImplementedException();
 
-        return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
-            (continuationToken, pageSize) => GetFileAssociations
-                (vectorStoreId, batchJobId, pageSize, resultOrder?.ToString(), continuationToken, null, filter?.ToString(), null));
+        //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        //Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+
+        //return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+        //    pageToken =>
+        //        GetFileAssociations(vectorStoreId, batchJobId, limit: pageSize, resultOrder?.ToString(), pageToken, null, filter?.ToString(), null));
     }
 }

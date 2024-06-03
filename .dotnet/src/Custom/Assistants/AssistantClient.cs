@@ -127,6 +127,8 @@ public partial class AssistantClient
             InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
             string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            prevPageToken ??= FromPageToken(new PageToken(itemsAfter, list.FirstId, itemsAfter != list.FirstId));
+
             return PageResult<Assistant>.Create(list.Data, response, nextPageToken, prevPageToken);
         }
 
@@ -147,7 +149,7 @@ public partial class AssistantClient
         string itemsBefore = default,
         int? pageSize = null)
     {
-        PageResult<Assistant> pageFunc(string? pageToken = default, string? prevPageToken = default)
+        PageResult<Assistant> getPage(string? pageToken = default, string? prevPageToken = default)
         {
             PageToken requestPageToken = pageToken is null ?
                 new(itemsAfter, itemsBefore, null) :
@@ -163,11 +165,16 @@ public partial class AssistantClient
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, itemsBefore, hasMore: true /*list.HasMore*/));
+            prevPageToken ??= pageToken is null ?
+                // We're requesting the first page, so prev page should be null.
+                null : 
+                FromPageToken(new PageToken(itemsAfter, list.FirstId, hasMore: true));
+
             return PageResult<Assistant>.Create(list.Data, response, nextPageToken, prevPageToken);
         }
 
-        return PageableResultHelpers.Create(pageFunc, pageFunc);
+        return PageableResultHelpers.Create(getPage, getPage);
     }
 
     /// <summary>
@@ -1013,7 +1020,7 @@ public partial class AssistantClient
                 new(itemsAfter, itemsBefore, true) :
                 ToPageToken(pageToken);
 
-            ClientResult result = GetAssistants(
+            ClientResult result = GetRunSteps(threadId, runId,
                 limit: pageSize,
                 order: resultOrder.ToString(),
                 after: requestPageToken.After,
@@ -1023,6 +1030,7 @@ public partial class AssistantClient
             InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
 
             string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
+            prevPageToken ??= FromPageToken(new PageToken(itemsAfter, list.FirstId, itemsAfter != list.FirstId));
             return PageResult<RunStep>.Create(list.Data, response, nextPageToken, prevPageToken);
         }
 

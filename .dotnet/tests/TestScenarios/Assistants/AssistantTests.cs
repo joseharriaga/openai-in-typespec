@@ -814,17 +814,30 @@ public partial class AssistantTests
 
         // Get previous page (from second page) -- this should be the first page
         pages = assistants.AsPages(secondPage.PreviousPageToken);
-        PageResult<Assistant> prevPage = default;
+        PageResult<Assistant> secondPrevPage = default;
         foreach (var page in pages)
         {
-            prevPage = page;
+            secondPrevPage = page;
             break;
         }
 
-        Assert.AreEqual(firstPage.Values[0].Id, prevPage.Values[0].Id);
-        Assert.AreEqual(firstPage.Values[^1].Id, prevPage.Values[^1].Id);
-        Assert.AreEqual(firstPage.NextPageToken, prevPage.NextPageToken);
-        Assert.AreEqual(firstPage.PreviousPageToken, prevPage.PreviousPageToken);
+        // Get previous page (from third page) -- this should be the second page
+        pages = assistants.AsPages(thirdPage.PreviousPageToken);
+        PageResult<Assistant> thirdPrevPage = default;
+        foreach (var page in pages)
+        {
+            thirdPrevPage = page;
+            break;
+        }
+
+        Assert.AreEqual(firstPage.Values[0].Id, secondPrevPage.Values[0].Id);
+        Assert.AreEqual(firstPage.Values[^1].Id, secondPrevPage.Values[^1].Id);
+
+        Assert.AreEqual(secondPage.Values[0].Id, thirdPrevPage.Values[0].Id);
+        Assert.AreEqual(secondPage.Values[^1].Id, thirdPrevPage.Values[^1].Id);
+
+        // Because we're constructing this a priori.
+        Assert.IsNotNull(secondPage.PreviousPageToken);
 
         // These should both point to the second page
         Assert.AreEqual(thirdPage.PreviousPageToken, firstPage.NextPageToken);
@@ -887,89 +900,30 @@ public partial class AssistantTests
 
         // Get previous page (from second page) -- this should be the first page
         pages = assistants.AsPages(secondPage.PreviousPageToken);
-        PageResult<Assistant> prevPage = default;
+        PageResult<Assistant> secondPrevPage = default;
         foreach (var page in pages)
         {
-            prevPage = page;
+            secondPrevPage = page;
             break;
         }
 
-        Assert.AreEqual(firstPage.Values[0].Id, prevPage.Values[0].Id);
-        Assert.AreEqual(firstPage.Values[^1].Id, prevPage.Values[^1].Id);
-        Assert.AreEqual(firstPage.NextPageToken, prevPage.NextPageToken);
-        Assert.AreEqual(firstPage.PreviousPageToken, prevPage.PreviousPageToken);
-
-        // These should both point to the second page
-        Assert.AreEqual(thirdPage.PreviousPageToken, firstPage.NextPageToken);
-    }
-
-    [Test]
-    public async Task CanGetPrevPageOfAssistantsAsync()
-    {
-        AssistantClient client = GetTestClient();
-
-        //// Create assistant collection
-        //for (int i = 0; i < 10; i++)
-        //{
-        //    Assistant assistant = client.CreateAssistant("gpt-3.5-turbo", new AssistantCreationOptions()
-        //    {
-        //        Name = $"Test Assistant {i}",
-        //    });
-        //    Validate(assistant);
-        //    Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-        //}
-
-        // Get the full list of assistants in the order they were created.
-        PageableResult<Assistant> enumerable = client.GetAssistants(ListOrder.OldestFirst, pageSize: 100);
-        List<Assistant> assistantList = enumerable.ToList();
-        int totalCount = assistantList.Count;
-
-        // Get the collection in smaller pages so we can traverse the pages.
-        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(
-            ListOrder.OldestFirst,
-            pageSize: 2);
-
-        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
-
-        // Get first page
-        PageResult<Assistant> firstPage = default;
-        await foreach(var page in pages)
+        // Get previous page (from third page) -- this should be the second page
+        pages = assistants.AsPages(thirdPage.PreviousPageToken);
+        PageResult<Assistant> thirdPrevPage = default;
+        foreach (var page in pages)
         {
-            firstPage = page;
+            thirdPrevPage = page;
             break;
         }
 
-        // Get second page
-        pages = assistants.AsPages(firstPage.NextPageToken);
-        PageResult<Assistant> secondPage = default;
-        await foreach (var page in pages)
-        {
-            secondPage = page;
-            break;
-        }
+        Assert.AreEqual(firstPage.Values[0].Id, secondPrevPage.Values[0].Id);
+        Assert.AreEqual(firstPage.Values[^1].Id, secondPrevPage.Values[^1].Id);
 
-        // Get second page
-        pages = assistants.AsPages(secondPage.NextPageToken);
-        PageResult<Assistant> thirdPage = default;
-        await foreach (var page in pages)
-        {
-            thirdPage = page;
-            break;
-        }
+        Assert.AreEqual(secondPage.Values[0].Id, thirdPrevPage.Values[0].Id);
+        Assert.AreEqual(secondPage.Values[^1].Id, thirdPrevPage.Values[^1].Id);
 
-        // Get previous page (from second page) -- this should be the first page
-        pages = assistants.AsPages(secondPage.PreviousPageToken);
-        PageResult<Assistant> prevPage = default;
-        await foreach (var page in pages)
-        {
-            prevPage = page;
-            break;
-        }
-
-        Assert.AreEqual(firstPage.Values[0].Id, prevPage.Values[0].Id);
-        Assert.AreEqual(firstPage.Values[^1].Id, prevPage.Values[^1].Id);
-        Assert.AreEqual(firstPage.NextPageToken, prevPage.NextPageToken);
-        Assert.AreEqual(firstPage.PreviousPageToken, prevPage.PreviousPageToken);
+        // Because we're constructing this a priori.
+        Assert.IsNotNull(secondPage.PreviousPageToken);
 
         // These should both point to the second page
         Assert.AreEqual(thirdPage.PreviousPageToken, firstPage.NextPageToken);

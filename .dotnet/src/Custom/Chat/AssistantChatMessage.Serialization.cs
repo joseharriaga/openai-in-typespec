@@ -51,6 +51,7 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
             {
                 if (property.Value.ValueKind == JsonValueKind.Null)
                 {
+                    functionCall = null;
                     continue;
                 }
                 functionCall = ChatFunctionCall.DeserializeChatFunctionCall(property.Value, options);
@@ -107,8 +108,15 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
         }
         if (Optional.IsDefined(instance.FunctionCall))
         {
-            writer.WritePropertyName("function_call"u8);
-            writer.WriteObjectValue(instance.FunctionCall, options);
+            if (instance.FunctionCall != null)
+            {
+                writer.WritePropertyName("function_call"u8);
+                writer.WriteObjectValue(instance.FunctionCall, options);
+            }
+            else
+            {
+                writer.WriteNull("function_call");
+            }
         }
         writer.WritePropertyName("role"u8);
         writer.WriteStringValue(instance.Role);

@@ -23,6 +23,7 @@ namespace OpenAI {
     }
     public class OpenAIClientOptions : ClientPipelineOptions {
         public OpenAIClientOptions();
+        public string ApplicationId { get; init; }
         public Uri Endpoint { get; init; }
     }
     public readonly struct ListOrder : IEquatable<ListOrder> {
@@ -680,24 +681,25 @@ namespace OpenAI.Assistants {
         RunInProgress = 4,
         RunRequiresAction = 5,
         RunCompleted = 6,
-        RunFailed = 7,
-        RunCancelling = 8,
-        RunCancelled = 9,
-        RunExpired = 10,
-        RunStepCreated = 11,
-        RunStepInProgress = 12,
-        RunStepUpdated = 13,
-        RunStepCompleted = 14,
-        RunStepFailed = 15,
-        RunStepCancelled = 16,
-        RunStepExpired = 17,
-        MessageCreated = 18,
-        MessageInProgress = 19,
-        MessageUpdated = 20,
-        MessageCompleted = 21,
-        MessageFailed = 22,
-        Error = 23,
-        Done = 24,
+        RunIncomplete = 7,
+        RunFailed = 8,
+        RunCancelling = 9,
+        RunCancelled = 10,
+        RunExpired = 11,
+        RunStepCreated = 12,
+        RunStepInProgress = 13,
+        RunStepUpdated = 14,
+        RunStepCompleted = 15,
+        RunStepFailed = 16,
+        RunStepCancelled = 17,
+        RunStepExpired = 18,
+        MessageCreated = 19,
+        MessageInProgress = 20,
+        MessageUpdated = 21,
+        MessageCompleted = 22,
+        MessageFailed = 23,
+        Error = 24,
+        Done = 25,
     }
 }
 namespace OpenAI.Audio {
@@ -1146,6 +1148,7 @@ namespace OpenAI.Files {
         public static FileUploadPurpose Assistants { get; }
         public static FileUploadPurpose Batch { get; }
         public static FileUploadPurpose FineTune { get; }
+        public static FileUploadPurpose Vision { get; }
         public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right);
         public static implicit operator FileUploadPurpose(string value);
         public static bool operator !=(FileUploadPurpose left, FileUploadPurpose right);
@@ -1322,8 +1325,8 @@ namespace OpenAI.Models {
         protected ModelClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         protected ModelClient();
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<bool> Delete(string model);
-        public virtual ClientResult Delete(string model, RequestOptions options);
+        public virtual ClientResult<bool> DeleteModel(string model);
+        public virtual ClientResult DeleteModel(string model, RequestOptions options);
         public virtual Task<ClientResult<bool>> DeleteModelAsync(string model);
         public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
         public virtual ClientResult<OpenAIModelInfo> GetModel(string model);

@@ -51,6 +51,7 @@ public abstract partial class StreamingUpdate
             or StreamingUpdateReason.RunQueued
             or StreamingUpdateReason.RunInProgress
             or StreamingUpdateReason.RunCompleted
+            or StreamingUpdateReason.RunIncomplete
             or StreamingUpdateReason.RunFailed
             or StreamingUpdateReason.RunCancelling
             or StreamingUpdateReason.RunCancelled

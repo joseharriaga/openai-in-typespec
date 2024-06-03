@@ -39,6 +39,7 @@ internal static class StreamingUpdateReasonExtensions
         "thread.run.in_progress" => StreamingUpdateReason.RunInProgress,
         "thread.run.requires_action" => StreamingUpdateReason.RunRequiresAction,
         "thread.run.completed" => StreamingUpdateReason.RunCompleted,
+        "thread.run.incomplete" => StreamingUpdateReason.RunIncomplete,
         "thread.run.failed" => StreamingUpdateReason.RunFailed,
         "thread.run.cancelling" => StreamingUpdateReason.RunCancelling,
         "thread.run.cancelled" => StreamingUpdateReason.RunCancelled,

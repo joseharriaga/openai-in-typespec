@@ -64,7 +64,7 @@ internal static class InternalListHelpers
     {
         if (pageToken is null)
         {
-            return new PageToken(null, null, null, true);
+            return new PageToken(null, null, true);
         }
 
         PageToken? token = ModelReaderWriter.Read<PageToken>(BinaryData.FromString(pageToken));
@@ -74,7 +74,7 @@ internal static class InternalListHelpers
 
     internal static string? FromPageToken(PageToken pageToken)
     {
-        if (!pageToken.HasMore)
+        if (!(pageToken.HasMore == true))
         {
             return null;
         }

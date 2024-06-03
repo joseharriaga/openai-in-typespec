@@ -11,18 +11,16 @@ internal class PageToken : IJsonModel<PageToken>
 {
     public PageToken() { }
 
-    public PageToken(ListOrder? order, string? after, string? before, bool hasMore)
+    public PageToken(string? after, string? before, bool? hasMore)
     {
-        Order = order;
         After = after;
         Before = before;
         HasMore = hasMore;
     }
 
-    public ListOrder? Order { get; }
     public string? After { get; }
     public string? Before { get; }
-    public bool HasMore { get; }
+    public bool? HasMore { get; }
 
     public PageToken Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         => DeserializePageToken(ref reader);
@@ -35,10 +33,9 @@ internal class PageToken : IJsonModel<PageToken>
 
     internal static PageToken DeserializePageToken(ref Utf8JsonReader reader)
     {
-        ListOrder? order = null;
         string? after = null;
         string? before = null;
-        bool hasMore = true;
+        bool? hasMore = null;
 
         // Read start object
         reader.Read();
@@ -58,15 +55,6 @@ internal class PageToken : IJsonModel<PageToken>
 
             switch (name)
             {
-                case "order":
-                    reader.Read();
-
-                    Debug.Assert(reader.TokenType == JsonTokenType.String);
-
-                    string o = reader.GetString()!;
-                    order = o == "asc" ? ListOrder.OldestFirst : ListOrder.NewestFirst;
-
-                    break;
                 case "after":
                     reader.Read();
 
@@ -97,7 +85,7 @@ internal class PageToken : IJsonModel<PageToken>
             }
         }
 
-        return new PageToken(order, after, before, hasMore);
+        return new PageToken(after, before, hasMore);
     }
 
     public string GetFormatFromOptions(ModelReaderWriterOptions options)
@@ -106,12 +94,6 @@ internal class PageToken : IJsonModel<PageToken>
     public void Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
-
-        if (Order is not null)
-        {
-            writer.WritePropertyName("order");
-            writer.WriteStringValue(Order == ListOrder.OldestFirst ? "asc" : "desc");
-        }
 
         if (After is not null)
         {
@@ -125,8 +107,11 @@ internal class PageToken : IJsonModel<PageToken>
             writer.WriteStringValue(Before);
         }
 
-        writer.WritePropertyName("has_more");
-        writer.WriteBooleanValue(HasMore);
+        if (HasMore is not null)
+        {
+            writer.WritePropertyName("has_more");
+            writer.WriteBooleanValue(HasMore.Value);
+        }
 
         writer.WriteEndObject();
     }

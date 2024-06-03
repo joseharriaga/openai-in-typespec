@@ -10,18 +10,18 @@ namespace OpenAI;
 
 internal class PageableResultHelpers
 {
-    public static PageableResult<T> Create<T>(Func<string?, PageResult<T>> getInitialPage, Func<string?, PageResult<T>>? getNextPage) where T : notnull
+    public static PageableResult<T> Create<T>(Func<string?, string?, PageResult<T>> getInitialPage, Func<string?, string?, PageResult<T>>? getNextPage) where T : notnull
         => new FuncPageable<T>(getInitialPage, getNextPage);
 
-    public static AsyncPageableResult<T> Create<T>(Func<string?, Task<PageResult<T>>> getInitialPage, Func<string?, Task<PageResult<T>>>? getNextPage) where T : notnull
+    public static AsyncPageableResult<T> Create<T>(Func<string?, string?, Task<PageResult<T>>> getInitialPage, Func<string?, string?, Task<PageResult<T>>>? getNextPage) where T : notnull
         => new FuncAsyncPageable<T>(getInitialPage, getNextPage);
 
     private class FuncAsyncPageable<T> : AsyncPageableResult<T> where T : notnull
     {
-        private readonly Func<string?, Task<PageResult<T>>> _getInitialPage;
-        private readonly Func<string?, Task<PageResult<T>>>? _getNextPage;
+        private readonly Func<string?, string?, Task<PageResult<T>>> _getInitialPage;
+        private readonly Func<string?, string?, Task<PageResult<T>>>? _getNextPage;
 
-        public FuncAsyncPageable(Func<string?, Task<PageResult<T>>> getInitialPage, Func<string?, Task<PageResult<T>>>? getNextPage)
+        public FuncAsyncPageable(Func<string?, string?, Task<PageResult<T>>> getInitialPage, Func<string?, string?, Task<PageResult<T>>>? getNextPage)
         {
             _getInitialPage = getInitialPage;
             _getNextPage = getNextPage;
@@ -29,19 +29,23 @@ internal class PageableResultHelpers
 
         public override async IAsyncEnumerable<PageResult<T>> AsPages(string? pageToken = default)
         {
-            Func<string?, Task<PageResult<T>>>? getPage = _getInitialPage;
+            Func<string?, string?, Task<PageResult<T>>>? getPage = _getInitialPage;
 
             if (getPage == null)
             {
                 yield break;
             }
 
+            string? requestPageToken = pageToken;
+            string? prevPageToken = null;
+
             do
             {
-                PageResult<T> page = await getPage(pageToken).ConfigureAwait(false);
+                PageResult<T> page = await getPage(requestPageToken, prevPageToken).ConfigureAwait(false);
                 SetRawResponse(page.GetRawResponse());
                 yield return page;
-                pageToken = page.NextPageToken;
+                prevPageToken = requestPageToken;
+                requestPageToken = page.NextPageToken;
                 getPage = _getNextPage;
             }
             while (!string.IsNullOrEmpty(pageToken) && getPage != null);
@@ -50,10 +54,10 @@ internal class PageableResultHelpers
 
     private class FuncPageable<T> : PageableResult<T> where T : notnull
     {
-        private readonly Func<string?, PageResult<T>> _getInitialPage;
-        private readonly Func<string?, PageResult<T>>? _getNextPage;
+        private readonly Func<string?, string?, PageResult<T>> _getInitialPage;
+        private readonly Func<string?, string?, PageResult<T>>? _getNextPage;
 
-        public FuncPageable(Func<string?, PageResult<T>> getInitialPage, Func<string?, PageResult<T>>? getNextPage)
+        public FuncPageable(Func<string?, string?, PageResult<T>> getInitialPage, Func<string?, string?, PageResult<T>>? getNextPage)
         {
             _getInitialPage = getInitialPage;
             _getNextPage = getNextPage;
@@ -61,22 +65,26 @@ internal class PageableResultHelpers
 
         public override IEnumerable<PageResult<T>> AsPages(string? pageToken = default)
         {
-            Func<string?, PageResult<T>>? getPage = _getInitialPage;
+            Func<string?, string?, PageResult<T>>? getPage = _getInitialPage;
 
             if (getPage == null)
             {
                 yield break;
             }
 
+            string? requestPageToken = pageToken;
+            string? prevPageToken = null;
+
             do
             {
-                PageResult<T> page = getPage(pageToken);
+                PageResult<T> page = getPage(requestPageToken, prevPageToken);
                 SetRawResponse(page.GetRawResponse());
                 yield return page;
-                pageToken = page.NextPageToken;
+                prevPageToken = requestPageToken;
+                requestPageToken = page.NextPageToken;
                 getPage = _getNextPage;
             }
-            while (!string.IsNullOrEmpty(pageToken) && getPage != null);
+            while (!string.IsNullOrEmpty(requestPageToken) && getPage != null);
         }
     }
 }

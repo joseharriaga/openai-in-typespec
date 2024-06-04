@@ -5,17 +5,17 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.FineTuning
 {
-    internal partial class FineTuneChatCompletionRequestAssistantMessage
+    internal partial class InternalFineTuneChatCompletionRequestAssistantMessage
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        internal FineTuneChatCompletionRequestAssistantMessage()
+        internal InternalFineTuneChatCompletionRequestAssistantMessage()
         {
         }
 
-        internal FineTuneChatCompletionRequestAssistantMessage(string content, string role, string name, FineTuneChatCompletionRequestAssistantMessageFunctionCall functionCall, string weight, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalFineTuneChatCompletionRequestAssistantMessage(string content, string role, string name, InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall functionCall, string weight, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Content = content;
             Role = role;
@@ -29,7 +29,7 @@ namespace OpenAI.Internal.Models
         public string Role { get; } = "assistant";
 
         public string Name { get; }
-        public FineTuneChatCompletionRequestAssistantMessageFunctionCall FunctionCall { get; }
+        public InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall FunctionCall { get; }
         public string Weight { get; }
     }
 }

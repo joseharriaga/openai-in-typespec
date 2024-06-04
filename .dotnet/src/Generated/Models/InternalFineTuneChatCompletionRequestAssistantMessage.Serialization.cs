@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.FineTuning
 {
-    internal partial class FineTuneChatCompletionRequestAssistantMessage : IJsonModel<FineTuneChatCompletionRequestAssistantMessage>
+    internal partial class InternalFineTuneChatCompletionRequestAssistantMessage : IJsonModel<InternalFineTuneChatCompletionRequestAssistantMessage>
     {
-        void IJsonModel<FineTuneChatCompletionRequestAssistantMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FineTuneChatCompletionRequestAssistantMessage)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalFineTuneChatCompletionRequestAssistantMessage)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -75,19 +75,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        FineTuneChatCompletionRequestAssistantMessage IJsonModel<FineTuneChatCompletionRequestAssistantMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalFineTuneChatCompletionRequestAssistantMessage IJsonModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FineTuneChatCompletionRequestAssistantMessage)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalFineTuneChatCompletionRequestAssistantMessage)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeFineTuneChatCompletionRequestAssistantMessage(document.RootElement, options);
+            return DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(document.RootElement, options);
         }
 
-        internal static FineTuneChatCompletionRequestAssistantMessage DeserializeFineTuneChatCompletionRequestAssistantMessage(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalFineTuneChatCompletionRequestAssistantMessage DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -98,7 +98,7 @@ namespace OpenAI.Internal.Models
             string content = default;
             string role = default;
             string name = default;
-            FineTuneChatCompletionRequestAssistantMessageFunctionCall functionCall = default;
+            InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall functionCall = default;
             string weight = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -131,7 +131,7 @@ namespace OpenAI.Internal.Models
                         functionCall = null;
                         continue;
                     }
-                    functionCall = FineTuneChatCompletionRequestAssistantMessageFunctionCall.DeserializeFineTuneChatCompletionRequestAssistantMessageFunctionCall(property.Value, options);
+                    functionCall = InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall.DeserializeInternalFineTuneChatCompletionRequestAssistantMessageFunctionCall(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("weight"u8))
@@ -145,7 +145,7 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FineTuneChatCompletionRequestAssistantMessage(
+            return new InternalFineTuneChatCompletionRequestAssistantMessage(
                 content,
                 role,
                 name,
@@ -154,41 +154,41 @@ namespace OpenAI.Internal.Models
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<FineTuneChatCompletionRequestAssistantMessage>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(FineTuneChatCompletionRequestAssistantMessage)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalFineTuneChatCompletionRequestAssistantMessage)} does not support writing '{options.Format}' format.");
             }
         }
 
-        FineTuneChatCompletionRequestAssistantMessage IPersistableModel<FineTuneChatCompletionRequestAssistantMessage>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalFineTuneChatCompletionRequestAssistantMessage IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeFineTuneChatCompletionRequestAssistantMessage(document.RootElement, options);
+                        return DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(FineTuneChatCompletionRequestAssistantMessage)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalFineTuneChatCompletionRequestAssistantMessage)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<FineTuneChatCompletionRequestAssistantMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static FineTuneChatCompletionRequestAssistantMessage FromResponse(PipelineResponse response)
+        internal static InternalFineTuneChatCompletionRequestAssistantMessage FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeFineTuneChatCompletionRequestAssistantMessage(document.RootElement);
+            return DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

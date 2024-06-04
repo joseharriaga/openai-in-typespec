@@ -213,41 +213,5 @@ namespace OpenAI
         {
             return new StreamingChatFunctionCallUpdate(functionArgumentsUpdate, functionName, serializedAdditionalRawData: null);
         }
-
-        public static FinetuneChatRequestInput FinetuneChatRequestInput(IEnumerable<BinaryData> messages = null, IEnumerable<ChatFunction> functions = null)
-        {
-            messages ??= new List<BinaryData>();
-            functions ??= new List<ChatFunction>();
-
-            return new FinetuneChatRequestInput(messages?.ToList(), functions?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        public static FineTuneChatCompletionRequestAssistantMessage FineTuneChatCompletionRequestAssistantMessage(string content = null, string role = null, string name = null, FineTuneChatCompletionRequestAssistantMessageFunctionCall functionCall = null, string weight = null)
-        {
-            return new FineTuneChatCompletionRequestAssistantMessage(
-                content,
-                role,
-                name,
-                functionCall,
-                weight,
-                serializedAdditionalRawData: null);
-        }
-
-        public static FineTuneChatCompletionRequestAssistantMessageFunctionCall FineTuneChatCompletionRequestAssistantMessageFunctionCall(string arguments = null, string name = null)
-        {
-            return new FineTuneChatCompletionRequestAssistantMessageFunctionCall(arguments, name, serializedAdditionalRawData: null);
-        }
-
-        public static FineTuneChatCompletionRequestFunctionMessage FineTuneChatCompletionRequestFunctionMessage(string role = null, IEnumerable<ChatMessageContentPart> content = null, string functionName = null)
-        {
-            content ??= new List<ChatMessageContentPart>();
-
-            return new FineTuneChatCompletionRequestFunctionMessage(role, content?.ToList(), serializedAdditionalRawData: null, functionName);
-        }
-
-        public static FinetuneCompletionRequestInput FinetuneCompletionRequestInput(string prompt = null, string completion = null)
-        {
-            return new FinetuneCompletionRequestInput(prompt, completion, serializedAdditionalRawData: null);
-        }
     }
 }

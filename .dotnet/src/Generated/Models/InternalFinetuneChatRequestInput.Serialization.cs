@@ -9,16 +9,16 @@ using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Chat;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.FineTuning
 {
-    internal partial class FinetuneChatRequestInput : IJsonModel<FinetuneChatRequestInput>
+    internal partial class InternalFinetuneChatRequestInput : IJsonModel<InternalFinetuneChatRequestInput>
     {
-        void IJsonModel<FinetuneChatRequestInput>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalFinetuneChatRequestInput>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FinetuneChatRequestInput>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFinetuneChatRequestInput>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FinetuneChatRequestInput)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalFinetuneChatRequestInput)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -72,19 +72,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        FinetuneChatRequestInput IJsonModel<FinetuneChatRequestInput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalFinetuneChatRequestInput IJsonModel<InternalFinetuneChatRequestInput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FinetuneChatRequestInput>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFinetuneChatRequestInput>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FinetuneChatRequestInput)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalFinetuneChatRequestInput)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeFinetuneChatRequestInput(document.RootElement, options);
+            return DeserializeInternalFinetuneChatRequestInput(document.RootElement, options);
         }
 
-        internal static FinetuneChatRequestInput DeserializeFinetuneChatRequestInput(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalFinetuneChatRequestInput DeserializeInternalFinetuneChatRequestInput(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -139,44 +139,44 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FinetuneChatRequestInput(messages ?? new ChangeTrackingList<BinaryData>(), functions ?? new ChangeTrackingList<ChatFunction>(), serializedAdditionalRawData);
+            return new InternalFinetuneChatRequestInput(messages ?? new ChangeTrackingList<BinaryData>(), functions ?? new ChangeTrackingList<ChatFunction>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<FinetuneChatRequestInput>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalFinetuneChatRequestInput>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FinetuneChatRequestInput>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFinetuneChatRequestInput>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(FinetuneChatRequestInput)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalFinetuneChatRequestInput)} does not support writing '{options.Format}' format.");
             }
         }
 
-        FinetuneChatRequestInput IPersistableModel<FinetuneChatRequestInput>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalFinetuneChatRequestInput IPersistableModel<InternalFinetuneChatRequestInput>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FinetuneChatRequestInput>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFinetuneChatRequestInput>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeFinetuneChatRequestInput(document.RootElement, options);
+                        return DeserializeInternalFinetuneChatRequestInput(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(FinetuneChatRequestInput)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalFinetuneChatRequestInput)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<FinetuneChatRequestInput>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalFinetuneChatRequestInput>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static FinetuneChatRequestInput FromResponse(PipelineResponse response)
+        internal static InternalFinetuneChatRequestInput FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeFinetuneChatRequestInput(document.RootElement);
+            return DeserializeInternalFinetuneChatRequestInput(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

@@ -5,17 +5,17 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.FineTuning
 {
-    internal partial class FinetuneCompletionRequestInput
+    internal partial class InternalFinetuneCompletionRequestInput
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        internal FinetuneCompletionRequestInput()
+        internal InternalFinetuneCompletionRequestInput()
         {
         }
 
-        internal FinetuneCompletionRequestInput(string prompt, string completion, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalFinetuneCompletionRequestInput(string prompt, string completion, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Prompt = prompt;
             Completion = completion;

@@ -5,13 +5,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.FineTuning
 {
-    internal partial class FineTuneChatCompletionRequestAssistantMessageFunctionCall
+    internal partial class InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        internal FineTuneChatCompletionRequestAssistantMessageFunctionCall(string arguments, string name)
+        internal InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall(string arguments, string name)
         {
             Argument.AssertNotNull(arguments, nameof(arguments));
             Argument.AssertNotNull(name, nameof(name));
@@ -20,14 +20,14 @@ namespace OpenAI.Internal.Models
             Name = name;
         }
 
-        internal FineTuneChatCompletionRequestAssistantMessageFunctionCall(string arguments, string name, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall(string arguments, string name, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Arguments = arguments;
             Name = name;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal FineTuneChatCompletionRequestAssistantMessageFunctionCall()
+        internal InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall()
         {
         }
 

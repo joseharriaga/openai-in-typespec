@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.Internal.FineTuning
 {
-    internal partial class FinetuneCompletionRequestInput : IJsonModel<FinetuneCompletionRequestInput>
+    internal partial class InternalFinetuneCompletionRequestInput : IJsonModel<InternalFinetuneCompletionRequestInput>
     {
-        void IJsonModel<FinetuneCompletionRequestInput>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalFinetuneCompletionRequestInput>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FinetuneCompletionRequestInput>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFinetuneCompletionRequestInput>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FinetuneCompletionRequestInput)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalFinetuneCompletionRequestInput)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -49,19 +49,19 @@ namespace OpenAI.Internal.Models
             writer.WriteEndObject();
         }
 
-        FinetuneCompletionRequestInput IJsonModel<FinetuneCompletionRequestInput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalFinetuneCompletionRequestInput IJsonModel<InternalFinetuneCompletionRequestInput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FinetuneCompletionRequestInput>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFinetuneCompletionRequestInput>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(FinetuneCompletionRequestInput)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalFinetuneCompletionRequestInput)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeFinetuneCompletionRequestInput(document.RootElement, options);
+            return DeserializeInternalFinetuneCompletionRequestInput(document.RootElement, options);
         }
 
-        internal static FinetuneCompletionRequestInput DeserializeFinetuneCompletionRequestInput(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalFinetuneCompletionRequestInput DeserializeInternalFinetuneCompletionRequestInput(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -91,44 +91,44 @@ namespace OpenAI.Internal.Models
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FinetuneCompletionRequestInput(prompt, completion, serializedAdditionalRawData);
+            return new InternalFinetuneCompletionRequestInput(prompt, completion, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<FinetuneCompletionRequestInput>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalFinetuneCompletionRequestInput>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FinetuneCompletionRequestInput>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFinetuneCompletionRequestInput>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(FinetuneCompletionRequestInput)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalFinetuneCompletionRequestInput)} does not support writing '{options.Format}' format.");
             }
         }
 
-        FinetuneCompletionRequestInput IPersistableModel<FinetuneCompletionRequestInput>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalFinetuneCompletionRequestInput IPersistableModel<InternalFinetuneCompletionRequestInput>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FinetuneCompletionRequestInput>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalFinetuneCompletionRequestInput>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeFinetuneCompletionRequestInput(document.RootElement, options);
+                        return DeserializeInternalFinetuneCompletionRequestInput(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(FinetuneCompletionRequestInput)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalFinetuneCompletionRequestInput)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<FinetuneCompletionRequestInput>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalFinetuneCompletionRequestInput>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static FinetuneCompletionRequestInput FromResponse(PipelineResponse response)
+        internal static InternalFinetuneCompletionRequestInput FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeFinetuneCompletionRequestInput(document.RootElement);
+            return DeserializeInternalFinetuneCompletionRequestInput(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
@@ -19,9 +20,10 @@ namespace OpenAI.VectorStores
             FileIds = fileIds.ToList();
         }
 
-        internal InternalCreateVectorStoreFileBatchRequest(IList<string> fileIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateVectorStoreFileBatchRequest(IList<string> fileIds, BinaryData chunkingStrategy, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileIds = fileIds;
+            ChunkingStrategy = chunkingStrategy;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -30,5 +32,6 @@ namespace OpenAI.VectorStores
         }
 
         public IList<string> FileIds { get; }
+        public BinaryData ChunkingStrategy { get; set; }
     }
 }

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
@@ -24,7 +25,7 @@ namespace OpenAI.VectorStores
             LastError = lastError;
         }
 
-        internal VectorStoreFileAssociation(string fileId, InternalVectorStoreFileObjectObject @object, int size, DateTimeOffset createdAt, string vectorStoreId, VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError? lastError, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreFileAssociation(string fileId, InternalVectorStoreFileObjectObject @object, int size, DateTimeOffset createdAt, string vectorStoreId, VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError? lastError, BinaryData chunkingStrategy, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Object = @object;
@@ -33,6 +34,7 @@ namespace OpenAI.VectorStores
             VectorStoreId = vectorStoreId;
             Status = status;
             LastError = lastError;
+            ChunkingStrategy = chunkingStrategy;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -43,5 +45,6 @@ namespace OpenAI.VectorStores
         public string VectorStoreId { get; }
         public VectorStoreFileAssociationStatus Status { get; }
         public VectorStoreFileAssociationError? LastError { get; }
+        public BinaryData ChunkingStrategy { get; }
     }
 }

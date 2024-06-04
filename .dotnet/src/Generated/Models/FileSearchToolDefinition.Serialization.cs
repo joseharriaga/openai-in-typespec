@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -21,6 +22,11 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
+            if (Optional.IsDefined(FileSearch))
+            {
+                writer.WritePropertyName("file_search"u8);
+                writer.WriteObjectValue(FileSearch, options);
+            }
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (true && _serializedAdditionalRawData != null)
@@ -61,11 +67,21 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            AssistantToolsFileSearchFileSearch fileSearch = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("file_search"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    fileSearch = AssistantToolsFileSearchFileSearch.DeserializeAssistantToolsFileSearchFileSearch(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString();
@@ -77,7 +93,7 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FileSearchToolDefinition(type, serializedAdditionalRawData);
+            return new FileSearchToolDefinition(type, serializedAdditionalRawData, fileSearch);
         }
 
         BinaryData IPersistableModel<FileSearchToolDefinition>.Write(ModelReaderWriterOptions options)

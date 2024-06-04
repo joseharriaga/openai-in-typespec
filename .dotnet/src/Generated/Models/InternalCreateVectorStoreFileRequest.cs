@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
@@ -18,9 +19,10 @@ namespace OpenAI.VectorStores
             FileId = fileId;
         }
 
-        internal InternalCreateVectorStoreFileRequest(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateVectorStoreFileRequest(string fileId, BinaryData chunkingStrategy, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
+            ChunkingStrategy = chunkingStrategy;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -29,5 +31,6 @@ namespace OpenAI.VectorStores
         }
 
         public string FileId { get; }
+        public BinaryData ChunkingStrategy { get; set; }
     }
 }

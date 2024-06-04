@@ -10,6 +10,7 @@ using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Images;
+using OpenAI.Models;
 using OpenAI.Moderations;
 using OpenAI.VectorStores;
 
@@ -169,9 +170,29 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
+        public static AutoChunkingStrategyRequestParam AutoChunkingStrategyRequestParam(AutoChunkingStrategyRequestParamType type = default)
+        {
+            return new AutoChunkingStrategyRequestParam(type, serializedAdditionalRawData: null);
+        }
+
+        public static StaticChunkingStrategyRequestParam StaticChunkingStrategyRequestParam(StaticChunkingStrategyRequestParamType type = default, StaticChunkingStrategy @static = null)
+        {
+            return new StaticChunkingStrategyRequestParam(type, @static, serializedAdditionalRawData: null);
+        }
+
         public static VectorStoreFileAssociationError VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code = default, string message = null)
         {
             return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
+        }
+
+        public static StaticChunkingStrategyResponseParam StaticChunkingStrategyResponseParam(StaticChunkingStrategyResponseParamType type = default, StaticChunkingStrategy @static = null)
+        {
+            return new StaticChunkingStrategyResponseParam(type, @static, serializedAdditionalRawData: null);
+        }
+
+        public static OtherChunkingStrategyResponseParam OtherChunkingStrategyResponseParam(OtherChunkingStrategyResponseParamType type = default)
+        {
+            return new OtherChunkingStrategyResponseParam(type, serializedAdditionalRawData: null);
         }
 
         public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)
@@ -191,6 +212,42 @@ namespace OpenAI
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null)
         {
             return new StreamingChatFunctionCallUpdate(functionArgumentsUpdate, functionName, serializedAdditionalRawData: null);
+        }
+
+        public static FinetuneChatRequestInput FinetuneChatRequestInput(IEnumerable<BinaryData> messages = null, IEnumerable<ChatFunction> functions = null)
+        {
+            messages ??= new List<BinaryData>();
+            functions ??= new List<ChatFunction>();
+
+            return new FinetuneChatRequestInput(messages?.ToList(), functions?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        public static FineTuneChatCompletionRequestAssistantMessage FineTuneChatCompletionRequestAssistantMessage(string content = null, string role = null, string name = null, FineTuneChatCompletionRequestAssistantMessageFunctionCall functionCall = null, string weight = null)
+        {
+            return new FineTuneChatCompletionRequestAssistantMessage(
+                content,
+                role,
+                name,
+                functionCall,
+                weight,
+                serializedAdditionalRawData: null);
+        }
+
+        public static FineTuneChatCompletionRequestAssistantMessageFunctionCall FineTuneChatCompletionRequestAssistantMessageFunctionCall(string arguments = null, string name = null)
+        {
+            return new FineTuneChatCompletionRequestAssistantMessageFunctionCall(arguments, name, serializedAdditionalRawData: null);
+        }
+
+        public static FineTuneChatCompletionRequestFunctionMessage FineTuneChatCompletionRequestFunctionMessage(string role = null, IEnumerable<ChatMessageContentPart> content = null, string functionName = null)
+        {
+            content ??= new List<ChatMessageContentPart>();
+
+            return new FineTuneChatCompletionRequestFunctionMessage(role, content?.ToList(), serializedAdditionalRawData: null, functionName);
+        }
+
+        public static FinetuneCompletionRequestInput FinetuneCompletionRequestInput(string prompt = null, string completion = null)
+        {
+            return new FinetuneCompletionRequestInput(prompt, completion, serializedAdditionalRawData: null);
         }
     }
 }

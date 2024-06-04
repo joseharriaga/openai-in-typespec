@@ -2066,6 +2066,19 @@ components:
           enum:
             - file_search
           description: 'The type of tool being defined: `file_search`'
+        file_search:
+          type: object
+          properties:
+            max_num_results:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 50
+              description: |-
+                The maximum number of results the file search tool should output. The default is 20 for gpt-4* models and 5 for gpt-3.5-turbo. This number should be between 1 and 50 inclusive.
+
+                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/number-of-chunks-returned) for more information.
+          description: Overrides for the file search tool.
       allOf:
         - $ref: '#/components/schemas/AssistantToolDefinition'
     AssistantToolsFunction:
@@ -2144,6 +2157,17 @@ components:
           required:
             - name
       description: Specifies a tool the model should use. Use to force the model to call a specific tool.
+    AutoChunkingStrategyRequestParam:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - auto
+          description: Always `auto`.
+      description: The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
     Batch:
       type: object
       required:
@@ -2784,6 +2808,12 @@ components:
       x-oaiExpandable: true
     ChatMessageContentPart:
       type: object
+    ChunkingStrategyRequestParam:
+      anyOf:
+        - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
+        - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
+      description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
+      x-oaiExpandable: true
     CompletionUsage:
       type: object
       required:
@@ -3791,6 +3821,8 @@ components:
             See [upload file](/docs/api-reference/files/create) for how to upload a file.
 
             Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
+
+            The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) format.
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         hyperparameters:
@@ -4850,6 +4882,8 @@ components:
           minItems: 1
           maxItems: 500
           description: A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
+        chunking_strategy:
+          $ref: '#/components/schemas/ChunkingStrategyRequestParam'
     CreateVectorStoreFileRequest:
       type: object
       required:
@@ -4858,6 +4892,8 @@ components:
         file_id:
           type: string
           description: A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files.
+        chunking_strategy:
+          $ref: '#/components/schemas/ChunkingStrategyRequestParam'
     CreateVectorStoreRequest:
       type: object
       properties:
@@ -4872,6 +4908,12 @@ components:
           description: The name of the vector store.
         expires_after:
           $ref: '#/components/schemas/VectorStoreExpirationAfter'
+        chunking_strategy:
+          anyOf:
+            - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
+            - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
+          description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+          x-oaiExpandable: true
         metadata:
           type: object
           additionalProperties:
@@ -5033,6 +5075,47 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/Error'
+    FineTuneChatCompletionRequestAssistantMessage:
+      type: object
+      required:
+        - role
+      properties:
+        content:
+          type: string
+          nullable: true
+          description: The contents of the assistant message. Required unless `function_call` is specified.
+        role:
+          type: string
+          enum:
+            - assistant
+          description: The role of the messages author, in this case `assistant`.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+        function_call:
+          type: object
+          properties:
+            arguments:
+              type: string
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
+            name:
+              type: string
+              description: The name of the function to call.
+          required:
+            - arguments
+            - name
+          nullable: true
+          description: The name and arguments of a function that should be called, as generated by the model.
+        weight:
+          type: string
+          enum:
+            - '0'
+            - '1'
+          description: Controls whether the assistant message is trained against (0 or 1)
+    FineTuneChatCompletionRequestFunctionMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
     FineTuningIntegration:
       type: object
       required:
@@ -5290,6 +5373,37 @@ components:
         $ref: '#/components/schemas/FineTuningIntegration'
       maxItems: 5
       x-oaiExpandable: true
+    FinetuneChatRequestInput:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
+              - $ref: '#/components/schemas/FineTuneChatCompletionRequestAssistantMessage'
+              - $ref: '#/components/schemas/FineTuneChatCompletionRequestFunctionMessage'
+          minItems: 1
+          x-oaiExpandable: true
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionFunctions'
+          minItems: 1
+          maxItems: 128
+          description: A list of functions the model may generate JSON inputs for.
+      description: The per-line training example of a fine-tuning input file for chat models
+    FinetuneCompletionRequestInput:
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: The input prompt for this training example.
+        completion:
+          type: string
+          description: The desired completion for this training example.
+      description: The per-line training example of a fine-tuning input file for completions models
     FunctionObject:
       type: object
       required:
@@ -6375,6 +6489,17 @@ components:
           description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
           deprecated: true
       description: The `File` object represents a document that has been uploaded to OpenAI.
+    OtherChunkingStrategyResponseParam:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - other
+          description: Always `other`.
+      description: This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
     RunCompletionUsage:
       type: object
       required:
@@ -7213,6 +7338,51 @@ components:
             - arguments
           description: The function definition.
       description: Tool call objects
+    StaticChunkingStrategy:
+      type: object
+      required:
+        - max_chunk_size_tokens
+        - chunk_overlap_tokens
+      properties:
+        max_chunk_size_tokens:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 4096
+          description: The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
+        chunk_overlap_tokens:
+          type: integer
+          format: int32
+          description: |-
+            The number of tokens that overlap between chunks. The default value is `400`.
+
+            Note that the overlap must not exceed half of `max_chunk_size_tokens`.
+    StaticChunkingStrategyRequestParam:
+      type: object
+      required:
+        - type
+        - static
+      properties:
+        type:
+          type: string
+          enum:
+            - static
+          description: Always `static`.
+        static:
+          $ref: '#/components/schemas/StaticChunkingStrategy'
+    StaticChunkingStrategyResponseParam:
+      type: object
+      required:
+        - type
+        - static
+      properties:
+        type:
+          type: string
+          enum:
+            - static
+          description: Always `static`.
+        static:
+          $ref: '#/components/schemas/StaticChunkingStrategy'
     SubmitToolOutputsRunRequest:
       type: object
       required:
@@ -7535,6 +7705,12 @@ components:
             - message
           nullable: true
           description: The last error associated with this vector store file. Will be `null` if there are no errors.
+        chunking_strategy:
+          anyOf:
+            - $ref: '#/components/schemas/StaticChunkingStrategyResponseParam'
+            - $ref: '#/components/schemas/OtherChunkingStrategyResponseParam'
+          description: The strategy used to chunk the file.
+          x-oaiExpandable: true
       description: A list of files attached to a vector store.
     VectorStoreObject:
       type: object

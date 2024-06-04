@@ -48,6 +48,18 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("expires_after");
                 }
             }
+            if (Optional.IsDefined(ChunkingStrategy))
+            {
+                writer.WritePropertyName("chunking_strategy"u8);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(ChunkingStrategy);
+#else
+                using (JsonDocument document = JsonDocument.Parse(ChunkingStrategy))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
+            }
             if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
@@ -107,6 +119,7 @@ namespace OpenAI.VectorStores
             IList<string> fileIds = default;
             string name = default;
             VectorStoreExpirationPolicy expiresAfter = default;
+            BinaryData chunkingStrategy = default;
             IDictionary<string, string> metadata = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -141,6 +154,15 @@ namespace OpenAI.VectorStores
                     expiresAfter = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(property.Value, options);
                     continue;
                 }
+                if (property.NameEquals("chunking_strategy"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    chunkingStrategy = BinaryData.FromString(property.Value.GetRawText());
+                    continue;
+                }
                 if (property.NameEquals("metadata"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -161,7 +183,13 @@ namespace OpenAI.VectorStores
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new VectorStoreCreationOptions(fileIds ?? new ChangeTrackingList<string>(), name, expiresAfter, metadata ?? new ChangeTrackingDictionary<string, string>(), serializedAdditionalRawData);
+            return new VectorStoreCreationOptions(
+                fileIds ?? new ChangeTrackingList<string>(),
+                name,
+                expiresAfter,
+                chunkingStrategy,
+                metadata ?? new ChangeTrackingDictionary<string, string>(),
+                serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<VectorStoreCreationOptions>.Write(ModelReaderWriterOptions options)

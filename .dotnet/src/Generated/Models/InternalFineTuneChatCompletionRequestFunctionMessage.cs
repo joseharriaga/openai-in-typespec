@@ -6,16 +6,11 @@ using System;
 using System.Collections.Generic;
 using OpenAI.Chat;
 
-namespace OpenAI.Internal.FineTuning
+namespace OpenAI.FineTuning
 {
     [Obsolete("This field is marked as deprecated.")]
     internal partial class InternalFineTuneChatCompletionRequestFunctionMessage : FunctionChatMessage
     {
-        public InternalFineTuneChatCompletionRequestFunctionMessage(IEnumerable<ChatMessageContentPart> content, string functionName) : base(content, functionName)
-        {
-            Argument.AssertNotNull(functionName, nameof(functionName));
-        }
-
         internal InternalFineTuneChatCompletionRequestFunctionMessage(string role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData, string functionName) : base(role, content, serializedAdditionalRawData, functionName)
         {
         }

@@ -86,9 +86,6 @@ internal partial class InternalFinetuneCompletionRequestInput { }
 [CodeGenModel("FinetuneChatRequestInput")]
 internal partial class InternalFinetuneChatRequestInput { }
 
-[CodeGenModel("FineTuneChatCompletionRequestFunctionMessage")]
-internal partial class InternalFineTuneChatCompletionRequestFunctionMessage { }
-
 [CodeGenModel("FineTuneChatCompletionRequestAssistantMessage")]
 internal partial class InternalFineTuneChatCompletionRequestAssistantMessage { }
 

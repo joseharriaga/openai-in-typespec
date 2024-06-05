@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
@@ -18,7 +17,7 @@ namespace OpenAI.VectorStores
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal VectorStoreCreationOptions(IList<string> fileIds, string name, VectorStoreExpirationPolicy expirationPolicy, BinaryData chunkingStrategy, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreCreationOptions(IList<string> fileIds, string name, VectorStoreExpirationPolicy expirationPolicy, FileChunkingStrategy chunkingStrategy, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileIds = fileIds;
             Name = name;
@@ -28,7 +27,6 @@ namespace OpenAI.VectorStores
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
         public string Name { get; init; }
-        public BinaryData ChunkingStrategy { get; init; }
         public IDictionary<string, string> Metadata { get; }
     }
 }

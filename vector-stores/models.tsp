@@ -259,17 +259,21 @@ model CreateVectorStoreFileBatchRequest {
   chunking_strategy?: ChunkingStrategyRequestParam;
 }
 
+// Tool customization: apply custom common base
 @doc("""
 This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
 """)
-model OtherChunkingStrategyResponseParam {
+model OtherChunkingStrategyResponseParam
+  extends FileChunkingStrategyResponseParam {
   @doc("""
   Always `other`.
   """)
   type: "other";
 }
 
-model StaticChunkingStrategyResponseParam {
+// Tool customization: apply custom common base
+model StaticChunkingStrategyResponseParam
+  extends FileChunkingStrategyResponseParam {
   @doc("""
   Always `static`.
   """)
@@ -294,17 +298,21 @@ model StaticChunkingStrategy {
   chunk_overlap_tokens: int32;
 }
 
+// Tool customization: apply custom common base
 @doc("""
 The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
 """)
-model AutoChunkingStrategyRequestParam {
+model AutoChunkingStrategyRequestParam
+  extends FileChunkingStrategyRequestParam {
   @doc("""
   Always `auto`.
   """)
   type: "auto";
 }
 
-model StaticChunkingStrategyRequestParam {
+// Tool customization: apply custom common base
+model StaticChunkingStrategyRequestParam
+  extends FileChunkingStrategyRequestParam {
   @doc("""
   Always `static`.
   """)

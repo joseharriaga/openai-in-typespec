@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Internal.FineTuning
+namespace OpenAI.FineTuning
 {
     internal partial class InternalFinetuneCompletionRequestInput : IJsonModel<InternalFinetuneCompletionRequestInput>
     {

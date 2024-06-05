@@ -2167,7 +2167,20 @@ components:
           enum:
             - auto
           description: Always `auto`.
+      allOf:
+        - $ref: '#/components/schemas/FileChunkingStrategyRequestParam'
       description: The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
+    AutoChunkingStrategyResponseParam:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - auto
+      allOf:
+        - $ref: '#/components/schemas/FileChunkingStrategyResponseParam'
     Batch:
       type: object
       required:
@@ -5075,6 +5088,29 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/Error'
+    FileChunkingStrategyRequestParam:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          static: '#/components/schemas/StaticChunkingStrategyRequestParam'
+    FileChunkingStrategyResponseParam:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          other: '#/components/schemas/OtherChunkingStrategyResponseParam'
+          auto: '#/components/schemas/AutoChunkingStrategyResponseParam'
     FineTuneChatCompletionRequestAssistantMessage:
       type: object
       required:
@@ -6499,6 +6535,8 @@ components:
           enum:
             - other
           description: Always `other`.
+      allOf:
+        - $ref: '#/components/schemas/FileChunkingStrategyResponseParam'
       description: This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
     RunCompletionUsage:
       type: object
@@ -7370,6 +7408,8 @@ components:
           description: Always `static`.
         static:
           $ref: '#/components/schemas/StaticChunkingStrategy'
+      allOf:
+        - $ref: '#/components/schemas/FileChunkingStrategyRequestParam'
     StaticChunkingStrategyResponseParam:
       type: object
       required:
@@ -7383,6 +7423,8 @@ components:
           description: Always `static`.
         static:
           $ref: '#/components/schemas/StaticChunkingStrategy'
+      allOf:
+        - $ref: '#/components/schemas/FileChunkingStrategyResponseParam'
     SubmitToolOutputsRunRequest:
       type: object
       required:

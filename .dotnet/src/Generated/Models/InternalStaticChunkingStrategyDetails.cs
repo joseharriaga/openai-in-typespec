@@ -5,30 +5,30 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Internal.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class StaticChunkingStrategy
+    internal partial class InternalStaticChunkingStrategyDetails
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        public StaticChunkingStrategy(int maxChunkSizeTokens, int chunkOverlapTokens)
+        public InternalStaticChunkingStrategyDetails(int maxChunkSizeTokens, int chunkOverlapTokens)
         {
             MaxChunkSizeTokens = maxChunkSizeTokens;
             ChunkOverlapTokens = chunkOverlapTokens;
         }
 
-        internal StaticChunkingStrategy(int maxChunkSizeTokens, int chunkOverlapTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalStaticChunkingStrategyDetails(int maxChunkSizeTokens, int chunkOverlapTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             MaxChunkSizeTokens = maxChunkSizeTokens;
             ChunkOverlapTokens = chunkOverlapTokens;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal StaticChunkingStrategy()
+        internal InternalStaticChunkingStrategyDetails()
         {
         }
 
-        public int MaxChunkSizeTokens { get; init; }
-        public int ChunkOverlapTokens { get; init; }
+        public int MaxChunkSizeTokens { get; set; }
+        public int ChunkOverlapTokens { get; set; }
     }
 }

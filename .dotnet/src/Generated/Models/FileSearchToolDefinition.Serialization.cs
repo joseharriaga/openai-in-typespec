@@ -7,7 +7,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -22,10 +21,10 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(FileSearch))
+            if (Optional.IsDefined(_fileSearch))
             {
                 writer.WritePropertyName("file_search"u8);
-                writer.WriteObjectValue(FileSearch, options);
+                writer.WriteObjectValue<InternalAssistantToolsFileSearchFileSearch>(_fileSearch, options);
             }
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
@@ -67,7 +66,7 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            AssistantToolsFileSearchFileSearch fileSearch = default;
+            InternalAssistantToolsFileSearchFileSearch fileSearch = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -79,7 +78,7 @@ namespace OpenAI.Assistants
                     {
                         continue;
                     }
-                    fileSearch = AssistantToolsFileSearchFileSearch.DeserializeAssistantToolsFileSearchFileSearch(property.Value, options);
+                    fileSearch = InternalAssistantToolsFileSearchFileSearch.DeserializeInternalAssistantToolsFileSearchFileSearch(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("type"u8))

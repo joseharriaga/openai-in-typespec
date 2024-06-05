@@ -4,22 +4,14 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
     public partial class FileSearchToolDefinition : ToolDefinition
     {
-        public FileSearchToolDefinition()
+        internal FileSearchToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalAssistantToolsFileSearchFileSearch fileSearch) : base(type, serializedAdditionalRawData)
         {
-            Type = "file_search";
+            _fileSearch = fileSearch;
         }
-
-        internal FileSearchToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, AssistantToolsFileSearchFileSearch fileSearch) : base(type, serializedAdditionalRawData)
-        {
-            FileSearch = fileSearch;
-        }
-
-        public AssistantToolsFileSearchFileSearch FileSearch { get; init; }
     }
 }

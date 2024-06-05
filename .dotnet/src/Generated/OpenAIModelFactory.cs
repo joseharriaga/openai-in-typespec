@@ -10,7 +10,6 @@ using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Images;
-using OpenAI.Models;
 using OpenAI.Moderations;
 using OpenAI.VectorStores;
 
@@ -170,29 +169,9 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        public static AutoChunkingStrategyRequestParam AutoChunkingStrategyRequestParam(AutoChunkingStrategyRequestParamType type = default)
-        {
-            return new AutoChunkingStrategyRequestParam(type, serializedAdditionalRawData: null);
-        }
-
-        public static StaticChunkingStrategyRequestParam StaticChunkingStrategyRequestParam(StaticChunkingStrategyRequestParamType type = default, StaticChunkingStrategy @static = null)
-        {
-            return new StaticChunkingStrategyRequestParam(type, @static, serializedAdditionalRawData: null);
-        }
-
         public static VectorStoreFileAssociationError VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code = default, string message = null)
         {
             return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
-        }
-
-        public static StaticChunkingStrategyResponseParam StaticChunkingStrategyResponseParam(StaticChunkingStrategyResponseParamType type = default, StaticChunkingStrategy @static = null)
-        {
-            return new StaticChunkingStrategyResponseParam(type, @static, serializedAdditionalRawData: null);
-        }
-
-        public static OtherChunkingStrategyResponseParam OtherChunkingStrategyResponseParam(OtherChunkingStrategyResponseParamType type = default)
-        {
-            return new OtherChunkingStrategyResponseParam(type, serializedAdditionalRawData: null);
         }
 
         public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)

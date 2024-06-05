@@ -45,14 +45,7 @@ namespace OpenAI.VectorStores
             if (Optional.IsDefined(ChunkingStrategy))
             {
                 writer.WritePropertyName("chunking_strategy"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(ChunkingStrategy);
-#else
-                using (JsonDocument document = JsonDocument.Parse(ChunkingStrategy))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
             }
             if (true && _serializedAdditionalRawData != null)
             {
@@ -99,7 +92,7 @@ namespace OpenAI.VectorStores
             string vectorStoreId = default;
             VectorStoreFileAssociationStatus status = default;
             VectorStoreFileAssociationError? lastError = default;
-            BinaryData chunkingStrategy = default;
+            FileChunkingStrategy chunkingStrategy = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -150,7 +143,7 @@ namespace OpenAI.VectorStores
                     {
                         continue;
                     }
-                    chunkingStrategy = BinaryData.FromString(property.Value.GetRawText());
+                    chunkingStrategy = FileChunkingStrategy.DeserializeFileChunkingStrategy(property.Value, options);
                     continue;
                 }
                 if (true)

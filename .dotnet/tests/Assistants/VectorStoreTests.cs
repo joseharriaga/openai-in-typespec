@@ -255,10 +255,10 @@ public partial class VectorStoreTests
             _ => throw new NotImplementedException(),
         };
 
-        if (strategyKind == ChunkingStrategyKind.Static)
+        if (chunkingStrategy is StaticFileChunkingStrategy inputStaticStrategy)
         {
-            Assert.That(chunkingStrategy.MaxTokensPerChunk, Is.EqualTo(1200));
-            Assert.That(chunkingStrategy.MaxOverlappingTokensBetweenChunks, Is.EqualTo(250));
+            Assert.That(inputStaticStrategy.MaxTokensPerChunk, Is.EqualTo(1200));
+            Assert.That(inputStaticStrategy.OverlappingTokenCount, Is.EqualTo(250));
         }
 
         VectorStore vectorStore = await client.CreateVectorStoreAsync(new VectorStoreCreationOptions()
@@ -274,10 +274,21 @@ public partial class VectorStoreTests
         await foreach (VectorStoreFileAssociation association in associations)
         {
             Assert.That(testFiles.Any(file => file.Id == association.FileId), Is.True);
-            Assert.That(association.ChunkingStrategy.MaxTokensPerChunk, Is.EqualTo(strategyKind switch
-            { ChunkingStrategyKind.Auto => 800, ChunkingStrategyKind.Static => 1200, _ => throw new NotImplementedException() }));
-            Assert.That(association.ChunkingStrategy.MaxOverlappingTokensBetweenChunks, Is.EqualTo(strategyKind switch
-            { ChunkingStrategyKind.Auto => 400, ChunkingStrategyKind.Static => 250, _ => throw new NotImplementedException() }));
+            Assert.That(association.ChunkingStrategy, Is.InstanceOf<StaticFileChunkingStrategy>());
+            StaticFileChunkingStrategy staticStrategy = association.ChunkingStrategy as StaticFileChunkingStrategy;
+
+            Assert.That(staticStrategy.MaxTokensPerChunk, Is.EqualTo(strategyKind switch
+            {
+                ChunkingStrategyKind.Auto => 800,
+                ChunkingStrategyKind.Static => 1200,
+                _ => throw new NotImplementedException()
+            }));
+            Assert.That(staticStrategy.OverlappingTokenCount, Is.EqualTo(strategyKind switch
+            {
+                ChunkingStrategyKind.Auto => 400,
+                ChunkingStrategyKind.Static => 250,
+                _ => throw new NotImplementedException()
+            }));
         }
     }
 

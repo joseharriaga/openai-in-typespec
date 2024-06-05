@@ -1,26 +1,34 @@
-using System;
-using System.Collections.Generic;
-
 namespace OpenAI.VectorStores;
 
 [CodeGenModel("FileChunkingStrategyResponseParam")]
 public abstract partial class FileChunkingStrategy
-{
-    public int? MaxTokensPerChunk => (this as InternalStaticChunkingStrategy)?.Static?.MaxChunkSizeTokens;
-    public int? MaxOverlappingTokensBetweenChunks => (this as InternalStaticChunkingStrategy)?.Static?.ChunkOverlapTokens;
-    
+{   
+    /// <summary>
+    /// Gets a value representing the default, automatic selection for a file chunking strategy.
+    /// </summary>
+    /// <remarks>
+    /// This value is only valid on vector store requests. <see cref="VectorStoreFileAssociation"/> response instances
+    /// will report the concrete chunking strategy applied after automatic selection.
+    /// </remarks>
     public static FileChunkingStrategy Auto => _autoValue ??= new();
 
+    /// <summary>
+    /// Gets a value representing the <c>other</c>, unknown strategy type.
+    /// </summary>
+    /// <remarks>
+    /// This value is present on responses when no chunking strategy could be found. This is typically only true for
+    /// vector stores created earlier than file chunking strategy availability.
+    /// </remarks>
     public static FileChunkingStrategy Unknown => _unknownValue ??= new();
 
+    /// <inheritdoc cref="StaticFileChunkingStrategy.StaticFileChunkingStrategy(int,int)"/>
     public static FileChunkingStrategy CreateStaticStrategy(
         int maxTokensPerChunk,
-        int maxOverlappingTokensBetweenChunks)
+        int overlappingTokenCount)
     {
-        return new InternalStaticChunkingStrategy(
-            new InternalStaticChunkingStrategyDetails(
+        return new StaticFileChunkingStrategy(
                 maxTokensPerChunk,
-                maxOverlappingTokensBetweenChunks));
+                overlappingTokenCount);
     }
 
     private static InternalAutoChunkingStrategy _autoValue;

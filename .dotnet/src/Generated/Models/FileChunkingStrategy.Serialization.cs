@@ -67,7 +67,7 @@ namespace OpenAI.VectorStores
                 {
                     case "auto": return InternalAutoChunkingStrategy.DeserializeInternalAutoChunkingStrategy(element, options);
                     case "other": return InternalUnknownChunkingStrategy.DeserializeInternalUnknownChunkingStrategy(element, options);
-                    case "static": return InternalStaticChunkingStrategy.DeserializeInternalStaticChunkingStrategy(element, options);
+                    case "static": return StaticFileChunkingStrategy.DeserializeStaticFileChunkingStrategy(element, options);
                 }
             }
             return InternalUnknownFileChunkingStrategyResponseParamProxy.DeserializeInternalUnknownFileChunkingStrategyResponseParamProxy(element, options);

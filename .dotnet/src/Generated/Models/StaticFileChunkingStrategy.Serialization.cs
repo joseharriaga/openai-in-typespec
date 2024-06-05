@@ -10,19 +10,19 @@ using System.Text.Json;
 
 namespace OpenAI.VectorStores
 {
-    internal partial class InternalStaticChunkingStrategy : IJsonModel<InternalStaticChunkingStrategy>
+    public partial class StaticFileChunkingStrategy : IJsonModel<StaticFileChunkingStrategy>
     {
-        void IJsonModel<InternalStaticChunkingStrategy>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<StaticFileChunkingStrategy>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalStaticChunkingStrategy>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StaticFileChunkingStrategy>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalStaticChunkingStrategy)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(StaticFileChunkingStrategy)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("static"u8);
-            writer.WriteObjectValue(Static, options);
+            writer.WriteObjectValue<InternalStaticChunkingStrategyDetails>(_internalDetails, options);
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (true && _serializedAdditionalRawData != null)
@@ -43,19 +43,19 @@ namespace OpenAI.VectorStores
             writer.WriteEndObject();
         }
 
-        InternalStaticChunkingStrategy IJsonModel<InternalStaticChunkingStrategy>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        StaticFileChunkingStrategy IJsonModel<StaticFileChunkingStrategy>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalStaticChunkingStrategy>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StaticFileChunkingStrategy>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalStaticChunkingStrategy)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(StaticFileChunkingStrategy)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalStaticChunkingStrategy(document.RootElement, options);
+            return DeserializeStaticFileChunkingStrategy(document.RootElement, options);
         }
 
-        internal static InternalStaticChunkingStrategy DeserializeInternalStaticChunkingStrategy(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static StaticFileChunkingStrategy DeserializeStaticFileChunkingStrategy(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -85,44 +85,44 @@ namespace OpenAI.VectorStores
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalStaticChunkingStrategy(type, serializedAdditionalRawData, @static);
+            return new StaticFileChunkingStrategy(type, serializedAdditionalRawData, @static);
         }
 
-        BinaryData IPersistableModel<InternalStaticChunkingStrategy>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<StaticFileChunkingStrategy>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalStaticChunkingStrategy>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StaticFileChunkingStrategy>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalStaticChunkingStrategy)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StaticFileChunkingStrategy)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalStaticChunkingStrategy IPersistableModel<InternalStaticChunkingStrategy>.Create(BinaryData data, ModelReaderWriterOptions options)
+        StaticFileChunkingStrategy IPersistableModel<StaticFileChunkingStrategy>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalStaticChunkingStrategy>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<StaticFileChunkingStrategy>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalStaticChunkingStrategy(document.RootElement, options);
+                        return DeserializeStaticFileChunkingStrategy(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalStaticChunkingStrategy)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StaticFileChunkingStrategy)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalStaticChunkingStrategy>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<StaticFileChunkingStrategy>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalStaticChunkingStrategy FromResponse(PipelineResponse response)
+        internal static new StaticFileChunkingStrategy FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalStaticChunkingStrategy(document.RootElement);
+            return DeserializeStaticFileChunkingStrategy(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

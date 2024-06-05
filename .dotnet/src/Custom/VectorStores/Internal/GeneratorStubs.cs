@@ -62,9 +62,6 @@ internal partial class InternalUnknownFileChunkingStrategyRequestParamProxy { }
 [CodeGenModel("AutoChunkingStrategyResponseParam")]
 internal partial class InternalAutoChunkingStrategy { }
 
-[CodeGenModel("StaticChunkingStrategyResponseParam")]
-internal partial class InternalStaticChunkingStrategy { }
-
 [CodeGenModel("OtherChunkingStrategyResponseParam")]
 internal partial class InternalUnknownChunkingStrategy { }
 

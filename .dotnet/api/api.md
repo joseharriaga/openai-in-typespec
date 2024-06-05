@@ -291,7 +291,8 @@ namespace OpenAI.Assistants {
         public IList<string> FileIds { get; init; }
     }
     public class FileSearchToolDefinition : ToolDefinition {
-        public FileSearchToolDefinition();
+        public FileSearchToolDefinition(int? maxResults = null);
+        public int? MaxResults { get; init; }
     }
     public class FileSearchToolResources {
         public FileSearchToolResources();
@@ -637,7 +638,7 @@ namespace OpenAI.Assistants {
     public abstract class ToolDefinition {
         protected ToolDefinition();
         public static CodeInterpreterToolDefinition CreateCodeInterpreter();
-        public static FileSearchToolDefinition CreateFileSearch();
+        public static FileSearchToolDefinition CreateFileSearch(int? maxResults = null);
         public static FunctionToolDefinition CreateFunction(string name, string description = null, BinaryData parameters = null);
     }
     public class ToolOutput {
@@ -1481,6 +1482,7 @@ namespace OpenAI.VectorStores {
     }
     public class VectorStoreCreationOptions {
         public VectorStoreCreationOptions();
+        public FileChunkingStrategy ChunkingStrategy { get; init; }
         public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
         public IList<string> FileIds { get; init; }
         public IDictionary<string, string> Metadata { get; }
@@ -1491,6 +1493,17 @@ namespace OpenAI.VectorStores {
         public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
         public IDictionary<string, string> Metadata { get; }
         public string Name { get; init; }
+    }
+    public abstract class FileChunkingStrategy {
+        protected FileChunkingStrategy();
+        public static FileChunkingStrategy Auto { get; }
+        public static FileChunkingStrategy Unknown { get; }
+        public static FileChunkingStrategy CreateStaticStrategy(int maxTokensPerChunk, int overlappingTokenCount);
+    }
+    public class StaticFileChunkingStrategy : FileChunkingStrategy {
+        public StaticFileChunkingStrategy(int maxTokensPerChunk, int overlappingTokenCount);
+        public int MaxTokensPerChunk { get; }
+        public int OverlappingTokenCount { get; }
     }
     public class VectorStore {
         public DateTimeOffset CreatedAt { get; }
@@ -1533,6 +1546,7 @@ namespace OpenAI.VectorStores {
         public required int Days { get; init; }
     }
     public class VectorStoreFileAssociation {
+        public FileChunkingStrategy ChunkingStrategy { get; }
         public DateTimeOffset CreatedAt { get; }
         public string FileId { get; }
         public VectorStoreFileAssociationError? LastError { get; }

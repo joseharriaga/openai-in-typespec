@@ -119,7 +119,7 @@ public partial class AssistantClient
 
             ClientResult result = await GetAssistantsAsync(
                 limit: pageSize,
-                order: resultOrder.ToString(),
+                order: resultOrder?.ToString(),
                 after: requestPageToken.After,
                 before: requestPageToken.Before,
                 options: null).ConfigureAwait(false);
@@ -157,7 +157,7 @@ public partial class AssistantClient
 
             ClientResult result = GetAssistants(
                 limit: pageSize,
-                order: resultOrder.ToString(),
+                order: resultOrder?.ToString(),
                 after: requestPageToken.After,
                 before: requestPageToken.Before,
                 options: null);
@@ -165,7 +165,7 @@ public partial class AssistantClient
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, itemsBefore, hasMore: true /*list.HasMore*/));
+            string nextPageToken = FromPageToken(new PageToken(list.LastId, itemsBefore, hasMore: list.HasMore));
             prevPageToken ??= pageToken is null ?
                 // We're requesting the first page, so prev page should be null.
                 null : 
@@ -386,7 +386,7 @@ public partial class AssistantClient
 
             ClientResult result = await GetMessagesAsync(threadId,
                 limit: pageSize,
-                order: resultOrder.ToString(),
+                order: resultOrder?.ToString(),
                 after: requestPageToken.After,
                 before: requestPageToken.Before,
                 options: null).ConfigureAwait(false);
@@ -426,7 +426,7 @@ public partial class AssistantClient
 
             ClientResult result = GetMessages(threadId,
                 limit: pageSize,
-                order: resultOrder.ToString(),
+                order: resultOrder?.ToString(),
                 after: requestPageToken.After,
                 before: requestPageToken.Before,
                 options: null);
@@ -740,7 +740,7 @@ public partial class AssistantClient
             ClientResult result = await GetRunsAsync(
                 threadId,
                  limit: pageSize,
-                        order: resultOrder.ToString(),
+                        order: resultOrder?.ToString(),
                 after: requestPageToken.After,
                 before: requestPageToken.Before,
                         options: null).ConfigureAwait(false);
@@ -780,7 +780,7 @@ public partial class AssistantClient
 
             ClientResult result = GetRuns(threadId,
                 limit: pageSize,
-                order: resultOrder.ToString(),
+                order: resultOrder?.ToString(),
 
                 after: requestPageToken.After,
                 before: requestPageToken.Before,
@@ -979,7 +979,7 @@ public partial class AssistantClient
 
             ClientResult result = await GetRunStepsAsync(threadId, runId,
                 limit: pageSize,
-                order: resultOrder.ToString(),
+                order: resultOrder?.ToString(),
                 after: requestPageToken.After,
                 before: requestPageToken.Before,
                 options: null).ConfigureAwait(false);
@@ -1022,7 +1022,7 @@ public partial class AssistantClient
 
             ClientResult result = GetRunSteps(threadId, runId,
                 limit: pageSize,
-                order: resultOrder.ToString(),
+                order: resultOrder?.ToString(),
                 after: requestPageToken.After,
                 before: requestPageToken.Before,
                 options: null);

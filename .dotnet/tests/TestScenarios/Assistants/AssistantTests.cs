@@ -661,9 +661,9 @@ public partial class AssistantTests
         int itemCount = 0;
         int pageCount = 0;
         AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
-        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
+        IAsyncEnumerable<ClientPage<Assistant>> pages = assistants.AsPages();
 
-        await foreach (PageResult<Assistant> page in pages)
+        await foreach (ClientPage<Assistant> page in pages)
         {
             foreach (Assistant assistant in page.Values)
             {
@@ -706,12 +706,12 @@ public partial class AssistantTests
         int itemCount = 0;
         int pageCount = 0;
         AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
-        IAsyncEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
+        IAsyncEnumerable<ClientPage<Assistant>> pages = assistants.AsPages();
 
         string? pageToken = default;
 
         // First iteration - stop after two pages
-        await foreach (PageResult<Assistant> page in pages)
+        await foreach (ClientPage<Assistant> page in pages)
         {
             foreach (Assistant assistant in page.Values)
             {
@@ -739,7 +739,7 @@ public partial class AssistantTests
         pages = assistants.AsPages(pageToken);
 
         // Now iterate again, continuing the counts.
-        await foreach (PageResult<Assistant> page in pages)
+        await foreach (ClientPage<Assistant> page in pages)
         {
             foreach (Assistant assistant in page.Values)
             {
@@ -784,12 +784,12 @@ public partial class AssistantTests
             ListOrder.OldestFirst,
             pageSize: 2);
 
-        IEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
+        IEnumerable<ClientPage<Assistant>> pages = assistants.AsPages();
 
         // Get first page
-        PageResult<Assistant> firstPage = default;
-        PageResult<Assistant> secondPage = default;
-        PageResult<Assistant> thirdPage = default;
+        ClientPage<Assistant> firstPage = default;
+        ClientPage<Assistant> secondPage = default;
+        ClientPage<Assistant> thirdPage = default;
         int pageCount = 0;
         foreach (var page in pages)
         {
@@ -814,7 +814,7 @@ public partial class AssistantTests
 
         // Get previous page (from second page) -- this should be the first page
         pages = assistants.AsPages(secondPage.PreviousPageToken);
-        PageResult<Assistant> secondPrevPage = default;
+        ClientPage<Assistant> secondPrevPage = default;
         foreach (var page in pages)
         {
             secondPrevPage = page;
@@ -823,7 +823,7 @@ public partial class AssistantTests
 
         // Get previous page (from third page) -- this should be the second page
         pages = assistants.AsPages(thirdPage.PreviousPageToken);
-        PageResult<Assistant> thirdPrevPage = default;
+        ClientPage<Assistant> thirdPrevPage = default;
         foreach (var page in pages)
         {
             thirdPrevPage = page;
@@ -870,10 +870,10 @@ public partial class AssistantTests
             ListOrder.OldestFirst,
             pageSize: 2);
 
-        IEnumerable<PageResult<Assistant>> pages = assistants.AsPages();
+        IEnumerable<ClientPage<Assistant>> pages = assistants.AsPages();
 
         // Get first page
-        PageResult<Assistant> firstPage = default;
+        ClientPage<Assistant> firstPage = default;
         foreach (var page in pages)
         {
             firstPage = page;
@@ -882,7 +882,7 @@ public partial class AssistantTests
 
         // Get second page
         pages = assistants.AsPages(firstPage.NextPageToken);
-        PageResult<Assistant> secondPage = default;
+        ClientPage<Assistant> secondPage = default;
         foreach (var page in pages)
         {
             secondPage = page;
@@ -891,7 +891,7 @@ public partial class AssistantTests
 
         // Get third page
         pages = assistants.AsPages(secondPage.NextPageToken);
-        PageResult<Assistant> thirdPage = default;
+        ClientPage<Assistant> thirdPage = default;
         foreach (var page in pages)
         {
             thirdPage = page;
@@ -900,7 +900,7 @@ public partial class AssistantTests
 
         // Get previous page (from second page) -- this should be the first page
         pages = assistants.AsPages(secondPage.PreviousPageToken);
-        PageResult<Assistant> secondPrevPage = default;
+        ClientPage<Assistant> secondPrevPage = default;
         foreach (var page in pages)
         {
             secondPrevPage = page;
@@ -909,7 +909,7 @@ public partial class AssistantTests
 
         // Get previous page (from third page) -- this should be the second page
         pages = assistants.AsPages(thirdPage.PreviousPageToken);
-        PageResult<Assistant> thirdPrevPage = default;
+        ClientPage<Assistant> thirdPrevPage = default;
         foreach (var page in pages)
         {
             thirdPrevPage = page;

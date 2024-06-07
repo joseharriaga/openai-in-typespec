@@ -1,3 +1,4 @@
+using OpenAI.Assistants;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -17,7 +18,7 @@ internal static class InternalListHelpers
     //internal static AsyncPageableResult<T> CreateAsyncPageable<T, U>(AsyncListResponseFunc listResponseFunc)
     //    where U : IJsonModel<U>, IInternalListResponse<T>
     //{
-    //    async Task<PageResult<T>> pageFunc(string? pageToken)
+    //    async Task<ClientPage<T>> pageFunc(string? pageToken)
     //        => GetPageFromProtocol<T,U>(pageToken, await listResponseFunc(pageToken).ConfigureAwait(false));
     //    return PageableResultHelpers.Create(pageFunc, pageFunc);
     //}
@@ -27,9 +28,9 @@ internal static class InternalListHelpers
     //AsyncListResponseFunc nextListResponseFunc)
     //where U : IJsonModel<U>, IInternalListResponse<T>
     //{
-    //    async Task<PageResult<T>> firstPageFunc(string? pageToken)
+    //    async Task<ClientPage<T>> firstPageFunc(string? pageToken)
     //        => GetPageFromProtocol<T, U>(pageToken, await firstListResponseFunc(pageToken).ConfigureAwait(false));
-    //    async Task<PageResult<T>> nextPageFunc(string? pageToken)
+    //    async Task<ClientPage<T>> nextPageFunc(string? pageToken)
     //        => GetPageFromProtocol<T, U>(pageToken, await nextListResponseFunc(pageToken).ConfigureAwait(false));
     //    return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
     //}
@@ -37,13 +38,13 @@ internal static class InternalListHelpers
     //internal static PageableResult<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
     //    where U : IJsonModel<U>, IInternalListResponse<T>
     //{
-    //    PageResult<T> pageFunc(string? pageToken)
+    //    ClientPage<T> pageFunc(string? pageToken)
     //        => GetPageFromProtocol<T, U>(pageToken, listResponseFunc(pageToken));
     //    return PageableResultHelpers.Create(pageFunc, pageFunc);
     //}
 
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //private static PageResult<TInstance> GetPageFromProtocol<TInstance, UInternalList>(
+    //private static ClientPage<TInstance> GetPageFromProtocol<TInstance, UInternalList>(
     //    string? pageToken, ClientResult protocolResult) 
     //    where UInternalList : IJsonModel<UInternalList>, IInternalListResponse<TInstance>
     //{
@@ -55,14 +56,15 @@ internal static class InternalListHelpers
     //    PageToken nextPageToken = new(token.Order, values.LastId, token.Before, values.HasMore);
     //    PageToken prevPageToken = new(token.Order, token.After, values.FirstId, values.HasMore);
 
-    //    return PageResult<TInstance>.Create(values.Data, response, 
+    //    return ClientPage<TInstance>.Create(values.Data, response, 
     //        FromPageToken(nextPageToken), 
     //        FromPageToken(prevPageToken));
     //}
 
-    internal static PageToken ToPageToken(string? pageToken)
+    internal static PageToken ToPageToken(string pageToken)
     {
-        if (pageToken is null)
+        // Note: unfortunate that we have to provide a T when we don't have one
+        if (pageToken == ClientPage<Assistant>.First)
         {
             return new PageToken(null, null, true);
         }

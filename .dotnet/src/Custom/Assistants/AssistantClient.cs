@@ -111,25 +111,21 @@ public partial class AssistantClient
         string itemsBefore = default,
         int? pageSize = null)
     {
-        async Task<ClientPage<Assistant>> pageFuncAsync(string? pageToken = default, string? prevPageToken = default)
+        async Task<ClientPage<Assistant>> pageFuncAsync(string pageToken)
         {
-            PageToken requestPageToken = pageToken is ClientPage<Assistant>.First ?
-                new(itemsAfter, itemsBefore, true) :
-                ToPageToken(pageToken);
+            string? after = pageToken is ClientPage<Assistant>.First ?
+                itemsAfter : pageToken;
 
             ClientResult result = await GetAssistantsAsync(
                 limit: pageSize,
                 order: resultOrder?.ToString(),
-                after: requestPageToken.After,
-                before: requestPageToken.Before,
+                after: after,
+                before: itemsBefore,
                 options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
-            prevPageToken ??= FromPageToken(new PageToken(itemsAfter, list.FirstId, itemsAfter != list.FirstId));
-
-            return ClientPage<Assistant>.Create(list.Data, response, nextPageToken, prevPageToken);
+            return ClientPage<Assistant>.Create(list.Data, response, list.HasMore ? list.LastId : default);
         }
 
         return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
@@ -149,29 +145,22 @@ public partial class AssistantClient
         string itemsBefore = default,
         int? pageSize = null)
     {
-        ClientPage<Assistant> getPage(string? pageToken = default, string? prevPageToken = default)
+        ClientPage<Assistant> getPage(string pageToken)
         {
-            PageToken requestPageToken = pageToken == ClientPage<Assistant>.First ?
-                new(itemsAfter, itemsBefore, null) :
-                ToPageToken(pageToken);
+            string? after = pageToken is ClientPage<Assistant>.First ?
+                itemsAfter : pageToken;
 
             ClientResult result = GetAssistants(
                 limit: pageSize,
                 order: resultOrder?.ToString(),
-                after: requestPageToken.After,
-                before: requestPageToken.Before,
+                after: after,
+                before: itemsBefore,
                 options: null);
 
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, itemsBefore, hasMore: list.HasMore));
-            prevPageToken ??= pageToken == ClientPage<Assistant>.First ?
-                // We're requesting the first page, so prev page should be null.
-                null : 
-                FromPageToken(new PageToken(itemsAfter, list.FirstId, hasMore: true));
-
-            return ClientPage<Assistant>.Create(list.Data, response, nextPageToken, prevPageToken);
+            return ClientPage<Assistant>.Create(list.Data, response, list.HasMore ? list.LastId : default);
         }
 
         return PageableResultHelpers.Create(getPage, getPage);
@@ -378,23 +367,21 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        async Task<ClientPage<ThreadMessage>> pageFuncAsync(string? pageToken = default, string? prevPageToken = default)
+        async Task<ClientPage<ThreadMessage>> pageFuncAsync(string pageToken)
         {
-            PageToken requestPageToken = pageToken == ClientPage<ThreadMessage>.First ?
-                new(itemsAfter, itemsBefore, true) :
-                ToPageToken(pageToken);
+            string? after = pageToken is ClientPage<Assistant>.First ?
+                itemsAfter : pageToken;
 
             ClientResult result = await GetMessagesAsync(threadId,
                 limit: pageSize,
                 order: resultOrder?.ToString(),
-                after: requestPageToken.After,
-                before: requestPageToken.Before,
+                after: after,
+                before: itemsBefore,
                 options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
-            return ClientPage<ThreadMessage>.Create(list.Data, response, nextPageToken, prevPageToken);
+            return ClientPage<ThreadMessage>.Create(list.Data, response, list.HasMore ? list.LastId : default);
         }
 
         return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
@@ -418,24 +405,21 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ClientPage<ThreadMessage> getPage(string? pageToken = default, string? prevPageToken = default)
+        ClientPage<ThreadMessage> getPage(string pageToken)
         {
-            PageToken requestPageToken = pageToken == ClientPage<Assistant>.First ?
-                new(itemsAfter, itemsBefore, true) :
-                ToPageToken(pageToken);
+            string? after = pageToken is ClientPage<Assistant>.First ?
+                itemsAfter : pageToken;
 
             ClientResult result = GetMessages(threadId,
                 limit: pageSize,
                 order: resultOrder?.ToString(),
-                after: requestPageToken.After,
-                before: requestPageToken.Before,
+                after: after,
+                before: itemsBefore,
                 options: null);
             PipelineResponse response = result.GetRawResponse();
             InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
 
-
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
-            return ClientPage<ThreadMessage>.Create(list.Data, response, nextPageToken, prevPageToken);
+            return ClientPage<ThreadMessage>.Create(list.Data, response, list.HasMore ? list.LastId : default);
         }
 
         return PageableResultHelpers.Create(getPage, getPage);
@@ -731,24 +715,22 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        async Task<ClientPage<ThreadRun>> pageFuncAsync(string? pageToken = default, string? prevPageToken = default)
+        async Task<ClientPage<ThreadRun>> pageFuncAsync(string pageToken)
         {
-            PageToken requestPageToken = pageToken == ClientPage<ThreadRun>.First ?
-                new(itemsAfter, itemsBefore, true) :
-                ToPageToken(pageToken);
+            string? after = pageToken is ClientPage<Assistant>.First ?
+                itemsAfter : pageToken;
 
             ClientResult result = await GetRunsAsync(
                 threadId,
-                 limit: pageSize,
-                        order: resultOrder?.ToString(),
-                after: requestPageToken.After,
-                before: requestPageToken.Before,
-                        options: null).ConfigureAwait(false);
+                limit: pageSize,
+                order: resultOrder?.ToString(),
+                after: after,
+                before: itemsBefore,
+                options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
-            return ClientPage<ThreadRun>.Create(list.Data, response, nextPageToken, prevPageToken);
+            return ClientPage<ThreadRun>.Create(list.Data, response, list.HasMore ? list.LastId : default);
         }
 
         return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
@@ -772,24 +754,21 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ClientPage<ThreadRun> pageFunc(string? pageToken = default, string? prevPageToken = default)
+        ClientPage<ThreadRun> pageFunc(string pageToken)
         {
-            PageToken requestPageToken = pageToken == ClientPage<ThreadRun>.First ?
-                new(itemsAfter, itemsBefore, true) :
-                ToPageToken(pageToken);
+            string? after = pageToken is ClientPage<Assistant>.First ?
+                itemsAfter : pageToken;
 
             ClientResult result = GetRuns(threadId,
                 limit: pageSize,
                 order: resultOrder?.ToString(),
-
-                after: requestPageToken.After,
-                before: requestPageToken.Before,
+                after: after,
+                before: itemsBefore,
                 options: null);
             PipelineResponse response = result.GetRawResponse();
             InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
-            return ClientPage<ThreadRun>.Create(list.Data, response, nextPageToken, prevPageToken);
+            return ClientPage<ThreadRun>.Create(list.Data, response, list.HasMore ? list.LastId : default);
         }
 
         return PageableResultHelpers.Create(pageFunc, pageFunc);
@@ -971,23 +950,21 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        async Task<ClientPage<RunStep>> pageFuncAsync(string? pageToken = default, string? prevPageToken = default)
+        async Task<ClientPage<RunStep>> pageFuncAsync(string pageToken)
         {
-            PageToken requestPageToken = pageToken == ClientPage<RunStep>.First ?
-                new(itemsAfter, itemsBefore, true) :
-                ToPageToken(pageToken);
+            string? after = pageToken is ClientPage<Assistant>.First ?
+                itemsAfter : pageToken;
 
             ClientResult result = await GetRunStepsAsync(threadId, runId,
                 limit: pageSize,
                 order: resultOrder?.ToString(),
-                after: requestPageToken.After,
-                before: requestPageToken.Before,
+                after: after,
+                before: itemsBefore,
                 options: null).ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
             InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
-            return ClientPage<RunStep>.Create(list.Data, response, nextPageToken, prevPageToken);
+            return ClientPage<RunStep>.Create(list.Data, response, list.HasMore ? list.LastId : default);
         }
 
         return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
@@ -1014,24 +991,21 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        ClientPage<RunStep> pageFunc(string? pageToken = default, string? prevPageToken = default)
+        ClientPage<RunStep> pageFunc(string pageToken)
         {
-            PageToken requestPageToken = pageToken == ClientPage<RunStep>.First ?
-                new(itemsAfter, itemsBefore, true) :
-                ToPageToken(pageToken);
+            string? after = pageToken is ClientPage<Assistant>.First ?
+                itemsAfter : pageToken;
 
             ClientResult result = GetRunSteps(threadId, runId,
                 limit: pageSize,
                 order: resultOrder?.ToString(),
-                after: requestPageToken.After,
-                before: requestPageToken.Before,
+                after: after,
+                before: itemsBefore,
                 options: null);
             PipelineResponse response = result.GetRawResponse();
             InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
 
-            string nextPageToken = FromPageToken(new PageToken(list.LastId, requestPageToken.Before, list.HasMore));
-            prevPageToken ??= FromPageToken(new PageToken(itemsAfter, list.FirstId, itemsAfter != list.FirstId));
-            return ClientPage<RunStep>.Create(list.Data, response, nextPageToken, prevPageToken);
+            return ClientPage<RunStep>.Create(list.Data, response, list.HasMore ? list.LastId : default);
         }
 
         return PageableResultHelpers.Create(pageFunc, pageFunc);

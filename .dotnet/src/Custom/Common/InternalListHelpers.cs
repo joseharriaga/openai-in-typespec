@@ -61,27 +61,4 @@ internal static class InternalListHelpers
     //        FromPageToken(prevPageToken));
     //}
 
-    internal static PageToken ToPageToken(string pageToken)
-    {
-        // Note: unfortunate that we have to provide a T when we don't have one
-        if (pageToken == ClientPage<Assistant>.First)
-        {
-            return new PageToken(null, null, true);
-        }
-
-        PageToken? token = ModelReaderWriter.Read<PageToken>(BinaryData.FromString(pageToken));
-        Debug.Assert(token is not null);
-        return token!;
-    }
-
-    internal static string? FromPageToken(PageToken pageToken)
-    {
-        if (!(pageToken.HasMore == true))
-        {
-            return null;
-        }
-
-        BinaryData data = pageToken.Write(ModelReaderWriterOptions.Json);
-        return data.ToString();
-    }
 }

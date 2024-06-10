@@ -15,7 +15,7 @@ internal static class InternalListHelpers
     internal delegate Task<ClientResult> AsyncListResponseFunc(string? pageToken);
     internal delegate ClientResult ListResponseFunc(string? pageToken);
 
-    //internal static AsyncPageableResult<T> CreateAsyncPageable<T, U>(AsyncListResponseFunc listResponseFunc)
+    //internal static AsyncClientPageable<T> CreateAsyncPageable<T, U>(AsyncListResponseFunc listResponseFunc)
     //    where U : IJsonModel<U>, IInternalListResponse<T>
     //{
     //    async Task<ClientPage<T>> pageFunc(string? pageToken)
@@ -23,7 +23,7 @@ internal static class InternalListHelpers
     //    return PageableResultHelpers.Create(pageFunc, pageFunc);
     //}
 
-    //internal static AsyncPageableResult<T> CreateAsyncPageable<T, U>(
+    //internal static AsyncClientPageable<T> CreateAsyncPageable<T, U>(
     //AsyncListResponseFunc firstListResponseFunc,
     //AsyncListResponseFunc nextListResponseFunc)
     //where U : IJsonModel<U>, IInternalListResponse<T>
@@ -35,7 +35,7 @@ internal static class InternalListHelpers
     //    return PageableResultHelpers.Create(firstPageFunc, nextPageFunc);
     //}
 
-    //internal static PageableResult<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
+    //internal static ClientPageable<T> CreatePageable<T, U>(ListResponseFunc listResponseFunc)
     //    where U : IJsonModel<U>, IInternalListResponse<T>
     //{
     //    ClientPage<T> pageFunc(string? pageToken)

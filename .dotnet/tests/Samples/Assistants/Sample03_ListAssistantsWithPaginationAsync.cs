@@ -17,7 +17,7 @@ public partial class AssistantSamples
 
         int count = 0;
 
-        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync();
+        AsyncClientPageable<Assistant> assistants = client.GetAssistantsAsync();
         await foreach (Assistant assistant in assistants)
         {
             Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");

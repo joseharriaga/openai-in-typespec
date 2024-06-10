@@ -8,7 +8,7 @@ using System.ClientModel.Primitives;
 namespace OpenAI;
 
 #pragma warning disable OPENAI001
-internal class AssistantPageableResult : PageableResult<Assistant>
+internal class AssistantPageableResult : ClientPageable<Assistant>
 {
     private readonly AssistantClient _client;
 
@@ -20,6 +20,10 @@ internal class AssistantPageableResult : PageableResult<Assistant>
     public AssistantPageableResult(AssistantClient client, ListOrder? order, string? after, string? before, int? pageSize)
     {
         _client = client;
+        _order = order;
+        _after = after;
+        _before = before;
+        _pageSize = pageSize;
     }
 
     protected override ClientPage<Assistant> GetPageCore(string pageToken)
@@ -38,7 +42,7 @@ internal class AssistantPageableResult : PageableResult<Assistant>
         PipelineResponse response = result.GetRawResponse();
         InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-        return ClientPage<Assistant>.Create(list.Data, response, pageToken, list.HasMore ? list.LastId : default);
+        return ClientPage<Assistant>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
     }
 }
 #pragma warning restore OPENAI001

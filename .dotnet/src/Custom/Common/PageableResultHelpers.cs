@@ -9,13 +9,13 @@ namespace OpenAI;
 
 internal class PageableResultHelpers
 {
-    public static AsyncPageableResult<T> Create<T>(Func<string, Task<ClientPage<T>>> getPageAsync) where T : notnull
+    public static AsyncClientPageable<T> Create<T>(Func<string, Task<ClientPage<T>>> getPageAsync) where T : notnull
         => new FuncAsyncPageable<T>(getPageAsync);
 
-    public static PageableResult<T> Create<T>(Func<string, ClientPage<T>> getPage) where T : notnull
+    public static ClientPageable<T> Create<T>(Func<string, ClientPage<T>> getPage) where T : notnull
         => new FuncPageable<T>(getPage);
 
-    private class FuncAsyncPageable<T> : AsyncPageableResult<T> where T : notnull
+    private class FuncAsyncPageable<T> : AsyncClientPageable<T> where T : notnull
     {
         private readonly Func<string, Task<ClientPage<T>>> _getPageAsync;
         
@@ -30,7 +30,7 @@ internal class PageableResultHelpers
         }
     }
 
-    private class FuncPageable<T> : PageableResult<T> where T : notnull
+    private class FuncPageable<T> : ClientPageable<T> where T : notnull
     {
         private readonly Func<string, ClientPage<T>> _getPage;
         

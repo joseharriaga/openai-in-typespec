@@ -98,7 +98,7 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncClientPageable<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStore vectorStore,
         int? pageSize = null,
         ListOrder? itemOrder = null,
@@ -123,7 +123,7 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
     /// <c>foreach</c>.
     /// </returns>
-    public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual ClientPageable<VectorStoreFileAssociation> GetFileAssociations(
         VectorStore vectorStore,
         int? pageSize = null,
         ListOrder? itemOrder = null,
@@ -245,7 +245,7 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncClientPageable<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStoreBatchFileJob batchJob,
         int? pageSize = null,
         ListOrder? itemOrder = null,
@@ -268,7 +268,7 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
     /// <c>foreach</c>.
     /// </returns>
-    public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual ClientPageable<VectorStoreFileAssociation> GetFileAssociations(
         VectorStoreBatchFileJob batchJob,
         int? pageSize = null,
         ListOrder? itemOrder = null,

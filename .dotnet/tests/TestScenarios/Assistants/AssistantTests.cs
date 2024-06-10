@@ -158,7 +158,7 @@ public partial class AssistantTests
         };
         AssistantThread thread = client.CreateThread(options);
         Validate(thread);
-        PageableResult<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.OldestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(thread, itemOrder: ListOrder.OldestFirst);
         Assert.That(messages.Count, Is.EqualTo(2));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.User));
         Assert.That(messages.First().Content?.Count, Is.EqualTo(1));
@@ -361,7 +361,7 @@ public partial class AssistantTests
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageableResult<ThreadMessage> messages = client.GetMessages(run.ThreadId, resultOrder: ListOrder.NewestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(run.ThreadId, itemOrder: ListOrder.NewestFirst);
         Assert.That(messages.Count, Is.GreaterThan(1));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.Assistant));
         Assert.That(messages.First().Content?[0], Is.Not.Null);
@@ -570,7 +570,7 @@ public partial class AssistantTests
         } while (run?.Status.IsTerminal == false);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageableResult<ThreadMessage> messages = client.GetMessages(thread, resultOrder: ListOrder.NewestFirst);
+        PageableResult<ThreadMessage> messages = client.GetMessages(thread, itemOrder: ListOrder.NewestFirst);
         foreach (ThreadMessage message in messages)
         {
             foreach (MessageContent content in message.Content)
@@ -660,7 +660,7 @@ public partial class AssistantTests
         // Page through collection
         int itemCount = 0;
         int pageCount = 0;
-        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, itemOrder: ListOrder.NewestFirst);
         IAsyncEnumerable<ClientPage<Assistant>> pages = assistants.AsPages();
 
         await foreach (ClientPage<Assistant> page in pages)
@@ -705,7 +705,7 @@ public partial class AssistantTests
         // Page through collection
         int itemCount = 0;
         int pageCount = 0;
-        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        AsyncPageableResult<Assistant> assistants = client.GetAssistantsAsync(pageSize: 2, itemOrder: ListOrder.NewestFirst);
         IAsyncEnumerable<ClientPage<Assistant>> pages = assistants.AsPages();
 
         string? pageToken = default;
@@ -731,7 +731,7 @@ public partial class AssistantTests
 
         // First: call the service method to get the pageable collection.  This makes no service calls,
         // but sets up the closures needed to replicate the collection from the first call.
-        assistants = client.GetAssistantsAsync(pageSize: 2, resultOrder: ListOrder.NewestFirst);
+        assistants = client.GetAssistantsAsync(pageSize: 2, itemOrder: ListOrder.NewestFirst);
 
         // Next: call AsPages, passing the continuation token we reserved from the previous iteration.
         // This does make a service call - it should make a request to the service for the next page

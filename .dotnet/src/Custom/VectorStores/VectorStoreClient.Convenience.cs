@@ -87,7 +87,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStore">
     /// The vector store to enumerate the file associations of.
     /// </param>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -101,9 +101,9 @@ public partial class VectorStoreClient
     public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStore vectorStore,
         int? pageSize = null,
-        ListOrder? resultOrder = null,
+        ListOrder? itemOrder = null,
         VectorStoreFileStatusFilter? filter = null)
-            => GetFileAssociationsAsync(vectorStore?.Id, pageSize, resultOrder, filter);
+            => GetFileAssociationsAsync(vectorStore?.Id, pageSize, itemOrder, filter);
 
     /// <summary>
     /// Gets the collection of <see cref="VectorStoreFileAssociation"/> instances representing file inclusions in the
@@ -112,7 +112,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStore">
     /// The ID vector store to enumerate the file associations of.
     /// </param>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -126,9 +126,9 @@ public partial class VectorStoreClient
     public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(
         VectorStore vectorStore,
         int? pageSize = null,
-        ListOrder? resultOrder = null,
+        ListOrder? itemOrder = null,
         VectorStoreFileStatusFilter? filter = null)
-            => GetFileAssociations(vectorStore?.Id, pageSize, resultOrder);
+            => GetFileAssociations(vectorStore?.Id, pageSize, itemOrder);
 
     /// <summary>
     /// Gets a <see cref="VectorStoreFileAssociation"/> instance representing an existing association between a known
@@ -234,7 +234,7 @@ public partial class VectorStoreClient
     /// Gets the collection of file associations associated with a vector store batch file job, representing the files
     /// that were scheduled for ingestion into the vector store.
     /// </summary>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -248,16 +248,16 @@ public partial class VectorStoreClient
     public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStoreBatchFileJob batchJob,
         int? pageSize = null,
-        ListOrder? resultOrder = null,
+        ListOrder? itemOrder = null,
         VectorStoreFileStatusFilter? filter = null)
-            => GetFileAssociationsAsync(batchJob?.VectorStoreId, batchJob?.BatchId, pageSize, resultOrder, filter);
+            => GetFileAssociationsAsync(batchJob?.VectorStoreId, batchJob?.BatchId, pageSize, itemOrder, filter);
 
     /// <summary>
     /// Gets the collection of file associations associated with a vector store batch file job, representing the files
     /// that were scheduled for ingestion into the vector store.
     /// </summary>
     /// <param name="batchJob"> The vector store batch file job to retrieve file associations from. </param>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -271,8 +271,8 @@ public partial class VectorStoreClient
     public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(
         VectorStoreBatchFileJob batchJob,
         int? pageSize = null,
-        ListOrder? resultOrder = null,
+        ListOrder? itemOrder = null,
         VectorStoreFileStatusFilter? filter = null)
-            => GetFileAssociations(batchJob?.VectorStoreId, batchJob?.BatchId, pageSize, resultOrder, filter);
+            => GetFileAssociations(batchJob?.VectorStoreId, batchJob?.BatchId, pageSize, itemOrder, filter);
 
 }

@@ -154,7 +154,7 @@ public partial class AssistantSamples
         if (run.Status == RunStatus.Completed)
         {
             AsyncPageableResult<ThreadMessage> messages
-                = client.GetMessagesAsync(run.ThreadId, resultOrder: ListOrder.OldestFirst);
+                = client.GetMessagesAsync(run.ThreadId, itemOrder: ListOrder.OldestFirst);
 
             await foreach (ThreadMessage message in messages)
             {

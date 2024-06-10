@@ -110,7 +110,7 @@ public partial class AssistantSamples
 
         // Finally, we'll print out the full history for the thread that includes the augmented generation
         AsyncPageableResult<ThreadMessage> messages
-            = assistantClient.GetMessagesAsync(threadRun.ThreadId, resultOrder: ListOrder.OldestFirst); ;
+            = assistantClient.GetMessagesAsync(threadRun.ThreadId, itemOrder: ListOrder.OldestFirst); ;
 
         await foreach (ThreadMessage message in messages)
         {

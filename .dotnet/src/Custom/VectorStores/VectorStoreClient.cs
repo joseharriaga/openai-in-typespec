@@ -130,7 +130,7 @@ public partial class VectorStoreClient
     /// <summary>
     /// Gets the collection of <see cref="VectorStore"/> instances for the configured organization.
     /// </summary>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -140,30 +140,30 @@ public partial class VectorStoreClient
     /// </returns>
     public virtual AsyncPageableResult<VectorStore> GetVectorStoresAsync(
         int? pageSize = null,
-        ListOrder? resultOrder = null)
+        ListOrder? itemOrder = null)
     {
         throw new NotImplementedException();
         //return CreateAsyncPageable<VectorStore, InternalListVectorStoresResponse>(
         //    pageToken =>
-        //        GetVectorStoresAsync(limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
+        //        GetVectorStoresAsync(limit: pageSize, itemOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>
     /// Gets the collection of <see cref="VectorStore"/> instances for the configured organization.
     /// </summary>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
     /// <returns>
     /// A collection of <see cref="VectorStore"/> instances that can be synchronously enumerated via <c>foreach</c>.
     /// </returns>
-    public virtual PageableResult<VectorStore> GetVectorStores(int? pageSize = null, ListOrder? resultOrder = null)
+    public virtual PageableResult<VectorStore> GetVectorStores(int? pageSize = null, ListOrder? itemOrder = null)
     {
         throw new NotImplementedException();
         //return CreatePageable<VectorStore, InternalListVectorStoresResponse>(
         //    pageToken =>
-        //        GetVectorStores(limit: pageSize, resultOrder?.ToString(), pageToken, null, null));
+        //        GetVectorStores(limit: pageSize, itemOrder?.ToString(), pageToken, null, null));
     }
 
     /// <summary>
@@ -207,7 +207,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId">
     /// The ID of the vector store to enumerate the file associations of.
     /// </param>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -221,7 +221,7 @@ public partial class VectorStoreClient
     public virtual AsyncPageableResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         string vectorStoreId,
         int? pageSize = null,
-        ListOrder? resultOrder = null,
+        ListOrder? itemOrder = null,
         VectorStoreFileStatusFilter? filter = null)
     {
         throw new NotImplementedException();
@@ -230,7 +230,7 @@ public partial class VectorStoreClient
 
         //return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
         //    pageToken =>
-        //        GetFileAssociationsAsync(vectorStoreId, limit: pageSize, resultOrder?.ToString(), pageToken, null, filter?.ToString(), null));
+        //        GetFileAssociationsAsync(vectorStoreId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
     }
 
     /// <summary>
@@ -240,7 +240,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId">
     /// The ID of the vector store to enumerate the file associations of.
     /// </param>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -253,14 +253,14 @@ public partial class VectorStoreClient
     /// </returns>
     public virtual PageableResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId,
         int? pageSize = null,
-        ListOrder? resultOrder = null,
+        ListOrder? itemOrder = null,
         VectorStoreFileStatusFilter? filter = null)
     {
         throw new NotImplementedException();
         //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         //return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
         //    pageToken =>
-        //        GetFileAssociations(vectorStoreId, limit: pageSize, resultOrder?.ToString(), pageToken, null, filter?.ToString(), null));
+        //        GetFileAssociations(vectorStoreId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
     }
 
     /// <summary>
@@ -461,7 +461,7 @@ public partial class VectorStoreClient
     /// <param name="batchJobId">
     /// The ID of the batch file job that was previously scheduled.
     /// </param>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -476,7 +476,7 @@ public partial class VectorStoreClient
         string vectorStoreId,
         string batchJobId,
         int? pageSize = null,
-        ListOrder? resultOrder = null,
+        ListOrder? itemOrder = null,
         VectorStoreFileStatusFilter? filter = null)
     {
         throw new NotImplementedException();
@@ -486,7 +486,7 @@ public partial class VectorStoreClient
 
         //return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
         //    pageToken
-        //        => GetFileAssociationsAsync(vectorStoreId, batchJobId, limit: pageSize, resultOrder?.ToString(), pageToken, null, filter?.ToString(), null));
+        //        => GetFileAssociationsAsync(vectorStoreId, batchJobId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
     }
 
     /// <summary>
@@ -499,7 +499,7 @@ public partial class VectorStoreClient
     /// <param name="batchJobId">
     /// The ID of the batch file job that was previously scheduled.
     /// </param>
-    /// <param name="resultOrder">
+    /// <param name="itemOrder">
     /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
     /// timestamp.
     /// </param>
@@ -514,7 +514,7 @@ public partial class VectorStoreClient
         string vectorStoreId,
         string batchJobId,
         int? pageSize = null,
-        ListOrder? resultOrder = null,
+        ListOrder? itemOrder = null,
         VectorStoreFileStatusFilter? filter = null)
     {
         throw new NotImplementedException();
@@ -524,6 +524,6 @@ public partial class VectorStoreClient
 
         //return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
         //    pageToken =>
-        //        GetFileAssociations(vectorStoreId, batchJobId, limit: pageSize, resultOrder?.ToString(), pageToken, null, filter?.ToString(), null));
+        //        GetFileAssociations(vectorStoreId, batchJobId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
     }
 }

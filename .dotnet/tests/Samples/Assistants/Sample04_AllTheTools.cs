@@ -143,7 +143,7 @@ public partial class AssistantSamples
         if (run.Status == RunStatus.Completed)
         {
             PageableResult<ThreadMessage> messages
-                = client.GetMessages(run.ThreadId, resultOrder: ListOrder.OldestFirst);
+                = client.GetMessages(run.ThreadId, itemOrder: ListOrder.OldestFirst);
 
             foreach (ThreadMessage message in messages)
             {
@@ -177,7 +177,7 @@ public partial class AssistantSamples
             #endregion
 
             #region List run steps for details about tool calls
-            PageableResult<RunStep> runSteps = client.GetRunSteps(run, resultOrder: ListOrder.OldestFirst);
+            PageableResult<RunStep> runSteps = client.GetRunSteps(run, itemOrder: ListOrder.OldestFirst);
             foreach (RunStep step in runSteps)
             {
                 Console.WriteLine($"Run step: {step.Status}");

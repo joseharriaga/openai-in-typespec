@@ -102,7 +102,7 @@ public partial class VectorStoreTests
         int lastIdSeen = int.MaxValue;
         int count = 0;
 
-        foreach (VectorStore vectorStore in client.GetVectorStores(resultOrder: ListOrder.NewestFirst))
+        foreach (VectorStore vectorStore in client.GetVectorStores(itemOrder: ListOrder.NewestFirst))
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
@@ -139,7 +139,7 @@ public partial class VectorStoreTests
         int lastIdSeen = int.MaxValue;
         int count = 0;
 
-        await foreach (VectorStore vectorStore in client.GetVectorStoresAsync(resultOrder: ListOrder.NewestFirst))
+        await foreach (VectorStore vectorStore in client.GetVectorStoresAsync(itemOrder: ListOrder.NewestFirst))
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)

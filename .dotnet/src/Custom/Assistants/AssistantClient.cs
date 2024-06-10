@@ -111,10 +111,11 @@ public partial class AssistantClient
         string itemsBefore = default,
         int? pageSize = null)
     {
-        async Task<ClientPage<Assistant>> pageFuncAsync(string pageToken)
+        async Task<ClientPage<Assistant>> getPageAsync(string pageToken)
         {
-            string? after = pageToken is ClientPage<Assistant>.First ?
-                itemsAfter : pageToken;
+            string after = pageToken is ClientPage<Assistant>.DefaultFirstPageToken ?
+                itemsAfter : 
+                pageToken;
 
             ClientResult result = await GetAssistantsAsync(
                 limit: pageSize,
@@ -122,13 +123,14 @@ public partial class AssistantClient
                 after: after,
                 before: itemsBefore,
                 options: null).ConfigureAwait(false);
+
             PipelineResponse response = result.GetRawResponse();
             InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-            return ClientPage<Assistant>.Create(list.Data, response, list.HasMore ? list.LastId : default);
+            return ClientPage<Assistant>.Create(list.Data, response, pageToken, list.HasMore ? list.LastId : default);
         }
 
-        return PageableResultHelpers.Create(pageFuncAsync, pageFuncAsync);
+        return PageableResultHelpers.Create(getPageAsync);
     }
 
     /// <summary>

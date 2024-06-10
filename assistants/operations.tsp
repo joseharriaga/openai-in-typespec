@@ -41,6 +41,7 @@ interface Assistants {
      * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
      * subsequent call can include after=obj_foo in order to fetch the next page of the list.
      */
+    @continuationToken
     @query after?: string,
 
     /**
@@ -50,6 +51,14 @@ interface Assistants {
      */
     @query before?: string,
   ): ListAssistantsResponse | ErrorResponse;
+
+  @list
+  @operationId("listPublicGists")
+  listPublicGists(
+    @query since?: utcDateTime,
+    @query per_page?: int32 = 30,
+    @query page?: int32 = 1,
+  ): ListPublicGistsResponse | ErrorResponse;
 
   @route("{assistant_id}")
   @get

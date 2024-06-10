@@ -185,8 +185,22 @@ model ListAssistantsResponse {
 
   data: AssistantObject[];
   first_id: string;
+  @continuationToken
   last_id: string;
   has_more: boolean;
+}
+
+model ListPublicGistsResponse  {    
+  ...GistObject[];
+  @Http.header
+  link:LinkHeader;
+}
+
+model LinkHeader{
+  prevLink: url;
+  nextLink: url;
+  lastLink: url;
+  firstLink: url;
 }
 
 model DeleteAssistantResponse {
@@ -226,6 +240,7 @@ Represents an `assistant` that can call the model and use tools.
 """)
 model AssistantObject {
   /** The identifier, which can be referenced in API endpoints. */
+  @continuationToken
   id: string;
 
   @doc("""

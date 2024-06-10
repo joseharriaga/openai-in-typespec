@@ -292,7 +292,7 @@ namespace OpenAI.Assistants {
         public IList<string> FileIds { get; init; }
     }
     public class FileSearchToolDefinition : ToolDefinition {
-        public FileSearchToolDefinition(int? maxResults = null);
+        public FileSearchToolDefinition();
         public int? MaxResults { get; init; }
     }
     public class FileSearchToolResources {

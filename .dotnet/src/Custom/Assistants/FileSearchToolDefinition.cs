@@ -14,11 +14,12 @@ public partial class FileSearchToolDefinition : ToolDefinition
         init => _fileSearch.InternalMaxNumResults = value;
     }
 
-    public FileSearchToolDefinition(int? maxResults = null)
+    /// <summary>
+    /// Creates a new instance of <see cref="FileSearchToolDefinition"/>.
+    /// </summary>
+    public FileSearchToolDefinition()
         : this("file_search", new ChangeTrackingDictionary<string, BinaryData>(), new InternalAssistantToolsFileSearchFileSearch())
-    {
-        _fileSearch.InternalMaxNumResults = maxResults;
-    }
+    { }
 
     [CodeGenMember("FileSearch")]
     private InternalAssistantToolsFileSearchFileSearch _fileSearch;

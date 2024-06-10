@@ -37,6 +37,9 @@ model FunctionObject {
   parameters?: FunctionParameters;
 }
 
+/** Whether to enable [parallel function calling](/docs/guides/function-calling/parallel-function-calling) during tool use. */
+alias ParallelToolCalls = boolean;
+
 /** Usage statistics for the completion request. */
 model CompletionUsage {
   /** Number of tokens in the generated completion. */

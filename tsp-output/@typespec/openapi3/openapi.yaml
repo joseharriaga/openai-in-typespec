@@ -2081,6 +2081,16 @@ components:
           description: Overrides for the file search tool.
       allOf:
         - $ref: '#/components/schemas/AssistantToolDefinition'
+    AssistantToolsFileSearchTypeOnly:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - file_search
+          description: 'The type of tool being defined: `file_search`'
     AssistantToolsFunction:
       type: object
       required:
@@ -3227,6 +3237,8 @@ components:
           description: A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
         tool_choice:
           $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
+        parallel_tool_calls:
+          type: boolean
         user:
           type: string
           description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
@@ -4167,7 +4179,7 @@ components:
             items:
               anyOf:
                 - $ref: '#/components/schemas/AssistantToolsCode'
-                - $ref: '#/components/schemas/AssistantToolsFileSearch'
+                - $ref: '#/components/schemas/AssistantToolsFileSearchTypeOnly'
             description: The tools to add this file to.
             x-oaiExpandable: true
         required:
@@ -4441,6 +4453,8 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
+        parallel_tool_calls:
+          type: boolean
         response_format:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
@@ -4628,6 +4642,8 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
+        parallel_tool_calls:
+          type: boolean
         response_format:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
@@ -6289,7 +6305,7 @@ components:
             items:
               anyOf:
                 - $ref: '#/components/schemas/AssistantToolsCode'
-                - $ref: '#/components/schemas/AssistantToolsFileSearch'
+                - $ref: '#/components/schemas/AssistantToolsFileSearchTypeOnly'
             description: The tools to add this file to.
             x-oaiExpandable: true
     MessageRequestContentTextObject:
@@ -6584,6 +6600,7 @@ components:
         - max_completion_tokens
         - truncation_strategy
         - tool_choice
+        - parallel_tool_calls
         - response_format
       properties:
         id:
@@ -6752,6 +6769,8 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
+        parallel_tool_calls:
+          type: boolean
         response_format:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'

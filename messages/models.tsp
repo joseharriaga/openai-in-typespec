@@ -18,7 +18,7 @@ model CreateMessageRequestAttachments
 
     /** The tools to add this file to. */
     @extension("x-oaiExpandable", true)
-    tools: (AssistantToolsCode | AssistantToolsFileSearch)[];
+    tools: (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
   }[];
 
 // Tool generated type. Extracts MessageObject.attachments
@@ -29,7 +29,7 @@ model MessageObjectAttachments
 
     /** The tools to add this file to. */
     @extension("x-oaiExpandable", true)
-    tools?: (AssistantToolsCode | AssistantToolsFileSearch)[];
+    tools?: (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
   }[];
 
 model CreateMessageRequest {

@@ -223,6 +223,13 @@ model AssistantToolsFileSearch extends AssistantToolDefinition {
   };
 }
 
+model AssistantToolsFileSearchTypeOnly {
+  @doc("""
+  The type of tool being defined: `file_search`
+  """)
+  type: "file_search";
+}
+
 // Tool customization: apply a common model base for tool definitions
 model AssistantToolsFunction extends AssistantToolDefinition {
   @doc("""

@@ -1,6 +1,7 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 namespace Azure.AI.OpenAI;
-
-
 [CodeGenModel("AzureContentFilterBlocklistIdResult")] internal partial class InternalAzureContentFilterBlocklistIdResult { }
 [CodeGenModel("AzureContentFilterBlocklistResultDetail")] internal partial class InternalAzureContentFilterBlocklistResultDetail { }
 [CodeGenModel("AzureContentFilterResultForChoiceProtectedMaterialCode")] public partial class ContentFilterProtectedMaterialResult { }

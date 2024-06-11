@@ -14,21 +14,21 @@ public partial class AzureSearchChatDataSource : AzureChatDataSource
     internal InternalAzureSearchChatDataSourceParameters InternalParameters { get; }
 
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.Endpoint"/>
-    public required Uri Endpoint
+    required public Uri Endpoint
     {
         get => InternalParameters.Endpoint;
         init => InternalParameters.Endpoint = value;
     }
 
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.IndexName"/>
-    public required string IndexName
+    required public string IndexName
     {
         get => InternalParameters.IndexName;
         init => InternalParameters.IndexName = value;
     }
-    
+
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.Authentication"/>
-    public required DataSourceAuthentication Authentication
+    required public DataSourceAuthentication Authentication
     {
         get => InternalParameters.Authentication;
         init => InternalParameters.Authentication = value;

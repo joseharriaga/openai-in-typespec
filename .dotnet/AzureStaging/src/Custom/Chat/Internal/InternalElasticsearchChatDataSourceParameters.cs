@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 
 namespace Azure.AI.OpenAI.Chat;
 
@@ -65,12 +63,11 @@ internal partial class InternalElasticsearchChatDataSourceParameters
     /// <remarks>
     /// Supported vectorization dependencies for Elasticsearch data sources include:
     /// <list type="bullet">
-    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item> 
-    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item> 
-    /// <item><see cref="DataSourceVectorizer.FromModelId(string)"/></item> 
+    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item>
+    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item>
+    /// <item><see cref="DataSourceVectorizer.FromModelId(string)"/></item>
     /// </list>
     /// </remarks>
     [CodeGenMember("EmbeddingDependency")]
     public DataSourceVectorizer VectorizationSource { get; set; }
 }
-

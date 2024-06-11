@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System.ClientModel.Primitives;
 
 namespace Azure.AI.OpenAI;
@@ -14,18 +17,12 @@ internal partial class GenericActionPipelinePolicy : PipelinePolicy
     public override void Process(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
     {
         _processMessageAction(message);
-        if (currentIndex < pipeline.Count - 1)
-        {
-            pipeline[currentIndex + 1].Process(message, pipeline, currentIndex + 1);
-        }
+        ProcessNext(message, pipeline, currentIndex);
     }
 
-    public override async ValueTask ProcessAsync(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
+    public override ValueTask ProcessAsync(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
     {
         _processMessageAction(message);
-        if (currentIndex < pipeline.Count - 1)
-        {
-            await pipeline[currentIndex + 1].ProcessAsync(message, pipeline, currentIndex + 1);
-        }
+        return ProcessNextAsync(message, pipeline, currentIndex);
     }
 }

@@ -84,7 +84,8 @@ namespace Azure.AI.OpenAI
                     promptIndex = property.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("content_filter_results"u8))
+                if (property.NameEquals("content_filter_results"u8)
+                    || property.NameEquals("content_filter_result"u8)) // gpt-4o models seem to use the singular case
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

@@ -100,7 +100,7 @@ internal partial class AzureFileClient : FileClient
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
 
         using PipelineMessage message = CreateUploadRequestMessage(content, contentType, options);
-        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options));
+        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     private PipelineMessage CreateDeleteRequestMessage(string fileId, RequestOptions options)

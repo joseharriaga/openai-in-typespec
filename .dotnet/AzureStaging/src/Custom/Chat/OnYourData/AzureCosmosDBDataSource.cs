@@ -14,42 +14,42 @@ public partial class AzureCosmosDBChatDataSource : AzureChatDataSource
     internal InternalAzureCosmosDBChatDataSourceParameters InternalParameters { get; }
 
     /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.ContainerName"/>
-    public required string ContainerName
+    required public string ContainerName
     {
         get => InternalParameters.ContainerName;
         init => InternalParameters.ContainerName = value;
     }
 
     /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.DatabaseName"/>
-    public required string DatabaseName
+    required public string DatabaseName
     {
         get => InternalParameters.DatabaseName;
         init => InternalParameters.DatabaseName = value;
     }
 
     /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.IndexName"/>
-    public required string IndexName
+    required public string IndexName
     {
         get => InternalParameters.IndexName;
         init => InternalParameters.IndexName = value;
     }
 
     /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.Authentication"/>
-    public required DataSourceAuthentication Authentication
+    required public DataSourceAuthentication Authentication
     {
         get => InternalParameters.Authentication;
         init => InternalParameters.Authentication = value;
     }
 
     /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.VectorizationSource"/>
-    public required DataSourceVectorizer VectorizationSource
+    required public DataSourceVectorizer VectorizationSource
     {
         get => InternalParameters.VectorizationSource;
         init => InternalParameters.VectorizationSource = value;
     }
 
     /// <inheritdoc cref="InternalAzureCosmosDBChatDataSourceParameters.FieldMappings"/>
-    public required DataSourceFieldMappings FieldMappings
+    required public DataSourceFieldMappings FieldMappings
     {
         get => InternalParameters.FieldMappings;
         init => InternalParameters.FieldMappings = value;

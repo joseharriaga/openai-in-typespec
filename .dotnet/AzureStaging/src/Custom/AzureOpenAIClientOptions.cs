@@ -25,6 +25,7 @@ public partial class AzureOpenAIClientOptions : OpenAIClientOptions
         {
             ServiceVersion.V2024_04_01_Preview => "2024-04-01-preview",
             ServiceVersion.V2024_05_01_Preview => "2024-05-01-preview",
+            ServiceVersion.V2024_06_01 => "2024-06-01",
             _ => throw new NotSupportedException()
         };
     }
@@ -35,6 +36,7 @@ public partial class AzureOpenAIClientOptions : OpenAIClientOptions
         /// <summary> Service version "2024-04-01-preview". </summary>
         V2024_04_01_Preview = 7,
         V2024_05_01_Preview = 8,
+        V2024_06_01 = 9,
     }
 
     private const ServiceVersion LatestVersion = ServiceVersion.V2024_05_01_Preview;

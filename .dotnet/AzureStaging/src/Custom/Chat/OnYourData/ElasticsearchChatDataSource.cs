@@ -14,21 +14,21 @@ public partial class ElasticsearchChatDataSource : AzureChatDataSource
     internal InternalElasticsearchChatDataSourceParameters InternalParameters { get; }
 
     /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.Endpoint"/>
-    public required Uri Endpoint
+    required public Uri Endpoint
     {
         get => InternalParameters.Endpoint;
         init => InternalParameters.Endpoint = value;
     }
 
     /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.IndexName"/>
-    public required string IndexName
+    required public string IndexName
     {
         get => InternalParameters.IndexName;
         init => InternalParameters.IndexName = value;
     }
-    
+
     /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.Authentication"/>
-    public required DataSourceAuthentication Authentication
+    required public DataSourceAuthentication Authentication
     {
         get => InternalParameters.Authentication;
         init => InternalParameters.Authentication = value;

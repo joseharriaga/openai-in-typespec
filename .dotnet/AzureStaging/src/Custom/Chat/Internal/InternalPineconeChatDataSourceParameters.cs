@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("PineconeChatDataSourceParameters")]
@@ -50,7 +53,7 @@ internal partial class InternalPineconeChatDataSourceParameters
     /// <remarks>
     /// Supported vectorization dependencies for Pinecone data sources include:
     /// <list type="bullet">
-    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/> 
+    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item>
     /// </list>
     /// </remarks>
     [CodeGenMember("EmbeddingDependency")]

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureSearchChatDataSourceParameters")]
@@ -43,7 +46,7 @@ internal partial class InternalAzureSearchChatDataSourceParameters
     /// <item><see cref="DataSourceFieldMappings.UrlFieldName"/></item>
     /// <item><see cref="DataSourceFieldMappings.FilepathFieldName"/></item>
     /// <item><see cref="DataSourceFieldMappings.VectorFieldNames"/></item>
-    /// <item><see cref="DataSourceFieldMappings.ImageVectorFieldNames"/></item> 
+    /// <item><see cref="DataSourceFieldMappings.ImageVectorFieldNames"/></item>
     /// </list>
     /// </remarks>
     [CodeGenMember("FieldsMapping")]
@@ -59,8 +62,8 @@ internal partial class InternalAzureSearchChatDataSourceParameters
     /// <remarks>
     /// Supported vectorization dependencies for Azure Search data sources include:
     /// <list type="bullet">
-    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item> 
-    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item> 
+    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item>
+    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item>
     /// </list>
     /// </remarks>
     [CodeGenMember("EmbeddingDependency")]

@@ -104,32 +104,33 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncClientPageable<Assistant> GetAssistantsAsync(
+    public virtual IAsyncEnumerable<Assistant> GetAssistantsAsync(
         ListOrder? itemOrder = null,
         string itemsAfter = default,
         string itemsBefore = default,
         int? pageSize = null)
     {
-        async Task<ClientPage<Assistant>> getPageAsync(string pageToken)
-        {
-            string? after = pageToken is ClientPage<Assistant>.DefaultFirstPageToken ?
-                itemsAfter : 
-                pageToken;
+        throw new NotImplementedException();
+        //async Task<ClientPage<Assistant>> getPageAsync(string pageToken)
+        //{
+        //    string? after = pageToken is ClientPage<Assistant>.DefaultFirstPageToken ?
+        //        itemsAfter : 
+        //        pageToken;
 
-            ClientResult result = await GetAssistantsAsync(
-                limit: pageSize,
-                order: itemOrder?.ToString(),
-                after: after,
-                before: itemsBefore,
-                options: null).ConfigureAwait(false);
+        //    ClientResult result = await GetAssistantsAsync(
+        //        limit: pageSize,
+        //        order: itemOrder?.ToString(),
+        //        after: after,
+        //        before: itemsBefore,
+        //        options: null).ConfigureAwait(false);
 
-            PipelineResponse response = result.GetRawResponse();
-            InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
+        //    PipelineResponse response = result.GetRawResponse();
+        //    InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-            return ClientPage<Assistant>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
-        }
+        //    return ClientPage<Assistant>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
+        //}
 
-        return PageableResultHelpers.Create(getPageAsync);
+        //return PageableResultHelpers.Create(getPageAsync);
     }
 
     /// <summary>
@@ -140,13 +141,14 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
-    public virtual ClientPageable<Assistant> GetAssistants(
+    public virtual IEnumerable<Assistant> GetAssistants(
         ListOrder? itemOrder = null,
         string itemsAfter = default,
         string itemsBefore = default,
         int? pageSize = null)
     {
-        return new AssistantPageableResult(this, itemOrder, itemsAfter, itemsBefore, pageSize);
+        throw new NotImplementedException();
+        //return new AssistantPageableResult(this, itemOrder, itemsAfter, itemsBefore, pageSize);
     }
 
     /// <summary>
@@ -332,81 +334,81 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, ThreadMessage.FromResponse);
     }
 
-    /// <summary>
-    /// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread to list messages from. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncClientPageable<ThreadMessage> GetMessagesAsync(
-        string threadId,
-        int? pageSize = null,
-        ListOrder? itemOrder = null,
-        string itemsAfter = null,
-        string itemsBefore = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    ///// <summary>
+    ///// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread to list messages from. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
+    //public virtual AsyncClientPageable<ThreadMessage> GetMessagesAsync(
+    //    string threadId,
+    //    int? pageSize = null,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = null,
+    //    string itemsBefore = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        async Task<ClientPage<ThreadMessage>> getPageAsync(string pageToken)
-        {
-            string? after = pageToken is ClientPage<Assistant>.DefaultFirstPageToken ?
-                itemsAfter : pageToken;
+    //    async Task<ClientPage<ThreadMessage>> getPageAsync(string pageToken)
+    //    {
+    //        string? after = pageToken is ClientPage<Assistant>.DefaultFirstPageToken ?
+    //            itemsAfter : pageToken;
 
-            ClientResult result = await GetMessagesAsync(threadId,
-                limit: pageSize,
-                order: itemOrder?.ToString(),
-                after: after,
-                before: itemsBefore,
-                options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
+    //        ClientResult result = await GetMessagesAsync(threadId,
+    //            limit: pageSize,
+    //            order: itemOrder?.ToString(),
+    //            after: after,
+    //            before: itemsBefore,
+    //            options: null).ConfigureAwait(false);
+    //        PipelineResponse response = result.GetRawResponse();
+    //        InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
 
-            return ClientPage<ThreadMessage>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
-        }
+    //        return ClientPage<ThreadMessage>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
+    //    }
 
-        return PageableResultHelpers.Create(getPageAsync);
-    }
+    //    return PageableResultHelpers.Create(getPageAsync);
+    //}
 
-    /// <summary>
-    /// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread to list messages from. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
-    public virtual ClientPageable<ThreadMessage> GetMessages(
-        string threadId,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    ///// <summary>
+    ///// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread to list messages from. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
+    //public virtual ClientPageable<ThreadMessage> GetMessages(
+    //    string threadId,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ClientPage<ThreadMessage> getPage(string pageToken)
-        {
-            string? after = pageToken is ClientPage<ThreadMessage>.DefaultFirstPageToken ?
-                itemsAfter : pageToken;
+    //    ClientPage<ThreadMessage> getPage(string pageToken)
+    //    {
+    //        string? after = pageToken is ClientPage<ThreadMessage>.DefaultFirstPageToken ?
+    //            itemsAfter : pageToken;
 
-            ClientResult result = GetMessages(threadId,
-                limit: pageSize,
-                order: itemOrder?.ToString(),
-                after: after,
-                before: itemsBefore,
-                options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
+    //        ClientResult result = GetMessages(threadId,
+    //            limit: pageSize,
+    //            order: itemOrder?.ToString(),
+    //            after: after,
+    //            before: itemsBefore,
+    //            options: null);
+    //        PipelineResponse response = result.GetRawResponse();
+    //        InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
 
-            return ClientPage<ThreadMessage>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
-        }
+    //        return ClientPage<ThreadMessage>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
+    //    }
 
-        return PageableResultHelpers.Create(getPage);
-    }
+    //    return PageableResultHelpers.Create(getPage);
+    //}
 
     /// <summary>
     /// Gets an existing <see cref="ThreadMessage"/> from a known <see cref="AssistantThread"/>.
@@ -680,82 +682,82 @@ public partial class AssistantClient
         return new StreamingUpdateCollection(getResult);
     }
 
-    /// <summary>
-    /// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of runs that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncClientPageable<ThreadRun> GetRunsAsync(
-        string threadId,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    ///// <summary>
+    ///// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of runs that can be enumerated using <c>await foreach</c>. </returns>
+    //public virtual AsyncClientPageable<ThreadRun> GetRunsAsync(
+    //    string threadId,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        async Task<ClientPage<ThreadRun>> pageFuncAsync(string pageToken)
-        {
-            string? after = pageToken is ClientPage<ThreadRun>.DefaultFirstPageToken ?
-                itemsAfter : pageToken;
+    //    async Task<ClientPage<ThreadRun>> pageFuncAsync(string pageToken)
+    //    {
+    //        string? after = pageToken is ClientPage<ThreadRun>.DefaultFirstPageToken ?
+    //            itemsAfter : pageToken;
 
-            ClientResult result = await GetRunsAsync(
-                threadId,
-                limit: pageSize,
-                order: itemOrder?.ToString(),
-                after: after,
-                before: itemsBefore,
-                options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
+    //        ClientResult result = await GetRunsAsync(
+    //            threadId,
+    //            limit: pageSize,
+    //            order: itemOrder?.ToString(),
+    //            after: after,
+    //            before: itemsBefore,
+    //            options: null).ConfigureAwait(false);
+    //        PipelineResponse response = result.GetRawResponse();
+    //        InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
 
-            return ClientPage<ThreadRun>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
-        }
+    //        return ClientPage<ThreadRun>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
+    //    }
 
-        return PageableResultHelpers.Create(pageFuncAsync);
-    }
+    //    return PageableResultHelpers.Create(pageFuncAsync);
+    //}
 
-    /// <summary>
-    /// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of runs that can be enumerated using <c>foreach</c>. </returns>
-    public virtual ClientPageable<ThreadRun> GetRuns(
-        string threadId,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    ///// <summary>
+    ///// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of runs that can be enumerated using <c>foreach</c>. </returns>
+    //public virtual ClientPageable<ThreadRun> GetRuns(
+    //    string threadId,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        ClientPage<ThreadRun> pageFunc(string pageToken)
-        {
-            string? after = pageToken is ClientPage<ThreadRun>.DefaultFirstPageToken ?
-                itemsAfter : pageToken;
+    //    ClientPage<ThreadRun> pageFunc(string pageToken)
+    //    {
+    //        string? after = pageToken is ClientPage<ThreadRun>.DefaultFirstPageToken ?
+    //            itemsAfter : pageToken;
 
-            ClientResult result = GetRuns(threadId,
-                limit: pageSize,
-                order: itemOrder?.ToString(),
-                after: after,
-                before: itemsBefore,
-                options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
+    //        ClientResult result = GetRuns(threadId,
+    //            limit: pageSize,
+    //            order: itemOrder?.ToString(),
+    //            after: after,
+    //            before: itemsBefore,
+    //            options: null);
+    //        PipelineResponse response = result.GetRawResponse();
+    //        InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
 
-            return ClientPage<ThreadRun>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
-        }
+    //        return ClientPage<ThreadRun>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
+    //    }
 
-        return PageableResultHelpers.Create(pageFunc);
-    }
+    //    return PageableResultHelpers.Create(pageFunc);
+    //}
 
     /// <summary>
     /// Gets an existing <see cref="ThreadRun"/> from a known <see cref="AssistantThread"/>.
@@ -912,87 +914,87 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 
-    /// <summary>
-    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread associated with the run. </param>
-    /// <param name="runId"> The ID of the run to list run steps from. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of run steps that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncClientPageable<RunStep> GetRunStepsAsync(
-        string threadId,
-        string runId,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+    ///// <summary>
+    ///// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread associated with the run. </param>
+    ///// <param name="runId"> The ID of the run to list run steps from. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of run steps that can be enumerated using <c>await foreach</c>. </returns>
+    //public virtual AsyncClientPageable<RunStep> GetRunStepsAsync(
+    //    string threadId,
+    //    string runId,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    //    Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        async Task<ClientPage<RunStep>> pageFuncAsync(string pageToken)
-        {
-            string? after = pageToken is ClientPage<RunStep>.DefaultFirstPageToken ?
-                itemsAfter : pageToken;
+    //    async Task<ClientPage<RunStep>> pageFuncAsync(string pageToken)
+    //    {
+    //        string? after = pageToken is ClientPage<RunStep>.DefaultFirstPageToken ?
+    //            itemsAfter : pageToken;
 
-            ClientResult result = await GetRunStepsAsync(threadId, runId,
-                limit: pageSize,
-                order: itemOrder?.ToString(),
-                after: after,
-                before: itemsBefore,
-                options: null).ConfigureAwait(false);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
+    //        ClientResult result = await GetRunStepsAsync(threadId, runId,
+    //            limit: pageSize,
+    //            order: itemOrder?.ToString(),
+    //            after: after,
+    //            before: itemsBefore,
+    //            options: null).ConfigureAwait(false);
+    //        PipelineResponse response = result.GetRawResponse();
+    //        InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
 
-            return ClientPage<RunStep>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
-        }
+    //        return ClientPage<RunStep>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
+    //    }
 
-        return PageableResultHelpers.Create(pageFuncAsync);
-    }
+    //    return PageableResultHelpers.Create(pageFuncAsync);
+    //}
 
-    /// <summary>
-    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
-    /// </summary>
-    /// <param name="threadId"> The ID of the thread associated with the run. </param>
-    /// <param name="runId"> The ID of the run to list run steps from. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of run steps that can be enumerated using <c>foreach</c>. </returns>
-    public virtual ClientPageable<RunStep> GetRunSteps(
-        string threadId,
-        string runId,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+    ///// <summary>
+    ///// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    ///// </summary>
+    ///// <param name="threadId"> The ID of the thread associated with the run. </param>
+    ///// <param name="runId"> The ID of the run to list run steps from. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of run steps that can be enumerated using <c>foreach</c>. </returns>
+    //public virtual ClientPageable<RunStep> GetRunSteps(
+    //    string threadId,
+    //    string runId,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+    //    Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        ClientPage<RunStep> pageFunc(string pageToken)
-        {
-            string? after = pageToken is ClientPage<RunStep>.DefaultFirstPageToken ?
-                itemsAfter : pageToken;
+    //    ClientPage<RunStep> pageFunc(string pageToken)
+    //    {
+    //        string? after = pageToken is ClientPage<RunStep>.DefaultFirstPageToken ?
+    //            itemsAfter : pageToken;
 
-            ClientResult result = GetRunSteps(threadId, runId,
-                limit: pageSize,
-                order: itemOrder?.ToString(),
-                after: after,
-                before: itemsBefore,
-                options: null);
-            PipelineResponse response = result.GetRawResponse();
-            InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
+    //        ClientResult result = GetRunSteps(threadId, runId,
+    //            limit: pageSize,
+    //            order: itemOrder?.ToString(),
+    //            after: after,
+    //            before: itemsBefore,
+    //            options: null);
+    //        PipelineResponse response = result.GetRawResponse();
+    //        InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
 
-            return ClientPage<RunStep>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
-        }
+    //        return ClientPage<RunStep>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
+    //    }
 
-        return PageableResultHelpers.Create(pageFunc);
-    }
+    //    return PageableResultHelpers.Create(pageFunc);
+    //}
 
     /// <summary>
     /// Gets a single run step from a run.

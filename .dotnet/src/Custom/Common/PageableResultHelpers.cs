@@ -9,39 +9,39 @@ namespace OpenAI;
 
 internal class PageableResultHelpers
 {
-    public static AsyncClientPageable<T> Create<T>(Func<string, Task<ClientPage<T>>> getPageAsync) where T : notnull
-        => new FuncAsyncPageable<T>(getPageAsync);
+    //public static AsyncClientPageable<T> Create<T>(Func<string, Task<ClientPage<T>>> getPageAsync) where T : notnull
+    //    => new FuncAsyncPageable<T>(getPageAsync);
 
-    public static ClientPageable<T> Create<T>(Func<string, ClientPage<T>> getPage) where T : notnull
-        => new FuncPageable<T>(getPage);
+    //public static ClientPageable<T> Create<T>(Func<string, ClientPage<T>> getPage) where T : notnull
+    //    => new FuncPageable<T>(getPage);
 
-    private class FuncAsyncPageable<T> : AsyncClientPageable<T> where T : notnull
-    {
-        private readonly Func<string, Task<ClientPage<T>>> _getPageAsync;
+    //private class FuncAsyncPageable<T> : AsyncClientPageable<T> where T : notnull
+    //{
+    //    private readonly Func<string, Task<ClientPage<T>>> _getPageAsync;
         
-        public FuncAsyncPageable(Func<string, Task<ClientPage<T>>> getPageAsync)
-        {
-            _getPageAsync = getPageAsync;
-        }
+    //    public FuncAsyncPageable(Func<string, Task<ClientPage<T>>> getPageAsync)
+    //    {
+    //        _getPageAsync = getPageAsync;
+    //    }
 
-        protected override async Task<ClientPage<T>> GetPageCoreAsync(string pageToken = "")
-        {
-            return await _getPageAsync(pageToken).ConfigureAwait(false);
-        }
-    }
+    //    protected override async Task<ClientPage<T>> GetPageCoreAsync(string pageToken = "")
+    //    {
+    //        return await _getPageAsync(pageToken).ConfigureAwait(false);
+    //    }
+    //}
 
-    private class FuncPageable<T> : ClientPageable<T> where T : notnull
-    {
-        private readonly Func<string, ClientPage<T>> _getPage;
+    //private class FuncPageable<T> : ClientPageable<T> where T : notnull
+    //{
+    //    private readonly Func<string, ClientPage<T>> _getPage;
         
-        public FuncPageable(Func<string, ClientPage<T>> getPage)
-        {
-            _getPage = getPage;
-        }
+    //    public FuncPageable(Func<string, ClientPage<T>> getPage)
+    //    {
+    //        _getPage = getPage;
+    //    }
 
-        protected override ClientPage<T> GetPageCore(string pageToken)
-        {
-            return _getPage(pageToken);
-        }
-    }
+    //    protected override ClientPage<T> GetPageCore(string pageToken)
+    //    {
+    //        return _getPage(pageToken);
+    //    }
+    //}
 }

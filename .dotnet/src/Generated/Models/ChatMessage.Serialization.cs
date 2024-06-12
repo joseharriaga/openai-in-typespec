@@ -24,6 +24,28 @@ namespace OpenAI.Chat
             return DeserializeChatMessage(document.RootElement, options);
         }
 
+        internal static ChatMessage DeserializeChatMessage(JsonElement element, ModelReaderWriterOptions options = null)
+        {
+            options ??= ModelSerializationExtensions.WireOptions;
+
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+            if (element.TryGetProperty("role", out JsonElement discriminator))
+            {
+                switch (discriminator.GetString())
+                {
+                    case "assistant": return AssistantChatMessage.DeserializeAssistantChatMessage(element, options);
+                    case "function": return FunctionChatMessage.DeserializeFunctionChatMessage(element, options);
+                    case "system": return SystemChatMessage.DeserializeSystemChatMessage(element, options);
+                    case "tool": return ToolChatMessage.DeserializeToolChatMessage(element, options);
+                    case "user": return UserChatMessage.DeserializeUserChatMessage(element, options);
+                }
+            }
+            return UnknownChatMessage.DeserializeUnknownChatMessage(element, options);
+        }
+
         BinaryData IPersistableModel<ChatMessage>.Write(ModelReaderWriterOptions options)
         {
             var format = options.Format == "W" ? ((IPersistableModel<ChatMessage>)this).GetFormatFromOptions(options) : options.Format;

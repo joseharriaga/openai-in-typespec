@@ -11,48 +11,30 @@ public abstract partial class ChatMessage : IJsonModel<ChatMessage>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SerializeContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
-    }
+        => throw new NotImplementedException();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void DeserializeContentValue(JsonProperty property, ref IList<ChatMessageContentPart> content, ModelReaderWriterOptions options = null)
+    protected static void DeserializeContentValue(JsonProperty property, ref IList<ChatMessageContentPart> content, ModelReaderWriterOptions options = null)
     {
-        throw new NotImplementedException();
+        content ??= new ChangeTrackingList<ChatMessageContentPart>();
+        if (property.Value.ValueKind == JsonValueKind.String)
+        {
+            content.Add(ChatMessageContentPart.CreateTextMessageContentPart(property.Value.GetString()));
+        }
+        else
+        {
+            foreach (var item in property.Value.EnumerateArray())
+            {
+                content.Add(ChatMessageContentPart.DeserializeChatMessageContentPart(item, options));
+            }
+        }
     }
 
     void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         => CustomSerializationHelpers.SerializeInstance(this, SerializeChatMessage, writer, options);
 
     internal static void SerializeChatMessage(ChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        instance.SerializeChatMessage(writer, options);
-    }
+        => instance.SerializeChatMessage(writer, options);
 
-    protected virtual void SerializeChatMessage(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static ChatMessage DeserializeChatMessage(JsonElement element, ModelReaderWriterOptions options = null)
-    {
-        options ??= ModelSerializationExtensions.WireOptions;
-
-        if (element.ValueKind == JsonValueKind.Null)
-        {
-            return null;
-        }
-        if (element.TryGetProperty("role", out JsonElement discriminator))
-        {
-            switch (discriminator.GetString())
-            {
-                case "assistant": return AssistantChatMessage.DeserializeAssistantChatMessage(element, options);
-                case "function": return FunctionChatMessage.DeserializeFunctionChatMessage(element, options);
-                case "system": return SystemChatMessage.DeserializeSystemChatMessage(element, options);
-                case "tool": return ToolChatMessage.DeserializeToolChatMessage(element, options);
-                case "user": return UserChatMessage.DeserializeUserChatMessage(element, options);
-            }
-        }
-        return UnknownChatMessage.DeserializeUnknownChatMessage(element, options);
-    }
+    protected abstract void SerializeChatMessage(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

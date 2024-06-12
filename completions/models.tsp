@@ -106,7 +106,7 @@ model CreateCompletionRequest {
   """)
   stream?: boolean | null = false;
 
-  stream_options?: ChatCompletionStreamOptions | null;
+  stream_options?: ChatCompletionStreamOptions | null = null;
 
   @doc("""
   The suffix that comes after a completion of inserted text.

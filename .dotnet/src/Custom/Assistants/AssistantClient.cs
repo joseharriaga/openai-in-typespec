@@ -903,7 +903,7 @@ public partial class AssistantClient
             runOptions.MaxCompletionTokens,
             runOptions.TruncationStrategy,
             runOptions.ToolConstraint,
-            runOptions.EnableParallelToolCalls,
+            runOptions.ParallelToolCallsEnabled,
             runOptions.ResponseFormat,
             serializedAdditionalRawData: null);
         return internalRequest.ToBinaryContent();

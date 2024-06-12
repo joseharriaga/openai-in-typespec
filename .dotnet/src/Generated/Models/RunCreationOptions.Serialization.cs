@@ -195,10 +195,10 @@ namespace OpenAI.Assistants
                     writer.WriteNull("tool_choice");
                 }
             }
-            if (Optional.IsDefined(EnableParallelToolCalls))
+            if (Optional.IsDefined(ParallelToolCallsEnabled))
             {
                 writer.WritePropertyName("parallel_tool_calls"u8);
-                writer.WriteBooleanValue(EnableParallelToolCalls.Value);
+                writer.WriteBooleanValue(ParallelToolCallsEnabled.Value);
             }
             if (Optional.IsDefined(ResponseFormat))
             {

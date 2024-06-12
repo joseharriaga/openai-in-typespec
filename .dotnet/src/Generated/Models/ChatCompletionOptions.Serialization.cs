@@ -199,10 +199,10 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("tool_choice"u8);
                 writer.WriteObjectValue<ChatToolChoice>(ToolChoice, options);
             }
-            if (Optional.IsDefined(EnableParallelToolCalls))
+            if (Optional.IsDefined(ParallelToolCallsEnabled))
             {
                 writer.WritePropertyName("parallel_tool_calls"u8);
-                writer.WriteBooleanValue(EnableParallelToolCalls.Value);
+                writer.WriteBooleanValue(ParallelToolCallsEnabled.Value);
             }
             if (Optional.IsDefined(User))
             {

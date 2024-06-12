@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Internal.Models;
 
-namespace OpenAI.Internal
+namespace OpenAI.Internal.Assistants
 {
     internal partial struct InternalAssistantToolsFileSearchTypeOnly : IJsonModel<InternalAssistantToolsFileSearchTypeOnly>, IJsonModel<object>
     {

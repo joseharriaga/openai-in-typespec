@@ -3208,6 +3208,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ChatCompletionStreamOptions'
           nullable: true
+          default: null
         temperature:
           type: number
           format: float
@@ -3239,6 +3240,7 @@ components:
           $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
         parallel_tool_calls:
           type: boolean
+          default: true
         user:
           type: string
           description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
@@ -3597,6 +3599,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ChatCompletionStreamOptions'
           nullable: true
+          default: null
         suffix:
           type: string
           nullable: true
@@ -4455,6 +4458,7 @@ components:
           nullable: true
         parallel_tool_calls:
           type: boolean
+          default: true
         response_format:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
@@ -4644,6 +4648,7 @@ components:
           nullable: true
         parallel_tool_calls:
           type: boolean
+          default: true
         response_format:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
@@ -6771,6 +6776,7 @@ components:
           nullable: true
         parallel_tool_calls:
           type: boolean
+          default: true
         response_format:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'

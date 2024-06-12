@@ -105,7 +105,7 @@ model CreateRunRequest {
 
   truncation_strategy?: TruncationObject | null;
   tool_choice?: AssistantsApiToolChoiceOption | null;
-  parallel_tool_calls?: ParallelToolCalls;
+  parallel_tool_calls?: ParallelToolCalls = true;
   response_format?: AssistantsApiResponseFormatOption | null;
 }
 
@@ -210,7 +210,7 @@ model CreateThreadAndRunRequest {
 
   truncation_strategy?: TruncationObject | null;
   tool_choice?: AssistantsApiToolChoiceOption | null;
-  parallel_tool_calls?: ParallelToolCalls;
+  parallel_tool_calls?: ParallelToolCalls = true;
   response_format?: AssistantsApiResponseFormatOption | null;
 }
 
@@ -536,7 +536,7 @@ model RunObject {
 
   truncation_strategy: TruncationObject | null;
   tool_choice: AssistantsApiToolChoiceOption | null;
-  parallel_tool_calls: ParallelToolCalls;
+  parallel_tool_calls: ParallelToolCalls = true;
   response_format: AssistantsApiResponseFormatOption | null;
 }
 

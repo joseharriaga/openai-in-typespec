@@ -11,7 +11,7 @@ namespace OpenAI.Assistants
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        internal RunCreationOptions(string assistantId, string modelOverride, string instructionsOverride, string additionalInstructions, IList<MessageCreationOptions> internalMessages, IList<ToolDefinition> toolsOverride, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, ToolConstraint toolConstraint, bool? enableParallelToolCalls, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunCreationOptions(string assistantId, string modelOverride, string instructionsOverride, string additionalInstructions, IList<MessageCreationOptions> internalMessages, IList<ToolDefinition> toolsOverride, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, ToolConstraint toolConstraint, bool? ParallelToolCallsEnabled, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AssistantId = assistantId;
             ModelOverride = modelOverride;
@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             MaxCompletionTokens = maxCompletionTokens;
             TruncationStrategy = truncationStrategy;
             ToolConstraint = toolConstraint;
-            EnableParallelToolCalls = enableParallelToolCalls;
+            ParallelToolCallsEnabled = ParallelToolCallsEnabled;
             ResponseFormat = responseFormat;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }

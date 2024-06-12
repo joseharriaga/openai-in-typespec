@@ -223,7 +223,7 @@ namespace OpenAI.Assistants {
         public RunCreationOptions();
         public string AdditionalInstructions { get; init; }
         public IList<ThreadInitializationMessage> AdditionalMessages { get; }
-        public bool? EnableParallelToolCalls { get; init; }
+        public bool? ParallelToolCallsEnabled { get; init; }
         public string InstructionsOverride { get; init; }
         public int? MaxCompletionTokens { get; init; }
         public int? MaxPromptTokens { get; init; }
@@ -850,7 +850,7 @@ namespace OpenAI.Chat {
     }
     public class ChatCompletionOptions {
         public ChatCompletionOptions();
-        public bool? EnableParallelToolCalls { get; init; }
+        public bool? ParallelToolCallsEnabled { get; init; }
         public float? FrequencyPenalty { get; init; }
         public ChatFunctionChoice FunctionChoice { get; init; }
         public IList<ChatFunction> Functions { get; }

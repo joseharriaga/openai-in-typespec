@@ -10,6 +10,3 @@ internal interface IInternalListResponse<T>
     string LastId { get; }
     bool HasMore { get; }
 }
-
-[CodeGenModel("AssistantToolsFileSearchTypeOnly")]
-internal readonly partial struct InternalAssistantToolsFileSearchTypeOnly { }

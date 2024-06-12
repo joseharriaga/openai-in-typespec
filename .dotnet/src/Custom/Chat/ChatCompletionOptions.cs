@@ -109,5 +109,5 @@ public partial class ChatCompletionOptions
     /// Assumed <c>true</c> if not otherwise specified.
     /// </remarks>
     [CodeGenMember("ParallelToolCalls")]
-    public bool? EnableParallelToolCalls { get; init; }
+    public bool? ParallelToolCallsEnabled { get; init; }
 }

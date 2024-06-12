@@ -4,6 +4,8 @@ using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
@@ -52,6 +54,50 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
             : client.GenerateSpeechFromText("Hello, world!", GeneratedSpeechVoice.Alloy, options);
 
         Assert.That(audio, Is.Not.Null);
+    }
+
+    [Test]
+    public async Task StreamingTextToSpeechWorks()
+    {
+        AudioClient client = new("tts-1");
+
+        const string input = """
+            Hello, world! This is a brief test to see how well chunked audio streaming works.
+            """;
+        const GeneratedSpeechVoice voice = GeneratedSpeechVoice.Echo;
+
+        List<TimeSpan> chunkTimes = [];
+        using MemoryStream chunkedOutputStream = new();
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
+
+        if (IsAsync)
+        {
+            await foreach (BinaryData audioChunk in client.GenerateSpeechFromTextStreamingAsync(input, voice))
+            {
+                chunkedOutputStream.Write(audioChunk.ToArray());
+                chunkTimes.Add(stopwatch.Elapsed);
+            }
+        }
+        else
+        {
+            foreach (BinaryData audioChunk in client.GenerateSpeechFromTextStreaming(input, voice))
+            {
+                chunkedOutputStream.Write(audioChunk.ToArray());
+                chunkTimes.Add(stopwatch.Elapsed);
+            }
+        }
+
+        Assert.That(chunkTimes, Has.Count.GreaterThan(10));
+        Assert.That(chunkTimes[^1] - chunkTimes[0], Is.GreaterThan(TimeSpan.FromMilliseconds(200)));
+
+        chunkedOutputStream.Position = 0;
+
+        AudioClient validationClient = new("whisper-1");
+
+        AudioTranscription transcription = validationClient.TranscribeAudio(chunkedOutputStream, "chunked_audio.mp3");
+        Assert.That(transcription.Text?.ToLower(), Does.Contain("hello"));
+        Assert.That(transcription.Text?.ToLower(), Does.Contain("chunked audio"));
     }
 
     private void ValidateGeneratedAudio(BinaryData audio, string expectedSubstring)

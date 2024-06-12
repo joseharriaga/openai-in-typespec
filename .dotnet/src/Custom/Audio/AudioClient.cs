@@ -121,6 +121,54 @@ public partial class AudioClient
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
 
+    /// <summary>
+    /// Generates text-to-speech audio using the specified voice speaking the provided input text, providing each transfer-encoded chunk as it arrives.
+    /// </summary>
+    /// <remarks>
+    /// <para> The result of this method may be iterated over using <c>await foreach</c>. </para>
+    /// The default format of the generated audio is <see cref="GeneratedSpeechFormat.Mp3"/> unless otherwise specified
+    /// via <see cref="SpeechGenerationOptions.ResponseFormat"/>.
+    /// </remarks>
+    /// <param name="text"> The text for the voice to speak. </param>
+    /// <param name="voice"> The voice to use. </param>
+    /// <param name="options"> Additional options to tailor the text-to-speech request. </param>
+    /// <returns> The generated audio in the specified output format. </returns>
+    public virtual AsyncResultCollection<BinaryData> GenerateSpeechFromTextStreamingAsync(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null)
+    {
+        Argument.AssertNotNull(text, nameof(text));
+
+        options ??= new();
+        CreateSpeechGenerationOptions(text, voice, ref options);
+
+        using BinaryContent content = options.ToBinaryContent();
+        RequestOptions requestOptions = new() { BufferResponse = false };
+        return new AsyncStreamingAudioChunkCollection(() => GenerateSpeechFromTextAsync(content, requestOptions));
+    }
+
+    /// <summary>
+    /// Generates text-to-speech audio using the specified voice speaking the provided input text, providing each transfer-encoded chunk as it arrives.
+    /// </summary>
+    /// <remarks>
+    /// <para> The result of this method may be iterated over using <c>foreach</c>. </para>
+    /// The default format of the generated audio is <see cref="GeneratedSpeechFormat.Mp3"/> unless otherwise specified
+    /// via <see cref="SpeechGenerationOptions.ResponseFormat"/>.
+    /// </remarks>
+    /// <param name="text"> The text for the voice to speak. </param>
+    /// <param name="voice"> The voice to use. </param>
+    /// <param name="options"> Additional options to tailor the text-to-speech request. </param>
+    /// <returns> The generated audio in the specified output format. </returns>
+    public virtual ResultCollection<BinaryData> GenerateSpeechFromTextStreaming(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null)
+    {
+        Argument.AssertNotNull(text, nameof(text));
+
+        options ??= new();
+        CreateSpeechGenerationOptions(text, voice, ref options);
+
+        using BinaryContent content = options.ToBinaryContent();
+        RequestOptions requestOptions = new() { BufferResponse = false };
+        return new StreamingAudioChunkCollection(() => GenerateSpeechFromText(content, requestOptions));
+    }
+
     #endregion
 
     #region TranscribeAudio

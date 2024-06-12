@@ -121,45 +121,45 @@ public partial class AssistantClient
         MessageCreationOptions options = null)
             => CreateMessage(thread?.Id, content, options);
 
-    /// <summary>
-    /// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
-    /// </summary>
-    /// <param name="thread"> The thread to list messages from. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncClientPageable<ThreadMessage> GetMessagesAsync(
-        AssistantThread thread,
-        int? pageSize = null,
-        ListOrder? itemOrder = default)
-    {
-        Argument.AssertNotNull(thread, nameof(thread));
+    ///// <summary>
+    ///// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
+    ///// </summary>
+    ///// <param name="thread"> The thread to list messages from. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of messages that can be enumerated using <c>await foreach</c>. </returns>
+    //public virtual AsyncClientPageable<ThreadMessage> GetMessagesAsync(
+    //    AssistantThread thread,
+    //    int? pageSize = null,
+    //    ListOrder? itemOrder = default)
+    //{
+    //    Argument.AssertNotNull(thread, nameof(thread));
 
-        return GetMessagesAsync(thread.Id, pageSize, itemOrder);
-    }
+    //    return GetMessagesAsync(thread.Id, pageSize, itemOrder);
+    //}
 
-    /// <summary>
-    /// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
-    /// </summary>
-    /// <param name="thread"> The thread to list messages from. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
-    public virtual ClientPageable<ThreadMessage> GetMessages(
-        AssistantThread thread,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNull(thread, nameof(thread));
+    ///// <summary>
+    ///// Returns a collection of <see cref="ThreadMessage"/> instances from an existing <see cref="AssistantThread"/>.
+    ///// </summary>
+    ///// <param name="thread"> The thread to list messages from. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of messages that can be enumerated using <c>foreach</c>. </returns>
+    //public virtual ClientPageable<ThreadMessage> GetMessages(
+    //    AssistantThread thread,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNull(thread, nameof(thread));
 
-        return GetMessages(thread.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
-    }
+    //    return GetMessages(thread.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
+    //}
 
     /// <summary>
     /// Gets an updated instance of an existing <see cref="ThreadMessage"/>.
@@ -240,7 +240,7 @@ public partial class AssistantClient
     /// <param name="thread"> The thread that the run should evaluate. </param>
     /// <param name="assistant"> The assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(
+    public virtual AsyncClientCollection<StreamingUpdate> CreateRunStreamingAsync(
         AssistantThread thread,
         Assistant assistant,
         RunCreationOptions options = null)
@@ -253,7 +253,7 @@ public partial class AssistantClient
     /// <param name="thread"> The thread that the run should evaluate. </param>
     /// <param name="assistant"> The assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(
+    public virtual ClientCollection<StreamingUpdate> CreateRunStreaming(
         AssistantThread thread,
         Assistant assistant,
         RunCreationOptions options = null)
@@ -291,7 +291,7 @@ public partial class AssistantClient
     /// <param name="assistant"> The assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(
+    public virtual AsyncClientCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
         Assistant assistant,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -303,53 +303,53 @@ public partial class AssistantClient
     /// <param name="assistant"> The assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(
+    public virtual ClientCollection<StreamingUpdate> CreateThreadAndRunStreaming(
         Assistant assistant,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
             => CreateThreadAndRunStreaming(assistant?.Id, threadOptions, runOptions);
 
-    /// <summary>
-    /// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
-    /// </summary>
-    /// <param name="thread"> The thread that runs in the list should be associated with. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of runs that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual AsyncClientPageable<ThreadRun> GetRunsAsync(
-        AssistantThread thread,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNull(thread, nameof(thread));
+    ///// <summary>
+    ///// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
+    ///// </summary>
+    ///// <param name="thread"> The thread that runs in the list should be associated with. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of runs that can be enumerated using <c>await foreach</c>. </returns>
+    //public virtual AsyncClientPageable<ThreadRun> GetRunsAsync(
+    //    AssistantThread thread,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNull(thread, nameof(thread));
 
-        return GetRunsAsync(thread.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
-    }
+    //    return GetRunsAsync(thread.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
+    //}
 
-    /// <summary>
-    /// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
-    /// </summary>
-    /// <param name="thread"> The thread that runs in the list should be associated with. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of runs that can be enumerated using <c>foreach</c>. </returns>
-    public virtual ClientPageable<ThreadRun> GetRuns(
-        AssistantThread thread,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNull(thread, nameof(thread));
+    ///// <summary>
+    ///// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
+    ///// </summary>
+    ///// <param name="thread"> The thread that runs in the list should be associated with. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of runs that can be enumerated using <c>foreach</c>. </returns>
+    //public virtual ClientPageable<ThreadRun> GetRuns(
+    //    AssistantThread thread,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNull(thread, nameof(thread));
 
-        return GetRuns(thread.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
-    }
+    //    return GetRuns(thread.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
+    //}
 
     /// <summary>
     /// Gets a refreshed instance of an existing <see cref="ThreadRun"/>.
@@ -400,7 +400,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
+    public virtual AsyncClientCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
         ThreadRun run,
         IEnumerable<ToolOutput> toolOutputs)
             => SubmitToolOutputsToRunStreamingAsync(run?.ThreadId, run?.Id, toolOutputs);
@@ -412,7 +412,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(
+    public virtual ClientCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
         ThreadRun run,
         IEnumerable<ToolOutput> toolOutputs)
             => SubmitToolOutputsToRunStreaming(run?.ThreadId, run?.Id, toolOutputs);
@@ -433,45 +433,45 @@ public partial class AssistantClient
     public virtual ClientResult<ThreadRun> CancelRun(ThreadRun run)
         => CancelRun(run?.ThreadId, run?.Id);
 
-    /// <summary>
-    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
-    /// </summary>
-    /// <param name="run"> The run to list run steps from. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of run steps that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual ClientPageable<RunStep> GetRunSteps(
-        ThreadRun run,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNull(run, nameof(run));
+    ///// <summary>
+    ///// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    ///// </summary>
+    ///// <param name="run"> The run to list run steps from. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of run steps that can be enumerated using <c>await foreach</c>. </returns>
+    //public virtual ClientPageable<RunStep> GetRunSteps(
+    //    ThreadRun run,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNull(run, nameof(run));
 
-        return GetRunSteps(run.ThreadId, run.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
-    }
+    //    return GetRunSteps(run.ThreadId, run.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
+    //}
 
-    /// <summary>
-    /// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
-    /// </summary>
-    /// <param name="run"> The run to list run steps from. </param>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of run steps that can be enumerated using <c>foreach</c>. </returns>
-    public virtual AsyncClientPageable<RunStep> GetRunStepsAsync(
-        ThreadRun run,
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        Argument.AssertNotNull(run, nameof(run));
+    ///// <summary>
+    ///// Gets a collection of <see cref="RunStep"/> instances associated with a <see cref="ThreadRun"/>.
+    ///// </summary>
+    ///// <param name="run"> The run to list run steps from. </param>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of run steps that can be enumerated using <c>foreach</c>. </returns>
+    //public virtual AsyncClientPageable<RunStep> GetRunStepsAsync(
+    //    ThreadRun run,
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    Argument.AssertNotNull(run, nameof(run));
 
-        return GetRunStepsAsync(run.ThreadId, run.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
-    }
+    //    return GetRunStepsAsync(run.ThreadId, run.Id, itemOrder, itemsAfter, itemsBefore, pageSize);
+    //}
 }

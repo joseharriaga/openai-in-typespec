@@ -12,7 +12,7 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// Implementation of collection abstraction over streaming assistant updates.
 /// </summary>
-internal class StreamingUpdateCollection : CollectionResult<StreamingUpdate>
+internal class StreamingUpdateCollection : ClientCollection<StreamingUpdate>
 {
     private readonly Func<ClientResult> _getResult;
 

@@ -127,44 +127,44 @@ public partial class VectorStoreClient
         return ClientResult.FromValue(internalResponse.Deleted, rawProtocolResponse);
     }
 
-    /// <summary>
-    /// Gets the collection of <see cref="VectorStore"/> instances for the configured organization.
-    /// </summary>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns>
-    /// A collection of <see cref="VectorStore"/> instances that can be asynchronously enumerated via
-    /// <c>await foreach</c>.
-    /// </returns>
-    public virtual AsyncClientPageable<VectorStore> GetVectorStoresAsync(
-        int? pageSize = null,
-        ListOrder? itemOrder = null)
-    {
-        throw new NotImplementedException();
-        //return CreateAsyncPageable<VectorStore, InternalListVectorStoresResponse>(
-        //    pageToken =>
-        //        GetVectorStoresAsync(limit: pageSize, itemOrder?.ToString(), pageToken, null, null));
-    }
+    ///// <summary>
+    ///// Gets the collection of <see cref="VectorStore"/> instances for the configured organization.
+    ///// </summary>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns>
+    ///// A collection of <see cref="VectorStore"/> instances that can be asynchronously enumerated via
+    ///// <c>await foreach</c>.
+    ///// </returns>
+    //public virtual AsyncClientPageable<VectorStore> GetVectorStoresAsync(
+    //    int? pageSize = null,
+    //    ListOrder? itemOrder = null)
+    //{
+    //    throw new NotImplementedException();
+    //    //return CreateAsyncPageable<VectorStore, InternalListVectorStoresResponse>(
+    //    //    pageToken =>
+    //    //        GetVectorStoresAsync(limit: pageSize, itemOrder?.ToString(), pageToken, null, null));
+    //}
 
-    /// <summary>
-    /// Gets the collection of <see cref="VectorStore"/> instances for the configured organization.
-    /// </summary>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns>
-    /// A collection of <see cref="VectorStore"/> instances that can be synchronously enumerated via <c>foreach</c>.
-    /// </returns>
-    public virtual ClientPageable<VectorStore> GetVectorStores(int? pageSize = null, ListOrder? itemOrder = null)
-    {
-        throw new NotImplementedException();
-        //return CreatePageable<VectorStore, InternalListVectorStoresResponse>(
-        //    pageToken =>
-        //        GetVectorStores(limit: pageSize, itemOrder?.ToString(), pageToken, null, null));
-    }
+    ///// <summary>
+    ///// Gets the collection of <see cref="VectorStore"/> instances for the configured organization.
+    ///// </summary>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns>
+    ///// A collection of <see cref="VectorStore"/> instances that can be synchronously enumerated via <c>foreach</c>.
+    ///// </returns>
+    //public virtual ClientPageable<VectorStore> GetVectorStores(int? pageSize = null, ListOrder? itemOrder = null)
+    //{
+    //    throw new NotImplementedException();
+    //    //return CreatePageable<VectorStore, InternalListVectorStoresResponse>(
+    //    //    pageToken =>
+    //    //        GetVectorStores(limit: pageSize, itemOrder?.ToString(), pageToken, null, null));
+    //}
 
     /// <summary>
     /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
@@ -218,20 +218,20 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncClientPageable<VectorStoreFileAssociation> GetFileAssociationsAsync(
-        string vectorStoreId,
-        int? pageSize = null,
-        ListOrder? itemOrder = null,
-        VectorStoreFileStatusFilter? filter = null)
-    {
-        throw new NotImplementedException();
+    //public virtual AsyncClientPageable<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    //    string vectorStoreId,
+    //    int? pageSize = null,
+    //    ListOrder? itemOrder = null,
+    //    VectorStoreFileStatusFilter? filter = null)
+    //{
+    //    throw new NotImplementedException();
 
-        //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+    //    //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        //return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
-        //    pageToken =>
-        //        GetFileAssociationsAsync(vectorStoreId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
-    }
+    //    //return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+    //    //    pageToken =>
+    //    //        GetFileAssociationsAsync(vectorStoreId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
+    //}
 
     /// <summary>
     /// Gets the collection of <see cref="VectorStoreFileAssociation"/> instances representing file inclusions in the
@@ -251,17 +251,17 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
     /// <c>foreach</c>.
     /// </returns>
-    public virtual ClientPageable<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId,
-        int? pageSize = null,
-        ListOrder? itemOrder = null,
-        VectorStoreFileStatusFilter? filter = null)
-    {
-        throw new NotImplementedException();
-        //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        //return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
-        //    pageToken =>
-        //        GetFileAssociations(vectorStoreId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
-    }
+    //public virtual ClientPageable<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId,
+    //    int? pageSize = null,
+    //    ListOrder? itemOrder = null,
+    //    VectorStoreFileStatusFilter? filter = null)
+    //{
+    //    throw new NotImplementedException();
+    //    //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+    //    //return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+    //    //    pageToken =>
+    //    //        GetFileAssociations(vectorStoreId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
+    //}
 
     /// <summary>
     /// Gets a <see cref="VectorStoreFileAssociation"/> instance representing an existing association between a known
@@ -472,22 +472,22 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be asynchronously enumerated via
     /// <c>await foreach</c>.
     /// </returns>
-    public virtual AsyncClientPageable<VectorStoreFileAssociation> GetFileAssociationsAsync(
-        string vectorStoreId,
-        string batchJobId,
-        int? pageSize = null,
-        ListOrder? itemOrder = null,
-        VectorStoreFileStatusFilter? filter = null)
-    {
-        throw new NotImplementedException();
+    //public virtual AsyncClientPageable<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    //    string vectorStoreId,
+    //    string batchJobId,
+    //    int? pageSize = null,
+    //    ListOrder? itemOrder = null,
+    //    VectorStoreFileStatusFilter? filter = null)
+    //{
+    //    throw new NotImplementedException();
 
-        //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        //Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+    //    //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+    //    //Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
 
-        //return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
-        //    pageToken
-        //        => GetFileAssociationsAsync(vectorStoreId, batchJobId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
-    }
+    //    //return CreateAsyncPageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+    //    //    pageToken
+    //    //        => GetFileAssociationsAsync(vectorStoreId, batchJobId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
+    //}
 
     /// <summary>
     /// Gets the collection of file associations associated with a vector store batch file job, representing the files
@@ -510,20 +510,20 @@ public partial class VectorStoreClient
     /// A collection of <see cref="VectorStoreFileAssociation"/> instances that can be synchronously enumerated via
     /// <c>foreach</c>.
     /// </returns>
-    public virtual ClientPageable<VectorStoreFileAssociation> GetFileAssociations(
-        string vectorStoreId,
-        string batchJobId,
-        int? pageSize = null,
-        ListOrder? itemOrder = null,
-        VectorStoreFileStatusFilter? filter = null)
-    {
-        throw new NotImplementedException();
+    //public virtual ClientPageable<VectorStoreFileAssociation> GetFileAssociations(
+    //    string vectorStoreId,
+    //    string batchJobId,
+    //    int? pageSize = null,
+    //    ListOrder? itemOrder = null,
+    //    VectorStoreFileStatusFilter? filter = null)
+    //{
+    //    throw new NotImplementedException();
 
-        //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        //Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
+    //    //Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+    //    //Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
 
-        //return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
-        //    pageToken =>
-        //        GetFileAssociations(vectorStoreId, batchJobId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
-    }
+    //    //return CreatePageable<VectorStoreFileAssociation, InternalListVectorStoreFilesResponse>(
+    //    //    pageToken =>
+    //    //        GetFileAssociations(vectorStoreId, batchJobId, limit: pageSize, itemOrder?.ToString(), pageToken, null, filter?.ToString(), null));
+    //}
 }

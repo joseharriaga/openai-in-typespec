@@ -110,27 +110,9 @@ public partial class AssistantClient
         string itemsBefore = default,
         int? pageSize = null)
     {
-        throw new NotImplementedException();
-        //async Task<ClientPage<Assistant>> getPageAsync(string pageToken)
-        //{
-        //    string? after = pageToken is ClientPage<Assistant>.DefaultFirstPageToken ?
-        //        itemsAfter : 
-        //        pageToken;
 
-        //    ClientResult result = await GetAssistantsAsync(
-        //        limit: pageSize,
-        //        order: itemOrder?.ToString(),
-        //        after: after,
-        //        before: itemsBefore,
-        //        options: null).ConfigureAwait(false);
-
-        //    PipelineResponse response = result.GetRawResponse();
-        //    InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
-
-        //    return ClientPage<Assistant>.Create(list.Data, response, nextPageToken: list.HasMore ? list.LastId : default);
-        //}
-
-        //return PageableResultHelpers.Create(getPageAsync);
+        ClientPage<Assistant> page = GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);
+        return page.ToItemCollectionAsync();
     }
 
     /// <summary>
@@ -147,8 +129,35 @@ public partial class AssistantClient
         string itemsBefore = default,
         int? pageSize = null)
     {
-        throw new NotImplementedException();
-        //return new AssistantPageableResult(this, itemOrder, itemsAfter, itemsBefore, pageSize);
+        //yield return GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);
+
+        ClientPage<Assistant> page = GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);
+        foreach (var item in page.Values)
+        {
+            yield return item;
+        }
+        //return page.ToItemCollection();
+        //foreach (AssistantsPage page in GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);)
+        //{
+        //    foreach (T value in page.Values)
+        //    {
+        //        yield return value;
+        //    }
+        //}
+    }
+
+    public virtual ClientPage<Assistant> GetAssistantsPage(
+        ListOrder? itemOrder = null,
+        string itemsAfter = default,
+        string itemsBefore = default,
+        int? pageSize = null)
+    {
+        return AssistantsPage.FromInputs(this, 
+            limit: pageSize,
+            order: itemOrder?.ToString(),
+            after: itemsAfter,
+            before: itemsBefore,
+            options: null);
     }
 
     /// <summary>
@@ -555,7 +564,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(
+    public virtual AsyncClientCollection<StreamingUpdate> CreateRunStreamingAsync(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
@@ -581,7 +590,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(
+    public virtual ClientCollection<StreamingUpdate> CreateRunStreaming(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
@@ -642,7 +651,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(
+    public virtual AsyncClientCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -666,7 +675,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(
+    public virtual ClientCollection<StreamingUpdate> CreateThreadAndRunStreaming(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -842,7 +851,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
+    public virtual AsyncClientCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
         string threadId,
         string runId,
         IEnumerable<ToolOutput> toolOutputs)
@@ -868,7 +877,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(
+    public virtual ClientCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
         string threadId,
         string runId,
         IEnumerable<ToolOutput> toolOutputs)

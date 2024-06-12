@@ -14,7 +14,7 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Implementation of collection abstraction over streaming chat updates.
 /// </summary>
-internal class AsyncStreamingChatCompletionUpdateCollection : AsyncCollectionResult<StreamingChatCompletionUpdate>
+internal class AsyncStreamingChatCompletionUpdateCollection : AsyncClientCollection<StreamingChatCompletionUpdate>
 {
     private readonly Func<Task<ClientResult>> _getResultAsync;
 

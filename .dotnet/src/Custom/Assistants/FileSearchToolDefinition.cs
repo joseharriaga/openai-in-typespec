@@ -18,8 +18,10 @@ public partial class FileSearchToolDefinition : ToolDefinition
     /// Creates a new instance of <see cref="FileSearchToolDefinition"/>.
     /// </summary>
     public FileSearchToolDefinition()
-        : this("file_search", new ChangeTrackingDictionary<string, BinaryData>(), new InternalAssistantToolsFileSearchFileSearch())
-    { }
+        : base("file_search")
+    {
+        _fileSearch = new InternalAssistantToolsFileSearchFileSearch();
+    }
 
     [CodeGenMember("FileSearch")]
     private InternalAssistantToolsFileSearchFileSearch _fileSearch;

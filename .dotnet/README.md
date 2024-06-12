@@ -1,10 +1,31 @@
 # OpenAI .NET API library
 
-[![NuGet version](https://img.shields.io/nuget/v/openai.svg)](https://www.nuget.org/packages/OpenAI/)
+[![NuGet version](https://img.shields.io/nuget/vpre/openai.svg)](https://www.nuget.org/packages/OpenAI/)
 
-The OpenAI .NET library provides convenient access to the OpenAI REST API from .NET applications. It includes scenario-specific client abstractions built atop the [System.ClientModel](https://learn.microsoft.com/dotnet/api/overview/azure/system.clientmodel-readme) library, well-defined types for OpenAI request and response models, and targeted adaptations of direct REST usage patterns to aid ease of use and better align with .NET conventions.
+The OpenAI .NET library provides convenient access to the OpenAI REST API from .NET applications. 
 
 It is generated from our [OpenAPI specification](https://github.com/openai/openai-openapi) in collaboration with Microsoft.
+
+## Table of Contents
+
+- [Getting started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Install the NuGet package](#install-the-nuget-package)
+- [Using the client library](#using-the-client-library)
+  - [Namespace organization](#namespace-organization)
+  - [Using the async API](#using-the-async-api)
+  - [Using the `OpenAIClient` class](#using-the-openaiclient-class)
+- [How to use chat completions with streaming](#how-to-use-chat-completions-with-streaming)
+- [How to use chat completions with tools and function calling](#how-to-use-chat-completions-with-tools-and-function-calling)
+- [How to generate text embeddings](#how-to-generate-text-embeddings)
+- [How to generate images](#how-to-generate-images)
+- [How to transcribe audio](#how-to-transcribe-audio)
+- [How to use assistants with retrieval augmented generation (RAG)](#how-to-use-assistants-with-retrieval-augmented-generation-rag)
+- [How to use streaming and GPT-4o vision with assistants](#how-to-use-streaming-and-gpt-4o-vision-with-assistants)
+- [How to work with Azure OpenAI](#how-to-work-with-azure-openai)
+- [Advanced scenarios](#advanced-scenarios)
+  - [Using protocol methods](#using-protocol-methods)
+  - [Automatically retrying errors](#automatically-retrying-errors)
 
 ## Getting started
 
@@ -20,16 +41,16 @@ Add the client library to your .NET project with [NuGet](https://www.nuget.org/)
 dotnet add package OpenAI --prerelease
 ```
 
-Note that the code samples included below were written using [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0). The OpenAI .NET library is compatible with all .NET Standard 2.0 applications but some of the demonstrated usage may depend on newer language features.
+Note that the code examples included below were written using [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0). The OpenAI .NET library is compatible with all .NET Standard 2.0 applications but some code examples in this document may depend on newer language features.
 
 ## Using the client library
 
-The full API of this library can be found in the [api.md](https://github.com/openai/openai-dotnet/api.md) file, and there are many [code samples](https://github.com/openai/openai-dotnet/examples) to help. For instance, the following snippet illustrates the basic use of the chat completions API:
+The full API of this library can be found in the [api.md](https://github.com/openai/openai-dotnet/blob/main/api/api.md) file, and there are many [code examples](https://github.com/openai/openai-dotnet/tree/main/examples) to help. For instance, the following snippet illustrates the basic use of the chat completions API:
 
 ```csharp
 using OpenAI.Chat;
 
-ChatClient client = new("gpt-3.5-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+ChatClient client = new(model: "gpt-4o", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
 ChatCompletion chatCompletion = client.CompleteChat(
     [
@@ -39,7 +60,9 @@ ChatCompletion chatCompletion = client.CompleteChat(
 
 While you can pass your API key directly as a string, it is highly recommended to keep it in a secure location and instead access it via an environment variable or configuration file as shown above to avoid storing it in source control.
 
-For convenience, the client library is organized by feature area into separate namespaces, each with a corresponding client class:
+### Namespace organization
+
+The library is organized into several namespaces corresponding to OpenAI feature areas. Each namespace contains a corresponding client class.
 
 | Namespace                     | Client class                 | Notes               |
 | ------------------------------|------------------------------|---------------------|
@@ -57,7 +80,7 @@ For convenience, the client library is organized by feature area into separate n
 
 ### Using the async API
 
-Every client method that performs a synchronous API call has an asynchronous variant in the same client class. For instance, the asynchronous variant of the `ChatClient`'s `CompleteChat` method is `CompleteChatAsync`. To rewrite the call above using the asynchronous counterpart, simply `await` the corresponding call from an async method:
+Every client method that performs a synchronous API call has an asynchronous variant in the same client class. For instance, the asynchronous variant of the `ChatClient`'s `CompleteChat` method is `CompleteChatAsync`. To rewrite the call above using the asynchronous counterpart, simply `await` the call to the corresponding async variant:
 
 ```csharp
 ChatCompletion chatCompletion = await client.CompleteChatAsync(
@@ -74,7 +97,7 @@ In addition to the namespaces mentioned above, there is also the parent `OpenAI`
 using OpenAI;
 ```
 
-This namespace contains the `OpenAIClient` class, which offers certain conveniences when you need to work with multiple feature area clients. Specifically, you can use an instance of this class to create instances of the other clients and have them share the same HTTP pipeline.
+This namespace contains the `OpenAIClient` class, which offers certain conveniences when you need to work with multiple feature area clients. Specifically, you can use an instance of this class to create instances of the other clients and have them share the same implementation details, which might be more efficient.
 
 You can create an `OpenAIClient` by specifying the API key that all clients will use for authentication:
 
@@ -82,7 +105,7 @@ You can create an `OpenAIClient` by specifying the API key that all clients will
 OpenAIClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 ```
 
-Next, to create an instance of an `AudioClient`, for example, you can call the `OpenAIClient`'s `GetAudioClient` method by passing the OpenAI model that the `AudioClient` will use in its API calls—just as if you were using the `AudioClient` constructor directly. If necessary, you can create additional clients of the same type to target different models.
+Next, to create an instance of an `AudioClient`, for example, you can call the `OpenAIClient`'s `GetAudioClient` method by passing the OpenAI model that the `AudioClient` will use, just as if you were using the `AudioClient` constructor directly. If necessary, you can create additional clients of the same type to target different models.
 
 ```csharp
 AudioClient ttsClient = client.GetAudioClient("tts-1");
@@ -93,18 +116,20 @@ AudioClient whisperClient = client.GetAudioClient("whisper-1");
 
 When you request a chat completion, the default behavior is for the server to generate it in its entirety before sending it back in a single response. Consequently, long chat completions can require waiting for several seconds before hearing back from the server. To mitigate this, the OpenAI REST API supports the ability to stream partial results back as they are being generated, allowing you to start processing the beginning of the completion before it is finished.
 
-The client library offers a convenient approach to working with streaming chat completions. If you wanted to re-write the sample from the previous section using streaming, rather than calling the `ChatClient`'s `CompleteChat` method, you would call its `CompleteChatStreaming` method instead:
+The client library offers a convenient approach to working with streaming chat completions. If you wanted to re-write the example from the previous section using streaming, rather than calling the `ChatClient`'s `CompleteChat` method, you would call its `CompleteChatStreaming` method instead:
 
 ```csharp
-ResultCollection<StreamingChatCompletionUpdate> chatUpdates = client.CompleteChatStreaming(
-    [
-        new UserChatMessage("Say 'this is a test.'"),
-    ]);
+ResultCollection<StreamingChatCompletionUpdate> chatUpdates
+    = client.CompleteChatStreaming(
+        [
+            new UserChatMessage("Say 'this is a test.'"),
+        ]);
 ```
 
 Notice that the returned value is a `ResultCollection<StreamingChatCompletionUpdate>` instance, which can be enumerated to process the streaming response chunks as they arrive:
 
 ```csharp
+Console.WriteLine($"[ASSISTANT]:");
 foreach (StreamingChatCompletionUpdate chatUpdate in chatUpdates)
 {
     foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
@@ -123,6 +148,7 @@ AsyncResultCollection<StreamingChatCompletionUpdate> asyncChatUpdates
             new UserChatMessage("Say 'this is a test.'"),
         ]);
 
+Console.WriteLine($"[ASSISTANT]:");
 await foreach (StreamingChatCompletionUpdate chatUpdate in asyncChatUpdates)
 {
     foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
@@ -134,7 +160,7 @@ await foreach (StreamingChatCompletionUpdate chatUpdate in asyncChatUpdates)
 
 ## How to use chat completions with tools and function calling
 
-In this sample, you have two functions. The first function can retrieve a user's current geographic location (e.g., by polling the location service APIs of the user's device), while the second function can query the weather in a given location (e.g., by making an API call to some third-party weather service). You want chat completions to be able to call these functions if the model deems it necessary to have this information in order to respond to a user request. For illustrative purposes, consider the following:
+In this example, you have two functions. The first function can retrieve a user's current geographic location (e.g., by polling the location service APIs of the user's device), while the second function can query the weather in a given location (e.g., by making an API call to some third-party weather service). You want chat completions to be able to call these functions if the model deems it necessary to have this information in order to respond to a user request. For illustrative purposes, consider the following:
 
 ```csharp
 private static string GetCurrentLocation()
@@ -185,9 +211,6 @@ Next, create a `ChatCompletionOptions` instance and add both to its `Tools` prop
 
 ```csharp
 List<ChatMessage> messages = [
-    new SystemChatMessage(
-        "Don't make assumptions about what values to plug into functions."
-        + " Ask for clarification if a user request is ambiguous."),
     new UserChatMessage("What's the weather like today?"),
 ];
 
@@ -284,19 +307,18 @@ do
 
 ## How to generate text embeddings
 
-In this sample, you want to create a trip-planning website that allows customers to write a prompt describing the kind of hotel that they are looking for and then offers hotel recommendations that closely match this description. To achieve this, it is possible to use text embeddings to measure the relatedness of text strings. In summary, you can get embeddings of the hotel descriptions, store them in a vector database, and use them to build a search index that you can query using the embedding of a given customer's prompt.
+In this example, you want to create a trip-planning website that allows customers to write a prompt describing the kind of hotel that they are looking for and then offers hotel recommendations that closely match this description. To achieve this, it is possible to use text embeddings to measure the relatedness of text strings. In summary, you can get embeddings of the hotel descriptions, store them in a vector database, and use them to build a search index that you can query using the embedding of a given customer's prompt.
 
 To generate a text embedding, use `EmbeddingClient` from the `OpenAI.Embeddings` namespace:
 
 ```csharp
 using OpenAI.Embeddings;
 
-EmbeddingClient client = new("text-embedding-3-small", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+EmbeddingClient client = new(model: "text-embedding-3-small", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-string description =
-    "Best hotel in town if you like luxury hotels. They have an amazing infinity pool, a spa,"
-    + " and a really helpful concierge. The location is perfect -- right downtown, close to all"
-    + " the tourist attractions. We highly recommend this hotel.";
+string description = "Best hotel in town if you like luxury hotels. They have an amazing infinity pool, a spa,"
+    + " and a really helpful concierge. The location is perfect -- right downtown, close to all the tourist"
+    + " attractions. We highly recommend this hotel.";
 
 Embedding embedding = client.GenerateEmbedding(description);
 ReadOnlyMemory<float> vector = embedding.Vector;
@@ -312,14 +334,14 @@ Embedding embedding = client.GenerateEmbedding(description, options);
 
 ## How to generate images
 
-In this sample, you want to build an app to help interior designers prototype new ideas based on the latest design trends. As part of the creative process, an interior designer can use this app to generate images for inspiration simply by describing the scene in their head as a prompt. As expected, high-quality, strikingly dramatic images with finer details deliver the best results for this application.
+In this example, you want to build an app to help interior designers prototype new ideas based on the latest design trends. As part of the creative process, an interior designer can use this app to generate images for inspiration simply by describing the scene in their head as a prompt. As expected, high-quality, strikingly dramatic images with finer details deliver the best results for this application.
 
 To generate an image, use `ImageClient` from the `OpenAI.Images` namespace:
 
 ```csharp
 using OpenAI.Images;
 
-ImageClient client = new("dall-e-3", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+ImageClient client = new(model: "dall-e-3", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 ```
 
 Generating an image always requires a `prompt` that describes what should be generated. To further tailor the image generation to your specific needs, you can create an instance of the `ImageGenerationOptions` class and set the `Quality`, `Size`, and `Style` properties accordingly. Note that you can also set the `ResponseFormat` property of `ImageGenerationOptions` to `GeneratedImageFormat.Bytes` in order to receive the resulting PNG as `BinaryData` (instead of the default remote `Uri`) if this is convenient for your use case.
@@ -356,9 +378,46 @@ using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");
 bytes.ToStream().CopyTo(stream);
 ```
 
+## How to transcribe audio
+
+In this example, an audio file is transcribed using the Whisper speech-to-text model, including both word- and audio-segment-level timestamp information.
+
+```csharp
+using OpenAI.Audio;
+
+AudioClient client = new(model: "whisper-1", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+
+string audioFilePath = Path.Combine("Assets", "audio_houseplant_care.mp3");
+
+AudioTranscriptionOptions options = new()
+{
+    ResponseFormat = AudioTranscriptionFormat.Verbose,
+    Granularities = AudioTimestampGranularities.Word | AudioTimestampGranularities.Segment,
+};
+
+AudioTranscription transcription = client.TranscribeAudio(audioFilePath, options);
+
+Console.WriteLine("Transcription:");
+Console.WriteLine($"{transcription.Text}");
+
+Console.WriteLine();
+Console.WriteLine($"Words:");
+foreach (TranscribedWord word in transcription.Words)
+{
+    Console.WriteLine($"  {word.Word,15} : {word.Start.TotalMilliseconds,5:0} - {word.End.TotalMilliseconds,5:0}");
+}
+
+Console.WriteLine();
+Console.WriteLine($"Segments:");
+foreach (TranscribedSegment segment in transcription.Segments)
+{
+    Console.WriteLine($"  {segment.Text,90} : {segment.Start.TotalMilliseconds,5:0} - {segment.End.TotalMilliseconds,5:0}");
+}
+```
+
 ## How to use assistants with retrieval augmented generation (RAG)
 
-In this sample, you have a JSON document with the monthly sales information of different products, and you want to build an assistant capable of analyzing it and answering questions about it.
+In this example, you have a JSON document with the monthly sales information of different products, and you want to build an assistant capable of analyzing it and answering questions about it.
 
 To achieve this, use both `FileClient` from the `OpenAI.Files` namespace and `AssistantClient` from the `OpenAI.Assistants` namespace.
 
@@ -551,7 +610,7 @@ The graph above visualizes this trend, showing a peak in sales during February.
 
 ## How to use streaming and GPT-4o vision with assistants
 
-This sample shows how to use the v2 Assistants API to provide image data to an assistant and then stream the run's response.
+This example shows how to use the v2 Assistants API to provide image data to an assistant and then stream the run's response.
 
 As before, you will use a `FileClient` and an `AssistantClient`:
 
@@ -576,7 +635,7 @@ Next, create a new assistant with a vision-capable model like `gpt-4o` and a thr
 
 ```csharp
 Assistant assistant = assistantClient.CreateAssistant(
-    "gpt-4o",
+    model: "gpt-4o",
     new AssistantCreationOptions()
     {
         Instructions = "When asked a question, attempt to answer very concisely. "
@@ -586,14 +645,14 @@ Assistant assistant = assistantClient.CreateAssistant(
 AssistantThread thread = assistantClient.CreateThread(new ThreadCreationOptions()
 {
     InitialMessages =
-        {
-            new ThreadInitializationMessage(
-                [
-                    "Hello, assistant! Please compare these two images for me:",
-                    MessageContent.FromImageFileId(pictureOfAppleFile.Id),
-                    MessageContent.FromImageUrl(linkToPictureOfOrange),
-                ]),
-        }
+    {
+        new ThreadInitializationMessage(
+        [
+            "Hello, assistant! Please compare these two images for me:",
+            MessageContent.FromImageFileId(pictureOfAppleFile.Id),
+            MessageContent.FromImageUrl(linkToPictureOfOrange),
+        ]),
+    }
 });
 ```
 
@@ -632,56 +691,9 @@ This will yield streamed output from the run like the following:
 The first image shows a red apple with a smooth skin and a single leaf, while the second image depicts an orange with a rough, textured skin and a leaf with droplets of water. Comparing them might seem impossible - it's like apples and oranges!
 ```
 
-## How to transcribe audio
-
-In this sample, an audio file is transcribed using the Whisper speech-to-text model, including both word- and audio-segment-level timestamp information.
-
-```csharp
-using OpenAI.Audio;
-
-AudioClient client = new("whisper-1", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-
-AudioTranscriptionOptions options = new()
-{
-    ResponseFormat = AudioTranscriptionFormat.Verbose,
-    Granularities = AudioTimestampGranularities.Word | AudioTimestampGranularities.Segment,
-};
-AudioTranscription transcription = client.TranscribeAudio("recorded-talking.m4a", options);
-
-Console.WriteLine($"[TRANSCRIPTION]: {transcription.Text}");
-Console.WriteLine($"[WORDS]:");
-foreach (TranscribedWord wordItem in transcription.Words)
-{
-    Console.WriteLine($"  {wordItem.Word,10}: {wordItem.Start.TotalMilliseconds,4:0} - {wordItem.End.TotalMilliseconds,4:0}");
-}
-Console.WriteLine($"[SEGMENTS]:");
-foreach (TranscribedSegment segmentItem in transcription.Segments)
-{
-    Console.WriteLine($"  {segmentItem.Id,10}: {segmentItem.Text}: "
-        + $"{segmentItem.Start.TotalMilliseconds,4:0} - {segmentItem.End.TotalMilliseconds,4:0}");
-}
-```
-
-The output of the above, providing a "hello world" file, yields:
-
-```text
-[TRANSCRIPTION]: Hello world, this is a test.
-[WORDS]:
-        Hello:  620 - 1200
-        world: 1200 - 1540
-         this: 1600 - 1940
-           is: 1940 - 2000
-            a: 2000 - 2140
-         test: 2140 - 2380
-[SEGMENTS]:
-            0:  Hello world, this is a test.:  620 - 2380
-```
-
 ## How to work with Azure OpenAI
 
-The OpenAI .NET library is extensibly designed for specialized use of the OpenAI REST API, including by Microsoft's Azure OpenAI Service. The [Azure.AI.OpenAI library](https://github.com/Azure/azure-sdk-for-net/tree/main/sdk/openai/Azure.AI.OpenAI) serves as a companion library to the OpenAI .NET library, retaining full parity functionality while also providing sub-clients that connect to Azure OpenAI, as well as strongly-typed support for Azure-specific features.
-
-To use the OpenAI .NET library with Azure OpenAI, please include the Azure.AI.OpenAI companion library and see that project's README for more details.
+Details for using the OpenAI .NET library with [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) are coming soon. Please watch here and the [Azure.AI.OpenAI project](https://github.com/Azure/azure-sdk-for-net/tree/main/sdk/openai/Azure.AI.OpenAI) for updates.
 
 ## Advanced scenarios
 
@@ -692,27 +704,29 @@ In addition to the client methods that use strongly-typed request and response o
 For example, to use the protocol method variant of the `ChatClient`'s `CompleteChat` method, pass the request body as `BinaryContent`:
 
 ```csharp
-BinaryData input = BinaryData.FromString("""
-    {
-       "model": "gpt-3.5-turbo",
-       "messages": [
-           {
-               "role": "user",
-               "content": "How does AI work? Explain it in simple terms."
-           }
-       ]
-    }
-    """);
+ChatClient client = new("gpt-4o", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+
+BinaryData input = BinaryData.FromBytes("""
+{  
+    "model": "gpt-4o",
+    "messages": [
+       {
+           "role": "user",
+           "content": "How does AI work? Explain it in simple terms."
+       }
+    ]
+}
+"""u8.ToArray());
 
 using BinaryContent content = BinaryContent.Create(input);
 ClientResult result = client.CompleteChat(content);
 BinaryData output = result.GetRawResponse().Content;
 
-using JsonDocument outputAsJson = JsonDocument.Parse(output.ToString());
+using JsonDocument outputAsJson = JsonDocument.Parse(output);
 string message = outputAsJson.RootElement
-    .GetProperty("choices")[0]
-    .GetProperty("message")
-    .GetProperty("content")
+    .GetProperty("choices"u8)[0]
+    .GetProperty("message"u8)
+    .GetProperty("content"u8)
     .GetString();
 ```
 

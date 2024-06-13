@@ -23,14 +23,14 @@ public partial class ChatWithVision : SyncAsyncTestBase
     public async Task DescribeAnImage()
     {
         string mediaType = "image/png";
-        string stopSignPath = Path.Combine("Assets", "stop_sign.png");
-        using Stream stopSignStream = File.OpenRead(stopSignPath);
-        BinaryData imageData = BinaryData.FromStream(stopSignStream);
+        string filePath = Path.Combine("Assets", "images_dog_and_cat.png");
+        using Stream stream = File.OpenRead(filePath);
+        BinaryData imageData = BinaryData.FromStream(stream);
 
         ChatClient client = GetTestClient<ChatClient>(TestScenario.VisionChat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me"),
+                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me."),
                 ChatMessageContentPart.CreateImageMessageContentPart(imageData, mediaType)),
         ];
         ChatCompletionOptions options = new() { MaxTokens = 2048 };
@@ -39,6 +39,6 @@ public partial class ChatWithVision : SyncAsyncTestBase
             ? await client.CompleteChatAsync(messages, options)
             : client.CompleteChat(messages, options);
         Console.WriteLine(result.Value.Content[0].Text);
-        Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("stop"));
+        Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("dog"));
     }
 }

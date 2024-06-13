@@ -31,7 +31,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     public async Task TranscriptionWorks(AudioSourceKind audioSourceKind)
     {
         AudioClient client = GetTestClient();
-        string filename = "hello_world.m4a";
+        string filename = "audio_hello_world.mp3";
         string path = Path.Combine("Assets", filename);
         AudioTranscription transcription = null;
 
@@ -63,7 +63,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     {
         AudioClient client = GetTestClient();
 
-        using FileStream inputStream = File.OpenRead(Path.Combine("Assets", "hello_world.m4a"));
+        using FileStream inputStream = File.OpenRead(Path.Combine("Assets", "audio_hello_world.mp3"));
 
         AudioTranscriptionOptions options = new()
         {
@@ -73,8 +73,8 @@ public partial class TranscriptionTests : SyncAsyncTestBase
         };
 
         AudioTranscription transcription = IsAsync
-            ? await client.TranscribeAudioAsync(inputStream, "hello_world.m4a", options)
-            : client.TranscribeAudio(inputStream, "hello_world.m4a", options);
+            ? await client.TranscribeAudioAsync(inputStream, "audio_hello_world.mp3", options)
+            : client.TranscribeAudio(inputStream, "audio_hello_world.mp3", options);
 
         Assert.That(transcription, Is.Not.Null);
 
@@ -131,7 +131,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     public async Task TranscriptionFormatsWork(AudioTranscriptionFormat formatToTest)
     {
         AudioClient client = GetTestClient();
-        string path = Path.Combine("Assets", "hello_world.m4a");
+        string path = Path.Combine("Assets", "audio_hello_world.mp3");
 
         AudioTranscriptionOptions options = new()
         {
@@ -151,7 +151,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     {
         AudioClient client = GetTestClient();
 
-        string path = Path.Combine("Assets", "hello_world.m4a");
+        string path = Path.Combine("Assets", "audio_hello_world.mp3");
 
         AudioTranscriptionOptions options = new AudioTranscriptionOptions()
         {

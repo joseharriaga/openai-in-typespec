@@ -223,13 +223,13 @@ namespace OpenAI.Assistants {
         public RunCreationOptions();
         public string AdditionalInstructions { get; init; }
         public IList<ThreadInitializationMessage> AdditionalMessages { get; }
-        public bool? ParallelToolCallsEnabled { get; init; }
         public string InstructionsOverride { get; init; }
         public int? MaxCompletionTokens { get; init; }
         public int? MaxPromptTokens { get; init; }
         public IDictionary<string, string> Metadata { get; }
         public string ModelOverride { get; init; }
         public float? NucleusSamplingFactor { get; init; }
+        public bool? ParallelToolCallsEnabled { get; init; }
         public AssistantResponseFormat ResponseFormat { get; init; }
         public float? Temperature { get; init; }
         public ToolConstraint ToolConstraint { get; init; }
@@ -578,6 +578,7 @@ namespace OpenAI.Assistants {
     }
     public class ThreadInitializationMessage : MessageCreationOptions {
         public ThreadInitializationMessage(IEnumerable<MessageContent> content);
+        public static implicit operator ThreadInitializationMessage(string initializationMessage);
     }
     public class ThreadMessage {
         public string AssistantId { get; }
@@ -635,6 +636,7 @@ namespace OpenAI.Assistants {
         public static ToolConstraint Required { get; }
     }
     public abstract class ToolDefinition {
+        protected ToolDefinition(string type);
         protected ToolDefinition();
         public static CodeInterpreterToolDefinition CreateCodeInterpreter();
         public static FileSearchToolDefinition CreateFileSearch(int? maxResults = null);
@@ -839,21 +841,25 @@ namespace OpenAI.Chat {
         protected ChatClient();
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<ChatCompletion> CompleteChat(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null);
+        public virtual ClientResult<ChatCompletion> CompleteChat(params ChatMessage[] messages);
         public virtual ClientResult CompleteChat(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null);
+        public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(params ChatMessage[] messages);
         public virtual Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null);
         public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null);
+        public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages);
         public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null);
+        public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(params ChatMessage[] messages);
     }
     public class ChatCompletionOptions {
         public ChatCompletionOptions();
-        public bool? ParallelToolCallsEnabled { get; init; }
         public float? FrequencyPenalty { get; init; }
         public ChatFunctionChoice FunctionChoice { get; init; }
         public IList<ChatFunction> Functions { get; }
         public bool? IncludeLogProbabilities { get; init; }
         public IDictionary<int, int> LogitBiases { get; }
         public int? MaxTokens { get; init; }
+        public bool? ParallelToolCallsEnabled { get; init; }
         public float? PresencePenalty { get; init; }
         public ChatResponseFormat ResponseFormat { get; init; }
         public long? Seed { get; init; }
@@ -886,6 +892,7 @@ namespace OpenAI.Chat {
         public string SystemFingerprint { get; }
         public IReadOnlyList<ChatToolCall> ToolCalls { get; }
         public ChatTokenUsage Usage { get; }
+        public override string ToString();
     }
     [Obsolete("This field is marked as deprecated.")]
     public class ChatFunction {
@@ -917,6 +924,7 @@ namespace OpenAI.Chat {
         public static UserChatMessage CreateUserMessage(string content);
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
+        public static implicit operator ChatMessage(string userMessage);
     }
     public class ChatMessageContentPart {
         public BinaryData ImageBytes { get; }
@@ -928,6 +936,8 @@ namespace OpenAI.Chat {
         public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ImageChatMessageContentPartDetail? imageDetail = null);
         public static ChatMessageContentPart CreateImageMessageContentPart(BinaryData imageBytes, string imageBytesMediaType, ImageChatMessageContentPartDetail? imageDetail = null);
         public static ChatMessageContentPart CreateTextMessageContentPart(string text);
+        public static implicit operator ChatMessageContentPart(string content);
+        public override string ToString();
     }
     public readonly struct ChatMessageContentPartKind : IEquatable<ChatMessageContentPartKind> {
         public ChatMessageContentPartKind(string value);

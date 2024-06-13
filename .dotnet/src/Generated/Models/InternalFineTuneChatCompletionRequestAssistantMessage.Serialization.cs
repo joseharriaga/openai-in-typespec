@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Chat;
 
 namespace OpenAI.Internal.FineTuning
 {
@@ -21,24 +22,20 @@ namespace OpenAI.Internal.FineTuning
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Content))
-            {
-                if (Content != null)
-                {
-                    writer.WritePropertyName("content"u8);
-                    writer.WriteStringValue(Content);
-                }
-                else
-                {
-                    writer.WriteNull("content");
-                }
-            }
-            writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role);
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(ParticipantName))
             {
                 writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
+                writer.WriteStringValue(ParticipantName);
+            }
+            if (Optional.IsCollectionDefined(ToolCalls))
+            {
+                writer.WritePropertyName("tool_calls"u8);
+                writer.WriteStartArray();
+                foreach (var item in ToolCalls)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
             if (Optional.IsDefined(FunctionCall))
             {
@@ -52,10 +49,12 @@ namespace OpenAI.Internal.FineTuning
                     writer.WriteNull("function_call");
                 }
             }
-            if (Optional.IsDefined(Weight))
+            writer.WritePropertyName("role"u8);
+            writer.WriteStringValue(Role);
+            if (Optional.IsCollectionDefined(Content))
             {
-                writer.WritePropertyName("weight"u8);
-                writer.WriteStringValue(Weight);
+                writer.WritePropertyName("content"u8);
+                SerializeContentValue(writer);
             }
             if (true && _serializedAdditionalRawData != null)
             {
@@ -95,33 +94,32 @@ namespace OpenAI.Internal.FineTuning
             {
                 return null;
             }
-            string content = default;
-            string role = default;
             string name = default;
-            InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall functionCall = default;
-            string weight = default;
+            IList<ChatToolCall> toolCalls = default;
+            ChatFunctionCall functionCall = default;
+            string role = default;
+            IList<ChatMessageContentPart> content = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("content"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        content = null;
-                        continue;
-                    }
-                    content = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("role"u8))
-                {
-                    role = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("name"u8))
                 {
                     name = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("tool_calls"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<ChatToolCall> array = new List<ChatToolCall>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(ChatToolCall.DeserializeChatToolCall(item, options));
+                    }
+                    toolCalls = array;
                     continue;
                 }
                 if (property.NameEquals("function_call"u8))
@@ -131,12 +129,17 @@ namespace OpenAI.Internal.FineTuning
                         functionCall = null;
                         continue;
                     }
-                    functionCall = InternalFineTuneChatCompletionRequestAssistantMessageFunctionCall.DeserializeInternalFineTuneChatCompletionRequestAssistantMessageFunctionCall(property.Value, options);
+                    functionCall = ChatFunctionCall.DeserializeChatFunctionCall(property.Value, options);
                     continue;
                 }
-                if (property.NameEquals("weight"u8))
+                if (property.NameEquals("role"u8))
                 {
-                    weight = property.Value.GetString();
+                    role = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("content"u8))
+                {
+                    DeserializeContentValue(property, ref content);
                     continue;
                 }
                 if (true)
@@ -146,12 +149,12 @@ namespace OpenAI.Internal.FineTuning
             }
             serializedAdditionalRawData = rawDataDictionary;
             return new InternalFineTuneChatCompletionRequestAssistantMessage(
-                content,
                 role,
+                content ?? new ChangeTrackingList<ChatMessageContentPart>(),
+                serializedAdditionalRawData,
                 name,
-                functionCall,
-                weight,
-                serializedAdditionalRawData);
+                toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
+                functionCall);
         }
 
         BinaryData IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Write(ModelReaderWriterOptions options)
@@ -185,13 +188,13 @@ namespace OpenAI.Internal.FineTuning
 
         string IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalFineTuneChatCompletionRequestAssistantMessage FromResponse(PipelineResponse response)
+        internal static new InternalFineTuneChatCompletionRequestAssistantMessage FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(document.RootElement);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

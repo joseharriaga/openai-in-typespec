@@ -370,7 +370,6 @@ namespace OpenAI.Assistants {
     public class MessageTextContentAnnotation {
         public int EndIndex { get; }
         public string InputFileId { get; }
-        public string InputQuote { get; }
         public string OutputFileId { get; }
         public int StartIndex { get; }
         public string TextToReplace { get; }
@@ -565,7 +564,6 @@ namespace OpenAI.Assistants {
     public class TextAnnotation {
         public int EndIndex { get; }
         public string InputFileId { get; }
-        public string InputQuote { get; }
         public string OutputFileId { get; }
         public int StartIndex { get; }
         public string TextToReplace { get; }
@@ -574,7 +572,6 @@ namespace OpenAI.Assistants {
         public int ContentIndex { get; }
         public int? EndIndex { get; }
         public string InputFileId { get; }
-        public string InputQuote { get; }
         public string OutputFileId { get; }
         public int? StartIndex { get; }
         public string TextToReplace { get; }

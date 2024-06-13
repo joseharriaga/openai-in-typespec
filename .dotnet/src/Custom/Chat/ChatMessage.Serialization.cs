@@ -10,7 +10,7 @@ namespace OpenAI.Chat;
 public abstract partial class ChatMessage : IJsonModel<ChatMessage>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal void SerializeContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal void SerializeContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options = null)
     {
         throw new NotImplementedException();
     }

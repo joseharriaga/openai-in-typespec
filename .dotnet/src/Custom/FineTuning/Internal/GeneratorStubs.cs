@@ -97,3 +97,6 @@ internal readonly partial struct InternalFineTuneChatCompletionRequestAssistantM
 
 [CodeGenModel("FineTuneChatCompletionRequestAssistantMessageWeight")]
 internal readonly partial struct InternalFineTuneChatCompletionRequestAssistantMessageWeight { }
+
+[CodeGenModel("FineTuneChatCompletionRequestFunctionMessage")]
+internal partial class InternalFineTuneChatCompletionRequestFunctionMessage { }

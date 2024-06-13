@@ -44,6 +44,21 @@ namespace OpenAI.Internal.FineTuning
                 }
                 writer.WriteEndArray();
             }
+            if (Optional.IsCollectionDefined(Tools))
+            {
+                writer.WritePropertyName("tools"u8);
+                writer.WriteStartArray();
+                foreach (var item in Tools)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
+            if (Optional.IsDefined(ParallelToolCalls))
+            {
+                writer.WritePropertyName("parallel_tool_calls"u8);
+                writer.WriteBooleanValue(ParallelToolCalls.Value);
+            }
             if (Optional.IsCollectionDefined(Functions))
             {
                 writer.WritePropertyName("functions"u8);
@@ -93,6 +108,8 @@ namespace OpenAI.Internal.FineTuning
                 return null;
             }
             IReadOnlyList<BinaryData> messages = default;
+            IReadOnlyList<ChatTool> tools = default;
+            bool? parallelToolCalls = default;
             IReadOnlyList<ChatFunction> functions = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -119,6 +136,29 @@ namespace OpenAI.Internal.FineTuning
                     messages = array;
                     continue;
                 }
+                if (property.NameEquals("tools"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<ChatTool> array = new List<ChatTool>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(ChatTool.DeserializeChatTool(item, options));
+                    }
+                    tools = array;
+                    continue;
+                }
+                if (property.NameEquals("parallel_tool_calls"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    parallelToolCalls = property.Value.GetBoolean();
+                    continue;
+                }
                 if (property.NameEquals("functions"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -139,7 +179,7 @@ namespace OpenAI.Internal.FineTuning
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalFinetuneChatRequestInput(messages ?? new ChangeTrackingList<BinaryData>(), functions ?? new ChangeTrackingList<ChatFunction>(), serializedAdditionalRawData);
+            return new InternalFinetuneChatRequestInput(messages ?? new ChangeTrackingList<BinaryData>(), tools ?? new ChangeTrackingList<ChatTool>(), parallelToolCalls, functions ?? new ChangeTrackingList<ChatFunction>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<InternalFinetuneChatRequestInput>.Write(ModelReaderWriterOptions options)

@@ -8,6 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
@@ -584,6 +585,111 @@ public partial class AssistantTests
         }
         Assert.That(messages.Count() > 1);
         Assert.That(messages.Any(message => message.Content.Any(content => content.Text.ToLower().Contains("cake"))));
+    }
+
+    [Test]
+    public void StreamingFileSearchWorks()
+    {
+        // First, we need to upload a simple test file.
+        FileClient fileClient = new();
+        OpenAIFileInfo testFile = fileClient.UploadFile(
+            BinaryData.FromString("""
+            This file describes the favorite foods of several people.
+
+            Travis Wilson: chicken
+            Summanus Ferdinand: tacos
+            Tekakwitha Effie: pizza
+            Filip Carola: cake
+            """).ToStream(),
+            "favorite_foods.txt",
+            FileUploadPurpose.Assistants);
+        Validate(testFile);
+
+        AssistantClient client = GetTestClient();
+
+        // Create an assistant, using the creation helper to make a new vector store
+        Assistant assistant = client.CreateAssistant("gpt-4o", new()
+        {
+            Tools = { new FileSearchToolDefinition() },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([testFile.Id]),
+                    }
+                }
+            }
+        });
+        Validate(assistant);
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        string createdVectorStoreId = assistant.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(createdVectorStoreId);
+
+        // Modify an assistant to use the existing vector store
+        assistant = client.ModifyAssistant(assistant, new AssistantModificationOptions()
+        {
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    VectorStoreIds = { assistant.ToolResources.FileSearch.VectorStoreIds[0] },
+                },
+            },
+        });
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        Assert.That(assistant.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
+
+        // Create a thread with an override vector store
+        AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
+        {
+            InitialMessages = { new(["Using the files you have available, what's Filip's favorite food?"]) },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores =
+                    {
+                        new VectorStoreCreationHelper([testFile.Id])
+                    }
+                }
+            }
+        });
+        Validate(thread);
+        Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        createdVectorStoreId = thread.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(createdVectorStoreId);
+
+        // Ensure that modifying the thread with an existing vector store works
+        thread = client.ModifyThread(thread, new ThreadModificationOptions()
+        {
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    VectorStoreIds = { createdVectorStoreId },
+                }
+            }
+        });
+        Assert.That(thread.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        Assert.That(thread.ToolResources.FileSearch.VectorStoreIds[0], Is.EqualTo(createdVectorStoreId));
+
+        ResultCollection<StreamingUpdate> streamingUpdates = client.CreateRunStreaming(thread, assistant);
+
+        foreach (StreamingUpdate update in streamingUpdates)
+        {
+            if (update is MessageContentUpdate contentUpdate)
+            {
+                StringBuilder builder = new();
+                builder.Append($"[Content]='{contentUpdate.Text}'");
+                if (contentUpdate.TextAnnotation is not null)
+                {
+                    builder.Append($" [Citation]='{contentUpdate.TextAnnotation.TextToReplace} -> {contentUpdate.TextAnnotation.InputFileId}'");
+                }
+                Console.WriteLine(builder.ToString());
+            }
+        }
     }
 
     [Test]

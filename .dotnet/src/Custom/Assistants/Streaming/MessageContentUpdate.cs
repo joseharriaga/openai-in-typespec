@@ -47,19 +47,13 @@ public partial class MessageContentUpdate : StreamingUpdate
     private readonly MessageDeltaContentImageUrlObject _imageUrlContent;
     private readonly InternalMessageDeltaObject _delta;
 
-    internal MessageContentUpdate(InternalMessageDeltaObject delta, MessageDeltaContent content)
+    internal MessageContentUpdate(InternalMessageDeltaObject delta, MessageDeltaContent content, TextAnnotationUpdate annotation = null)
         : base(StreamingUpdateReason.MessageUpdated)
     {
         _delta = delta;
         _textContent = content as MessageDeltaContentTextObject;
         _imageFileContent = content as MessageDeltaContentImageFileObject;
         _imageUrlContent = content as MessageDeltaContentImageUrlObject;
-    }
-
-    internal MessageContentUpdate(InternalMessageDeltaObject delta, TextAnnotationUpdate annotation)
-        : base(StreamingUpdateReason.MessageUpdated)
-    {
-        _delta = delta;
         TextAnnotation = annotation;
     }
 
@@ -72,15 +66,20 @@ public partial class MessageContentUpdate : StreamingUpdate
         List<MessageContentUpdate> updates = [];
         foreach (MessageDeltaContent deltaContent in deltaObject.Delta.Content ?? [])
         {
-            updates.Add(new(deltaObject, deltaContent));
+            List<MessageContentUpdate> updatesForContentItem = [];
             if (deltaContent is MessageDeltaContentTextObject textContent)
             {
                 foreach (MessageDeltaTextContentAnnotation internalAnnotation in textContent.Text.Annotations)
                 {
                     TextAnnotationUpdate annotation = new(internalAnnotation);
-                    updates.Add(new(deltaObject, annotation));
+                    updatesForContentItem.Add(new(deltaObject, deltaContent, annotation));
                 }
             }
+            if (updatesForContentItem.Count == 0)
+            {
+                updatesForContentItem.Add(new(deltaObject, deltaContent));
+            }
+            updates.AddRange(updatesForContentItem);
         }
         return updates;
     }

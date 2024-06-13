@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace OpenAI;
 
-public class OpenAIPage<T> : ClientPage<T, OpenAIPageToken>
-{
-    internal OpenAIPage(IReadOnlyList<T> values,
-        OpenAIPageToken pageToken,
-        OpenAIPageToken? nextPageToken,
-        PipelineResponse response)
-        : base(values, pageToken, nextPageToken, response)
-    {
-    }
-}
+//public class OpenAIPage<T> : ClientPage<T, OpenAIPageToken>
+//{
+//    internal OpenAIPage(IReadOnlyList<T> values,
+//        OpenAIPageToken pageToken,
+//        OpenAIPageToken? nextPageToken,
+//        PipelineResponse response)
+//        : base(values, pageToken, nextPageToken, response)
+//    {
+//    }
+//}

@@ -1,6 +1,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
@@ -68,10 +69,11 @@ public partial class AssistantClient
     //    return await AssistantsPage.FromInputsAsync(this, limit, order, after, before, options).ConfigureAwait(false);
     //}
 
-    public virtual async Task<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
+    public virtual IAsyncEnumerable<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        throw new NotImplementedException();
+        //using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
+        //return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -98,7 +100,15 @@ public partial class AssistantClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
+    public virtual IEnumerable<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
+    {
+        throw new NotImplementedException();
+        //using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
+        //return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+    }
+
+    // This needs to be internal now
+    internal virtual ClientResult GetAssistantsPage(int? limit, string order, string after, string before, RequestOptions options)
     {
         using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));

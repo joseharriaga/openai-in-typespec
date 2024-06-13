@@ -507,7 +507,9 @@ public partial class ChatClientTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
+#pragma warning disable CS0618
             choice = new ChatFunctionChoice(new ChatFunction(functionName));
+#pragma warning restore CS0618
         }
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);
@@ -649,7 +651,7 @@ public partial class ChatClientTests : SyncAsyncTestBase
     public void SerializeChatMessageContentPartAsImageBytes(bool fromRawJson)
     {
         string imageMediaType = "image/png";
-        string imageFilename = "variation_sample_image.png";
+        string imageFilename = "images_dog_and_cat.png";
         string imagePath = Path.Combine("Assets", imageFilename);
         using Stream image = File.OpenRead(imagePath);
 

@@ -105,7 +105,7 @@ public partial class AssistantClient
     //    //return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     //}
 
-    public virtual ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
+    public virtual ClientCollection<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
     {
         using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));

@@ -96,24 +96,24 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);
     }
 
-    /// <summary>
-    /// Returns a collection of <see cref="Assistant"/> instances.
-    /// </summary>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
-    /// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
-    public virtual IAsyncEnumerable<Assistant> GetAssistantsAsync(
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-
-        ClientPage<Assistant> page = GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);
-        return page.ToItemCollectionAsync();
-    }
+    ///// <summary>
+    ///// Returns a collection of <see cref="Assistant"/> instances.
+    ///// </summary>
+    ///// <param name="itemOrder">
+    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
+    ///// timestamp.
+    ///// </param>
+    ///// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
+    //public virtual IAsyncEnumerable<Assistant> GetAssistantsAsync(
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    throw new NotImplementedException();
+    //    //ClientPage<Assistant> page = GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);
+    //    //return page.ToItemCollectionAsync();
+    //}
 
     /// <summary>
     /// Returns a collection of <see cref="Assistant"/> instances.
@@ -123,7 +123,7 @@ public partial class AssistantClient
     /// timestamp.
     /// </param>
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
-    public virtual IEnumerable<Assistant> GetAssistants(
+    public virtual ClientCollection<Assistant> GetAssistants(
         ListOrder? itemOrder = null,
         string itemsAfter = default,
         string itemsBefore = default,
@@ -146,19 +146,19 @@ public partial class AssistantClient
         //}
     }
 
-    public virtual ClientPage<Assistant> GetAssistantsPage(
-        ListOrder? itemOrder = null,
-        string itemsAfter = default,
-        string itemsBefore = default,
-        int? pageSize = null)
-    {
-        return AssistantsPage.FromInputs(this, 
-            limit: pageSize,
-            order: itemOrder?.ToString(),
-            after: itemsAfter,
-            before: itemsBefore,
-            options: null);
-    }
+    //public virtual ClientPage<Assistant> GetAssistantsPage(
+    //    ListOrder? itemOrder = null,
+    //    string itemsAfter = default,
+    //    string itemsBefore = default,
+    //    int? pageSize = null)
+    //{
+    //    return AssistantsPage.FromInputs(this, 
+    //        limit: pageSize,
+    //        order: itemOrder?.ToString(),
+    //        after: itemsAfter,
+    //        before: itemsBefore,
+    //        options: null);
+    //}
 
     /// <summary>
     /// Deletes an existing <see cref="Assistant"/>. 

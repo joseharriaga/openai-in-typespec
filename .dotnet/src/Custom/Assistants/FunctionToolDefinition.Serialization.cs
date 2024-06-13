@@ -13,9 +13,9 @@ public partial class FunctionToolDefinition : IJsonModel<FunctionToolDefinition>
         => CustomSerializationHelpers.SerializeInstance<ToolDefinition, FunctionToolDefinition>(this, SerializeFunctionToolDefinition, writer, options);
 
     internal static void SerializeFunctionToolDefinition(FunctionToolDefinition instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => instance.SerializeToolDefinition(writer, options);
+        => instance.WriteCore(writer, options);
     
-    protected override void SerializeToolDefinition(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         writer.WritePropertyName("function"u8);

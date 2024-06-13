@@ -31,10 +31,10 @@ public abstract partial class ChatMessage : IJsonModel<ChatMessage>
     }
 
     void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => CustomSerializationHelpers.SerializeInstance(this, SerializeChatMessage, writer, options);
+        => CustomSerializationHelpers.SerializeInstance(this, WriteCore, writer, options);
 
-    internal static void SerializeChatMessage(ChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => instance.SerializeChatMessage(writer, options);
+    internal static void WriteCore(ChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => instance.WriteCore(writer, options);
 
-    protected abstract void SerializeChatMessage(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+    protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

@@ -12,9 +12,9 @@ public partial class SystemChatMessage : IJsonModel<SystemChatMessage>
         => CustomSerializationHelpers.SerializeInstance(this, SerializeSystemChatMessage, writer, options);
 
     internal static void SerializeSystemChatMessage(SystemChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => instance.SerializeChatMessage(writer, options);
+        => instance.WriteCore(writer, options);
 
-    protected override void SerializeChatMessage(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         if (Optional.IsDefined(ParticipantName))

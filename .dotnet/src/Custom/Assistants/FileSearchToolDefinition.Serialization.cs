@@ -13,9 +13,9 @@ public partial class FileSearchToolDefinition : IJsonModel<FileSearchToolDefinit
         => CustomSerializationHelpers.SerializeInstance(this, SerializeFileSearchToolDefinition, writer, options);
 
     internal static void SerializeFileSearchToolDefinition(FileSearchToolDefinition instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => instance.SerializeToolDefinition(writer, options);
+        => instance.WriteCore(writer, options);
 
-    protected override void SerializeToolDefinition(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         writer.WritePropertyName("type"u8);

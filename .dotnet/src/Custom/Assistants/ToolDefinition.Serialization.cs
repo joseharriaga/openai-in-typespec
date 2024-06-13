@@ -10,10 +10,10 @@ namespace OpenAI.Assistants;
 public abstract partial class ToolDefinition : IJsonModel<ToolDefinition>
 {
     void IJsonModel<ToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => CustomSerializationHelpers.SerializeInstance(this, SerializeToolDefinition, writer, options);
+        => CustomSerializationHelpers.SerializeInstance(this, WriteCore, writer, options);
 
-    internal static void SerializeToolDefinition(ToolDefinition instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => instance.SerializeToolDefinition(writer, options);
+    internal static void WriteCore(ToolDefinition instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => instance.WriteCore(writer, options);
 
-    protected abstract void SerializeToolDefinition(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+    protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

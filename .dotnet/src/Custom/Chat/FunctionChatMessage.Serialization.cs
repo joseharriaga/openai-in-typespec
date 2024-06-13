@@ -13,10 +13,10 @@ public partial class FunctionChatMessage : IJsonModel<FunctionChatMessage>
 
     internal static void SerializeFunctionChatMessage(FunctionChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        instance.SerializeChatMessage(writer, options);
+        instance.WriteCore(writer, options);
     }
 
-    protected override void SerializeChatMessage(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         writer.WritePropertyName("name"u8);

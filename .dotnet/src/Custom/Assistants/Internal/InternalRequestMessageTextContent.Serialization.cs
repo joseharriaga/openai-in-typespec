@@ -13,9 +13,9 @@ internal partial class InternalRequestMessageTextContent : IJsonModel<InternalRe
         => CustomSerializationHelpers.SerializeInstance(this, SerializeInternalRequestMessageTextContent, writer, options);
 
     internal static void SerializeInternalRequestMessageTextContent(InternalRequestMessageTextContent instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => instance.SerializeMessageContent(writer, options);
+        => instance.WriteCore(writer, options);
 
-    protected override void SerializeMessageContent(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         writer.WritePropertyName("type"u8);

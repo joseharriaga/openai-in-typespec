@@ -13,9 +13,9 @@ public partial class CodeInterpreterToolDefinition : IJsonModel<CodeInterpreterT
         => CustomSerializationHelpers.SerializeInstance(this, SerializeCodeInterpreterToolDefinition, writer, options);
 
     internal static void SerializeCodeInterpreterToolDefinition(CodeInterpreterToolDefinition instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => instance.SerializeToolDefinition(writer, options);
+        => instance.WriteCore(writer, options);
 
-    protected override void SerializeToolDefinition(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         writer.WritePropertyName("type"u8);

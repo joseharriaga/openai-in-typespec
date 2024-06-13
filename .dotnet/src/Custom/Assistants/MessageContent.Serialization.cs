@@ -7,12 +7,12 @@ namespace OpenAI.Assistants;
 public abstract partial class MessageContent : IJsonModel<MessageContent>
 {
     void IJsonModel<MessageContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => CustomSerializationHelpers.SerializeInstance(this, SerializeMessageContent, writer, options);
+        => CustomSerializationHelpers.SerializeInstance(this, WriteCore, writer, options);
 
-    internal static void SerializeMessageContent(MessageContent instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => instance.SerializeMessageContent(writer, options);
+    internal static void WriteCore(MessageContent instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => instance.WriteCore(writer, options);
 
-    protected abstract void SerializeMessageContent(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+    protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 
     internal static MessageContent DeserializeMessageContent(JsonElement element, ModelReaderWriterOptions options = null)
     {

@@ -98,14 +98,7 @@ public partial class AssistantClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    //public virtual ClientPage<ClientResult> GetAssistantsPage(int? limit, string order, string after, string before, RequestOptions options)
-    //{
-    //    throw new NotImplementedException();
-    //    //using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
-    //    //return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-    //}
-
-    public virtual ClientCollection<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
+    public virtual ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
     {
         using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));

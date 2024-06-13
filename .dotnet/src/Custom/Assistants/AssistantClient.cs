@@ -118,43 +118,12 @@ public partial class AssistantClient
     /// <summary>
     /// Returns a collection of <see cref="Assistant"/> instances.
     /// </summary>
-    /// <param name="itemOrder">
-    /// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    /// timestamp.
-    /// </param>
+    /// <param name="pageOptions">Options describing the collection of assistants.</param>
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageCollection<Assistant> GetAssistants(OpenAIPageOptions pageOptions)
+    public virtual PageCollection<Assistant> GetAssistants(OpenAIPageCollectionOptions pageOptions)
     {
-        //yield return GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);
-
-        //ClientPage<Assistant> page = GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);
-        //foreach (var item in page.Values)
-        //{
-        //    yield return item;
-        //}
-        //return page.ToItemCollection();
-        //foreach (AssistantsPage page in GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);)
-        //{
-        //    foreach (T value in page.Values)
-        //    {
-        //        yield return value;
-        //    }
-        //}
+        return new AssistantPageCollection(this, pageOptions);
     }
-
-    //public virtual ClientPage<Assistant> GetAssistantsPage(
-    //    ListOrder? itemOrder = null,
-    //    string itemsAfter = default,
-    //    string itemsBefore = default,
-    //    int? pageSize = null)
-    //{
-    //    return AssistantsPage.FromInputs(this, 
-    //        limit: pageSize,
-    //        order: itemOrder?.ToString(),
-    //        after: itemsAfter,
-    //        before: itemsBefore,
-    //        options: null);
-    //}
 
     /// <summary>
     /// Deletes an existing <see cref="Assistant"/>. 
@@ -560,7 +529,7 @@ public partial class AssistantClient
     ///// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     ///// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     ///// <param name="options"> Additional options for the run. </param>
-    //public virtual AsyncClientCollection<StreamingUpdate> CreateRunStreamingAsync(
+    //public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(
     //    string threadId,
     //    string assistantId,
     //    RunCreationOptions options = null)
@@ -586,7 +555,7 @@ public partial class AssistantClient
     ///// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     ///// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     ///// <param name="options"> Additional options for the run. </param>
-    //public virtual ClientCollection<StreamingUpdate> CreateRunStreaming(
+    //public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(
     //    string threadId,
     //    string assistantId,
     //    RunCreationOptions options = null)
@@ -647,7 +616,7 @@ public partial class AssistantClient
     ///// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     ///// <param name="threadOptions"> Options for the new thread that will be created. </param>
     ///// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    //public virtual AsyncClientCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
+    //public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
     //    string assistantId,
     //    ThreadCreationOptions threadOptions = null,
     //    RunCreationOptions runOptions = null)
@@ -671,7 +640,7 @@ public partial class AssistantClient
     ///// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     ///// <param name="threadOptions"> Options for the new thread that will be created. </param>
     ///// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    //public virtual ClientCollection<StreamingUpdate> CreateThreadAndRunStreaming(
+    //public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(
     //    string assistantId,
     //    ThreadCreationOptions threadOptions = null,
     //    RunCreationOptions runOptions = null)
@@ -847,7 +816,7 @@ public partial class AssistantClient
     ///// <param name="toolOutputs">
     ///// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     ///// </param>
-    //public virtual AsyncClientCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
+    //public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
     //    string threadId,
     //    string runId,
     //    IEnumerable<ToolOutput> toolOutputs)
@@ -873,7 +842,7 @@ public partial class AssistantClient
     ///// <param name="toolOutputs">
     ///// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     ///// </param>
-    //public virtual ClientCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
+    //public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
     //    string threadId,
     //    string runId,
     //    IEnumerable<ToolOutput> toolOutputs)

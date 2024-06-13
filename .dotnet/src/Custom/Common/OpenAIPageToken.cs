@@ -18,9 +18,13 @@ internal class OpenAIPageToken : PageToken
     }
 
     public int? PageSize { get; }
+
     public string? Order { get; }
+
     public string? FirstPageAfter { get; }
+
     public string? CurrentPageAfter { get; }
+
     public string? Before { get; }
 
     public override PageToken FirstCollectionPage

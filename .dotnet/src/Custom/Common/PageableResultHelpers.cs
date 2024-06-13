@@ -44,7 +44,7 @@ internal class PageableResultHelpers
     //    {
     //        return _getPage(pageToken);
     //    }
-    }
+    //}
 
     //public static AsyncClientPageable<T> Create<T>(Func<string, Task<ClientPage<T>>> getPageAsync) where T : notnull
     //    => new FuncAsyncPageable<T>(getPageAsync);
@@ -81,4 +81,4 @@ internal class PageableResultHelpers
     //        return _getPage(pageToken);
     //    }
     //}
-//}
+}

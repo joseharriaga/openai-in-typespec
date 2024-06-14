@@ -6,6 +6,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
+using OpenAI.FineTuning;
 
 namespace OpenAI.Chat
 {
@@ -36,6 +37,7 @@ namespace OpenAI.Chat
             {
                 switch (discriminator.GetString())
                 {
+                    case null: return InternalFineTuneChatCompletionRequestAssistantMessage.DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(element, options);
                     case "assistant": return AssistantChatMessage.DeserializeAssistantChatMessage(element, options);
                     case "function": return FunctionChatMessage.DeserializeFunctionChatMessage(element, options);
                     case "system": return SystemChatMessage.DeserializeSystemChatMessage(element, options);

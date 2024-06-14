@@ -105,9 +105,9 @@ internal class AzureOpenAIPipelineMessageBuilder
         PipelineRequest request = message.Request;
         request.Method = _method;
         SetUri(request);
-        foreach ((string name, string value) in _headers)
+        foreach (KeyValuePair<string, string> pair in _headers)
         {
-            request.Headers.Set(name, value);
+            request.Headers.Set(pair.Key, pair.Value);
         }
         request.Content = _content;
         if (_options is not null)

@@ -32,11 +32,21 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            InternalAssistantToolsFileSearchFileSearch fileSearch = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("file_search"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    fileSearch = InternalAssistantToolsFileSearchFileSearch.DeserializeInternalAssistantToolsFileSearchFileSearch(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString();
@@ -48,7 +58,7 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FileSearchToolDefinition(type, serializedAdditionalRawData);
+            return new FileSearchToolDefinition(type, serializedAdditionalRawData, fileSearch);
         }
 
         BinaryData IPersistableModel<FileSearchToolDefinition>.Write(ModelReaderWriterOptions options)

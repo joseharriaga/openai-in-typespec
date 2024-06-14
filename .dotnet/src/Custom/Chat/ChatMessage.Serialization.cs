@@ -10,11 +10,13 @@ namespace OpenAI.Chat;
 public abstract partial class ChatMessage : IJsonModel<ChatMessage>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void SerializeContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => throw new NotImplementedException();
+    internal void SerializeContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options = null)
+    {
+        throw new NotImplementedException();
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected static void DeserializeContentValue(JsonProperty property, ref IList<ChatMessageContentPart> content, ModelReaderWriterOptions options = null)
+    internal static void DeserializeContentValue(JsonProperty property, ref IList<ChatMessageContentPart> content, ModelReaderWriterOptions options = null)
     {
         content ??= new ChangeTrackingList<ChatMessageContentPart>();
         if (property.Value.ValueKind == JsonValueKind.String)

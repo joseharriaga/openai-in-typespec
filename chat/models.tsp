@@ -127,7 +127,7 @@ model CreateChatCompletionRequest {
   """)
   stream?: boolean | null = false;
 
-  stream_options?: ChatCompletionStreamOptions | null;
+  stream_options?: ChatCompletionStreamOptions | null = null;
 
   @doc("""
   What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
@@ -151,6 +151,7 @@ model CreateChatCompletionRequest {
   tools?: ChatCompletionTool[];
 
   tool_choice?: ChatCompletionToolChoiceOption;
+  parallel_tool_calls?: ParallelToolCalls = true;
 
   /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
   user?: string;

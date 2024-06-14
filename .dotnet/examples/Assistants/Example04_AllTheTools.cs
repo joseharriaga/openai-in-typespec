@@ -83,13 +83,10 @@ public partial class AssistantExamples
         {
             InitialMessages =
             {
-                new ThreadInitializationMessage(
-                    [
-                        "Create a graph of a line with a slope that's my father's favorite number "
-                        + "and an offset that's my mother's favorite number.",
-                        "Include people's names in your response and cite where you found them."
-                    ]),
-            },
+                "Create a graph of a line with a slope that's my father's favorite number "
+                + "and an offset that's my mother's favorite number.",
+                "Include people's names in your response and cite where you found them."
+            }
         });
 
         ThreadRun run = client.CreateRun(thread, assistant);
@@ -162,7 +159,6 @@ public partial class AssistantExamples
                         foreach (TextAnnotation annotation in contentItem.TextAnnotations)
                         {
                             Console.WriteLine($"* File ID used by file_search: {annotation.InputFileId}");
-                            Console.WriteLine($"* file_search quote from file: {annotation.InputQuote}");
                             Console.WriteLine($"* File ID created by code_interpreter: {annotation.OutputFileId}");
                             Console.WriteLine($"* Text to replace: {annotation.TextToReplace}");
                             Console.WriteLine($"* Message content index range: {annotation.StartIndex}-{annotation.EndIndex}");

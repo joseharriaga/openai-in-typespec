@@ -12,8 +12,8 @@ public abstract partial class DataSourceVectorizer
     /// <remarks>
     /// Vectorization endpoint authentication only supports api-key- and access-token-based authentication, as
     /// created via <see cref="DataSourceAuthentication.FromApiKey(string)"/> and
-    /// <see cref="DataSourceAuthentication.FromAccessToken(string)"/>, respectively.  
-    /// <remarks>
+    /// <see cref="DataSourceAuthentication.FromAccessToken(string)"/>, respectively.
+    /// </remarks>
     /// <param name="endpoint"> The endpoint to use for vectorization. </param>
     /// <param name="authentication"> The authentication mechanism to use with the endpoint. </param>
     /// <returns></returns>

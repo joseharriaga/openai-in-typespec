@@ -29,7 +29,7 @@ public partial class TranslationTests : SyncAsyncTestBase
     {
         AudioClient client = GetTestClient();
 
-        string filename = "french.wav";
+        string filename = "audio_french.wav";
         string path = Path.Combine("Assets", filename);
         AudioTranslation translation = null;
 
@@ -59,7 +59,7 @@ public partial class TranslationTests : SyncAsyncTestBase
     public async Task TranslationFormatsWork(AudioTranslationFormat formatToTest)
     {
         AudioClient client = GetTestClient();
-        string path = Path.Combine("Assets", "french.wav");
+        string path = Path.Combine("Assets", "audio_french.wav");
 
         AudioTranslationOptions options = new()
         {

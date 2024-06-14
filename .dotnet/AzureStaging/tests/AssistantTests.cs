@@ -541,7 +541,7 @@ public class AssistantTests : TestBase<AssistantClient>
                 Console.WriteLine(content.Text);
                 foreach (TextAnnotation annotation in content.TextAnnotations)
                 {
-                    Console.WriteLine($"  --> From file: {annotation.InputFileId}, quote: {annotation.InputQuote}, replacement: {annotation.TextToReplace}");
+                    Console.WriteLine($"  --> From file: {annotation.InputFileId}, replacement: {annotation.TextToReplace}");
                 }
             }
         }

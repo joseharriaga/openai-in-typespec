@@ -209,6 +209,25 @@ model AssistantToolsFileSearch extends AssistantToolDefinition {
   The type of tool being defined: `file_search`
   """)
   type: "file_search";
+
+  /** Overrides for the file search tool. */
+  file_search?: {
+    @doc("""
+    The maximum number of results the file search tool should output. The default is 20 for gpt-4* models and 5 for gpt-3.5-turbo. This number should be between 1 and 50 inclusive.
+    
+    Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/number-of-chunks-returned) for more information.
+    """)
+    @minValue(1)
+    @maxValue(50)
+    max_num_results?: int32;
+  };
+}
+
+model AssistantToolsFileSearchTypeOnly {
+  @doc("""
+  The type of tool being defined: `file_search`
+  """)
+  type: "file_search";
 }
 
 // Tool customization: apply a common model base for tool definitions

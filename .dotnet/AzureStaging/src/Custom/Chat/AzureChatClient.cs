@@ -5,6 +5,8 @@ using OpenAI.Chat;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
+#pragma warning disable AZC0112
+
 namespace Azure.AI.OpenAI.Chat;
 
 /// <summary>

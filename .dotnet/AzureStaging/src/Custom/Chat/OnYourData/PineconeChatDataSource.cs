@@ -14,35 +14,35 @@ public partial class PineconeChatDataSource : AzureChatDataSource
     internal InternalPineconeChatDataSourceParameters InternalParameters { get; }
 
     /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.Environment"/>
-    public required string Environment
+    required public string Environment
     {
         get => InternalParameters.Environment;
         init => InternalParameters.Environment = value;
     }
 
     /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.IndexName"/>
-    public required string IndexName
+    required public string IndexName
     {
         get => InternalParameters.IndexName;
         init => InternalParameters.IndexName = value;
     }
-    
+
     /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.Authentication"/>
-    public required DataSourceAuthentication Authentication
+    required public DataSourceAuthentication Authentication
     {
         get => InternalParameters.Authentication;
         init => InternalParameters.Authentication = value;
     }
 
     /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.VectorizationSource"/>
-    public required DataSourceVectorizer VectorizationSource
+    required public DataSourceVectorizer VectorizationSource
     {
         get => InternalParameters.VectorizationSource;
         init => InternalParameters.VectorizationSource = value;
     }
 
     /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.FieldMappings"/>
-    public required DataSourceFieldMappings FieldMappings
+    required public DataSourceFieldMappings FieldMappings
     {
         get => InternalParameters.FieldMappings;
         init => InternalParameters.FieldMappings = value;

@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Diagnostics.CodeAnalysis;
+using Azure.AI.OpenAI.Chat;
 using Azure.AI.OpenAI.Internal;
 using OpenAI.Chat;
-using System.Diagnostics.CodeAnalysis;
 
-namespace Azure.AI.OpenAI.Chat;
+namespace Azure.AI.OpenAI;
+
 public static partial class AzureChatCompletionOptionsExtensions
 {
-    [Experimental("OPENAI002")]
+    [Experimental("AOAI001")]
     public static void AddDataSource(this ChatCompletionOptions options, AzureChatDataSource dataSource)
     {
         options._serializedAdditionalRawData ??= new ChangeTrackingDictionary<string, BinaryData>();
@@ -24,7 +26,7 @@ public static partial class AzureChatCompletionOptionsExtensions
             existingSources);
     }
 
-    [Experimental("OPENAI002")]
+    [Experimental("AOAI001")]
     public static IReadOnlyList<AzureChatDataSource> GetDataSources(this ChatCompletionOptions options)
     {
         return AdditionalPropertyHelpers.GetAdditionalListProperty<AzureChatDataSource>(

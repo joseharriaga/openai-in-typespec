@@ -1,6 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.ClientModel;
+using System.ClientModel.Primitives;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Azure.AI.OpenAI.Assistants;
 using Azure.AI.OpenAI.Audio;
 using Azure.AI.OpenAI.Batch;
@@ -23,10 +27,8 @@ using OpenAI.Images;
 using OpenAI.Models;
 using OpenAI.Moderations;
 using OpenAI.VectorStores;
-using System.ClientModel;
-using System.ClientModel.Primitives;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable AZC0007
 
 namespace Azure.AI.OpenAI;
 
@@ -47,7 +49,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <remarks>
     /// <para>
     /// For token-based authentication, including the use of managed identity, please use the alternate constructor:
-    /// <see cref="AzureOpenAIClient(Uri,TokenCredential,AzureOpenAIClientOptions"/>
+    /// <see cref="AzureOpenAIClient(Uri,TokenCredential,AzureOpenAIClientOptions)"/>
     /// </para>
     /// </remarks>
     /// <param name="endpoint">
@@ -67,6 +69,14 @@ public partial class AzureOpenAIClient : OpenAIClient
             options)
     {}
 
+    /// <inheritdoc cref="AzureOpenAIClient(Uri,ApiKeyCredential,AzureOpenAIClientOptions)"/>
+    public AzureOpenAIClient(Uri endpoint, AzureKeyCredential credential, AzureOpenAIClientOptions options = null)
+        : this(
+              CreatePipeline(GetApiKey(new ApiKeyCredential(credential?.Key), requireExplicitCredential: true), options),
+              GetEndpoint(endpoint, requireExplicitEndpoint: true),
+              options)
+    {}
+
     /// <summary>
     /// Creates a new instance of <see cref="AzureOpenAIClient"/> that will connect to an Azure OpenAI service resource
     /// using endpoint and authentication settings from available configuration information.
@@ -74,7 +84,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <remarks>
     /// <para>
     /// For token-based authentication, including the use of managed identity, please use the alternate constructor:
-    /// <see cref="AzureOpenAIClient(Uri,TokenCredential,AzureOpenAIClientOptions"/>
+    /// <see cref="AzureOpenAIClient(Uri,TokenCredential,AzureOpenAIClientOptions)"/>
     /// </para>
     /// <para>
     /// The client selects its resource endpoint in the following order of precedence:
@@ -107,7 +117,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// </summary>
     /// <remarks>
     /// For API-key-based authentication, please use the alternate constructor:
-    /// <see cref="AzureOpenAIClient(Uri,ApiKeyCredential,AzureOpenAIClientOptions"/>
+    /// <see cref="AzureOpenAIClient(Uri,ApiKeyCredential,AzureOpenAIClientOptions)"/>
     /// </remarks>
     /// <param name="endpoint">
     /// <para>
@@ -138,6 +148,12 @@ public partial class AzureOpenAIClient : OpenAIClient
     {
         _options = options;
     }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="AzureOpenAIClient"/> for mocking.
+    /// </summary>
+    protected AzureOpenAIClient()
+    { }
 
     /// <summary>
     /// Gets a new <see cref="AssistantClient"/> instance configured for assistant operation use with the Azure OpenAI service.
@@ -234,23 +250,24 @@ public partial class AzureOpenAIClient : OpenAIClient
     public override VectorStoreClient GetVectorStoreClient()
         => new AzureVectorStoreClient(Pipeline, Endpoint, _options);
 
-    private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, OpenAIClientOptions options)
+    private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, AzureOpenAIClientOptions options)
         => ClientPipeline.Create(
             options ?? new(),
             perCallPolicies: [],
             perTryPolicies:
             [
                 authenticationPolicy,
+                CreateAddUserAgentHeaderPolicy(options),
             ],
             beforeTransportPolicies: []);
 
-    internal static new ClientPipeline CreatePipeline(ApiKeyCredential credential, OpenAIClientOptions options = null)
+    internal static ClientPipeline CreatePipeline(ApiKeyCredential credential, AzureOpenAIClientOptions options = null)
     {
         Argument.AssertNotNull(credential, nameof(credential));
         return CreatePipeline(ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, "api-key"), options);
     }
 
-    internal static ClientPipeline CreatePipeline(TokenCredential credential, OpenAIClientOptions options = null)
+    internal static ClientPipeline CreatePipeline(TokenCredential credential, AzureOpenAIClientOptions options = null)
     {
         Argument.AssertNotNull(credential, nameof(credential));
         return CreatePipeline(new AzureTokenAuthenticationPolicy(credential), options);
@@ -310,10 +327,22 @@ public partial class AzureOpenAIClient : OpenAIClient
         }
     }
 
+    private static PipelinePolicy CreateAddUserAgentHeaderPolicy(AzureOpenAIClientOptions options = null)
+    {
+        Core.TelemetryDetails telemetryDetails = new(typeof(AzureOpenAIClient).Assembly);
+        return new GenericActionPipelinePolicy(message =>
+        {
+            if (message?.Request?.Headers?.TryGetValue(s_userAgentHeaderKey, out string _) == false)
+            {
+                message.Request.Headers.Set(s_userAgentHeaderKey, telemetryDetails.ToString());
+            }
+        });
+    }
+
     private static readonly string s_aoaiEndpointEnvironmentVariable = "AZURE_OPENAI_ENDPOINT";
     private static readonly string s_aoaiApiKeyEnvironmentVariable = "AZURE_OPENAI_API_KEY";
+    private static readonly string s_userAgentHeaderKey = "User-Agent";
     private static PipelineMessageClassifier _pipelineMessageClassifier200;
     internal static PipelineMessageClassifier PipelineMessageClassifier200
         => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
-
 }

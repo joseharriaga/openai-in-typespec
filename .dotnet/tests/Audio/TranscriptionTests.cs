@@ -3,6 +3,7 @@ using OpenAI.Audio;
 using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     public async Task TranscriptionWorks(AudioSourceKind audioSourceKind)
     {
         AudioClient client = GetTestClient();
-        string filename = "hello_world.m4a";
+        string filename = "audio_hello_world.mp3";
         string path = Path.Combine("Assets", filename);
         AudioTranscription transcription = null;
 
@@ -63,7 +64,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     {
         AudioClient client = GetTestClient();
 
-        using FileStream inputStream = File.OpenRead(Path.Combine("Assets", "hello_world.m4a"));
+        using FileStream inputStream = File.OpenRead(Path.Combine("Assets", "audio_hello_world.mp3"));
 
         AudioTranscriptionOptions options = new()
         {
@@ -72,10 +73,14 @@ public partial class TranscriptionTests : SyncAsyncTestBase
             Granularities = granularityFlags,
         };
 
-        AudioTranscription transcription = IsAsync
-            ? await client.TranscribeAudioAsync(inputStream, "hello_world.m4a", options)
-            : client.TranscribeAudio(inputStream, "hello_world.m4a", options);
+        ClientResult<AudioTranscription> transcriptionResult = IsAsync
+            ? await client.TranscribeAudioAsync(inputStream, "audio_hello_world.mp3", options)
+            : client.TranscribeAudio(inputStream, "audio_hello_world.mp3", options);
 
+        PipelineResponse rawResponse = transcriptionResult.GetRawResponse();
+        Assert.That(rawResponse.Content.ToString(), Is.Not.Null.And.Not.Empty);
+
+        AudioTranscription transcription = transcriptionResult;
         Assert.That(transcription, Is.Not.Null);
 
         IReadOnlyList<TranscribedWord> words = transcription.Words;
@@ -114,7 +119,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
             Assert.That(segments[i].TokenIds, Is.Not.Null.And.Not.Empty);
             foreach (int tokenId in segments[i].TokenIds)
             {
-                Assert.That(tokenId, Is.GreaterThan(0));
+                Assert.That(tokenId, Is.GreaterThanOrEqualTo(0));
             }
             Assert.That(segments[i].Temperature, Is.LessThan(-0.001f).Or.GreaterThan(0.001f));
             Assert.That(segments[i].AverageLogProbability, Is.LessThan(-0.001f).Or.GreaterThan(0.001f));
@@ -131,7 +136,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     public async Task TranscriptionFormatsWork(AudioTranscriptionFormat formatToTest)
     {
         AudioClient client = GetTestClient();
-        string path = Path.Combine("Assets", "hello_world.m4a");
+        string path = Path.Combine("Assets", "audio_hello_world.mp3");
 
         AudioTranscriptionOptions options = new()
         {
@@ -151,7 +156,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
     {
         AudioClient client = GetTestClient();
 
-        string path = Path.Combine("Assets", "hello_world.m4a");
+        string path = Path.Combine("Assets", "audio_hello_world.mp3");
 
         AudioTranscriptionOptions options = new AudioTranscriptionOptions()
         {

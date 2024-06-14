@@ -14,32 +14,32 @@ public partial class AzureMachineLearningIndexChatDataSource : AzureChatDataSour
     internal InternalAzureMachineLearningIndexChatDataSourceParameters InternalParameters { get; }
 
     /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.Name"/>
-    public required string IndexName
+    required public string IndexName
     {
         get => InternalParameters.Name;
         init => InternalParameters.Name = value;
     }
 
     /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.ProjectResourceId"/>
-    public required string ProjectResourceId
+    required public string ProjectResourceId
     {
         get => InternalParameters.ProjectResourceId;
         init => InternalParameters.ProjectResourceId = value;
     }
 
     /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.Authentication"/>
-    public required DataSourceAuthentication Authentication
+    required public DataSourceAuthentication Authentication
     {
         get => InternalParameters.Authentication;
         init => InternalParameters.Authentication = value;
     }
 
     /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.Version"/>
-    public required string Version
+    required public string Version
     {
         get => InternalParameters.Version;
         init => InternalParameters.Version = value;
-    }    
+    }
 
     /// <inheritdoc cref="InternalAzureMachineLearningIndexChatDataSourceParameters.TopNDocuments"/>
     public int? TopNDocuments

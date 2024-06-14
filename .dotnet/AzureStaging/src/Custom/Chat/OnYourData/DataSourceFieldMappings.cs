@@ -92,7 +92,7 @@ public partial class DataSourceFieldMappings
     public IList<string> ImageVectorFieldNames { get; } = new ChangeTrackingList<string>();
 
     /// <summary>
-    /// Initializes a new instance of <see cref="DataSourceFieldMappings"/>. 
+    /// Initializes a new instance of <see cref="DataSourceFieldMappings"/>.
     /// </summary>
     public DataSourceFieldMappings()
     {}

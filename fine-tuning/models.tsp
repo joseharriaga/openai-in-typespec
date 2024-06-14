@@ -3,6 +3,9 @@
  * Edits made directly to this file will be lost.
  */
 
+import "../chat";
+import "../common";
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -58,6 +61,8 @@ model CreateFineTuningJobRequest {
   See [upload file](/docs/api-reference/files/create) for how to upload a file.
   
   Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
+  
+  The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) format.
   
   See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
   """)
@@ -305,3 +310,38 @@ model FineTuningJobCheckpoint {
   /** The object type, which is always "fine_tuning.job.checkpoint". */
   object: "fine_tuning.job.checkpoint";
 }
+
+/** The per-line training example of a fine-tuning input file for chat models */
+model FinetuneChatRequestInput {
+  @minItems(1)
+  @extension("x-oaiExpandable", true)
+  messages?: (
+    | ChatCompletionRequestSystemMessage
+    | ChatCompletionRequestUserMessage
+    | FineTuneChatCompletionRequestAssistantMessage
+    | ChatCompletionRequestToolMessage
+    | ChatCompletionRequestFunctionMessage)[];
+
+  /** A list of tools the model may generate JSON inputs for. */
+  tools?: ChatCompletionTool[];
+
+  parallel_tool_calls?: ParallelToolCalls = true;
+
+  /** A list of functions the model may generate JSON inputs for. */
+  #deprecated "This field is marked as deprecated."
+  @minItems(1)
+  @maxItems(128)
+  functions?: ChatCompletionFunctions[];
+}
+
+/** The per-line training example of a fine-tuning input file for completions models */
+model FinetuneCompletionRequestInput {
+  /** The input prompt for this training example. */
+  prompt?: string;
+
+  /** The desired completion for this training example. */
+  completion?: string;
+}
+
+model FineTuneChatCompletionRequestAssistantMessage
+  extends ChatCompletionRequestAssistantMessage {}

@@ -15,6 +15,14 @@ function Partialize-ClientPipelineExtensions {
     $content | Set-Content -Path $file.FullName -NoNewline
 }
 
+function Partialize-ClientUriBuilder {
+    $file = Get-ChildItem -Path "$generatedCodeRoot\Internal\ClientUriBuilder.cs"
+    $content = Get-Content -Path $file -Raw
+    Write-Output "Editing $($file.FullName)"
+    $content = $content -creplace "internal class ClientUriBuilder", "internal partial class ClientUriBuilder"
+    $content | Set-Content -Path $file.FullName -NoNewline
+}
+
 Push-Location $specRoot
 try {
   Invoke { npm ci }
@@ -23,6 +31,7 @@ try {
   Invoke { .$PSScriptRoot/Prune-Generated-Files.ps1 }
   Invoke { .$PSScriptRoot/Make-Internals-Settable.ps1 }
   Partialize-ClientPipelineExtensions
+  Partialize-ClientUriBuilder
 }
 finally {
   Pop-Location

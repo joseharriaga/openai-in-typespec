@@ -53,7 +53,7 @@ internal static class TestHelpers
             TestScenario.Files => new FileClient(options),
             TestScenario.Images => new ImageClient(overrideModel ?? "dall-e-3", options),
             TestScenario.Transcription => new AudioClient(overrideModel ?? "whisper-1", options),
-            TestScenario.VisionChat => new ChatClient(overrideModel ?? "gpt-4-vision-preview", options),
+            TestScenario.VisionChat => new ChatClient(overrideModel ?? "gpt-4o", options),
             TestScenario.TopLevel => new OpenAIClient(options),
             _ => throw new NotImplementedException(),
         };

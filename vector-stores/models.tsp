@@ -96,6 +96,12 @@ model CreateVectorStoreRequest {
 
   expires_after?: VectorStoreExpirationAfter;
 
+  @doc("""
+  The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+  """)
+  @extension("x-oaiExpandable", true)
+  chunking_strategy?: AutoChunkingStrategyRequestParam | StaticChunkingStrategyRequestParam;
+
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
@@ -170,6 +176,10 @@ model VectorStoreFileObject {
     /** A human-readable description of the error. */
     message: string;
   } | null;
+
+  /** The strategy used to chunk the file. */
+  @extension("x-oaiExpandable", true)
+  chunking_strategy?: StaticChunkingStrategyResponseParam | OtherChunkingStrategyResponseParam;
 }
 
 model CreateVectorStoreFileRequest {
@@ -177,6 +187,8 @@ model CreateVectorStoreFileRequest {
   A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files.
   """)
   file_id: string;
+
+  chunking_strategy?: ChunkingStrategyRequestParam;
 }
 
 model ListVectorStoreFilesResponse {
@@ -243,4 +255,77 @@ model CreateVectorStoreFileBatchRequest {
   @minItems(1)
   @maxItems(500)
   file_ids: string[];
+
+  chunking_strategy?: ChunkingStrategyRequestParam;
+}
+
+// Tool customization: apply custom common base
+@doc("""
+This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
+""")
+model OtherChunkingStrategyResponseParam
+  extends FileChunkingStrategyResponseParam {
+  @doc("""
+  Always `other`.
+  """)
+  type: "other";
+}
+
+// Tool customization: apply custom common base
+model StaticChunkingStrategyResponseParam
+  extends FileChunkingStrategyResponseParam {
+  @doc("""
+  Always `static`.
+  """)
+  type: "static";
+
+  static: StaticChunkingStrategy;
+}
+
+model StaticChunkingStrategy {
+  @doc("""
+  The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
+  """)
+  @minValue(100)
+  @maxValue(4096)
+  max_chunk_size_tokens: int32;
+
+  @doc("""
+  The number of tokens that overlap between chunks. The default value is `400`.
+  
+  Note that the overlap must not exceed half of `max_chunk_size_tokens`.
+  """)
+  chunk_overlap_tokens: int32;
+}
+
+// Tool customization: apply custom common base
+@doc("""
+The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
+""")
+model AutoChunkingStrategyRequestParam
+  extends FileChunkingStrategyRequestParam {
+  @doc("""
+  Always `auto`.
+  """)
+  type: "auto";
+}
+
+// Tool customization: apply custom common base
+model StaticChunkingStrategyRequestParam
+  extends FileChunkingStrategyRequestParam {
+  @doc("""
+  Always `static`.
+  """)
+  type: "static";
+
+  static: StaticChunkingStrategy;
+}
+
+@doc("""
+The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
+""")
+@extension("x-oaiExpandable", true)
+union ChunkingStrategyRequestParam {
+  AutoChunkingStrategyRequestParam,
+  StaticChunkingStrategyRequestParam,
 }

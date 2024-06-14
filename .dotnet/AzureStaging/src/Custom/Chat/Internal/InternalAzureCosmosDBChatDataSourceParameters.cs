@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,8 +59,8 @@ internal partial class InternalAzureCosmosDBChatDataSourceParameters
     /// <remarks>
     /// Supported vectorization dependencies for Azure CosmosDB data sources include:
     /// <list type="bullet">
-    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item> 
-    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item> 
+    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item>
+    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item>
     /// </list>
     /// </remarks>
     [CodeGenMember("EmbeddingDependency")]

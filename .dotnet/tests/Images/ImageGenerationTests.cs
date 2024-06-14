@@ -82,8 +82,8 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
 
-        string prompt = "A sunlit indoor lounge area with a pool containing a black cat. The black cat has bright blue eyes and is looking to the side.";
-        string maskImagePath = Path.Combine("Assets", "edit_sample_mask.png");
+        string prompt = "A big cat with big, round eyes sitting in an empty room and looking at the camera.";
+        string maskImagePath = Path.Combine("Assets", "images_empty_room_with_mask.png");
 
         GeneratedImage image = IsAsync
             ? await client.GenerateImageEditAsync(maskImagePath, prompt)
@@ -101,9 +101,9 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
 
-        string prompt = "A sunlit indoor lounge area with a pool containing a black cat. The black cat has bright blue eyes and is looking to the side.";
-        string originalImagePath = Path.Combine("Assets", "edit_sample_image.png");
-        string maskImagePath = Path.Combine("Assets", "edit_sample_mask.png");
+        string prompt = "A big cat with big, round eyes sitting in an empty room and looking at the camera.";
+        string originalImagePath = Path.Combine("Assets", "images_empty_room.png");
+        string maskImagePath = Path.Combine("Assets", "images_empty_room_with_mask.png");
 
         GeneratedImage image = IsAsync
             ? await client.GenerateImageEditAsync(originalImagePath, prompt, maskImagePath)
@@ -121,8 +121,8 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
 
-        string prompt = "A sunlit indoor lounge area with a pool containing a black cat. The black cat has bright blue eyes and is looking to the side.";
-        string maskImagePath = Path.Combine("Assets", "edit_sample_mask.png");
+        string prompt = "A big cat with big, round eyes sitting in an empty room and looking at the camera.";
+        string maskImagePath = Path.Combine("Assets", "images_empty_room_with_mask.png");
 
         ImageEditOptions options = new()
         {
@@ -142,7 +142,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     public async Task GenerateImageVariationWorks()
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
-        string imagePath = Path.Combine("Assets", "variation_sample_image.png");
+        string imagePath = Path.Combine("Assets", "images_dog_and_cat.png");
 
         GeneratedImage image = IsAsync
             ? await client.GenerateImageVariationAsync(imagePath)
@@ -152,14 +152,14 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
 
         Console.WriteLine(image.ImageUri.AbsoluteUri);
 
-        ValidateGeneratedImage(image.ImageUri, "cat");
+        ValidateGeneratedImage(image.ImageUri, "dog");
     }
 
     [Test]
     public async Task GenerateImageVariationWithBytesResponseWorks()
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
-        string imagePath = Path.Combine("Assets", "variation_sample_image.png");
+        string imagePath = Path.Combine("Assets", "images_dog_and_cat.png");
 
         ImageVariationOptions options = new()
         {
@@ -180,7 +180,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
         ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.VisionChat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me"),
+                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me."),
                 ChatMessageContentPart.CreateImageMessageContentPart(imageUri)),
         ];
         ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };
@@ -194,7 +194,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
         ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.VisionChat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me"),
+                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me."),
                 ChatMessageContentPart.CreateImageMessageContentPart(imageBytes, "image/png")),
         ];
         ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };

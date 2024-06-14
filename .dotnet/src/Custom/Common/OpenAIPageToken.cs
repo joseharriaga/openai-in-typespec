@@ -8,13 +8,18 @@ namespace OpenAI;
 
 internal class OpenAIPageToken : PageToken
 {
+    private readonly OpenAIPageToken _firstPageToken;
+
     public OpenAIPageToken(int? pageSize, string? order, string? firstPageAfter, string? currentPageAfter, string? before)
+        : base()
     {
         PageSize = pageSize;
         Order = order;
         FirstPageAfter = firstPageAfter;
         CurrentPageAfter = currentPageAfter;
         Before = before;
+
+        _firstPageToken = GetFirstPageToken(pageSize, order, firstPageAfter, before);
     }
 
     public int? PageSize { get; }
@@ -27,20 +32,22 @@ internal class OpenAIPageToken : PageToken
 
     public string? Before { get; }
 
-    public override PageToken FirstCollectionPage
-        => new OpenAIPageToken(PageSize, Order, FirstPageAfter, FirstPageAfter, Before);
+    protected override PageToken FirstPageToken => _firstPageToken;
 
-    public override PageToken Create(BinaryData data, ModelReaderWriterOptions options)
+    private static OpenAIPageToken GetFirstPageToken(int? pageSize, string? order, string? after, string? before)
+        => new OpenAIPageToken(pageSize, order, after, after, before);
+
+    protected override PageToken CreateCore(BinaryData data, ModelReaderWriterOptions options)
     {
         throw new NotImplementedException();
     }
 
-    public override string GetFormatFromOptions(ModelReaderWriterOptions options)
+    protected override string GetFormatFromOptionsCore(ModelReaderWriterOptions options)
     {
         throw new NotImplementedException();
     }
 
-    public override BinaryData Write(ModelReaderWriterOptions options)
+    protected override BinaryData WriteCore(ModelReaderWriterOptions options)
     {
         throw new NotImplementedException();
     }

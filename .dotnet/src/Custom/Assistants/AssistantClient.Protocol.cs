@@ -102,9 +102,7 @@ public partial class AssistantClient
     /// <returns> The response returned from the service. </returns>
     public virtual IEnumerable<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
     {
-        throw new NotImplementedException();
-        //using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
-        //return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return new ProtocolAssistantPageCollection(this, limit, order, after, before, options);
     }
 
     // This needs to be internal now

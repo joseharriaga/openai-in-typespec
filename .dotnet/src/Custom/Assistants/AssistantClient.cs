@@ -96,25 +96,6 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);
     }
 
-    ///// <summary>
-    ///// Returns a collection of <see cref="Assistant"/> instances.
-    ///// </summary>
-    ///// <param name="itemOrder">
-    ///// The <c>order</c> that results should appear in the list according to their <c>created_at</c>
-    ///// timestamp.
-    ///// </param>
-    ///// <returns> A collection of assistants that can be enumerated using <c>await foreach</c>. </returns>
-    //public virtual IAsyncEnumerable<Assistant> GetAssistantsAsync(
-    //    ListOrder? itemOrder = null,
-    //    string itemsAfter = default,
-    //    string itemsBefore = default,
-    //    int? pageSize = null)
-    //{
-    //    throw new NotImplementedException();
-    //    //ClientPage<Assistant> page = GetAssistantsPage(itemOrder, itemsAfter, itemsBefore, pageSize);
-    //    //return page.ToItemCollectionAsync();
-    //}
-
     /// <summary>
     /// Returns a collection of <see cref="Assistant"/> instances.
     /// </summary>
@@ -123,6 +104,17 @@ public partial class AssistantClient
     public virtual PageCollection<Assistant> GetAssistants(OpenAIPageCollectionOptions pageOptions)
     {
         return new AssistantPageCollection(this, pageOptions);
+    }
+
+    // Rehydration implementation method
+    public virtual PageCollection<Assistant> GetAssistants(PageToken pageToken)
+    {
+        if (pageToken is not OpenAIPageToken oaiToken)
+        {
+            throw new ArgumentException("Invalid page token.");
+        }
+
+        return new AssistantPageCollection(this, oaiToken);
     }
 
     /// <summary>

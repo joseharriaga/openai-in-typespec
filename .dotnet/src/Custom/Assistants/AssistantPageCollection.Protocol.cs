@@ -1,9 +1,8 @@
 ﻿using OpenAI.Assistants;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text.Json;
 
 #nullable enable

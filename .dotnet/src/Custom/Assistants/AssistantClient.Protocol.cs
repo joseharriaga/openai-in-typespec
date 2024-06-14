@@ -64,11 +64,6 @@ public partial class AssistantClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    //public virtual async Task<ClientPage<ClientResult>> GetAssistantsPageAsync(int? limit, string order, string after, string before, RequestOptions options)
-    //{
-    //    return await AssistantsPage.FromInputsAsync(this, limit, order, after, before, options).ConfigureAwait(false);
-    //}
-
     public virtual IAsyncEnumerable<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
         throw new NotImplementedException();

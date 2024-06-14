@@ -42,7 +42,7 @@ public partial class FunctionToolDefinition : ToolDefinition
         : base("function")
     {
         Argument.AssertNotNullOrEmpty(name, nameof(name));
-        _internalFunction = new(name, description, parameters, null);
+        _internalFunction = new(description, name, parameters, null);
     }
 
     /// <summary>

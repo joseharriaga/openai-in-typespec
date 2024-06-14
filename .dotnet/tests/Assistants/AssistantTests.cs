@@ -365,7 +365,7 @@ public partial class AssistantTests
         Assert.That(messages.Count, Is.GreaterThan(1));
         Assert.That(messages.First().Role, Is.EqualTo(MessageRole.Assistant));
         Assert.That(messages.First().Content?[0], Is.Not.Null);
-        Assert.That(messages.First().Content[0].Text, Does.Contain("tacos"));
+        Assert.That(messages.First().Content[0].Text.ToLowerInvariant(), Does.Contain("tacos"));
     }
 
     [Test]

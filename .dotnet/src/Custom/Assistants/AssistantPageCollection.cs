@@ -17,14 +17,14 @@ internal class AssistantPageCollection : PageCollection<Assistant>
     public AssistantPageCollection(AssistantClient client, OpenAIPageCollectionOptions firstPageOptions)
     {
         _client = client;
-        _firstPageToken = GetFirstPageToken(firstPageOptions);
+        _firstPageToken = OpenAIPageToken.FromOptions(firstPageOptions);
     }
 
     // rehydration method constructor
     public AssistantPageCollection(AssistantClient client, OpenAIPageToken pageToken)
     {
         _client = client;
-        _firstPageToken = GetFirstPageToken(pageToken);
+        _firstPageToken = OpenAIPageToken.FromToken(pageToken, default);
     }
 
     public override PageToken FirstPageToken => _firstPageToken;
@@ -36,41 +36,30 @@ internal class AssistantPageCollection : PageCollection<Assistant>
             throw new ArgumentException("Invalid page token.");
         }
 
-        // Call the protocol method using values stored in page token.
-        ClientResult result = _client.GetAssistantsPage(
-            limit: oaiToken.PageSize,
-            order: oaiToken.Order,
-            after: oaiToken.CurrentPageAfter,
-            before: oaiToken.Before,
-            options: options);
+        ClientResult result = pageToken.HasResponseValues ?
+
+             // Call the method that gets a page using client-only values
+             _client.GetAssistantsPage(
+                limit: oaiToken.PageSize,
+                order: oaiToken.Order,
+                after: oaiToken.After,
+                before: oaiToken.Before,
+                options: options)
+             :
+             // Call the method that gets a page using a combination of service and client values
+             _client.GetAssistantsPage(
+                limit: oaiToken.PageSize,
+                order: oaiToken.Order,
+                after: oaiToken.LastSeenId,
+                before: oaiToken.Before,
+                options: options);
 
         PipelineResponse response = result.GetRawResponse();
         InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-        OpenAIPageToken? nextPageToken = GetNextPageToken(_firstPageToken, list.HasMore, list.LastId);
+        OpenAIPageToken? nextPageToken = OpenAIPageToken.GetNextPageToken(_firstPageToken, list.HasMore, list.LastId);
         return ClientPage<Assistant>.Create(list.Data, pageToken, nextPageToken, response);
     }
 
-    private static OpenAIPageToken FromOptions(OpenAIPageCollectionOptions options, string? currentPageAfter)
-        => new(options.PageSize, options.Order?.ToString(), options.AfterItemId, currentPageAfter, options.BeforeItemId);
-
-    private static OpenAIPageToken FromToken(OpenAIPageToken token, string? currentPageAfter)
-        => new(token.PageSize, token.Order, token.FirstPageAfter, currentPageAfter, token.Before);
-
-    private static OpenAIPageToken GetFirstPageToken(OpenAIPageCollectionOptions options)
-        => FromOptions(options, options.AfterItemId);
-
-    private static OpenAIPageToken GetFirstPageToken(OpenAIPageToken token)
-        => FromToken(token, token.FirstPageAfter);
-
-    private static OpenAIPageToken? GetNextPageToken(OpenAIPageToken token, bool hasMore, string? lastId)
-    {
-        if (!hasMore)
-        {
-            return null;
-        }
-
-        return FromToken(token, lastId);
-    }
 }
 #pragma warning restore OPENAI001

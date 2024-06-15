@@ -11,53 +11,42 @@ namespace OpenAI;
 internal class AssistantPageCollection : PageCollection<Assistant>
 {
     private readonly AssistantClient _client;
-    private readonly OpenAIPageToken _firstPageToken;
+
+    private readonly int? _limit;
+    private readonly string? _order;
+    private readonly string? _after;
+    private readonly string? _before;
 
     // service method constructor
-    public AssistantPageCollection(AssistantClient client, OpenAIPageCollectionOptions firstPageOptions)
+    public AssistantPageCollection(AssistantClient client, int? limit, string? order, string? after, string? before)
     {
         _client = client;
-        _firstPageToken = OpenAIPageToken.FromOptions(firstPageOptions);
+
+        _limit = limit;
+        _order = order;
+        _after = after;
+        _before = before;
+
+        FirstPageToken = BinaryData.FromString(after ?? string.Empty);
     }
 
-    // rehydration method constructor
-    public AssistantPageCollection(AssistantClient client, OpenAIPageToken pageToken)
+    public override BinaryData FirstPageToken { get; }
+
+    public override ClientPage<Assistant> GetPage(BinaryData pageToken, RequestOptions? options)
     {
-        _client = client;
-        _firstPageToken = OpenAIPageToken.FromToken(pageToken, default);
-    }
+        OpenAIPageToken token = OpenAIPageToken.FromBytes(pageToken);
 
-    public override PageToken FirstPageToken => _firstPageToken;
-
-    public override ClientPage<Assistant> GetPage(PageToken pageToken, RequestOptions? options)
-    {
-        if (pageToken is not OpenAIPageToken oaiToken)
-        {
-            throw new ArgumentException("Invalid page token.");
-        }
-
-        ClientResult result = pageToken.HasResponseValues ?
-
-             // Call the method that gets a page using client-only values
-             _client.GetAssistantsPage(
-                limit: oaiToken.PageSize,
-                order: oaiToken.Order,
-                after: oaiToken.After,
-                before: oaiToken.Before,
-                options: options)
-             :
-             // Call the method that gets a page using a combination of service and client values
-             _client.GetAssistantsPage(
-                limit: oaiToken.PageSize,
-                order: oaiToken.Order,
-                after: oaiToken.LastSeenId,
-                before: oaiToken.Before,
-                options: options);
+        ClientResult result = _client.GetAssistantsPage(
+            limit: _limit,
+            order: _order,
+            after: token.After,
+            before: _before,
+            options: options);
 
         PipelineResponse response = result.GetRawResponse();
         InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
 
-        OpenAIPageToken? nextPageToken = OpenAIPageToken.GetNextPageToken(_firstPageToken, list.HasMore, list.LastId);
+        BinaryData? nextPageToken = OpenAIPageToken.GetNextPageToken(list.HasMore, list.LastId);
         return ClientPage<Assistant>.Create(list.Data, pageToken, nextPageToken, response);
     }
 

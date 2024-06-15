@@ -101,21 +101,21 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="pageOptions">Options describing the collection of assistants.</param>
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageCollection<Assistant> GetAssistants(OpenAIPageCollectionOptions pageOptions)
+    public virtual PageCollection<Assistant> GetAssistants(ListOrder? order, int? pageSize, string? afterId, string? beforeId)
     {
-        return new AssistantPageCollection(this, pageOptions);
+        return new AssistantPageCollection(this, pageSize, order?.ToString(), afterId, beforeId);
     }
 
-    // Rehydration implementation method
-    public virtual PageCollection<Assistant> GetAssistants(PageToken pageToken)
-    {
-        if (pageToken is not OpenAIPageToken oaiToken)
-        {
-            throw new ArgumentException("Invalid page token.");
-        }
+    // Rehydration implementation method - none in this version.
+    //public virtual PageCollection<Assistant> GetAssistants(PageToken pageToken)
+    //{
+    //    if (pageToken is not OpenAIPageToken oaiToken)
+    //    {
+    //        throw new ArgumentException("Invalid page token.");
+    //    }
 
-        return new AssistantPageCollection(this, oaiToken);
-    }
+    //    return new AssistantPageCollection(this, oaiToken);
+    //}
 
     /// <summary>
     /// Deletes an existing <see cref="Assistant"/>. 

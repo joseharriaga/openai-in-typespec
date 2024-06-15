@@ -1,4 +1,4 @@
-import "../../../../chat";
+import "../../.typespec/chat";
 
 using OpenAI;
 

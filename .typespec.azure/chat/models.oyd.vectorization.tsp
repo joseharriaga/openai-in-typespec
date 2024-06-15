@@ -1,4 +1,4 @@
-import "../../../../chat";
+import "../../.typespec/chat";
 import "./models.oyd.auth.tsp";
 
 using OpenAI;

@@ -1,5 +1,5 @@
 import "../common";
-import "../../../../images";
+import "../../.typespec/images";
 
 using OpenAI;
 

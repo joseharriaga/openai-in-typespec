@@ -6,7 +6,7 @@ options:
     output-file: "{project-root}/azure-openai-openapi3.yaml"
   "@azure-tools/typespec-csharp":
     namespace: "Azure.AI.OpenAI"
-    emitter-output-dir: "{project-root}/../src"
+    emitter-output-dir: "{project-root}/../.dotnet.azure"
     generate-convenience-methods: false
     unreferenced-types-handling: keepAll
     model-namespace: false

@@ -1,6 +1,6 @@
 import "./models.oyd.auth.tsp";
 import "./models.oyd.vectorization.tsp";
-import "../../../../chat";
+import "../../.typespec/chat";
 
 using OpenAI;
 

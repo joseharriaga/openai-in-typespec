@@ -1850,6 +1850,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/OpenAI.ChatCompletionStreamOptions'
           nullable: true
+          default: null
         temperature:
           type: number
           format: float
@@ -1879,6 +1880,9 @@ components:
           description: A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
         tool_choice:
           $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
+        parallel_tool_calls:
+          type: boolean
+          default: true
         user:
           type: string
           description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).

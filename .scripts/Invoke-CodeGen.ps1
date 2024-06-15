@@ -7,15 +7,15 @@ function Invoke([scriptblock]$script) {
   & $script
 }
 
-Push-Location $repoRoot
+Push-Location $repoRoot/.typespec
 try {
   Invoke { npm ci }
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile main.tsp --emit @typespec/openapi3 }
   Invoke { npm exec --no -- tsp compile main.tsp --emit @azure-tools/typespec-csharp --option @azure-tools/typespec-csharp.emitter-output-dir="$dotnetFolder" }
-  Invoke { .scripts\Update-ClientModel.ps1 }
-  Invoke { .scripts\ConvertTo-Internal.ps1 }
-  Invoke { .scripts\Add-Customizations.ps1 }
+  Invoke { .$PSScriptRoot\Update-ClientModel.ps1 }
+  Invoke { .$PSScriptRoot\ConvertTo-Internal.ps1 }
+  Invoke { .$PSScriptRoot\Add-Customizations.ps1 }
 }
 finally {
   Pop-Location

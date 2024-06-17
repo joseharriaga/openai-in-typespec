@@ -20,14 +20,5 @@ namespace Azure.AI.OpenAI.Chat
             Type = "elasticsearch";
             InternalParameters = internalParameters;
         }
-
-        /// <summary> Initializes a new instance of <see cref="ElasticsearchChatDataSource"/>. </summary>
-        /// <param name="type"> The differentiating type identifier for the data source. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="internalParameters"> The parameter information to control the use of the Elasticsearch data source. </param>
-        internal ElasticsearchChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalElasticsearchChatDataSourceParameters internalParameters) : base(type, serializedAdditionalRawData)
-        {
-            InternalParameters = internalParameters;
-        }
     }
 }

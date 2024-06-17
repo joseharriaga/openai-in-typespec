@@ -20,5 +20,14 @@ namespace Azure.AI.OpenAI.Chat
             Type = "azure_search";
             InternalParameters = internalParameters;
         }
+
+        /// <summary> Initializes a new instance of <see cref="AzureSearchChatDataSource"/>. </summary>
+        /// <param name="type"> The differentiating type identifier for the data source. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        /// <param name="internalParameters"> The parameter information to control the use of the Azure Search data source. </param>
+        internal AzureSearchChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalAzureSearchChatDataSourceParameters internalParameters) : base(type, serializedAdditionalRawData)
+        {
+            InternalParameters = internalParameters;
+        }
     }
 }

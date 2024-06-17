@@ -20,5 +20,14 @@ namespace Azure.AI.OpenAI.Chat
             Type = "pinecone";
             InternalParameters = internalParameters;
         }
+
+        /// <summary> Initializes a new instance of <see cref="PineconeChatDataSource"/>. </summary>
+        /// <param name="type"> The differentiating type identifier for the data source. </param>
+        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
+        /// <param name="internalParameters"> The parameter information to control the use of the Pinecone data source. </param>
+        internal PineconeChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalPineconeChatDataSourceParameters internalParameters) : base(type, serializedAdditionalRawData)
+        {
+            InternalParameters = internalParameters;
+        }
     }
 }

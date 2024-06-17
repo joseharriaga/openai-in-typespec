@@ -2,10 +2,9 @@
 // Licensed under the MIT License.
 
 #if !NET8_0_OR_GREATER
-#nullable enable
 
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
+#pragma warning disable SA1649
+#nullable enable
 
 namespace System.Diagnostics.CodeAnalysis
 {

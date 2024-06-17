@@ -73,6 +73,7 @@ try {
   Invoke { npm ci }
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
+#   Invoke { npm exec --no -- tsp compile main.tsp --emit @azure-tools/typespec-csharp --option @azure-tools/typespec-csharp.emitter-output-dir="$dotnetAzureFolder/src" }
   Prune-Generated-Files
   Make-Internals-Settable
   Partialize-ClientPipelineExtensions

@@ -676,6 +676,35 @@ public partial class AssistantTests
         Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
     }
 
+    [Test]
+    public void SerializationTests()
+    {
+        AssistantCreationOptions options = new()
+        {
+            Name = "Assistant Name",
+            ResponseFormat = AssistantResponseFormat.JsonObject,
+            Tools =
+            {
+                new FileSearchToolDefinition()
+                {
+                    MaxResults = 25,
+                }
+            }
+        };
+
+        BinaryData serializedOptions = ModelReaderWriter.Write(options);
+        Assert.That(serializedOptions, Is.Not.Null);
+
+        AssistantCreationOptions deserializedOptions
+            = ModelReaderWriter.Read<AssistantCreationOptions>(serializedOptions);
+
+        Assert.That(deserializedOptions, Is.Not.Null);
+        Assert.That(deserializedOptions.Name, Is.EqualTo(options.Name));
+        Assert.That(deserializedOptions.Tools, Has.Count.EqualTo(options.Tools.Count));
+        Assert.That(deserializedOptions.Tools[0], Is.InstanceOf<FileSearchToolDefinition>());
+        Assert.That((deserializedOptions.Tools[0] as FileSearchToolDefinition).MaxResults, Is.EqualTo((options.Tools[0] as FileSearchToolDefinition).MaxResults));
+    }
+
     [TearDown]
     protected void Cleanup()
     {

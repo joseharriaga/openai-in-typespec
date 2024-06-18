@@ -108,11 +108,9 @@ namespace OpenAI.Assistants {
         public virtual ClientResult<Assistant> GetAssistant(Assistant assistant, CancellationToken cancellationToken = default);
         public virtual ClientResult<Assistant> GetAssistant(string assistantId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetAssistant(string assistantId, RequestOptions options);
-        public virtual ClientResult<Assistant> GetAssistant(string assistantId);
         public virtual Task<ClientResult<Assistant>> GetAssistantAsync(Assistant assistant, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetAssistantAsync(string assistantId, RequestOptions options);
-        public virtual Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId);
         public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
@@ -160,11 +158,9 @@ namespace OpenAI.Assistants {
         public virtual ClientResult<Assistant> ModifyAssistant(Assistant assistant, AssistantModificationOptions options, CancellationToken cancellationToken = default);
         public virtual ClientResult<Assistant> ModifyAssistant(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = default);
         public virtual ClientResult ModifyAssistant(string assistantId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<Assistant> ModifyAssistant(string assistantId, AssistantModificationOptions assistant);
         public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(Assistant assistant, AssistantModificationOptions options, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> ModifyAssistantAsync(string assistantId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions assistant);
         public virtual ClientResult<ThreadMessage> ModifyMessage(ThreadMessage message, MessageModificationOptions options, CancellationToken cancellationToken = default);
         public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
         public virtual ClientResult ModifyMessage(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
@@ -1487,11 +1483,9 @@ namespace OpenAI.VectorStores {
         public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options);
-        public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId);
         public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(VectorStore vectorStore, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options);
-        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId);
         public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetVectorStores(int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
@@ -1499,11 +1493,9 @@ namespace OpenAI.VectorStores {
         public virtual ClientResult<VectorStore> ModifyVectorStore(VectorStore vectorStore, VectorStoreModificationOptions options, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
         public virtual ClientResult ModifyVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore);
         public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(VectorStore vectorStore, VectorStoreModificationOptions options, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore);
         public virtual ClientResult<bool> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file, CancellationToken cancellationToken = default);
         public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options);

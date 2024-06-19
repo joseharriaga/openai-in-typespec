@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
 namespace OpenAI.Chat
 {
@@ -34,6 +35,11 @@ namespace OpenAI.Chat
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model);
+            if (Optional.IsDefined(ServiceTier))
+            {
+                writer.WritePropertyName("service_tier"u8);
+                writer.WriteStringValue(ServiceTier.Value.ToString());
+            }
             if (Optional.IsDefined(SystemFingerprint))
             {
                 writer.WritePropertyName("system_fingerprint"u8);
@@ -88,6 +94,7 @@ namespace OpenAI.Chat
             IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices = default;
             DateTimeOffset created = default;
             string model = default;
+            ChatCompletionServiceTier? serviceTier = default;
             string systemFingerprint = default;
             InternalCreateChatCompletionResponseObject @object = default;
             ChatTokenUsage usage = default;
@@ -120,6 +127,15 @@ namespace OpenAI.Chat
                     model = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("service_tier"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    serviceTier = new ChatCompletionServiceTier(property.Value.GetString());
+                    continue;
+                }
                 if (property.NameEquals("system_fingerprint"u8))
                 {
                     systemFingerprint = property.Value.GetString();
@@ -150,6 +166,7 @@ namespace OpenAI.Chat
                 choices,
                 created,
                 model,
+                serviceTier,
                 systemFingerprint,
                 @object,
                 usage,

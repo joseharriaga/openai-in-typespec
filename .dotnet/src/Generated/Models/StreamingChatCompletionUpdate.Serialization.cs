@@ -34,6 +34,11 @@ namespace OpenAI.Chat
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model);
+            if (Optional.IsDefined(ServiceTier))
+            {
+                writer.WritePropertyName("service_tier"u8);
+                writer.WriteStringValue(ServiceTier);
+            }
             if (Optional.IsDefined(SystemFingerprint))
             {
                 writer.WritePropertyName("system_fingerprint"u8);
@@ -88,6 +93,7 @@ namespace OpenAI.Chat
             IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices = default;
             DateTimeOffset created = default;
             string model = default;
+            string serviceTier = default;
             string systemFingerprint = default;
             InternalCreateChatCompletionStreamResponseObject @object = default;
             ChatTokenUsage usage = default;
@@ -120,6 +126,11 @@ namespace OpenAI.Chat
                     model = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("service_tier"u8))
+                {
+                    serviceTier = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("system_fingerprint"u8))
                 {
                     systemFingerprint = property.Value.GetString();
@@ -150,6 +161,7 @@ namespace OpenAI.Chat
                 choices,
                 created,
                 model,
+                serviceTier,
                 systemFingerprint,
                 @object,
                 usage,

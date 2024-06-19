@@ -119,6 +119,15 @@ model CreateChatCompletionRequest {
   @maxValue(9223372036854775807)
   seed?: int64 | null;
 
+  @doc("""
+  Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
+    - If set to 'auto', the system will utilize scale tier credits until they are exhausted.
+    - If set to 'default', the request will be processed in the shared cluster.
+  
+    When this parameter is set, the response body will include the `service_tier` utilized.
+  """)
+  service_tier?: "auto" | "default" | null = null;
+
   /** Up to 4 sequences where the API will stop generating further tokens. */
   stop?: string | string[] | null = null;
 
@@ -222,6 +231,11 @@ model CreateChatCompletionResponse {
 
   /** The model used for the chat completion. */
   `model`: string;
+
+  @doc("""
+  The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
+  """)
+  service_tier?: "scale" | "default" | null;
 
   @doc("""
   This fingerprint represents the backend configuration that the model runs with.
@@ -637,6 +651,11 @@ model CreateChatCompletionStreamResponse {
 
   /** The model to generate the completion. */
   `model`: string;
+
+  @doc("""
+  The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
+  """)
+  service_tier?: "scale" | "default" | null;
 
   @doc("""
   This fingerprint represents the backend configuration that the model runs with.

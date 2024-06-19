@@ -24,12 +24,13 @@ namespace OpenAI.Chat
             Model = model;
         }
 
-        internal StreamingChatCompletionUpdate(string id, IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset createdAt, string model, string systemFingerprint, InternalCreateChatCompletionStreamResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal StreamingChatCompletionUpdate(string id, IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset createdAt, string model, string serviceTier, string systemFingerprint, InternalCreateChatCompletionStreamResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Choices = choices;
             CreatedAt = createdAt;
             Model = model;
+            ServiceTier = serviceTier;
             SystemFingerprint = systemFingerprint;
             Object = @object;
             Usage = usage;
@@ -42,6 +43,7 @@ namespace OpenAI.Chat
 
         public string Id { get; }
         public string Model { get; }
+        public string ServiceTier { get; }
         public string SystemFingerprint { get; }
     }
 }

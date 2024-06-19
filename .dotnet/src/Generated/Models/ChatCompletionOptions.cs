@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Models;
 
 namespace OpenAI.Chat
 {
@@ -12,7 +13,7 @@ namespace OpenAI.Chat
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        internal ChatCompletionOptions(IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<int, int> logitBiases, bool? includeLogProbabilities, int? topLogProbabilityCount, int? maxTokens, int? n, float? presencePenalty, ChatResponseFormat responseFormat, long? seed, IList<string> stopSequences, bool? stream, InternalChatCompletionStreamOptions streamOptions, float? temperature, float? topP, IList<ChatTool> tools, ChatToolChoice toolChoice, bool? parallelToolCallsEnabled, string user, ChatFunctionChoice functionChoice, IList<ChatFunction> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatCompletionOptions(IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<int, int> logitBiases, bool? includeLogProbabilities, int? topLogProbabilityCount, int? maxTokens, int? n, float? presencePenalty, ChatResponseFormat responseFormat, long? seed, ChatCompletionOptionsServiceTier? serviceTier, IList<string> stopSequences, bool? stream, InternalChatCompletionStreamOptions streamOptions, float? temperature, float? topP, IList<ChatTool> tools, ChatToolChoice toolChoice, bool? parallelToolCallsEnabled, string user, ChatFunctionChoice functionChoice, IList<ChatFunction> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Messages = messages;
             Model = model;
@@ -25,6 +26,7 @@ namespace OpenAI.Chat
             PresencePenalty = presencePenalty;
             ResponseFormat = responseFormat;
             Seed = seed;
+            ServiceTier = serviceTier;
             StopSequences = stopSequences;
             Stream = stream;
             StreamOptions = streamOptions;
@@ -43,6 +45,7 @@ namespace OpenAI.Chat
         public float? PresencePenalty { get; init; }
         public ChatResponseFormat ResponseFormat { get; init; }
         public long? Seed { get; init; }
+        public ChatCompletionOptionsServiceTier? ServiceTier { get; init; }
         public float? Temperature { get; init; }
         public float? TopP { get; init; }
         public IList<ChatTool> Tools { get; }

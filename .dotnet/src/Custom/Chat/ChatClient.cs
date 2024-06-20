@@ -14,6 +14,7 @@ namespace OpenAI.Chat;
 public partial class ChatClient
 {
     private readonly string _model;
+    private readonly OpenAIClientOptions _clientOptions;
 
     /// <summary>
     /// Initializes a new instance of <see cref="ChatClient"/> that will use an API key when authenticating.
@@ -62,6 +63,7 @@ public partial class ChatClient
         _model = model;
         _pipeline = pipeline;
         _endpoint = endpoint;
+        _clientOptions = options;
     }
 
     /// <summary>
@@ -204,5 +206,6 @@ public partial class ChatClient
             ? true
             : null;
         options.StreamOptions = stream ? options.StreamOptions : null;
+        options.ServiceTier = _clientOptions?.LatencyTierChoice;
     }
 }

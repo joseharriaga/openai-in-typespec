@@ -7,7 +7,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
 namespace OpenAI.Chat
 {
@@ -279,7 +278,7 @@ namespace OpenAI.Chat
             float? presencePenalty = default;
             ChatResponseFormat responseFormat = default;
             long? seed = default;
-            ChatCompletionOptionsServiceTier? serviceTier = default;
+            ServiceLatencyTierChoice? serviceTier = default;
             IList<string> stop = default;
             bool? stream = default;
             InternalChatCompletionStreamOptions streamOptions = default;
@@ -400,7 +399,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    serviceTier = new ChatCompletionOptionsServiceTier(property.Value.GetString());
+                    serviceTier = new ServiceLatencyTierChoice(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("stop"u8))

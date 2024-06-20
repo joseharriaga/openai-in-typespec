@@ -740,4 +740,43 @@ public partial class ChatClientTests : SyncAsyncTestBase
         Assert.That(greenProperty.GetString().ToLowerInvariant(), Contains.Substring("00ff00"));
         Assert.That(blueProperty.GetString().ToLowerInvariant(), Contains.Substring("0000ff"));
     }
+
+    public enum ServiceTierTestKind
+    {
+        None,
+        Auto,
+        Default
+    }
+
+    [Test]
+    [TestCase(ServiceTierTestKind.None)]
+    // [TestCase(ServiceTierTestKind.Auto)]
+    [TestCase(ServiceTierTestKind.Default)]
+    public async Task ScaleCredits(ServiceTierTestKind testedTierKind)
+    {
+        OpenAIClientOptions clientOptions = testedTierKind switch
+        {
+            ServiceTierTestKind.None => new OpenAIClientOptions(),
+            ServiceTierTestKind.Auto => new OpenAIClientOptions()
+            {
+                LatencyTierChoice = ServiceLatencyTierChoice.ApplyScaleCredits,
+            },
+            ServiceTierTestKind.Default => new OpenAIClientOptions()
+            {
+                LatencyTierChoice = ServiceLatencyTierChoice.Default,
+            },
+            _ => throw new NotImplementedException()
+        };
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, overrideOptions: clientOptions);
+        ChatCompletion completion = IsAsync
+            ? await client.CompleteChatAsync(["Hello, assistant!"])
+            : client.CompleteChat(["Hello, assistant!"]);
+        Assert.That(completion.ServiceTier, testedTierKind switch
+        {
+            ServiceTierTestKind.None => Is.Null,
+            ServiceTierTestKind.Auto => Is.EqualTo(ServiceLatencyTierOutcome.ScaleCreditsApplied),
+            ServiceTierTestKind.Default => Is.EqualTo(ServiceLatencyTierOutcome.Default),
+            _ => throw new NotImplementedException()
+        });
+    }
 }

@@ -18,4 +18,6 @@ public partial class OpenAIClientOptions : ClientPipelineOptions
     /// An optional application ID to use as part of the request User-Agent header.
     /// </summary>
     public string ApplicationId { get; init; }
+
+    public ServiceLatencyTierChoice? LatencyTierChoice { get; init; }
 }

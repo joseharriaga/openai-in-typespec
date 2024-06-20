@@ -7,7 +7,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Models;
 
 namespace OpenAI.Chat
 {
@@ -94,7 +93,7 @@ namespace OpenAI.Chat
             IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices = default;
             DateTimeOffset created = default;
             string model = default;
-            ChatCompletionServiceTier? serviceTier = default;
+            ServiceLatencyTierOutcome? serviceTier = default;
             string systemFingerprint = default;
             InternalCreateChatCompletionResponseObject @object = default;
             ChatTokenUsage usage = default;
@@ -133,7 +132,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    serviceTier = new ChatCompletionServiceTier(property.Value.GetString());
+                    serviceTier = new ServiceLatencyTierOutcome(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("system_fingerprint"u8))

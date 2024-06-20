@@ -103,6 +103,8 @@ function Edit-GeneratedModels {
         "OpenAIErrorResponse.Serialization.cs",
         "InternalFunctionDefinition.cs",
         "InternalFunctionDefinition.Serialization.cs",
+        "ServiceLatencyTierChoice.cs",
+        "ServiceLatencyTierOutcome.cs",
 
         # OpenAI.Assistants namespace
         "Assistant.cs",

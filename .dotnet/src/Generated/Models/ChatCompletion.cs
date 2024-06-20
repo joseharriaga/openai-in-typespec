@@ -24,13 +24,13 @@ namespace OpenAI.Chat
             Model = model;
         }
 
-        internal ChatCompletion(string id, IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt, string model, ServiceLatencyTierOutcome? serviceTier, string systemFingerprint, InternalCreateChatCompletionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatCompletion(string id, IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt, string model, ServiceLatencyTierOutcome? latencyTierOutcome, string systemFingerprint, InternalCreateChatCompletionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Choices = choices;
             CreatedAt = createdAt;
             Model = model;
-            ServiceTier = serviceTier;
+            LatencyTierOutcome = latencyTierOutcome;
             SystemFingerprint = systemFingerprint;
             Object = @object;
             Usage = usage;
@@ -43,7 +43,6 @@ namespace OpenAI.Chat
 
         public string Id { get; }
         public string Model { get; }
-        public ServiceLatencyTierOutcome? ServiceTier { get; }
         public string SystemFingerprint { get; }
 
         public ChatTokenUsage Usage { get; }

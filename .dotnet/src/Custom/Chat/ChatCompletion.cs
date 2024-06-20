@@ -61,6 +61,9 @@ public partial class ChatCompletion
     // CUSTOM: Flattened choice message property.
     public ChatFunctionCall FunctionCall => Choices[0].Message.FunctionCall;
 
+    [CodeGenMember("ServiceTier")]
+    public ServiceLatencyTierOutcome? LatencyTierOutcome { get; }
+
     /// <summary>
     /// Returns text representation of the first part of the first choice.
     /// </summary>

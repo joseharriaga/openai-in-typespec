@@ -34,10 +34,10 @@ namespace OpenAI.Chat
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model);
-            if (Optional.IsDefined(ServiceTier))
+            if (Optional.IsDefined(LatencyTierOutcome))
             {
                 writer.WritePropertyName("service_tier"u8);
-                writer.WriteStringValue(ServiceTier.Value.ToString());
+                writer.WriteStringValue(LatencyTierOutcome.Value.ToString());
             }
             if (Optional.IsDefined(SystemFingerprint))
             {

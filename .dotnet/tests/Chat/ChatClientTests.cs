@@ -771,7 +771,7 @@ public partial class ChatClientTests : SyncAsyncTestBase
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(["Hello, assistant!"])
             : client.CompleteChat(["Hello, assistant!"]);
-        Assert.That(completion.ServiceTier, testedTierKind switch
+        Assert.That(completion.LatencyTierOutcome, testedTierKind switch
         {
             ServiceTierTestKind.None => Is.Null,
             ServiceTierTestKind.Auto => Is.EqualTo(ServiceLatencyTierOutcome.ScaleCreditsApplied),

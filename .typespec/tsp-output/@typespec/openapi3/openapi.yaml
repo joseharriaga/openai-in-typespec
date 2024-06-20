@@ -3189,6 +3189,19 @@ components:
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
             Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+        service_tier:
+          type: string
+          enum:
+            - auto
+            - default
+          nullable: true
+          description: |-
+            Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
+              - If set to 'auto', the system will utilize scale tier credits until they are exhausted.
+              - If set to 'default', the request will be processed in the shared cluster.
+
+              When this parameter is set, the response body will include the `service_tier` utilized.
+          default: null
         stop:
           anyOf:
             - type: string
@@ -3335,6 +3348,13 @@ components:
         model:
           type: string
           description: The model used for the chat completion.
+        service_tier:
+          type: string
+          enum:
+            - scale
+            - default
+          nullable: true
+          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
         system_fingerprint:
           type: string
           description: |-
@@ -3413,6 +3433,13 @@ components:
         model:
           type: string
           description: The model to generate the completion.
+        service_tier:
+          type: string
+          enum:
+            - scale
+            - default
+          nullable: true
+          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
         system_fingerprint:
           type: string
           description: |-

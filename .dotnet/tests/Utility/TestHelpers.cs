@@ -37,9 +37,9 @@ internal static class TestHelpers
 
     public static OpenAIClient GetTestTopLevelClient() => GetTestClient<OpenAIClient>(TestScenario.TopLevel);
 
-    public static T GetTestClient<T>(TestScenario scenario, string overrideModel = null)
+    public static T GetTestClient<T>(TestScenario scenario, string overrideModel = null, OpenAIClientOptions overrideOptions = null)
     {
-        OpenAIClientOptions options = new();
+        OpenAIClientOptions options = overrideOptions ?? new();
         options.AddPolicy(GetDumpPolicy(), PipelinePosition.PerTry);
         object clientObject = scenario switch
         {

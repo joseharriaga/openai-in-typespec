@@ -1,5 +1,22 @@
 # Release History
 
+## 2.0.0-beta.6 (2024-06-21)
+
+## Features Added
+
+- `OrganizationId` and `ProjectId` are now present on `OpenAIClientOptions`. When instantiating a client, providing an instance of `OpenAIClientOptions` with these properties set will cause the client to add the appropriate request headers for org/project, eliminating the need to manually configure the headers. ([9ee7dff](https://github.com/openai/openai-dotnet/commit/9ee7dff064a9412c069a793ff62096b8db4aa43d))
+
+## Bugs Fixed
+
+- ([#72](https://github.com/openai/openai-dotnet/issues/72)) Fixed `filename` request encoding in operations using `multipart/form-data`, including `files` and `audio` ([2ba8e69](https://github.com/openai/openai-dotnet/commit/2ba8e69512e187ea0b761edda8bce2cd5c79c58a))
+- ([#79](https://github.com/openai/openai-dotnet/issues/79)) Fixed hard-coded `user` role for caller-created Assistants API messages on threads ([d665b61](https://github.com/openai/openai-dotnet/commit/d665b61fc7ef1ada00a8ef5c00d1a47d276be032))
+- Fixed non-streaming Assistants API run step details not reporting code interpreter logs when present ([d665b61](https://github.com/openai/openai-dotnet/commit/d665b61fc7ef1ada00a8ef5c00d1a47d276be032))
+
+## Breaking Changes
+
+**Assistants (beta)**:
+- `AssistantClient.CreateMessage()` and the explicit constructor for `ThreadInitializationMessage` now require a `MessageRole` parameter. This properly enables the ability to create an Assistant message representing conversation history on a new thread. ([d665b61](https://github.com/openai/openai-dotnet/commit/d665b61fc7ef1ada00a8ef5c00d1a47d276be032))
+
 ## 2.0.0-beta.5 (2024-06-14)
 
 ## Features Added
@@ -16,7 +33,7 @@
 
 ## Breaking Changes
 
-**Assistants**:
+**Assistants (beta)**:
 - `InputQuote` is removed from Assistants `TextAnnotation` and `TextAnnotationUpdate`, per [openai/openai-openapi@dd73070b](https://github.com/openai/openai-openapi/commit/dd73070b1d507645d24c249a63ebebd3ec38c0cb) ([1af6569](https://github.com/openai/openai-dotnet/commit/1af6569e2ceae9d840b8826e42d7e3b2569b43f6))
 
 ## Other Changes

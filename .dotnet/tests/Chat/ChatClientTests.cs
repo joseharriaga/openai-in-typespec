@@ -816,7 +816,7 @@ public partial class ChatClientTests : SyncAsyncTestBase
         {
             Transport = mockTransport
         };
-        ChatClient client = new("model_name_replaced", options);
+        ChatClient client = new("model_name_replaced", new ApiKeyCredential("sk-not-a-real-key"), options);
 
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(["Mock me!"])

@@ -101,7 +101,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// </remarks>
     /// <param name="options"> Additional options for the client. </param>
     public AzureOpenAIClient(string apiVersion = null, AzureOpenAIClientOptions options = null)
-        : this(CreatePipeline(GetApiKey(), options), GetEndpoint(), apiVersion, options)
+        : this(CreatePipeline(GetApiKey(), options), GetEndpoint(), apiVersion ?? GetApiVersion(), options)
     {}
 
     /// <summary>

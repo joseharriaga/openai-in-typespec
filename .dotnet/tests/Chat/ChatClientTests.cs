@@ -240,6 +240,7 @@ public partial class ChatClientTests : SyncAsyncTestBase
     }
 
     [Test]
+    [Category("smoke")]
     public void AuthFailureStreaming()
     {
         string fakeApiKey = "not-a-real-key-but-should-be-sanitized";

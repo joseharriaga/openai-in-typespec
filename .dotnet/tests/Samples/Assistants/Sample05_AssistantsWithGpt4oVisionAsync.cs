@@ -46,7 +46,7 @@ public partial class AssistantSamples
                 }
         });
 
-        AsyncCollectionResult<StreamingUpdate> streamingUpdates = assistantClient.CreateRunStreamingAsync(
+        AsyncResultCollection<StreamingUpdate> streamingUpdates = assistantClient.CreateRunStreamingAsync(
             thread,
             assistant,
             new RunCreationOptions()

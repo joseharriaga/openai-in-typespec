@@ -76,8 +76,8 @@ public partial class ChatClientTests : SyncAsyncTestBase
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        CollectionResult<StreamingChatCompletionUpdate> streamingResult = client.CompleteChatStreaming(messages);
-        Assert.That(streamingResult, Is.InstanceOf<CollectionResult<StreamingChatCompletionUpdate>>());
+        ResultCollection<StreamingChatCompletionUpdate> streamingResult = client.CompleteChatStreaming(messages);
+        Assert.That(streamingResult, Is.InstanceOf<ResultCollection<StreamingChatCompletionUpdate>>());
         int updateCount = 0;
 
         foreach (StreamingChatCompletionUpdate chatUpdate in streamingResult)
@@ -108,16 +108,19 @@ public partial class ChatClientTests : SyncAsyncTestBase
         TimeSpan? latestTokenReceiptTime = null;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        AsyncCollectionResult<StreamingChatCompletionUpdate> streamingResult = client.CompleteChatStreamingAsync(messages);
-        Assert.That(streamingResult, Is.InstanceOf<AsyncCollectionResult<StreamingChatCompletionUpdate>>());
+        AsyncResultCollection<StreamingChatCompletionUpdate> streamingResult = client.CompleteChatStreamingAsync(messages);
+        Assert.That(streamingResult, Is.InstanceOf<AsyncResultCollection<StreamingChatCompletionUpdate>>());
         int updateCount = 0;
         ChatTokenUsage usage = null;
 
-        await foreach (StreamingChatCompletionUpdate chatUpdate in streamingResult)
+        PipelineResponse response = null!;
+        await foreach (ClientResult<StreamingChatCompletionUpdate> chatUpdate in streamingResult)
         {
+            response = chatUpdate.GetRawResponse();
+
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
-            usage ??= chatUpdate.Usage;
+            usage ??= chatUpdate.Value.Usage;
             Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
             updateCount++;
         }
@@ -130,7 +133,8 @@ public partial class ChatClientTests : SyncAsyncTestBase
 
         // Validate that network stream was disposed - this will show up as the
         // the raw response holding an empty content stream.
-        PipelineResponse response = streamingResult.GetRawResponse();
+        
+        //PipelineResponse response = streamingResult.GetRawResponse();
         Assert.That(response.ContentStream.Length, Is.EqualTo(0));
     }
 
@@ -338,7 +342,7 @@ public partial class ChatClientTests : SyncAsyncTestBase
             options = new();
         }
 
-        AsyncCollectionResult<StreamingChatCompletionUpdate> chatCompletionUpdates = client.CompleteChatStreamingAsync(messages, options);
+        AsyncResultCollection<StreamingChatCompletionUpdate> chatCompletionUpdates = client.CompleteChatStreamingAsync(messages, options);
         Assert.That(chatCompletionUpdates, Is.Not.Null);
 
         await foreach (StreamingChatCompletionUpdate chatCompletionUpdate in chatCompletionUpdates)

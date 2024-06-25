@@ -25,12 +25,12 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
         _getResultAsync = getResultAsync;
     }
 
-    public override IAsyncEnumerator<StreamingChatCompletionUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+    public override IAsyncEnumerator<ClientResult<StreamingChatCompletionUpdate>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
         return new AsyncStreamingChatUpdateEnumerator(_getResultAsync, this, cancellationToken);
     }
 
-    private sealed class AsyncStreamingChatUpdateEnumerator : IAsyncEnumerator<StreamingChatCompletionUpdate>
+    private sealed class AsyncStreamingChatUpdateEnumerator : IAsyncEnumerator<ClientResult<StreamingChatCompletionUpdate>>
     {
         private const string _terminalData = "[DONE]";
 
@@ -48,7 +48,8 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
         private IAsyncEnumerator<ServerSentEvent>? _events;
         private IEnumerator<StreamingChatCompletionUpdate>? _updates;
 
-        private StreamingChatCompletionUpdate? _current;
+        private ClientResult<StreamingChatCompletionUpdate>? _current;
+        private PipelineResponse? _response;
         private bool _started;
 
         public AsyncStreamingChatUpdateEnumerator(Func<Task<ClientResult>> getResultAsync,
@@ -63,10 +64,10 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
             _cancellationToken = cancellationToken;
         }
 
-        StreamingChatCompletionUpdate IAsyncEnumerator<StreamingChatCompletionUpdate>.Current
+        ClientResult<StreamingChatCompletionUpdate> IAsyncEnumerator<ClientResult<StreamingChatCompletionUpdate>>.Current
             => _current!;
 
-        async ValueTask<bool> IAsyncEnumerator<StreamingChatCompletionUpdate>.MoveNextAsync()
+        async ValueTask<bool> IAsyncEnumerator<ClientResult<StreamingChatCompletionUpdate>>.MoveNextAsync()
         {
             if (_events is null && _started)
             {
@@ -79,7 +80,7 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
 
             if (_updates is not null && _updates.MoveNext())
             {
-                _current = _updates.Current;
+                _current = ClientResult.FromValue(_updates.Current, _response!);
                 return true;
             }
 
@@ -97,7 +98,7 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
 
                 if (_updates.MoveNext())
                 {
-                    _current = _updates.Current;
+                    _current = ClientResult.FromValue(_updates.Current, _response!);
                     return true;
                 }
             }
@@ -110,7 +111,8 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
         {
             ClientResult result = await _getResultAsync().ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
-            _enumerable.SetRawResponse(response);
+            _response = response;
+            //_enumerable.SetRawResponse(response);
 
             if (response.ContentStream is null)
             {
@@ -137,8 +139,7 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
 
                 // Dispose the response so we don't leave the unbuffered
                 // network stream open.
-                PipelineResponse response = _enumerable.GetRawResponse();
-                response.Dispose();
+                _response?.Dispose();
             }
         }
     }

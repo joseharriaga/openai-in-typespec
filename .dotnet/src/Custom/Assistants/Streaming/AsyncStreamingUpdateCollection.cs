@@ -24,12 +24,12 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
         _getResultAsync = getResultAsync;
     }
 
-    public override IAsyncEnumerator<StreamingUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+    public override IAsyncEnumerator<ClientResult<StreamingUpdate>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
         return new AsyncStreamingUpdateEnumerator(_getResultAsync, this, cancellationToken);
     }
 
-    private sealed class AsyncStreamingUpdateEnumerator : IAsyncEnumerator<StreamingUpdate>
+    private sealed class AsyncStreamingUpdateEnumerator : IAsyncEnumerator<ClientResult<StreamingUpdate>>
     {
         private const string _terminalData = "[DONE]";
 
@@ -47,7 +47,8 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
         private IAsyncEnumerator<ServerSentEvent>? _events;
         private IEnumerator<StreamingUpdate>? _updates;
 
-        private StreamingUpdate? _current;
+        private ClientResult<StreamingUpdate>? _current; 
+        private PipelineResponse? _response;
         private bool _started;
 
         public AsyncStreamingUpdateEnumerator(Func<Task<ClientResult>> getResultAsync,
@@ -62,10 +63,10 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
             _cancellationToken = cancellationToken;
         }
 
-        StreamingUpdate IAsyncEnumerator<StreamingUpdate>.Current
+        ClientResult<StreamingUpdate> IAsyncEnumerator<ClientResult<StreamingUpdate>>.Current
             => _current!;
 
-        async ValueTask<bool> IAsyncEnumerator<StreamingUpdate>.MoveNextAsync()
+        async ValueTask<bool> IAsyncEnumerator<ClientResult<StreamingUpdate>>.MoveNextAsync()
         {
             if (_events is null && _started)
             {
@@ -78,7 +79,7 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
 
             if (_updates is not null && _updates.MoveNext())
             {
-                _current = _updates.Current;
+                _current = ClientResult.FromValue(_updates.Current, _response!);
                 return true;
             }
 
@@ -95,7 +96,7 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
 
                 if (_updates.MoveNext())
                 {
-                    _current = _updates.Current;
+                    _current = ClientResult.FromValue(_updates.Current, _response!);
                     return true;
                 }
             }
@@ -108,7 +109,8 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
         {
             ClientResult result = await _getResultAsync().ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
-            _enumerable.SetRawResponse(response);
+            _response = response;
+            //_enumerable.SetRawResponse(response);
 
             if (response.ContentStream is null)
             {
@@ -135,8 +137,8 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
 
                 // Dispose the response so we don't leave the unbuffered
                 // network stream open.
-                PipelineResponse response = _enumerable.GetRawResponse();
-                response.Dispose();
+                //PipelineResponse response = _enumerable.GetRawResponse();
+                _response?.Dispose();
             }
         }
     }

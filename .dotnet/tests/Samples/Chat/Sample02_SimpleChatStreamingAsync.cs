@@ -17,7 +17,7 @@ namespace OpenAI.Samples
                 // This is the default key used and the line can be omitted
                 Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-            AsyncCollectionResult<StreamingChatCompletionUpdate> asyncChatUpdates
+            AsyncResultCollection<StreamingChatCompletionUpdate> asyncChatUpdates
                 = client.CompleteChatStreamingAsync(
                     [
                         new UserChatMessage("Say 'this is a test.'"),

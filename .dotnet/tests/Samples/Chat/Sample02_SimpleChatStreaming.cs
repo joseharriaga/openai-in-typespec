@@ -16,7 +16,7 @@ public partial class ChatSamples
             // This is the default key used and the line can be omitted
             Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-        CollectionResult<StreamingChatCompletionUpdate> chatUpdates = client.CompleteChatStreaming(
+        ResultCollection<StreamingChatCompletionUpdate> chatUpdates = client.CompleteChatStreaming(
             [
                 new UserChatMessage("Say 'this is a test.'"),
             ]);

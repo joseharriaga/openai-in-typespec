@@ -101,7 +101,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="pageOptions">Options describing the collection of assistants.</param>
     /// <returns> A collection of assistants that can be enumerated using <c>foreach</c>. </returns>
-    public virtual PageCollection<Assistant> GetAssistants(ListOrder? order, int? pageSize, string? afterId, string? beforeId)
+    public virtual PageCollection<Assistant> GetAssistants(ListOrder? order, int? pageSize, string? afterId = default, string? beforeId = default)
     {
         return new AssistantPageCollection(this, pageSize, order?.ToString(), afterId, beforeId);
     }
@@ -514,55 +514,55 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 
-    ///// <summary>
-    ///// Begins a new streaming <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
-    ///// <see cref="Assistant"/>.
-    ///// </summary>
-    ///// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
-    ///// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
-    ///// <param name="options"> Additional options for the run. </param>
-    //public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(
-    //    string threadId,
-    //    string assistantId,
-    //    RunCreationOptions options = null)
-    //{
-    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-    //    Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+    /// <summary>
+    /// Begins a new streaming <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
+    /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(
+        string threadId,
+        string assistantId,
+        RunCreationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-    //    options ??= new();
-    //    options.AssistantId = assistantId;
-    //    options.Stream = true;
+        options ??= new();
+        options.AssistantId = assistantId;
+        options.Stream = true;
 
-    //    async Task<ClientResult> getResultAsync() =>
-    //        await CreateRunAsync(threadId, options.ToBinaryContent(), StreamRequestOptions)
-    //        .ConfigureAwait(false);
+        async Task<ClientResult> getResultAsync() =>
+            await CreateRunAsync(threadId, options.ToBinaryContent(), StreamRequestOptions)
+            .ConfigureAwait(false);
 
-    //    return new AsyncStreamingUpdateCollection(getResultAsync);
-    //}
+        return new AsyncStreamingUpdateCollection(getResultAsync);
+    }
 
-    ///// <summary>
-    ///// Begins a new streaming <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
-    ///// <see cref="Assistant"/>.
-    ///// </summary>
-    ///// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
-    ///// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
-    ///// <param name="options"> Additional options for the run. </param>
-    //public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(
-    //    string threadId,
-    //    string assistantId,
-    //    RunCreationOptions options = null)
-    //{
-    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-    //    Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+    /// <summary>
+    /// Begins a new streaming <see cref="ThreadRun"/> that evaluates a <see cref="AssistantThread"/> using a specified
+    /// <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
+    /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
+    /// <param name="options"> Additional options for the run. </param>
+    public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(
+        string threadId,
+        string assistantId,
+        RunCreationOptions options = null)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-    //    options ??= new();
-    //    options.AssistantId = assistantId;
-    //    options.Stream = true;
+        options ??= new();
+        options.AssistantId = assistantId;
+        options.Stream = true;
 
-    //    ClientResult getResult() => CreateRun(threadId, options.ToBinaryContent(), StreamRequestOptions);
+        ClientResult getResult() => CreateRun(threadId, options.ToBinaryContent(), StreamRequestOptions);
 
-    //    return new StreamingUpdateCollection(getResult);
-    //}
+        return new StreamingUpdateCollection(getResult);
+    }
 
     /// <summary>
     /// Creates a new thread and immediately begins a run against it using the specified <see cref="Assistant"/>.
@@ -602,51 +602,51 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 
-    ///// <summary>
-    ///// Creates a new thread and immediately begins a streaming run against it using the specified <see cref="Assistant"/>.
-    ///// </summary>
-    ///// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
-    ///// <param name="threadOptions"> Options for the new thread that will be created. </param>
-    ///// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    //public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
-    //    string assistantId,
-    //    ThreadCreationOptions threadOptions = null,
-    //    RunCreationOptions runOptions = null)
-    //{
-    //    Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+    /// <summary>
+    /// Creates a new thread and immediately begins a streaming run against it using the specified <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
+    /// <param name="threadOptions"> Options for the new thread that will be created. </param>
+    /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
+    public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+    {
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-    //    runOptions ??= new();
-    //    runOptions.Stream = true;
-    //    BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
+        runOptions ??= new();
+        runOptions.Stream = true;
+        BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
 
-    //    async Task<ClientResult> getResultAsync() =>
-    //        await CreateThreadAndRunAsync(protocolContent, StreamRequestOptions)
-    //        .ConfigureAwait(false);
+        async Task<ClientResult> getResultAsync() =>
+            await CreateThreadAndRunAsync(protocolContent, StreamRequestOptions)
+            .ConfigureAwait(false);
 
-    //    return new AsyncStreamingUpdateCollection(getResultAsync);
-    //}
+        return new AsyncStreamingUpdateCollection(getResultAsync);
+    }
 
-    ///// <summary>
-    ///// Creates a new thread and immediately begins a streaming run against it using the specified <see cref="Assistant"/>.
-    ///// </summary>
-    ///// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
-    ///// <param name="threadOptions"> Options for the new thread that will be created. </param>
-    ///// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    //public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(
-    //    string assistantId,
-    //    ThreadCreationOptions threadOptions = null,
-    //    RunCreationOptions runOptions = null)
-    //{
-    //    Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
+    /// <summary>
+    /// Creates a new thread and immediately begins a streaming run against it using the specified <see cref="Assistant"/>.
+    /// </summary>
+    /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
+    /// <param name="threadOptions"> Options for the new thread that will be created. </param>
+    /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
+    public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(
+        string assistantId,
+        ThreadCreationOptions threadOptions = null,
+        RunCreationOptions runOptions = null)
+    {
+        Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-    //    runOptions ??= new();
-    //    runOptions.Stream = true;
-    //    BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
+        runOptions ??= new();
+        runOptions.Stream = true;
+        BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
 
-    //    ClientResult getResult() => CreateThreadAndRun(protocolContent, StreamRequestOptions);
+        ClientResult getResult() => CreateThreadAndRun(protocolContent, StreamRequestOptions);
 
-    //    return new StreamingUpdateCollection(getResult);
-    //}
+        return new StreamingUpdateCollection(getResult);
+    }
 
     ///// <summary>
     ///// Returns a collection of <see cref="ThreadRun"/> instances associated with an existing <see cref="AssistantThread"/>.
@@ -800,55 +800,55 @@ public partial class AssistantClient
         return CreateResultFromProtocol(protocolResult, ThreadRun.FromResponse);
     }
 
-    ///// <summary>
-    ///// Submits a collection of required tool call outputs to a run and resumes the run with streaming enabled.
-    ///// </summary>
-    ///// <param name="threadId"> The thread ID of the thread being run. </param>
-    ///// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
-    ///// <param name="toolOutputs">
-    ///// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
-    ///// </param>
-    //public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
-    //    string threadId,
-    //    string runId,
-    //    IEnumerable<ToolOutput> toolOutputs)
-    //{
-    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-    //    Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+    /// <summary>
+    /// Submits a collection of required tool call outputs to a run and resumes the run with streaming enabled.
+    /// </summary>
+    /// <param name="threadId"> The thread ID of the thread being run. </param>
+    /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
+    /// <param name="toolOutputs">
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
+    /// </param>
+    public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
+        string threadId,
+        string runId,
+        IEnumerable<ToolOutput> toolOutputs)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-    //    BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
-    //        .ToBinaryContent();
+        BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
+            .ToBinaryContent();
 
-    //    async Task<ClientResult> getResultAsync() =>
-    //        await SubmitToolOutputsToRunAsync(threadId, runId, content, StreamRequestOptions)
-    //        .ConfigureAwait(false);
+        async Task<ClientResult> getResultAsync() =>
+            await SubmitToolOutputsToRunAsync(threadId, runId, content, StreamRequestOptions)
+            .ConfigureAwait(false);
 
-    //    return new AsyncStreamingUpdateCollection(getResultAsync);
-    //}
+        return new AsyncStreamingUpdateCollection(getResultAsync);
+    }
 
-    ///// <summary>
-    ///// Submits a collection of required tool call outputs to a run and resumes the run with streaming enabled.
-    ///// </summary>
-    ///// <param name="threadId"> The thread ID of the thread being run. </param>
-    ///// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
-    ///// <param name="toolOutputs">
-    ///// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
-    ///// </param>
-    //public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
-    //    string threadId,
-    //    string runId,
-    //    IEnumerable<ToolOutput> toolOutputs)
-    //{
-    //    Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-    //    Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+    /// <summary>
+    /// Submits a collection of required tool call outputs to a run and resumes the run with streaming enabled.
+    /// </summary>
+    /// <param name="threadId"> The thread ID of the thread being run. </param>
+    /// <param name="runId"> The ID of the run that reached a <c>requires_action</c> status. </param>
+    /// <param name="toolOutputs">
+    /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
+    /// </param>
+    public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
+        string threadId,
+        string runId,
+        IEnumerable<ToolOutput> toolOutputs)
+    {
+        Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-    //    BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
-    //        .ToBinaryContent();
+        BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
+            .ToBinaryContent();
 
-    //    ClientResult getResult() => SubmitToolOutputsToRun(threadId, runId, content, StreamRequestOptions);
+        ClientResult getResult() => SubmitToolOutputsToRun(threadId, runId, content, StreamRequestOptions);
 
-    //    return new StreamingUpdateCollection(getResult);
-    //}
+        return new StreamingUpdateCollection(getResult);
+    }
 
     /// <summary>
     /// Cancels an in-progress <see cref="ThreadRun"/>.

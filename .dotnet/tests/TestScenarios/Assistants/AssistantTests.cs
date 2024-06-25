@@ -368,53 +368,53 @@ public partial class AssistantTests
     //    Assert.That(messages.First().Content[0].Text, Does.Contain("tacos"));
     //}
 
-    //[Test]
-    //public async Task StreamingRunWorks()
-    //{
-    //    AssistantClient client = new();
-    //    Assistant assistant = await client.CreateAssistantAsync("gpt-3.5-turbo");
-    //    Validate(assistant);
+    [Test]
+    public async Task StreamingRunWorks()
+    {
+        AssistantClient client = new();
+        Assistant assistant = await client.CreateAssistantAsync("gpt-3.5-turbo");
+        Validate(assistant);
 
-    //    AssistantThread thread = await client.CreateThreadAsync(new()
-    //    {
-    //        InitialMessages = { new(["Hello there, assistant! How are you today?"]), },
-    //    });
-    //    Validate(thread);
+        AssistantThread thread = await client.CreateThreadAsync(new()
+        {
+            InitialMessages = { new(["Hello there, assistant! How are you today?"]), },
+        });
+        Validate(thread);
 
-    //    Stopwatch stopwatch = Stopwatch.StartNew();
-    //    void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
-    //    AsyncCollectionResult<StreamingUpdate> streamingResult
-    //        = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        AsyncResultCollection<StreamingUpdate> streamingResult
+            = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
 
-    //    Print(">>> Connected <<<");
+        Print(">>> Connected <<<");
 
-    //    await foreach (StreamingUpdate update in streamingResult)
-    //    {
-    //        string message = $"{update.UpdateKind} ";
-    //        if (update is RunUpdate runUpdate)
-    //        {
-    //            message += $"at {update.UpdateKind switch
-    //            {
-    //                StreamingUpdateReason.RunCreated => runUpdate.Value.CreatedAt,
-    //                StreamingUpdateReason.RunQueued => runUpdate.Value.StartedAt,
-    //                StreamingUpdateReason.RunInProgress => runUpdate.Value.StartedAt,
-    //                StreamingUpdateReason.RunCompleted => runUpdate.Value.CompletedAt,
-    //                _ => "???",
-    //            }}";
-    //        }
-    //        if (update is MessageContentUpdate contentUpdate)
-    //        {
-    //            if (contentUpdate.Role.HasValue)
-    //            {
-    //                message += $"[{contentUpdate.Role}]";
-    //            }
-    //            message += $"[{contentUpdate.MessageIndex}] {contentUpdate.Text}";
-    //        }
-    //        Print(message);
-    //    }
-    //    Print(">>> Done <<<");
-    //}
+        await foreach (StreamingUpdate update in streamingResult)
+        {
+            string message = $"{update.UpdateKind} ";
+            if (update is RunUpdate runUpdate)
+            {
+                message += $"at {update.UpdateKind switch
+                {
+                    StreamingUpdateReason.RunCreated => runUpdate.Value.CreatedAt,
+                    StreamingUpdateReason.RunQueued => runUpdate.Value.StartedAt,
+                    StreamingUpdateReason.RunInProgress => runUpdate.Value.StartedAt,
+                    StreamingUpdateReason.RunCompleted => runUpdate.Value.CompletedAt,
+                    _ => "???",
+                }}";
+            }
+            if (update is MessageContentUpdate contentUpdate)
+            {
+                if (contentUpdate.Role.HasValue)
+                {
+                    message += $"[{contentUpdate.Role}]";
+                }
+                message += $"[{contentUpdate.MessageIndex}] {contentUpdate.Text}";
+            }
+            Print(message);
+        }
+        Print(">>> Done <<<");
+    }
 
     //[TestCase]
     //public async Task StreamingToolCall()
@@ -431,7 +431,7 @@ public partial class AssistantTests
     //    void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
     //    Print(" >>> Beginning call ... ");
-    //    AsyncCollectionResult<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
+    //    AsyncResultCollection<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
     //        assistant,
     //        new()
     //        {
@@ -604,9 +604,9 @@ public partial class AssistantTests
 
         // Page through collection
         int count = 0;
-        IEnumerable<Assistant> assistants = client.GetAssistants(ListOrder.NewestFirst, pageSize: 2);
+        PageCollection<Assistant> assistants = client.GetAssistants(order: ListOrder.NewestFirst, pageSize: 2);
 
-        foreach (Assistant assistant in assistants)
+        foreach (Assistant assistant in assistants.ToValueCollection())
         {
             count++;
         }

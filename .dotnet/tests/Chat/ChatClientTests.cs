@@ -18,6 +18,7 @@ namespace OpenAI.Tests.Chat;
 
 [TestFixture(true)]
 [TestFixture(false)]
+[Parallelizable(ParallelScope.All)]
 public partial class ChatClientTests : SyncAsyncTestBase
 {
     public ChatClientTests(bool isAsync)
@@ -810,7 +811,7 @@ public partial class ChatClientTests : SyncAsyncTestBase
                 ]
             }
             """);
-        SimpleMockPipelineTransport mockTransport = new(mockRequest, mockResponse);
+        MockPipelineTransport mockTransport = new(mockRequest, mockResponse);
 
         OpenAIClientOptions options = new()
         {

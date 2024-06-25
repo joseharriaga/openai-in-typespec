@@ -13,7 +13,7 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// Implementation of collection abstraction over streaming assistant updates.
 /// </summary>
-internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingUpdate>
+internal class AsyncStreamingUpdateCollection : AsyncResultValueCollection<StreamingUpdate>
 {
     private readonly Func<Task<ClientResult>> _getResultAsync;
 
@@ -24,12 +24,12 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
         _getResultAsync = getResultAsync;
     }
 
-    public override IAsyncEnumerator<ClientResult<StreamingUpdate>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+    public override IAsyncEnumerator<StreamingUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
         return new AsyncStreamingUpdateEnumerator(_getResultAsync, this, cancellationToken);
     }
 
-    private sealed class AsyncStreamingUpdateEnumerator : IAsyncEnumerator<ClientResult<StreamingUpdate>>
+    private sealed class AsyncStreamingUpdateEnumerator : IAsyncEnumerator<StreamingUpdate>
     {
         private const string _terminalData = "[DONE]";
 
@@ -63,10 +63,10 @@ internal class AsyncStreamingUpdateCollection : AsyncResultCollection<StreamingU
             _cancellationToken = cancellationToken;
         }
 
-        ClientResult<StreamingUpdate> IAsyncEnumerator<ClientResult<StreamingUpdate>>.Current
+        StreamingUpdate IAsyncEnumerator<StreamingUpdate>.Current
             => _current!;
 
-        async ValueTask<bool> IAsyncEnumerator<ClientResult<StreamingUpdate>>.MoveNextAsync()
+        async ValueTask<bool> IAsyncEnumerator<StreamingUpdate>.MoveNextAsync()
         {
             if (_events is null && _started)
             {

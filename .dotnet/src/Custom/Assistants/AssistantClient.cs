@@ -521,7 +521,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(
+    public virtual AsyncResultValueCollection<StreamingUpdate> CreateRunStreamingAsync(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
@@ -547,7 +547,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that the run should evaluate. </param>
     /// <param name="assistantId"> The ID of the assistant that should be used when evaluating the thread. </param>
     /// <param name="options"> Additional options for the run. </param>
-    public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(
+    public virtual ResultValueCollection<StreamingUpdate> CreateRunStreaming(
         string threadId,
         string assistantId,
         RunCreationOptions options = null)
@@ -608,7 +608,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
+    public virtual AsyncResultValueCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -632,7 +632,7 @@ public partial class AssistantClient
     /// <param name="assistantId"> The ID of the assistant that the new run should use. </param>
     /// <param name="threadOptions"> Options for the new thread that will be created. </param>
     /// <param name="runOptions"> Additional options to apply to the run that will begin. </param>
-    public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(
+    public virtual ResultValueCollection<StreamingUpdate> CreateThreadAndRunStreaming(
         string assistantId,
         ThreadCreationOptions threadOptions = null,
         RunCreationOptions runOptions = null)
@@ -808,7 +808,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
+    public virtual AsyncResultValueCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(
         string threadId,
         string runId,
         IEnumerable<ToolOutput> toolOutputs)
@@ -834,7 +834,7 @@ public partial class AssistantClient
     /// <param name="toolOutputs">
     /// The tool outputs, corresponding to <see cref="InternalRequiredToolCall"/> instances from the run.
     /// </param>
-    public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
+    public virtual ResultValueCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(
         string threadId,
         string runId,
         IEnumerable<ToolOutput> toolOutputs)

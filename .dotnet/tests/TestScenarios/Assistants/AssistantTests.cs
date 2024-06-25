@@ -384,7 +384,7 @@ public partial class AssistantTests
         Stopwatch stopwatch = Stopwatch.StartNew();
         void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
-        AsyncResultCollection<StreamingUpdate> streamingResult
+        AsyncResultValueCollection<StreamingUpdate> streamingResult
             = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
 
         Print(">>> Connected <<<");
@@ -431,7 +431,7 @@ public partial class AssistantTests
     //    void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
 
     //    Print(" >>> Beginning call ... ");
-    //    AsyncResultCollection<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
+    //    AsyncResultValueCollection<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(
     //        assistant,
     //        new()
     //        {

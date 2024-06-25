@@ -14,7 +14,7 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Implementation of collection abstraction over streaming chat updates.
 /// </summary>
-internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollection<StreamingChatCompletionUpdate>
+internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultValueCollection<StreamingChatCompletionUpdate>
 {
     private readonly Func<Task<ClientResult>> _getResultAsync;
 
@@ -25,12 +25,12 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
         _getResultAsync = getResultAsync;
     }
 
-    public override IAsyncEnumerator<ClientResult<StreamingChatCompletionUpdate>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+    public override IAsyncEnumerator<StreamingChatCompletionUpdate> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
         return new AsyncStreamingChatUpdateEnumerator(_getResultAsync, this, cancellationToken);
     }
 
-    private sealed class AsyncStreamingChatUpdateEnumerator : IAsyncEnumerator<ClientResult<StreamingChatCompletionUpdate>>
+    private sealed class AsyncStreamingChatUpdateEnumerator : IAsyncEnumerator<StreamingChatCompletionUpdate>
     {
         private const string _terminalData = "[DONE]";
 
@@ -64,10 +64,10 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncResultCollect
             _cancellationToken = cancellationToken;
         }
 
-        ClientResult<StreamingChatCompletionUpdate> IAsyncEnumerator<ClientResult<StreamingChatCompletionUpdate>>.Current
+        StreamingChatCompletionUpdate IAsyncEnumerator<StreamingChatCompletionUpdate>.Current
             => _current!;
 
-        async ValueTask<bool> IAsyncEnumerator<ClientResult<StreamingChatCompletionUpdate>>.MoveNextAsync()
+        async ValueTask<bool> IAsyncEnumerator<StreamingChatCompletionUpdate>.MoveNextAsync()
         {
             if (_events is null && _started)
             {

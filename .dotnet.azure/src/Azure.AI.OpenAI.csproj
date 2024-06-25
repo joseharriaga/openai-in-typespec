@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   NOTE: This is a staging version of the file. Changes should not be made here except for reflections and replacements from azure-sdk-for-net.
         This project will be removed once direct codegen support is functional.
 
@@ -23,6 +23,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>
     <Nullable>disable</Nullable>
+    <Configurations>Unsigned</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

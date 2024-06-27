@@ -5,7 +5,7 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// Represents additional options available when modifying an existing <see cref="Assistant"/>.
 /// </summary>
-[CodeGenModel("ModifyAssistantRequest")]
+[CodeGenModel("AssistantModificationOptions")]
 public partial class AssistantModificationOptions
 {
     /// <summary>
@@ -19,18 +19,15 @@ public partial class AssistantModificationOptions
     /// </para>
     /// There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
     /// </summary>
-    [CodeGenMember("Tools")]
     public IList<ToolDefinition> DefaultTools { get; init; } = new ChangeTrackingList<ToolDefinition>();
 
     // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
     //          response models (which do not contain resource initialization helpers).
 
     /// <inheritdoc cref="ToolResources"/>
-    [CodeGenMember("ToolResources")]
     public ToolResources ToolResources { get; init; }
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
-    [CodeGenMember("ResponseFormat")]
     public AssistantResponseFormat ResponseFormat { get; init; }
 
     /// <summary>
@@ -38,6 +35,5 @@ public partial class AssistantModificationOptions
     ///
     /// We generally recommend altering this or temperature but not both.
     /// </summary>
-    [CodeGenMember("TopP")]
     public float? NucleusSamplingFactor { get; init; }
 }

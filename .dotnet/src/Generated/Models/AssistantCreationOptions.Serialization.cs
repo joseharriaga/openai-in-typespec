@@ -125,15 +125,8 @@ namespace OpenAI.Assistants
             }
             if (Optional.IsDefined(ResponseFormat))
             {
-                if (ResponseFormat != null)
-                {
-                    writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
-                }
-                else
-                {
-                    writer.WriteNull("response_format");
-                }
+                writer.WritePropertyName("response_format"u8);
+                writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
             }
             if (true && _serializedAdditionalRawData != null)
             {
@@ -284,7 +277,6 @@ namespace OpenAI.Assistants
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        responseFormat = null;
                         continue;
                     }
                     responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);

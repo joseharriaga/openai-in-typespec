@@ -2,8 +2,8 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-model ChatMessageContentPart {}
+model ChatCompletionFunctionChoice {}
 
 model ChatCompletionToolChoice {}
 
-model ChatCompletionFunctionChoice {}
+model ChatMessageContentPart {}

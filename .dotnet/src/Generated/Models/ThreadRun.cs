@@ -20,6 +20,8 @@ namespace OpenAI.Assistants
             Argument.AssertNotNull(model, nameof(model));
             Argument.AssertNotNull(instructions, nameof(instructions));
             Argument.AssertNotNull(tools, nameof(tools));
+            Argument.AssertNotNull(toolConstraint, nameof(toolConstraint));
+            Argument.AssertNotNull(responseFormat, nameof(responseFormat));
 
             Id = id;
             CreatedAt = createdAt;

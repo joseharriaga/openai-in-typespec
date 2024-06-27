@@ -185,15 +185,8 @@ namespace OpenAI.Assistants
             }
             if (Optional.IsDefined(ToolConstraint))
             {
-                if (ToolConstraint != null)
-                {
-                    writer.WritePropertyName("tool_choice"u8);
-                    SerializeToolConstraint(writer);
-                }
-                else
-                {
-                    writer.WriteNull("tool_choice");
-                }
+                writer.WritePropertyName("tool_choice"u8);
+                SerializeToolConstraint(writer, options);
             }
             if (Optional.IsDefined(ParallelToolCallsEnabled))
             {
@@ -202,15 +195,8 @@ namespace OpenAI.Assistants
             }
             if (Optional.IsDefined(ResponseFormat))
             {
-                if (ResponseFormat != null)
-                {
-                    writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
-                }
-                else
-                {
-                    writer.WriteNull("response_format");
-                }
+                writer.WritePropertyName("response_format"u8);
+                writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
             }
             if (true && _serializedAdditionalRawData != null)
             {
@@ -411,7 +397,6 @@ namespace OpenAI.Assistants
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        toolChoice = null;
                         continue;
                     }
                     toolChoice = Assistants.ToolConstraint.DeserializeToolConstraint(property.Value, options);
@@ -430,7 +415,6 @@ namespace OpenAI.Assistants
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        responseFormat = null;
                         continue;
                     }
                     responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);

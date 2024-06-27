@@ -54,7 +54,7 @@ namespace OpenAI.Assistants
             if (ExpiresAt != null)
             {
                 writer.WritePropertyName("expires_at"u8);
-                writer.WriteStringValue(ExpiresAt.Value, "O");
+                writer.WriteNumberValue(ExpiresAt.Value, "U");
             }
             else
             {
@@ -63,7 +63,7 @@ namespace OpenAI.Assistants
             if (StartedAt != null)
             {
                 writer.WritePropertyName("started_at"u8);
-                writer.WriteStringValue(StartedAt.Value, "O");
+                writer.WriteNumberValue(StartedAt.Value, "U");
             }
             else
             {
@@ -72,7 +72,7 @@ namespace OpenAI.Assistants
             if (CancelledAt != null)
             {
                 writer.WritePropertyName("cancelled_at"u8);
-                writer.WriteStringValue(CancelledAt.Value, "O");
+                writer.WriteNumberValue(CancelledAt.Value, "U");
             }
             else
             {
@@ -81,7 +81,7 @@ namespace OpenAI.Assistants
             if (FailedAt != null)
             {
                 writer.WritePropertyName("failed_at"u8);
-                writer.WriteStringValue(FailedAt.Value, "O");
+                writer.WriteNumberValue(FailedAt.Value, "U");
             }
             else
             {
@@ -90,7 +90,7 @@ namespace OpenAI.Assistants
             if (CompletedAt != null)
             {
                 writer.WritePropertyName("completed_at"u8);
-                writer.WriteStringValue(CompletedAt.Value, "O");
+                writer.WriteNumberValue(CompletedAt.Value, "U");
             }
             else
             {
@@ -191,26 +191,12 @@ namespace OpenAI.Assistants
             {
                 writer.WriteNull("truncation_strategy");
             }
-            if (ToolConstraint != null)
-            {
-                writer.WritePropertyName("tool_choice"u8);
-                writer.WriteObjectValue<ToolConstraint>(ToolConstraint, options);
-            }
-            else
-            {
-                writer.WriteNull("tool_choice");
-            }
+            writer.WritePropertyName("tool_choice"u8);
+            writer.WriteObjectValue<ToolConstraint>(ToolConstraint, options);
             writer.WritePropertyName("parallel_tool_calls"u8);
             writer.WriteBooleanValue(ParallelToolCallsEnabled.Value);
-            if (ResponseFormat != null)
-            {
-                writer.WritePropertyName("response_format"u8);
-                writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
-            }
-            else
-            {
-                writer.WriteNull("response_format");
-            }
+            writer.WritePropertyName("response_format"u8);
+            writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
             if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -337,8 +323,6 @@ namespace OpenAI.Assistants
                         expiresAt = null;
                         continue;
                     }
-                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // expiresAt = property.Value.GetDateTimeOffset("O");
                     expiresAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
@@ -349,8 +333,6 @@ namespace OpenAI.Assistants
                         startedAt = null;
                         continue;
                     }
-                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // startedAt = property.Value.GetDateTimeOffset("O");
                     startedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
@@ -361,8 +343,6 @@ namespace OpenAI.Assistants
                         cancelledAt = null;
                         continue;
                     }
-                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // cancelledAt = property.Value.GetDateTimeOffset("O");
                     cancelledAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
@@ -373,8 +353,6 @@ namespace OpenAI.Assistants
                         failedAt = null;
                         continue;
                     }
-                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // failedAt = property.Value.GetDateTimeOffset("O");
                     failedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
@@ -385,8 +363,6 @@ namespace OpenAI.Assistants
                         completedAt = null;
                         continue;
                     }
-                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // completedAt = property.Value.GetDateTimeOffset("O");
                     completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
@@ -497,11 +473,6 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("tool_choice"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        toolChoice = null;
-                        continue;
-                    }
                     toolChoice = Assistants.ToolConstraint.DeserializeToolConstraint(property.Value, options);
                     continue;
                 }
@@ -512,11 +483,6 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("response_format"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        responseFormat = null;
-                        continue;
-                    }
                     responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);
                     continue;
                 }

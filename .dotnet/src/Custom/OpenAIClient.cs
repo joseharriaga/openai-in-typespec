@@ -20,7 +20,6 @@ namespace OpenAI;
 /// A top-level client factory that enables convenient creation of scenario-specific sub-clients while reusing shared
 /// configuration details like endpoint, authentication, and pipeline customization.
 /// </summary>
-[CodeGenModel("OpenAIClient")]
 [CodeGenSuppress("OpenAIClient", typeof(ApiKeyCredential))]
 [CodeGenSuppress("OpenAIClient", typeof(Uri), typeof(ApiKeyCredential), typeof(OpenAIClientOptions))]
 [CodeGenSuppress("GetAssistantClientClient")]

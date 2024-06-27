@@ -6,7 +6,6 @@ namespace OpenAI;
 /// <summary>
 /// Client-level options for the OpenAI service.
 /// </summary>
-[CodeGenModel("OpenAIClientOptions")]
 public partial class OpenAIClientOptions : ClientPipelineOptions
 {
     /// <summary>

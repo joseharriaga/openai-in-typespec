@@ -23,6 +23,6 @@ namespace OpenAI.Chat
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal string Role { get; init; }
+        internal string Role { get; set; }
     }
 }

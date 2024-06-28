@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-
-namespace OpenAI.Assistants;
+﻿namespace OpenAI.Assistants;
 
 [CodeGenModel("AssistantToolsFileSearch")]
 [CodeGenSuppress(nameof(FileSearchToolDefinition))]
@@ -11,7 +7,7 @@ public partial class FileSearchToolDefinition : ToolDefinition
     public int? MaxResults
     {
         get => _fileSearch.InternalMaxNumResults;
-        init => _fileSearch.InternalMaxNumResults = value;
+        set => _fileSearch.InternalMaxNumResults = value;
     }
 
     /// <summary>

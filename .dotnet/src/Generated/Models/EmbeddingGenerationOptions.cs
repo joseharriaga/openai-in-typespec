@@ -20,7 +20,7 @@ namespace OpenAI.Embeddings
             User = user;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-        public int? Dimensions { get; init; }
-        public string User { get; init; }
+        public int? Dimensions { get; set; }
+        public string User { get; set; }
     }
 }

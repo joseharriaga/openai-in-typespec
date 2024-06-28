@@ -11,7 +11,7 @@ public partial class AssistantModificationOptions
     /// <summary>
     /// The replacement model that the assistant should use.
     /// </summary>
-    public string Model { get; init; }
+    public string Model { get; set; }
 
     /// <summary>
     /// <para>
@@ -27,11 +27,11 @@ public partial class AssistantModificationOptions
 
     /// <inheritdoc cref="ToolResources"/>
     [CodeGenMember("ToolResources")]
-    public ToolResources ToolResources { get; init; }
+    public ToolResources ToolResources { get; set; }
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     [CodeGenMember("ResponseFormat")]
-    public AssistantResponseFormat ResponseFormat { get; init; }
+    public AssistantResponseFormat ResponseFormat { get; set; }
 
     /// <summary>
     /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
@@ -39,5 +39,5 @@ public partial class AssistantModificationOptions
     /// We generally recommend altering this or temperature but not both.
     /// </summary>
     [CodeGenMember("TopP")]
-    public float? NucleusSamplingFactor { get; init; }
+    public float? NucleusSamplingFactor { get; set; }
 }

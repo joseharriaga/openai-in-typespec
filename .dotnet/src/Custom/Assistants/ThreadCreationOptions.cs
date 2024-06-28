@@ -13,7 +13,7 @@ public partial class ThreadCreationOptions
 
     /// <inheritdoc cref="ToolResources"/>
     [CodeGenMember("ToolResources")]
-    public ToolResources ToolResources { get; init; }
+    public ToolResources ToolResources { get; set; }
 
     // CUSTOM: the wire-oriented messages type list is hidden so that we can propagate top-level required semantics
     //          of message creation into the collection.
@@ -47,5 +47,5 @@ public partial class ThreadCreationOptions
     /// }
     /// </code></para>
     /// </remarks>
-    public IList<ThreadInitializationMessage> InitialMessages { get; } = new ChangeTrackingList<ThreadInitializationMessage>();
+    public IList<ThreadInitializationMessage> InitialMessages { get; init; } = new ChangeTrackingList<ThreadInitializationMessage>();
 }

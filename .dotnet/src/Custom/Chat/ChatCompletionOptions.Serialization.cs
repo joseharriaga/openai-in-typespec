@@ -45,10 +45,10 @@ public partial class ChatCompletionOptions
 
     // CUSTOM: Added custom serialization to represent tokens as integers instead of strings.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void SerializeLogitBiasesValue(Utf8JsonWriter writer)
+    private void SerializeTokenSelectionBiasesValue(Utf8JsonWriter writer)
     {
         writer.WriteStartObject();
-        foreach (var item in LogitBiases)
+        foreach (var item in TokenSelectionBiases)
         {
             writer.WritePropertyName(item.Key.ToString(CultureInfo.InvariantCulture));
             writer.WriteNumberValue(item.Value);
@@ -58,7 +58,7 @@ public partial class ChatCompletionOptions
 
     // CUSTOM: Added custom serialization to represent tokens as integers instead of strings.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void DeserializeLogitBiasesValue(JsonProperty property, ref IDictionary<int, int> logitBias)
+    private static void DeserializeTokenSelectionBiasesValue(JsonProperty property, ref IDictionary<int, int> logitBias)
     {
         if (property.Value.ValueKind == JsonValueKind.Null)
         {

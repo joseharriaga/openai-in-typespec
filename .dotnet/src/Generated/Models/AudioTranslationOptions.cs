@@ -20,8 +20,8 @@ namespace OpenAI.Audio
             Temperature = temperature;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-        public string Prompt { get; init; }
-        public AudioTranslationFormat? ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
+        public string Prompt { get; set; }
+        public AudioTranslationFormat? ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
     }
 }

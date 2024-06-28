@@ -48,8 +48,8 @@ namespace OpenAI.Assistants
         public string AssistantId { get; }
         public ThreadCreationOptions Thread { get; set; }
         public string Instructions { get; set; }
-        public IList<ToolDefinition> Tools { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IList<ToolDefinition> Tools { get; }
+        public IDictionary<string, string> Metadata { get; }
         public float? Temperature { get; set; }
         public float? TopP { get; set; }
         public bool? Stream { get; set; }

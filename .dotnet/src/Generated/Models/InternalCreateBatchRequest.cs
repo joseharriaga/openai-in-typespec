@@ -37,6 +37,6 @@ namespace OpenAI.Batch
         public InternalBatchOperationEndpoint Endpoint { get; }
         public InternalBatchCompletionTimeframe CompletionWindow { get; } = InternalBatchCompletionTimeframe._24h;
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
     }
 }

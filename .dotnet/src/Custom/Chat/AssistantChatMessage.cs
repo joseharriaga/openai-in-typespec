@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Chat;
 
@@ -11,12 +12,6 @@ namespace OpenAI.Chat;
 [CodeGenModel("ChatCompletionRequestAssistantMessage")]
 public partial class AssistantChatMessage : ChatMessage
 {
-    // CUSTOM: Made internal.
-    /// <summary> Initializes a new instance of <see cref="AssistantChatMessage"/>. </summary>
-    internal AssistantChatMessage()
-    {
-    }
-
     // Assistant messages may present ONE OF:
     //	- Ordinary text content without tools or a function, in which case the content is required.
     //	- A list of tool calls, together with optional text content
@@ -41,15 +36,12 @@ public partial class AssistantChatMessage : ChatMessage
     /// were provided by the model.
     /// </summary>
     /// <param name="toolCalls"> The <c>tool_calls</c> made by the model. </param>
-    /// <param name="content"> Optional text content associated with the message. </param>
-    public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null)
+    public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls)
     {
         Argument.AssertNotNull(toolCalls, nameof(toolCalls));
 
         Role = "assistant";
-        Content = (content == null)
-            ? new ChangeTrackingList<ChatMessageContentPart>()
-            : [ChatMessageContentPart.CreateTextMessageContentPart(content)];
+        Content = new ChangeTrackingList<ChatMessageContentPart>();
         ToolCalls = new List<ChatToolCall>(toolCalls);
     }
 
@@ -58,15 +50,11 @@ public partial class AssistantChatMessage : ChatMessage
     /// (deprecated in favor of <c>tool_calls</c>) that was made by the model.
     /// </summary>
     /// <param name="functionCall"> The <c>function_call</c> made by the model. </param>
-    /// <param name="content"> Optional text content associated with the message. </param>
-    public AssistantChatMessage(ChatFunctionCall functionCall, string content = null)
+    public AssistantChatMessage(ChatFunctionCall functionCall)
     {
         Argument.AssertNotNull(functionCall, nameof(functionCall));
 
         Role = "assistant";
-        Content = (content == null)
-            ? new ChangeTrackingList<ChatMessageContentPart>()
-            : [ChatMessageContentPart.CreateTextMessageContentPart(content)];
         ToolCalls = new ChangeTrackingList<ChatToolCall>();
         FunctionCall = functionCall;
     }
@@ -100,11 +88,46 @@ public partial class AssistantChatMessage : ChatMessage
         FunctionCall = chatCompletion.FunctionCall;
     }
 
+    /// <summary> Initializes a new instance of <see cref="AssistantChatMessage"/>. </summary>
+    public AssistantChatMessage()
+    {
+    }
+
+    [SetsRequiredMembers]
+    internal AssistantChatMessage(string role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData, string participantName, IList<ChatToolCall> toolCalls, ChatFunctionCall functionCall) : base(role, content, serializedAdditionalRawData)
+    {
+        ParticipantName = participantName;
+        ToolCalls = toolCalls;
+        FunctionCall = functionCall;
+    }
+
+    /// <summary>
+    /// The tool calls produced by the assistant, as provided on a response's <see cref="ChatCompletion.ToolCalls"/>. 
+    /// </summary>
+    public IList<ChatToolCall> ToolCalls { get; init; }
+
+    /// <summary>
+    /// The function call produced by the assistant, as provided on a response's <see cref="ChatCompletion.FunctionCall"/>. 
+    /// </summary>
+    public ChatFunctionCall FunctionCall { get; set; }
+
+    /// <summary>
+    /// The content associated with the chat message.
+    /// </summary>
+    /// <remarks>
+    /// In <c>assistant</c> messages, content represents the model's response to a sequence of prior messages.
+    /// </remarks>
+    public override IList<ChatMessageContentPart> Content
+    {
+        get => base.Content;
+        init => base.Content = value;
+    }
+
     // CUSTOM: Renamed.
     /// <summary>
     /// An optional <c>name</c> associated with the assistant message. This is typically defined with a <c>system</c>
     /// message and is used to differentiate between multiple participants of the same role.
     /// </summary>
     [CodeGenMember("Name")]
-    public string ParticipantName { get; init; }
+    public string ParticipantName { get; set; }
 }

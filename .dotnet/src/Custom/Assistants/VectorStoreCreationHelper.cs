@@ -1,20 +1,42 @@
 using OpenAI.Files;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Assistants;
+
+[CodeGenModel("CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore")]
+public partial class VectorStoreCreationHelper
 {
-    [CodeGenModel("CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore")]
-    public partial class VectorStoreCreationHelper
-    {
-        public VectorStoreCreationHelper(IEnumerable<string> fileIds, IDictionary<string, string> metadata = null)
-        {
-            FileIds = fileIds.ToList();
-            Metadata = metadata ?? new ChangeTrackingDictionary<string, string>();
-        }
+    [CodeGenMember("FileIds")]
+    internal IList<string> _internalFileIds;
 
-        public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files, IDictionary<string, string> metadata = null)
-            : this(files?.Select(file => file.Id) ?? [], metadata)
-        {}
+    [SetsRequiredMembers]
+    public VectorStoreCreationHelper(IEnumerable<string> fileIds)
+        : this(fileIds?.ToList(), metadata: null, serializedAdditionalRawData: null)
+    {
+        Argument.AssertNotNull(fileIds, nameof(fileIds));
+    }
+
+    [SetsRequiredMembers]
+    public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files)
+        : this(files?.Select(file => file.Id)?.ToList(), metadata: null, serializedAdditionalRawData: null)
+    {
+        Argument.AssertNotNull(files, nameof(files));
+    }
+
+    [SetsRequiredMembers]
+    internal VectorStoreCreationHelper(IList<string> fileIds, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    {
+        FileIds = fileIds;
+        Metadata = metadata;
+        _serializedAdditionalRawData = serializedAdditionalRawData;
+    }
+
+    public required IList<string> FileIds
+    {
+        get => _internalFileIds;
+        init => _internalFileIds = value;
     }
 }

@@ -20,7 +20,7 @@ public partial class MessageCreationOptions
     //          method signatures.
 
     [CodeGenMember("Content")]
-    internal IList<MessageContent> Content { get; }
+    internal IList<MessageContent> Content { get; init; }
 
     /// <summary>
     /// Creates a new instance of <see cref="MessageCreationOptions"/>.

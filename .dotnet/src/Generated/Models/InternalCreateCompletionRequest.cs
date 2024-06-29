@@ -53,7 +53,7 @@ namespace OpenAI.LegacyCompletions
         public int? BestOf { get; set; }
         public bool? Echo { get; set; }
         public float? FrequencyPenalty { get; set; }
-        public IDictionary<string, int> LogitBias { get; set; }
+        public IDictionary<string, int> LogitBias { get; }
         public int? Logprobs { get; set; }
         public int? MaxTokens { get; set; }
         public int? N { get; set; }

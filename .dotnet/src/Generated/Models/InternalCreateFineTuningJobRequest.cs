@@ -41,7 +41,7 @@ namespace OpenAI.FineTuning
         public InternalCreateFineTuningJobRequestHyperparameters Hyperparameters { get; set; }
         public string Suffix { get; set; }
         public string ValidationFile { get; set; }
-        public IList<InternalCreateFineTuningJobRequestIntegration> Integrations { get; set; }
+        public IList<InternalCreateFineTuningJobRequestIntegration> Integrations { get; }
         public int? Seed { get; set; }
     }
 }

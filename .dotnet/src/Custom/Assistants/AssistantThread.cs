@@ -8,7 +8,6 @@ public partial class AssistantThread
     [CodeGenMember("Object")]
     internal InternalThreadObjectObject Object { get; } = InternalThreadObjectObject.Thread;
 
-
     /// <summary>
     /// The set of resources that are made available to the assistant's tools on this thread.
     /// The resources are specific to the type of tool.

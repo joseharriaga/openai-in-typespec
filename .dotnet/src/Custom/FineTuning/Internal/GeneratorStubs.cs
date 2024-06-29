@@ -1,4 +1,9 @@
-﻿namespace OpenAI.FineTuning;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using OpenAI.Chat;
+
+namespace OpenAI.FineTuning;
 
 // CUSTOM: Made internal.
 
@@ -87,4 +92,7 @@ internal partial class InternalFinetuneCompletionRequestInput { }
 internal partial class InternalFinetuneChatRequestInput { }
 
 [CodeGenModel("FineTuneChatCompletionRequestAssistantMessage")]
-internal partial class InternalFineTuneChatCompletionRequestAssistantMessage { }
+internal partial class InternalFineTuneChatCompletionRequestAssistantMessage
+{
+    [SetsRequiredMembers] internal InternalFineTuneChatCompletionRequestAssistantMessage(string role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData, string participantName, IList<ChatToolCall> toolCalls, ChatFunctionCall functionCall) : base(role, content, serializedAdditionalRawData, participantName, toolCalls, functionCall) {}
+}

@@ -21,6 +21,6 @@ namespace OpenAI.Images
             User = user;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-        public string User { get; init; }
+        public string User { get; set; }
     }
 }

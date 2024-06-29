@@ -23,10 +23,10 @@ namespace OpenAI.Images
             User = user;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-        public GeneratedImageQuality? Quality { get; init; }
-        public GeneratedImageFormat? ResponseFormat { get; init; }
-        public GeneratedImageSize? Size { get; init; }
-        public GeneratedImageStyle? Style { get; init; }
-        public string User { get; init; }
+        public GeneratedImageQuality? Quality { get; set; }
+        public GeneratedImageFormat? ResponseFormat { get; set; }
+        public GeneratedImageSize? Size { get; set; }
+        public GeneratedImageStyle? Style { get; set; }
+        public string User { get; set; }
     }
 }

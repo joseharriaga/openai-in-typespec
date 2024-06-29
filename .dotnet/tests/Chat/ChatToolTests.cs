@@ -65,10 +65,11 @@ public partial class ChatToolTests : SyncAsyncTestBase
     private const string GetFavoriteColorForMonthFunctionName = "get_favorite_color_for_month";
 
 #pragma warning disable CS0618
-    private static ChatFunction s_getFavoriteColorForMonthFunction = new ChatFunction(
-        GetFavoriteColorForMonthToolFunctionName,
-        "gets the caller's favorite color for a given month",
-        BinaryData.FromString("""
+    private static ChatFunction s_getFavoriteColorForMonthFunction = new ChatFunction()
+    {
+        FunctionName = GetFavoriteColorForMonthFunctionName,
+        FunctionDescription = "gets the caller's favorite color for a given month",
+        FunctionParameters = BinaryData.FromString("""
             {
                 "type": "object",
                 "properties": {
@@ -80,7 +81,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
                 "required": [ "month_name" ]
             }
             """)
-    );
+    };
 #pragma warning restore CS0618
 
     private const string GetWeatherForCityToolName = "get_weather_for_city";

@@ -1,3 +1,4 @@
+
 ```csharp
 namespace OpenAI {
     public class OpenAIClient {
@@ -25,6 +26,8 @@ namespace OpenAI {
         public OpenAIClientOptions();
         public string ApplicationId { get; init; }
         public Uri Endpoint { get; init; }
+        public string OrganizationId { get; init; }
+        public string ProjectId { get; init; }
     }
     public readonly struct ListOrder : IEquatable<ListOrder> {
         public ListOrder(string value);
@@ -48,110 +51,110 @@ namespace OpenAI.Assistants {
         protected AssistantClient();
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<ThreadRun> CancelRun(ThreadRun run);
-        public virtual ClientResult<ThreadRun> CancelRun(string threadId, string runId);
+        public virtual ClientResult<ThreadRun> CancelRun(string threadId, string runId, CancellationToken cancellationToken = default);
         public virtual ClientResult CancelRun(string threadId, string runId, RequestOptions options);
         public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(ThreadRun run);
-        public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(string threadId, string runId);
+        public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CancelRunAsync(string threadId, string runId, RequestOptions options);
-        public virtual ClientResult<Assistant> CreateAssistant(string model, AssistantCreationOptions options = null);
+        public virtual ClientResult<Assistant> CreateAssistant(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateAssistant(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<Assistant>> CreateAssistantAsync(string model, AssistantCreationOptions options = null);
+        public virtual Task<ClientResult<Assistant>> CreateAssistantAsync(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateAssistantAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ThreadMessage> CreateMessage(AssistantThread thread, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
-        public virtual ClientResult<ThreadMessage> CreateMessage(string threadId, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
+        public virtual ClientResult<ThreadMessage> CreateMessage(AssistantThread thread, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
+        public virtual ClientResult<ThreadMessage> CreateMessage(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateMessage(string threadId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(AssistantThread thread, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
-        public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(string threadId, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
+        public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(AssistantThread thread, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
+        public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateMessageAsync(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateRun(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual ClientResult<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null);
+        public virtual ClientResult<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateRun(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null);
+        public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateRunAsync(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(string threadId, string assistantId, RunCreationOptions options = null);
+        public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null);
-        public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null);
+        public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateThread(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateThreadAndRun(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual ClientResult<ThreadRun> CreateThreadAndRun(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
+        public virtual ClientResult<ThreadRun> CreateThreadAndRun(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateThreadAndRun(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
+        public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateThreadAndRunAsync(BinaryContent content, RequestOptions options = null);
         public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
+        public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null);
+        public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateThreadAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<bool> DeleteAssistant(Assistant assistant);
-        public virtual ClientResult<bool> DeleteAssistant(string assistantId);
+        public virtual ClientResult<bool> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default);
         public virtual ClientResult DeleteAssistant(string assistantId, RequestOptions options);
         public virtual Task<ClientResult<bool>> DeleteAssistantAsync(Assistant assistant);
-        public virtual Task<ClientResult<bool>> DeleteAssistantAsync(string assistantId);
+        public virtual Task<ClientResult<bool>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> DeleteAssistantAsync(string assistantId, RequestOptions options);
         public virtual ClientResult<bool> DeleteMessage(ThreadMessage message);
-        public virtual ClientResult<bool> DeleteMessage(string threadId, string messageId);
+        public virtual ClientResult<bool> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual ClientResult DeleteMessage(string threadId, string messageId, RequestOptions options);
         public virtual Task<ClientResult<bool>> DeleteMessageAsync(ThreadMessage message);
-        public virtual Task<ClientResult<bool>> DeleteMessageAsync(string threadId, string messageId);
+        public virtual Task<ClientResult<bool>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> DeleteMessageAsync(string threadId, string messageId, RequestOptions options);
         public virtual ClientResult<bool> DeleteThread(AssistantThread thread);
-        public virtual ClientResult<bool> DeleteThread(string threadId);
+        public virtual ClientResult<bool> DeleteThread(string threadId, CancellationToken cancellationToken = default);
         public virtual ClientResult DeleteThread(string threadId, RequestOptions options);
         public virtual Task<ClientResult<bool>> DeleteThreadAsync(AssistantThread thread);
-        public virtual Task<ClientResult<bool>> DeleteThreadAsync(string threadId);
+        public virtual Task<ClientResult<bool>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> DeleteThreadAsync(string threadId, RequestOptions options);
         public virtual ClientResult GetAssistant(string assistantId, RequestOptions options);
         public virtual ClientResult<Assistant> GetAssistant(string assistantId);
         public virtual Task<ClientResult> GetAssistantAsync(string assistantId, RequestOptions options);
         public virtual Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId);
-        public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null);
+        public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null);
+        public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<ThreadMessage> GetMessage(ThreadMessage message);
-        public virtual ClientResult<ThreadMessage> GetMessage(string threadId, string messageId);
+        public virtual ClientResult<ThreadMessage> GetMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetMessage(string threadId, string messageId, RequestOptions options);
         public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(ThreadMessage message);
-        public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId);
+        public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetMessageAsync(string threadId, string messageId, RequestOptions options);
         public virtual PageableCollection<ThreadMessage> GetMessages(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual PageableCollection<ThreadMessage> GetMessages(string threadId, ListOrder? resultOrder = null);
+        public virtual PageableCollection<ThreadMessage> GetMessages(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(string threadId, ListOrder? resultOrder = null);
+        public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<ThreadRun> GetRun(ThreadRun run);
-        public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId);
+        public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetRun(string threadId, string runId, RequestOptions options);
         public virtual Task<ClientResult<ThreadRun>> GetRunAsync(ThreadRun run);
-        public virtual Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId);
+        public virtual Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetRunAsync(string threadId, string runId, RequestOptions options);
         public virtual PageableCollection<ThreadRun> GetRuns(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual PageableCollection<ThreadRun> GetRuns(string threadId, ListOrder? resultOrder = null);
+        public virtual PageableCollection<ThreadRun> GetRuns(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(string threadId, ListOrder? resultOrder = null);
+        public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual ClientResult<RunStep> GetRunStep(string threadId, string runId, string stepId);
+        public virtual ClientResult<RunStep> GetRunStep(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetRunStep(string threadId, string runId, string stepId, RequestOptions options);
-        public virtual Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId);
+        public virtual Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetRunStepAsync(string threadId, string runId, string stepId, RequestOptions options);
         public virtual PageableCollection<RunStep> GetRunSteps(ThreadRun run, ListOrder? resultOrder = null);
-        public virtual PageableCollection<RunStep> GetRunSteps(string threadId, string runId, ListOrder? resultOrder = null);
+        public virtual PageableCollection<RunStep> GetRunSteps(string threadId, string runId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(ThreadRun run, ListOrder? resultOrder = null);
-        public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(string threadId, string runId, ListOrder? resultOrder = null);
+        public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(string threadId, string runId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<AssistantThread> GetThread(AssistantThread thread);
-        public virtual ClientResult<AssistantThread> GetThread(string threadId);
+        public virtual ClientResult<AssistantThread> GetThread(string threadId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetThread(string threadId, RequestOptions options);
         public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(AssistantThread thread);
-        public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(string threadId);
+        public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(string threadId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetThreadAsync(string threadId, RequestOptions options);
         public virtual ClientResult<Assistant> ModifyAssistant(Assistant assistant, AssistantModificationOptions options);
         public virtual ClientResult ModifyAssistant(string assistantId, BinaryContent content, RequestOptions options = null);
@@ -160,96 +163,95 @@ namespace OpenAI.Assistants {
         public virtual Task<ClientResult> ModifyAssistantAsync(string assistantId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions assistant);
         public virtual ClientResult<ThreadMessage> ModifyMessage(ThreadMessage message, MessageModificationOptions options);
-        public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options);
+        public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
         public virtual ClientResult ModifyMessage(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(ThreadMessage message, MessageModificationOptions options);
-        public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(string threadId, string messageId, MessageModificationOptions options);
+        public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> ModifyMessageAsync(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult ModifyRun(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult> ModifyRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<AssistantThread> ModifyThread(AssistantThread thread, ThreadModificationOptions options);
-        public virtual ClientResult<AssistantThread> ModifyThread(string threadId, ThreadModificationOptions options);
+        public virtual ClientResult<AssistantThread> ModifyThread(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = default);
         public virtual ClientResult ModifyThread(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(AssistantThread thread, ThreadModificationOptions options);
-        public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(string threadId, ThreadModificationOptions options);
+        public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> ModifyThreadAsync(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs);
+        public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
         public virtual ClientResult SubmitToolOutputsToRun(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs);
+        public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> SubmitToolOutputsToRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs);
+        public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
         public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs);
+        public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
     }
     public class AssistantCreationOptions {
         public AssistantCreationOptions();
-        public string Description { get; init; }
-        public string Instructions { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Name { get; init; }
-        public float? NucleusSamplingFactor { get; init; }
-        public AssistantResponseFormat ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
-        public ToolResources ToolResources { get; init; }
-        public IList<ToolDefinition> Tools { get; }
+        public string Description { get; set; }
+        public string Instructions { get; set; }
+        public IDictionary<string, string> Metadata { get; init; }
+        public string Name { get; set; }
+        public float? NucleusSamplingFactor { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
+        public ToolResources ToolResources { get; set; }
+        public IList<ToolDefinition> Tools { get; init; }
     }
     public class AssistantModificationOptions {
         public AssistantModificationOptions();
         public IList<ToolDefinition> DefaultTools { get; init; }
-        public string Description { get; init; }
-        public string Instructions { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Model { get; init; }
-        public string Name { get; init; }
-        public float? NucleusSamplingFactor { get; init; }
-        public AssistantResponseFormat ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
-        public ToolResources ToolResources { get; init; }
+        public string Description { get; set; }
+        public string Instructions { get; set; }
+        public IDictionary<string, string> Metadata { get; init; }
+        public string Model { get; set; }
+        public string Name { get; set; }
+        public float? NucleusSamplingFactor { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
+        public ToolResources ToolResources { get; set; }
     }
     public class MessageCreationOptions {
         public MessageCreationOptions();
-        public IList<MessageCreationAttachment> Attachments { get; }
-        public IDictionary<string, string> Metadata { get; }
-        public MessageRole Role { get; }
+        public IList<MessageCreationAttachment> Attachments { get; init; }
+        public IDictionary<string, string> Metadata { get; init; }
     }
     public class MessageModificationOptions {
         public MessageModificationOptions();
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; init; }
     }
     public class RunCreationOptions {
         public RunCreationOptions();
-        public string AdditionalInstructions { get; init; }
-        public IList<ThreadInitializationMessage> AdditionalMessages { get; }
-        public string InstructionsOverride { get; init; }
-        public int? MaxCompletionTokens { get; init; }
-        public int? MaxPromptTokens { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string ModelOverride { get; init; }
-        public float? NucleusSamplingFactor { get; init; }
-        public bool? ParallelToolCallsEnabled { get; init; }
-        public AssistantResponseFormat ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
-        public ToolConstraint ToolConstraint { get; init; }
-        public IList<ToolDefinition> ToolsOverride { get; }
-        public RunTruncationStrategy TruncationStrategy { get; init; }
+        public string AdditionalInstructions { get; set; }
+        public IList<ThreadInitializationMessage> AdditionalMessages { get; init; }
+        public string InstructionsOverride { get; set; }
+        public int? MaxCompletionTokens { get; set; }
+        public int? MaxPromptTokens { get; set; }
+        public IDictionary<string, string> Metadata { get; init; }
+        public string ModelOverride { get; set; }
+        public float? NucleusSamplingFactor { get; set; }
+        public bool? ParallelToolCallsEnabled { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
+        public ToolConstraint ToolConstraint { get; set; }
+        public IList<ToolDefinition> ToolsOverride { get; init; }
+        public RunTruncationStrategy TruncationStrategy { get; set; }
     }
     public class RunModificationOptions {
         public RunModificationOptions();
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; init; }
     }
     public class ThreadCreationOptions {
         public ThreadCreationOptions();
-        public IList<ThreadInitializationMessage> InitialMessages { get; }
-        public IDictionary<string, string> Metadata { get; }
-        public ToolResources ToolResources { get; init; }
+        public IList<ThreadInitializationMessage> InitialMessages { get; init; }
+        public IDictionary<string, string> Metadata { get; init; }
+        public ToolResources ToolResources { get; set; }
     }
     public class ThreadModificationOptions {
         public ThreadModificationOptions();
-        public IDictionary<string, string> Metadata { get; }
-        public ToolResources ToolResources { get; init; }
+        public IDictionary<string, string> Metadata { get; init; }
+        public ToolResources ToolResources { get; set; }
     }
     public class Assistant {
         public DateTimeOffset CreatedAt { get; }
@@ -286,6 +288,7 @@ namespace OpenAI.Assistants {
     }
     public class CodeInterpreterToolDefinition : ToolDefinition {
         public CodeInterpreterToolDefinition();
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class CodeInterpreterToolResources {
         public CodeInterpreterToolResources();
@@ -293,11 +296,12 @@ namespace OpenAI.Assistants {
     }
     public class FileSearchToolDefinition : ToolDefinition {
         public FileSearchToolDefinition();
-        public int? MaxResults { get; init; }
+        public int? MaxResults { get; set; }
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class FileSearchToolResources {
         public FileSearchToolResources();
-        public IList<VectorStoreCreationHelper> NewVectorStores { get; }
+        public IList<VectorStoreCreationHelper> NewVectorStores { get; init; }
         public IList<string> VectorStoreIds { get; init; }
     }
     public class FunctionToolDefinition : ToolDefinition {
@@ -307,6 +311,7 @@ namespace OpenAI.Assistants {
         public string Description { get; init; }
         public required string FunctionName { get; init; }
         public BinaryData Parameters { get; init; }
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public abstract class MessageContent {
         protected MessageContent();
@@ -319,6 +324,7 @@ namespace OpenAI.Assistants {
         public static MessageContent FromImageUrl(Uri imageUri, MessageImageDetail? detail = null);
         public static MessageContent FromText(string text);
         public static implicit operator MessageContent(string value);
+        protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class MessageContentUpdate : StreamingUpdate {
         public MessageImageDetail? ImageDetail { get; }
@@ -577,7 +583,7 @@ namespace OpenAI.Assistants {
         public string TextToReplace { get; }
     }
     public class ThreadInitializationMessage : MessageCreationOptions {
-        public ThreadInitializationMessage(IEnumerable<MessageContent> content);
+        public ThreadInitializationMessage(MessageRole role, IEnumerable<MessageContent> content);
         public static implicit operator ThreadInitializationMessage(string initializationMessage);
     }
     public class ThreadMessage {
@@ -641,17 +647,18 @@ namespace OpenAI.Assistants {
         public static CodeInterpreterToolDefinition CreateCodeInterpreter();
         public static FileSearchToolDefinition CreateFileSearch(int? maxResults = null);
         public static FunctionToolDefinition CreateFunction(string name, string description = null, BinaryData parameters = null);
+        protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ToolOutput {
         public ToolOutput(string toolCallId, string output);
         public ToolOutput();
-        public string Output { get; init; }
-        public string ToolCallId { get; init; }
+        public string Output { get; set; }
+        public string ToolCallId { get; set; }
     }
     public class ToolResources {
         public ToolResources();
-        public CodeInterpreterToolResources CodeInterpreter { get; init; }
-        public FileSearchToolResources FileSearch { get; init; }
+        public CodeInterpreterToolResources CodeInterpreter { get; set; }
+        public FileSearchToolResources FileSearch { get; set; }
     }
     public class VectorStoreCreationHelper {
         public VectorStoreCreationHelper(IEnumerable<string> fileIds, IDictionary<string, string> metadata = null);
@@ -711,41 +718,41 @@ namespace OpenAI.Audio {
         protected AudioClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected AudioClient();
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<BinaryData> GenerateSpeechFromText(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null);
+        public virtual ClientResult<BinaryData> GenerateSpeechFromText(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GenerateSpeechFromText(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<BinaryData>> GenerateSpeechFromTextAsync(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null);
+        public virtual Task<ClientResult<BinaryData>> GenerateSpeechFromTextAsync(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GenerateSpeechFromTextAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string audioFilename, AudioTranscriptionOptions options = null);
+        public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string audioFilename, AudioTranscriptionOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null);
         public virtual ClientResult TranscribeAudio(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string audioFilename, AudioTranscriptionOptions options = null);
+        public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string audioFilename, AudioTranscriptionOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null);
         public virtual Task<ClientResult> TranscribeAudioAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string audioFilename, AudioTranslationOptions options = null);
+        public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string audioFilename, AudioTranslationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null);
         public virtual ClientResult TranslateAudio(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string audioFilename, AudioTranslationOptions options = null);
+        public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string audioFilename, AudioTranslationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null);
         public virtual Task<ClientResult> TranslateAudioAsync(BinaryContent content, string contentType, RequestOptions options = null);
     }
     public class AudioTranscriptionOptions {
         public AudioTranscriptionOptions();
-        public AudioTimestampGranularities Granularities { get; init; }
-        public string Language { get; init; }
-        public string Prompt { get; init; }
-        public AudioTranscriptionFormat? ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
+        public AudioTimestampGranularities Granularities { get; set; }
+        public string Language { get; set; }
+        public string Prompt { get; set; }
+        public AudioTranscriptionFormat? ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
     }
     public class AudioTranslationOptions {
         public AudioTranslationOptions();
-        public string Prompt { get; init; }
-        public AudioTranslationFormat? ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
+        public string Prompt { get; set; }
+        public AudioTranslationFormat? ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
     }
     public class SpeechGenerationOptions {
         public SpeechGenerationOptions();
-        public GeneratedSpeechFormat? ResponseFormat { get; init; }
-        public float? Speed { get; init; }
+        public GeneratedSpeechFormat? ResponseFormat { get; set; }
+        public float? Speed { get; set; }
     }
     public class AudioTranscription {
         public TimeSpan? Duration { get; }
@@ -840,45 +847,46 @@ namespace OpenAI.Chat {
         protected ChatClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected ChatClient();
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<ChatCompletion> CompleteChat(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null);
+        public virtual ClientResult<ChatCompletion> CompleteChat(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<ChatCompletion> CompleteChat(params ChatMessage[] messages);
         public virtual ClientResult CompleteChat(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null);
+        public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(params ChatMessage[] messages);
         public virtual Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null);
+        public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
         public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages);
-        public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null);
+        public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
         public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(params ChatMessage[] messages);
     }
     public class ChatCompletionOptions {
         public ChatCompletionOptions();
-        public float? FrequencyPenalty { get; init; }
-        public ChatFunctionChoice FunctionChoice { get; init; }
-        public IList<ChatFunction> Functions { get; }
-        public bool? IncludeLogProbabilities { get; init; }
-        public IDictionary<int, int> LogitBiases { get; }
-        public int? MaxTokens { get; init; }
-        public bool? ParallelToolCallsEnabled { get; init; }
-        public float? PresencePenalty { get; init; }
-        public ChatResponseFormat ResponseFormat { get; init; }
-        public long? Seed { get; init; }
-        public IList<string> StopSequences { get; }
-        public float? Temperature { get; init; }
-        public ChatToolChoice ToolChoice { get; init; }
+        public float? FrequencyPenalty { get; set; }
+        public ChatFunctionChoice FunctionChoice { get; set; }
+        public IList<ChatFunction> Functions { get; init; }
+        public bool? IncludeLogProbabilities { get; set; }
+        public int? MaxTokens { get; set; }
+        public bool? ParallelToolCallsEnabled { get; set; }
+        public float? PresencePenalty { get; set; }
+        public ChatResponseFormat ResponseFormat { get; set; }
+        public long? Seed { get; set; }
+        public IList<string> StopSequences { get; init; }
+        public float? Temperature { get; set; }
+        public IDictionary<int, int> TokenSelectionBiases { get; init; }
+        public ChatToolChoice ToolChoice { get; set; }
         public IList<ChatTool> Tools { get; }
-        public int? TopLogProbabilityCount { get; init; }
-        public float? TopP { get; init; }
-        public string User { get; init; }
+        public int? TopLogProbabilityCount { get; set; }
+        public float? TopP { get; set; }
+        public string User { get; set; }
     }
     public class AssistantChatMessage : ChatMessage {
         public AssistantChatMessage(string content);
         public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public AssistantChatMessage(ChatFunctionCall functionCall, string content = null);
         public AssistantChatMessage(ChatCompletion chatCompletion);
-        public ChatFunctionCall FunctionCall { get; init; }
+        public ChatFunctionCall FunctionCall { get; set; }
         public string ParticipantName { get; init; }
         public IList<ChatToolCall> ToolCalls { get; }
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ChatCompletion {
         public IReadOnlyList<ChatMessageContentPart> Content { get; }
@@ -925,6 +933,7 @@ namespace OpenAI.Chat {
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
         public static implicit operator ChatMessage(string userMessage);
+        protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ChatMessageContentPart {
         public BinaryData ImageBytes { get; }
@@ -981,7 +990,7 @@ namespace OpenAI.Chat {
     public class ChatToolCall {
         public string FunctionArguments { get; }
         public string FunctionName { get; }
-        public string Id { get; init; }
+        public string Id { get; set; }
         public ChatToolCallKind Kind { get; }
         public static ChatToolCall CreateFunctionToolCall(string toolCallId, string functionName, string functionArguments);
     }
@@ -1017,6 +1026,7 @@ namespace OpenAI.Chat {
     public class FunctionChatMessage : ChatMessage {
         public FunctionChatMessage(string functionName, string content = null);
         public string FunctionName { get; }
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public readonly struct ImageChatMessageContentPartDetail : IEquatable<ImageChatMessageContentPartDetail> {
         public ImageChatMessageContentPartDetail(string value);
@@ -1058,16 +1068,19 @@ namespace OpenAI.Chat {
     public class SystemChatMessage : ChatMessage {
         public SystemChatMessage(string content);
         public string ParticipantName { get; init; }
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ToolChatMessage : ChatMessage {
         public ToolChatMessage(string toolCallId, string content);
         public string ToolCallId { get; }
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class UserChatMessage : ChatMessage {
         public UserChatMessage(string content);
         public UserChatMessage(IEnumerable<ChatMessageContentPart> content);
         public UserChatMessage(params ChatMessageContentPart[] content);
         public string ParticipantName { get; init; }
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public enum ChatFinishReason {
         Stop = 0,
@@ -1091,19 +1104,19 @@ namespace OpenAI.Embeddings {
         protected EmbeddingClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected EmbeddingClient();
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null);
-        public virtual Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null);
-        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null);
-        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null);
+        public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GenerateEmbeddings(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null);
-        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null);
+        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GenerateEmbeddingsAsync(BinaryContent content, RequestOptions options = null);
     }
     public class EmbeddingGenerationOptions {
         public EmbeddingGenerationOptions();
-        public int? Dimensions { get; init; }
-        public string User { get; init; }
+        public int? Dimensions { get; set; }
+        public string User { get; set; }
     }
     public class Embedding {
         public int Index { get; }
@@ -1125,31 +1138,31 @@ namespace OpenAI.Files {
         protected FileClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         protected FileClient();
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<bool> DeleteFile(string fileId);
+        public virtual ClientResult<bool> DeleteFile(string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult<bool> DeleteFile(OpenAIFileInfo file);
         public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteFileAsync(string fileId);
+        public virtual Task<ClientResult<bool>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<bool>> DeleteFileAsync(OpenAIFileInfo file);
         public virtual Task<ClientResult> DeleteFileAsync(string fileId, RequestOptions options);
-        public virtual ClientResult<BinaryData> DownloadFile(string fileId);
+        public virtual ClientResult<BinaryData> DownloadFile(string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult<BinaryData> DownloadFile(OpenAIFileInfo file);
         public virtual ClientResult DownloadFile(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId);
+        public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(OpenAIFileInfo file);
         public virtual Task<ClientResult> DownloadFileAsync(string fileId, RequestOptions options);
-        public virtual ClientResult<OpenAIFileInfo> GetFile(string fileId);
+        public virtual ClientResult<OpenAIFileInfo> GetFile(string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetFile(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId);
+        public virtual Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetFileAsync(string fileId, RequestOptions options);
-        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose? purpose = null);
+        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetFiles(string purpose, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose? purpose = null);
+        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options);
-        public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose);
+        public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
         public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose);
         public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, FileUploadPurpose purpose);
         public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose);
+        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose);
         public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
         public virtual Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null);
@@ -1238,60 +1251,60 @@ namespace OpenAI.Images {
         protected ImageClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected ImageClient();
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<GeneratedImage> GenerateImage(string prompt, ImageGenerationOptions options = null);
-        public virtual Task<ClientResult<GeneratedImage>> GenerateImageAsync(string prompt, ImageGenerationOptions options = null);
-        public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null);
+        public virtual ClientResult<GeneratedImage> GenerateImage(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<GeneratedImage>> GenerateImageAsync(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(string imageFilePath, string prompt, ImageEditOptions options = null);
-        public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null);
+        public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(string imageFilePath, string prompt, string maskFilePath, ImageEditOptions options = null);
-        public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, ImageEditOptions options = null);
+        public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(string imageFilePath, string prompt, ImageEditOptions options = null);
-        public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null);
+        public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(string imageFilePath, string prompt, string maskFilePath, ImageEditOptions options = null);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null);
         public virtual ClientResult GenerateImageEdits(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null);
         public virtual Task<ClientResult> GenerateImageEditsAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImages(string prompt, int imageCount, ImageGenerationOptions options = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImages(string prompt, int imageCount, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GenerateImages(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(string prompt, int imageCount, ImageGenerationOptions options = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(string prompt, int imageCount, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GenerateImagesAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<GeneratedImage> GenerateImageVariation(Stream image, string imageFilename, ImageVariationOptions options = null);
+        public virtual ClientResult<GeneratedImage> GenerateImageVariation(Stream image, string imageFilename, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageVariation(string imageFilePath, ImageVariationOptions options = null);
-        public virtual Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(Stream image, string imageFilename, ImageVariationOptions options = null);
+        public virtual Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(Stream image, string imageFilename, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(string imageFilePath, ImageVariationOptions options = null);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(string imageFilePath, int imageCount, ImageVariationOptions options = null);
         public virtual ClientResult GenerateImageVariations(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(string imageFilePath, int imageCount, ImageVariationOptions options = null);
         public virtual Task<ClientResult> GenerateImageVariationsAsync(BinaryContent content, string contentType, RequestOptions options = null);
     }
     public class ImageEditOptions {
         public ImageEditOptions();
-        public GeneratedImageFormat? ResponseFormat { get; init; }
-        public GeneratedImageSize? Size { get; init; }
-        public string User { get; init; }
+        public GeneratedImageFormat? ResponseFormat { get; set; }
+        public GeneratedImageSize? Size { get; set; }
+        public string User { get; set; }
     }
     public class ImageGenerationOptions {
         public ImageGenerationOptions();
-        public GeneratedImageQuality? Quality { get; init; }
-        public GeneratedImageFormat? ResponseFormat { get; init; }
-        public GeneratedImageSize? Size { get; init; }
-        public GeneratedImageStyle? Style { get; init; }
-        public string User { get; init; }
+        public GeneratedImageQuality? Quality { get; set; }
+        public GeneratedImageFormat? ResponseFormat { get; set; }
+        public GeneratedImageSize? Size { get; set; }
+        public GeneratedImageStyle? Style { get; set; }
+        public string User { get; set; }
     }
     public class ImageVariationOptions {
         public ImageVariationOptions();
-        public GeneratedImageFormat? ResponseFormat { get; init; }
-        public GeneratedImageSize? Size { get; init; }
-        public string User { get; init; }
+        public GeneratedImageFormat? ResponseFormat { get; set; }
+        public GeneratedImageSize? Size { get; set; }
+        public string User { get; set; }
     }
     public class GeneratedImage {
         public BinaryData ImageBytes { get; }
@@ -1364,11 +1377,11 @@ namespace OpenAI.Moderations {
         protected ModerationClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected ModerationClient();
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<ModerationResult> ClassifyTextInput(string input);
-        public virtual Task<ClientResult<ModerationResult>> ClassifyTextInputAsync(string input);
-        public virtual ClientResult<ModerationCollection> ClassifyTextInputs(IEnumerable<string> inputs);
+        public virtual ClientResult<ModerationResult> ClassifyTextInput(string input, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ModerationResult>> ClassifyTextInputAsync(string input, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ModerationCollection> ClassifyTextInputs(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
         public virtual ClientResult ClassifyTextInputs(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ModerationCollection>> ClassifyTextInputsAsync(IEnumerable<string> inputs);
+        public virtual Task<ClientResult<ModerationCollection>> ClassifyTextInputsAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> ClassifyTextInputsAsync(BinaryContent content, RequestOptions options = null);
     }
     public class ModerationCategories {
@@ -1416,55 +1429,55 @@ namespace OpenAI.VectorStores {
         protected VectorStoreClient();
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId);
+        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(VectorStoreBatchFileJob batchJob);
-        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId);
+        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
         public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
-        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds);
+        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null);
+        public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null);
+        public virtual Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<bool> DeleteVectorStore(VectorStore vectorStore);
-        public virtual ClientResult<bool> DeleteVectorStore(string vectorStoreId);
+        public virtual ClientResult<bool> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual ClientResult DeleteVectorStore(string vectorStoreId, RequestOptions options);
         public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(VectorStore vectorStore);
-        public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(string vectorStoreId);
+        public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> DeleteVectorStoreAsync(string vectorStoreId, RequestOptions options);
         public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(VectorStoreBatchFileJob batchJob);
-        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId);
+        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
         public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(string vectorStoreId, string fileId);
+        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
         public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStore vectorStore, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
         public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStoreBatchFileJob batchJob, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
+        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
+        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual ClientResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStore vectorStore, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
         public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreBatchFileJob batchJob, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
+        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
+        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore);
@@ -1473,9 +1486,9 @@ namespace OpenAI.VectorStores {
         public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(VectorStore vectorStore);
         public virtual Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options);
         public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId);
-        public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null);
+        public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GetVectorStores(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null);
+        public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<VectorStore> ModifyVectorStore(VectorStore vectorStore, VectorStoreModificationOptions options);
         public virtual ClientResult ModifyVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
@@ -1484,25 +1497,25 @@ namespace OpenAI.VectorStores {
         public virtual Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore);
         public virtual ClientResult<bool> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId);
+        public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId);
+        public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options);
     }
     public class VectorStoreCreationOptions {
         public VectorStoreCreationOptions();
-        public FileChunkingStrategy ChunkingStrategy { get; init; }
-        public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
+        public FileChunkingStrategy ChunkingStrategy { get; set; }
+        public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
         public IList<string> FileIds { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Name { get; init; }
+        public IDictionary<string, string> Metadata { get; init; }
+        public string Name { get; set; }
     }
     public class VectorStoreModificationOptions {
         public VectorStoreModificationOptions();
-        public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Name { get; init; }
+        public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
+        public IDictionary<string, string> Metadata { get; init; }
+        public string Name { get; set; }
     }
     public abstract class FileChunkingStrategy {
         protected FileChunkingStrategy();

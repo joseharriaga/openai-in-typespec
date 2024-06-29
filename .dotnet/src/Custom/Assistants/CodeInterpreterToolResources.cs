@@ -14,11 +14,7 @@ public partial class CodeInterpreterToolResources
         get => _fileIds;
         init
         {
-            _fileIds = new ChangeTrackingList<string>();
-            foreach (string fileId in value)
-            {
-                _fileIds.Add(fileId);
-            }
+            _fileIds = [.. value];
         }
     }
 

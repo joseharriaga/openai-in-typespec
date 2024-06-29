@@ -42,12 +42,12 @@ namespace OpenAI.Chat
                     writer.WriteNull("frequency_penalty");
                 }
             }
-            if (Optional.IsCollectionDefined(LogitBiases))
+            if (Optional.IsCollectionDefined(TokenSelectionBiases))
             {
-                if (LogitBiases != null)
+                if (TokenSelectionBiases != null)
                 {
                     writer.WritePropertyName("logit_bias"u8);
-                    SerializeLogitBiasesValue(writer);
+                    SerializeTokenSelectionBiasesValue(writer);
                 }
                 else
                 {
@@ -315,7 +315,7 @@ namespace OpenAI.Chat
                 }
                 if (property.NameEquals("logit_bias"u8))
                 {
-                    DeserializeLogitBiasesValue(property, ref logitBias);
+                    DeserializeTokenSelectionBiasesValue(property, ref logitBias);
                     continue;
                 }
                 if (property.NameEquals("logprobs"u8))

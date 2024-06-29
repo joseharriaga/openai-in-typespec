@@ -22,7 +22,7 @@ namespace OpenAI.Assistants
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public string ToolCallId { get; init; }
-        public string Output { get; init; }
+        public string ToolCallId { get; set; }
+        public string Output { get; set; }
     }
 }

@@ -228,7 +228,9 @@ namespace OpenAI.Assistants
                         expiredAt = null;
                         continue;
                     }
-                    expiredAt = property.Value.GetDateTimeOffset("O");
+                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
+                    // expiredAt = property.Value.GetDateTimeOffset("O");
+                    expiredAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
                 if (property.NameEquals("cancelled_at"u8))

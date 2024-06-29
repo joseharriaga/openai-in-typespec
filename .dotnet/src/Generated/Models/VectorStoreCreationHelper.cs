@@ -13,18 +13,9 @@ namespace OpenAI.Assistants
 
         public VectorStoreCreationHelper()
         {
-            FileIds = new ChangeTrackingList<string>();
+            _internalFileIds = new ChangeTrackingList<string>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
-
-        internal VectorStoreCreationHelper(IList<string> fileIds, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
-        {
-            FileIds = fileIds;
-            Metadata = metadata;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        public IList<string> FileIds { get; }
         public IDictionary<string, string> Metadata { get; }
     }
 }

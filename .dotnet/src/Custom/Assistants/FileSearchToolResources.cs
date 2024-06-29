@@ -16,16 +16,12 @@ public partial class FileSearchToolResources
         get => _vectorStoreIds;
         init
         {
-            _vectorStoreIds = new ChangeTrackingList<string>();
-            foreach (string item in value)
-            {
-                _vectorStoreIds.Add(item);
-            }
+            _vectorStoreIds = [.. value];
         }
     }
 
     [CodeGenMember("vector_stores")]
-    public IList<VectorStoreCreationHelper> NewVectorStores { get; } = new ChangeTrackingList<VectorStoreCreationHelper>();
+    public IList<VectorStoreCreationHelper> NewVectorStores { get; init; } = new ChangeTrackingList<VectorStoreCreationHelper>();
 
     public FileSearchToolResources()
     { }

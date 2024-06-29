@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Chat;
 
@@ -32,6 +34,7 @@ public partial class ToolChatMessage : ChatMessage
     ///     that resolves the tool call and allows the logical conversation to continue. No format restrictions (e.g.
     ///     JSON) are imposed on the content emitted by tools.
     /// </param>
+    [SetsRequiredMembers]
     public ToolChatMessage(string toolCallId, string content)
     {
         Argument.AssertNotNull(toolCallId, nameof(toolCallId));
@@ -40,5 +43,37 @@ public partial class ToolChatMessage : ChatMessage
         Role = "tool";
         ToolCallId = toolCallId;
         Content = [ChatMessageContentPart.CreateTextMessageContentPart(content)];
+    }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="ToolChatMessage"/>.
+    /// </summary>
+    public ToolChatMessage()
+    {
+    }
+
+    [SetsRequiredMembers]
+    internal ToolChatMessage(string role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData, string toolCallId) : base(role, content, serializedAdditionalRawData)
+    {
+        ToolCallId = toolCallId;
+    }
+
+    /// <summary>
+    /// The ID of a tool call, as received on a <see cref="ChatToolCall"/> in an assistant response's
+    /// <see cref="ChatCompletion.ToolCalls"/> property.
+    /// </summary>
+    public required string ToolCallId { get; set; }
+
+    /// <summary>
+    /// The content associated with the chat message.
+    /// </summary>
+    /// <remarks>
+    /// In <c>tool</c> messages, content represents the output from a tool that should be used to resolve the tool
+    /// call matching the provided <see cref="ToolCallId"/>. 
+    /// </remarks>
+    public override required IList<ChatMessageContentPart> Content
+    {
+        get => base.Content;
+        init => base.Content = value;
     }
 }

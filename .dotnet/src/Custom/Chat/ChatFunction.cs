@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Chat;
 
@@ -14,21 +16,33 @@ public partial class ChatFunction
     /// Creates a new instance of <see cref="ChatFunction"/>.
     /// </summary>
     /// <param name="functionName"> The <c>name</c> of the function. </param>
-    /// <param name="functionDescription"> The <c>description</c> of the function. </param>
-    /// <param name="functionParameters"> The <c>parameters</c> into the function, in JSON Schema format. </param>
-    public ChatFunction(string functionName, string functionDescription = null, BinaryData functionParameters = null)
+    [SetsRequiredMembers]
+    public ChatFunction(string functionName)
     {
         Argument.AssertNotNull(functionName, nameof(functionName));
 
         FunctionName = functionName;
+    }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="ChatFunction"/>.
+    /// </summary>
+    public ChatFunction()
+    {}
+
+    [SetsRequiredMembers]
+    internal ChatFunction(string functionDescription, string functionName, BinaryData functionParameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    {
         FunctionDescription = functionDescription;
+        FunctionName = functionName;
         FunctionParameters = functionParameters;
+        _serializedAdditionalRawData = serializedAdditionalRawData;
     }
 
     // CUSTOM: Renamed.
     /// <summary> The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. </summary>
     [CodeGenMember("Name")]
-    public string FunctionName { get; }
+    public required string FunctionName { get; init; }
 
     // CUSTOM: Renamed
     /// <summary> A description of what the function does, used by the model to choose when and how to call the function. </summary>

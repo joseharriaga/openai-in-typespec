@@ -33,7 +33,7 @@ namespace OpenAI.FineTuning
                 writer.WriteStartArray();
                 foreach (var item in ToolCalls)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<ChatToolCall>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -42,7 +42,7 @@ namespace OpenAI.FineTuning
                 if (FunctionCall != null)
                 {
                     writer.WritePropertyName("function_call"u8);
-                    writer.WriteObjectValue(FunctionCall, options);
+                    writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
                 }
                 else
                 {

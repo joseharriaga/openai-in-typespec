@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Chat;
 
@@ -12,25 +14,41 @@ namespace OpenAI.Chat;
 [CodeGenSuppress("FunctionChatMessage", typeof(IEnumerable<ChatMessageContentPart>), typeof(string))]
 public partial class FunctionChatMessage : ChatMessage
 {
+    [CodeGenMember("Name")]
+    private string _name;
+
     /// <summary>
     /// Creates a new instance of <see cref="FunctionChatMessage"/>.
     /// </summary>
     /// <param name="functionName">
     ///     The name of the called function that this message provides information from.
     /// </param>
-    /// <param name="content">
-    ///     The textual content that represents the output or result from the called function. There is no format
-    ///     restriction (e.g. JSON) imposed on this content.
-    /// </param>
-    public FunctionChatMessage(string functionName, string content = null)
+    /// <param name=""=
+    [SetsRequiredMembers]
+    public FunctionChatMessage(string functionName, string content)
     {
         Argument.AssertNotNull(functionName, nameof(functionName));
 
         Role = "function";
         FunctionName = functionName;
-        Content = (content == null)
-            ? new ChangeTrackingList<ChatMessageContentPart>()
-            : [ChatMessageContentPart.CreateTextMessageContentPart(content)];
+        Content = new ChangeTrackingList<ChatMessageContentPart>(
+            new List<ChatMessageContentPart>()
+            {
+                ChatMessageContentPart.CreateTextMessageContentPart(content)
+            } as IList<ChatMessageContentPart>);
+    }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="FunctionChatMessage"/>.
+    /// </summary>
+    public FunctionChatMessage()
+    {}
+
+    [SetsRequiredMembers]
+    internal FunctionChatMessage(string role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData, string functionName)
+        : base(role, content, serializedAdditionalRawData)
+    {
+        FunctionName = functionName;
     }
 
     // CUSTOM: Renamed.
@@ -38,5 +56,22 @@ public partial class FunctionChatMessage : ChatMessage
     /// The <c>name</c> of the called function that this message provides information from.
     /// </summary>
     [CodeGenMember("Name")]
-    public string FunctionName { get; }
+    public required string FunctionName
+    {
+        get => _name;
+        init => _name = value;
+    }
+
+    /// <summary>
+    /// The content associated with the chat message.
+    /// </summary>
+    /// <remarks>
+    /// In <c>function</c> messages, content represents the output from a function that should be used to resolve the
+    /// function call matching the provided <see cref="FunctionName"/>.
+    /// </remarks>
+    public override required IList<ChatMessageContentPart> Content
+    {
+        get => base.Content;
+        init => base.Content = value;
+    }
 }

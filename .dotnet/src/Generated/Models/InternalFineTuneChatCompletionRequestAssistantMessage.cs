@@ -13,9 +13,5 @@ namespace OpenAI.FineTuning
         public InternalFineTuneChatCompletionRequestAssistantMessage()
         {
         }
-
-        internal InternalFineTuneChatCompletionRequestAssistantMessage(string role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData, string participantName, IList<ChatToolCall> toolCalls, ChatFunctionCall functionCall) : base(role, content, serializedAdditionalRawData, participantName, toolCalls, functionCall)
-        {
-        }
     }
 }

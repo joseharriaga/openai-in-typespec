@@ -58,7 +58,7 @@ public abstract partial class ChatMessage
     /// <summary>
     /// The content associated with the message. The interpretation of this content will vary depending on the message type.
     /// </summary>
-    public IList<ChatMessageContentPart> Content { get; protected init; }
+    public virtual IList<ChatMessageContentPart> Content { get; init; }
 
     /// <inheritdoc cref="SystemChatMessage(string)"/>
     public static SystemChatMessage CreateSystemMessage(string content) => new SystemChatMessage(content);
@@ -76,10 +76,10 @@ public abstract partial class ChatMessage
     public static AssistantChatMessage CreateAssistantMessage(string content) => new AssistantChatMessage(content);
 
     /// <inheritdoc cref="AssistantChatMessage(IEnumerable{ChatToolCall}, string)"/>
-    public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null) => new AssistantChatMessage(toolCalls, content);
+    public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls) => new AssistantChatMessage(toolCalls);
 
     /// <inheritdoc cref="AssistantChatMessage(ChatFunctionCall, string)"/>
-    public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null) => new AssistantChatMessage(functionCall, content);
+    public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall) => new AssistantChatMessage(functionCall);
 
     /// <inheritdoc cref="AssistantChatMessage(ChatCompletion)"/>
     public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion) => new AssistantChatMessage(chatCompletion);

@@ -21,11 +21,11 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (Optional.IsCollectionDefined(FileIds))
+            if (Optional.IsCollectionDefined(_internalFileIds))
             {
                 writer.WritePropertyName("file_ids"u8);
                 writer.WriteStartArray();
-                foreach (var item in FileIds)
+                foreach (var item in _internalFileIds)
                 {
                     writer.WriteStringValue(item);
                 }

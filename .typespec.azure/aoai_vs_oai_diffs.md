@@ -8,7 +8,7 @@ Listing differences in the request/response models between Azure and non-Azure
 
 ### `/completions`
 
-- [ ] `CreateCompletionRequest`
+- [x] `CreateCompletionRequest`
   - [x] Additional Azure field: `completion_config`
   - [x] non-Azure has `model`
 

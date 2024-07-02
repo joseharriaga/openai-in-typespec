@@ -1,3 +1,9 @@
 options:
   "@azure-tools/typespec-csharp":
     unreferenced-types-handling: keepAll
+
+  # currently the generated openapi3.yaml file gets generated into the emitter's default output directory
+  # which seems to be `{current-dir}/tsp-output/@typespec/openapi3`. We should probably introduce this change
+  # to have the emitter always emit in the same folder, no matter where you are emitting from.
+  "@typespec/openapi3":
+    output-file: "{project-root}/tsp-output/@typespec/openapi3/openapi.yaml" 

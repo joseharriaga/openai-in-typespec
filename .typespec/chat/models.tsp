@@ -182,38 +182,14 @@ model CreateChatCompletionRequest {
 }
 
 /** Represents a chat completion response returned by model, based on the provided input. */
-model CreateChatCompletionResponse {
+model CreateChatCompletionResponse<T extends ChatCompletionChoice = ChatCompletionChoice> {
   /** A unique identifier for the chat completion. */
   id: string;
 
   @doc("""
   A list of chat completion choices. Can be more than one if `n` is greater than 1.
   """)
-  choices: {
-    @doc("""
-    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-    `length` if the maximum number of tokens specified in the request was reached,
-    `content_filter` if content was omitted due to a flag from our content filters,
-    `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-    """)
-    finish_reason:
-      | "stop"
-      | "length"
-      | "tool_calls"
-      | "content_filter"
-      | "function_call";
-
-    /** The index of the choice in the list of choices. */
-    index: int32;
-
-    message: ChatCompletionResponseMessage;
-
-    /** Log probability information for the choice. */
-    logprobs: {
-      /** A list of message content tokens with log probability information. */
-      content: ChatCompletionTokenLogprob[] | null;
-    } | null;
-  }[];
+  choices: T[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. */
@@ -236,6 +212,32 @@ model CreateChatCompletionResponse {
   object: "chat.completion";
 
   usage?: CompletionUsage;
+}
+
+model ChatCompletionChoice {
+  @doc("""
+  The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+  `length` if the maximum number of tokens specified in the request was reached,
+  `content_filter` if content was omitted due to a flag from our content filters,
+  `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+  """)
+  finish_reason:
+    | "stop"
+    | "length"
+    | "tool_calls"
+    | "content_filter"
+    | "function_call";
+
+  /** The index of the choice in the list of choices. */
+  index: int32;
+
+  message: ChatCompletionResponseMessage;
+
+  /** Log probability information for the choice. */
+  logprobs: {
+    /** A list of message content tokens with log probability information. */
+    content: ChatCompletionTokenLogprob[] | null;
+  } | null;
 }
 
 model ChatCompletionTool {

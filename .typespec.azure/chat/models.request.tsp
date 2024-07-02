@@ -17,7 +17,7 @@ model AzureCreateChatCompletionRequest extends CreateChatCompletionRequest {
   data_sources?: AzureChatDataSource[];
 
   /** TODO: there is no available documentation in v2024_05_01_preview */
-  completionConfig: string | null;
+  completio_config: string | null;
 }
 
 /**

@@ -23,8 +23,17 @@ To install dependencies, run the following command to install the necessary tool
 
 ### Azure OpenAI OpenAPI file
 
-To regenearte the OpenAPI file in `./.typespec.azure/azure-openai-openapi3.yaml`, run the following command from the root of the project folder:
+To re-generate the OpenAPI file in `./.typespec.azure/azure-openai-openapi3.yaml`, run the following command from the root of the project folder:
 
 ```bash
 tsp compile .typespec.azure/client.tsp --emit @typespec/openapi3 
+```
+
+
+### OpenAI OpenAPI file
+
+To re-generate the OpenAPI file in `./.typespec/tsp-output/@typespec/openapi3`, run the following commend from the root of the project folder:
+
+```bash
+tsp complie .tspespec --emit @typespec/openapi3
 ```

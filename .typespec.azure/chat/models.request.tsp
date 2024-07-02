@@ -15,6 +15,9 @@ model AzureCreateChatCompletionRequest extends CreateChatCompletionRequest {
    * The data sources to use for the On Your Data feature, exclusive to Azure OpenAI.
    */
   data_sources?: AzureChatDataSource[];
+
+  /** TODO: there is no available documentation in v2024_05_01_preview */
+  completionConfig: string | null;
 }
 
 /**

@@ -21,3 +21,4 @@ interface AzureChat {
     ...AzureCreateChatCompletionRequest,
   ): AzureCreateChatCompletionResponse | AzureOpenAIErrorResponse<AzureOpenAIChatError>;
 }
+

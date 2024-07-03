@@ -182,33 +182,28 @@ model CreateChatCompletionRequest {
 }
 
 /** Represents a chat completion response returned by model, based on the provided input. */
-model CreateChatCompletionResponse<T extends ChatCompletionChoice = ChatCompletionChoice> {
-  /** A unique identifier for the chat completion. */
-  id: string;
+model CreateChatCompletionResponse <T extends ChatCompletionChoice = ChatCompletionChoice> {
+    /** A unique identifier for the chat completion. */
+    id: string;
 
-  @doc("""
-  A list of chat completion choices. Can be more than one if `n` is greater than 1.
-  """)
-  choices: T[];
-
-  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
-  /** The Unix timestamp (in seconds) of when the chat completion was created. */
-  @encode("unixTimestamp", int32)
-  created: utcDateTime;
+    /** A list of chat completion choices. Can be more than one if `n` is greater than 1. */
+    choices: T[];
+  
+    // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+    /** The Unix timestamp (in seconds) of when the chat completion was created. */
+    @encode("unixTimestamp", int32)
+    created: utcDateTime;
 
   /** The model used for the chat completion. */
   `model`: string;
 
-  @doc("""
-  This fingerprint represents the backend configuration that the model runs with.
-  
-  Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-  """)
+  /** 
+   * This fingerprint represents the backend configuration that the model runs with.
+   * Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+   */
   system_fingerprint?: string;
 
-  @doc("""
-  The object type, which is always `chat.completion`.
-  """)
+  /** The object type, which is always `chat.completion`. */
   object: "chat.completion";
 
   usage?: CompletionUsage;

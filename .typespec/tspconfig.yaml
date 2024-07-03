@@ -1,3 +1,9 @@
+emit:
+  - "@typespec/openapi3"
+  - "@azure-tools/typespec-csharp"
 options:
+  "@typespec/openapi3":
+    output-file: "{project-root}/tsp-output/@typespec/openapi3/openapi.yaml"
   "@azure-tools/typespec-csharp":
+    emitter-output-dir: "{project-root}/../.dotnet/src"
     unreferenced-types-handling: keepAll

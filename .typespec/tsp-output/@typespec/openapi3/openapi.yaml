@@ -5130,8 +5130,8 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          other: '#/components/schemas/OtherChunkingStrategyResponseParam'
           auto: '#/components/schemas/AutoChunkingStrategyResponseParam'
+          other: '#/components/schemas/OtherChunkingStrategyResponseParam'
     FineTuneChatCompletionRequestAssistantMessage:
       type: object
       allOf:

@@ -20,5 +20,5 @@ interface AzureImages {
     @path deploymentId: string,
     @body image: CreateImageRequest,
     // @query api-version: string;
-  ): ImagesResponse | AzureOpenAIErrorResponse<AzureOpenAIDalleError>;
+  ): ImagesResponse | AzureOpenAIDalleErrorResponse;
 }

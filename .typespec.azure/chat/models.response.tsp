@@ -1,7 +1,5 @@
+import "../../.typespec/chat/models.tsp";
 import "../common";
-import "../../.typespec/chat";
-
-using OpenAI;
 
 namespace AzureOpenAI;
 
@@ -9,7 +7,8 @@ namespace AzureOpenAI;
  * The extended top-level chat completion response model for the Azure OpenAI service.
  * This model adds Responsible AI content filter annotations for prompt input.
  */
-model AzureCreateChatCompletionResponse extends CreateChatCompletionResponse {
+model AzureCreateChatCompletionResponse
+  extends OpenAI.CreateChatCompletionResponse {
   /**
    * The Responsible AI content filter annotations associated with prompt inputs into chat completions.
    */
@@ -63,7 +62,8 @@ model AzureChatMessageContext {
  * This model adds support for chat message context, used by the On Your Data feature for intent, citations, and other
  * information related to retrieval-augmented generation performed.
  */
-model AzureChatCompletionResponseMessage extends ChatCompletionResponseMessage {
+model AzureChatCompletionResponseMessage
+  extends OpenAI.ChatCompletionResponseMessage {
   /**
    * The Azure-specific context information associated with the chat completion response message.
    */
@@ -76,7 +76,7 @@ model AzureChatCompletionResponseMessage extends ChatCompletionResponseMessage {
  * information related to retrieval-augmented generation performed.
  */
 model AzureChatCompletionStreamResponseDelta
-  extends ChatCompletionStreamResponseDelta {
+  extends OpenAI.ChatCompletionStreamResponseDelta {
   /**
    * The Azure-specific context information associated with the chat completion response message.
    */

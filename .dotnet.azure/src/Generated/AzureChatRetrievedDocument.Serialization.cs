@@ -65,7 +65,7 @@ namespace Azure.AI.OpenAI.Chat
             if (Optional.IsDefined(FilterReason))
             {
                 writer.WritePropertyName("filter_reason"u8);
-                writer.WriteStringValue(FilterReason);
+                writer.WriteStringValue(FilterReason.Value.ToString());
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -114,7 +114,7 @@ namespace Azure.AI.OpenAI.Chat
             int dataSourceIndex = default;
             double? originalSearchScore = default;
             double? rerankScore = default;
-            string filterReason = default;
+            AzureChatRetrievedDocumentFilterReason? filterReason = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -179,7 +179,11 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 if (property.NameEquals("filter_reason"u8))
                 {
-                    filterReason = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    filterReason = new AzureChatRetrievedDocumentFilterReason(property.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

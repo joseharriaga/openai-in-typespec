@@ -20,11 +20,7 @@ paths:
               schema:
                 anyOf:
                   - $ref: '#/components/schemas/AzureCreateChatCompletionResponse'
-                  - type: object
-                    properties:
-                      error:
-                        $ref: '#/components/schemas/AzureOpenAIChatError'
-                    description: A structured representation of an error an Azure OpenAI request.
+                  - $ref: '#/components/schemas/AzureOpenAIChatErrorResponse'
       requestBody:
         required: true
         content:
@@ -50,11 +46,7 @@ paths:
               schema:
                 anyOf:
                   - $ref: '#/components/schemas/OpenAI.ImagesResponse'
-                  - type: object
-                    properties:
-                      error:
-                        $ref: '#/components/schemas/AzureOpenAIDalleError'
-                    description: A structured representation of an error an Azure OpenAI request.
+                  - $ref: '#/components/schemas/AzureOpenAIDalleErrorResponse'
       requestBody:
         required: true
         content:
@@ -152,12 +144,12 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          system_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
-          user_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
-          access_token: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
           connection_string: '#/components/schemas/AzureChatDataSourceConnectionStringAuthenticationOptions'
           key_and_key_id: '#/components/schemas/AzureChatDataSourceKeyAndKeyIdAuthenticationOptions'
           encoded_api_key: '#/components/schemas/AzureChatDataSourceEncodedApiKeyAuthenticationOptions'
+          access_token: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
+          system_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
+          user_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
     AzureChatDataSourceConnectionStringAuthenticationOptions:
       type: object
       required:
@@ -974,6 +966,12 @@ components:
               description: The content filter result details associated with the inner error.
           description: If applicable, an upstream error that originated this error.
       description: The structured representation of an error from an Azure OpenAI chat completion request.
+    AzureOpenAIChatErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/AzureOpenAIChatError'
+      description: A structured representation of an error an Azure OpenAI request.
     AzureOpenAIDalleError:
       type: object
       properties:
@@ -1006,6 +1004,12 @@ components:
               description: The content filter result details associated with the inner error.
           description: If applicable, an upstream error that originated this error.
       description: The structured representation of an error from an Azure OpenAI image generation request.
+    AzureOpenAIDalleErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/AzureOpenAIDalleError'
+      description: A structured representation of an error an Azure OpenAI request.
     AzureSearchChatDataSource:
       type: object
       required:

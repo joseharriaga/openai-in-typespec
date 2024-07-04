@@ -19,5 +19,5 @@ interface AzureChat {
   @tag("Chat")
   createChatCompletion(
     ...AzureCreateChatCompletionRequest,
-  ): AzureCreateChatCompletionResponse | AzureOpenAIErrorResponse<AzureOpenAIChatError>;
+  ): AzureCreateChatCompletionResponse | AzureOpenAIChatErrorResponse;
 }

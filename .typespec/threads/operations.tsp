@@ -15,7 +15,9 @@ interface Threads {
   @operationId("createThread")
   @tag("Assistants")
   @summary("Create a thread.")
-  createThread(@body thread: CreateThreadRequest): ThreadObject | ErrorResponse;
+  createThread(
+    @body requestBody: CreateThreadRequest
+  ): ThreadObject | ErrorResponse;
 
   @route("{thread_id}")
   @get
@@ -36,7 +38,7 @@ interface Threads {
     /** The ID of the thread to modify. Only the `metadata` can be modified. */
     @path thread_id: string,
 
-    @body thread: ModifyThreadRequest,
+    @body requestBody: ModifyThreadRequest,
   ): ThreadObject | ErrorResponse;
 
   @route("{thread_id}")

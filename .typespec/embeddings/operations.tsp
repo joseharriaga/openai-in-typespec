@@ -16,6 +16,6 @@ interface Embeddings {
   @tag("Embeddings")
   @summary("Creates an embedding vector representing the input text.")
   createEmbedding(
-    @body embedding: CreateEmbeddingRequest,
+    @body requestBody: CreateEmbeddingRequest,
   ): CreateEmbeddingResponse | ErrorResponse;
 }

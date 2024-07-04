@@ -26,7 +26,7 @@ interface Files {
   """)
   createFile(
     @header contentType: "multipart/form-data",
-    @body file: CreateFileRequest,
+    @body requestBody: CreateFileRequest,
   ): OpenAIFile | ErrorResponse;
 
   @get

@@ -17,7 +17,7 @@ interface Runs {
   @tag("Assistants")
   @summary("Create a thread and run it in one request.")
   createThreadAndRun(
-    @body threadAndRun: CreateThreadAndRunRequest,
+    @body requestBody: CreateThreadAndRunRequest,
   ): RunObject | ErrorResponse;
 
   @route("{thread_id}/runs")
@@ -29,7 +29,7 @@ interface Runs {
     /** The ID of the thread to run. */
     @path thread_id: string,
 
-    @body run: CreateRunRequest,
+    @body requestBody: CreateRunRequest,
   ): RunObject | ErrorResponse;
 
   @route("{thread_id}/runs")
@@ -93,7 +93,7 @@ interface Runs {
     /** The ID of the run to modify. */
     @path run_id: string,
 
-    @body run: ModifyRunRequest,
+    @body requestBody: ModifyRunRequest,
   ): RunObject | ErrorResponse;
 
   @route("{thread_id}/runs/{run_id}/cancel")
@@ -125,7 +125,7 @@ interface Runs {
     /** The ID of the run that requires the tool output submission. */
     @path run_id: string,
 
-    @body submitToolOutputsRun: SubmitToolOutputsRunRequest,
+    @body requestBody: SubmitToolOutputsRunRequest,
   ): RunObject | ErrorResponse;
 
   @route("{thread_id}/runs/{run_id}/steps")

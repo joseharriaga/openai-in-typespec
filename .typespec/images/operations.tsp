@@ -16,7 +16,9 @@ interface Images {
   @operationId("createImage")
   @tag("Images")
   @summary("Creates an image given a prompt")
-  createImage(@body image: CreateImageRequest): ImagesResponse | ErrorResponse;
+  createImage(
+    @body requestBody: CreateImageRequest
+  ): ImagesResponse | ErrorResponse;
 
   @route("edits")
   @post
@@ -25,7 +27,7 @@ interface Images {
   @summary("Creates an edited or extended image given an original image and a prompt.")
   createImageEdit(
     @header contentType: "multipart/form-data",
-    @body image: CreateImageEditRequest,
+    @body requestBody: CreateImageEditRequest,
   ): ImagesResponse | ErrorResponse;
 
   @route("variations")
@@ -35,6 +37,6 @@ interface Images {
   @summary("Creates an edited or extended image given an original image and a prompt.")
   createImageVariation(
     @header contentType: "multipart/form-data",
-    @body image: CreateImageVariationRequest,
+    @body requestBody: CreateImageVariationRequest,
   ): ImagesResponse | ErrorResponse;
 }

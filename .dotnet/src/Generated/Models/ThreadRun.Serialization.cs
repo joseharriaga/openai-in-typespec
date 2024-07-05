@@ -191,12 +191,28 @@ namespace OpenAI.Assistants
             {
                 writer.WriteNull("truncation_strategy");
             }
-            writer.WritePropertyName("tool_choice"u8);
-            writer.WriteObjectValue<ToolConstraint>(ToolConstraint, options);
+            // CUSTOM: Made nullable.
+            if (ToolConstraint != null)
+            {
+                writer.WritePropertyName("tool_choice"u8);
+                writer.WriteObjectValue<ToolConstraint>(ToolConstraint, options);
+            }
+            else
+            {
+                writer.WriteNull("tool_choice");
+            }
             writer.WritePropertyName("parallel_tool_calls"u8);
             writer.WriteBooleanValue(ParallelToolCallsEnabled.Value);
-            writer.WritePropertyName("response_format"u8);
-            writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+            // CUSTOM: Made nullable.
+            if (ResponseFormat != null)
+            {
+                writer.WritePropertyName("response_format"u8);
+                writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+            }
+            else
+            {
+                writer.WriteNull("response_format");
+            }
             if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -471,8 +487,14 @@ namespace OpenAI.Assistants
                     truncationStrategy = RunTruncationStrategy.DeserializeRunTruncationStrategy(property.Value, options);
                     continue;
                 }
+                // CUSTOM: Made nullable.
                 if (property.NameEquals("tool_choice"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolChoice = null;
+                        continue;
+                    }
                     toolChoice = Assistants.ToolConstraint.DeserializeToolConstraint(property.Value, options);
                     continue;
                 }
@@ -481,8 +503,14 @@ namespace OpenAI.Assistants
                     parallelToolCalls = property.Value.GetBoolean();
                     continue;
                 }
+                // CUSTOM: Made nullable.
                 if (property.NameEquals("response_format"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        responseFormat = null;
+                        continue;
+                    }
                     responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);
                     continue;
                 }

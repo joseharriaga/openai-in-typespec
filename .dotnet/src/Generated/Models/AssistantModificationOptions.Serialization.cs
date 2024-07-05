@@ -126,10 +126,18 @@ namespace OpenAI.Assistants
                     writer.WriteNull("top_p");
                 }
             }
+            // CUSTOM: Made nullable.
             if (Optional.IsDefined(ResponseFormat))
             {
-                writer.WritePropertyName("response_format"u8);
-                writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                if (ResponseFormat != null)
+                {
+                    writer.WritePropertyName("response_format"u8);
+                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                }
+                else
+                {
+                    writer.WriteNull("response_format");
+                }
             }
             if (true && _serializedAdditionalRawData != null)
             {
@@ -276,10 +284,12 @@ namespace OpenAI.Assistants
                     topP = property.Value.GetSingle();
                     continue;
                 }
+                // CUSTOM: Made nullable.
                 if (property.NameEquals("response_format"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        responseFormat = null;
                         continue;
                     }
                     responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);

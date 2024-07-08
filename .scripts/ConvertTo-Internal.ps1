@@ -1,35 +1,3 @@
-function Edit-GeneratedOpenAIClient {
-    $root = Split-Path $PSScriptRoot -Parent
-
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated"
-    $file = Get-ChildItem -Path $directory -Filter "OpenAIClient.cs"
-
-    $content = Get-Content -Path $file -Raw
-
-    Write-Output "Editing $($file.FullName)"
-
-    $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AssistantClient _cachedAssistantClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.BatchClient _cachedBatchClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ChatClient _cachedChatClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FileClient _cachedFileClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantMessageClient _cachedInternalAssistantMessageClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantRunClient _cachedInternalAssistantRunClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantThreadClient _cachedInternalAssistantThreadClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModerationClient _cachedModerationClient;", ""
-    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.VectorStoreClient _cachedVectorStoreClient;", ""
-    $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
-    $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
-
-    $content | Set-Content -Path $file.FullName -NoNewline
-}
-
 function Edit-GeneratedSubclients {
     $root = Split-Path $PSScriptRoot -Parent
 
@@ -71,21 +39,6 @@ function Edit-GeneratedSubclients {
 
         $content | Set-Content -Path $file.FullName -NoNewline
     }
-}
-
-function Edit-GeneratedModelFactory {
-    $root = Split-Path $PSScriptRoot -Parent
-
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated"
-    $file = Get-ChildItem -Path $directory -Filter "OpenAIModelFactory.cs"
-
-    $content = Get-Content -Path $file -Raw
-
-    Write-Output "Editing $($file.FullName)"
-
-    $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
-
-    $content | Set-Content -Path $file.FullName -NoNewline
 }
 
 function Edit-GeneratedModels {
@@ -847,7 +800,5 @@ function Edit-GeneratedModels {
     }
 }
 
-Edit-GeneratedOpenAIClient
-# Edit-GeneratedSubclients
-# Edit-GeneratedModelFactory
+Edit-GeneratedSubclients
 Edit-GeneratedModels

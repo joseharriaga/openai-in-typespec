@@ -1,17 +1,3 @@
-function Remove-PseudoSuppressedTypes {
-    $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
-    $targets = @(
-        # "Unknown",
-    )
-    foreach ($target in $targets) {
-        Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {
-            Write-Output "Virtual [CodeGenSuppressType]: Removing $($_.Name)"
-            $_ | Remove-Item
-        }
-    }
-}
-
 function Internalize-SerializedAdditionalRawData {
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
@@ -68,7 +54,6 @@ function Update-Set-Accessors {
     }
 }
 
-Remove-PseudoSuppressedTypes
 Internalize-SerializedAdditionalRawData
 Enable-Global-AdditionalRawDataSerialization
 Update-Set-Accessors

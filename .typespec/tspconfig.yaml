@@ -7,3 +7,4 @@ options:
   "@azure-tools/typespec-csharp":
     emitter-output-dir: "{project-root}/../.dotnet/src"
     unreferenced-types-handling: keepAll
+    disable-xml-docs: true

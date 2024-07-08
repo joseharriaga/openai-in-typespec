@@ -68,19 +68,7 @@ function Update-Set-Accessors {
     }
 }
 
-function Remove-Generated-Comments {
-    $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated"
-    Get-ChildItem -Recurse -File -Path $directory -Filter "*.cs" | ForEach-Object {
-        Write-Output $_.Name
-        $content = Get-Content -Path $_.FullName -Raw
-        $content = $content -replace " *///.*[\r\n]*", ""
-        Set-Content -Path $_.FullName -Value $content -NoNewLine
-    }
-}
-
 Remove-PseudoSuppressedTypes
 Internalize-SerializedAdditionalRawData
 Enable-Global-AdditionalRawDataSerialization
 Update-Set-Accessors
-Remove-Generated-Comments

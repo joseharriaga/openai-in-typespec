@@ -9,7 +9,7 @@ namespace OpenAI.Audio
 {
     public readonly partial struct TranscribedWord
     {
-        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         internal TranscribedWord(string word, TimeSpan start, TimeSpan end)
         {

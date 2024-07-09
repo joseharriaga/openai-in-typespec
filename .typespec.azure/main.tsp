@@ -5,6 +5,8 @@ import "@typespec/openapi";
 import "./assistants";
 import "./chat";
 import "./images";
+import "./runs";
+import "./messages";
 
 using TypeSpec.Http;
 

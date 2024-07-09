@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     public abstract partial class FileChunkingStrategy
     {
-        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         protected FileChunkingStrategy()
         {

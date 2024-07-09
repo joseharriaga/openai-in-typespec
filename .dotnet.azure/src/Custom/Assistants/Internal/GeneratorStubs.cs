@@ -1,0 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+namespace Azure.AI.OpenAI.Assistants;
+
+[CodeGenModel("BingSearchToolDefinitionBrowser")] internal partial class InternalBingSearchToolDefinitionBrowser { }

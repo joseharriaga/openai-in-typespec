@@ -2,6 +2,7 @@ import "@typespec/http";
 import "@typespec/openapi3";
 import "@typespec/openapi";
 
+import "./assistants";
 import "./chat";
 import "./images";
 

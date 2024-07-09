@@ -1147,6 +1147,26 @@ components:
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
       description: Represents a data source configuration that will use an Azure Search resource.
+    BingSearchToolDefinition:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - browser
+          description: 'The type of tool being defined: `browser`'
+        browser:
+          type: object
+          properties:
+            bing_resource_id:
+              type: string
+              description: The resource ID of the Bing Search resource to use.
+          required:
+            - bing_resource_id
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.AssistantToolDefinition'
     ChatCompletionMessageToolCallsItem:
       type: array
       items:
@@ -1283,6 +1303,71 @@ components:
           description: The parameter information to control the use of the Elasticsearch data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
+    OpenAI.AssistantToolDefinition:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          code_interpreter: '#/components/schemas/OpenAI.AssistantToolsCode'
+          file_search: '#/components/schemas/OpenAI.AssistantToolsFileSearch'
+          function: '#/components/schemas/OpenAI.AssistantToolsFunction'
+    OpenAI.AssistantToolsCode:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - code_interpreter
+          description: 'The type of tool being defined: `code_interpreter`'
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.AssistantToolDefinition'
+    OpenAI.AssistantToolsFileSearch:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - file_search
+          description: 'The type of tool being defined: `file_search`'
+        file_search:
+          type: object
+          properties:
+            max_num_results:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 50
+              description: |-
+                The maximum number of results the file search tool should output. The default is 20 for gpt-4* models and 5 for gpt-3.5-turbo. This number should be between 1 and 50 inclusive.
+
+                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/number-of-chunks-returned) for more information.
+          description: Overrides for the file search tool.
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.AssistantToolDefinition'
+    OpenAI.AssistantToolsFunction:
+      type: object
+      required:
+        - type
+        - function
+      properties:
+        type:
+          type: string
+          enum:
+            - function
+          description: 'The type of tool being defined: `function`'
+        function:
+          $ref: '#/components/schemas/OpenAI.FunctionObject'
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.AssistantToolDefinition'
     OpenAI.ChatCompletionFunctionCallOption:
       type: object
       required:

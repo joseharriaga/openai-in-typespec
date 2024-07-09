@@ -3,9 +3,32 @@ info:
   title: Azure OpenAI Service
   version: 0.0.0
 tags:
+  - name: Assistants
   - name: Chat
   - name: Images
 paths:
+  /assistants:
+    post:
+      tags:
+        - Assistants
+      operationId: createAssistant
+      summary: Create an assistant with a model and instructions.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/OpenAI.AssistantObject'
+                  - $ref: '#/components/schemas/OpenAI.ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenAI.CreateAssistantRequest'
   /chat/completions:
     post:
       tags:
@@ -59,6 +82,20 @@ security:
       - https://cognitiveservices.azure.com/.default
 components:
   schemas:
+    AssistantsApiResponseFormatOption:
+      anyOf:
+        - type: string
+          enum:
+            - none
+            - auto
+        - $ref: '#/components/schemas/OpenAI.AssistantsApiResponseFormat'
+      description: |-
+        Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+        Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+
+        **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+      x-oaiExpandable: true
     AzureChatCompletionResponseMessage:
       type: object
       properties:
@@ -1303,6 +1340,112 @@ components:
           description: The parameter information to control the use of the Elasticsearch data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
+    OpenAI.AssistantObject:
+      type: object
+      required:
+        - id
+        - object
+        - created_at
+        - name
+        - description
+        - model
+        - instructions
+        - tools
+        - metadata
+      properties:
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints.
+        object:
+          type: string
+          enum:
+            - assistant
+          description: The object type, which is always `assistant`.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the assistant was created.
+        name:
+          type: string
+          nullable: true
+          maxLength: 256
+          description: The name of the assistant. The maximum length is 256 characters.
+        description:
+          type: string
+          nullable: true
+          maxLength: 512
+          description: The description of the assistant. The maximum length is 512 characters.
+        model:
+          type: string
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
+        instructions:
+          type: string
+          nullable: true
+          maxLength: 256000
+          description: The system instructions that the assistant uses. The maximum length is 256,000 characters.
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenAI.AssistantToolDefinition'
+          maxItems: 128
+          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+          x-oaiExpandable: true
+          default: []
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              type: object
+              properties:
+                vector_store_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 1
+                  description: The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
+          nullable: true
+          description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+          x-oaiTypeLabel: map
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+          default: 1
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 1
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or temperature but not both.
+          default: 1
+        response_format:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
+          nullable: true
+      description: Represents an `assistant` that can call the model and use tools.
     OpenAI.AssistantToolDefinition:
       type: object
       required:
@@ -1313,6 +1456,7 @@ components:
       discriminator:
         propertyName: type
         mapping:
+          browser: '#/components/schemas/BingSearchToolDefinition'
           code_interpreter: '#/components/schemas/OpenAI.AssistantToolsCode'
           file_search: '#/components/schemas/OpenAI.AssistantToolsFileSearch'
           function: '#/components/schemas/OpenAI.AssistantToolsFunction'
@@ -1368,6 +1512,17 @@ components:
           $ref: '#/components/schemas/OpenAI.FunctionObject'
       allOf:
         - $ref: '#/components/schemas/OpenAI.AssistantToolDefinition'
+    OpenAI.AssistantsApiResponseFormat:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+            - json_object
+          description: Must be one of `text` or `json_object`.
+          default: text
+      description: An object describing the expected output of the model. If `json_object` only `function` type `tools` are allowed to be passed to the Run. If `text` the model can return text or any value needed.
     OpenAI.ChatCompletionFunctionCallOption:
       type: object
       required:
@@ -1792,6 +1947,151 @@ components:
           format: int32
           description: Total number of tokens used in the request (prompt + completion).
       description: Usage statistics for the completion request.
+    OpenAI.CreateAssistantRequest:
+      type: object
+      required:
+        - model
+      properties:
+        model:
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - gpt-4o
+                - gpt-4o-2024-05-13
+                - gpt-4-turbo
+                - gpt-4-turbo-2024-04-09
+                - gpt-4-0125-preview
+                - gpt-4-turbo-preview
+                - gpt-4-1106-preview
+                - gpt-4-vision-preview
+                - gpt-4
+                - gpt-4-0314
+                - gpt-4-0613
+                - gpt-4-32k
+                - gpt-4-32k-0314
+                - gpt-4-32k-0613
+                - gpt-3.5-turbo
+                - gpt-3.5-turbo-16k
+                - gpt-3.5-turbo-0613
+                - gpt-3.5-turbo-1106
+                - gpt-3.5-turbo-0125
+                - gpt-3.5-turbo-16k-0613
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
+          x-oaiTypeLabel: string
+        name:
+          type: string
+          nullable: true
+          maxLength: 256
+          description: The name of the assistant. The maximum length is 256 characters.
+        description:
+          type: string
+          nullable: true
+          maxLength: 512
+          description: The description of the assistant. The maximum length is 512 characters.
+        instructions:
+          type: string
+          nullable: true
+          maxLength: 256000
+          description: The system instructions that the assistant uses. The maximum length is 256,000 characters.
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenAI.AssistantToolDefinition'
+          maxItems: 128
+          description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
+          x-oaiExpandable: true
+          default: []
+        tool_resources:
+          type: object
+          properties:
+            code_interpreter:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 20
+                  description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
+                  default: []
+            file_search:
+              anyOf:
+                - $ref: '#/components/schemas/OpenAI.CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences'
+                - $ref: '#/components/schemas/OpenAI.CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers'
+          nullable: true
+          description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+          x-oaiTypeLabel: map
+        temperature:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 2
+          description: What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+          default: 1
+        top_p:
+          type: number
+          format: float
+          nullable: true
+          minimum: 0
+          maximum: 1
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or temperature but not both.
+          default: 1
+        response_format:
+          oneOf:
+            - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
+          nullable: true
+    OpenAI.CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers:
+      type: object
+      properties:
+        vector_stores:
+          type: array
+          items:
+            type: object
+            properties:
+              file_ids:
+                type: array
+                items:
+                  type: string
+                maxItems: 10000
+                description: |-
+                  A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
+                  a maximum of 10000 files in a vector store.
+              metadata:
+                type: object
+                additionalProperties:
+                  type: string
+                description: |-
+                  Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
+                  storing additional information about the vector store in a structured format. Keys can
+                  be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+                x-oaiTypeLabel: map
+          maxItems: 1
+          description: |-
+            A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
+            file_ids and attach it to this assistant. There can be a maximum of 1 vector store
+            attached to the assistant.
+    OpenAI.CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences:
+      type: object
+      properties:
+        vector_store_ids:
+          type: array
+          items:
+            type: string
+          maxItems: 1
+          description: |-
+            The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
+            There can be a maximum of 1 vector store attached to the assistant.
     OpenAI.CreateChatCompletionRequest:
       type: object
       required:
@@ -2144,6 +2444,31 @@ components:
         user:
           type: string
           description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+    OpenAI.Error:
+      type: object
+      required:
+        - code
+        - message
+        - param
+        - type
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+        param:
+          type: string
+          nullable: true
+        type:
+          type: string
+    OpenAI.ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          $ref: '#/components/schemas/OpenAI.Error'
     OpenAI.FunctionObject:
       type: object
       required:

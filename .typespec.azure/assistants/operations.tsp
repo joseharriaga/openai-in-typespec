@@ -9,3 +9,14 @@ using TypeSpec.OpenAPI;
 using OpenAI;
 
 namespace AzureOpenAI;
+
+@route("/assistants")
+interface AzureAssistants {
+  @post
+  @operationId("createAssistant")
+  @tag("Assistants")
+  @summary("Create an assistant with a model and instructions.")
+  createAssistant(
+    @body assistant: CreateAssistantRequest,
+  ): AssistantObject | ErrorResponse;
+}

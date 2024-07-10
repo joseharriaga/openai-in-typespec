@@ -17,11 +17,10 @@ namespace AzureOpenAI.Client {
         service: AzureOpenAI,
     })
     interface AzureOpenAIClient {
-        // This generates a duplicate entry in the OpenAPI file
-        // Also the path seems to be incorrect. It seems to ignore the path from the interface `AzureChat`
-        createChatCompletion is AzureOpenAI.AzureChat.createChatCompletion;
 
         createSpeech is OpenAI.Audio.createSpeech;
+        createTranscription is OpenAI.Audio.createTranscription;
+        createTranslation is OpenAI.Audio.createTranslation;
     }
 }
 

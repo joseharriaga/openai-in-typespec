@@ -35,5 +35,5 @@ tsp compile .typespec.azure/client.tsp --emit @typespec/openapi3
 To re-generate the OpenAPI file in `./.typespec/tsp-output/@typespec/openapi3`, run the following commend from the root of the project folder:
 
 ```bash
-tsp complie .tspespec --emit @typespec/openapi3
+tsp compile .typespec --emit @typespec/openapi3
 ```

@@ -11,6 +11,7 @@ namespace Azure.AI.OpenAI.Assistants;
 
 /// <summary> The BingSearchToolDefinition. </summary>
 [CodeGenModel("BingSearchToolDefinition")]
+[Experimental("AOAI001")]
 public partial class BingSearchToolDefinition : ToolDefinition
 {
     public required string BingResourceId

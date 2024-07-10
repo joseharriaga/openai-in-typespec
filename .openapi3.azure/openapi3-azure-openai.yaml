@@ -404,7 +404,7 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: '#/components/schemas/OpenAI.RunStepObject'
+                  - $ref: '#/components/schemas/AzureRunStepObject'
                   - $ref: '#/components/schemas/OpenAI.ErrorResponse'
   /threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
     post:
@@ -1457,6 +1457,115 @@ components:
         error:
           $ref: '#/components/schemas/AzureOpenAIDalleError'
       description: A structured representation of an error an Azure OpenAI request.
+    AzureRunStepDetailsToolCallsObjectToolCallsObject:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.RunStepDetailsToolCallsObjectToolCallsObject'
+    AzureRunStepObject:
+      type: object
+      required:
+        - id
+        - object
+        - created_at
+        - assistant_id
+        - thread_id
+        - run_id
+        - type
+        - status
+        - last_error
+        - expired_at
+        - cancelled_at
+        - failed_at
+        - completed_at
+        - metadata
+        - usage
+      properties:
+        id:
+          type: string
+          description: The identifier of the run step, which can be referenced in API endpoints.
+        object:
+          type: string
+          enum:
+            - thread.run.step
+          description: The object type, which is always `thread.run.step`.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the run step was created.
+        assistant_id:
+          type: string
+          description: The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.
+        thread_id:
+          type: string
+          description: The ID of the [thread](/docs/api-reference/threads) that was run.
+        run_id:
+          type: string
+          description: The ID of the [run](/docs/api-reference/runs) that this run step is a part of.
+        type:
+          type: string
+          enum:
+            - message_creation
+            - tool_calls
+          description: The type of run step, which can be either `message_creation` or `tool_calls`.
+        status:
+          type: string
+          enum:
+            - in_progress
+            - cancelled
+            - failed
+            - completed
+            - expired
+          description: The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
+        last_error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+                - server_error
+                - rate_limit_exceeded
+              description: One of `server_error` or `rate_limit_exceeded`.
+            message:
+              type: string
+              description: A human-readable description of the error.
+          required:
+            - code
+            - message
+          nullable: true
+          description: The last error associated with this run step. Will be `null` if there are no errors.
+        expired_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.
+        cancelled_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the run step was cancelled.
+        failed_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the run step failed.
+        completed_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) for when the run step completed.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+          x-oaiTypeLabel: map
+        usage:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/OpenAI.RunStepCompletionUsage'
+          nullable: true
+      description: Represents a step in execution of a run.
     AzureSearchChatDataSource:
       type: object
       required:
@@ -4590,6 +4699,7 @@ components:
       discriminator:
         propertyName: type
         mapping:
+          browser: '#/components/schemas/RunStepDeltaStepDetailsToolCallsBingSearchObject'
           code_interpreter: '#/components/schemas/OpenAI.RunStepDeltaStepDetailsToolCallsCodeObject'
           file_search: '#/components/schemas/OpenAI.RunStepDeltaStepDetailsToolCallsFileSearchObject'
           function: '#/components/schemas/OpenAI.RunStepDeltaStepDetailsToolCallsFunctionObject'
@@ -4791,6 +4901,7 @@ components:
       discriminator:
         propertyName: type
         mapping:
+          browser: '#/components/schemas/RunStepDetailsToolCallsBingSearchObject'
           code_interpreter: '#/components/schemas/OpenAI.RunStepDetailsToolCallsCodeObject'
           file_search: '#/components/schemas/OpenAI.RunStepDetailsToolCallsFileSearchObject'
           function: '#/components/schemas/OpenAI.RunStepDetailsToolCallsFunctionObject'
@@ -5150,6 +5261,54 @@ components:
           description: The parameter information to control the use of the Pinecone data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
+    RunStepDeltaStepDetailsToolCallsBingSearchObject:
+      type: object
+      required:
+        - index
+        - type
+        - browser
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the tool call in the tool calls array.
+        id:
+          type: string
+          description: The ID of the tool call object.
+        type:
+          type: string
+          enum:
+            - browser
+          description: The type of tool call. This is always going to be `browser` for this type of tool call.
+        browser:
+          type: object
+          additionalProperties: {}
+          description: For now, this is always going to be an empty object.
+          x-oaiTypeLabel: map
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.RunStepDeltaStepDetailsToolCallsObjectToolCallsObject'
+    RunStepDetailsToolCallsBingSearchObject:
+      type: object
+      required:
+        - id
+        - type
+        - browser
+      properties:
+        id:
+          type: string
+          description: The ID of the tool call object.
+        type:
+          type: string
+          enum:
+            - browser
+          description: The type of tool call. This is always going to be `browser` for this type of tool call.
+        browser:
+          type: object
+          additionalProperties: {}
+          description: For now, this is always going to be an empty object.
+          x-oaiTypeLabel: map
+      allOf:
+        - $ref: '#/components/schemas/AzureRunStepDetailsToolCallsObjectToolCallsObject'
     RunStepStreamEvent:
       anyOf:
         - type: object

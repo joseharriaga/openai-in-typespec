@@ -33,7 +33,7 @@ function Partialize-ClientUriBuilder {
 
 function Prune-Generated-Files {
   $patternsToKeep = @(
-      "*BingSearch*",
+      "*BingSearchTool*",
       "*DataSource*",
       "*ContentFilter*",
       "*OpenAI*Error*",

@@ -181,5 +181,5 @@ interface AzureRuns {
 
     /** The ID of the run step to retrieve. */
     @path step_id: string,
-  ): OpenAI.RunStepObject | OpenAI.ErrorResponse;
+  ): AzureRunStepObject | OpenAI.ErrorResponse;
 }

@@ -22,8 +22,8 @@ public partial class BingSearchToolDefinition : ToolDefinition
 
     /// <summary> Initializes a new instance of <see cref="BingSearchToolDefinition"/>. </summary>
     public BingSearchToolDefinition()
+        : base("browser")
     {
-        Type = "browser";
         _internalBrowser = new();
     }
 

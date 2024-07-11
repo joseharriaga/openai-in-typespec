@@ -10,65 +10,50 @@ using Azure.AI.OpenAI.Internal;
 
 namespace Azure.AI.OpenAI.Assistants;
 
-/// <inheritdoc/>
-public partial class AzureTextAnnotationUpdate : TextAnnotationUpdate
+public static partial class TextAnnotationUpdateExtensions
 {
-    private InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitation _bingSearchCitation;
-
-    /// <inheritdoc/>
-    public override int ContentIndex => _bingSearchCitation?.Index ?? base.ContentIndex;
-
-    /// <inheritdoc/>
-    public override int? StartIndex => _bingSearchCitation?.StartIndex ?? base.StartIndex;
-
-    /// <inheritdoc/>
-    public override int? EndIndex => _bingSearchCitation?.EndIndex ?? base.EndIndex;
-
-    /// <inheritdoc/>
-    public override string TextToReplace => _bingSearchCitation?.Text ?? base.TextToReplace;
-
-    /// <inheritdoc/>
-    public string BingSearchTitle => _bingSearchCitation?.UrlCitation?.Title;
-
-    /// <inheritdoc/>
-    public Uri BingSearchUrl => _bingSearchCitation?.UrlCitation?.Url;
-
-    internal AzureTextAnnotationUpdate(TextAnnotationUpdate baseAnnotationUpdate)
-        : base(baseAnnotationUpdate._internalAnnotation)
+    /// <summary>
+    /// Gets a value indicating whether the text annotation represents one provided by an Azure OpenAI Bing Search
+    /// <c>browser</c> tool.
+    /// </summary>
+    /// <param name="baseAnnotation"> The annotation being evaluated. </param>
+    /// <returns> True if the annotation has a <c>browser</c> tool <c>url_citation</c>, false otherwise. </returns>
+    [Experimental("AOAI001")]
+    public static bool IsBingSearchAnnotation(this TextAnnotationUpdate baseAnnotation)
     {
-        if (baseAnnotationUpdate._internalAnnotation is UnknownMessageDeltaTextContentAnnotation unknownAnnotation
-            && unknownAnnotation.Type == "url_citation")
-        {
-            int index = int.Parse(unknownAnnotation._serializedAdditionalRawData["index"].ToString());
-            string text = unknownAnnotation._serializedAdditionalRawData.TryGetValue(
-                "text",
-                out BinaryData textData)
-                    ? textData.ToString()
-                    : null;
-            int? startIndex = unknownAnnotation._serializedAdditionalRawData.TryGetValue(
-                "start_index",
-                out BinaryData startIndexData)
-                    ? int.Parse(startIndexData.ToString())
-                    : null;
-            int? endIndex = unknownAnnotation._serializedAdditionalRawData.TryGetValue(
-                "start_index",
-                out BinaryData endIndexData)
-                    ? int.Parse(startIndexData.ToString())
-                    : null;
-            InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitationUrlCitation bingSearchCitationObject
-                = unknownAnnotation._serializedAdditionalRawData.TryGetValue(
-                    "url_citation",
-                    out BinaryData urlCitationData)
-                        ? ModelReaderWriter.Read<InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitationUrlCitation>(urlCitationData)
-                        : null;
-            _bingSearchCitation = new InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitation()
-            {
-                Index = index,
-                Text = text,
-                UrlCitation = bingSearchCitationObject,
-                StartIndex = startIndex,
-                EndIndex = endIndex,
-            };
-        }
+        return GetInternalUrlCitationFrom(baseAnnotation) != null;
+    }
+
+    /// <summary>
+    /// If applicable, gets the page title from an Azure OpenAI Bing Search <c>browser</c> tool's text content
+    /// annotation.
+    /// </summary>
+    /// <param name="baseAnnotation"> The annotation being evaluated. </param>
+    /// <returns> If present, the <c>title</c> from a <c>browser</c> tool annotation; null otherwise. </returns>
+    [Experimental("AOAI001")]
+    public static string GetBingSearchTitle(this TextAnnotationUpdate baseAnnotation)
+    {
+        return GetInternalUrlCitationFrom(baseAnnotation)?.Title;
+    }
+
+    /// <summary>
+    /// If applicable, gets the page URL from an Azure OpenAI Bing Search <c>browser</c> tool's text content
+    /// annotation.
+    /// </summary>
+    /// <param name="baseAnnotation"> The annotation being evaluated. </param>
+    /// <returns> If present, the <c>url</c> from a <c>browser</c> tool annotation; null otherwise. </returns>
+    [Experimental("AOAI001")]
+    public static Uri GetBingSearchUrl(this TextAnnotationUpdate baseAnnotation)
+    {
+        return GetInternalUrlCitationFrom(baseAnnotation)?.Url;
+    }
+
+    private static InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitationUrlCitation
+        GetInternalUrlCitationFrom(TextAnnotationUpdate baseAnnotation)
+    {
+        return baseAnnotation?._internalAnnotation?
+            ._serializedAdditionalRawData?.TryGetValue("url_citation", out BinaryData citationData) == true
+                ? ModelReaderWriter.Read<InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitationUrlCitation>(citationData)
+                : null;
     }
 }

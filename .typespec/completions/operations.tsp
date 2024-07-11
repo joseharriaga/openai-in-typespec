@@ -16,6 +16,6 @@ interface Completions {
   @tag("Completions")
   @summary("Creates a completion for the provided prompt and parameters.")
   createCompletion(
-    ...CreateCompletionRequest,
+    @body requestBody: CreateCompletionRequest,
   ): CreateCompletionResponse | ErrorResponse;
 }

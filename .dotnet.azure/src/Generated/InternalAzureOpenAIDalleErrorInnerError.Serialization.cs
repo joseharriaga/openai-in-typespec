@@ -24,7 +24,7 @@ namespace Azure.AI.OpenAI
             if (Optional.IsDefined(Code))
             {
                 writer.WritePropertyName("code"u8);
-                writer.WriteStringValue(Code);
+                writer.WriteStringValue(Code.Value.ToString());
             }
             if (Optional.IsDefined(RevisedPrompt))
             {
@@ -74,7 +74,7 @@ namespace Azure.AI.OpenAI
             {
                 return null;
             }
-            string code = default;
+            InternalAzureOpenAIDalleErrorInnerErrorCode? code = default;
             string revisedPrompt = default;
             ImageContentFilterResultForPrompt contentFilterResults = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -83,7 +83,11 @@ namespace Azure.AI.OpenAI
             {
                 if (property.NameEquals("code"u8))
                 {
-                    code = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    code = new InternalAzureOpenAIDalleErrorInnerErrorCode(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("revised_prompt"u8))

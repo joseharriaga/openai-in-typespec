@@ -70,7 +70,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="rerankScore"> The rerank score for the retrieval. </param>
         /// <param name="filterReason"> If applicable, an indication of why the document was filtered. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal AzureChatRetrievedDocument(string content, string title, string url, string filepath, string chunkId, IReadOnlyList<string> searchQueries, int dataSourceIndex, double? originalSearchScore, double? rerankScore, string filterReason, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AzureChatRetrievedDocument(string content, string title, string url, string filepath, string chunkId, IReadOnlyList<string> searchQueries, int dataSourceIndex, double? originalSearchScore, double? rerankScore, AzureChatRetrievedDocumentFilterReason? filterReason, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Content = content;
             Title = title;
@@ -109,6 +109,6 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> The rerank score for the retrieval. </summary>
         public double? RerankScore { get; }
         /// <summary> If applicable, an indication of why the document was filtered. </summary>
-        public string FilterReason { get; }
+        public AzureChatRetrievedDocumentFilterReason? FilterReason { get; }
     }
 }

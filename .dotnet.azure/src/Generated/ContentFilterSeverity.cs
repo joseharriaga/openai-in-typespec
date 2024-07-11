@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> Enum for severity in ContentFilterSeverityResult. </summary>
+    /// <summary> The AzureContentFilterSeverityResultSeverity. </summary>
     public readonly partial struct ContentFilterSeverity : IEquatable<ContentFilterSeverity>
     {
         private readonly string _value;

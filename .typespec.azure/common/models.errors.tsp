@@ -41,3 +41,9 @@ model AzureOpenAIChatError
 /** The structured representation of an error from an Azure OpenAI image generation request. */
 model AzureOpenAIDalleError
   is AzureOpenAIError<AzureContentFilterImagePromptResults>;
+
+model AzureOpenAIChatErrorResponse
+  is AzureOpenAIErrorResponse<AzureOpenAIChatError>;
+
+model AzureOpenAIDalleErrorResponse
+  is AzureOpenAIErrorResponse<AzureOpenAIDalleError>;

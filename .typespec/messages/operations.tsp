@@ -19,7 +19,7 @@ interface Messages {
     /** The ID of the [thread](/docs/api-reference/threads) to create a message for. */
     @path thread_id: string,
 
-    @body message: CreateMessageRequest,
+    @body requestBody: CreateMessageRequest,
   ): MessageObject | ErrorResponse;
 
   @get
@@ -82,7 +82,7 @@ interface Messages {
     /** The ID of the message to modify. */
     @path message_id: string,
 
-    @body message: ModifyMessageRequest,
+    @body requestBody: ModifyMessageRequest,
   ): MessageObject | ErrorResponse;
 
   @route("{message_id}")

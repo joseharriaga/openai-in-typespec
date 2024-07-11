@@ -1,6 +1,4 @@
-import "../../.typespec/chat";
-
-using OpenAI;
+import "../../.typespec/chat/models.tsp";
 
 namespace AzureOpenAI;
 

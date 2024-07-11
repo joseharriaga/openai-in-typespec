@@ -1,8 +1,6 @@
+import "../../.typespec/chat/models.tsp";
 import "./models.oyd.auth.tsp";
 import "./models.oyd.vectorization.tsp";
-import "../../.typespec/chat";
-
-using OpenAI;
 
 namespace AzureOpenAI;
 
@@ -10,7 +8,8 @@ namespace AzureOpenAI;
  * The extended request model for chat completions against the Azure OpenAI service.
  * This adds the ability to provide data sources for the On Your Data feature.
  */
-model AzureCreateChatCompletionRequest extends CreateChatCompletionRequest {
+model AzureCreateChatCompletionRequest
+  extends OpenAI.CreateChatCompletionRequest {
   /**
    * The data sources to use for the On Your Data feature, exclusive to Azure OpenAI.
    */

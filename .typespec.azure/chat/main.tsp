@@ -1,3 +1,2 @@
-import "./models.request.tsp";
-import "./models.response.tsp";
+import "./client.tsp";
 import "./operations.tsp";

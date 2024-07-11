@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> Enum for filter_reason in AzureChatRetrievedDocument. </summary>
+    /// <summary> The AzureChatMessageContextAllRetrievedDocumentsFilterReason. </summary>
     public readonly partial struct AzureChatRetrievedDocumentFilterReason : IEquatable<AzureChatRetrievedDocumentFilterReason>
     {
         private readonly string _value;

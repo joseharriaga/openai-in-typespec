@@ -3,7 +3,7 @@ emit:
   - "@azure-tools/typespec-csharp"
 options:
   "@typespec/openapi3":
-    output-file: "{project-root}/azure-openai-openapi3.yaml"
+    output-file: "{project-root}/../.openapi3.azure/openapi3-azure-openai.yaml"
   "@azure-tools/typespec-csharp":
     namespace: "Azure.AI.OpenAI"
     emitter-output-dir: "{project-root}/../.dotnet.azure/src"

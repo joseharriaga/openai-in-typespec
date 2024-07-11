@@ -47,7 +47,7 @@ namespace OpenAI.Chat
                 if (TokenSelectionBiases != null)
                 {
                     writer.WritePropertyName("logit_bias"u8);
-                    SerializeTokenSelectionBiasesValue(writer);
+                    SerializeTokenSelectionBiasesValue(writer, options);
                 }
                 else
                 {
@@ -134,7 +134,7 @@ namespace OpenAI.Chat
             if (Optional.IsCollectionDefined(StopSequences))
             {
                 writer.WritePropertyName("stop"u8);
-                SerializeStopSequencesValue(writer);
+                SerializeStopSequencesValue(writer, options);
             }
             if (Optional.IsDefined(Stream))
             {

@@ -1,7 +1,5 @@
-import "../../.typespec/chat";
+import "../../.typespec/chat/models.tsp";
 import "./models.oyd.auth.tsp";
-
-using OpenAI;
 
 namespace AzureOpenAI;
 

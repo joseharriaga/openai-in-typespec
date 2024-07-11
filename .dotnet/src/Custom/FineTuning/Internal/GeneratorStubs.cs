@@ -52,7 +52,7 @@ internal partial class InternalFineTuningJobError { }
 [CodeGenModel("FineTuningJobEvent")]
 internal partial class InternalFineTuningJobEvent { }
 
-[CodeGenModel("InternalFineTuningJobEventLevel")]
+[CodeGenModel("FineTuningJobEventLevel")]
 internal readonly partial struct InternalFineTuningJobEventLevel { }
 
 [CodeGenModel("FineTuningJobEventObject")]
@@ -64,7 +64,7 @@ internal partial class InternalFineTuningJobHyperparameters { }
 [CodeGenModel("FineTuningJobObject")]
 internal readonly partial struct InternalFineTuningJobObject { }
 
-[CodeGenModel("InternalFineTuningJobStatus")]
+[CodeGenModel("FineTuningJobStatus")]
 internal readonly partial struct InternalFineTuningJobStatus { }
 
 [CodeGenModel("ListFineTuningJobCheckpointsResponse")]

@@ -16,6 +16,6 @@ interface Moderations {
   @tag("Moderations")
   @summary("Classifies if text is potentially harmful.")
   createModeration(
-    @body content: CreateModerationRequest,
+    @body requestBody: CreateModerationRequest,
   ): CreateModerationResponse | ErrorResponse;
 }

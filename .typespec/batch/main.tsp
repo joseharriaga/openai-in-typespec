@@ -1,2 +1,2 @@
-import "./models.tsp";
+import "./client.tsp";
 import "./operations.tsp";

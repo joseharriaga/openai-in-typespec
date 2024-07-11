@@ -23,7 +23,7 @@ interface FineTuning {
   [Learn more about fine-tuning](/docs/guides/fine-tuning)
   """)
   createFineTuningJob(
-    @body job: CreateFineTuningJobRequest,
+    @body requestBody: CreateFineTuningJobRequest,
   ): FineTuningJob | ErrorResponse;
 
   @route("jobs")

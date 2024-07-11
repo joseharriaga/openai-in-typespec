@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> Enum for query_type in InternalAzureSearchChatDataSourceParameters. </summary>
+    /// <summary> The AzureSearchChatDataSourceParametersQueryType. </summary>
     public readonly partial struct DataSourceQueryType : IEquatable<DataSourceQueryType>
     {
         private readonly string _value;

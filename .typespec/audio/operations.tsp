@@ -16,7 +16,7 @@ interface Audio {
   @operationId("createSpeech")
   @tag("Audio")
   @summary("Generates audio from the input text.")
-  createSpeech(@body speech: CreateSpeechRequest): {
+  createSpeech(@body requestBody: CreateSpeechRequest): {
     /** chunked */
     @header("Transfer-Encoding") transferEncoding?: string;
 
@@ -31,7 +31,7 @@ interface Audio {
   @summary("Transcribes audio into the input language.")
   createTranscription(
     @header contentType: "multipart/form-data",
-    @body audio: CreateTranscriptionRequest,
+    @body requestBody: CreateTranscriptionRequest,
   ):
     | CreateTranscriptionResponseVerboseJson
     | CreateTranscriptionResponseJson
@@ -50,7 +50,7 @@ interface Audio {
   @summary("Translates audio into English..")
   createTranslation(
     @header contentType: "multipart/form-data",
-    @body audio: CreateTranslationRequest,
+    @body requestBody: CreateTranslationRequest,
   ):
     | CreateTranslationResponseVerboseJson
     | CreateTranslationResponseJson

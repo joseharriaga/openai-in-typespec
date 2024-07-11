@@ -17,6 +17,6 @@ interface Chat {
   @tag("Chat")
   @summary("Creates a model response for the given chat conversation.")
   createChatCompletion(
-    ...CreateChatCompletionRequest,
+    @body requestBody: CreateChatCompletionRequest,
   ): CreateChatCompletionResponse | ErrorResponse;
 }

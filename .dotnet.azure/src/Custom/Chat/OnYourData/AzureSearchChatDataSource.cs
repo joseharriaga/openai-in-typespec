@@ -126,6 +126,18 @@ public partial class AzureSearchChatDataSource : AzureChatDataSource
         _serializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
     }
 
+    // CUSTOM: Made internal.
+    /// <summary> Initializes a new instance of <see cref="AzureSearchChatDataSource"/>. </summary>
+    /// <param name="internalParameters"> The parameter information to control the use of the Azure Search data source. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="internalParameters"/> is null. </exception>
+    internal AzureSearchChatDataSource(InternalAzureSearchChatDataSourceParameters internalParameters)
+    {
+        Argument.AssertNotNull(internalParameters, nameof(internalParameters));
+
+        Type = "azure_search";
+        InternalParameters = internalParameters;
+    }
+
     /// <summary> Initializes a new instance of <see cref="AzureSearchChatDataSource"/>. </summary>
     /// <param name="type"></param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>

@@ -105,6 +105,18 @@ public partial class AzureMachineLearningIndexChatDataSource : AzureChatDataSour
         _serializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
     }
 
+    // CUSTOM: Made internal.
+    /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSource"/>. </summary>
+    /// <param name="internalParameters"> The parameter information to control the use of the Azure Machine Learning Index data source. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="internalParameters"/> is null. </exception>
+    internal AzureMachineLearningIndexChatDataSource(InternalAzureMachineLearningIndexChatDataSourceParameters internalParameters)
+    {
+        Argument.AssertNotNull(internalParameters, nameof(internalParameters));
+
+        Type = "azure_ml_index";
+        InternalParameters = internalParameters;
+    }
+
     /// <summary> Initializes a new instance of <see cref="AzureMachineLearningIndexChatDataSource"/>. </summary>
     /// <param name="type"></param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>

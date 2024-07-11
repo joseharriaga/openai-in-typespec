@@ -1,22 +1,3 @@
-$applicableDateTimeOffsetFilenames = @(
-    "RunStep.Serialization.cs"
-    "ThreadMessage.Serialization.cs",
-    "ThreadRun.Serialization.cs",
-    "VectorStore.Serialization.cs",
-    "VectorStoreFileAssociation.Serialization.cs"
-)
-function Edit-DateTimeOffset-Serialization([string]$Filename, [ref]$FileContentReference) {
-    if ($applicableDateTimeOffsetFilenames -contains $Filename) {
-        $FileContentReference.Value = $FileContentReference.Value -creplace "expiresAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // expiresAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    expiresAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
-        $FileContentReference.Value = $FileContentReference.Value -creplace "expiredAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // expiredAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    expiredAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
-        $FileContentReference.Value = $FileContentReference.Value -creplace "startedAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // startedAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    startedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
-        $FileContentReference.Value = $FileContentReference.Value -creplace "cancelledAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // cancelledAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    cancelledAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
-        $FileContentReference.Value = $FileContentReference.Value -creplace "failedAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // failedAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    failedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
-        $FileContentReference.Value = $FileContentReference.Value -creplace "completedAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // completedAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
-        $FileContentReference.Value = $FileContentReference.Value -creplace "lastActiveAt = property\.Value\.GetDateTimeOffset\(`"O`"\);", "// BUG: https://github.com/Azure/autorest.csharp/issues/4296`r`n                    // lastActiveAt = property.Value.GetDateTimeOffset(`"O`");`r`n                    lastActiveAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());"
-    }
-}
-
 function Replace-Collection-Set-With-Init([ref]$FileContentReference) {
     $pattern = '(.*(List<|Dictionary<)[^{]*){ get; set; }'
     $matches = [regex]::Matches($FileContentReference.Value, $pattern)
@@ -40,7 +21,6 @@ foreach ($generatedFile in $generatedFiles) {
         -Status $currentFilename `
         -PercentComplete ((($processedCount++) / $generatedFiles.Count) * 100)
 
-    Edit-DateTimeOffset-Serialization -Filename $currentFilename -FileContentReference ([ref]$currentFileContent)
     Replace-Collection-Set-With-Init -FileContentReference ([ref]$currentFileContent)
 
     $currentFileContent = $currentFileContent -creplace `

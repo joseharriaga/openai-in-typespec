@@ -1829,8 +1829,6 @@ components:
           type: integer
           format: int64
           nullable: true
-          minimum: -9223372036854776000
-          maximum: 9223372036854776000
           description: |-
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.

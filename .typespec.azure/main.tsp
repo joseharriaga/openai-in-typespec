@@ -24,9 +24,9 @@ using TypeSpec.Http;
   "Azure OpenAI APIs for completions and search",
   {
     @doc("""
-Supported Cognitive Services endpoints (protocol and hostname, for example:
-https://westus.api.cognitive.microsoft.com).
-""")
+      Supported Cognitive Services endpoints (protocol and hostname, for example:
+      https://westus.api.cognitive.microsoft.com).
+      """)
     endpoint: string,
   }
 )

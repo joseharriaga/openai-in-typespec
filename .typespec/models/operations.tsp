@@ -15,9 +15,9 @@ interface Models {
   @operationId("listModels")
   @tag("Models")
   @summary("""
-  Lists the currently available models, and provides basic information about each one such as the
-  owner and availability.
-  """)
+    Lists the currently available models, and provides basic information about each one such as the
+    owner and availability.
+    """)
   listModels(): ListModelsResponse | ErrorResponse;
 
   @route("{model}")
@@ -25,9 +25,9 @@ interface Models {
   @operationId("retrieveModel")
   @tag("Models")
   @summary("""
-  Retrieves a model instance, providing basic information about the model such as the owner and
-  permissioning.
-  """)
+    Retrieves a model instance, providing basic information about the model such as the owner and
+    permissioning.
+    """)
   retrieve(
     /** The ID of the model to use for this request. */
     @path `model`: string,
@@ -38,8 +38,8 @@ interface Models {
   @operationId("deleteModel")
   @tag("Models")
   @summary("""
-  Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
-  """)
+    Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
+    """)
   delete(
     /** The model to delete */
     @path `model`: string,

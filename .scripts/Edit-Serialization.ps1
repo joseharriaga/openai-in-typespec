@@ -501,9 +501,9 @@ function Edit-ThreadRunSerialization {
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 16
 }
 
-Edit-AssistantSerialization
-Edit-AssistantCreationOptionsSerialization
-Edit-AssistantModificationOptionsSerialization
-Edit-InternalCreateThreadAndRunRequestSerialization
-Edit-RunCreationOptionsSerialization
-Edit-ThreadRunSerialization
+# Edit-AssistantSerialization
+# Edit-AssistantCreationOptionsSerialization
+# Edit-AssistantModificationOptionsSerialization
+# Edit-InternalCreateThreadAndRunRequestSerialization
+# Edit-RunCreationOptionsSerialization
+# Edit-ThreadRunSerialization

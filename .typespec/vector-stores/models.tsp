@@ -12,8 +12,8 @@ namespace OpenAI;
 /** The expiration policy for a vector store. */
 model VectorStoreExpirationAfter {
   @doc("""
-  Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`.
-  """)
+    Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`.
+    """)
   anchor: "last_active_at";
 
   /** The number of days after the anchor time that the vector store will expire. */
@@ -23,15 +23,15 @@ model VectorStoreExpirationAfter {
 }
 
 @doc("""
-A vector store is a collection of processed files can be used by the `file_search` tool.
-""")
+  A vector store is a collection of processed files can be used by the `file_search` tool.
+  """)
 model VectorStoreObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
   @doc("""
-  The object type, which is always `vector_store`.
-  """)
+    The object type, which is always `vector_store`.
+    """)
   object: "vector_store";
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
@@ -63,8 +63,8 @@ model VectorStoreObject {
   };
 
   @doc("""
-  The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use.
-  """)
+    The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use.
+    """)
   status: "expired" | "in_progress" | "completed";
 
   expires_after?: VectorStoreExpirationAfter;
@@ -86,8 +86,8 @@ model VectorStoreObject {
 
 model CreateVectorStoreRequest {
   @doc("""
-  A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
-  """)
+    A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
+    """)
   @maxItems(500)
   file_ids?: string[];
 
@@ -97,8 +97,8 @@ model CreateVectorStoreRequest {
   expires_after?: VectorStoreExpirationAfter;
 
   @doc("""
-  The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
-  """)
+    The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+    """)
   @extension("x-oaiExpandable", true)
   chunking_strategy?: AutoChunkingStrategyRequestParam | StaticChunkingStrategyRequestParam;
 
@@ -140,8 +140,8 @@ model VectorStoreFileObject {
   id: string;
 
   @doc("""
-  The object type, which is always `vector_store.file`.
-  """)
+    The object type, which is always `vector_store.file`.
+    """)
   object: "vector_store.file";
 
   /** The total vector store usage in bytes. Note that this may be different from the original file size. */
@@ -156,17 +156,17 @@ model VectorStoreFileObject {
   vector_store_id: string;
 
   @doc("""
-  The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use.
-  """)
+    The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use.
+    """)
   status: "in_progress" | "completed" | "cancelled" | "failed";
 
   @doc("""
-  The last error associated with this vector store file. Will be `null` if there are no errors.
-  """)
+    The last error associated with this vector store file. Will be `null` if there are no errors.
+    """)
   last_error: {
     @doc("""
-    One of `server_error` or `rate_limit_exceeded`.
-    """)
+      One of `server_error` or `rate_limit_exceeded`.
+      """)
     code:
       | "internal_error"
       | "file_not_found"
@@ -184,8 +184,8 @@ model VectorStoreFileObject {
 
 model CreateVectorStoreFileRequest {
   @doc("""
-  A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files.
-  """)
+    A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files.
+    """)
   file_id: string;
 
   chunking_strategy?: ChunkingStrategyRequestParam;
@@ -213,8 +213,8 @@ model VectorStoreFileBatchObject {
   id: string;
 
   @doc("""
-  The object type, which is always `vector_store.file_batch`.
-  """)
+    The object type, which is always `vector_store.file_batch`.
+    """)
   object: "vector_store.files_batch";
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
@@ -226,8 +226,8 @@ model VectorStoreFileBatchObject {
   vector_store_id: string;
 
   @doc("""
-  The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`.
-  """)
+    The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`.
+    """)
   status: "in_progress" | "completed" | "cancelled" | "failed";
 
   file_counts: {
@@ -250,8 +250,8 @@ model VectorStoreFileBatchObject {
 
 model CreateVectorStoreFileBatchRequest {
   @doc("""
-  A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
-  """)
+    A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
+    """)
   @minItems(1)
   @maxItems(500)
   file_ids: string[];
@@ -261,13 +261,13 @@ model CreateVectorStoreFileBatchRequest {
 
 // Tool customization: apply custom common base
 @doc("""
-This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
-""")
+  This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
+  """)
 model OtherChunkingStrategyResponseParam
   extends FileChunkingStrategyResponseParam {
   @doc("""
-  Always `other`.
-  """)
+    Always `other`.
+    """)
   type: "other";
 }
 
@@ -275,8 +275,8 @@ model OtherChunkingStrategyResponseParam
 model StaticChunkingStrategyResponseParam
   extends FileChunkingStrategyResponseParam {
   @doc("""
-  Always `static`.
-  """)
+    Always `static`.
+    """)
   type: "static";
 
   static: StaticChunkingStrategy;
@@ -284,29 +284,29 @@ model StaticChunkingStrategyResponseParam
 
 model StaticChunkingStrategy {
   @doc("""
-  The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
-  """)
+    The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
+    """)
   @minValue(100)
   @maxValue(4096)
   max_chunk_size_tokens: int32;
 
   @doc("""
-  The number of tokens that overlap between chunks. The default value is `400`.
-  
-  Note that the overlap must not exceed half of `max_chunk_size_tokens`.
-  """)
+    The number of tokens that overlap between chunks. The default value is `400`.
+    
+    Note that the overlap must not exceed half of `max_chunk_size_tokens`.
+    """)
   chunk_overlap_tokens: int32;
 }
 
 // Tool customization: apply custom common base
 @doc("""
-The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
-""")
+  The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
+  """)
 model AutoChunkingStrategyRequestParam
   extends FileChunkingStrategyRequestParam {
   @doc("""
-  Always `auto`.
-  """)
+    Always `auto`.
+    """)
   type: "auto";
 }
 
@@ -314,16 +314,16 @@ model AutoChunkingStrategyRequestParam
 model StaticChunkingStrategyRequestParam
   extends FileChunkingStrategyRequestParam {
   @doc("""
-  Always `static`.
-  """)
+    Always `static`.
+    """)
   type: "static";
 
   static: StaticChunkingStrategy;
 }
 
 @doc("""
-The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
-""")
+  The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
+  """)
 @extension("x-oaiExpandable", true)
 union ChunkingStrategyRequestParam {
   AutoChunkingStrategyRequestParam,

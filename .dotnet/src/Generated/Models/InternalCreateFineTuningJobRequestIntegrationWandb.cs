@@ -35,6 +35,6 @@ namespace OpenAI.FineTuning
         public string Project { get; }
         public string Name { get; set; }
         public string Entity { get; set; }
-        public IList<string> Tags { get; }
+        public IList<string> Tags { get; init; }
     }
 }

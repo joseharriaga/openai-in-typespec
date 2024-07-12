@@ -19,6 +19,6 @@ namespace OpenAI.Chat
             AdditionalProperties = additionalProperties;
         }
 
-        public IDictionary<string, BinaryData> AdditionalProperties { get; }
+        public IDictionary<string, BinaryData> AdditionalProperties { get; init; }
     }
 }

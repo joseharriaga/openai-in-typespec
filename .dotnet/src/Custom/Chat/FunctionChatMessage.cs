@@ -55,7 +55,6 @@ public partial class FunctionChatMessage : ChatMessage
     /// <summary>
     /// The <c>name</c> of the called function that this message provides information from.
     /// </summary>
-    [CodeGenMember("Name")]
     public required string FunctionName
     {
         get => _name;

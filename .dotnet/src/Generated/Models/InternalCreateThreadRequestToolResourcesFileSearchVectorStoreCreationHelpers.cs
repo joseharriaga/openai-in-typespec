@@ -22,6 +22,6 @@ namespace OpenAI.Assistants
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public IList<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> VectorStores { get; }
+        public IList<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore> VectorStores { get; init; }
     }
 }

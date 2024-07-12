@@ -24,6 +24,6 @@ namespace OpenAI.Assistants
             Metadata = metadata;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; init; }
     }
 }

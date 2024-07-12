@@ -25,6 +25,6 @@ namespace OpenAI.VectorStores
         }
 
         public string Name { get; set; }
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; init; }
     }
 }

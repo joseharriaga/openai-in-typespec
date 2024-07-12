@@ -27,7 +27,7 @@ namespace OpenAI.Chat
                 writer.WriteStringValue(FunctionDescription);
             }
             writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(Name);
+            writer.WriteStringValue(_name);
             if (Optional.IsDefined(FunctionParameters))
             {
                 writer.WritePropertyName("parameters"u8);

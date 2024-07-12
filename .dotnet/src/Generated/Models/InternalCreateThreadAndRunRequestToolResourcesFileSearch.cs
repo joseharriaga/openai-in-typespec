@@ -22,6 +22,6 @@ namespace OpenAI.Assistants
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public IList<string> VectorStoreIds { get; }
+        public IList<string> VectorStoreIds { get; init; }
     }
 }

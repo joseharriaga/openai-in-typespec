@@ -28,9 +28,9 @@ namespace OpenAI.FineTuning
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public IList<BinaryData> Messages { get; }
-        public IList<ChatTool> Tools { get; }
+        public IList<BinaryData> Messages { get; init; }
+        public IList<ChatTool> Tools { get; init; }
         public bool? ParallelToolCalls { get; set; }
-        public IList<ChatFunction> Functions { get; }
+        public IList<ChatFunction> Functions { get; init; }
     }
 }

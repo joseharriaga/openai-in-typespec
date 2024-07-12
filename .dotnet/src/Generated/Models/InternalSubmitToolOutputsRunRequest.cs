@@ -30,7 +30,7 @@ namespace OpenAI.Assistants
         {
         }
 
-        public IList<ToolOutput> ToolOutputs { get; }
+        public IList<ToolOutput> ToolOutputs { get; init; }
         public bool? Stream { get; set; }
     }
 }

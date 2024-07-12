@@ -30,7 +30,7 @@ namespace OpenAI.VectorStores
         {
         }
 
-        public IList<string> FileIds { get; }
+        public IList<string> FileIds { get; init; }
         public BinaryData ChunkingStrategy { get; set; }
     }
 }

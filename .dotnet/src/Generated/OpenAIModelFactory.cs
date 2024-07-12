@@ -40,11 +40,6 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        public static ChatFunction ChatFunction(string functionDescription = null, string name = null, BinaryData functionParameters = null)
-        {
-            return new ChatFunction(functionDescription, name, functionParameters, serializedAdditionalRawData: null);
-        }
-
         public static ChatTokenLogProbabilityInfo ChatTokenLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null, IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = null)
         {
             utf8ByteValues ??= new List<int>();

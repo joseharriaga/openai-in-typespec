@@ -22,9 +22,9 @@ namespace OpenAI.Chat
 
             writer.WriteStartObject();
             writer.WritePropertyName("arguments"u8);
-            writer.WriteStringValue(FunctionArguments);
+            writer.WriteStringValue(_arguments);
             writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(FunctionName);
+            writer.WriteStringValue(_name);
             if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)

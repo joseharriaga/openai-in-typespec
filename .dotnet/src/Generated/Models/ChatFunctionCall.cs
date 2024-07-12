@@ -10,16 +10,5 @@ namespace OpenAI.Chat
     public partial class ChatFunctionCall
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
-        internal ChatFunctionCall(string functionArguments, string functionName, IDictionary<string, BinaryData> serializedAdditionalRawData)
-        {
-            FunctionArguments = functionArguments;
-            FunctionName = functionName;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal ChatFunctionCall()
-        {
-        }
     }
 }

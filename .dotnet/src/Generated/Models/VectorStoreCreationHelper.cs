@@ -16,6 +16,6 @@ namespace OpenAI.Assistants
             _internalFileIds = new ChangeTrackingList<string>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; init; }
     }
 }

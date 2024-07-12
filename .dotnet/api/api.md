@@ -1,4 +1,3 @@
-
 ```csharp
 namespace OpenAI {
     public class OpenAIClient {
@@ -306,7 +305,7 @@ namespace OpenAI.Assistants {
     }
     public class FunctionToolDefinition : ToolDefinition {
         internal [SetsRequiredMembers]
-        public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null);
+        public FunctionToolDefinition(string name);
         public FunctionToolDefinition();
         public string Description { get; init; }
         public required string FunctionName { get; init; }
@@ -661,11 +660,13 @@ namespace OpenAI.Assistants {
         public FileSearchToolResources FileSearch { get; set; }
     }
     public class VectorStoreCreationHelper {
-        public VectorStoreCreationHelper(IEnumerable<string> fileIds, IDictionary<string, string> metadata = null);
-        public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files, IDictionary<string, string> metadata = null);
+        internal [SetsRequiredMembers]
+        public VectorStoreCreationHelper(IEnumerable<string> fileIds);
+        internal [SetsRequiredMembers]
+        public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files);
         public VectorStoreCreationHelper();
-        public IList<string> FileIds { get; }
-        public IDictionary<string, string> Metadata { get; }
+        public required IList<string> FileIds { get; init; }
+        public IDictionary<string, string> Metadata { get; init; }
     }
     public enum MessageImageDetail {
         Auto = 0,
@@ -873,19 +874,21 @@ namespace OpenAI.Chat {
         public float? Temperature { get; set; }
         public IDictionary<int, int> TokenSelectionBiases { get; init; }
         public ChatToolChoice ToolChoice { get; set; }
-        public IList<ChatTool> Tools { get; }
+        public IList<ChatTool> Tools { get; init; }
         public int? TopLogProbabilityCount { get; set; }
         public float? TopP { get; set; }
         public string User { get; set; }
     }
     public class AssistantChatMessage : ChatMessage {
         public AssistantChatMessage(string content);
-        public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
-        public AssistantChatMessage(ChatFunctionCall functionCall, string content = null);
+        public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls);
+        public AssistantChatMessage(ChatFunctionCall functionCall);
         public AssistantChatMessage(ChatCompletion chatCompletion);
+        public AssistantChatMessage();
+        public override IList<ChatMessageContentPart> Content { get; init; }
         public ChatFunctionCall FunctionCall { get; set; }
-        public string ParticipantName { get; init; }
-        public IList<ChatToolCall> ToolCalls { get; }
+        public string ParticipantName { get; set; }
+        public IList<ChatToolCall> ToolCalls { get; init; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ChatCompletion {
@@ -904,15 +907,19 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This field is marked as deprecated.")]
     public class ChatFunction {
-        public ChatFunction(string functionName, string functionDescription = null, BinaryData functionParameters = null);
-        public string FunctionDescription { get; init; }
-        public string FunctionName { get; }
-        public BinaryData FunctionParameters { get; init; }
+        internal [SetsRequiredMembers]
+        public ChatFunction(string functionName);
+        public ChatFunction();
+        public string FunctionDescription { get; set; }
+        public required string FunctionName { get; set; }
+        public BinaryData FunctionParameters { get; set; }
     }
     public class ChatFunctionCall {
+        internal [SetsRequiredMembers]
         public ChatFunctionCall(string functionName, string functionArguments);
-        public string FunctionArguments { get; }
-        public string FunctionName { get; }
+        public ChatFunctionCall();
+        public required string FunctionArguments { get; set; }
+        public required string FunctionName { get; set; }
     }
     public class ChatFunctionChoice {
         public ChatFunctionChoice(ChatFunction chatFunction);
@@ -921,10 +928,10 @@ namespace OpenAI.Chat {
     }
     public abstract class ChatMessage {
         protected ChatMessage();
-        public IList<ChatMessageContentPart> Content { get; protected init; }
+        public virtual IList<ChatMessageContentPart> Content { get; init; }
         public static AssistantChatMessage CreateAssistantMessage(string content);
-        public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
-        public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
+        public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls);
+        public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall);
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(string content);
@@ -1024,8 +1031,11 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This field is marked as deprecated.")]
     public class FunctionChatMessage : ChatMessage {
-        public FunctionChatMessage(string functionName, string content = null);
-        public string FunctionName { get; }
+        internal [SetsRequiredMembers]
+        public FunctionChatMessage(string functionName, string content);
+        public FunctionChatMessage();
+        public override required IList<ChatMessageContentPart> Content { get; init; }
+        public required string FunctionName { get; init; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public readonly struct ImageChatMessageContentPartDetail : IEquatable<ImageChatMessageContentPartDetail> {
@@ -1066,19 +1076,30 @@ namespace OpenAI.Chat {
         public ChatToolCallKind Kind { get; }
     }
     public class SystemChatMessage : ChatMessage {
+        internal [SetsRequiredMembers]
         public SystemChatMessage(string content);
+        public SystemChatMessage();
+        public override required IList<ChatMessageContentPart> Content { get; init; }
         public string ParticipantName { get; init; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ToolChatMessage : ChatMessage {
+        internal [SetsRequiredMembers]
         public ToolChatMessage(string toolCallId, string content);
-        public string ToolCallId { get; }
+        public ToolChatMessage();
+        public override required IList<ChatMessageContentPart> Content { get; init; }
+        public required string ToolCallId { get; set; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class UserChatMessage : ChatMessage {
+        internal [SetsRequiredMembers]
         public UserChatMessage(string content);
+        internal [SetsRequiredMembers]
         public UserChatMessage(IEnumerable<ChatMessageContentPart> content);
+        internal [SetsRequiredMembers]
         public UserChatMessage(params ChatMessageContentPart[] content);
+        public UserChatMessage();
+        public override required IList<ChatMessageContentPart> Content { get; init; }
         public string ParticipantName { get; init; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }

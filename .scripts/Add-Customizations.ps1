@@ -1,10 +1,10 @@
-function Replace-Collection-Set-With-Init([ref]$FileContentReference) {
-    $pattern = '(.*(List<|Dictionary<)[^{]*){ get; set; }'
+function Make-Mutable-Collections-Initable([ref]$FileContentReference) {
+    $pattern = '(.*public (IList<|IDictionary<)[^{]*){ get;( set;)? }'
     $matches = [regex]::Matches($FileContentReference.Value, $pattern)
 
     foreach ($match in $matches) {
         $propertyDeclaration = $match.Groups[1].Value
-        $newPropertyDeclaration = "$propertyDeclaration{ get; }"
+        $newPropertyDeclaration = "$propertyDeclaration{ get; init; }"
         $FileContentReference.Value = $FileContentReference.Value -replace [regex]::Escape($match.Value), $newPropertyDeclaration
     }
 }
@@ -21,7 +21,7 @@ foreach ($generatedFile in $generatedFiles) {
         -Status $currentFilename `
         -PercentComplete ((($processedCount++) / $generatedFiles.Count) * 100)
 
-    Replace-Collection-Set-With-Init -FileContentReference ([ref]$currentFileContent)
+    Make-Mutable-Collections-Initable -FileContentReference ([ref]$currentFileContent)
 
     $currentFileContent = $currentFileContent -creplace `
         "private IDictionary<string, BinaryData> _serializedAdditionalRawData", `

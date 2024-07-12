@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Chat;
 
@@ -32,6 +34,7 @@ public partial class ChatFunctionCall
     /// function.
     /// </param>
     /// <exception cref="ArgumentNullException"> <paramref name="functionName"/> or <paramref name="functionArguments"/> is null. </exception>
+    [SetsRequiredMembers]
     public ChatFunctionCall(string functionName, string functionArguments)
     {
         Argument.AssertNotNull(functionName, nameof(functionName));
@@ -41,10 +44,25 @@ public partial class ChatFunctionCall
         FunctionArguments = functionArguments;
     }
 
+    /// <summary> Initializes a new instance of <see cref="ChatFunctionCall"/>. </summary>
+    public ChatFunctionCall()
+    {}
+
+    [SetsRequiredMembers]
+    internal ChatFunctionCall(string arguments, string name, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    {
+        FunctionArguments = arguments;
+        FunctionName = name;
+        _serializedAdditionalRawData = serializedAdditionalRawData;
+    }
+
     // CUSTOM: Renamed.
     /// <summary> The name of the function to call. </summary>
-    [CodeGenMember("Name")]
-    public string FunctionName { get; }
+    public required string FunctionName
+    {
+        get => _name;
+        set => _name = value;
+    }
 
     // CUSTOM: Renamed.
     /// <summary> 
@@ -53,6 +71,15 @@ public partial class ChatFunctionCall
     /// defined by your function schema. Validate the arguments in your code before calling your
     /// function.
     /// </summary>
+    public required string FunctionArguments
+    {
+        get => _arguments;
+        set => _arguments = value;
+    }
+
+    [CodeGenMember("Name")]
+    private string _name;
+
     [CodeGenMember("Arguments")]
-    public string FunctionArguments { get; }
+    private string _arguments;
 }

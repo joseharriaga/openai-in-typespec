@@ -5,12 +5,14 @@
 
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI.Assistants;
+using Azure.Core;
 using Azure.Identity;
 using NUnit.Framework;
 using OpenAI;
@@ -672,44 +674,62 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     public async Task BrowserToolWorks()
     {
         Uri endpoint = new("https://openai-sdk-testing-tip.openai.azure.com");
-        AzureOpenAIClient azureClient = new(endpoint, new DefaultAzureCredential());
+        TokenCredential credential = new DefaultAzureCredential();
+        AzureOpenAIClientOptions options = new();
+        options.AddPolicy(new GenericActionPipelinePolicy(
+            requestAction: request =>
+            {
+                request.Headers.Set("X-Ms-Enable-Preview", "true");
+            }),
+            PipelinePosition.PerCall);
+        AzureOpenAIClient azureClient = new(endpoint, credential, options);
         AssistantClient client = azureClient.GetAssistantClient();
 
         Assistant assistant = await client.CreateAssistantAsync(
-            "gpt-4o",
+            "gpt-4-0125-preview",
             new AssistantCreationOptions()
             {
-                Instructions = "When asked to retrieve up-to-date financial information, use the browser tool.",
+                Instructions = "When asked to retrieve up-to-date information, use the browser tool.",
                 Tools =
                 {
                     new BingSearchToolDefinition()
                     {
-                        BingResourceId = "openai-sdk-test-bing-search-v7",
+                        BingResourceId = "/subscriptions/6a6fff00-4464-4eab-a6b1-0b533c7202e0/resourceGroups/rg-agent-test-westus2/providers/Microsoft.Bing/accounts/chattest-westus2-bing",
                     },
                 },
             });
         Validate(assistant);
 
-        AssistantThread thread = await client.CreateThreadAsync(new ThreadCreationOptions()
+        ThreadCreationOptions threadOptions = new()
         {
             InitialMessages =
             {
-                "What's the latest Microsoft stock price?",
+                "What's the date and what's headline news today?"
             },
-        });
-        Validate(thread);
+        };
 
-        ThreadRun run = await client.CreateRunAsync(thread.Id, assistant.Id);
-        Validate(run);
-        for (int i = 0; i < 8; i++)
+        List<TextAnnotationUpdate> annotationUpdates = [];
+        await foreach (StreamingUpdate update in client.CreateThreadAndRunStreamingAsync(assistant.Id, threadOptions))
         {
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            if (update is MessageContentUpdate contentUpdate)
+            {
+                Console.Write(contentUpdate.Text);
+                if (contentUpdate.TextAnnotation is not null)
+                {
+                    annotationUpdates.Add(contentUpdate.TextAnnotation);
+                }
+            }
         }
-        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+        Console.WriteLine();
 
-        await foreach (ThreadMessage message in client.GetMessagesAsync(thread.Id, ListOrder.OldestFirst))
+        if (annotationUpdates.Count > 0)
         {
-            Console.WriteLine(message.Content[0]?.Text);
+            Console.WriteLine("Citations:");
+            for (int i = 0; i <  annotationUpdates.Count; i++)
+            {
+                Console.WriteLine($"{(i + 1)}: {annotationUpdates[i].GetBingSearchTitle()}");
+                Console.WriteLine($"   {annotationUpdates[i].GetBingSearchUrl().AbsoluteUri}");
+            }
         }
     }
 

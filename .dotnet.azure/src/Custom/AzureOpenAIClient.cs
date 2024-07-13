@@ -331,13 +331,14 @@ public partial class AzureOpenAIClient : OpenAIClient
     private static PipelinePolicy CreateAddUserAgentHeaderPolicy(AzureOpenAIClientOptions options = null)
     {
         Core.TelemetryDetails telemetryDetails = new(typeof(AzureOpenAIClient).Assembly);
-        return new GenericActionPipelinePolicy(message =>
-        {
-            if (message?.Request?.Headers?.TryGetValue(s_userAgentHeaderKey, out string _) == false)
+        return new GenericActionPipelinePolicy(
+            requestAction: request =>
             {
-                message.Request.Headers.Set(s_userAgentHeaderKey, telemetryDetails.ToString());
-            }
-        });
+                if (request?.Headers?.TryGetValue(s_userAgentHeaderKey, out string _) == false)
+                {
+                    request.Headers.Set(s_userAgentHeaderKey, telemetryDetails.ToString());
+                }
+            });
     }
 
     private static readonly string s_aoaiEndpointEnvironmentVariable = "AZURE_OPENAI_ENDPOINT";

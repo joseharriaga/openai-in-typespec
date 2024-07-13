@@ -18,8 +18,6 @@ public static class RunStepDetailsUpdateExtensions
     [Experimental("AOAI001")]
     public static bool IsBingSearchKind(this RunStepDetailsUpdate baseUpdate)
     {
-        return baseUpdate?._toolCall?
-            ._serializedAdditionalRawData.TryGetValue("type", out BinaryData typeData) == true
-                && typeData.ToString() == "browser";
+        return baseUpdate?._toolCall?.Type == "browser";
     }
 }

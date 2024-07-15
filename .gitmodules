@@ -1,0 +1,3 @@
+[submodule ".input.swagger/openai-openapi"]
+	path = .input.swagger/openai-openapi
+	url = https://github.com/openai/openai-openapi.git

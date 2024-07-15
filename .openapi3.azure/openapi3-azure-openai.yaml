@@ -59,6 +59,17 @@ security:
       - https://cognitiveservices.azure.com/.default
 components:
   schemas:
+    AzureChatCompletionChoice:
+      type: object
+      properties:
+        content_filter_results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureContentFilterResultForPrompt'
+          description: 'TODO: documentation'
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionChoice'
+      description: 'TODO: documentation'
     AzureChatCompletionResponseMessage:
       type: object
       properties:
@@ -830,7 +841,43 @@ components:
               - content_filter_results
           description: The Responsible AI content filter annotations associated with prompt inputs into chat completions.
       allOf:
-        - $ref: '#/components/schemas/OpenAI.CreateChatCompletionResponse'
+        - type: object
+          required:
+            - id
+            - choices
+            - created
+            - model
+            - object
+          properties:
+            id:
+              type: string
+              description: A unique identifier for the chat completion.
+            choices:
+              type: array
+              items:
+                $ref: '#/components/schemas/AzureChatCompletionChoice'
+              description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
+            created:
+              type: integer
+              format: unixtime
+              description: The Unix timestamp (in seconds) of when the chat completion was created.
+            model:
+              type: string
+              description: The model used for the chat completion.
+            system_fingerprint:
+              type: string
+              description: |-
+                This fingerprint represents the backend configuration that the model runs with.
+
+                Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+            object:
+              type: string
+              enum:
+                - chat.completion
+              description: The object type, which is always `chat.completion`.
+            usage:
+              $ref: '#/components/schemas/OpenAI.CompletionUsage'
+          description: Represents a chat completion response returned by model, based on the provided input.
       description: |-
         The extended top-level chat completion response model for the Azure OpenAI service.
         This model adds Responsible AI content filter annotations for prompt input.
@@ -1283,6 +1330,46 @@ components:
           description: The parameter information to control the use of the Elasticsearch data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
+    OpenAI.ChatCompletionChoice:
+      type: object
+      required:
+        - finish_reason
+        - index
+        - message
+        - logprobs
+      properties:
+        finish_reason:
+          type: string
+          enum:
+            - stop
+            - length
+            - tool_calls
+            - content_filter
+            - function_call
+          description: |-
+            The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+            `length` if the maximum number of tokens specified in the request was reached,
+            `content_filter` if content was omitted due to a flag from our content filters,
+            `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+        index:
+          type: integer
+          format: int32
+          description: The index of the choice in the list of choices.
+        message:
+          $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
+        logprobs:
+          type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
+              nullable: true
+              description: A list of message content tokens with log probability information.
+          required:
+            - content
+          nullable: true
+          description: Log probability information for the choice.
     OpenAI.ChatCompletionFunctionCallOption:
       type: object
       required:
@@ -1822,6 +1909,8 @@ components:
           type: integer
           format: int64
           nullable: true
+          minimum: -9223372036854776000
+          maximum: 9223372036854776000
           description: |-
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
@@ -1904,82 +1993,6 @@ components:
 
             A list of functions the model may generate JSON inputs for.
           deprecated: true
-    OpenAI.CreateChatCompletionResponse:
-      type: object
-      required:
-        - id
-        - choices
-        - created
-        - model
-        - object
-      properties:
-        id:
-          type: string
-          description: A unique identifier for the chat completion.
-        choices:
-          type: array
-          items:
-            type: object
-            properties:
-              finish_reason:
-                type: string
-                enum:
-                  - stop
-                  - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
-                description: |-
-                  The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-                  `length` if the maximum number of tokens specified in the request was reached,
-                  `content_filter` if content was omitted due to a flag from our content filters,
-                  `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-              index:
-                type: integer
-                format: int32
-                description: The index of the choice in the list of choices.
-              message:
-                $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
-              logprobs:
-                type: object
-                properties:
-                  content:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
-                    nullable: true
-                    description: A list of message content tokens with log probability information.
-                required:
-                  - content
-                nullable: true
-                description: Log probability information for the choice.
-            required:
-              - finish_reason
-              - index
-              - message
-              - logprobs
-          description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
-        created:
-          type: integer
-          format: unixtime
-          description: The Unix timestamp (in seconds) of when the chat completion was created.
-        model:
-          type: string
-          description: The model used for the chat completion.
-        system_fingerprint:
-          type: string
-          description: |-
-            This fingerprint represents the backend configuration that the model runs with.
-
-            Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-        object:
-          type: string
-          enum:
-            - chat.completion
-          description: The object type, which is always `chat.completion`.
-        usage:
-          $ref: '#/components/schemas/OpenAI.CompletionUsage'
-      description: Represents a chat completion response returned by model, based on the provided input.
     OpenAI.CreateImageRequest:
       type: object
       required:

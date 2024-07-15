@@ -9,11 +9,13 @@ namespace OpenAI {
     @@withoutOmittedProperties(CreateChatCompletionRequest, "stream_options");
 }
 
-namespace AzureOpenAI {
-    namespace Client {
-        @client
-        interface AzureOpenAIClient {
-            createSpeech is OpenAI.Audio.createSpeech;
-        }
+namespace AzureOpenAI.Client {
+    
+    @client({
+        name: "AzureOpenAIClient",
+        service: AzureOpenAI,
+    })
+    interface AzureOpenAIClient {
+        createSpeech is OpenAI.Audio.createSpeech;
     }
 }

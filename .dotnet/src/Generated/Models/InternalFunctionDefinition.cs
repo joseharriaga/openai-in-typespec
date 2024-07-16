@@ -9,13 +9,13 @@ namespace OpenAI
 {
     internal partial class InternalFunctionDefinition
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalFunctionDefinition(string name)
         {
             Argument.AssertNotNull(name, nameof(name));
 
             Name = name;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalFunctionDefinition(string description, string name, BinaryData parameters, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -23,7 +23,7 @@ namespace OpenAI
             Description = description;
             Name = name;
             Parameters = parameters;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalFunctionDefinition()

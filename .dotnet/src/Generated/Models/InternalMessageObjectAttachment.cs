@@ -9,18 +9,18 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageObjectAttachment
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalMessageObjectAttachment()
         {
             Tools = new ChangeTrackingList<BinaryData>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalMessageObjectAttachment(string fileId, IReadOnlyList<BinaryData> tools, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Tools = tools;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public string FileId { get; }

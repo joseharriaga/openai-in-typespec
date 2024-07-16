@@ -9,8 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalCreateFineTuningJobRequest
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalCreateFineTuningJobRequest(InternalCreateFineTuningJobRequestModel model, string trainingFile)
         {
             Argument.AssertNotNull(trainingFile, nameof(trainingFile));
@@ -18,6 +17,7 @@ namespace OpenAI.FineTuning
             Model = model;
             TrainingFile = trainingFile;
             Integrations = new ChangeTrackingList<InternalCreateFineTuningJobRequestIntegration>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalCreateFineTuningJobRequest(InternalCreateFineTuningJobRequestModel model, string trainingFile, InternalCreateFineTuningJobRequestHyperparameters hyperparameters, string suffix, string validationFile, IList<InternalCreateFineTuningJobRequestIntegration> integrations, int? seed, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -29,7 +29,7 @@ namespace OpenAI.FineTuning
             ValidationFile = validationFile;
             Integrations = integrations;
             Seed = seed;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalCreateFineTuningJobRequest()

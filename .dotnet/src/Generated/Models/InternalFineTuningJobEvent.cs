@@ -9,8 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJobEvent
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalFineTuningJobEvent(string id, DateTimeOffset createdAt, InternalFineTuningJobEventLevel level, string message)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -20,6 +19,7 @@ namespace OpenAI.FineTuning
             CreatedAt = createdAt;
             Level = level;
             Message = message;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalFineTuningJobEvent(string id, DateTimeOffset createdAt, InternalFineTuningJobEventLevel level, string message, InternalFineTuningJobEventObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -29,7 +29,7 @@ namespace OpenAI.FineTuning
             Level = level;
             Message = message;
             Object = @object;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalFineTuningJobEvent()

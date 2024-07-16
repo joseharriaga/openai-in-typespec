@@ -9,8 +9,7 @@ namespace OpenAI.Moderations
 {
     public partial class ModerationResult
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal ModerationResult(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores)
         {
             Argument.AssertNotNull(categories, nameof(categories));
@@ -19,6 +18,7 @@ namespace OpenAI.Moderations
             Flagged = flagged;
             Categories = categories;
             CategoryScores = categoryScores;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ModerationResult(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -26,7 +26,7 @@ namespace OpenAI.Moderations
             Flagged = flagged;
             Categories = categories;
             CategoryScores = categoryScores;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal ModerationResult()

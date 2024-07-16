@@ -9,17 +9,17 @@ namespace OpenAI.Assistants
 {
     internal partial class MessageDeltaContentImageUrlObjectImageUrl
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal MessageDeltaContentImageUrlObjectImageUrl()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageDeltaContentImageUrlObjectImageUrl(Uri url, string detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Url = url;
             Detail = detail;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public Uri Url { get; }

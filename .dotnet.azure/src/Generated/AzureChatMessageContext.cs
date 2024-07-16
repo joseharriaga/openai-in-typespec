@@ -43,12 +43,12 @@ namespace Azure.AI.OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         /// <summary> Initializes a new instance of <see cref="AzureChatMessageContext"/>. </summary>
         internal AzureChatMessageContext()
         {
             Citations = new ChangeTrackingList<AzureChatCitation>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatMessageContext"/>. </summary>
@@ -61,7 +61,7 @@ namespace Azure.AI.OpenAI.Chat
             Intent = intent;
             Citations = citations;
             AllRetrievedDocuments = allRetrievedDocuments;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> The detected intent from the chat history, which is used to carry conversation context between interactions. </summary>

@@ -21,29 +21,33 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("n_epochs"u8);
+            if (!SerializedAdditionalRawData.ContainsKey("n_epochs"))
+            {
+                writer.WritePropertyName("n_epochs"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(NEpochs);
 #else
-            using (JsonDocument document = JsonDocument.Parse(NEpochs))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
-            if (true && _serializedAdditionalRawData != null)
-            {
-                foreach (var item in _serializedAdditionalRawData)
+                using (JsonDocument document = JsonDocument.Parse(NEpochs))
                 {
-                    writer.WritePropertyName(item.Key);
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                {
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -78,7 +82,7 @@ namespace OpenAI.FineTuning
                     nEpochs = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

@@ -40,11 +40,11 @@ namespace Azure.AI.OpenAI
         /// </list>
         /// </para>
         /// </summary>
-        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         /// <summary> Initializes a new instance of <see cref="ImageContentFilterResultForResponse"/>. </summary>
         internal ImageContentFilterResultForResponse()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="ImageContentFilterResultForResponse"/>. </summary>
@@ -75,7 +75,7 @@ namespace Azure.AI.OpenAI
             Violence = violence;
             Hate = hate;
             SelfHarm = selfHarm;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary>

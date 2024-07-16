@@ -9,14 +9,14 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalCreateFineTuningJobRequestIntegrationWandb
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalCreateFineTuningJobRequestIntegrationWandb(string project)
         {
             Argument.AssertNotNull(project, nameof(project));
 
             Project = project;
             Tags = new ChangeTrackingList<string>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalCreateFineTuningJobRequestIntegrationWandb(string project, string name, string entity, IList<string> tags, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -25,7 +25,7 @@ namespace OpenAI.FineTuning
             Name = name;
             Entity = entity;
             Tags = tags;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalCreateFineTuningJobRequestIntegrationWandb()

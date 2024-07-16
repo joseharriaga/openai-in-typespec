@@ -21,50 +21,66 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            if (ToolResources != null)
+            if (!SerializedAdditionalRawData.ContainsKey("id"))
             {
-                writer.WritePropertyName("tool_resources"u8);
-                writer.WriteObjectValue<ToolResources>(ToolResources, options);
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
             {
-                writer.WriteNull("tool_resources");
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
             {
-                writer.WritePropertyName("metadata"u8);
-                writer.WriteStartObject();
-                foreach (var item in Metadata)
+                writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("tool_resources"))
+            {
+                if (ToolResources != null)
                 {
-                    writer.WritePropertyName(item.Key);
-                    writer.WriteStringValue(item.Value);
+                    writer.WritePropertyName("tool_resources"u8);
+                    writer.WriteObjectValue<ToolResources>(ToolResources, options);
                 }
-                writer.WriteEndObject();
-            }
-            else
-            {
-                writer.WriteNull("metadata");
-            }
-            if (true && _serializedAdditionalRawData != null)
-            {
-                foreach (var item in _serializedAdditionalRawData)
+                else
                 {
-                    writer.WritePropertyName(item.Key);
+                    writer.WriteNull("tool_resources");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("metadata"))
+            {
+                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+                {
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+                else
+                {
+                    writer.WriteNull("metadata");
+                }
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                {
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -138,7 +154,7 @@ namespace OpenAI.Assistants
                     metadata = dictionary;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

@@ -40,8 +40,7 @@ namespace Azure.AI.OpenAI
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         /// <summary> Initializes a new instance of <see cref="ContentFilterProtectedMaterialResult"/>. </summary>
         /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
         /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
@@ -49,6 +48,7 @@ namespace Azure.AI.OpenAI
         {
             Filtered = filtered;
             Detected = detected;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterProtectedMaterialResult"/>. </summary>
@@ -61,7 +61,7 @@ namespace Azure.AI.OpenAI
             Filtered = filtered;
             Detected = detected;
             Citation = citation;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterProtectedMaterialResult"/> for deserialization. </summary>

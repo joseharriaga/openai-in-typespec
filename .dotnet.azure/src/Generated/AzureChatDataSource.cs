@@ -47,11 +47,11 @@ namespace Azure.AI.OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         /// <summary> Initializes a new instance of <see cref="AzureChatDataSource"/>. </summary>
         protected AzureChatDataSource()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatDataSource"/>. </summary>
@@ -60,8 +60,12 @@ namespace Azure.AI.OpenAI.Chat
         internal AzureChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
+
+        internal AzureChatDataSource(string type)
+            : this(type, new ChangeTrackingDictionary<string, BinaryData>())
+        {}
 
         /// <summary> The differentiating type identifier for the data source. </summary>
         internal string Type { get; set; }

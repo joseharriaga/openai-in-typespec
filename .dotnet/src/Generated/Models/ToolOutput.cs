@@ -9,17 +9,17 @@ namespace OpenAI.Assistants
 {
     public partial class ToolOutput
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public ToolOutput()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ToolOutput(string toolCallId, string output, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             ToolCallId = toolCallId;
             Output = output;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public string ToolCallId { get; init; }

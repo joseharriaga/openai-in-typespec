@@ -21,45 +21,61 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("choices"u8);
-            writer.WriteStartArray();
-            foreach (var item in Choices)
+            if (!SerializedAdditionalRawData.ContainsKey("id"))
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteEndArray();
-            writer.WritePropertyName("created"u8);
-            writer.WriteNumberValue(Created, "U");
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model);
-            if (Optional.IsDefined(SystemFingerprint))
+            if (!SerializedAdditionalRawData.ContainsKey("choices"))
+            {
+                writer.WritePropertyName("choices"u8);
+                writer.WriteStartArray();
+                foreach (var item in Choices)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("created"))
+            {
+                writer.WritePropertyName("created"u8);
+                writer.WriteNumberValue(Created, "U");
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            {
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("system_fingerprint") && Optional.IsDefined(SystemFingerprint))
             {
                 writer.WritePropertyName("system_fingerprint"u8);
                 writer.WriteStringValue(SystemFingerprint);
             }
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            if (Optional.IsDefined(Usage))
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            {
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("usage") && Optional.IsDefined(Usage))
             {
                 writer.WritePropertyName("usage"u8);
                 writer.WriteObjectValue(Usage, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -139,7 +155,7 @@ namespace OpenAI.Chat
                     usage = ChatTokenUsage.DeserializeChatTokenUsage(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

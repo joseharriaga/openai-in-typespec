@@ -10,8 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class ChatTokenTopLogProbabilityInfo
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal ChatTokenTopLogProbabilityInfo(string token, float logProbability, IEnumerable<int> utf8ByteValues)
         {
             Argument.AssertNotNull(token, nameof(token));
@@ -19,6 +18,7 @@ namespace OpenAI.Chat
             Token = token;
             LogProbability = logProbability;
             Utf8ByteValues = utf8ByteValues?.ToList();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ChatTokenTopLogProbabilityInfo(string token, float logProbability, IReadOnlyList<int> utf8ByteValues, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -26,7 +26,7 @@ namespace OpenAI.Chat
             Token = token;
             LogProbability = logProbability;
             Utf8ByteValues = utf8ByteValues;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal ChatTokenTopLogProbabilityInfo()

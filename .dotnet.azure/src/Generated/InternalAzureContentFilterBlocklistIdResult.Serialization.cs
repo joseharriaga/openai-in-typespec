@@ -21,24 +21,31 @@ namespace Azure.AI.OpenAI
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("filtered"u8);
-            writer.WriteBooleanValue(Filtered);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (!SerializedAdditionalRawData.ContainsKey("id"))
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("filtered"))
+            {
+                writer.WritePropertyName("filtered"u8);
+                writer.WriteBooleanValue(Filtered);
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }

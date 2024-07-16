@@ -10,8 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IEnumerable<RunStepCodeInterpreterOutput> outputs)
         {
             Argument.AssertNotNull(input, nameof(input));
@@ -19,13 +18,14 @@ namespace OpenAI.Assistants
 
             Input = input;
             Outputs = outputs.ToList();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IReadOnlyList<RunStepCodeInterpreterOutput> outputs, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Input = input;
             Outputs = outputs;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter()

@@ -21,16 +21,22 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("messages"u8);
-            writer.WriteStartArray();
-            foreach (var item in Messages)
+            if (!SerializedAdditionalRawData.ContainsKey("messages"))
             {
-                writer.WriteObjectValue<ChatMessage>(item, options);
+                writer.WritePropertyName("messages"u8);
+                writer.WriteStartArray();
+                foreach (var item in Messages)
+                {
+                    writer.WriteObjectValue<ChatMessage>(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model.ToString());
-            if (Optional.IsDefined(FrequencyPenalty))
+            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            {
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("frequency_penalty") && Optional.IsDefined(FrequencyPenalty))
             {
                 if (FrequencyPenalty != null)
                 {
@@ -42,7 +48,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("frequency_penalty");
                 }
             }
-            if (Optional.IsCollectionDefined(LogitBiases))
+            if (!SerializedAdditionalRawData.ContainsKey("logit_bias") && Optional.IsCollectionDefined(LogitBiases))
             {
                 if (LogitBiases != null)
                 {
@@ -54,7 +60,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("logit_bias");
                 }
             }
-            if (Optional.IsDefined(IncludeLogProbabilities))
+            if (!SerializedAdditionalRawData.ContainsKey("logprobs") && Optional.IsDefined(IncludeLogProbabilities))
             {
                 if (IncludeLogProbabilities != null)
                 {
@@ -66,7 +72,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("logprobs");
                 }
             }
-            if (Optional.IsDefined(TopLogProbabilityCount))
+            if (!SerializedAdditionalRawData.ContainsKey("top_logprobs") && Optional.IsDefined(TopLogProbabilityCount))
             {
                 if (TopLogProbabilityCount != null)
                 {
@@ -78,7 +84,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("top_logprobs");
                 }
             }
-            if (Optional.IsDefined(MaxTokens))
+            if (!SerializedAdditionalRawData.ContainsKey("max_tokens") && Optional.IsDefined(MaxTokens))
             {
                 if (MaxTokens != null)
                 {
@@ -90,7 +96,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("max_tokens");
                 }
             }
-            if (Optional.IsDefined(N))
+            if (!SerializedAdditionalRawData.ContainsKey("n") && Optional.IsDefined(N))
             {
                 if (N != null)
                 {
@@ -102,7 +108,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("n");
                 }
             }
-            if (Optional.IsDefined(PresencePenalty))
+            if (!SerializedAdditionalRawData.ContainsKey("presence_penalty") && Optional.IsDefined(PresencePenalty))
             {
                 if (PresencePenalty != null)
                 {
@@ -114,12 +120,12 @@ namespace OpenAI.Chat
                     writer.WriteNull("presence_penalty");
                 }
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (!SerializedAdditionalRawData.ContainsKey("response_format") && Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteObjectValue(ResponseFormat, options);
             }
-            if (Optional.IsDefined(Seed))
+            if (!SerializedAdditionalRawData.ContainsKey("seed") && Optional.IsDefined(Seed))
             {
                 if (Seed != null)
                 {
@@ -131,7 +137,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("seed");
                 }
             }
-            if (Optional.IsCollectionDefined(StopSequences))
+            if (!SerializedAdditionalRawData.ContainsKey("stop") && Optional.IsCollectionDefined(StopSequences))
             {
                 if (StopSequences != null)
                 {
@@ -143,7 +149,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("stop");
                 }
             }
-            if (Optional.IsDefined(Stream))
+            if (!SerializedAdditionalRawData.ContainsKey("stream") && Optional.IsDefined(Stream))
             {
                 if (Stream != null)
                 {
@@ -155,7 +161,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("stream");
                 }
             }
-            if (Optional.IsDefined(StreamOptions))
+            if (!SerializedAdditionalRawData.ContainsKey("stream_options") && Optional.IsDefined(StreamOptions))
             {
                 if (StreamOptions != null)
                 {
@@ -167,7 +173,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("stream_options");
                 }
             }
-            if (Optional.IsDefined(Temperature))
+            if (!SerializedAdditionalRawData.ContainsKey("temperature") && Optional.IsDefined(Temperature))
             {
                 if (Temperature != null)
                 {
@@ -179,7 +185,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("temperature");
                 }
             }
-            if (Optional.IsDefined(TopP))
+            if (!SerializedAdditionalRawData.ContainsKey("top_p") && Optional.IsDefined(TopP))
             {
                 if (TopP != null)
                 {
@@ -191,7 +197,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("top_p");
                 }
             }
-            if (Optional.IsCollectionDefined(Tools))
+            if (!SerializedAdditionalRawData.ContainsKey("tools") && Optional.IsCollectionDefined(Tools))
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
@@ -201,27 +207,27 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(ToolChoice))
+            if (!SerializedAdditionalRawData.ContainsKey("tool_choice") && Optional.IsDefined(ToolChoice))
             {
                 writer.WritePropertyName("tool_choice"u8);
                 writer.WriteObjectValue<ChatToolChoice>(ToolChoice, options);
             }
-            if (Optional.IsDefined(ParallelToolCallsEnabled))
+            if (!SerializedAdditionalRawData.ContainsKey("parallel_tool_calls") && Optional.IsDefined(ParallelToolCallsEnabled))
             {
                 writer.WritePropertyName("parallel_tool_calls"u8);
                 writer.WriteBooleanValue(ParallelToolCallsEnabled.Value);
             }
-            if (Optional.IsDefined(User))
+            if (!SerializedAdditionalRawData.ContainsKey("user") && Optional.IsDefined(User))
             {
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(User);
             }
-            if (Optional.IsDefined(FunctionChoice))
+            if (!SerializedAdditionalRawData.ContainsKey("function_call") && Optional.IsDefined(FunctionChoice))
             {
                 writer.WritePropertyName("function_call"u8);
                 writer.WriteObjectValue<ChatFunctionChoice>(FunctionChoice, options);
             }
-            if (Optional.IsCollectionDefined(Functions))
+            if (!SerializedAdditionalRawData.ContainsKey("functions") && Optional.IsCollectionDefined(Functions))
             {
                 writer.WritePropertyName("functions"u8);
                 writer.WriteStartArray();
@@ -231,20 +237,21 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -499,7 +506,7 @@ namespace OpenAI.Chat
                     functions = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

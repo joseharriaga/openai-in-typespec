@@ -9,16 +9,16 @@ namespace OpenAI.Assistants
 {
     internal abstract partial class MessageDeltaContent
     {
-        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         protected MessageDeltaContent()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageDeltaContent(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal string Type { get; init; }

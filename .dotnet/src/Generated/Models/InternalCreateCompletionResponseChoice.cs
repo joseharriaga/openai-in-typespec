@@ -9,8 +9,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionResponseChoice
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalCreateCompletionResponseChoice(InternalCreateCompletionResponseChoiceFinishReason finishReason, int index, InternalCreateCompletionResponseChoiceLogprobs logprobs, string text)
         {
             Argument.AssertNotNull(text, nameof(text));
@@ -19,6 +18,7 @@ namespace OpenAI.LegacyCompletions
             Index = index;
             Logprobs = logprobs;
             Text = text;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalCreateCompletionResponseChoice(InternalCreateCompletionResponseChoiceFinishReason finishReason, int index, InternalCreateCompletionResponseChoiceLogprobs logprobs, string text, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -27,7 +27,7 @@ namespace OpenAI.LegacyCompletions
             Index = index;
             Logprobs = logprobs;
             Text = text;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalCreateCompletionResponseChoice()

@@ -9,19 +9,19 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalStaticChunkingStrategyDetails
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalStaticChunkingStrategyDetails(int maxChunkSizeTokens, int chunkOverlapTokens)
         {
             MaxChunkSizeTokens = maxChunkSizeTokens;
             ChunkOverlapTokens = chunkOverlapTokens;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalStaticChunkingStrategyDetails(int maxChunkSizeTokens, int chunkOverlapTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             MaxChunkSizeTokens = maxChunkSizeTokens;
             ChunkOverlapTokens = chunkOverlapTokens;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalStaticChunkingStrategyDetails()

@@ -9,8 +9,7 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStore
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStoreStatus status, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -24,6 +23,7 @@ namespace OpenAI.VectorStores
             Status = status;
             LastActiveAt = lastActiveAt;
             Metadata = metadata;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal VectorStore(string id, InternalVectorStoreObjectObject @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStoreStatus status, VectorStoreExpirationPolicy expirationPolicy, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -39,7 +39,7 @@ namespace OpenAI.VectorStores
             ExpiresAt = expiresAt;
             LastActiveAt = lastActiveAt;
             Metadata = metadata;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal VectorStore()

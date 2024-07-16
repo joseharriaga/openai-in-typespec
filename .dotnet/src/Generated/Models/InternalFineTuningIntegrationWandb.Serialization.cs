@@ -21,9 +21,12 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("project"u8);
-            writer.WriteStringValue(Project);
-            if (Optional.IsDefined(Name))
+            if (!SerializedAdditionalRawData.ContainsKey("project"))
+            {
+                writer.WritePropertyName("project"u8);
+                writer.WriteStringValue(Project);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("name") && Optional.IsDefined(Name))
             {
                 if (Name != null)
                 {
@@ -35,7 +38,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("name");
                 }
             }
-            if (Optional.IsDefined(Entity))
+            if (!SerializedAdditionalRawData.ContainsKey("entity") && Optional.IsDefined(Entity))
             {
                 if (Entity != null)
                 {
@@ -47,7 +50,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("entity");
                 }
             }
-            if (Optional.IsCollectionDefined(Tags))
+            if (!SerializedAdditionalRawData.ContainsKey("tags") && Optional.IsCollectionDefined(Tags))
             {
                 writer.WritePropertyName("tags"u8);
                 writer.WriteStartArray();
@@ -57,20 +60,21 @@ namespace OpenAI.FineTuning
                 }
                 writer.WriteEndArray();
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -142,7 +146,7 @@ namespace OpenAI.FineTuning
                     tags = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

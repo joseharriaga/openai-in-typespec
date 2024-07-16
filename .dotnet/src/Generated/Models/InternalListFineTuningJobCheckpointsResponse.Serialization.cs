@@ -21,16 +21,22 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("data"u8);
-            writer.WriteStartArray();
-            foreach (var item in Data)
+            if (!SerializedAdditionalRawData.ContainsKey("data"))
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("data"u8);
+                writer.WriteStartArray();
+                foreach (var item in Data)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            if (Optional.IsDefined(FirstId))
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            {
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("first_id") && Optional.IsDefined(FirstId))
             {
                 if (FirstId != null)
                 {
@@ -42,7 +48,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("first_id");
                 }
             }
-            if (Optional.IsDefined(LastId))
+            if (!SerializedAdditionalRawData.ContainsKey("last_id") && Optional.IsDefined(LastId))
             {
                 if (LastId != null)
                 {
@@ -54,22 +60,26 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("last_id");
                 }
             }
-            writer.WritePropertyName("has_more"u8);
-            writer.WriteBooleanValue(HasMore);
-            if (true && _serializedAdditionalRawData != null)
+            if (!SerializedAdditionalRawData.ContainsKey("has_more"))
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("has_more"u8);
+                writer.WriteBooleanValue(HasMore);
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -143,7 +153,7 @@ namespace OpenAI.FineTuning
                     hasMore = property.Value.GetBoolean();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

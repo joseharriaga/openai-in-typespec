@@ -9,17 +9,17 @@ namespace OpenAI.Assistants
 {
     internal partial class MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageDeltaContentTextAnnotationsFileCitationObjectFileCitation(string fileId, string quote, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Quote = quote;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public string FileId { get; }

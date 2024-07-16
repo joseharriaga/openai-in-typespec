@@ -21,13 +21,22 @@ namespace OpenAI.Batch
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("input_file_id"u8);
-            writer.WriteStringValue(InputFileId);
-            writer.WritePropertyName("endpoint"u8);
-            writer.WriteStringValue(Endpoint.ToString());
-            writer.WritePropertyName("completion_window"u8);
-            writer.WriteStringValue(CompletionWindow.ToString());
-            if (Optional.IsCollectionDefined(Metadata))
+            if (!SerializedAdditionalRawData.ContainsKey("input_file_id"))
+            {
+                writer.WritePropertyName("input_file_id"u8);
+                writer.WriteStringValue(InputFileId);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("endpoint"))
+            {
+                writer.WritePropertyName("endpoint"u8);
+                writer.WriteStringValue(Endpoint.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("completion_window"))
+            {
+                writer.WritePropertyName("completion_window"u8);
+                writer.WriteStringValue(CompletionWindow.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("metadata") && Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
                 {
@@ -45,20 +54,21 @@ namespace OpenAI.Batch
                     writer.WriteNull("metadata");
                 }
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -120,7 +130,7 @@ namespace OpenAI.Batch
                     metadata = dictionary;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

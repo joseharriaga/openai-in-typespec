@@ -21,24 +21,31 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("connection_string"u8);
-            writer.WriteStringValue(ConnectionString);
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (!SerializedAdditionalRawData.ContainsKey("connection_string"))
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("connection_string"u8);
+                writer.WriteStringValue(ConnectionString);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("type"))
+            {
+                writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type);
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }

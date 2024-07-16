@@ -9,8 +9,7 @@ namespace OpenAI.VectorStores
 {
     public readonly partial struct VectorStoreFileCounts
     {
-        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal VectorStoreFileCounts(int inProgress, int completed, int failed, int cancelled, int total)
         {
             InProgress = inProgress;
@@ -18,6 +17,7 @@ namespace OpenAI.VectorStores
             Failed = failed;
             Cancelled = cancelled;
             Total = total;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal VectorStoreFileCounts(int inProgress, int completed, int failed, int cancelled, int total, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -27,7 +27,7 @@ namespace OpenAI.VectorStores
             Failed = failed;
             Cancelled = cancelled;
             Total = total;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public VectorStoreFileCounts()

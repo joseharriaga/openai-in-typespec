@@ -40,14 +40,14 @@ namespace Azure.AI.OpenAI
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         /// <summary> Initializes a new instance of <see cref="ContentFilterBlocklistResult"/>. </summary>
         /// <param name="filtered"> A value indicating whether any of the detailed blocklists resulted in a filtering action. </param>
         internal ContentFilterBlocklistResult(bool filtered)
         {
             Filtered = filtered;
             InternalDetails = new ChangeTrackingList<InternalAzureContentFilterBlocklistResultDetail>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterBlocklistResult"/>. </summary>
@@ -58,7 +58,7 @@ namespace Azure.AI.OpenAI
         {
             Filtered = filtered;
             InternalDetails = internalDetails;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterBlocklistResult"/> for deserialization. </summary>

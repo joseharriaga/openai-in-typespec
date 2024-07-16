@@ -9,8 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRequiredFunctionToolCall
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalRequiredFunctionToolCall(string id, InternalRunToolCallObjectFunction internalFunction)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -18,6 +17,7 @@ namespace OpenAI.Assistants
 
             Id = id;
             _internalFunction = internalFunction;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalRequiredFunctionToolCall(string id, object type, InternalRunToolCallObjectFunction internalFunction, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -25,7 +25,7 @@ namespace OpenAI.Assistants
             Id = id;
             _type = type;
             _internalFunction = internalFunction;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalRequiredFunctionToolCall()

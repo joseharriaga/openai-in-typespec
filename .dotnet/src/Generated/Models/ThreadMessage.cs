@@ -10,8 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class ThreadMessage
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageRole role, IEnumerable<MessageContent> content, string assistantId, string runId, IEnumerable<MessageCreationAttachment> attachments, IReadOnlyDictionary<string, string> metadata)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -31,6 +30,7 @@ namespace OpenAI.Assistants
             RunId = runId;
             Attachments = attachments?.ToList();
             Metadata = metadata;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ThreadMessage(string id, InternalMessageObjectObject @object, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageRole role, IReadOnlyList<MessageContent> content, string assistantId, string runId, IReadOnlyList<MessageCreationAttachment> attachments, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -49,7 +49,7 @@ namespace OpenAI.Assistants
             RunId = runId;
             Attachments = attachments;
             Metadata = metadata;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal ThreadMessage()

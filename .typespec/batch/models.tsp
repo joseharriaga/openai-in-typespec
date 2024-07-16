@@ -11,8 +11,8 @@ model Batch {
   id: string;
 
   @doc("""
-  The object type, which is always `batch`.
-  """)
+    The object type, which is always `batch`.
+    """)
   object: "batch";
 
   /** The OpenAI API endpoint used by the batch. */
@@ -21,8 +21,8 @@ model Batch {
   errors?: {
     // Tool customization: add a clear enum enforcement of constrained 'object' label
     @doc("""
-    The object type, which is always `list`.
-    """)
+      The object type, which is always `list`.
+      """)
     object?: "list";
 
     data?: {
@@ -131,14 +131,14 @@ model BatchRequestInput {
   custom_id?: string;
 
   @doc("""
-  The HTTP method to be used for the request. Currently only `POST` is supported.
-  """)
+    The HTTP method to be used for the request. Currently only `POST` is supported.
+    """)
   method?: "POST";
 
   // Tool customization: url uses the url type
   @doc("""
-  The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported.
-  """)
+    The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported.
+    """)
   url?: url;
 }
 

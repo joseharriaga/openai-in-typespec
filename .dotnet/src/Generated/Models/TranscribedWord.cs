@@ -9,8 +9,7 @@ namespace OpenAI.Audio
 {
     public readonly partial struct TranscribedWord
     {
-        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal TranscribedWord(string word, TimeSpan start, TimeSpan end)
         {
             Argument.AssertNotNull(word, nameof(word));
@@ -18,6 +17,7 @@ namespace OpenAI.Audio
             Word = word;
             Start = start;
             End = end;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal TranscribedWord(string word, TimeSpan start, TimeSpan end, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -25,7 +25,7 @@ namespace OpenAI.Audio
             Word = word;
             Start = start;
             End = end;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public TranscribedWord()

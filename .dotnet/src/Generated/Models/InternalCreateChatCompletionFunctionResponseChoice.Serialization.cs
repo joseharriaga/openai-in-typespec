@@ -21,26 +21,36 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("finish_reason"u8);
-            writer.WriteStringValue(FinishReason.ToString());
-            writer.WritePropertyName("index"u8);
-            writer.WriteNumberValue(Index);
-            writer.WritePropertyName("message"u8);
-            writer.WriteObjectValue(Message, options);
-            if (true && _serializedAdditionalRawData != null)
+            if (!SerializedAdditionalRawData.ContainsKey("finish_reason"))
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("finish_reason"u8);
+                writer.WriteStringValue(FinishReason.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("index"))
+            {
+                writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("message"))
+            {
+                writer.WritePropertyName("message"u8);
+                writer.WriteObjectValue(Message, options);
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -87,7 +97,7 @@ namespace OpenAI.Chat
                     message = InternalChatCompletionResponseMessage.DeserializeInternalChatCompletionResponseMessage(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

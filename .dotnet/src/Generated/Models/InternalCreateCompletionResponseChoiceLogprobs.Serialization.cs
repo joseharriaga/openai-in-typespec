@@ -21,7 +21,7 @@ namespace OpenAI.LegacyCompletions
             }
 
             writer.WriteStartObject();
-            if (Optional.IsCollectionDefined(TextOffset))
+            if (!SerializedAdditionalRawData.ContainsKey("text_offset") && Optional.IsCollectionDefined(TextOffset))
             {
                 writer.WritePropertyName("text_offset"u8);
                 writer.WriteStartArray();
@@ -31,7 +31,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(TokenLogprobs))
+            if (!SerializedAdditionalRawData.ContainsKey("token_logprobs") && Optional.IsCollectionDefined(TokenLogprobs))
             {
                 writer.WritePropertyName("token_logprobs"u8);
                 writer.WriteStartArray();
@@ -41,7 +41,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(Tokens))
+            if (!SerializedAdditionalRawData.ContainsKey("tokens") && Optional.IsCollectionDefined(Tokens))
             {
                 writer.WritePropertyName("tokens"u8);
                 writer.WriteStartArray();
@@ -51,7 +51,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(TopLogprobs))
+            if (!SerializedAdditionalRawData.ContainsKey("top_logprobs") && Optional.IsCollectionDefined(TopLogprobs))
             {
                 writer.WritePropertyName("top_logprobs"u8);
                 writer.WriteStartArray();
@@ -72,20 +72,21 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -186,7 +187,7 @@ namespace OpenAI.LegacyCompletions
                     topLogprobs = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

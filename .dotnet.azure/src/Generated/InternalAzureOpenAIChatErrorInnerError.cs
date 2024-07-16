@@ -40,11 +40,11 @@ namespace Azure.AI.OpenAI
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         /// <summary> Initializes a new instance of <see cref="InternalAzureOpenAIChatErrorInnerError"/>. </summary>
         internal InternalAzureOpenAIChatErrorInnerError()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureOpenAIChatErrorInnerError"/>. </summary>
@@ -57,7 +57,7 @@ namespace Azure.AI.OpenAI
             Code = code;
             RevisedPrompt = revisedPrompt;
             ContentFilterResults = contentFilterResults;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> The code associated with the inner error. </summary>

@@ -62,13 +62,13 @@ model CreateChatCompletionRequest {
   logit_bias?: Record<int32> | null = null;
 
   @doc("""
-  Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.
-  """)
+    Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.
+    """)
   logprobs?: boolean | null = false;
 
   @doc("""
-  An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
-  """)
+    An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
+    """)
   @minValue(0)
   @maxValue(20)
   top_logprobs?: int32 | null;
@@ -81,8 +81,8 @@ model CreateChatCompletionRequest {
   max_tokens?: int32 | null;
 
   @doc("""
-  How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
-  """)
+    How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
+    """)
   @minValue(1)
   @maxValue(128)
   n?: int32 | null = 1;
@@ -97,24 +97,24 @@ model CreateChatCompletionRequest {
   presence_penalty?: float32 | null = 0;
 
   @doc("""
-  An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
-  
-  Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
-  
-  **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-  """)
+    An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+    
+    Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+    
+    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+    """)
   response_format?: {
     @doc("""
-    Must be one of `text` or `json_object`.
-    """)
+      Must be one of `text` or `json_object`.
+      """)
     type?: "text" | "json_object" = "text";
   };
 
   @doc("""
-  This feature is in Beta.
-  If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
-  Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
-  """)
+    This feature is in Beta.
+    If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
+    Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+    """)
   @minValue(-9223372036854775808)
   @maxValue(9223372036854775807)
   seed?: int64 | null;
@@ -123,26 +123,26 @@ model CreateChatCompletionRequest {
   stop?: string | string[] | null = null;
 
   @doc("""
-  If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
-  """)
+    If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).
+    """)
   stream?: boolean | null = false;
 
   stream_options?: ChatCompletionStreamOptions | null = null;
 
   @doc("""
-  What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-  
-  We generally recommend altering this or `top_p` but not both.
-  """)
+    What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+    
+    We generally recommend altering this or `top_p` but not both.
+    """)
   @minValue(0)
   @maxValue(2)
   temperature?: float32 | null = 1;
 
   @doc("""
-  An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-  
-  We generally recommend altering this or `temperature` but not both.
-  """)
+    An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+    
+    We generally recommend altering this or `temperature` but not both.
+    """)
   @minValue(0)
   @maxValue(1)
   top_p?: float32 | null = 1;
@@ -158,24 +158,24 @@ model CreateChatCompletionRequest {
 
   #deprecated "This field is marked as deprecated."
   @doc("""
-  Deprecated in favor of `tool_choice`.
-  
-  Controls which (if any) function is called by the model.
-  `none` means the model will not call a function and instead generates a message.
-  `auto` means the model can pick between generating a message or calling a function.
-  Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
-  
-  `none` is the default when no functions are present. `auto` is the default if functions are present.
-  """)
+    Deprecated in favor of `tool_choice`.
+    
+    Controls which (if any) function is called by the model.
+    `none` means the model will not call a function and instead generates a message.
+    `auto` means the model can pick between generating a message or calling a function.
+    Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
+    
+    `none` is the default when no functions are present. `auto` is the default if functions are present.
+    """)
   @extension("x-oaiExpandable", true)
   function_call?: "none" | "auto" | ChatCompletionFunctionCallOption;
 
   #deprecated "This field is marked as deprecated."
   @doc("""
-  Deprecated in favor of `tools`.
-  
-  A list of functions the model may generate JSON inputs for.
-  """)
+    Deprecated in favor of `tools`.
+    
+    A list of functions the model may generate JSON inputs for.
+    """)
   @minItems(1)
   @maxItems(128)
   functions?: ChatCompletionFunctions[];
@@ -187,15 +187,15 @@ model CreateChatCompletionResponse {
   id: string;
 
   @doc("""
-  A list of chat completion choices. Can be more than one if `n` is greater than 1.
-  """)
+    A list of chat completion choices. Can be more than one if `n` is greater than 1.
+    """)
   choices: {
     @doc("""
-    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-    `length` if the maximum number of tokens specified in the request was reached,
-    `content_filter` if content was omitted due to a flag from our content filters,
-    `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-    """)
+      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+      `length` if the maximum number of tokens specified in the request was reached,
+      `content_filter` if content was omitted due to a flag from our content filters,
+      `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+      """)
     finish_reason:
       | "stop"
       | "length"
@@ -224,15 +224,15 @@ model CreateChatCompletionResponse {
   `model`: string;
 
   @doc("""
-  This fingerprint represents the backend configuration that the model runs with.
-  
-  Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-  """)
+    This fingerprint represents the backend configuration that the model runs with.
+    
+    Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+    """)
   system_fingerprint?: string;
 
   @doc("""
-  The object type, which is always `chat.completion`.
-  """)
+    The object type, which is always `chat.completion`.
+    """)
   object: "chat.completion";
 
   usage?: CompletionUsage;
@@ -240,8 +240,8 @@ model CreateChatCompletionResponse {
 
 model ChatCompletionTool {
   @doc("""
-  The type of the tool. Currently, only `function` is supported.
-  """)
+    The type of the tool. Currently, only `function` is supported.
+    """)
   type: "function";
 
   function: FunctionObject;
@@ -250,8 +250,8 @@ model ChatCompletionTool {
 /** Specifies a tool the model should use. Use to force the model to call a specific function. */
 model ChatCompletionNamedToolChoice {
   @doc("""
-  The type of the tool. Currently, only `function` is supported.
-  """)
+    The type of the tool. Currently, only `function` is supported.
+    """)
   type: "function";
 
   function: {
@@ -261,14 +261,14 @@ model ChatCompletionNamedToolChoice {
 }
 
 @doc("""
-Controls which (if any) tool is called by the model.
-`none` means the model will not call any tool and instead generates a message.
-`auto` means the model can pick between generating a message or calling one or more tools.
-`required` means the model must call one or more tools.
-Specifying a particular tool via `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
-
-`none` is the default when no tools are present. `auto` is the default if tools are present.
-""")
+  Controls which (if any) tool is called by the model.
+  `none` means the model will not call any tool and instead generates a message.
+  `auto` means the model can pick between generating a message or calling one or more tools.
+  `required` means the model must call one or more tools.
+  Specifying a particular tool via `{"type": "function", "function": {"name": "my_function"}}` forces the model to call that tool.
+  
+  `none` is the default when no tools are present. `auto` is the default if tools are present.
+  """)
 @extension("x-oaiExpandable", true)
 union ChatCompletionToolChoiceOption {
   "none" | "auto" | "required",
@@ -308,8 +308,8 @@ model ChatCompletionMessageToolCall {
   id: string;
 
   @doc("""
-  The type of the tool. Currently, only `function` is supported.
-  """)
+    The type of the tool. Currently, only `function` is supported.
+    """)
   type: "function";
 
   /** The function that the model called. */
@@ -336,8 +336,8 @@ model ChatCompletionRequestSystemMessage extends ChatCompletionRequestMessage {
   content: string;
 
   @doc("""
-  The role of the messages author, in this case `system`.
-  """)
+    The role of the messages author, in this case `system`.
+    """)
   role: "system";
 
   /** An optional name for the participant. Provides the model information to differentiate between participants of the same role. */
@@ -351,8 +351,8 @@ model ChatCompletionRequestUserMessage extends ChatCompletionRequestMessage {
   content: string | ChatCompletionRequestMessageContentPart[];
 
   @doc("""
-  The role of the messages author, in this case `user`.
-  """)
+    The role of the messages author, in this case `user`.
+    """)
   role: "user";
 
   /** An optional name for the participant. Provides the model information to differentiate between participants of the same role. */
@@ -363,13 +363,13 @@ model ChatCompletionRequestUserMessage extends ChatCompletionRequestMessage {
 model ChatCompletionRequestAssistantMessage
   extends ChatCompletionRequestMessage {
   @doc("""
-  The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
-  """)
+    The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
+    """)
   content?: string | null;
 
   @doc("""
-  The role of the messages author, in this case `assistant`.
-  """)
+    The role of the messages author, in this case `assistant`.
+    """)
   role: "assistant";
 
   /** An optional name for the participant. Provides the model information to differentiate between participants of the same role. */
@@ -379,8 +379,8 @@ model ChatCompletionRequestAssistantMessage
 
   #deprecated "This field is marked as deprecated."
   @doc("""
-  Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
-  """)
+    Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
+    """)
   function_call?: {
     /** The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. */
     arguments: string;
@@ -393,8 +393,8 @@ model ChatCompletionRequestAssistantMessage
 // Tool customization: apply discriminated type base
 model ChatCompletionRequestToolMessage extends ChatCompletionRequestMessage {
   @doc("""
-  The role of the messages author, in this case `tool`.
-  """)
+    The role of the messages author, in this case `tool`.
+    """)
   role: "tool";
 
   /** The contents of the tool message. */
@@ -409,8 +409,8 @@ model ChatCompletionRequestToolMessage extends ChatCompletionRequestMessage {
 model ChatCompletionRequestFunctionMessage
   extends ChatCompletionRequestMessage {
   @doc("""
-  The role of the messages author, in this case `function`.
-  """)
+    The role of the messages author, in this case `function`.
+    """)
   role: "function";
 
   /** The contents of the function message. */
@@ -439,12 +439,12 @@ model CreateChatCompletionFunctionResponse {
   id: string;
 
   @doc("""
-  A list of chat completion choices. Can be more than one if `n` is greater than 1.
-  """)
+    A list of chat completion choices. Can be more than one if `n` is greater than 1.
+    """)
   choices: {
     @doc("""
-    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
-    """)
+      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
+      """)
     finish_reason: "stop" | "length" | "function_call" | "content_filter";
 
     /** The index of the choice in the list of choices. */
@@ -462,15 +462,15 @@ model CreateChatCompletionFunctionResponse {
   `model`: string;
 
   @doc("""
-  This fingerprint represents the backend configuration that the model runs with.
-  
-  Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-  """)
+    This fingerprint represents the backend configuration that the model runs with.
+    
+    Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+    """)
   system_fingerprint?: string;
 
   @doc("""
-  The object type, which is always `chat.completion`.
-  """)
+    The object type, which is always `chat.completion`.
+    """)
   object: "chat.completion";
 
   usage?: CompletionUsage;
@@ -488,8 +488,8 @@ model ChatCompletionResponseMessage {
 
   #deprecated "This field is marked as deprecated."
   @doc("""
-  Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
-  """)
+    Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
+    """)
   function_call?: {
     /** The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. */
     arguments: string;
@@ -504,37 +504,37 @@ model ChatCompletionTokenLogprob {
   token: string;
 
   @doc("""
-  The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
-  """)
+    The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
+    """)
   logprob: float32;
 
   @doc("""
-  A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
-  """)
+    A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
+    """)
   bytes: ChatCompletionTokenLogprobBytes | null;
 
   @doc("""
-  List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
-  """)
+    List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
+    """)
   top_logprobs: {
     /** The token. */
     token: string;
 
     @doc("""
-    The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
-    """)
+      The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
+      """)
     logprob: float32;
 
     @doc("""
-    A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
-    """)
+      A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
+      """)
     bytes: int32[] | null;
   }[];
 }
 
 @doc("""
-Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
-""")
+  Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
+  """)
 model ChatCompletionFunctionCallOption {
   /** The name of the function to call. */
   name: string;
@@ -558,8 +558,8 @@ model ChatCompletionStreamResponseDelta {
 
   #deprecated "This field is marked as deprecated."
   @doc("""
-  Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
-  """)
+    Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
+    """)
   function_call?: {
     /** The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function. */
     arguments?: string;
@@ -581,8 +581,8 @@ model ChatCompletionMessageToolCallChunk {
   id?: string;
 
   @doc("""
-  The type of the tool. Currently, only `function` is supported.
-  """)
+    The type of the tool. Currently, only `function` is supported.
+    """)
   type?: "function";
 
   function?: {
@@ -600,9 +600,9 @@ model CreateChatCompletionStreamResponse {
   id: string;
 
   @doc("""
-  A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
-  last chunk if you set `stream_options: {"include_usage": true}`.
-  """)
+    A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
+    last chunk if you set `stream_options: {"include_usage": true}`.
+    """)
   choices: {
     delta: ChatCompletionStreamResponseDelta;
 
@@ -613,11 +613,11 @@ model CreateChatCompletionStreamResponse {
     } | null;
 
     @doc("""
-    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-    `length` if the maximum number of tokens specified in the request was reached,
-    `content_filter` if content was omitted due to a flag from our content filters,
-    `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-    """)
+      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+      `length` if the maximum number of tokens specified in the request was reached,
+      `content_filter` if content was omitted due to a flag from our content filters,
+      `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+      """)
     finish_reason:
       | "stop"
       | "length"
@@ -639,20 +639,20 @@ model CreateChatCompletionStreamResponse {
   `model`: string;
 
   @doc("""
-  This fingerprint represents the backend configuration that the model runs with.
-  Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-  """)
+    This fingerprint represents the backend configuration that the model runs with.
+    Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+    """)
   system_fingerprint?: string;
 
   @doc("""
-  The object type, which is always `chat.completion.chunk`.
-  """)
+    The object type, which is always `chat.completion.chunk`.
+    """)
   object: "chat.completion.chunk";
 
   @doc("""
-  An optional field that will only be present when you set `stream_options: {"include_usage": true}` in your request.
-  When present, it contains a null value except for the last chunk which contains the token usage statistics for the entire request.
-  """)
+    An optional field that will only be present when you set `stream_options: {"include_usage": true}` in your request.
+    When present, it contains a null value except for the last chunk which contains the token usage statistics for the entire request.
+    """)
   usage?: {
     /** Number of tokens in the generated completion. */
     completion_tokens: int32;

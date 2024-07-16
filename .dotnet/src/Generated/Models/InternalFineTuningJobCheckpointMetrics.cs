@@ -9,10 +9,10 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJobCheckpointMetrics
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalFineTuningJobCheckpointMetrics()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalFineTuningJobCheckpointMetrics(float? step, float? trainLoss, float? trainMeanTokenAccuracy, float? validLoss, float? validMeanTokenAccuracy, float? fullValidLoss, float? fullValidMeanTokenAccuracy, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -24,7 +24,7 @@ namespace OpenAI.FineTuning
             ValidMeanTokenAccuracy = validMeanTokenAccuracy;
             FullValidLoss = fullValidLoss;
             FullValidMeanTokenAccuracy = fullValidMeanTokenAccuracy;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public float? Step { get; }

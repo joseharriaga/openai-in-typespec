@@ -9,13 +9,13 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchRequestCounts
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalBatchRequestCounts(int total, int completed, int failed)
         {
             Total = total;
             Completed = completed;
             Failed = failed;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalBatchRequestCounts(int total, int completed, int failed, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -23,7 +23,7 @@ namespace OpenAI.Batch
             Total = total;
             Completed = completed;
             Failed = failed;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalBatchRequestCounts()

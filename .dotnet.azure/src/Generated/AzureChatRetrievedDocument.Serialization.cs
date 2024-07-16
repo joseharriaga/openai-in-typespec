@@ -21,66 +21,76 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("content"u8);
-            writer.WriteStringValue(Content);
-            if (Optional.IsDefined(Title))
+            if (!SerializedAdditionalRawData.ContainsKey("content"))
+            {
+                writer.WritePropertyName("content"u8);
+                writer.WriteStringValue(Content);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("title") && Optional.IsDefined(Title))
             {
                 writer.WritePropertyName("title"u8);
                 writer.WriteStringValue(Title);
             }
-            if (Optional.IsDefined(Url))
+            if (!SerializedAdditionalRawData.ContainsKey("url") && Optional.IsDefined(Url))
             {
                 writer.WritePropertyName("url"u8);
                 writer.WriteStringValue(Url);
             }
-            if (Optional.IsDefined(Filepath))
+            if (!SerializedAdditionalRawData.ContainsKey("filepath") && Optional.IsDefined(Filepath))
             {
                 writer.WritePropertyName("filepath"u8);
                 writer.WriteStringValue(Filepath);
             }
-            if (Optional.IsDefined(ChunkId))
+            if (!SerializedAdditionalRawData.ContainsKey("chunk_id") && Optional.IsDefined(ChunkId))
             {
                 writer.WritePropertyName("chunk_id"u8);
                 writer.WriteStringValue(ChunkId);
             }
-            writer.WritePropertyName("search_queries"u8);
-            writer.WriteStartArray();
-            foreach (var item in SearchQueries)
+            if (!SerializedAdditionalRawData.ContainsKey("search_queries"))
             {
-                writer.WriteStringValue(item);
+                writer.WritePropertyName("search_queries"u8);
+                writer.WriteStartArray();
+                foreach (var item in SearchQueries)
+                {
+                    writer.WriteStringValue(item);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
-            writer.WritePropertyName("data_source_index"u8);
-            writer.WriteNumberValue(DataSourceIndex);
-            if (Optional.IsDefined(OriginalSearchScore))
+            if (!SerializedAdditionalRawData.ContainsKey("data_source_index"))
+            {
+                writer.WritePropertyName("data_source_index"u8);
+                writer.WriteNumberValue(DataSourceIndex);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("original_search_score") && Optional.IsDefined(OriginalSearchScore))
             {
                 writer.WritePropertyName("original_search_score"u8);
                 writer.WriteNumberValue(OriginalSearchScore.Value);
             }
-            if (Optional.IsDefined(RerankScore))
+            if (!SerializedAdditionalRawData.ContainsKey("rerank_score") && Optional.IsDefined(RerankScore))
             {
                 writer.WritePropertyName("rerank_score"u8);
                 writer.WriteNumberValue(RerankScore.Value);
             }
-            if (Optional.IsDefined(FilterReason))
+            if (!SerializedAdditionalRawData.ContainsKey("filter_reason") && Optional.IsDefined(FilterReason))
             {
                 writer.WritePropertyName("filter_reason"u8);
                 writer.WriteStringValue(FilterReason.Value.ToString());
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }

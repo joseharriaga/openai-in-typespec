@@ -10,8 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageCreationAttachment
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
@@ -19,13 +18,14 @@ namespace OpenAI.Assistants
 
             FileId = fileId;
             Tools = tools.ToList();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageCreationAttachment(string fileId, IReadOnlyList<ToolDefinition> tools, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Tools = tools;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal MessageCreationAttachment()

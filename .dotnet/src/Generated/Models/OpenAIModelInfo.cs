@@ -9,8 +9,7 @@ namespace OpenAI.Models
 {
     public partial class OpenAIModelInfo
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal OpenAIModelInfo(string id, DateTimeOffset createdAt, string ownedBy)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -19,6 +18,7 @@ namespace OpenAI.Models
             Id = id;
             CreatedAt = createdAt;
             OwnedBy = ownedBy;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal OpenAIModelInfo(string id, DateTimeOffset createdAt, InternalModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -27,7 +27,7 @@ namespace OpenAI.Models
             CreatedAt = createdAt;
             Object = @object;
             OwnedBy = ownedBy;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal OpenAIModelInfo()

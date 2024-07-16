@@ -21,49 +21,73 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            if (Name != null)
+            if (!SerializedAdditionalRawData.ContainsKey("id"))
             {
-                writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
             {
-                writer.WriteNull("name");
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            if (Description != null)
+            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
             {
-                writer.WritePropertyName("description"u8);
-                writer.WriteStringValue(Description);
+                writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("name"))
             {
-                writer.WriteNull("description");
+                if (Name != null)
+                {
+                    writer.WritePropertyName("name"u8);
+                    writer.WriteStringValue(Name);
+                }
+                else
+                {
+                    writer.WriteNull("name");
+                }
             }
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model);
-            if (Instructions != null)
+            if (!SerializedAdditionalRawData.ContainsKey("description"))
             {
-                writer.WritePropertyName("instructions"u8);
-                writer.WriteStringValue(Instructions);
+                if (Description != null)
+                {
+                    writer.WritePropertyName("description"u8);
+                    writer.WriteStringValue(Description);
+                }
+                else
+                {
+                    writer.WriteNull("description");
+                }
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("model"))
             {
-                writer.WriteNull("instructions");
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
             }
-            writer.WritePropertyName("tools"u8);
-            writer.WriteStartArray();
-            foreach (var item in Tools)
+            if (!SerializedAdditionalRawData.ContainsKey("instructions"))
             {
-                writer.WriteObjectValue(item, options);
+                if (Instructions != null)
+                {
+                    writer.WritePropertyName("instructions"u8);
+                    writer.WriteStringValue(Instructions);
+                }
+                else
+                {
+                    writer.WriteNull("instructions");
+                }
             }
-            writer.WriteEndArray();
-            if (Optional.IsDefined(ToolResources))
+            if (!SerializedAdditionalRawData.ContainsKey("tools"))
+            {
+                writer.WritePropertyName("tools"u8);
+                writer.WriteStartArray();
+                foreach (var item in Tools)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("tool_resources") && Optional.IsDefined(ToolResources))
             {
                 if (ToolResources != null)
                 {
@@ -75,22 +99,25 @@ namespace OpenAI.Assistants
                     writer.WriteNull("tool_resources");
                 }
             }
-            if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+            if (!SerializedAdditionalRawData.ContainsKey("metadata"))
             {
-                writer.WritePropertyName("metadata"u8);
-                writer.WriteStartObject();
-                foreach (var item in Metadata)
+                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
-                    writer.WritePropertyName(item.Key);
-                    writer.WriteStringValue(item.Value);
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
                 }
-                writer.WriteEndObject();
+                else
+                {
+                    writer.WriteNull("metadata");
+                }
             }
-            else
-            {
-                writer.WriteNull("metadata");
-            }
-            if (Optional.IsDefined(Temperature))
+            if (!SerializedAdditionalRawData.ContainsKey("temperature") && Optional.IsDefined(Temperature))
             {
                 if (Temperature != null)
                 {
@@ -102,7 +129,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("temperature");
                 }
             }
-            if (Optional.IsDefined(NucleusSamplingFactor))
+            if (!SerializedAdditionalRawData.ContainsKey("top_p") && Optional.IsDefined(NucleusSamplingFactor))
             {
                 if (NucleusSamplingFactor != null)
                 {
@@ -114,7 +141,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("top_p");
                 }
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (!SerializedAdditionalRawData.ContainsKey("response_format") && Optional.IsDefined(ResponseFormat))
             {
                 if (ResponseFormat != null)
                 {
@@ -126,20 +153,21 @@ namespace OpenAI.Assistants
                     writer.WriteNull("response_format");
                 }
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -296,7 +324,7 @@ namespace OpenAI.Assistants
                     responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

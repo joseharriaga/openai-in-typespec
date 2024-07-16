@@ -9,8 +9,7 @@ namespace OpenAI.Moderations
 {
     public partial class ModerationCategories
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal ModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic)
         {
             Hate = hate;
@@ -24,6 +23,7 @@ namespace OpenAI.Moderations
             SexualMinors = sexualMinors;
             Violence = violence;
             ViolenceGraphic = violenceGraphic;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -39,7 +39,7 @@ namespace OpenAI.Moderations
             SexualMinors = sexualMinors;
             Violence = violence;
             ViolenceGraphic = violenceGraphic;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal ModerationCategories()

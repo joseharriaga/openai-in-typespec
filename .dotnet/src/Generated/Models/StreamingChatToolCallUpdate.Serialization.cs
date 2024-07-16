@@ -21,34 +21,41 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("index"u8);
-            writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(Id))
+            if (!SerializedAdditionalRawData.ContainsKey("index"))
+            {
+                writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("id") && Optional.IsDefined(Id))
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Kind.ToString());
-            if (Optional.IsDefined(Function))
+            if (!SerializedAdditionalRawData.ContainsKey("type"))
+            {
+                writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Kind.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("function") && Optional.IsDefined(Function))
             {
                 writer.WritePropertyName("function"u8);
                 writer.WriteObjectValue<InternalChatCompletionMessageToolCallChunkFunction>(Function, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -109,7 +116,7 @@ namespace OpenAI.Chat
                     function = InternalChatCompletionMessageToolCallChunkFunction.DeserializeInternalChatCompletionMessageToolCallChunkFunction(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

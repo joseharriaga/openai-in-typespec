@@ -22,31 +22,38 @@ namespace OpenAI.Files
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("file"u8);
+            if (!SerializedAdditionalRawData.ContainsKey("file"))
+            {
+                writer.WritePropertyName("file"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(global::System.BinaryData.FromStream(File));
 #else
-            using (JsonDocument document = JsonDocument.Parse(BinaryData.FromStream(File)))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
-            writer.WritePropertyName("purpose"u8);
-            writer.WriteStringValue(Purpose.ToString());
-            if (true && _serializedAdditionalRawData != null)
-            {
-                foreach (var item in _serializedAdditionalRawData)
+                using (JsonDocument document = JsonDocument.Parse(BinaryData.FromStream(File)))
                 {
-                    writer.WritePropertyName(item.Key);
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("purpose"))
+            {
+                writer.WritePropertyName("purpose"u8);
+                writer.WriteStringValue(Purpose.ToString());
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                {
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -87,7 +94,7 @@ namespace OpenAI.Files
                     purpose = new FileUploadPurpose(property.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

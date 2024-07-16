@@ -9,8 +9,7 @@ namespace OpenAI.Audio
 {
     public partial class AudioTranscription
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal AudioTranscription(string language, TimeSpan? duration, string text)
         {
             Argument.AssertNotNull(language, nameof(language));
@@ -21,6 +20,7 @@ namespace OpenAI.Audio
             Text = text;
             Words = new ChangeTrackingList<TranscribedWord>();
             Segments = new ChangeTrackingList<TranscribedSegment>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal AudioTranscription(InternalCreateTranscriptionResponseVerboseJsonTask task, string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedWord> words, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -31,7 +31,7 @@ namespace OpenAI.Audio
             Text = text;
             Words = words;
             Segments = segments;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal AudioTranscription()

@@ -21,46 +21,68 @@ namespace OpenAI.VectorStores
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(FileId);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("usage_bytes"u8);
-            writer.WriteNumberValue(Size);
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("vector_store_id"u8);
-            writer.WriteStringValue(VectorStoreId);
-            writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status.ToSerialString());
-            if (LastError != null)
+            if (!SerializedAdditionalRawData.ContainsKey("id"))
             {
-                writer.WritePropertyName("last_error"u8);
-                writer.WriteObjectValue(LastError, options);
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(FileId);
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
             {
-                writer.WriteNull("last_error");
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            if (Optional.IsDefined(ChunkingStrategy))
+            if (!SerializedAdditionalRawData.ContainsKey("usage_bytes"))
+            {
+                writer.WritePropertyName("usage_bytes"u8);
+                writer.WriteNumberValue(Size);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
+            {
+                writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("vector_store_id"))
+            {
+                writer.WritePropertyName("vector_store_id"u8);
+                writer.WriteStringValue(VectorStoreId);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("status"))
+            {
+                writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToSerialString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("last_error"))
+            {
+                if (LastError != null)
+                {
+                    writer.WritePropertyName("last_error"u8);
+                    writer.WriteObjectValue(LastError, options);
+                }
+                else
+                {
+                    writer.WriteNull("last_error");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("chunking_strategy") && Optional.IsDefined(ChunkingStrategy))
             {
                 writer.WritePropertyName("chunking_strategy"u8);
                 writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -146,7 +168,7 @@ namespace OpenAI.VectorStores
                     chunkingStrategy = FileChunkingStrategy.DeserializeFileChunkingStrategy(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

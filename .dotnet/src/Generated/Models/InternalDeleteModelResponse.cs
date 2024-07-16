@@ -9,14 +9,14 @@ namespace OpenAI.Models
 {
     internal partial class InternalDeleteModelResponse
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalDeleteModelResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
             Id = id;
             Deleted = deleted;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalDeleteModelResponse(string id, bool deleted, InternalDeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -24,7 +24,7 @@ namespace OpenAI.Models
             Id = id;
             Deleted = deleted;
             Object = @object;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalDeleteModelResponse()

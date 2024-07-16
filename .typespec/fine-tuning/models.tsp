@@ -56,16 +56,16 @@ model CreateFineTuningJobRequest {
   `model`: string | "babbage-002" | "davinci-002" | "gpt-3.5-turbo";
 
   @doc("""
-  The ID of an uploaded file that contains training data.
-  
-  See [upload file](/docs/api-reference/files/create) for how to upload a file.
-  
-  Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
-  
-  The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) format.
-  
-  See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-  """)
+    The ID of an uploaded file that contains training data.
+    
+    See [upload file](/docs/api-reference/files/create) for how to upload a file.
+    
+    Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
+    
+    The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) format.
+    
+    See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+    """)
   training_file: string;
 
   /** The hyperparameters used for the fine-tuning job. */
@@ -90,26 +90,26 @@ model CreateFineTuningJobRequest {
   };
 
   @doc("""
-  A string of up to 18 characters that will be added to your fine-tuned model name.
-  
-  For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
-  """)
+    A string of up to 18 characters that will be added to your fine-tuned model name.
+    
+    For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+    """)
   @minLength(1)
   @maxLength(40)
   suffix?: string | null = null;
 
   @doc("""
-  The ID of an uploaded file that contains validation data.
-  
-  If you provide this file, the data is used to generate validation
-  metrics periodically during fine-tuning. These metrics can be viewed in
-  the fine-tuning results file.
-  The same data should not be present in both train and validation files.
-  
-  Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
-  
-  See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-  """)
+    The ID of an uploaded file that contains validation data.
+    
+    If you provide this file, the data is used to generate validation
+    metrics periodically during fine-tuning. These metrics can be viewed in
+    the fine-tuning results file.
+    The same data should not be present in both train and validation files.
+    
+    Your dataset must be formatted as a JSONL file. You must upload your file with the purpose `fine-tune`.
+    
+    See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+    """)
   validation_file?: string | null;
 
   /** A list of integrations to enable for your fine-tuning job. */
@@ -144,8 +144,8 @@ model ListFineTuningJobCheckpointsResponse {
 }
 
 @doc("""
-The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
-""")
+  The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
+  """)
 model FineTuningJob {
   /** The object identifier, which can be referenced in the API endpoints. */
   id: string;
@@ -156,8 +156,8 @@ model FineTuningJob {
   created_at: utcDateTime;
 
   @doc("""
-  For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure.
-  """)
+    For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure.
+    """)
   error: {
     /** A machine-readable error code. */
     code: string;
@@ -166,8 +166,8 @@ model FineTuningJob {
     message: string;
 
     @doc("""
-    The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific.
-    """)
+      The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific.
+      """)
     param: string | null;
   } | null;
 
@@ -201,8 +201,8 @@ model FineTuningJob {
   result_files: string[];
 
   @doc("""
-  The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`.
-  """)
+    The current status of the fine-tuning job, which can be either `validating_files`, `queued`, `running`, `succeeded`, `failed`, or `cancelled`.
+    """)
   status:
     | "validating_files"
     | "queued"
@@ -276,8 +276,8 @@ model FineTuningJobEvent {
 }
 
 @doc("""
-The `fine_tuning.job.checkpoint` object represents a model checkpoint for a fine-tuning job that is ready to use.
-""")
+  The `fine_tuning.job.checkpoint` object represents a model checkpoint for a fine-tuning job that is ready to use.
+  """)
 model FineTuningJobCheckpoint {
   /** The checkpoint identifier, which can be referenced in the API endpoints. */
   id: string;

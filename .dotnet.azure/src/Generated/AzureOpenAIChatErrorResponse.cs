@@ -40,11 +40,11 @@ namespace Azure.AI.OpenAI
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         /// <summary> Initializes a new instance of <see cref="AzureOpenAIChatErrorResponse"/>. </summary>
         internal AzureOpenAIChatErrorResponse()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureOpenAIChatErrorResponse"/>. </summary>
@@ -53,7 +53,7 @@ namespace Azure.AI.OpenAI
         internal AzureOpenAIChatErrorResponse(AzureOpenAIChatError error, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Error = error;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Gets the error. </summary>

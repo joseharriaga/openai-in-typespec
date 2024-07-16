@@ -10,13 +10,13 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFinetuneChatRequestInput
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalFinetuneChatRequestInput()
         {
             Messages = new ChangeTrackingList<BinaryData>();
             Tools = new ChangeTrackingList<ChatTool>();
             Functions = new ChangeTrackingList<ChatFunction>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalFinetuneChatRequestInput(IList<BinaryData> messages, IList<ChatTool> tools, bool? parallelToolCalls, IList<ChatFunction> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -25,7 +25,7 @@ namespace OpenAI.FineTuning
             Tools = tools;
             ParallelToolCalls = parallelToolCalls;
             Functions = functions;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public IList<BinaryData> Messages { get; }

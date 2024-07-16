@@ -9,20 +9,20 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentItemFileObjectImageFile
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalMessageContentItemFileObjectImageFile(string fileId)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
 
             FileId = fileId;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalMessageContentItemFileObjectImageFile(string fileId, string detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Detail = detail;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalMessageContentItemFileObjectImageFile()

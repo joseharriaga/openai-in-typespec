@@ -21,16 +21,22 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model.ToString());
-            writer.WritePropertyName("training_file"u8);
-            writer.WriteStringValue(TrainingFile);
-            if (Optional.IsDefined(Hyperparameters))
+            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            {
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("training_file"))
+            {
+                writer.WritePropertyName("training_file"u8);
+                writer.WriteStringValue(TrainingFile);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("hyperparameters") && Optional.IsDefined(Hyperparameters))
             {
                 writer.WritePropertyName("hyperparameters"u8);
                 writer.WriteObjectValue(Hyperparameters, options);
             }
-            if (Optional.IsDefined(Suffix))
+            if (!SerializedAdditionalRawData.ContainsKey("suffix") && Optional.IsDefined(Suffix))
             {
                 if (Suffix != null)
                 {
@@ -42,7 +48,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("suffix");
                 }
             }
-            if (Optional.IsDefined(ValidationFile))
+            if (!SerializedAdditionalRawData.ContainsKey("validation_file") && Optional.IsDefined(ValidationFile))
             {
                 if (ValidationFile != null)
                 {
@@ -54,7 +60,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("validation_file");
                 }
             }
-            if (Optional.IsCollectionDefined(Integrations))
+            if (!SerializedAdditionalRawData.ContainsKey("integrations") && Optional.IsCollectionDefined(Integrations))
             {
                 if (Integrations != null)
                 {
@@ -71,7 +77,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("integrations");
                 }
             }
-            if (Optional.IsDefined(Seed))
+            if (!SerializedAdditionalRawData.ContainsKey("seed") && Optional.IsDefined(Seed))
             {
                 if (Seed != null)
                 {
@@ -83,20 +89,21 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("seed");
                 }
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -195,7 +202,7 @@ namespace OpenAI.FineTuning
                     seed = property.Value.GetInt32();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

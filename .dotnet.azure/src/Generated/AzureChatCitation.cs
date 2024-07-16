@@ -40,8 +40,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         /// <summary> Initializes a new instance of <see cref="AzureChatCitation"/>. </summary>
         /// <param name="content"> The content of the citation. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
@@ -50,6 +49,7 @@ namespace Azure.AI.OpenAI.Chat
             Argument.AssertNotNull(content, nameof(content));
 
             Content = content;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatCitation"/>. </summary>
@@ -66,7 +66,7 @@ namespace Azure.AI.OpenAI.Chat
             Url = url;
             Filepath = filepath;
             ChunkId = chunkId;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatCitation"/> for deserialization. </summary>

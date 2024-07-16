@@ -9,10 +9,10 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalCreateFineTuningJobRequestHyperparameters
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalCreateFineTuningJobRequestHyperparameters()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalCreateFineTuningJobRequestHyperparameters(BinaryData batchSize, BinaryData learningRateMultiplier, BinaryData nEpochs, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -20,7 +20,7 @@ namespace OpenAI.FineTuning
             BatchSize = batchSize;
             LearningRateMultiplier = learningRateMultiplier;
             NEpochs = nEpochs;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public BinaryData BatchSize { get; set; }

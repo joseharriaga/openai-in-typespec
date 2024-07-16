@@ -21,12 +21,12 @@ namespace OpenAI.Batch
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Object))
+            if (!SerializedAdditionalRawData.ContainsKey("object") && Optional.IsDefined(Object))
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.Value.ToString());
             }
-            if (Optional.IsCollectionDefined(Data))
+            if (!SerializedAdditionalRawData.ContainsKey("data") && Optional.IsCollectionDefined(Data))
             {
                 writer.WritePropertyName("data"u8);
                 writer.WriteStartArray();
@@ -36,20 +36,21 @@ namespace OpenAI.Batch
                 }
                 writer.WriteEndArray();
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -103,7 +104,7 @@ namespace OpenAI.Batch
                     data = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

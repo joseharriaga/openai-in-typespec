@@ -9,11 +9,11 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchRequestOutputResponse
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalBatchRequestOutputResponse()
         {
             Body = new ChangeTrackingDictionary<string, string>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalBatchRequestOutputResponse(int? statusCode, string requestId, IReadOnlyDictionary<string, string> body, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -21,7 +21,7 @@ namespace OpenAI.Batch
             StatusCode = statusCode;
             RequestId = requestId;
             Body = body;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public int? StatusCode { get; }

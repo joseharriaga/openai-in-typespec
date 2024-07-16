@@ -9,17 +9,17 @@ namespace OpenAI.Chat
 {
     public partial class StreamingChatFunctionCallUpdate
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal StreamingChatFunctionCallUpdate()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal StreamingChatFunctionCallUpdate(string functionArgumentsUpdate, string functionName, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FunctionArgumentsUpdate = functionArgumentsUpdate;
             FunctionName = functionName;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
     }
 }

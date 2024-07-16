@@ -21,75 +21,117 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            if (Error != null)
+            if (!SerializedAdditionalRawData.ContainsKey("id"))
             {
-                writer.WritePropertyName("error"u8);
-                writer.WriteObjectValue(Error, options);
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
             {
-                writer.WriteNull("error");
+                writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            if (FineTunedModel != null)
+            if (!SerializedAdditionalRawData.ContainsKey("error"))
             {
-                writer.WritePropertyName("fine_tuned_model"u8);
-                writer.WriteStringValue(FineTunedModel);
+                if (Error != null)
+                {
+                    writer.WritePropertyName("error"u8);
+                    writer.WriteObjectValue(Error, options);
+                }
+                else
+                {
+                    writer.WriteNull("error");
+                }
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("fine_tuned_model"))
             {
-                writer.WriteNull("fine_tuned_model");
+                if (FineTunedModel != null)
+                {
+                    writer.WritePropertyName("fine_tuned_model"u8);
+                    writer.WriteStringValue(FineTunedModel);
+                }
+                else
+                {
+                    writer.WriteNull("fine_tuned_model");
+                }
             }
-            if (FinishedAt != null)
+            if (!SerializedAdditionalRawData.ContainsKey("finished_at"))
             {
-                writer.WritePropertyName("finished_at"u8);
-                writer.WriteNumberValue(FinishedAt.Value, "U");
+                if (FinishedAt != null)
+                {
+                    writer.WritePropertyName("finished_at"u8);
+                    writer.WriteNumberValue(FinishedAt.Value, "U");
+                }
+                else
+                {
+                    writer.WriteNull("finished_at");
+                }
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("hyperparameters"))
             {
-                writer.WriteNull("finished_at");
+                writer.WritePropertyName("hyperparameters"u8);
+                writer.WriteObjectValue(Hyperparameters, options);
             }
-            writer.WritePropertyName("hyperparameters"u8);
-            writer.WriteObjectValue(Hyperparameters, options);
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("organization_id"u8);
-            writer.WriteStringValue(OrganizationId);
-            writer.WritePropertyName("result_files"u8);
-            writer.WriteStartArray();
-            foreach (var item in ResultFiles)
+            if (!SerializedAdditionalRawData.ContainsKey("model"))
             {
-                writer.WriteStringValue(item);
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
             }
-            writer.WriteEndArray();
-            writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status.ToString());
-            if (TrainedTokens != null)
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
             {
-                writer.WritePropertyName("trained_tokens"u8);
-                writer.WriteNumberValue(TrainedTokens.Value);
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("organization_id"))
             {
-                writer.WriteNull("trained_tokens");
+                writer.WritePropertyName("organization_id"u8);
+                writer.WriteStringValue(OrganizationId);
             }
-            writer.WritePropertyName("training_file"u8);
-            writer.WriteStringValue(TrainingFile);
-            if (ValidationFile != null)
+            if (!SerializedAdditionalRawData.ContainsKey("result_files"))
             {
-                writer.WritePropertyName("validation_file"u8);
-                writer.WriteStringValue(ValidationFile);
+                writer.WritePropertyName("result_files"u8);
+                writer.WriteStartArray();
+                foreach (var item in ResultFiles)
+                {
+                    writer.WriteStringValue(item);
+                }
+                writer.WriteEndArray();
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("status"))
             {
-                writer.WriteNull("validation_file");
+                writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            if (Optional.IsCollectionDefined(Integrations))
+            if (!SerializedAdditionalRawData.ContainsKey("trained_tokens"))
+            {
+                if (TrainedTokens != null)
+                {
+                    writer.WritePropertyName("trained_tokens"u8);
+                    writer.WriteNumberValue(TrainedTokens.Value);
+                }
+                else
+                {
+                    writer.WriteNull("trained_tokens");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("training_file"))
+            {
+                writer.WritePropertyName("training_file"u8);
+                writer.WriteStringValue(TrainingFile);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("validation_file"))
+            {
+                if (ValidationFile != null)
+                {
+                    writer.WritePropertyName("validation_file"u8);
+                    writer.WriteStringValue(ValidationFile);
+                }
+                else
+                {
+                    writer.WriteNull("validation_file");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("integrations") && Optional.IsCollectionDefined(Integrations))
             {
                 if (Integrations != null)
                 {
@@ -106,9 +148,12 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("integrations");
                 }
             }
-            writer.WritePropertyName("seed"u8);
-            writer.WriteNumberValue(Seed);
-            if (Optional.IsDefined(EstimatedFinish))
+            if (!SerializedAdditionalRawData.ContainsKey("seed"))
+            {
+                writer.WritePropertyName("seed"u8);
+                writer.WriteNumberValue(Seed);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("estimated_finish") && Optional.IsDefined(EstimatedFinish))
             {
                 if (EstimatedFinish != null)
                 {
@@ -120,20 +165,21 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("estimated_finish");
                 }
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -308,7 +354,7 @@ namespace OpenAI.FineTuning
                     estimatedFinish = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

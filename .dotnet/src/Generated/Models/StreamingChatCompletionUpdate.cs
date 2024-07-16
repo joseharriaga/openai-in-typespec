@@ -10,8 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class StreamingChatCompletionUpdate
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal StreamingChatCompletionUpdate(string id, IEnumerable<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset createdAt, string model)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -22,6 +21,7 @@ namespace OpenAI.Chat
             Choices = choices.ToList();
             CreatedAt = createdAt;
             Model = model;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal StreamingChatCompletionUpdate(string id, IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset createdAt, string model, string systemFingerprint, InternalCreateChatCompletionStreamResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -33,7 +33,7 @@ namespace OpenAI.Chat
             SystemFingerprint = systemFingerprint;
             Object = @object;
             Usage = usage;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal StreamingChatCompletionUpdate()

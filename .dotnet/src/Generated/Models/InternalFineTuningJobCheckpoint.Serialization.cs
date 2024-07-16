@@ -21,34 +21,56 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("fine_tuned_model_checkpoint"u8);
-            writer.WriteStringValue(FineTunedModelCheckpoint);
-            writer.WritePropertyName("step_number"u8);
-            writer.WriteNumberValue(StepNumber);
-            writer.WritePropertyName("metrics"u8);
-            writer.WriteObjectValue(Metrics, options);
-            writer.WritePropertyName("fine_tuning_job_id"u8);
-            writer.WriteStringValue(FineTuningJobId);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            if (true && _serializedAdditionalRawData != null)
+            if (!SerializedAdditionalRawData.ContainsKey("id"))
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
+            {
+                writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("fine_tuned_model_checkpoint"))
+            {
+                writer.WritePropertyName("fine_tuned_model_checkpoint"u8);
+                writer.WriteStringValue(FineTunedModelCheckpoint);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("step_number"))
+            {
+                writer.WritePropertyName("step_number"u8);
+                writer.WriteNumberValue(StepNumber);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("metrics"))
+            {
+                writer.WritePropertyName("metrics"u8);
+                writer.WriteObjectValue(Metrics, options);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("fine_tuning_job_id"))
+            {
+                writer.WritePropertyName("fine_tuning_job_id"u8);
+                writer.WriteStringValue(FineTuningJobId);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            {
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -119,7 +141,7 @@ namespace OpenAI.FineTuning
                     @object = new InternalFineTuningJobCheckpointObject(property.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

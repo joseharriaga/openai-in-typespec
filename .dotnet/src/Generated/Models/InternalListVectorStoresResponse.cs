@@ -10,8 +10,7 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalListVectorStoresResponse
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalListVectorStoresResponse(IEnumerable<VectorStore> data, string firstId, string lastId, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
@@ -22,6 +21,7 @@ namespace OpenAI.VectorStores
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalListVectorStoresResponse(InternalListVectorStoresResponseObject @object, IReadOnlyList<VectorStore> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -31,7 +31,7 @@ namespace OpenAI.VectorStores
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalListVectorStoresResponse()

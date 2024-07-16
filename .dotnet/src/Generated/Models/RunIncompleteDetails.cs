@@ -9,16 +9,16 @@ namespace OpenAI.Assistants
 {
     public partial class RunIncompleteDetails
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal RunIncompleteDetails()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal RunIncompleteDetails(RunIncompleteReason? reason, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Reason = reason;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public RunIncompleteReason? Reason { get; }

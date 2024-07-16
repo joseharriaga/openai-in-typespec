@@ -9,10 +9,10 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction(string name, string arguments, string output, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -20,7 +20,7 @@ namespace OpenAI.Assistants
             Name = name;
             Arguments = arguments;
             Output = output;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public string Name { get; }

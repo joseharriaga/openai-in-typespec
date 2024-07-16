@@ -27,7 +27,7 @@ using OpenAI;
 @@access(RunStepDeltaStepDetailsToolCallsFunctionObject, Access.public);
 @@usage(RunStepDeltaStepDetailsToolCallsFunctionObject, Usage.output);
 
-// 
+//
 // @@access(RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject, Access.public);
 // @@usage(RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject, Usage.output);
 

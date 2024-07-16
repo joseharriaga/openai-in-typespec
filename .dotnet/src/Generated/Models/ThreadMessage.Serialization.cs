@@ -21,113 +21,156 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("thread_id"u8);
-            writer.WriteStringValue(ThreadId);
-            writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status.ToString());
-            if (IncompleteDetails != null)
+            if (!SerializedAdditionalRawData.ContainsKey("id"))
             {
-                writer.WritePropertyName("incomplete_details"u8);
-                writer.WriteObjectValue(IncompleteDetails, options);
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
             {
-                writer.WriteNull("incomplete_details");
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            if (CompletedAt != null)
+            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
             {
-                writer.WritePropertyName("completed_at"u8);
-                writer.WriteNumberValue(CompletedAt.Value, "U");
+                writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("thread_id"))
             {
-                writer.WriteNull("completed_at");
+                writer.WritePropertyName("thread_id"u8);
+                writer.WriteStringValue(ThreadId);
             }
-            if (IncompleteAt != null)
+            if (!SerializedAdditionalRawData.ContainsKey("status"))
             {
-                writer.WritePropertyName("incomplete_at"u8);
-                writer.WriteNumberValue(IncompleteAt.Value, "U");
+                writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("incomplete_details"))
             {
-                writer.WriteNull("incomplete_at");
-            }
-            writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role.ToSerialString());
-            writer.WritePropertyName("content"u8);
-            writer.WriteStartArray();
-            foreach (var item in Content)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
-            if (AssistantId != null)
-            {
-                writer.WritePropertyName("assistant_id"u8);
-                writer.WriteStringValue(AssistantId);
-            }
-            else
-            {
-                writer.WriteNull("assistant_id");
-            }
-            if (RunId != null)
-            {
-                writer.WritePropertyName("run_id"u8);
-                writer.WriteStringValue(RunId);
-            }
-            else
-            {
-                writer.WriteNull("run_id");
-            }
-            if (Attachments != null && Optional.IsCollectionDefined(Attachments))
-            {
-                writer.WritePropertyName("attachments"u8);
-                writer.WriteStartArray();
-                foreach (var item in Attachments)
+                if (IncompleteDetails != null)
                 {
-                    writer.WriteObjectValue<MessageCreationAttachment>(item, options);
+                    writer.WritePropertyName("incomplete_details"u8);
+                    writer.WriteObjectValue(IncompleteDetails, options);
+                }
+                else
+                {
+                    writer.WriteNull("incomplete_details");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("completed_at"))
+            {
+                if (CompletedAt != null)
+                {
+                    writer.WritePropertyName("completed_at"u8);
+                    writer.WriteNumberValue(CompletedAt.Value, "U");
+                }
+                else
+                {
+                    writer.WriteNull("completed_at");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("incomplete_at"))
+            {
+                if (IncompleteAt != null)
+                {
+                    writer.WritePropertyName("incomplete_at"u8);
+                    writer.WriteNumberValue(IncompleteAt.Value, "U");
+                }
+                else
+                {
+                    writer.WriteNull("incomplete_at");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("role"))
+            {
+                writer.WritePropertyName("role"u8);
+                writer.WriteStringValue(Role.ToSerialString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("content"))
+            {
+                writer.WritePropertyName("content"u8);
+                writer.WriteStartArray();
+                foreach (var item in Content)
+                {
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
-            else
+            if (!SerializedAdditionalRawData.ContainsKey("assistant_id"))
             {
-                writer.WriteNull("attachments");
-            }
-            if (Metadata != null && Optional.IsCollectionDefined(Metadata))
-            {
-                writer.WritePropertyName("metadata"u8);
-                writer.WriteStartObject();
-                foreach (var item in Metadata)
+                if (AssistantId != null)
                 {
-                    writer.WritePropertyName(item.Key);
-                    writer.WriteStringValue(item.Value);
+                    writer.WritePropertyName("assistant_id"u8);
+                    writer.WriteStringValue(AssistantId);
                 }
-                writer.WriteEndObject();
-            }
-            else
-            {
-                writer.WriteNull("metadata");
-            }
-            if (true && _serializedAdditionalRawData != null)
-            {
-                foreach (var item in _serializedAdditionalRawData)
+                else
                 {
-                    writer.WritePropertyName(item.Key);
+                    writer.WriteNull("assistant_id");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("run_id"))
+            {
+                if (RunId != null)
+                {
+                    writer.WritePropertyName("run_id"u8);
+                    writer.WriteStringValue(RunId);
+                }
+                else
+                {
+                    writer.WriteNull("run_id");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("attachments"))
+            {
+                if (Attachments != null && Optional.IsCollectionDefined(Attachments))
+                {
+                    writer.WritePropertyName("attachments"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Attachments)
+                    {
+                        writer.WriteObjectValue<MessageCreationAttachment>(item, options);
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("attachments");
+                }
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("metadata"))
+            {
+                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+                {
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+                else
+                {
+                    writer.WriteNull("metadata");
+                }
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                {
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -290,7 +333,7 @@ namespace OpenAI.Assistants
                     metadata = dictionary;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

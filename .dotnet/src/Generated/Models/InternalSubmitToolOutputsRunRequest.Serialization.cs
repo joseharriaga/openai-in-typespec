@@ -21,14 +21,17 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("tool_outputs"u8);
-            writer.WriteStartArray();
-            foreach (var item in ToolOutputs)
+            if (!SerializedAdditionalRawData.ContainsKey("tool_outputs"))
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("tool_outputs"u8);
+                writer.WriteStartArray();
+                foreach (var item in ToolOutputs)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
-            if (Optional.IsDefined(Stream))
+            if (!SerializedAdditionalRawData.ContainsKey("stream") && Optional.IsDefined(Stream))
             {
                 if (Stream != null)
                 {
@@ -40,20 +43,21 @@ namespace OpenAI.Assistants
                     writer.WriteNull("stream");
                 }
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -104,7 +108,7 @@ namespace OpenAI.Assistants
                     stream = property.Value.GetBoolean();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

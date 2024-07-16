@@ -21,24 +21,31 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("message_creation"u8);
-            writer.WriteObjectValue<InternalRunStepDetailsMessageCreationObjectMessageCreation>(_messageCreation, options);
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
-            if (true && _serializedAdditionalRawData != null)
+            if (!SerializedAdditionalRawData.ContainsKey("message_creation"))
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("message_creation"u8);
+                writer.WriteObjectValue<InternalRunStepDetailsMessageCreationObjectMessageCreation>(_messageCreation, options);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("type"))
+            {
+                writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type);
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -79,7 +86,7 @@ namespace OpenAI.Assistants
                     type = property.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

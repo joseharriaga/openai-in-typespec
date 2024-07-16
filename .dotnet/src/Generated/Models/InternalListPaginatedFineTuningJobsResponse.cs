@@ -10,14 +10,14 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalListPaginatedFineTuningJobsResponse
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalListPaginatedFineTuningJobsResponse(IEnumerable<InternalFineTuningJob> data, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
 
             Data = data.ToList();
             HasMore = hasMore;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalListPaginatedFineTuningJobsResponse(IReadOnlyList<InternalFineTuningJob> data, bool hasMore, InternalListPaginatedFineTuningJobsResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -25,7 +25,7 @@ namespace OpenAI.FineTuning
             Data = data;
             HasMore = hasMore;
             Object = @object;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalListPaginatedFineTuningJobsResponse()

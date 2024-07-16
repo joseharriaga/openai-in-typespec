@@ -22,38 +22,44 @@ namespace OpenAI.Audio
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("file"u8);
+            if (!SerializedAdditionalRawData.ContainsKey("file"))
+            {
+                writer.WritePropertyName("file"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(File);
 #else
-            using (JsonDocument document = JsonDocument.Parse(File))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(File))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model.ToString());
-            if (Optional.IsDefined(Language))
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            {
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("language") && Optional.IsDefined(Language))
             {
                 writer.WritePropertyName("language"u8);
                 writer.WriteStringValue(Language);
             }
-            if (Optional.IsDefined(Prompt))
+            if (!SerializedAdditionalRawData.ContainsKey("prompt") && Optional.IsDefined(Prompt))
             {
                 writer.WritePropertyName("prompt"u8);
                 writer.WriteStringValue(Prompt);
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (!SerializedAdditionalRawData.ContainsKey("response_format") && Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
             }
-            if (Optional.IsDefined(Temperature))
+            if (!SerializedAdditionalRawData.ContainsKey("temperature") && Optional.IsDefined(Temperature))
             {
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
-            if (Optional.IsCollectionDefined(TimestampGranularities))
+            if (!SerializedAdditionalRawData.ContainsKey("timestamp_granularities") && Optional.IsCollectionDefined(TimestampGranularities))
             {
                 writer.WritePropertyName("timestamp_granularities"u8);
                 writer.WriteStartArray();
@@ -75,20 +81,21 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -183,7 +190,7 @@ namespace OpenAI.Audio
                     timestampGranularities = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

@@ -9,19 +9,19 @@ namespace OpenAI.Embeddings
 {
     public partial class EmbeddingTokenUsage
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal EmbeddingTokenUsage(int inputTokens, int totalTokens)
         {
             InputTokens = inputTokens;
             TotalTokens = totalTokens;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal EmbeddingTokenUsage(int inputTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             InputTokens = inputTokens;
             TotalTokens = totalTokens;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal EmbeddingTokenUsage()

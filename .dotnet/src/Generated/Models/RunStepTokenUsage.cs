@@ -9,13 +9,13 @@ namespace OpenAI.Assistants
 {
     public partial class RunStepTokenUsage
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal RunStepTokenUsage(int completionTokens, int promptTokens, int totalTokens)
         {
             CompletionTokens = completionTokens;
             PromptTokens = promptTokens;
             TotalTokens = totalTokens;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal RunStepTokenUsage(int completionTokens, int promptTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -23,7 +23,7 @@ namespace OpenAI.Assistants
             CompletionTokens = completionTokens;
             PromptTokens = promptTokens;
             TotalTokens = totalTokens;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal RunStepTokenUsage()

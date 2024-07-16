@@ -9,21 +9,21 @@ namespace OpenAI.Assistants
 {
     public partial class RunStepError
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal RunStepError(RunStepErrorCode code, string message)
         {
             Argument.AssertNotNull(message, nameof(message));
 
             Code = code;
             Message = message;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal RunStepError(RunStepErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Code = code;
             Message = message;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal RunStepError()

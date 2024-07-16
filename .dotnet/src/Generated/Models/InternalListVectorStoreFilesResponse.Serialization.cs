@@ -21,35 +21,51 @@ namespace OpenAI.VectorStores
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("data"u8);
-            writer.WriteStartArray();
-            foreach (var item in Data)
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteEndArray();
-            writer.WritePropertyName("first_id"u8);
-            writer.WriteStringValue(FirstId);
-            writer.WritePropertyName("last_id"u8);
-            writer.WriteStringValue(LastId);
-            writer.WritePropertyName("has_more"u8);
-            writer.WriteBooleanValue(HasMore);
-            if (true && _serializedAdditionalRawData != null)
+            if (!SerializedAdditionalRawData.ContainsKey("data"))
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("data"u8);
+                writer.WriteStartArray();
+                foreach (var item in Data)
                 {
-                    writer.WritePropertyName(item.Key);
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("first_id"))
+            {
+                writer.WritePropertyName("first_id"u8);
+                writer.WriteStringValue(FirstId);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("last_id"))
+            {
+                writer.WritePropertyName("last_id"u8);
+                writer.WriteStringValue(LastId);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("has_more"))
+            {
+                writer.WritePropertyName("has_more"u8);
+                writer.WriteBooleanValue(HasMore);
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                {
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -113,7 +129,7 @@ namespace OpenAI.VectorStores
                     hasMore = property.Value.GetBoolean();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

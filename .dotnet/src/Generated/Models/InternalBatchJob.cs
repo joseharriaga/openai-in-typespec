@@ -9,8 +9,7 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchJob
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalBatchJob(string id, string endpoint, string inputFileId, string completionWindow, InternalBatchStatus status, DateTimeOffset createdAt)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -25,6 +24,7 @@ namespace OpenAI.Batch
             Status = status;
             CreatedAt = createdAt;
             Metadata = new ChangeTrackingDictionary<string, string>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalBatchJob(string id, InternalBatchObject @object, string endpoint, InternalBatchErrors errors, string inputFileId, string completionWindow, InternalBatchStatus status, string outputFileId, string errorFileId, DateTimeOffset createdAt, DateTimeOffset? inProgressAt, DateTimeOffset? expiresAt, DateTimeOffset? finalizingAt, DateTimeOffset? completedAt, DateTimeOffset? failedAt, DateTimeOffset? expiredAt, DateTimeOffset? cancellingAt, DateTimeOffset? cancelledAt, InternalBatchRequestCounts requestCounts, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -49,7 +49,7 @@ namespace OpenAI.Batch
             CancelledAt = cancelledAt;
             RequestCounts = requestCounts;
             Metadata = metadata;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalBatchJob()

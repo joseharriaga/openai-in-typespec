@@ -9,17 +9,17 @@ namespace OpenAI.Assistants
 {
     public partial class MessageFailureDetails
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal MessageFailureDetails(MessageFailureReason reason)
         {
             Reason = reason;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageFailureDetails(MessageFailureReason reason, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Reason = reason;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal MessageFailureDetails()

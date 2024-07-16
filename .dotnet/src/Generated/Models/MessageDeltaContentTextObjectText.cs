@@ -9,18 +9,18 @@ namespace OpenAI.Assistants
 {
     internal partial class MessageDeltaContentTextObjectText
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal MessageDeltaContentTextObjectText()
         {
             Annotations = new ChangeTrackingList<MessageDeltaTextContentAnnotation>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageDeltaContentTextObjectText(string value, IReadOnlyList<MessageDeltaTextContentAnnotation> annotations, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Value = value;
             Annotations = annotations;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public string Value { get; }

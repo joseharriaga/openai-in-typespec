@@ -21,33 +21,43 @@ namespace OpenAI.Embeddings
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("index"u8);
-            writer.WriteNumberValue(Index);
-            writer.WritePropertyName("embedding"u8);
+            if (!SerializedAdditionalRawData.ContainsKey("index"))
+            {
+                writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("embedding"))
+            {
+                writer.WritePropertyName("embedding"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(EmbeddingProperty);
 #else
-            using (JsonDocument document = JsonDocument.Parse(EmbeddingProperty))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
-            if (true && _serializedAdditionalRawData != null)
-            {
-                foreach (var item in _serializedAdditionalRawData)
+                using (JsonDocument document = JsonDocument.Parse(EmbeddingProperty))
                 {
-                    writer.WritePropertyName(item.Key);
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            {
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                {
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -94,7 +104,7 @@ namespace OpenAI.Embeddings
                     @object = new InternalEmbeddingObject(property.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

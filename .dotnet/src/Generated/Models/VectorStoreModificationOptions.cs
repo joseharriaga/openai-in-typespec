@@ -9,11 +9,11 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStoreModificationOptions
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public VectorStoreModificationOptions()
         {
             Metadata = new ChangeTrackingDictionary<string, string>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal VectorStoreModificationOptions(string name, VectorStoreExpirationPolicy expirationPolicy, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -21,7 +21,7 @@ namespace OpenAI.VectorStores
             Name = name;
             ExpirationPolicy = expirationPolicy;
             Metadata = metadata;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public string Name { get; init; }

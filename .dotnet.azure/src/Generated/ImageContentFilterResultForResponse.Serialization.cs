@@ -21,40 +21,41 @@ namespace Azure.AI.OpenAI
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Sexual))
+            if (!SerializedAdditionalRawData.ContainsKey("sexual") && Optional.IsDefined(Sexual))
             {
                 writer.WritePropertyName("sexual"u8);
                 writer.WriteObjectValue(Sexual, options);
             }
-            if (Optional.IsDefined(Violence))
+            if (!SerializedAdditionalRawData.ContainsKey("violence") && Optional.IsDefined(Violence))
             {
                 writer.WritePropertyName("violence"u8);
                 writer.WriteObjectValue(Violence, options);
             }
-            if (Optional.IsDefined(Hate))
+            if (!SerializedAdditionalRawData.ContainsKey("hate") && Optional.IsDefined(Hate))
             {
                 writer.WritePropertyName("hate"u8);
                 writer.WriteObjectValue(Hate, options);
             }
-            if (Optional.IsDefined(SelfHarm))
+            if (!SerializedAdditionalRawData.ContainsKey("self_harm") && Optional.IsDefined(SelfHarm))
             {
                 writer.WritePropertyName("self_harm"u8);
                 writer.WriteObjectValue(SelfHarm, options);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }

@@ -21,35 +21,36 @@ namespace Azure.AI.OpenAI
             }
 
             writer.WriteStartObject();
-            if (Optional.IsDefined(Code))
+            if (!SerializedAdditionalRawData.ContainsKey("code") && Optional.IsDefined(Code))
             {
                 writer.WritePropertyName("code"u8);
                 writer.WriteStringValue(Code.Value.ToString());
             }
-            if (Optional.IsDefined(RevisedPrompt))
+            if (!SerializedAdditionalRawData.ContainsKey("revised_prompt") && Optional.IsDefined(RevisedPrompt))
             {
                 writer.WritePropertyName("revised_prompt"u8);
                 writer.WriteStringValue(RevisedPrompt);
             }
-            if (Optional.IsDefined(ContentFilterResults))
+            if (!SerializedAdditionalRawData.ContainsKey("content_filter_results") && Optional.IsDefined(ContentFilterResults))
             {
                 writer.WritePropertyName("content_filter_results"u8);
                 writer.WriteObjectValue(ContentFilterResults, options);
             }
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }

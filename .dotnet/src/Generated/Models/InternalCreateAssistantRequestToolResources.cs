@@ -9,17 +9,17 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalCreateAssistantRequestToolResources
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalCreateAssistantRequestToolResources()
         {
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalCreateAssistantRequestToolResources(InternalCreateAssistantRequestToolResourcesCodeInterpreter codeInterpreter, BinaryData fileSearch, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             CodeInterpreter = codeInterpreter;
             FileSearch = fileSearch;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public InternalCreateAssistantRequestToolResourcesCodeInterpreter CodeInterpreter { get; set; }

@@ -10,13 +10,13 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionRequest
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalCreateCompletionRequest(InternalCreateCompletionRequestModel model, BinaryData prompt)
         {
             Model = model;
             Prompt = prompt;
             LogitBias = new ChangeTrackingDictionary<string, int>();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalCreateCompletionRequest(InternalCreateCompletionRequestModel model, BinaryData prompt, int? bestOf, bool? echo, float? frequencyPenalty, IDictionary<string, int> logitBias, int? logprobs, int? maxTokens, int? n, float? presencePenalty, long? seed, BinaryData stop, bool? stream, InternalChatCompletionStreamOptions streamOptions, string suffix, float? temperature, float? topP, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -39,7 +39,7 @@ namespace OpenAI.LegacyCompletions
             Temperature = temperature;
             TopP = topP;
             User = user;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalCreateCompletionRequest()

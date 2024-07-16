@@ -21,27 +21,31 @@ namespace OpenAI.VectorStores
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("file_id"u8);
-            writer.WriteStringValue(FileId);
-            if (Optional.IsDefined(ChunkingStrategy))
+            if (!SerializedAdditionalRawData.ContainsKey("file_id"))
+            {
+                writer.WritePropertyName("file_id"u8);
+                writer.WriteStringValue(FileId);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("chunking_strategy") && Optional.IsDefined(ChunkingStrategy))
             {
                 writer.WritePropertyName("chunking_strategy"u8);
                 writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
             }
-            if (true && _serializedAdditionalRawData != null)
+            foreach (var item in SerializedAdditionalRawData)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -86,7 +90,7 @@ namespace OpenAI.VectorStores
                     chunkingStrategy = FileChunkingStrategy.DeserializeFileChunkingStrategy(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

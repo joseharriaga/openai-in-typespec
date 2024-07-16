@@ -21,26 +21,36 @@ namespace OpenAI.Audio
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("word"u8);
-            writer.WriteStringValue(Word);
-            writer.WritePropertyName("start"u8);
-            writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.FFF")));
-            writer.WritePropertyName("end"u8);
-            writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.FFF")));
-            if (true && _serializedAdditionalRawData != null)
+            if (!SerializedAdditionalRawData.ContainsKey("word"))
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("word"u8);
+                writer.WriteStringValue(Word);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("start"))
+            {
+                writer.WritePropertyName("start"u8);
+                writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.FFF")));
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("end"))
+            {
+                writer.WritePropertyName("end"u8);
+                writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.FFF")));
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
-                    writer.WritePropertyName(item.Key);
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -87,7 +97,7 @@ namespace OpenAI.Audio
                     end = TimeSpan.FromSeconds(property.Value.GetDouble());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

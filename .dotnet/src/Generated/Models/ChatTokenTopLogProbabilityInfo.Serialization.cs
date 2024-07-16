@@ -21,38 +21,48 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("token"u8);
-            writer.WriteStringValue(Token);
-            writer.WritePropertyName("logprob"u8);
-            writer.WriteNumberValue(LogProbability);
-            if (Utf8ByteValues != null && Optional.IsCollectionDefined(Utf8ByteValues))
+            if (!SerializedAdditionalRawData.ContainsKey("token"))
             {
-                writer.WritePropertyName("bytes"u8);
-                writer.WriteStartArray();
-                foreach (var item in Utf8ByteValues)
+                writer.WritePropertyName("token"u8);
+                writer.WriteStringValue(Token);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("logprob"))
+            {
+                writer.WritePropertyName("logprob"u8);
+                writer.WriteNumberValue(LogProbability);
+            }
+            if (!SerializedAdditionalRawData.ContainsKey("bytes"))
+            {
+                if (Utf8ByteValues != null && Optional.IsCollectionDefined(Utf8ByteValues))
                 {
-                    writer.WriteNumberValue(item);
+                    writer.WritePropertyName("bytes"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Utf8ByteValues)
+                    {
+                        writer.WriteNumberValue(item);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
-            }
-            else
-            {
-                writer.WriteNull("bytes");
-            }
-            if (true && _serializedAdditionalRawData != null)
-            {
-                foreach (var item in _serializedAdditionalRawData)
+                else
                 {
-                    writer.WritePropertyName(item.Key);
+                    writer.WriteNull("bytes");
+                }
+            }
+            foreach (var item in SerializedAdditionalRawData)
+            {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                {
+                    continue;
+                }
+                writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             writer.WriteEndObject();
         }
@@ -109,7 +119,7 @@ namespace OpenAI.Chat
                     bytes = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

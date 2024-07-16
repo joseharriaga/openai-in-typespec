@@ -9,20 +9,20 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionRequestMessageContentPartImage
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalChatCompletionRequestMessageContentPartImage(InternalChatCompletionRequestMessageContentPartImageImageUrl imageUrl)
         {
             Argument.AssertNotNull(imageUrl, nameof(imageUrl));
 
             ImageUrl = imageUrl;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalChatCompletionRequestMessageContentPartImage(InternalChatCompletionRequestMessageContentPartImageType type, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUrl, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             ImageUrl = imageUrl;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalChatCompletionRequestMessageContentPartImage()

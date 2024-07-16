@@ -9,8 +9,7 @@ namespace OpenAI.Files
 {
     public partial class OpenAIFileInfo
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal OpenAIFileInfo(string id, long? sizeInBytes, DateTimeOffset createdAt, string filename, OpenAIFilePurpose purpose, OpenAIFileStatus status)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -22,6 +21,7 @@ namespace OpenAI.Files
             Filename = filename;
             Purpose = purpose;
             Status = status;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal OpenAIFileInfo(string id, long? sizeInBytes, DateTimeOffset createdAt, string filename, InternalOpenAIFileObject @object, OpenAIFilePurpose purpose, OpenAIFileStatus status, string statusDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -34,7 +34,7 @@ namespace OpenAI.Files
             Purpose = purpose;
             Status = status;
             StatusDetails = statusDetails;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal OpenAIFileInfo()

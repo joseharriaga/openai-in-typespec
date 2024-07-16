@@ -10,8 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJob
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalFineTuningJob(string id, DateTimeOffset createdAt, InternalFineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, InternalFineTuningJobHyperparameters hyperparameters, string model, string organizationId, IEnumerable<string> resultFiles, InternalFineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, int seed)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -36,6 +35,7 @@ namespace OpenAI.FineTuning
             ValidationFile = validationFile;
             Integrations = new ChangeTrackingList<InternalFineTuningIntegration>();
             Seed = seed;
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalFineTuningJob(string id, DateTimeOffset createdAt, InternalFineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, InternalFineTuningJobHyperparameters hyperparameters, string model, InternalFineTuningJobObject @object, string organizationId, IReadOnlyList<string> resultFiles, InternalFineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, IReadOnlyList<InternalFineTuningIntegration> integrations, int seed, DateTimeOffset? estimatedFinish, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -57,7 +57,7 @@ namespace OpenAI.FineTuning
             Integrations = integrations;
             Seed = seed;
             EstimatedFinish = estimatedFinish;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalFineTuningJob()

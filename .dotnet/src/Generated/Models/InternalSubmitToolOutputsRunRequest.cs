@@ -10,20 +10,20 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalSubmitToolOutputsRunRequest
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalSubmitToolOutputsRunRequest(IEnumerable<ToolOutput> toolOutputs)
         {
             Argument.AssertNotNull(toolOutputs, nameof(toolOutputs));
 
             ToolOutputs = toolOutputs.ToList();
+            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalSubmitToolOutputsRunRequest(IList<ToolOutput> toolOutputs, bool? stream, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             ToolOutputs = toolOutputs;
             Stream = stream;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalSubmitToolOutputsRunRequest()

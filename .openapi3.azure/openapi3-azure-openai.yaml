@@ -850,6 +850,8 @@ components:
         This adds the ability to provide data sources for the On Your Data feature.
     AzureCreateChatCompletionResponse:
       type: object
+      required:
+        - choices
       properties:
         prompt_filter_results:
           type: array
@@ -868,11 +870,15 @@ components:
               - prompt_index
               - content_filter_results
           description: The Responsible AI content filter annotations associated with prompt inputs into chat completions.
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureChatCompletionChoice'
+          description: TODO documentation
       allOf:
         - type: object
           required:
             - id
-            - choices
             - created
             - model
             - object
@@ -880,11 +886,6 @@ components:
             id:
               type: string
               description: A unique identifier for the chat completion.
-            choices:
-              type: array
-              items:
-                $ref: '#/components/schemas/AzureChatCompletionChoice'
-              description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
             created:
               type: integer
               format: unixtime
@@ -905,7 +906,7 @@ components:
               description: The object type, which is always `chat.completion`.
             usage:
               $ref: '#/components/schemas/OpenAI.CompletionUsage'
-          description: Represents a chat completion response returned by model, based on the provided input.
+          description: The template for omitting properties.
       description: |-
         The extended top-level chat completion response model for the Azure OpenAI service.
         This model adds Responsible AI content filter annotations for prompt input.

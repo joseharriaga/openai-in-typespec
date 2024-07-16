@@ -8,7 +8,7 @@ namespace AzureOpenAI;
  * This model adds Responsible AI content filter annotations for prompt input.
  */
 model AzureCreateChatCompletionResponse
-  extends OpenAI.CreateChatCompletionResponse<AzureChatCompletionChoice> {
+  extends OmitProperties<OpenAI.CreateChatCompletionResponse, "choices" | "stream_options"> {
   /**
    * The Responsible AI content filter annotations associated with prompt inputs into chat completions.
    */
@@ -23,6 +23,9 @@ model AzureCreateChatCompletionResponse
      */
     content_filter_results: AzureContentFilterResultForPrompt;
   }[];
+
+  /** TODO documentation */
+  choices: AzureChatCompletionChoice[];
 }
 
 /**

@@ -182,14 +182,14 @@ model CreateChatCompletionRequest {
 }
 
 /** Represents a chat completion response returned by model, based on the provided input. */
-model CreateChatCompletionResponse<T extends ChatCompletionChoice = ChatCompletionChoice> {
+model CreateChatCompletionResponse {
   /** A unique identifier for the chat completion. */
   id: string;
 
   @doc("""
   A list of chat completion choices. Can be more than one if `n` is greater than 1.
   """)
-  choices: T[];
+  choices: ChatCompletionChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. */

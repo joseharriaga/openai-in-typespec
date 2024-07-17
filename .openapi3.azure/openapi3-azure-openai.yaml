@@ -3,6 +3,7 @@ info:
   title: Azure OpenAI Service
   version: 0.0.0
 tags:
+  - name: Audio
   - name: Chat
   - name: Images
 paths:
@@ -53,12 +54,50 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/OpenAI.CreateImageRequest'
+  /speech:
+    post:
+      tags:
+        - Audio
+      operationId: createSpeech
+      summary: Generates audio from the input text.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          headers:
+            Transfer-Encoding:
+              required: false
+              description: chunked
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenAI.CreateSpeechRequest'
 security:
   - ApiKeyAuth: []
   - OAuth2Auth:
       - https://cognitiveservices.azure.com/.default
 components:
   schemas:
+    AzureChatCompletionChoice:
+      type: object
+      properties:
+        content_filter_results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureContentFilterResultForPrompt'
+          description: 'TODO: documentation'
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionChoice'
+      description: 'TODO: documentation'
     AzureChatCompletionResponseMessage:
       type: object
       properties:
@@ -811,6 +850,8 @@ components:
         This adds the ability to provide data sources for the On Your Data feature.
     AzureCreateChatCompletionResponse:
       type: object
+      required:
+        - choices
       properties:
         prompt_filter_results:
           type: array
@@ -829,8 +870,39 @@ components:
               - prompt_index
               - content_filter_results
           description: The Responsible AI content filter annotations associated with prompt inputs into chat completions.
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureChatCompletionChoice'
+          description: TODO documentation
       allOf:
-        - $ref: '#/components/schemas/OpenAI.CreateChatCompletionResponse'
+        - type: object
+          required:
+            - id
+            - created
+            - object
+          properties:
+            id:
+              type: string
+              description: A unique identifier for the chat completion.
+            created:
+              type: integer
+              format: unixtime
+              description: The Unix timestamp (in seconds) of when the chat completion was created.
+            system_fingerprint:
+              type: string
+              description: |-
+                This fingerprint represents the backend configuration that the model runs with.
+
+                Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
+            object:
+              type: string
+              enum:
+                - chat.completion
+              description: The object type, which is always `chat.completion`.
+            usage:
+              $ref: '#/components/schemas/OpenAI.CompletionUsage'
+          description: The template for omitting properties.
       description: |-
         The extended top-level chat completion response model for the Azure OpenAI service.
         This model adds Responsible AI content filter annotations for prompt input.
@@ -1283,6 +1355,46 @@ components:
           description: The parameter information to control the use of the Elasticsearch data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
+    OpenAI.ChatCompletionChoice:
+      type: object
+      required:
+        - finish_reason
+        - index
+        - message
+        - logprobs
+      properties:
+        finish_reason:
+          type: string
+          enum:
+            - stop
+            - length
+            - tool_calls
+            - content_filter
+            - function_call
+          description: |-
+            The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+            `length` if the maximum number of tokens specified in the request was reached,
+            `content_filter` if content was omitted due to a flag from our content filters,
+            `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+        index:
+          type: integer
+          format: int32
+          description: The index of the choice in the list of choices.
+        message:
+          $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
+        logprobs:
+          type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
+              nullable: true
+              description: A list of message content tokens with log probability information.
+          required:
+            - content
+          nullable: true
+          description: Log probability information for the choice.
     OpenAI.ChatCompletionFunctionCallOption:
       type: object
       required:
@@ -1591,13 +1703,6 @@ components:
           description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
           deprecated: true
       description: A chat completion message generated by the model.
-    OpenAI.ChatCompletionStreamOptions:
-      type: object
-      properties:
-        include_usage:
-          type: boolean
-          description: 'If set, an additional chunk will be streamed before the `data: [DONE]` message. The `usage` field on this chunk shows the token usage statistics for the entire request, and the `choices` field will always be an empty array. All other chunks will also include a `usage` field, but with a null value.'
-      description: 'Options for streaming response. Only set this when you set `stream: true`.'
     OpenAI.ChatCompletionStreamResponseDelta:
       type: object
       properties:
@@ -1829,6 +1934,8 @@ components:
           type: integer
           format: int64
           nullable: true
+          minimum: -9223372036854776000
+          maximum: 9223372036854776000
           description: |-
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
@@ -1847,12 +1954,6 @@ components:
           nullable: true
           description: 'If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).'
           default: false
-        stream_options:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/OpenAI.ChatCompletionStreamOptions'
-          nullable: true
-          default: null
         temperature:
           type: number
           format: float
@@ -1917,82 +2018,6 @@ components:
 
             A list of functions the model may generate JSON inputs for.
           deprecated: true
-    OpenAI.CreateChatCompletionResponse:
-      type: object
-      required:
-        - id
-        - choices
-        - created
-        - model
-        - object
-      properties:
-        id:
-          type: string
-          description: A unique identifier for the chat completion.
-        choices:
-          type: array
-          items:
-            type: object
-            properties:
-              finish_reason:
-                type: string
-                enum:
-                  - stop
-                  - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
-                description: |-
-                  The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-                  `length` if the maximum number of tokens specified in the request was reached,
-                  `content_filter` if content was omitted due to a flag from our content filters,
-                  `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-              index:
-                type: integer
-                format: int32
-                description: The index of the choice in the list of choices.
-              message:
-                $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
-              logprobs:
-                type: object
-                properties:
-                  content:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
-                    nullable: true
-                    description: A list of message content tokens with log probability information.
-                required:
-                  - content
-                nullable: true
-                description: Log probability information for the choice.
-            required:
-              - finish_reason
-              - index
-              - message
-              - logprobs
-          description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
-        created:
-          type: integer
-          format: unixtime
-          description: The Unix timestamp (in seconds) of when the chat completion was created.
-        model:
-          type: string
-          description: The model used for the chat completion.
-        system_fingerprint:
-          type: string
-          description: |-
-            This fingerprint represents the backend configuration that the model runs with.
-
-            Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-        object:
-          type: string
-          enum:
-            - chat.completion
-          description: The object type, which is always `chat.completion`.
-        usage:
-          $ref: '#/components/schemas/OpenAI.CompletionUsage'
-      description: Represents a chat completion response returned by model, based on the provided input.
     OpenAI.CreateImageRequest:
       type: object
       required:
@@ -2057,6 +2082,54 @@ components:
         user:
           type: string
           description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+    OpenAI.CreateSpeechRequest:
+      type: object
+      required:
+        - model
+        - input
+        - voice
+      properties:
+        model:
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - tts-1
+                - tts-1-hd
+          description: 'One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`'
+          x-oaiTypeLabel: string
+        input:
+          type: string
+          maxLength: 4096
+          description: The text to generate audio for. The maximum length is 4096 characters.
+        voice:
+          type: string
+          enum:
+            - alloy
+            - echo
+            - fable
+            - onyx
+            - nova
+            - shimmer
+          description: The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech/voice-options).
+        response_format:
+          type: string
+          enum:
+            - mp3
+            - opus
+            - aac
+            - flac
+            - wav
+            - pcm
+          description: The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`.
+          default: mp3
+        speed:
+          type: number
+          format: float
+          minimum: 0.25
+          maximum: 4
+          description: The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default.
+          default: 1
     OpenAI.FunctionObject:
       type: object
       required:

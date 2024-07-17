@@ -12,7 +12,6 @@ namespace OpenAI.VectorStores
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         protected FileChunkingStrategy()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal FileChunkingStrategy(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)

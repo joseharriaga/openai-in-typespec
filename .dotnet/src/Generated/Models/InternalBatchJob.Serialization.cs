@@ -21,102 +21,102 @@ namespace OpenAI.Batch
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("id"))
+            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("endpoint"))
+            if (SerializedAdditionalRawData?.ContainsKey("endpoint") != true)
             {
                 writer.WritePropertyName("endpoint"u8);
                 writer.WriteStringValue(Endpoint);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("errors") && Optional.IsDefined(Errors))
+            if (SerializedAdditionalRawData?.ContainsKey("errors") != true && Optional.IsDefined(Errors))
             {
                 writer.WritePropertyName("errors"u8);
                 writer.WriteObjectValue(Errors, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("input_file_id"))
+            if (SerializedAdditionalRawData?.ContainsKey("input_file_id") != true)
             {
                 writer.WritePropertyName("input_file_id"u8);
                 writer.WriteStringValue(InputFileId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("completion_window"))
+            if (SerializedAdditionalRawData?.ContainsKey("completion_window") != true)
             {
                 writer.WritePropertyName("completion_window"u8);
                 writer.WriteStringValue(CompletionWindow);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("status"))
+            if (SerializedAdditionalRawData?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
                 writer.WriteStringValue(Status.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("output_file_id") && Optional.IsDefined(OutputFileId))
+            if (SerializedAdditionalRawData?.ContainsKey("output_file_id") != true && Optional.IsDefined(OutputFileId))
             {
                 writer.WritePropertyName("output_file_id"u8);
                 writer.WriteStringValue(OutputFileId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("error_file_id") && Optional.IsDefined(ErrorFileId))
+            if (SerializedAdditionalRawData?.ContainsKey("error_file_id") != true && Optional.IsDefined(ErrorFileId))
             {
                 writer.WritePropertyName("error_file_id"u8);
                 writer.WriteStringValue(ErrorFileId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
                 writer.WriteNumberValue(CreatedAt, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("in_progress_at") && Optional.IsDefined(InProgressAt))
+            if (SerializedAdditionalRawData?.ContainsKey("in_progress_at") != true && Optional.IsDefined(InProgressAt))
             {
                 writer.WritePropertyName("in_progress_at"u8);
                 writer.WriteNumberValue(InProgressAt.Value, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("expires_at") && Optional.IsDefined(ExpiresAt))
+            if (SerializedAdditionalRawData?.ContainsKey("expires_at") != true && Optional.IsDefined(ExpiresAt))
             {
                 writer.WritePropertyName("expires_at"u8);
                 writer.WriteNumberValue(ExpiresAt.Value, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("finalizing_at") && Optional.IsDefined(FinalizingAt))
+            if (SerializedAdditionalRawData?.ContainsKey("finalizing_at") != true && Optional.IsDefined(FinalizingAt))
             {
                 writer.WritePropertyName("finalizing_at"u8);
                 writer.WriteNumberValue(FinalizingAt.Value, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("completed_at") && Optional.IsDefined(CompletedAt))
+            if (SerializedAdditionalRawData?.ContainsKey("completed_at") != true && Optional.IsDefined(CompletedAt))
             {
                 writer.WritePropertyName("completed_at"u8);
                 writer.WriteNumberValue(CompletedAt.Value, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("failed_at") && Optional.IsDefined(FailedAt))
+            if (SerializedAdditionalRawData?.ContainsKey("failed_at") != true && Optional.IsDefined(FailedAt))
             {
                 writer.WritePropertyName("failed_at"u8);
                 writer.WriteNumberValue(FailedAt.Value, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("expired_at") && Optional.IsDefined(ExpiredAt))
+            if (SerializedAdditionalRawData?.ContainsKey("expired_at") != true && Optional.IsDefined(ExpiredAt))
             {
                 writer.WritePropertyName("expired_at"u8);
                 writer.WriteNumberValue(ExpiredAt.Value, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("cancelling_at") && Optional.IsDefined(CancellingAt))
+            if (SerializedAdditionalRawData?.ContainsKey("cancelling_at") != true && Optional.IsDefined(CancellingAt))
             {
                 writer.WritePropertyName("cancelling_at"u8);
                 writer.WriteNumberValue(CancellingAt.Value, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("cancelled_at") && Optional.IsDefined(CancelledAt))
+            if (SerializedAdditionalRawData?.ContainsKey("cancelled_at") != true && Optional.IsDefined(CancelledAt))
             {
                 writer.WritePropertyName("cancelled_at"u8);
                 writer.WriteNumberValue(CancelledAt.Value, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("request_counts") && Optional.IsDefined(RequestCounts))
+            if (SerializedAdditionalRawData?.ContainsKey("request_counts") != true && Optional.IsDefined(RequestCounts))
             {
                 writer.WritePropertyName("request_counts"u8);
                 writer.WriteObjectValue(RequestCounts, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("metadata") && Optional.IsCollectionDefined(Metadata))
+            if (SerializedAdditionalRawData?.ContainsKey("metadata") != true && Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
                 {
@@ -134,7 +134,7 @@ namespace OpenAI.Batch
                     writer.WriteNull("metadata");
                 }
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -348,6 +348,7 @@ namespace OpenAI.Batch
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

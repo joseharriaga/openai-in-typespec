@@ -21,7 +21,7 @@ namespace OpenAI.Batch
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("data"))
+            if (SerializedAdditionalRawData?.ContainsKey("data") != true)
             {
                 writer.WritePropertyName("data"u8);
                 writer.WriteStartArray();
@@ -31,27 +31,27 @@ namespace OpenAI.Batch
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("first_id") && Optional.IsDefined(FirstId))
+            if (SerializedAdditionalRawData?.ContainsKey("first_id") != true && Optional.IsDefined(FirstId))
             {
                 writer.WritePropertyName("first_id"u8);
                 writer.WriteStringValue(FirstId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("last_id") && Optional.IsDefined(LastId))
+            if (SerializedAdditionalRawData?.ContainsKey("last_id") != true && Optional.IsDefined(LastId))
             {
                 writer.WritePropertyName("last_id"u8);
                 writer.WriteStringValue(LastId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("has_more"))
+            if (SerializedAdditionalRawData?.ContainsKey("has_more") != true)
             {
                 writer.WritePropertyName("has_more"u8);
                 writer.WriteBooleanValue(HasMore);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -131,6 +131,7 @@ namespace OpenAI.Batch
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

@@ -10,14 +10,13 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalListFineTuningJobCheckpointsResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalListFineTuningJobCheckpointsResponse(IEnumerable<InternalFineTuningJobCheckpoint> data, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
 
             Data = data.ToList();
             HasMore = hasMore;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalListFineTuningJobCheckpointsResponse(IReadOnlyList<InternalFineTuningJobCheckpoint> data, InternalListFineTuningJobCheckpointsResponseObject @object, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)

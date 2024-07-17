@@ -9,10 +9,9 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalAssistantToolsFileSearchFileSearch
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalAssistantToolsFileSearchFileSearch()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalAssistantToolsFileSearchFileSearch(int? internalMaxNumResults, IDictionary<string, BinaryData> serializedAdditionalRawData)

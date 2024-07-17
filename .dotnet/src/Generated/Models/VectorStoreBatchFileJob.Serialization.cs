@@ -21,37 +21,37 @@ namespace OpenAI.VectorStores
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("id"))
+            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(BatchId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteObjectValue<object>(Object, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
                 writer.WriteNumberValue(CreatedAt, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("vector_store_id"))
+            if (SerializedAdditionalRawData?.ContainsKey("vector_store_id") != true)
             {
                 writer.WritePropertyName("vector_store_id"u8);
                 writer.WriteStringValue(VectorStoreId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("status"))
+            if (SerializedAdditionalRawData?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
                 writer.WriteStringValue(Status.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("file_counts"))
+            if (SerializedAdditionalRawData?.ContainsKey("file_counts") != true)
             {
                 writer.WritePropertyName("file_counts"u8);
                 writer.WriteObjectValue<VectorStoreFileCounts>(FileCounts, options);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -132,6 +132,7 @@ namespace OpenAI.VectorStores
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

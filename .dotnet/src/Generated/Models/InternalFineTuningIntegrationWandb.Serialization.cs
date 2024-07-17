@@ -21,12 +21,12 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("project"))
+            if (SerializedAdditionalRawData?.ContainsKey("project") != true)
             {
                 writer.WritePropertyName("project"u8);
                 writer.WriteStringValue(Project);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("name") && Optional.IsDefined(Name))
+            if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(Name))
             {
                 if (Name != null)
                 {
@@ -38,7 +38,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("name");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("entity") && Optional.IsDefined(Entity))
+            if (SerializedAdditionalRawData?.ContainsKey("entity") != true && Optional.IsDefined(Entity))
             {
                 if (Entity != null)
                 {
@@ -50,7 +50,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("entity");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("tags") && Optional.IsCollectionDefined(Tags))
+            if (SerializedAdditionalRawData?.ContainsKey("tags") != true && Optional.IsCollectionDefined(Tags))
             {
                 writer.WritePropertyName("tags"u8);
                 writer.WriteStartArray();
@@ -60,7 +60,7 @@ namespace OpenAI.FineTuning
                 }
                 writer.WriteEndArray();
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -148,6 +148,7 @@ namespace OpenAI.FineTuning
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

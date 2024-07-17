@@ -21,17 +21,17 @@ namespace OpenAI.LegacyCompletions
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("finish_reason"))
+            if (SerializedAdditionalRawData?.ContainsKey("finish_reason") != true)
             {
                 writer.WritePropertyName("finish_reason"u8);
                 writer.WriteStringValue(FinishReason.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("index"))
+            if (SerializedAdditionalRawData?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
                 writer.WriteNumberValue(Index);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("logprobs"))
+            if (SerializedAdditionalRawData?.ContainsKey("logprobs") != true)
             {
                 if (Logprobs != null)
                 {
@@ -43,12 +43,12 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("logprobs");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("text"))
+            if (SerializedAdditionalRawData?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
                 writer.WriteStringValue(Text);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -122,6 +122,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

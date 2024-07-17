@@ -12,7 +12,6 @@ namespace OpenAI.Chat
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal StreamingChatFunctionCallUpdate()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal StreamingChatFunctionCallUpdate(string functionArgumentsUpdate, string functionName, IDictionary<string, BinaryData> serializedAdditionalRawData)

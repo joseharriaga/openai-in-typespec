@@ -21,17 +21,17 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("file_id") && Optional.IsDefined(FileId))
+            if (SerializedAdditionalRawData?.ContainsKey("file_id") != true && Optional.IsDefined(FileId))
             {
                 writer.WritePropertyName("file_id"u8);
                 writer.WriteStringValue(FileId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("detail") && Optional.IsDefined(Detail))
+            if (SerializedAdditionalRawData?.ContainsKey("detail") != true && Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
                 writer.WriteStringValue(Detail);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -88,6 +88,7 @@ namespace OpenAI.Assistants
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

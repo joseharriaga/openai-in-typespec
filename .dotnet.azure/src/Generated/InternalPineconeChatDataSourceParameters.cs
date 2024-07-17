@@ -40,7 +40,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalPineconeChatDataSourceParameters"/>. </summary>
         /// <param name="environment"> The environment name to use with Pinecone. </param>
         /// <param name="indexName"> The name of the Pinecone database index to use. </param>
@@ -73,7 +73,6 @@ namespace Azure.AI.OpenAI.Chat
             Authentication = authentication;
             VectorizationSource = vectorizationSource;
             FieldMappings = fieldMappings;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalPineconeChatDataSourceParameters"/>. </summary>

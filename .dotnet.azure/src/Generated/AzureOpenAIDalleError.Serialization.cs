@@ -21,32 +21,32 @@ namespace Azure.AI.OpenAI
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("code") && Optional.IsDefined(Code))
+            if (SerializedAdditionalRawData?.ContainsKey("code") != true && Optional.IsDefined(Code))
             {
                 writer.WritePropertyName("code"u8);
                 writer.WriteStringValue(Code);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("message") && Optional.IsDefined(Message))
+            if (SerializedAdditionalRawData?.ContainsKey("message") != true && Optional.IsDefined(Message))
             {
                 writer.WritePropertyName("message"u8);
                 writer.WriteStringValue(Message);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("param") && Optional.IsDefined(Param))
+            if (SerializedAdditionalRawData?.ContainsKey("param") != true && Optional.IsDefined(Param))
             {
                 writer.WritePropertyName("param"u8);
                 writer.WriteStringValue(Param);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("type") && Optional.IsDefined(Type))
+            if (SerializedAdditionalRawData?.ContainsKey("type") != true && Optional.IsDefined(Type))
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("inner_error") && Optional.IsDefined(InnerError))
+            if (SerializedAdditionalRawData?.ContainsKey("inner_error") != true && Optional.IsDefined(InnerError))
             {
                 writer.WritePropertyName("inner_error"u8);
                 writer.WriteObjectValue(InnerError, options);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -125,6 +125,7 @@ namespace Azure.AI.OpenAI
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

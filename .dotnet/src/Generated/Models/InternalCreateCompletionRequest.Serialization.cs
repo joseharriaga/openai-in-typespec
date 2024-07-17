@@ -22,12 +22,12 @@ namespace OpenAI.LegacyCompletions
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("prompt"))
+            if (SerializedAdditionalRawData?.ContainsKey("prompt") != true)
             {
                 if (Prompt != null)
                 {
@@ -46,7 +46,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("prompt");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("best_of") && Optional.IsDefined(BestOf))
+            if (SerializedAdditionalRawData?.ContainsKey("best_of") != true && Optional.IsDefined(BestOf))
             {
                 if (BestOf != null)
                 {
@@ -58,7 +58,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("best_of");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("echo") && Optional.IsDefined(Echo))
+            if (SerializedAdditionalRawData?.ContainsKey("echo") != true && Optional.IsDefined(Echo))
             {
                 if (Echo != null)
                 {
@@ -70,7 +70,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("echo");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("frequency_penalty") && Optional.IsDefined(FrequencyPenalty))
+            if (SerializedAdditionalRawData?.ContainsKey("frequency_penalty") != true && Optional.IsDefined(FrequencyPenalty))
             {
                 if (FrequencyPenalty != null)
                 {
@@ -82,7 +82,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("frequency_penalty");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("logit_bias") && Optional.IsCollectionDefined(LogitBias))
+            if (SerializedAdditionalRawData?.ContainsKey("logit_bias") != true && Optional.IsCollectionDefined(LogitBias))
             {
                 if (LogitBias != null)
                 {
@@ -100,7 +100,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("logit_bias");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("logprobs") && Optional.IsDefined(Logprobs))
+            if (SerializedAdditionalRawData?.ContainsKey("logprobs") != true && Optional.IsDefined(Logprobs))
             {
                 if (Logprobs != null)
                 {
@@ -112,7 +112,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("logprobs");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("max_tokens") && Optional.IsDefined(MaxTokens))
+            if (SerializedAdditionalRawData?.ContainsKey("max_tokens") != true && Optional.IsDefined(MaxTokens))
             {
                 if (MaxTokens != null)
                 {
@@ -124,7 +124,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("max_tokens");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("n") && Optional.IsDefined(N))
+            if (SerializedAdditionalRawData?.ContainsKey("n") != true && Optional.IsDefined(N))
             {
                 if (N != null)
                 {
@@ -136,7 +136,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("n");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("presence_penalty") && Optional.IsDefined(PresencePenalty))
+            if (SerializedAdditionalRawData?.ContainsKey("presence_penalty") != true && Optional.IsDefined(PresencePenalty))
             {
                 if (PresencePenalty != null)
                 {
@@ -148,7 +148,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("presence_penalty");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("seed") && Optional.IsDefined(Seed))
+            if (SerializedAdditionalRawData?.ContainsKey("seed") != true && Optional.IsDefined(Seed))
             {
                 if (Seed != null)
                 {
@@ -160,7 +160,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("seed");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("stop") && Optional.IsDefined(Stop))
+            if (SerializedAdditionalRawData?.ContainsKey("stop") != true && Optional.IsDefined(Stop))
             {
                 if (Stop != null)
                 {
@@ -179,7 +179,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("stop");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("stream") && Optional.IsDefined(Stream))
+            if (SerializedAdditionalRawData?.ContainsKey("stream") != true && Optional.IsDefined(Stream))
             {
                 if (Stream != null)
                 {
@@ -191,7 +191,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("stream");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("stream_options") && Optional.IsDefined(StreamOptions))
+            if (SerializedAdditionalRawData?.ContainsKey("stream_options") != true && Optional.IsDefined(StreamOptions))
             {
                 if (StreamOptions != null)
                 {
@@ -203,7 +203,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("stream_options");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("suffix") && Optional.IsDefined(Suffix))
+            if (SerializedAdditionalRawData?.ContainsKey("suffix") != true && Optional.IsDefined(Suffix))
             {
                 if (Suffix != null)
                 {
@@ -215,7 +215,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("suffix");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("temperature") && Optional.IsDefined(Temperature))
+            if (SerializedAdditionalRawData?.ContainsKey("temperature") != true && Optional.IsDefined(Temperature))
             {
                 if (Temperature != null)
                 {
@@ -227,7 +227,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("temperature");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("top_p") && Optional.IsDefined(TopP))
+            if (SerializedAdditionalRawData?.ContainsKey("top_p") != true && Optional.IsDefined(TopP))
             {
                 if (TopP != null)
                 {
@@ -239,12 +239,12 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("top_p");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("user") && Optional.IsDefined(User))
+            if (SerializedAdditionalRawData?.ContainsKey("user") != true && Optional.IsDefined(User))
             {
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(User);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -481,6 +481,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

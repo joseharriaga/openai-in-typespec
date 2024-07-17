@@ -22,12 +22,12 @@ namespace OpenAI.LegacyCompletions
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("id"))
+            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("choices"))
+            if (SerializedAdditionalRawData?.ContainsKey("choices") != true)
             {
                 writer.WritePropertyName("choices"u8);
                 writer.WriteStartArray();
@@ -37,32 +37,32 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("created"))
+            if (SerializedAdditionalRawData?.ContainsKey("created") != true)
             {
                 writer.WritePropertyName("created"u8);
                 writer.WriteNumberValue(Created, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("system_fingerprint") && Optional.IsDefined(SystemFingerprint))
+            if (SerializedAdditionalRawData?.ContainsKey("system_fingerprint") != true && Optional.IsDefined(SystemFingerprint))
             {
                 writer.WritePropertyName("system_fingerprint"u8);
                 writer.WriteStringValue(SystemFingerprint);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("usage") && Optional.IsDefined(Usage))
+            if (SerializedAdditionalRawData?.ContainsKey("usage") != true && Optional.IsDefined(Usage))
             {
                 writer.WritePropertyName("usage"u8);
                 writer.WriteObjectValue(Usage, options);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -158,6 +158,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

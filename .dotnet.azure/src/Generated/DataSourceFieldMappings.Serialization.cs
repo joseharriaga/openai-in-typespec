@@ -21,22 +21,22 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("title_field") && Optional.IsDefined(TitleFieldName))
+            if (SerializedAdditionalRawData?.ContainsKey("title_field") != true && Optional.IsDefined(TitleFieldName))
             {
                 writer.WritePropertyName("title_field"u8);
                 writer.WriteStringValue(TitleFieldName);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("url_field") && Optional.IsDefined(UrlFieldName))
+            if (SerializedAdditionalRawData?.ContainsKey("url_field") != true && Optional.IsDefined(UrlFieldName))
             {
                 writer.WritePropertyName("url_field"u8);
                 writer.WriteStringValue(UrlFieldName);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("filepath_field") && Optional.IsDefined(FilepathFieldName))
+            if (SerializedAdditionalRawData?.ContainsKey("filepath_field") != true && Optional.IsDefined(FilepathFieldName))
             {
                 writer.WritePropertyName("filepath_field"u8);
                 writer.WriteStringValue(FilepathFieldName);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("content_fields") && Optional.IsCollectionDefined(ContentFieldNames))
+            if (SerializedAdditionalRawData?.ContainsKey("content_fields") != true && Optional.IsCollectionDefined(ContentFieldNames))
             {
                 writer.WritePropertyName("content_fields"u8);
                 writer.WriteStartArray();
@@ -46,12 +46,12 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("content_fields_separator") && Optional.IsDefined(ContentFieldSeparator))
+            if (SerializedAdditionalRawData?.ContainsKey("content_fields_separator") != true && Optional.IsDefined(ContentFieldSeparator))
             {
                 writer.WritePropertyName("content_fields_separator"u8);
                 writer.WriteStringValue(ContentFieldSeparator);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("vector_fields") && Optional.IsCollectionDefined(VectorFieldNames))
+            if (SerializedAdditionalRawData?.ContainsKey("vector_fields") != true && Optional.IsCollectionDefined(VectorFieldNames))
             {
                 writer.WritePropertyName("vector_fields"u8);
                 writer.WriteStartArray();
@@ -61,7 +61,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("image_vector_fields") && Optional.IsCollectionDefined(ImageVectorFieldNames))
+            if (SerializedAdditionalRawData?.ContainsKey("image_vector_fields") != true && Optional.IsCollectionDefined(ImageVectorFieldNames))
             {
                 writer.WritePropertyName("image_vector_fields"u8);
                 writer.WriteStartArray();
@@ -71,7 +71,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -185,6 +185,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

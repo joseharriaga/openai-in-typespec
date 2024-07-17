@@ -12,7 +12,6 @@ namespace OpenAI.Assistants
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         protected RunStepToolCall()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal RunStepToolCall(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)

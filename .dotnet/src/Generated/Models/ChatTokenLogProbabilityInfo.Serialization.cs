@@ -21,17 +21,17 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("token"))
+            if (SerializedAdditionalRawData?.ContainsKey("token") != true)
             {
                 writer.WritePropertyName("token"u8);
                 writer.WriteStringValue(Token);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("logprob"))
+            if (SerializedAdditionalRawData?.ContainsKey("logprob") != true)
             {
                 writer.WritePropertyName("logprob"u8);
                 writer.WriteNumberValue(LogProbability);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("bytes"))
+            if (SerializedAdditionalRawData?.ContainsKey("bytes") != true)
             {
                 if (Utf8ByteValues != null && Optional.IsCollectionDefined(Utf8ByteValues))
                 {
@@ -48,7 +48,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("bytes");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("top_logprobs"))
+            if (SerializedAdditionalRawData?.ContainsKey("top_logprobs") != true)
             {
                 writer.WritePropertyName("top_logprobs"u8);
                 writer.WriteStartArray();
@@ -58,7 +58,7 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -142,6 +142,7 @@ namespace OpenAI.Chat
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

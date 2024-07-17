@@ -17,7 +17,6 @@ namespace OpenAI.Audio
             Word = word;
             Start = start;
             End = end;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal TranscribedWord(string word, TimeSpan start, TimeSpan end, IDictionary<string, BinaryData> serializedAdditionalRawData)

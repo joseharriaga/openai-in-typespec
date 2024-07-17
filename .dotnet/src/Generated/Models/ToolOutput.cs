@@ -12,7 +12,6 @@ namespace OpenAI.Assistants
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public ToolOutput()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ToolOutput(string toolCallId, string output, IDictionary<string, BinaryData> serializedAdditionalRawData)

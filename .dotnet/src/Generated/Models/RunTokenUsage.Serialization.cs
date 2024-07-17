@@ -21,22 +21,22 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("completion_tokens"))
+            if (SerializedAdditionalRawData?.ContainsKey("completion_tokens") != true)
             {
                 writer.WritePropertyName("completion_tokens"u8);
                 writer.WriteNumberValue(CompletionTokens);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("prompt_tokens"))
+            if (SerializedAdditionalRawData?.ContainsKey("prompt_tokens") != true)
             {
                 writer.WritePropertyName("prompt_tokens"u8);
                 writer.WriteNumberValue(PromptTokens);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("total_tokens"))
+            if (SerializedAdditionalRawData?.ContainsKey("total_tokens") != true)
             {
                 writer.WritePropertyName("total_tokens"u8);
                 writer.WriteNumberValue(TotalTokens);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -99,6 +99,7 @@ namespace OpenAI.Assistants
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

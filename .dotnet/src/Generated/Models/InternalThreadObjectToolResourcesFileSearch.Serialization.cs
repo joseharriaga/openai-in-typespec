@@ -21,7 +21,7 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("vector_store_ids") && Optional.IsCollectionDefined(VectorStoreIds))
+            if (SerializedAdditionalRawData?.ContainsKey("vector_store_ids") != true && Optional.IsCollectionDefined(VectorStoreIds))
             {
                 writer.WritePropertyName("vector_store_ids"u8);
                 writer.WriteStartArray();
@@ -31,7 +31,7 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -91,6 +91,7 @@ namespace OpenAI.Assistants
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

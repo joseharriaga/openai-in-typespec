@@ -21,22 +21,22 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("key"))
+            if (SerializedAdditionalRawData?.ContainsKey("key") != true)
             {
                 writer.WritePropertyName("key"u8);
                 writer.WriteStringValue(Key);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("key_id"))
+            if (SerializedAdditionalRawData?.ContainsKey("key_id") != true)
             {
                 writer.WritePropertyName("key_id"u8);
                 writer.WriteStringValue(KeyId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("type"))
+            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -99,6 +99,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

@@ -9,14 +9,13 @@ namespace OpenAI.Files
 {
     internal partial class InternalDeleteFileResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalDeleteFileResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
             Id = id;
             Deleted = deleted;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalDeleteFileResponse(string id, InternalDeleteFileResponseObject @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)

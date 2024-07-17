@@ -21,32 +21,32 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("text"))
+            if (SerializedAdditionalRawData?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
                 writer.WriteStringValue(Text);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("file_citation"))
+            if (SerializedAdditionalRawData?.ContainsKey("file_citation") != true)
             {
                 writer.WritePropertyName("file_citation"u8);
                 writer.WriteObjectValue(FileCitation, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("start_index"))
+            if (SerializedAdditionalRawData?.ContainsKey("start_index") != true)
             {
                 writer.WritePropertyName("start_index"u8);
                 writer.WriteNumberValue(StartIndex);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("end_index"))
+            if (SerializedAdditionalRawData?.ContainsKey("end_index") != true)
             {
                 writer.WritePropertyName("end_index"u8);
                 writer.WriteNumberValue(EndIndex);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("type"))
+            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -121,6 +121,7 @@ namespace OpenAI.Assistants
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

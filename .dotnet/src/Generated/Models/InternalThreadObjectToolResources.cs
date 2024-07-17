@@ -9,10 +9,9 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalThreadObjectToolResources
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalThreadObjectToolResources()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalThreadObjectToolResources(InternalThreadObjectToolResourcesCodeInterpreter codeInterpreter, InternalThreadObjectToolResourcesFileSearch fileSearch, IDictionary<string, BinaryData> serializedAdditionalRawData)

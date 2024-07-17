@@ -20,7 +20,6 @@ namespace OpenAI.VectorStores
             VectorStoreId = vectorStoreId;
             Status = status;
             FileCounts = fileCounts;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal VectorStoreBatchFileJob(string batchId, object @object, DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, VectorStoreFileCounts fileCounts, IDictionary<string, BinaryData> serializedAdditionalRawData)

@@ -21,22 +21,22 @@ namespace OpenAI.Batch
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("custom_id") && Optional.IsDefined(CustomId))
+            if (SerializedAdditionalRawData?.ContainsKey("custom_id") != true && Optional.IsDefined(CustomId))
             {
                 writer.WritePropertyName("custom_id"u8);
                 writer.WriteStringValue(CustomId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("method") && Optional.IsDefined(Method))
+            if (SerializedAdditionalRawData?.ContainsKey("method") != true && Optional.IsDefined(Method))
             {
                 writer.WritePropertyName("method"u8);
                 writer.WriteStringValue(Method.Value.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("url") && Optional.IsDefined(Url))
+            if (SerializedAdditionalRawData?.ContainsKey("url") != true && Optional.IsDefined(Url))
             {
                 writer.WritePropertyName("url"u8);
                 writer.WriteStringValue(Url.AbsoluteUri);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -107,6 +107,7 @@ namespace OpenAI.Batch
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

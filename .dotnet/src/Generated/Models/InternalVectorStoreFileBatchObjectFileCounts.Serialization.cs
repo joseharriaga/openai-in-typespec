@@ -21,32 +21,32 @@ namespace OpenAI.VectorStores
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("in_progress"))
+            if (SerializedAdditionalRawData?.ContainsKey("in_progress") != true)
             {
                 writer.WritePropertyName("in_progress"u8);
                 writer.WriteNumberValue(InProgress);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("completed"))
+            if (SerializedAdditionalRawData?.ContainsKey("completed") != true)
             {
                 writer.WritePropertyName("completed"u8);
                 writer.WriteNumberValue(Completed);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("failed"))
+            if (SerializedAdditionalRawData?.ContainsKey("failed") != true)
             {
                 writer.WritePropertyName("failed"u8);
                 writer.WriteNumberValue(Failed);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("cancelled"))
+            if (SerializedAdditionalRawData?.ContainsKey("cancelled") != true)
             {
                 writer.WritePropertyName("cancelled"u8);
                 writer.WriteNumberValue(Cancelled);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("total"))
+            if (SerializedAdditionalRawData?.ContainsKey("total") != true)
             {
                 writer.WritePropertyName("total"u8);
                 writer.WriteNumberValue(Total);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -121,6 +121,7 @@ namespace OpenAI.VectorStores
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

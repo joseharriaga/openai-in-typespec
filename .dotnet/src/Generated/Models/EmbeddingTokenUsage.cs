@@ -14,7 +14,6 @@ namespace OpenAI.Embeddings
         {
             InputTokens = inputTokens;
             TotalTokens = totalTokens;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal EmbeddingTokenUsage(int inputTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)

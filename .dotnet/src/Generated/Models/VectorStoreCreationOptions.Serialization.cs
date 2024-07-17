@@ -21,7 +21,7 @@ namespace OpenAI.VectorStores
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("file_ids") && Optional.IsCollectionDefined(FileIds))
+            if (SerializedAdditionalRawData?.ContainsKey("file_ids") != true && Optional.IsCollectionDefined(FileIds))
             {
                 writer.WritePropertyName("file_ids"u8);
                 writer.WriteStartArray();
@@ -31,22 +31,22 @@ namespace OpenAI.VectorStores
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("name") && Optional.IsDefined(Name))
+            if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(Name))
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(Name);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("expires_after") && Optional.IsDefined(ExpirationPolicy))
+            if (SerializedAdditionalRawData?.ContainsKey("expires_after") != true && Optional.IsDefined(ExpirationPolicy))
             {
                 writer.WritePropertyName("expires_after"u8);
                 writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("chunking_strategy") && Optional.IsDefined(ChunkingStrategy))
+            if (SerializedAdditionalRawData?.ContainsKey("chunking_strategy") != true && Optional.IsDefined(ChunkingStrategy))
             {
                 writer.WritePropertyName("chunking_strategy"u8);
                 writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("metadata") && Optional.IsCollectionDefined(Metadata))
+            if (SerializedAdditionalRawData?.ContainsKey("metadata") != true && Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
                 {
@@ -64,7 +64,7 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("metadata");
                 }
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -165,6 +165,7 @@ namespace OpenAI.VectorStores
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

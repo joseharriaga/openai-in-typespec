@@ -21,17 +21,17 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("arguments") && Optional.IsDefined(FunctionArgumentsUpdate))
+            if (SerializedAdditionalRawData?.ContainsKey("arguments") != true && Optional.IsDefined(FunctionArgumentsUpdate))
             {
                 writer.WritePropertyName("arguments"u8);
                 writer.WriteStringValue(FunctionArgumentsUpdate);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("name") && Optional.IsDefined(FunctionName))
+            if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(FunctionName))
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(FunctionName);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -88,6 +88,7 @@ namespace OpenAI.Chat
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

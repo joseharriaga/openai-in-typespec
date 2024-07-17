@@ -12,7 +12,6 @@ namespace OpenAI.Assistants
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         protected MessageDeltaContent()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageDeltaContent(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)

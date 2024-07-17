@@ -9,11 +9,10 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchErrors
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalBatchErrors()
         {
             Data = new ChangeTrackingList<InternalBatchError>();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalBatchErrors(InternalBatchErrorsObject? @object, IReadOnlyList<InternalBatchError> data, IDictionary<string, BinaryData> serializedAdditionalRawData)

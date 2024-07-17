@@ -26,7 +26,6 @@ namespace OpenAI.Audio
             AverageLogProbability = averageLogProbability;
             CompressionRatio = compressionRatio;
             NoSpeechProbability = noSpeechProbability;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal TranscribedSegment(int id, long seekOffset, TimeSpan start, TimeSpan end, string text, IReadOnlyList<long> tokenIds, float temperature, double averageLogProbability, float compressionRatio, double noSpeechProbability, IDictionary<string, BinaryData> serializedAdditionalRawData)

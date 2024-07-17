@@ -21,52 +21,52 @@ namespace OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("id"))
+            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
                 writer.WriteNumberValue(CreatedAt, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("assistant_id"))
+            if (SerializedAdditionalRawData?.ContainsKey("assistant_id") != true)
             {
                 writer.WritePropertyName("assistant_id"u8);
                 writer.WriteStringValue(AssistantId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("thread_id"))
+            if (SerializedAdditionalRawData?.ContainsKey("thread_id") != true)
             {
                 writer.WritePropertyName("thread_id"u8);
                 writer.WriteStringValue(ThreadId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("run_id"))
+            if (SerializedAdditionalRawData?.ContainsKey("run_id") != true)
             {
                 writer.WritePropertyName("run_id"u8);
                 writer.WriteStringValue(RunId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("type"))
+            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("status"))
+            if (SerializedAdditionalRawData?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
                 writer.WriteStringValue(Status.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("step_details"))
+            if (SerializedAdditionalRawData?.ContainsKey("step_details") != true)
             {
                 writer.WritePropertyName("step_details"u8);
                 writer.WriteObjectValue<RunStepDetails>(Details, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("last_error"))
+            if (SerializedAdditionalRawData?.ContainsKey("last_error") != true)
             {
                 if (LastError != null)
                 {
@@ -78,7 +78,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("last_error");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("expired_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("expired_at") != true)
             {
                 if (ExpiredAt != null)
                 {
@@ -90,7 +90,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("expired_at");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("cancelled_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("cancelled_at") != true)
             {
                 if (CancelledAt != null)
                 {
@@ -102,7 +102,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("cancelled_at");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("failed_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("failed_at") != true)
             {
                 if (FailedAt != null)
                 {
@@ -114,7 +114,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("failed_at");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("completed_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("completed_at") != true)
             {
                 if (CompletedAt != null)
                 {
@@ -126,7 +126,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("completed_at");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("metadata"))
+            if (SerializedAdditionalRawData?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
@@ -144,7 +144,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("metadata");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("usage"))
+            if (SerializedAdditionalRawData?.ContainsKey("usage") != true)
             {
                 if (Usage != null)
                 {
@@ -156,7 +156,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("usage");
                 }
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -337,6 +337,7 @@ namespace OpenAI.Assistants
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

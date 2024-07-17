@@ -21,7 +21,6 @@ namespace OpenAI.Files
             Filename = filename;
             Purpose = purpose;
             Status = status;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal OpenAIFileInfo(string id, long? sizeInBytes, DateTimeOffset createdAt, string filename, InternalOpenAIFileObject @object, OpenAIFilePurpose purpose, OpenAIFileStatus status, string statusDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)

@@ -21,17 +21,17 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("prompt") && Optional.IsDefined(Prompt))
+            if (SerializedAdditionalRawData?.ContainsKey("prompt") != true && Optional.IsDefined(Prompt))
             {
                 writer.WritePropertyName("prompt"u8);
                 writer.WriteStringValue(Prompt);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("completion") && Optional.IsDefined(Completion))
+            if (SerializedAdditionalRawData?.ContainsKey("completion") != true && Optional.IsDefined(Completion))
             {
                 writer.WritePropertyName("completion"u8);
                 writer.WriteStringValue(Completion);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -88,6 +88,7 @@ namespace OpenAI.FineTuning
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

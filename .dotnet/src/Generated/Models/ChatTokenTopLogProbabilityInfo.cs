@@ -18,7 +18,6 @@ namespace OpenAI.Chat
             Token = token;
             LogProbability = logProbability;
             Utf8ByteValues = utf8ByteValues?.ToList();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ChatTokenTopLogProbabilityInfo(string token, float logProbability, IReadOnlyList<int> utf8ByteValues, IDictionary<string, BinaryData> serializedAdditionalRawData)

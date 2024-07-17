@@ -22,12 +22,12 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("name") && Optional.IsDefined(ParticipantName))
+            if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(ParticipantName))
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(ParticipantName);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("tool_calls") && Optional.IsCollectionDefined(ToolCalls))
+            if (SerializedAdditionalRawData?.ContainsKey("tool_calls") != true && Optional.IsCollectionDefined(ToolCalls))
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -37,7 +37,7 @@ namespace OpenAI.FineTuning
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("function_call") && Optional.IsDefined(FunctionCall))
+            if (SerializedAdditionalRawData?.ContainsKey("function_call") != true && Optional.IsDefined(FunctionCall))
             {
                 if (FunctionCall != null)
                 {
@@ -49,17 +49,17 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("function_call");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("role"))
+            if (SerializedAdditionalRawData?.ContainsKey("role") != true)
             {
                 writer.WritePropertyName("role"u8);
                 writer.WriteStringValue(Role);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("content") && Optional.IsCollectionDefined(Content))
+            if (SerializedAdditionalRawData?.ContainsKey("content") != true && Optional.IsCollectionDefined(Content))
             {
                 writer.WritePropertyName("content"u8);
                 SerializeContentValue(writer, options);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -148,6 +148,7 @@ namespace OpenAI.FineTuning
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

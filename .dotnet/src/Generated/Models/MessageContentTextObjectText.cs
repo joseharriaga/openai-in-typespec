@@ -18,7 +18,6 @@ namespace OpenAI.Assistants
 
             Value = value;
             Annotations = annotations.ToList();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageContentTextObjectText(string value, IList<MessageContentTextObjectAnnotation> annotations, IDictionary<string, BinaryData> serializedAdditionalRawData)

@@ -21,27 +21,27 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("endpoint"))
+            if (SerializedAdditionalRawData?.ContainsKey("endpoint") != true)
             {
                 writer.WritePropertyName("endpoint"u8);
                 writer.WriteStringValue(Endpoint.AbsoluteUri);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("authentication"))
+            if (SerializedAdditionalRawData?.ContainsKey("authentication") != true)
             {
                 writer.WritePropertyName("authentication"u8);
                 writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("dimensions") && Optional.IsDefined(Dimensions))
+            if (SerializedAdditionalRawData?.ContainsKey("dimensions") != true && Optional.IsDefined(Dimensions))
             {
                 writer.WritePropertyName("dimensions"u8);
                 writer.WriteNumberValue(Dimensions.Value);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("type"))
+            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -114,6 +114,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

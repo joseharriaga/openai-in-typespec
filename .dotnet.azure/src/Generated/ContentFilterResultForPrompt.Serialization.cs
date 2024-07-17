@@ -20,17 +20,17 @@ namespace Azure.AI.OpenAI
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("prompt_index") && Optional.IsDefined(PromptIndex))
+            if (SerializedAdditionalRawData?.ContainsKey("prompt_index") != true && Optional.IsDefined(PromptIndex))
             {
                 writer.WritePropertyName("prompt_index"u8);
                 writer.WriteNumberValue(PromptIndex.Value);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("content_filter_results") && Optional.IsDefined(InternalResults))
+            if (SerializedAdditionalRawData?.ContainsKey("content_filter_results") != true && Optional.IsDefined(InternalResults))
             {
                 writer.WritePropertyName("content_filter_results"u8);
                 writer.WriteObjectValue<InternalAzureContentFilterResultForPromptContentFilterResults>(InternalResults, options);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {

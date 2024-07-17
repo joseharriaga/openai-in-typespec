@@ -12,7 +12,6 @@ namespace OpenAI.Images
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal GeneratedImage()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal GeneratedImage(BinaryData imageBytes, Uri imageUri, string revisedPrompt, IDictionary<string, BinaryData> serializedAdditionalRawData)

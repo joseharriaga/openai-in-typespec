@@ -9,13 +9,12 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentTextAnnotationsFileCitationObjectFileCitation
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalMessageContentTextAnnotationsFileCitationObjectFileCitation(string fileId)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
 
             FileId = fileId;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalMessageContentTextAnnotationsFileCitationObjectFileCitation(string fileId, IDictionary<string, BinaryData> serializedAdditionalRawData)

@@ -9,14 +9,13 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalDeleteMessageResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalDeleteMessageResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
             Id = id;
             Deleted = deleted;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalDeleteMessageResponse(string id, bool deleted, InternalDeleteMessageResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)

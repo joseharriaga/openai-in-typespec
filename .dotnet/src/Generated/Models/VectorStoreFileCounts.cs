@@ -17,7 +17,6 @@ namespace OpenAI.VectorStores
             Failed = failed;
             Cancelled = cancelled;
             Total = total;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal VectorStoreFileCounts(int inProgress, int completed, int failed, int cancelled, int total, IDictionary<string, BinaryData> serializedAdditionalRawData)

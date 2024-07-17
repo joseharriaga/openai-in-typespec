@@ -9,10 +9,9 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation(string messageId, IDictionary<string, BinaryData> serializedAdditionalRawData)

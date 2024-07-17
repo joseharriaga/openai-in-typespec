@@ -21,17 +21,17 @@ namespace OpenAI.VectorStores
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("static"))
+            if (SerializedAdditionalRawData?.ContainsKey("static") != true)
             {
                 writer.WritePropertyName("static"u8);
                 writer.WriteObjectValue(Static, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("type"))
+            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -88,6 +88,7 @@ namespace OpenAI.VectorStores
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

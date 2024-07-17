@@ -13,7 +13,6 @@ namespace OpenAI.Chat
         protected ChatMessage()
         {
             Content = new ChangeTrackingList<ChatMessageContentPart>();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ChatMessage(string role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData)

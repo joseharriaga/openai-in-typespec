@@ -9,13 +9,12 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJobHyperparameters
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalFineTuningJobHyperparameters(BinaryData nEpochs)
         {
             Argument.AssertNotNull(nEpochs, nameof(nEpochs));
 
             NEpochs = nEpochs;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalFineTuningJobHyperparameters(BinaryData nEpochs, IDictionary<string, BinaryData> serializedAdditionalRawData)

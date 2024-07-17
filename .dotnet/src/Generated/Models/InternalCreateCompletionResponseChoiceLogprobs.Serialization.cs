@@ -21,7 +21,7 @@ namespace OpenAI.LegacyCompletions
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("text_offset") && Optional.IsCollectionDefined(TextOffset))
+            if (SerializedAdditionalRawData?.ContainsKey("text_offset") != true && Optional.IsCollectionDefined(TextOffset))
             {
                 writer.WritePropertyName("text_offset"u8);
                 writer.WriteStartArray();
@@ -31,7 +31,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("token_logprobs") && Optional.IsCollectionDefined(TokenLogprobs))
+            if (SerializedAdditionalRawData?.ContainsKey("token_logprobs") != true && Optional.IsCollectionDefined(TokenLogprobs))
             {
                 writer.WritePropertyName("token_logprobs"u8);
                 writer.WriteStartArray();
@@ -41,7 +41,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("tokens") && Optional.IsCollectionDefined(Tokens))
+            if (SerializedAdditionalRawData?.ContainsKey("tokens") != true && Optional.IsCollectionDefined(Tokens))
             {
                 writer.WritePropertyName("tokens"u8);
                 writer.WriteStartArray();
@@ -51,7 +51,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("top_logprobs") && Optional.IsCollectionDefined(TopLogprobs))
+            if (SerializedAdditionalRawData?.ContainsKey("top_logprobs") != true && Optional.IsCollectionDefined(TopLogprobs))
             {
                 writer.WritePropertyName("top_logprobs"u8);
                 writer.WriteStartArray();
@@ -72,7 +72,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -189,6 +189,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

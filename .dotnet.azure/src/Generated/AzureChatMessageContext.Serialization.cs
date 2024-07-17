@@ -21,12 +21,12 @@ namespace Azure.AI.OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("intent") && Optional.IsDefined(Intent))
+            if (SerializedAdditionalRawData?.ContainsKey("intent") != true && Optional.IsDefined(Intent))
             {
                 writer.WritePropertyName("intent"u8);
                 writer.WriteStringValue(Intent);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("citations") && Optional.IsCollectionDefined(Citations))
+            if (SerializedAdditionalRawData?.ContainsKey("citations") != true && Optional.IsCollectionDefined(Citations))
             {
                 writer.WritePropertyName("citations"u8);
                 writer.WriteStartArray();
@@ -36,12 +36,12 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("all_retrieved_documents") && Optional.IsDefined(AllRetrievedDocuments))
+            if (SerializedAdditionalRawData?.ContainsKey("all_retrieved_documents") != true && Optional.IsDefined(AllRetrievedDocuments))
             {
                 writer.WritePropertyName("all_retrieved_documents"u8);
                 writer.WriteObjectValue(AllRetrievedDocuments, options);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -117,6 +117,7 @@ namespace Azure.AI.OpenAI.Chat
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

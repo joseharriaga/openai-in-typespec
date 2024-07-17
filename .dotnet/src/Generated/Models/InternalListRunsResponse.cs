@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalListRunsResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalListRunsResponse(IEnumerable<ThreadRun> data, string firstId, string lastId, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));
@@ -21,7 +21,6 @@ namespace OpenAI.Assistants
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalListRunsResponse(InternalListRunsResponseObject @object, IReadOnlyList<ThreadRun> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)

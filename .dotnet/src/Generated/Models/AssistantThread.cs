@@ -18,7 +18,6 @@ namespace OpenAI.Assistants
             CreatedAt = createdAt;
             ToolResources = toolResources;
             Metadata = metadata;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal AssistantThread(string id, InternalThreadObjectObject @object, DateTimeOffset createdAt, ToolResources toolResources, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)

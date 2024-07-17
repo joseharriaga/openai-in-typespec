@@ -18,7 +18,6 @@ namespace OpenAI.Assistants
 
             FileId = fileId;
             Tools = tools.ToList();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageCreationAttachment(string fileId, IReadOnlyList<ToolDefinition> tools, IDictionary<string, BinaryData> serializedAdditionalRawData)

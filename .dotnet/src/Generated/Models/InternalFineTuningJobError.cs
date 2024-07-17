@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJobError
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalFineTuningJobError(string code, string message, string param)
         {
             Argument.AssertNotNull(code, nameof(code));
@@ -18,7 +18,6 @@ namespace OpenAI.FineTuning
             Code = code;
             Message = message;
             Param = param;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalFineTuningJobError(string code, string message, string param, IDictionary<string, BinaryData> serializedAdditionalRawData)

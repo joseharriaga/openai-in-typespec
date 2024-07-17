@@ -40,7 +40,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
         /// <summary> Initializes a new instance of <see cref="DataSourceFieldMappings"/>. </summary>
         /// <param name="titleFieldName"> The name of the index field to use as a title. </param>

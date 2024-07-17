@@ -15,7 +15,6 @@ namespace OpenAI.Internal
             Argument.AssertNotNull(error, nameof(error));
 
             Error = error;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal OpenAIErrorResponse(OpenAIError error, IDictionary<string, BinaryData> serializedAdditionalRawData)

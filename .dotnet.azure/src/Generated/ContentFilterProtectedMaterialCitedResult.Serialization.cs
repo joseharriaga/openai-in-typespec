@@ -21,17 +21,17 @@ namespace Azure.AI.OpenAI
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("license") && Optional.IsDefined(License))
+            if (SerializedAdditionalRawData?.ContainsKey("license") != true && Optional.IsDefined(License))
             {
                 writer.WritePropertyName("license"u8);
                 writer.WriteStringValue(License);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("URL") && Optional.IsDefined(URL))
+            if (SerializedAdditionalRawData?.ContainsKey("URL") != true && Optional.IsDefined(URL))
             {
                 writer.WritePropertyName("URL"u8);
                 writer.WriteStringValue(URL.AbsoluteUri);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -92,6 +92,7 @@ namespace Azure.AI.OpenAI
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

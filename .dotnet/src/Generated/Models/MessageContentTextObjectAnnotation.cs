@@ -12,7 +12,6 @@ namespace OpenAI.Assistants
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         protected MessageContentTextObjectAnnotation()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageContentTextObjectAnnotation(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)

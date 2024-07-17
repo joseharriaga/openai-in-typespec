@@ -40,7 +40,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalAzureCosmosDBChatDataSourceParameters"/>. </summary>
         /// <param name="containerName"></param>
         /// <param name="databaseName"></param>
@@ -69,7 +69,6 @@ namespace Azure.AI.OpenAI.Chat
             IndexName = indexName;
             Authentication = authentication;
             FieldMappings = fieldMappings;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureCosmosDBChatDataSourceParameters"/>. </summary>

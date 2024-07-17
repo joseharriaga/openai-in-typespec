@@ -21,22 +21,22 @@ namespace OpenAI.Moderations
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("flagged"))
+            if (SerializedAdditionalRawData?.ContainsKey("flagged") != true)
             {
                 writer.WritePropertyName("flagged"u8);
                 writer.WriteBooleanValue(Flagged);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("categories"))
+            if (SerializedAdditionalRawData?.ContainsKey("categories") != true)
             {
                 writer.WritePropertyName("categories"u8);
                 writer.WriteObjectValue(Categories, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("category_scores"))
+            if (SerializedAdditionalRawData?.ContainsKey("category_scores") != true)
             {
                 writer.WritePropertyName("category_scores"u8);
                 writer.WriteObjectValue(CategoryScores, options);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -99,6 +99,7 @@ namespace OpenAI.Moderations
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

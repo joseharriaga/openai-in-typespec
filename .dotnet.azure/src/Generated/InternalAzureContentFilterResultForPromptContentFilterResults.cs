@@ -40,7 +40,7 @@ namespace Azure.AI.OpenAI
         /// </list>
         /// </para>
         /// </summary>
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterResultForPromptContentFilterResults"/>. </summary>
         /// <param name="jailbreak">
         /// A detection result that describes user prompt injection attacks, where malicious users deliberately exploit
@@ -60,7 +60,6 @@ namespace Azure.AI.OpenAI
 
             Jailbreak = jailbreak;
             IndirectAttack = indirectAttack;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterResultForPromptContentFilterResults"/>. </summary>

@@ -9,14 +9,13 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalDeleteVectorStoreFileResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalDeleteVectorStoreFileResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
             Id = id;
             Deleted = deleted;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalDeleteVectorStoreFileResponse(string id, bool deleted, InternalDeleteVectorStoreFileResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)

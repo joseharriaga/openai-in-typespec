@@ -21,17 +21,17 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("id"))
+            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("created_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
                 writer.WriteNumberValue(CreatedAt, "U");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("error"))
+            if (SerializedAdditionalRawData?.ContainsKey("error") != true)
             {
                 if (Error != null)
                 {
@@ -43,7 +43,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("error");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("fine_tuned_model"))
+            if (SerializedAdditionalRawData?.ContainsKey("fine_tuned_model") != true)
             {
                 if (FineTunedModel != null)
                 {
@@ -55,7 +55,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("fine_tuned_model");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("finished_at"))
+            if (SerializedAdditionalRawData?.ContainsKey("finished_at") != true)
             {
                 if (FinishedAt != null)
                 {
@@ -67,27 +67,27 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("finished_at");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("hyperparameters"))
+            if (SerializedAdditionalRawData?.ContainsKey("hyperparameters") != true)
             {
                 writer.WritePropertyName("hyperparameters"u8);
                 writer.WriteObjectValue(Hyperparameters, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("organization_id"))
+            if (SerializedAdditionalRawData?.ContainsKey("organization_id") != true)
             {
                 writer.WritePropertyName("organization_id"u8);
                 writer.WriteStringValue(OrganizationId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("result_files"))
+            if (SerializedAdditionalRawData?.ContainsKey("result_files") != true)
             {
                 writer.WritePropertyName("result_files"u8);
                 writer.WriteStartArray();
@@ -97,12 +97,12 @@ namespace OpenAI.FineTuning
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("status"))
+            if (SerializedAdditionalRawData?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
                 writer.WriteStringValue(Status.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("trained_tokens"))
+            if (SerializedAdditionalRawData?.ContainsKey("trained_tokens") != true)
             {
                 if (TrainedTokens != null)
                 {
@@ -114,12 +114,12 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("trained_tokens");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("training_file"))
+            if (SerializedAdditionalRawData?.ContainsKey("training_file") != true)
             {
                 writer.WritePropertyName("training_file"u8);
                 writer.WriteStringValue(TrainingFile);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("validation_file"))
+            if (SerializedAdditionalRawData?.ContainsKey("validation_file") != true)
             {
                 if (ValidationFile != null)
                 {
@@ -131,7 +131,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("validation_file");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("integrations") && Optional.IsCollectionDefined(Integrations))
+            if (SerializedAdditionalRawData?.ContainsKey("integrations") != true && Optional.IsCollectionDefined(Integrations))
             {
                 if (Integrations != null)
                 {
@@ -148,12 +148,12 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("integrations");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("seed"))
+            if (SerializedAdditionalRawData?.ContainsKey("seed") != true)
             {
                 writer.WritePropertyName("seed"u8);
                 writer.WriteNumberValue(Seed);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("estimated_finish") && Optional.IsDefined(EstimatedFinish))
+            if (SerializedAdditionalRawData?.ContainsKey("estimated_finish") != true && Optional.IsDefined(EstimatedFinish))
             {
                 if (EstimatedFinish != null)
                 {
@@ -165,7 +165,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("estimated_finish");
                 }
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -356,6 +356,7 @@ namespace OpenAI.FineTuning
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

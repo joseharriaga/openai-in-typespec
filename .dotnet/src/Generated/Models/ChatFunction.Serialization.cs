@@ -21,17 +21,17 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("description") && Optional.IsDefined(FunctionDescription))
+            if (SerializedAdditionalRawData?.ContainsKey("description") != true && Optional.IsDefined(FunctionDescription))
             {
                 writer.WritePropertyName("description"u8);
                 writer.WriteStringValue(FunctionDescription);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("name"))
+            if (SerializedAdditionalRawData?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(FunctionName);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("parameters") && Optional.IsDefined(FunctionParameters))
+            if (SerializedAdditionalRawData?.ContainsKey("parameters") != true && Optional.IsDefined(FunctionParameters))
             {
                 writer.WritePropertyName("parameters"u8);
 #if NET6_0_OR_GREATER
@@ -43,7 +43,7 @@ namespace OpenAI.Chat
                 }
 #endif
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -110,6 +110,7 @@ namespace OpenAI.Chat
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

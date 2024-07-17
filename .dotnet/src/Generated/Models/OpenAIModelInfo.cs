@@ -18,7 +18,6 @@ namespace OpenAI.Models
             Id = id;
             CreatedAt = createdAt;
             OwnedBy = ownedBy;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal OpenAIModelInfo(string id, DateTimeOffset createdAt, InternalModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)

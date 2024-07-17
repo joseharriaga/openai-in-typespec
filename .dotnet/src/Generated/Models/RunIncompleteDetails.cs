@@ -12,7 +12,6 @@ namespace OpenAI.Assistants
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal RunIncompleteDetails()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal RunIncompleteDetails(RunIncompleteReason? reason, IDictionary<string, BinaryData> serializedAdditionalRawData)

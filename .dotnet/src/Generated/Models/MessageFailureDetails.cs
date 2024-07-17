@@ -13,7 +13,6 @@ namespace OpenAI.Assistants
         internal MessageFailureDetails(MessageFailureReason reason)
         {
             Reason = reason;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageFailureDetails(MessageFailureReason reason, IDictionary<string, BinaryData> serializedAdditionalRawData)

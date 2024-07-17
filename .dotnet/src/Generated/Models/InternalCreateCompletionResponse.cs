@@ -11,7 +11,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalCreateCompletionResponse(string id, IEnumerable<InternalCreateCompletionResponseChoice> choices, DateTimeOffset created, string model)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -22,7 +22,6 @@ namespace OpenAI.LegacyCompletions
             Choices = choices.ToList();
             Created = created;
             Model = model;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalCreateCompletionResponse(string id, IReadOnlyList<InternalCreateCompletionResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, InternalCreateCompletionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)

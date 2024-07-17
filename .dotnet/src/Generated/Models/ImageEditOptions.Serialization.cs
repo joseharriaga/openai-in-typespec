@@ -22,7 +22,7 @@ namespace OpenAI.Images
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("image"))
+            if (SerializedAdditionalRawData?.ContainsKey("image") != true)
             {
                 writer.WritePropertyName("image"u8);
 #if NET6_0_OR_GREATER
@@ -34,12 +34,12 @@ namespace OpenAI.Images
                 }
 #endif
             }
-            if (!SerializedAdditionalRawData.ContainsKey("prompt"))
+            if (SerializedAdditionalRawData?.ContainsKey("prompt") != true)
             {
                 writer.WritePropertyName("prompt"u8);
                 writer.WriteStringValue(Prompt);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("mask") && Optional.IsDefined(Mask))
+            if (SerializedAdditionalRawData?.ContainsKey("mask") != true && Optional.IsDefined(Mask))
             {
                 writer.WritePropertyName("mask"u8);
 #if NET6_0_OR_GREATER
@@ -51,7 +51,7 @@ namespace OpenAI.Images
                 }
 #endif
             }
-            if (!SerializedAdditionalRawData.ContainsKey("model") && Optional.IsDefined(Model))
+            if (SerializedAdditionalRawData?.ContainsKey("model") != true && Optional.IsDefined(Model))
             {
                 if (Model != null)
                 {
@@ -63,7 +63,7 @@ namespace OpenAI.Images
                     writer.WriteNull("model");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("n") && Optional.IsDefined(N))
+            if (SerializedAdditionalRawData?.ContainsKey("n") != true && Optional.IsDefined(N))
             {
                 if (N != null)
                 {
@@ -75,7 +75,7 @@ namespace OpenAI.Images
                     writer.WriteNull("n");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("size") && Optional.IsDefined(Size))
+            if (SerializedAdditionalRawData?.ContainsKey("size") != true && Optional.IsDefined(Size))
             {
                 if (Size != null)
                 {
@@ -87,7 +87,7 @@ namespace OpenAI.Images
                     writer.WriteNull("size");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("response_format") && Optional.IsDefined(ResponseFormat))
+            if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
             {
                 if (ResponseFormat != null)
                 {
@@ -99,12 +99,12 @@ namespace OpenAI.Images
                     writer.WriteNull("response_format");
                 }
             }
-            if (!SerializedAdditionalRawData.ContainsKey("user") && Optional.IsDefined(User))
+            if (SerializedAdditionalRawData?.ContainsKey("user") != true && Optional.IsDefined(User))
             {
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(User);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -221,6 +221,7 @@ namespace OpenAI.Images
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

@@ -21,17 +21,17 @@ namespace OpenAI.Batch
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("code") && Optional.IsDefined(Code))
+            if (SerializedAdditionalRawData?.ContainsKey("code") != true && Optional.IsDefined(Code))
             {
                 writer.WritePropertyName("code"u8);
                 writer.WriteStringValue(Code);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("message") && Optional.IsDefined(Message))
+            if (SerializedAdditionalRawData?.ContainsKey("message") != true && Optional.IsDefined(Message))
             {
                 writer.WritePropertyName("message"u8);
                 writer.WriteStringValue(Message);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -88,6 +88,7 @@ namespace OpenAI.Batch
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

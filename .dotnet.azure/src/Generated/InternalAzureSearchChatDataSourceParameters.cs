@@ -40,7 +40,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/>. </summary>
         /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
         /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
@@ -59,7 +59,6 @@ namespace Azure.AI.OpenAI.Chat
             Endpoint = endpoint;
             IndexName = indexName;
             Authentication = authentication;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/>. </summary>

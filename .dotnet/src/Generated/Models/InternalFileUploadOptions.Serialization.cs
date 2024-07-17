@@ -22,7 +22,7 @@ namespace OpenAI.Files
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("file"))
+            if (SerializedAdditionalRawData?.ContainsKey("file") != true)
             {
                 writer.WritePropertyName("file"u8);
 #if NET6_0_OR_GREATER
@@ -34,12 +34,12 @@ namespace OpenAI.Files
                 }
 #endif
             }
-            if (!SerializedAdditionalRawData.ContainsKey("purpose"))
+            if (SerializedAdditionalRawData?.ContainsKey("purpose") != true)
             {
                 writer.WritePropertyName("purpose"u8);
                 writer.WriteStringValue(Purpose.ToString());
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -96,6 +96,7 @@ namespace OpenAI.Files
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

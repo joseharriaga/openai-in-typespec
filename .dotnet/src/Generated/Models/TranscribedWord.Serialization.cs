@@ -21,22 +21,22 @@ namespace OpenAI.Audio
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("word"))
+            if (SerializedAdditionalRawData?.ContainsKey("word") != true)
             {
                 writer.WritePropertyName("word"u8);
                 writer.WriteStringValue(Word);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("start"))
+            if (SerializedAdditionalRawData?.ContainsKey("start") != true)
             {
                 writer.WritePropertyName("start"u8);
                 writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.FFF")));
             }
-            if (!SerializedAdditionalRawData.ContainsKey("end"))
+            if (SerializedAdditionalRawData?.ContainsKey("end") != true)
             {
                 writer.WritePropertyName("end"u8);
                 writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.FFF")));
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -99,6 +99,7 @@ namespace OpenAI.Audio
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

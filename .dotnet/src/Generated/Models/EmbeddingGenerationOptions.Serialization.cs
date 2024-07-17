@@ -21,7 +21,7 @@ namespace OpenAI.Embeddings
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("input"))
+            if (SerializedAdditionalRawData?.ContainsKey("input") != true)
             {
                 writer.WritePropertyName("input"u8);
 #if NET6_0_OR_GREATER
@@ -33,27 +33,27 @@ namespace OpenAI.Embeddings
                 }
 #endif
             }
-            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("encoding_format") && Optional.IsDefined(EncodingFormat))
+            if (SerializedAdditionalRawData?.ContainsKey("encoding_format") != true && Optional.IsDefined(EncodingFormat))
             {
                 writer.WritePropertyName("encoding_format"u8);
                 writer.WriteStringValue(EncodingFormat.Value.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("dimensions") && Optional.IsDefined(Dimensions))
+            if (SerializedAdditionalRawData?.ContainsKey("dimensions") != true && Optional.IsDefined(Dimensions))
             {
                 writer.WritePropertyName("dimensions"u8);
                 writer.WriteNumberValue(Dimensions.Value);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("user") && Optional.IsDefined(User))
+            if (SerializedAdditionalRawData?.ContainsKey("user") != true && Optional.IsDefined(User))
             {
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(User);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -136,6 +136,7 @@ namespace OpenAI.Embeddings
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

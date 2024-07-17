@@ -21,17 +21,17 @@ namespace OpenAI.Batch
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("status_code") && Optional.IsDefined(StatusCode))
+            if (SerializedAdditionalRawData?.ContainsKey("status_code") != true && Optional.IsDefined(StatusCode))
             {
                 writer.WritePropertyName("status_code"u8);
                 writer.WriteNumberValue(StatusCode.Value);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("request_id") && Optional.IsDefined(RequestId))
+            if (SerializedAdditionalRawData?.ContainsKey("request_id") != true && Optional.IsDefined(RequestId))
             {
                 writer.WritePropertyName("request_id"u8);
                 writer.WriteStringValue(RequestId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("body") && Optional.IsCollectionDefined(Body))
+            if (SerializedAdditionalRawData?.ContainsKey("body") != true && Optional.IsCollectionDefined(Body))
             {
                 writer.WritePropertyName("body"u8);
                 writer.WriteStartObject();
@@ -42,7 +42,7 @@ namespace OpenAI.Batch
                 }
                 writer.WriteEndObject();
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -118,6 +118,7 @@ namespace OpenAI.Batch
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

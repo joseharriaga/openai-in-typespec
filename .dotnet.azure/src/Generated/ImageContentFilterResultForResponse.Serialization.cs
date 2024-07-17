@@ -21,27 +21,27 @@ namespace Azure.AI.OpenAI
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("sexual") && Optional.IsDefined(Sexual))
+            if (SerializedAdditionalRawData?.ContainsKey("sexual") != true && Optional.IsDefined(Sexual))
             {
                 writer.WritePropertyName("sexual"u8);
                 writer.WriteObjectValue(Sexual, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("violence") && Optional.IsDefined(Violence))
+            if (SerializedAdditionalRawData?.ContainsKey("violence") != true && Optional.IsDefined(Violence))
             {
                 writer.WritePropertyName("violence"u8);
                 writer.WriteObjectValue(Violence, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("hate") && Optional.IsDefined(Hate))
+            if (SerializedAdditionalRawData?.ContainsKey("hate") != true && Optional.IsDefined(Hate))
             {
                 writer.WritePropertyName("hate"u8);
                 writer.WriteObjectValue(Hate, options);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("self_harm") && Optional.IsDefined(SelfHarm))
+            if (SerializedAdditionalRawData?.ContainsKey("self_harm") != true && Optional.IsDefined(SelfHarm))
             {
                 writer.WritePropertyName("self_harm"u8);
                 writer.WriteObjectValue(SelfHarm, options);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -126,6 +126,7 @@ namespace Azure.AI.OpenAI
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

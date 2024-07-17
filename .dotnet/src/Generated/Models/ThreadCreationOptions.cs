@@ -14,7 +14,6 @@ namespace OpenAI.Assistants
         {
             InternalMessages = new ChangeTrackingList<MessageCreationOptions>();
             Metadata = new ChangeTrackingDictionary<string, string>();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ThreadCreationOptions(IList<MessageCreationOptions> internalMessages, ToolResources toolResources, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)

@@ -21,7 +21,7 @@ namespace OpenAI.VectorStores
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("file_ids"))
+            if (SerializedAdditionalRawData?.ContainsKey("file_ids") != true)
             {
                 writer.WritePropertyName("file_ids"u8);
                 writer.WriteStartArray();
@@ -31,7 +31,7 @@ namespace OpenAI.VectorStores
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("chunking_strategy") && Optional.IsDefined(ChunkingStrategy))
+            if (SerializedAdditionalRawData?.ContainsKey("chunking_strategy") != true && Optional.IsDefined(ChunkingStrategy))
             {
                 writer.WritePropertyName("chunking_strategy"u8);
 #if NET6_0_OR_GREATER
@@ -43,7 +43,7 @@ namespace OpenAI.VectorStores
                 }
 #endif
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -109,6 +109,7 @@ namespace OpenAI.VectorStores
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

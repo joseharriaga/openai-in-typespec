@@ -13,7 +13,6 @@ namespace OpenAI.VectorStores
         public VectorStoreModificationOptions()
         {
             Metadata = new ChangeTrackingDictionary<string, string>();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal VectorStoreModificationOptions(string name, VectorStoreExpirationPolicy expirationPolicy, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)

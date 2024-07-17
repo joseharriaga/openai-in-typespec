@@ -21,7 +21,7 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("batch_size") && Optional.IsDefined(BatchSize))
+            if (SerializedAdditionalRawData?.ContainsKey("batch_size") != true && Optional.IsDefined(BatchSize))
             {
                 writer.WritePropertyName("batch_size"u8);
 #if NET6_0_OR_GREATER
@@ -33,7 +33,7 @@ namespace OpenAI.FineTuning
                 }
 #endif
             }
-            if (!SerializedAdditionalRawData.ContainsKey("learning_rate_multiplier") && Optional.IsDefined(LearningRateMultiplier))
+            if (SerializedAdditionalRawData?.ContainsKey("learning_rate_multiplier") != true && Optional.IsDefined(LearningRateMultiplier))
             {
                 writer.WritePropertyName("learning_rate_multiplier"u8);
 #if NET6_0_OR_GREATER
@@ -45,7 +45,7 @@ namespace OpenAI.FineTuning
                 }
 #endif
             }
-            if (!SerializedAdditionalRawData.ContainsKey("n_epochs") && Optional.IsDefined(NEpochs))
+            if (SerializedAdditionalRawData?.ContainsKey("n_epochs") != true && Optional.IsDefined(NEpochs))
             {
                 writer.WritePropertyName("n_epochs"u8);
 #if NET6_0_OR_GREATER
@@ -57,7 +57,7 @@ namespace OpenAI.FineTuning
                 }
 #endif
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -132,6 +132,7 @@ namespace OpenAI.FineTuning
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

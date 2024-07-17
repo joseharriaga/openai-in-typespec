@@ -33,7 +33,6 @@ namespace OpenAI.Assistants
             CompletedAt = completedAt;
             Metadata = metadata;
             Usage = usage;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal RunStep(string id, InternalRunStepObjectObject @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)

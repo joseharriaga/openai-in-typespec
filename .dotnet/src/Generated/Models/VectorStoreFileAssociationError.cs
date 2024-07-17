@@ -16,7 +16,6 @@ namespace OpenAI.VectorStores
 
             Code = code;
             Message = message;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)

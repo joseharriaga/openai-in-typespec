@@ -21,32 +21,32 @@ namespace OpenAI.Audio
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("id"))
+            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteNumberValue(Id);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("seek"))
+            if (SerializedAdditionalRawData?.ContainsKey("seek") != true)
             {
                 writer.WritePropertyName("seek"u8);
                 writer.WriteNumberValue(SeekOffset);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("start"))
+            if (SerializedAdditionalRawData?.ContainsKey("start") != true)
             {
                 writer.WritePropertyName("start"u8);
                 writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.FFF")));
             }
-            if (!SerializedAdditionalRawData.ContainsKey("end"))
+            if (SerializedAdditionalRawData?.ContainsKey("end") != true)
             {
                 writer.WritePropertyName("end"u8);
                 writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.FFF")));
             }
-            if (!SerializedAdditionalRawData.ContainsKey("text"))
+            if (SerializedAdditionalRawData?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
                 writer.WriteStringValue(Text);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("tokens"))
+            if (SerializedAdditionalRawData?.ContainsKey("tokens") != true)
             {
                 writer.WritePropertyName("tokens"u8);
                 writer.WriteStartArray();
@@ -56,27 +56,27 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
-            if (!SerializedAdditionalRawData.ContainsKey("temperature"))
+            if (SerializedAdditionalRawData?.ContainsKey("temperature") != true)
             {
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("avg_logprob"))
+            if (SerializedAdditionalRawData?.ContainsKey("avg_logprob") != true)
             {
                 writer.WritePropertyName("avg_logprob"u8);
                 writer.WriteNumberValue(AverageLogProbability);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("compression_ratio"))
+            if (SerializedAdditionalRawData?.ContainsKey("compression_ratio") != true)
             {
                 writer.WritePropertyName("compression_ratio"u8);
                 writer.WriteNumberValue(CompressionRatio);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("no_speech_prob"))
+            if (SerializedAdditionalRawData?.ContainsKey("no_speech_prob") != true)
             {
                 writer.WritePropertyName("no_speech_prob"u8);
                 writer.WriteNumberValue(NoSpeechProbability);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -186,6 +186,7 @@ namespace OpenAI.Audio
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

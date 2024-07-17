@@ -21,32 +21,32 @@ namespace OpenAI.Audio
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("model"))
+            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("input"))
+            if (SerializedAdditionalRawData?.ContainsKey("input") != true)
             {
                 writer.WritePropertyName("input"u8);
                 writer.WriteStringValue(Input);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("voice"))
+            if (SerializedAdditionalRawData?.ContainsKey("voice") != true)
             {
                 writer.WritePropertyName("voice"u8);
                 writer.WriteStringValue(Voice.ToSerialString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("response_format") && Optional.IsDefined(ResponseFormat))
+            if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("speed") && Optional.IsDefined(Speed))
+            if (SerializedAdditionalRawData?.ContainsKey("speed") != true && Optional.IsDefined(Speed))
             {
                 writer.WritePropertyName("speed"u8);
                 writer.WriteNumberValue(Speed.Value);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -129,6 +129,7 @@ namespace OpenAI.Audio
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

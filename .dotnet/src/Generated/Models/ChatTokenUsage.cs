@@ -15,7 +15,6 @@ namespace OpenAI.Chat
             OutputTokens = outputTokens;
             InputTokens = inputTokens;
             TotalTokens = totalTokens;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ChatTokenUsage(int outputTokens, int inputTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)

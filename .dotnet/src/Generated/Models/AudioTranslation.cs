@@ -19,7 +19,6 @@ namespace OpenAI.Audio
             Duration = duration;
             Text = text;
             Segments = new ChangeTrackingList<TranscribedSegment>();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal AudioTranslation(InternalCreateTranslationResponseVerboseJsonTask task, string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)

@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionFunctionResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalCreateChatCompletionFunctionResponse(string id, IEnumerable<InternalCreateChatCompletionFunctionResponseChoice> choices, DateTimeOffset created, string model)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -21,7 +21,6 @@ namespace OpenAI.Chat
             Choices = choices.ToList();
             Created = created;
             Model = model;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalCreateChatCompletionFunctionResponse(string id, IReadOnlyList<InternalCreateChatCompletionFunctionResponseChoice> choices, DateTimeOffset created, string model, string systemFingerprint, InternalCreateChatCompletionFunctionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)

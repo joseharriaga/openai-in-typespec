@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunToolCallObjectFunction
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalRunToolCallObjectFunction(string name, string arguments)
         {
             Argument.AssertNotNull(name, nameof(name));
@@ -17,7 +17,6 @@ namespace OpenAI.Assistants
 
             Name = name;
             Arguments = arguments;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalRunToolCallObjectFunction(string name, string arguments, IDictionary<string, BinaryData> serializedAdditionalRawData)

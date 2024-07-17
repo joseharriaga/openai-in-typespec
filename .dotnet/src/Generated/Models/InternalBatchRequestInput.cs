@@ -9,10 +9,9 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchRequestInput
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalBatchRequestInput()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalBatchRequestInput(string customId, InternalBatchRequestInputMethod? method, Uri url, IDictionary<string, BinaryData> serializedAdditionalRawData)

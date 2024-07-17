@@ -16,7 +16,6 @@ namespace OpenAI.Assistants
 
             Code = code;
             Message = message;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal RunError(RunErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)

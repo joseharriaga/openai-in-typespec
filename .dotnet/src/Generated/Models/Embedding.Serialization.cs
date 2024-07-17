@@ -21,12 +21,12 @@ namespace OpenAI.Embeddings
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("index"))
+            if (SerializedAdditionalRawData?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
                 writer.WriteNumberValue(Index);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("embedding"))
+            if (SerializedAdditionalRawData?.ContainsKey("embedding") != true)
             {
                 writer.WritePropertyName("embedding"u8);
 #if NET6_0_OR_GREATER
@@ -38,12 +38,12 @@ namespace OpenAI.Embeddings
                 }
 #endif
             }
-            if (!SerializedAdditionalRawData.ContainsKey("object"))
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -106,6 +106,7 @@ namespace OpenAI.Embeddings
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

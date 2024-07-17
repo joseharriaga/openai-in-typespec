@@ -40,7 +40,7 @@ namespace Azure.AI.OpenAI
         /// </list>
         /// </para>
         /// </summary>
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterBlocklistResultDetail"/>. </summary>
         /// <param name="filtered"> A value indicating whether the blocklist produced a filtering action. </param>
         /// <param name="id"> The ID of the custom blocklist evaluated. </param>
@@ -51,7 +51,6 @@ namespace Azure.AI.OpenAI
 
             Filtered = filtered;
             Id = id;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterBlocklistResultDetail"/>. </summary>

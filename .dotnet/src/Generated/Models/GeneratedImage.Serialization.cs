@@ -21,22 +21,22 @@ namespace OpenAI.Images
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("b64_json") && Optional.IsDefined(ImageBytes))
+            if (SerializedAdditionalRawData?.ContainsKey("b64_json") != true && Optional.IsDefined(ImageBytes))
             {
                 writer.WritePropertyName("b64_json"u8);
                 writer.WriteBase64StringValue(ImageBytes.ToArray(), "D");
             }
-            if (!SerializedAdditionalRawData.ContainsKey("url") && Optional.IsDefined(ImageUri))
+            if (SerializedAdditionalRawData?.ContainsKey("url") != true && Optional.IsDefined(ImageUri))
             {
                 writer.WritePropertyName("url"u8);
                 writer.WriteStringValue(ImageUri.AbsoluteUri);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("revised_prompt") && Optional.IsDefined(RevisedPrompt))
+            if (SerializedAdditionalRawData?.ContainsKey("revised_prompt") != true && Optional.IsDefined(RevisedPrompt))
             {
                 writer.WritePropertyName("revised_prompt"u8);
                 writer.WriteStringValue(RevisedPrompt);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -107,6 +107,7 @@ namespace OpenAI.Images
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

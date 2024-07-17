@@ -21,22 +21,22 @@ namespace OpenAI.Batch
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("input_file_id"))
+            if (SerializedAdditionalRawData?.ContainsKey("input_file_id") != true)
             {
                 writer.WritePropertyName("input_file_id"u8);
                 writer.WriteStringValue(InputFileId);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("endpoint"))
+            if (SerializedAdditionalRawData?.ContainsKey("endpoint") != true)
             {
                 writer.WritePropertyName("endpoint"u8);
                 writer.WriteStringValue(Endpoint.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("completion_window"))
+            if (SerializedAdditionalRawData?.ContainsKey("completion_window") != true)
             {
                 writer.WritePropertyName("completion_window"u8);
                 writer.WriteStringValue(CompletionWindow.ToString());
             }
-            if (!SerializedAdditionalRawData.ContainsKey("metadata") && Optional.IsCollectionDefined(Metadata))
+            if (SerializedAdditionalRawData?.ContainsKey("metadata") != true && Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
                 {
@@ -54,7 +54,7 @@ namespace OpenAI.Batch
                     writer.WriteNull("metadata");
                 }
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -132,6 +132,7 @@ namespace OpenAI.Batch
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

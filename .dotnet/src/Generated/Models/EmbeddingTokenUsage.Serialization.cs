@@ -21,17 +21,17 @@ namespace OpenAI.Embeddings
             }
 
             writer.WriteStartObject();
-            if (!SerializedAdditionalRawData.ContainsKey("prompt_tokens"))
+            if (SerializedAdditionalRawData?.ContainsKey("prompt_tokens") != true)
             {
                 writer.WritePropertyName("prompt_tokens"u8);
                 writer.WriteNumberValue(InputTokens);
             }
-            if (!SerializedAdditionalRawData.ContainsKey("total_tokens"))
+            if (SerializedAdditionalRawData?.ContainsKey("total_tokens") != true)
             {
                 writer.WritePropertyName("total_tokens"u8);
                 writer.WriteNumberValue(TotalTokens);
             }
-            foreach (var item in SerializedAdditionalRawData)
+            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
             {
                 if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                 {
@@ -88,6 +88,7 @@ namespace OpenAI.Embeddings
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

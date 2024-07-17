@@ -13,7 +13,6 @@ namespace OpenAI.Assistants
         internal MessageDeltaContentTextObjectText()
         {
             Annotations = new ChangeTrackingList<MessageDeltaTextContentAnnotation>();
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal MessageDeltaContentTextObjectText(string value, IReadOnlyList<MessageDeltaTextContentAnnotation> annotations, IDictionary<string, BinaryData> serializedAdditionalRawData)

@@ -9,10 +9,9 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionStreamOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalChatCompletionStreamOptions()
         {
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalChatCompletionStreamOptions(bool? includeUsage, IDictionary<string, BinaryData> serializedAdditionalRawData)

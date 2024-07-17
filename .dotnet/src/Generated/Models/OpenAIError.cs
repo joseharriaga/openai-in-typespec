@@ -19,7 +19,6 @@ namespace OpenAI.Internal
             Message = message;
             Param = param;
             Type = type;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal OpenAIError(string code, string message, string param, string type, IDictionary<string, BinaryData> serializedAdditionalRawData)

@@ -18,7 +18,6 @@ namespace OpenAI.Moderations
             Flagged = flagged;
             Categories = categories;
             CategoryScores = categoryScores;
-            SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal ModerationResult(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores, IDictionary<string, BinaryData> serializedAdditionalRawData)

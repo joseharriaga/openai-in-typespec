@@ -1,6 +1,6 @@
 emit:
   - "@typespec/openapi3"
-  - "@azure-tools/typespec-csharp"
+  - "@azure-tools/typespec-java"
 options:
   "@typespec/openapi3":
     output-file: "{project-root}/../.openapi3.azure/openapi3-azure-openai.yaml"
@@ -14,3 +14,12 @@ options:
     single-top-level-client: true
     new-project: false
     flavor: "unbranded"
+  "@azure-tools/typespec-java":
+    output-folder: "{project-root}/../.java.azure"
+    package-dir: "azure-ai-openai"
+    namespace: "com.azure.ai.openai"
+    partial-update: true
+    enable-sync-stack: true
+    generate-tests: false
+    custom-types-subpackage: "implementation.models"
+    flavor: "azure"

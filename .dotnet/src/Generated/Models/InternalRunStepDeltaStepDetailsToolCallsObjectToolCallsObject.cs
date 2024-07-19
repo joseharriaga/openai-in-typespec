@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal abstract partial class InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject
     {
-        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         protected InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject()
         {

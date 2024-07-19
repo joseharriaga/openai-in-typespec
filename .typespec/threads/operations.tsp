@@ -16,7 +16,7 @@ interface Threads {
   @tag("Assistants")
   @summary("Create a thread.")
   createThread(
-    @body requestBody: CreateThreadRequest
+    @body requestBody: CreateThreadRequest,
   ): ThreadObject | ErrorResponse;
 
   @route("{thread_id}")

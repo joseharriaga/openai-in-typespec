@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     public abstract partial class ChatMessage
     {
-        private protected IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         protected ChatMessage()
         {

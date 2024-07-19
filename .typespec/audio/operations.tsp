@@ -16,11 +16,10 @@ interface Audio {
   @operationId("createSpeech")
   @tag("Audio")
   @summary("Generates audio from the input text.")
-  createSpeech(
-    @body requestBody: CreateSpeechRequest
-  ): {
+  createSpeech(@body requestBody: CreateSpeechRequest): {
     /** chunked */
     @header("Transfer-Encoding") transferEncoding?: string;
+
     @header contentType: "application/octet-stream";
     @body @encode("binary") audio: bytes;
   };
@@ -39,6 +38,7 @@ interface Audio {
     | {
         // TODO: This response is not defined in the OpenAPI spec.
         @header contentType: "text/plain";
+
         @body text: string;
       }
     | ErrorResponse;
@@ -57,6 +57,7 @@ interface Audio {
     | {
         // TODO: This response is not defined in the OpenAPI spec.
         @header contentType: "text/plain";
+
         @body text: string;
       }
     | ErrorResponse;

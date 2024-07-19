@@ -75,8 +75,9 @@ internal static class TestHelpers
             if (message.Request?.Content != null)
             {
                 string contentType = "Unknown Content Type";
+                long? contentLength = message?.Request?.Content?.TryComputeLength(out long computedLength) == true ? computedLength : null;
                 if (message.Request.Headers?.TryGetValue("Content-Type", out contentType) == true
-                    && contentType == "application/json")
+                    && (contentType == "application/json" || contentLength < 1000))
                 {
                     using MemoryStream stream = new();
                     message.Request.Content.WriteTo(stream, default);
@@ -86,10 +87,7 @@ internal static class TestHelpers
                 }
                 else
                 {
-                    string length = message.Request.Content.TryComputeLength(out long numberLength)
-                        ? $"{numberLength} bytes"
-                        : "unknown length";
-                    Console.WriteLine($"<< Non-JSON content: {contentType} >> {length}");
+                    Console.WriteLine($"<< Non-JSON content: {contentType} >> {contentLength} bytes");
                 }
             }
             if (message.Response != null)

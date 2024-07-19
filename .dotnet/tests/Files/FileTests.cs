@@ -1,8 +1,12 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using NUnit.Framework;
 using OpenAI.Files;
 using OpenAI.Tests.Utility;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
@@ -121,6 +125,55 @@ public partial class FileTests : SyncAsyncTestBase
             ? await client.UploadFileAsync(fileContent, filename, FileUploadPurpose.Assistants)
             : client.UploadFile(fileContent, filename, FileUploadPurpose.Assistants);
         Assert.That(uploadedFile?.Filename, Is.EqualTo(filename));
+    }
+
+    [Test]
+    public async Task UploadJobWorks()
+    {
+        FileClient client = GetTestClient();
+
+        byte[][] parts =
+        [
+            "Hello "u8.ToArray(),
+            "World "u8.ToArray(),
+            "this is a test"u8.ToArray(),
+        ];
+        int totalSize = parts.Sum(part => part.Length);
+        Stream[] partStreams = parts.Select(part => new MemoryStream(part)).ToArray();
+
+        UploadJob uploadJob = IsAsync
+            ? await client.CreateUploadJobAsync("test-file.txt", totalSize, UploadJobCreationPurpose.Assistants, "text/plain")
+            : client.CreateUploadJob("test-file.txt", totalSize, UploadJobCreationPurpose.Assistants, "text/plain");
+        Assert.That(uploadJob, Is.Not.Null);
+        Assert.That(uploadJob.Status, Is.EqualTo(UploadJobStatus.Pending));
+
+        Task[] uploadTasks = new Task[parts.Length];
+        UploadJobDataPart[] uploadParts = new UploadJobDataPart[parts.Length];
+        for (int i = 0; i < parts.Length; i++)
+        {
+            int partIndex = i;
+            uploadTasks[partIndex] = Task.Run(async () =>
+            {
+                uploadParts[partIndex] = IsAsync
+                    ? await client.AddDataPartToUploadJobAsync(uploadJob.Id, partStreams[partIndex])
+                    : client.AddDataPartToUploadJob(uploadJob.Id, partStreams[partIndex]);
+            });
+        }
+
+        await Task.WhenAll(uploadTasks);
+        Assert.That(uploadTasks.All(task => task.IsCompletedSuccessfully));
+        Assert.That(uploadParts.All(uploadPart =>
+            uploadPart is not null
+            && uploadPart.UploadId == uploadJob.Id
+            && !string.IsNullOrEmpty(uploadPart.Id)));
+
+        IEnumerable<string> orderedPartIds = uploadParts.Select(part => part.Id);
+        uploadJob = IsAsync
+            ? await client.CompleteUploadJobAsync(uploadJob.Id, orderedPartIds)
+            : client.CompleteUploadJob(uploadJob.Id, orderedPartIds);
+        Assert.That(uploadJob.Status, Is.EqualTo(UploadJobStatus.Completed));
+        Assert.That(uploadJob.File.Id, Is.Not.Null.And.Not.Empty);
+        Assert.That(uploadJob.File.SizeInBytes, Is.EqualTo(totalSize));
     }
 
     private static FileClient GetTestClient() => GetTestClient<FileClient>(TestScenario.Files);

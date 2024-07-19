@@ -505,7 +505,7 @@ public partial class FileClient
 
         InternalUploadJobDataPartOptions internalOptions = new(data);
         using MultipartFormDataBinaryContent content = internalOptions.ToMultipartContent();
-        ClientResult result = await AddDataPartToUploadJobAsync(uploadJobId, content, "application/octet-stream", cancellationToken.ToRequestOptions())
+        ClientResult result = await AddDataPartToUploadJobAsync(uploadJobId, content, content.ContentType, cancellationToken.ToRequestOptions())
             .ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
         return ClientResult.FromValue(UploadJobDataPart.FromResponse(response), response);
@@ -529,7 +529,7 @@ public partial class FileClient
 
         InternalUploadJobDataPartOptions internalOptions = new(data);
         using MultipartFormDataBinaryContent content = internalOptions.ToMultipartContent();
-        ClientResult result = AddDataPartToUploadJob(uploadJobId, content, "application/octet-stream", cancellationToken.ToRequestOptions());
+        ClientResult result = AddDataPartToUploadJob(uploadJobId, content, content.ContentType, cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
         return ClientResult.FromValue(UploadJobDataPart.FromResponse(response), response);
     }
@@ -560,6 +560,7 @@ public partial class FileClient
         Argument.AssertNotNull(uploadJobId, nameof(uploadJobId));
         Argument.AssertNotNullOrEmpty(dataPartIds, nameof(dataPartIds));
 
+        options ??= new();
         options.DataPartIds = dataPartIds.ToList();
         ClientResult result = await CompleteUploadJobAsync(
             uploadJobId,
@@ -596,6 +597,7 @@ public partial class FileClient
         Argument.AssertNotNull(uploadJobId, nameof(uploadJobId));
         Argument.AssertNotNullOrEmpty(dataPartIds, nameof(dataPartIds));
 
+        options ??= new();
         options.DataPartIds = dataPartIds.ToList();
         ClientResult result = CompleteUploadJob(uploadJobId, options.ToBinaryContent(), cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();

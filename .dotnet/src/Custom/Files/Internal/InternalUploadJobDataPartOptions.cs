@@ -11,7 +11,7 @@ internal partial class InternalUploadJobDataPartOptions
     internal MultipartFormDataBinaryContent ToMultipartContent()
     {
         MultipartFormDataBinaryContent content = new();
-        content.Add(Data, "data");
+        content.Add(Data, "data", "data_part");
         return content;
     }
 }

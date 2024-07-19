@@ -237,9 +237,11 @@ public partial class OpenAIClient
             perCallPolicies: [
                 CreateAddBetaFeatureHeaderPolicy(),
                 CreateAddCustomHeadersPolicy(options),
+            ],
+            perTryPolicies:
+            [
                 ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, AuthorizationHeader, AuthorizationApiKeyPrefix)
             ],
-            perTryPolicies: [],
             beforeTransportPolicies: []);
     }
 

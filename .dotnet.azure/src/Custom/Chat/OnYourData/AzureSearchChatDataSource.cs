@@ -119,7 +119,7 @@ public partial class AzureSearchChatDataSource : AzureChatDataSource
     /// <summary>
     /// Creates a new instance of <see cref="AzureSearchChatDataSource"/>.
     /// </summary>
-    public AzureSearchChatDataSource() : base(type: "azure_search")
+    public AzureSearchChatDataSource() : base(type: "azure_search", serializedAdditionalRawData: null)
     {
         InternalParameters = new();
     }

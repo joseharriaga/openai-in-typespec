@@ -105,7 +105,7 @@ public partial class AzureCosmosDBChatDataSource : AzureChatDataSource
     /// <summary>
     /// Initializes a new instance of <see cref="AzureCosmosDBChatDataSource"/>.
     /// </summary>
-    public AzureCosmosDBChatDataSource() : base(type: "azure_cosmos_db")
+    public AzureCosmosDBChatDataSource() : base(type: "azure_cosmos_db", serializedAdditionalRawData: null)
     {
         InternalParameters = new();
     }

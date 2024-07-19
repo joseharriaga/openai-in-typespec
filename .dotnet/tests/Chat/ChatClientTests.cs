@@ -269,7 +269,7 @@ public partial class ChatClientTests : SyncAsyncTestBase
     public async Task TokenLogProbabilities(bool includeLogProbabilities)
     {
         const int topLogProbabilityCount = 3;
-        ChatClient client = new("gpt-3.5-turbo");
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
         IList<ChatMessage> messages = [new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")];
         ChatCompletionOptions options;
         
@@ -321,7 +321,7 @@ public partial class ChatClientTests : SyncAsyncTestBase
     public async Task TokenLogProbabilitiesStreaming(bool includeLogProbabilities)
     {
         const int topLogProbabilityCount = 3;
-        ChatClient client = new("gpt-3.5-turbo");
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
         IList<ChatMessage> messages = [new UserChatMessage("What are the best pizza toppings? Give me a breakdown on the reasons.")];
         ChatCompletionOptions options;
 

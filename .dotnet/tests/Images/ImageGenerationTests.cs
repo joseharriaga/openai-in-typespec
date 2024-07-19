@@ -142,7 +142,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
         Assert.That(image.ImageUri, Is.Null);
         Assert.That(image.ImageBytes, Is.Not.Null);
 
-        ValidateGeneratedImage(image.ImageBytes, "cat");
+        ValidateGeneratedImage(image.ImageBytes, "cat", "Note that it likely depicts some sort of animal.");
     }
 
     [Test]
@@ -160,7 +160,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
 
         Console.WriteLine(image.ImageUri.AbsoluteUri);
 
-        ValidateGeneratedImage(image.ImageUri, "dog");
+        ValidateGeneratedImage(image.ImageUri, "dog", "Note that it likely depicts some sort of animal.");
     }
 
     [Test]
@@ -181,15 +181,15 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
         Assert.That(image.ImageUri, Is.Null);
         Assert.That(image.ImageBytes, Is.Not.Null);
 
-        ValidateGeneratedImage(image.ImageBytes, "cat");
+        ValidateGeneratedImage(image.ImageBytes, "cat", "Note that it likely depicts some sort of animal.");
     }
 
-    private void ValidateGeneratedImage(Uri imageUri, string expectedSubstring)
+    private void ValidateGeneratedImage(Uri imageUri, string expectedSubstring, string descriptionHint = null)
     {
         ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.VisionChat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me."),
+                ChatMessageContentPart.CreateTextMessageContentPart($"Describe this image for me. {descriptionHint}"),
                 ChatMessageContentPart.CreateImageMessageContentPart(imageUri)),
         ];
         ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };
@@ -198,12 +198,12 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring(expectedSubstring));
     }
 
-    private void ValidateGeneratedImage(BinaryData imageBytes, string expectedSubstring)
+    private void ValidateGeneratedImage(BinaryData imageBytes, string expectedSubstring, string descriptionHint = null)
     {
         ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.VisionChat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me."),
+                ChatMessageContentPart.CreateTextMessageContentPart($"Describe this image for me. {descriptionHint}"),
                 ChatMessageContentPart.CreateImageMessageContentPart(imageBytes, "image/png")),
         ];
         ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };

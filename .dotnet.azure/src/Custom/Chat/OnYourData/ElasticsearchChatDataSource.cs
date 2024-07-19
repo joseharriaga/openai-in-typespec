@@ -102,7 +102,7 @@ public partial class ElasticsearchChatDataSource : AzureChatDataSource
         init => InternalParameters.VectorizationSource = value;
     }
 
-    public ElasticsearchChatDataSource() : base(type: "elasticsearch")
+    public ElasticsearchChatDataSource() : base(type: "elasticsearch", serializedAdditionalRawData: null)
     {
         InternalParameters = new();
     }

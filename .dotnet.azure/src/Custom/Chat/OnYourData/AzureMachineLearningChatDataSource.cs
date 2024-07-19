@@ -98,7 +98,7 @@ public partial class AzureMachineLearningIndexChatDataSource : AzureChatDataSour
     /// <summary>
     /// Creates a new instance of <see cref="AzureMachineLearningIndexChatDataSource"/>.
     /// </summary>
-    public AzureMachineLearningIndexChatDataSource() : base(type: "azure_ml_index")
+    public AzureMachineLearningIndexChatDataSource() : base(type: "azure_ml_index", serializedAdditionalRawData: null)
     {
         InternalParameters = new();
     }

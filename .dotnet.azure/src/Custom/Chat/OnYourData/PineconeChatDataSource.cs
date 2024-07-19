@@ -95,7 +95,7 @@ public partial class PineconeChatDataSource : AzureChatDataSource
         init => InternalParameters.OutputContextFlags = value;
     }
 
-    public PineconeChatDataSource() : base(type: "pinecone")
+    public PineconeChatDataSource() : base(type: "pinecone", serializedAdditionalRawData: null)
     {
         InternalParameters = new();
     }

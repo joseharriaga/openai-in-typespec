@@ -131,6 +131,18 @@ namespace OpenAI.Chat
                     writer.WriteNull("seed");
                 }
             }
+            if (Optional.IsDefined(ServiceTier))
+            {
+                if (ServiceTier != null)
+                {
+                    writer.WritePropertyName("service_tier"u8);
+                    writer.WriteStringValue(ServiceTier.Value.ToSerialString());
+                }
+                else
+                {
+                    writer.WriteNull("service_tier");
+                }
+            }
             if (Optional.IsCollectionDefined(StopSequences))
             {
                 if (StopSequences != null)
@@ -280,6 +292,7 @@ namespace OpenAI.Chat
             float? presencePenalty = default;
             ChatResponseFormat responseFormat = default;
             long? seed = default;
+            InternalCreateChatCompletionRequestServiceTier? serviceTier = default;
             IList<string> stop = default;
             bool? stream = default;
             InternalChatCompletionStreamOptions streamOptions = default;
@@ -392,6 +405,16 @@ namespace OpenAI.Chat
                         continue;
                     }
                     seed = property.Value.GetInt64();
+                    continue;
+                }
+                if (property.NameEquals("service_tier"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        serviceTier = null;
+                        continue;
+                    }
+                    serviceTier = property.Value.GetString().ToInternalCreateChatCompletionRequestServiceTier();
                     continue;
                 }
                 if (property.NameEquals("stop"u8))
@@ -517,6 +540,7 @@ namespace OpenAI.Chat
                 presencePenalty,
                 responseFormat,
                 seed,
+                serviceTier,
                 stop ?? new ChangeTrackingList<string>(),
                 stream,
                 streamOptions,

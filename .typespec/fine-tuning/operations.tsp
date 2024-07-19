@@ -16,12 +16,12 @@ interface FineTuning {
   @operationId("createFineTuningJob")
   @tag("Fine-tuning")
   @summary("""
-  Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
-
-  Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
-
-  [Learn more about fine-tuning](/docs/guides/fine-tuning)
-  """)
+    Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
+    
+    Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
+    
+    [Learn more about fine-tuning](/docs/guides/fine-tuning)
+    """)
   createFineTuningJob(
     @body requestBody: CreateFineTuningJobRequest,
   ): FineTuningJob | ErrorResponse;
@@ -44,10 +44,10 @@ interface FineTuning {
   @operationId("retrieveFineTuningJob")
   @tag("Fine-tuning")
   @summary("""
-  Get info about a fine-tuning job.
-
-  [Learn more about fine-tuning](/docs/guides/fine-tuning)
-  """)
+    Get info about a fine-tuning job.
+    
+    [Learn more about fine-tuning](/docs/guides/fine-tuning)
+    """)
   retrieveFineTuningJob(
     /** The ID of the fine-tuning job. */
     @path fine_tuning_job_id: string,

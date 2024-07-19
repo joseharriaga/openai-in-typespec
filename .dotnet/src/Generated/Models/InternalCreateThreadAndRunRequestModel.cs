@@ -18,6 +18,8 @@ namespace OpenAI.Assistants
 
         private const string Gpt4oValue = "gpt-4o";
         private const string Gpt4o20240513Value = "gpt-4o-2024-05-13";
+        private const string Gpt4oMiniValue = "gpt-4o-mini";
+        private const string Gpt4oMini20240718Value = "gpt-4o-mini-2024-07-18";
         private const string Gpt4TurboValue = "gpt-4-turbo";
         private const string Gpt4Turbo20240409Value = "gpt-4-turbo-2024-04-09";
         private const string Gpt40125PreviewValue = "gpt-4-0125-preview";
@@ -39,6 +41,8 @@ namespace OpenAI.Assistants
 
         public static InternalCreateThreadAndRunRequestModel Gpt4o { get; } = new InternalCreateThreadAndRunRequestModel(Gpt4oValue);
         public static InternalCreateThreadAndRunRequestModel Gpt4o20240513 { get; } = new InternalCreateThreadAndRunRequestModel(Gpt4o20240513Value);
+        public static InternalCreateThreadAndRunRequestModel Gpt4oMini { get; } = new InternalCreateThreadAndRunRequestModel(Gpt4oMiniValue);
+        public static InternalCreateThreadAndRunRequestModel Gpt4oMini20240718 { get; } = new InternalCreateThreadAndRunRequestModel(Gpt4oMini20240718Value);
         public static InternalCreateThreadAndRunRequestModel Gpt4Turbo { get; } = new InternalCreateThreadAndRunRequestModel(Gpt4TurboValue);
         public static InternalCreateThreadAndRunRequestModel Gpt4Turbo20240409 { get; } = new InternalCreateThreadAndRunRequestModel(Gpt4Turbo20240409Value);
         public static InternalCreateThreadAndRunRequestModel Gpt40125Preview { get; } = new InternalCreateThreadAndRunRequestModel(Gpt40125PreviewValue);

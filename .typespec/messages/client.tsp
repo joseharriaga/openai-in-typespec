@@ -5,7 +5,7 @@ import "./models.tsp";
 using Azure.ClientGenerator.Core;
 using OpenAI;
 
-// 
+//
 @@access(MessageContent, Access.public);
 @@usage(MessageContent, Usage.input | Usage.output);
 
@@ -26,10 +26,14 @@ using OpenAI;
 @@usage(MessageContentTextObjectAnnotation, Usage.input | Usage.output);
 
 @@access(MessageContentTextAnnotationsFileCitationObject, Access.public);
-@@usage(MessageContentTextAnnotationsFileCitationObject, Usage.input | Usage.output);
+@@usage(MessageContentTextAnnotationsFileCitationObject,
+  Usage.input | Usage.output
+);
 
 @@access(MessageContentTextAnnotationsFilePathObject, Access.public);
-@@usage(MessageContentTextAnnotationsFilePathObject, Usage.input | Usage.output);
+@@usage(MessageContentTextAnnotationsFilePathObject,
+  Usage.input | Usage.output
+);
 
 //
 @@access(MessageDeltaContent, Access.public);

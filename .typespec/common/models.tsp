@@ -21,10 +21,10 @@ model ErrorResponse {
 }
 
 @doc("""
-The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. 
-
-Omitting `parameters` defines a function with an empty parameter list.
-""")
+  The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. 
+  
+  Omitting `parameters` defines a function with an empty parameter list.
+  """)
 model FunctionParameters is Record<unknown>;
 
 model FunctionObject {
@@ -53,11 +53,11 @@ model CompletionUsage {
 }
 
 @doc("""
-Options for streaming response. Only set this when you set `stream: true`.
-""")
+  Options for streaming response. Only set this when you set `stream: true`.
+  """)
 model ChatCompletionStreamOptions {
   @doc("""
-  If set, an additional chunk will be streamed before the `data: [DONE]` message. The `usage` field on this chunk shows the token usage statistics for the entire request, and the `choices` field will always be an empty array. All other chunks will also include a `usage` field, but with a null value.
-  """)
+    If set, an additional chunk will be streamed before the `data: [DONE]` message. The `usage` field on this chunk shows the token usage statistics for the entire request, and the `choices` field will always be an empty array. All other chunks will also include a `usage` field, but with a null value.
+    """)
   include_usage?: boolean;
 }

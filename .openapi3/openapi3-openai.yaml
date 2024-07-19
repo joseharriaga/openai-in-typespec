@@ -15,6 +15,7 @@ tags:
   - name: Images
   - name: Models
   - name: Moderations
+  - name: Uploads
   - name: Vector Stores
 paths:
   /assistants:
@@ -1473,6 +1474,123 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SubmitToolOutputsRunRequest'
+  /uploads:
+    post:
+      tags:
+        - Uploads
+      operationId: createUpload
+      summary: |-
+        Creates an intermediate [Upload](/docs/api-reference/uploads/object) object that you can add [Parts](/docs/api-reference/uploads/part-object) to. Currently, an Upload can accept at most 8 GB in total and expires after an hour after you create it.
+
+        Once you complete the Upload, we will create a [File](/docs/api-reference/files/object) object that contains all the parts you uploaded. This File is usable in the rest of our platform as a regular File object.
+
+        For certain `purpose`s, the correct `mime_type` must be specified. Please refer to documentation for the supported MIME types for your use case:
+        - [Assistants](/docs/assistants/tools/file-search/supported-files)
+
+        For guidance on the proper filename extensions for each purpose, please follow the documentation on [creating a File](/docs/api-reference/files/create).
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Upload'
+                  - $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUploadRequest'
+  /uploads/{upload_id}/cancel:
+    post:
+      tags:
+        - Uploads
+      operationId: cancelUpload
+      summary: Cancels the Upload. No Parts may be added after an Upload is cancelled.
+      parameters:
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Upload'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /uploads/{upload_id}/complete:
+    post:
+      tags:
+        - Uploads
+      operationId: completeUpload
+      summary: |-
+        Completes the [Upload](/docs/api-reference/uploads/object). 
+
+        Within the returned Upload object, there is a nested [File](/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
+
+        You can specify the order of the Parts by passing in an ordered list of the Part IDs.
+
+        The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
+      parameters:
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Upload'
+                  - $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteUploadRequest'
+  /uploads/{upload_id}/parts:
+    post:
+      tags:
+        - Uploads
+      operationId: addUploadPart
+      summary: |-
+        Adds a [Part](/docs/api-reference/uploads/part-object) to an [Upload](/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload. 
+
+        Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
+
+        It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](/docs/api-reference/uploads/complete).
+      parameters:
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/UploadPart'
+                  - $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddUploadPartRequestMultiPart'
   /vector_stores:
     get:
       tags:
@@ -1923,6 +2041,14 @@ security:
   - BearerAuth: []
 components:
   schemas:
+    AddUploadPartRequestMultiPart:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: string
+          format: binary
     AssistantObject:
       type: object
       required:
@@ -2837,6 +2963,19 @@ components:
         - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
       description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
       x-oaiExpandable: true
+    CompleteUploadRequest:
+      type: object
+      required:
+        - part_ids
+      properties:
+        part_ids:
+          type: array
+          items:
+            type: string
+          description: The ordered list of Part IDs.
+        md5:
+          type: string
+          description: The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect.
     CompletionUsage:
       type: object
       required:
@@ -2869,6 +3008,8 @@ components:
               enum:
                 - gpt-4o
                 - gpt-4o-2024-05-13
+                - gpt-4o-mini
+                - gpt-4o-mini-2024-07-18
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -3080,6 +3221,8 @@ components:
               enum:
                 - gpt-4o
                 - gpt-4o-2024-05-13
+                - gpt-4o-mini
+                - gpt-4o-mini-2024-07-18
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -3187,6 +3330,19 @@ components:
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
             Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+        service_tier:
+          type: string
+          enum:
+            - auto
+            - default
+          nullable: true
+          description: |-
+            Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
+              - If set to 'auto', the system will utilize scale tier credits until they are exhausted.
+              - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+
+              When this parameter is set, the response body will include the `service_tier` utilized.
+          default: null
         stop:
           anyOf:
             - type: string
@@ -3333,6 +3489,13 @@ components:
         model:
           type: string
           description: The model used for the chat completion.
+        service_tier:
+          type: string
+          enum:
+            - scale
+            - default
+          nullable: true
+          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
         system_fingerprint:
           type: string
           description: |-
@@ -3411,6 +3574,13 @@ components:
         model:
           type: string
           description: The model to generate the completion.
+        service_tier:
+          type: string
+          enum:
+            - scale
+            - default
+          nullable: true
+          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
         system_fingerprint:
           type: string
           description: |-
@@ -4360,6 +4530,8 @@ components:
               enum:
                 - gpt-4o
                 - gpt-4o-2024-05-13
+                - gpt-4o-mini
+                - gpt-4o-mini-2024-07-18
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4536,6 +4708,8 @@ components:
               enum:
                 - gpt-4o
                 - gpt-4o-2024-05-13
+                - gpt-4o-mini
+                - gpt-4o-mini-2024-07-18
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4900,6 +5074,38 @@ components:
           items:
             $ref: '#/components/schemas/TranscriptionSegment'
           description: Segments of the translated text and their corresponding details.
+    CreateUploadRequest:
+      type: object
+      required:
+        - filename
+        - purpose
+        - bytes
+        - mime_type
+      properties:
+        filename:
+          type: string
+          description: The name of the file to upload.
+        purpose:
+          type: string
+          enum:
+            - assistants
+            - batch
+            - fine-tune
+            - vision
+          description: |-
+            The intended purpose of the uploaded file.
+
+            See the [documentation on File purposes](/docs/api-reference/files/create#files-create-purpose).
+        bytes:
+          type: integer
+          format: int32
+          description: The number of bytes in the file you are uploading.
+        mime_type:
+          type: string
+          description: |-
+            The MIME type of the file.
+
+            This must fall within the supported MIME types for your file purpose. See the supported MIME types for assistants and vision.
     CreateVectorStoreFileBatchRequest:
       type: object
       required:
@@ -7599,6 +7805,82 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+    Upload:
+      type: object
+      required:
+        - id
+        - created_at
+        - filename
+        - bytes
+        - purpose
+        - status
+        - expires_at
+      properties:
+        id:
+          type: string
+          description: The Upload unique identifier, which can be referenced in API endpoints.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the Upload was created.
+        filename:
+          type: string
+          description: The name of the file to be uploaded.
+        bytes:
+          type: integer
+          format: int32
+          description: The intended number of bytes to be uploaded.
+        purpose:
+          type: string
+          description: The intended purpose of the file. [Please refer here](/docs/api-reference/files/object#files/object-purpose) for acceptable values.
+        status:
+          type: string
+          enum:
+            - pending
+            - completed
+            - cancelled
+            - expired
+          description: The status of the Upload.
+        expires_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the Upload was created.
+        object:
+          type: string
+          enum:
+            - upload
+          description: The object type, which is always "upload".
+        file:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/OpenAIFile'
+          nullable: true
+          description: The ready File object after the Upload is completed.
+      description: The Upload object can accept byte chunks in the form of Parts.
+    UploadPart:
+      type: object
+      required:
+        - id
+        - created_at
+        - upload_id
+        - object
+      properties:
+        id:
+          type: string
+          description: The upload Part unique identifier, which can be referenced in API endpoints.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the Part was created.
+        upload_id:
+          type: string
+          description: The ID of the Upload object that this Part was added to.
+        object:
+          type: string
+          enum:
+            - upload.part
+          description: The object type, which is always `upload.part`.
+      description: The upload Part represents a chunk of bytes we can add to an Upload object.
     VectorStoreExpirationAfter:
       type: object
       required:

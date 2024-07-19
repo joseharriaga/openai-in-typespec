@@ -93,4 +93,16 @@ internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 [CodeGenModel("FunctionParameters")]
 internal partial class InternalFunctionParameters { }
 
+[CodeGenModel("CreateChatCompletionRequestServiceTier")]
+internal enum InternalCreateChatCompletionRequestServiceTier
+{
+    Auto,
+    Default
+}
 
+[CodeGenModel("CreateChatCompletionResponseServiceTier")]
+internal enum InternalCreateChatCompletionResponseServiceTier
+{
+    Scale,
+    Default
+}

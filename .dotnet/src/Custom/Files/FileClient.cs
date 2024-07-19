@@ -1,7 +1,9 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +26,8 @@ namespace OpenAI.Files;
 [CodeGenSuppress("DownloadFile", typeof(string))]
 public partial class FileClient
 {
+    private readonly InternalUploadClient _internalUploadClient;
+
     /// <summary>
     /// Initializes a new instance of <see cref="FileClient"/> that will use an API key when authenticating.
     /// </summary>
@@ -65,6 +69,7 @@ public partial class FileClient
     {
         _pipeline = pipeline;
         _endpoint = endpoint;
+        _internalUploadClient = new(pipeline, endpoint, options);
     }
 
     /// <summary>
@@ -394,4 +399,240 @@ public partial class FileClient
         Argument.AssertNotNull(file, nameof(file));
         return DownloadFile(file.Id);
     }
+
+    /// <summary>
+    /// Creates a new file upload job that allows incremental, parallel, and out-of-order upload of multiple data parts.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Once an <see cref="UploadJob"/> is created, associate data parts with it by calling
+    /// <see cref="AddDataPartToUploadJobAsync(string,Stream,CancellationToken)"/> before finishing by calling
+    /// <see cref="CompleteUploadJobAsync(string,IEnumerable{string},UploadJobCompletionOptions,CancellationToken)"/>.
+    /// </para>
+    /// <para>
+    /// Data parts may be uploaded concurrently and in any order, with the structure finalized when the job is completed
+    /// and an <see cref="OpenAIFileInfo"/> becomes available. 
+    /// </para>
+    /// <para>
+    /// An upload job can accept up to 8GB total from data parts and must be completed within one hour of creation.
+    /// </para>
+    /// <para>
+    /// Some upload purposes require specific MIME types. Please refer to the documentation for supported types.
+    /// </para>
+    /// </remarks>
+    /// <param name="filename"> The filename to use on the server when the job is completed. </param>
+    /// <param name="size"> The total, combined size of all data parts that will be uploaded. </param>
+    /// <param name="purpose"> The purpose of the file that will be created whe the job is completed. </param>
+    /// <param name="mimeType"> The MIME type for the content parts that will be uploaded. </param>
+    /// <param name="cancellationToken"> An optional token to control method cancellation. </param>
+    /// <returns> An <see cref="UploadJob"/> instance representing the pending job. </returns>
+    public virtual async Task<ClientResult<UploadJob>> CreateUploadJobAsync(
+        string filename,
+        int size,
+        UploadJobCreationPurpose purpose,
+        string mimeType,
+        CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(filename, nameof(filename));
+        Argument.AssertNotNull(mimeType, nameof(mimeType));
+
+        InternalUploadJobCreationOptions internalOptions = new(filename, purpose, size, mimeType);
+        ClientResult result = await CreateUploadJobAsync(
+            internalOptions.ToBinaryContent(),
+            cancellationToken.ToRequestOptions())
+                .ConfigureAwait(false);
+        PipelineResponse response = result.GetRawResponse();
+        return ClientResult.FromValue(UploadJob.FromResponse(response), response); 
+    }
+
+    /// <summary>
+    /// Creates a new file upload job that allows incremental, parallel, and out-of-order upload of multiple data parts.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Once an <see cref="UploadJob"/> is created, associate data parts with it by calling
+    /// <see cref="AddDataPartToUploadJob(string,Stream,CancellationToken)"/> before finishing by calling
+    /// <see cref="CompleteUploadJob(string,IEnumerable{string},UploadJobCompletionOptions,CancellationToken)"/>.
+    /// </para>
+    /// <para>
+    /// Data parts may be uploaded concurrently and in any order, with the structure finalized when the job is completed
+    /// and an <see cref="OpenAIFileInfo"/> becomes available. 
+    /// </para>
+    /// <para>
+    /// An upload job can accept up to 8GB total from data parts and must be completed within one hour of creation.
+    /// </para>
+    /// <para>
+    /// Some upload purposes require specific MIME types. Please refer to the documentation for supported types.
+    /// </para>
+    /// </remarks>
+    /// <param name="filename"> The filename to use on the server when the job is completed. </param>
+    /// <param name="size"> The total, combined size of all data parts that will be uploaded. </param>
+    /// <param name="purpose"> The purpose of the file that will be created whe the job is completed. </param>
+    /// <param name="mimeType"> The MIME type for the content parts that will be uploaded. </param>
+    /// <param name="cancellationToken"> An optional token to control method cancellation. </param>
+    /// <returns> An <see cref="UploadJob"/> instance representing the pending job. </returns>
+    public virtual ClientResult<UploadJob> CreateUploadJob(
+        string filename,
+        int size,
+        UploadJobCreationPurpose purpose,
+        string mimeType,
+        CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(filename, nameof(filename));
+        Argument.AssertNotNull(mimeType, nameof(mimeType));
+
+        InternalUploadJobCreationOptions internalOptions = new(filename, purpose, size, mimeType);
+        ClientResult result = CreateUploadJob(internalOptions.ToBinaryContent(), cancellationToken.ToRequestOptions());
+        PipelineResponse response = result.GetRawResponse();
+        return ClientResult.FromValue(UploadJob.FromResponse(response), response); 
+    }
+
+    /// <summary>
+    /// Uploads binary data as a part of a job created via
+    /// <see cref="CreateUploadJobAsync(string,int,UploadJobCreationPurpose,string,CancellationToken)"/>. 
+    /// </summary>
+    /// <param name="uploadJobId"> The ID of the upload job to associate the data with. </param>
+    /// <param name="data"> The data to upload, with a format matching the MIME type of the job. </param>
+    /// <param name="cancellationToken"> An optional token to control method cancellation. </param>
+    /// <returns> An <see cref="UploadJobDataPart"/> instance representing the uploaded part. </returns>
+    public virtual async Task<ClientResult<UploadJobDataPart>> AddDataPartToUploadJobAsync(
+        string uploadJobId,
+        Stream data,
+        CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(uploadJobId, nameof(uploadJobId));
+        Argument.AssertNotNull(data, nameof(data));
+
+        InternalUploadJobDataPartOptions internalOptions = new(data);
+        using MultipartFormDataBinaryContent content = internalOptions.ToMultipartContent();
+        ClientResult result = await AddDataPartToUploadJobAsync(uploadJobId, content, "application/octet-stream", cancellationToken.ToRequestOptions())
+            .ConfigureAwait(false);
+        PipelineResponse response = result.GetRawResponse();
+        return ClientResult.FromValue(UploadJobDataPart.FromResponse(response), response);
+    }
+
+    /// <summary>
+    /// Uploads binary data as a part of a job created via
+    /// <see cref="CreateUploadJob(string,int,UploadJobCreationPurpose,string,CancellationToken)"/>. 
+    /// </summary>
+    /// <param name="uploadJobId"> The ID of the upload job to associate the data with. </param>
+    /// <param name="data"> The data to upload, with a format matching the MIME type of the job. </param>
+    /// <param name="cancellationToken"> An optional token to control method cancellation. </param>
+    /// <returns> An <see cref="UploadJobDataPart"/> instance representing the uploaded part. </returns>
+    public virtual ClientResult<UploadJobDataPart> AddDataPartToUploadJob(
+        string uploadJobId,
+        Stream data,
+        CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(uploadJobId, nameof(uploadJobId));
+        Argument.AssertNotNull(data, nameof(data));
+
+        InternalUploadJobDataPartOptions internalOptions = new(data);
+        using MultipartFormDataBinaryContent content = internalOptions.ToMultipartContent();
+        ClientResult result = AddDataPartToUploadJob(uploadJobId, content, "application/octet-stream", cancellationToken.ToRequestOptions());
+        PipelineResponse response = result.GetRawResponse();
+        return ClientResult.FromValue(UploadJobDataPart.FromResponse(response), response);
+    }
+
+    /// <summary>
+    /// Completes an in-progress <see cref="UploadJob"/>, sequencing the data parts and creating an file as if the
+    /// entire contents had been uploaded at once via
+    /// <see cref="UploadFileAsync(Stream,string,FileUploadPurpose,CancellationToken)"/>. 
+    /// </summary>
+    /// <param name="uploadJobId"> The ID of the upload job to complete. </param>
+    /// <param name="dataPartIds">
+    /// The ordered sequence of data part IDs, as obtained from <see cref="UploadJobDataPartId"/> instances after
+    /// calling <see cref="AddDataPartToUploadJobAsync(string,Stream,CancellationToken)"/>, that describe the full
+    /// file contents.
+    /// </param>
+    /// <param name="options"> Additional options for completing the upload job. </param>
+    /// <param name="cancellationToken"> An optional token to control method cancellation. </param>
+    /// <returns>
+    /// A finished <see cref="UploadJob"/> instance that will, if successful, include an
+    /// <see cref="OpenAIFileInfo"/> instance that can be used for other operations.
+    /// </returns>
+    public virtual async Task<ClientResult<UploadJob>> CompleteUploadJobAsync(
+        string uploadJobId,
+        IEnumerable<string> dataPartIds,
+        UploadJobCompletionOptions options = null,
+        CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(uploadJobId, nameof(uploadJobId));
+        Argument.AssertNotNullOrEmpty(dataPartIds, nameof(dataPartIds));
+
+        options.DataPartIds = dataPartIds.ToList();
+        ClientResult result = await CompleteUploadJobAsync(
+            uploadJobId,
+            options.ToBinaryContent(),
+            cancellationToken.ToRequestOptions())
+                .ConfigureAwait(false);
+        PipelineResponse response = result.GetRawResponse();
+        return ClientResult.FromValue(UploadJob.FromResponse(response), response); 
+    }
+
+    /// <summary>
+    /// Completes an in-progress <see cref="UploadJob"/>, sequencing the data parts and creating an file as if the
+    /// entire contents had been uploaded at once via
+    /// <see cref="UploadFile(Stream,string,FileUploadPurpose,CancellationToken)"/>. 
+    /// </summary>
+    /// <param name="uploadJobId"> The ID of the upload job to complete. </param>
+    /// <param name="dataPartIds">
+    /// The ordered sequence of data part IDs, as obtained from <see cref="UploadJobDataPartId"/> instances after
+    /// calling <see cref="AddDataPartToUploadJob(string,Stream,CancellationToken)"/>, that describe the full
+    /// file contents.
+    /// </param>
+    /// <param name="options"> Additional options for completing the upload job. </param>
+    /// <param name="cancellationToken"> An optional token to control method cancellation. </param>
+    /// <returns>
+    /// A finished <see cref="UploadJob"/> instance that will, if successful, include an
+    /// <see cref="OpenAIFileInfo"/> instance that can be used for other operations.
+    /// </returns>
+    public virtual ClientResult<UploadJob> CompleteUploadJob(
+        string uploadJobId,
+        IEnumerable<string> dataPartIds,
+        UploadJobCompletionOptions options = null,
+        CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(uploadJobId, nameof(uploadJobId));
+        Argument.AssertNotNullOrEmpty(dataPartIds, nameof(dataPartIds));
+
+        options.DataPartIds = dataPartIds.ToList();
+        ClientResult result = CompleteUploadJob(uploadJobId, options.ToBinaryContent(), cancellationToken.ToRequestOptions());
+        PipelineResponse response = result.GetRawResponse();
+        return ClientResult.FromValue(UploadJob.FromResponse(response), response); 
+    }
+
+    /// <summary>
+    /// Cancels a pending <see cref="UploadJob"/>, abandoning <see cref="UploadJobDataPart"/> instances already added
+    /// and preventing further calls to <see cref="AddDataPartToUploadJobAsync(string,Stream,CancellationToken)"/> from
+    /// adding more data. 
+    /// </summary>
+    /// <param name="uploadJobId"> The ID of the upload job to cancel. </param>
+    /// <param name="cancellationToken"> An optional token to control method cancellation. </param>
+    /// <returns> An updated <see cref="UploadJob"/> instance reflecting the cancelled state. </returns>
+    public virtual async Task<ClientResult<UploadJob>> CancelUploadJobAsync(string uploadJobId, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(uploadJobId, nameof(uploadJobId));
+
+        ClientResult result = await CancelUploadJobAsync(uploadJobId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        PipelineResponse response = result.GetRawResponse();
+        return ClientResult.FromValue(UploadJob.FromResponse(response), response);
+    } 
+
+    /// <summary>
+    /// Cancels a pending <see cref="UploadJob"/>, abandoning <see cref="UploadJobDataPart"/> instances already added
+    /// and preventing further calls to <see cref="AddDataPartToUploadJob(string,Stream,CancellationToken)"/> from
+    /// adding more data. 
+    /// </summary>
+    /// <param name="uploadJobId"> The ID of the upload job to cancel. </param>
+    /// <param name="cancellationToken"> An optional token to control method cancellation. </param>
+    /// <returns> An updated <see cref="UploadJob"/> instance reflecting the cancelled state. </returns>
+    public virtual ClientResult<UploadJob> CancelUploadJob(string uploadJobId, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(uploadJobId, nameof(uploadJobId));
+
+        ClientResult result = CancelUploadJob(uploadJobId, cancellationToken.ToRequestOptions());
+        PipelineResponse response = result.GetRawResponse();
+        return ClientResult.FromValue(UploadJob.FromResponse(response), response);
+    } 
 }

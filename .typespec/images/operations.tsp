@@ -17,7 +17,7 @@ interface Images {
   @tag("Images")
   @summary("Creates an image given a prompt")
   createImage(
-    @body requestBody: CreateImageRequest
+    @body requestBody: CreateImageRequest,
   ): ImagesResponse | ErrorResponse;
 
   @route("edits")

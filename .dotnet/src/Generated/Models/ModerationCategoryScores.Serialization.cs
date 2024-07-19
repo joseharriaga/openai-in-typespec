@@ -76,21 +76,24 @@ namespace OpenAI.Moderations
                 writer.WritePropertyName("violence/graphic"u8);
                 writer.WriteNumberValue(ViolenceGraphic);
             }
-            foreach (var item in SerializedAdditionalRawData ?? new System.Collections.Generic.Dictionary<string, BinaryData>())
+            if (SerializedAdditionalRawData != null)
             {
-                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                foreach (var item in SerializedAdditionalRawData)
                 {
-                    continue;
-                }
-                writer.WritePropertyName(item.Key);
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
+                    writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
 #else
-                using (JsonDocument document = JsonDocument.Parse(item.Value))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
+                    using (JsonDocument document = JsonDocument.Parse(item.Value))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
 #endif
+                }
             }
             writer.WriteEndObject();
         }

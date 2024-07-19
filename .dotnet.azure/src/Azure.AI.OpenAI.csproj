@@ -33,4 +33,8 @@
     <ProjectReference Include="..\..\.dotnet\src\OpenAI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Azure.AI.OpenAI.Tests"/>
+  </ItemGroup>
+
 </Project>

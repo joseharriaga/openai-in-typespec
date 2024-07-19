@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     public readonly partial struct VectorStoreFileCounts
     {
-        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         internal VectorStoreFileCounts(int inProgress, int completed, int failed, int cancelled, int total)
         {

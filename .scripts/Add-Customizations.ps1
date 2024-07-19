@@ -4,11 +4,11 @@ function Internalize-SerializedAdditionalRawData {
     Get-ChildItem -Path $directory -Filter "*.cs" | ForEach-Object {
         $file = $_
         $filename = $_.FullName
-        $match = Select-String -Path $filename -Pattern "^(\s*)private (IDictionary<string, BinaryData> _serializedAdditionalRawData)"
+        $match = Select-String -Path $filename -Pattern "^(\s*)private (protected )?(.*IDictionary<string, BinaryData> _serializedAdditionalRawData)"
         if ($match) {
             Write-Output "Internalizing _serializedAdditionalRawData: $($_.Name)"
             $content = Get-Content -Path $file -Raw
-            $content = $content -creplace $match.Matches[0].Groups[0], "$($match.Matches[0].Groups[1])internal $($match.Matches[0].Groups[2])"
+            $content = $content -creplace $match.Matches[0].Groups[0], "$($match.Matches[0].Groups[1])internal $($match.Matches[0].Groups[3])"
             $content | Set-Content -Path $filename -NoNewline
         }
     }

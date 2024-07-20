@@ -210,35 +210,15 @@ public partial class FileClient
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual Task<ClientResult> CreateUploadJobAsync(BinaryContent content, RequestOptions options)
-        => _internalUploadClient.CreateUploadJobAsync(content, options);
-    
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult CreateUploadJob(BinaryContent content, RequestOptions options)
-        => _internalUploadClient.CreateUploadJob(content, options);
-    
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual Task<ClientResult> AddDataPartToUploadJobAsync(string uploadJobId, BinaryContent content, string contentType, RequestOptions options)
-        => _internalUploadClient.AddDataPartToUploadJobAsync(uploadJobId, content, contentType, options);
+    public virtual async Task<IncrementalUploadOperation> CreateIncrementalUploadAsync(BinaryContent content, RequestOptions options)
+    {
+        ClientResult result = await _internalUploadClient.CreateUploadJobAsync(content, options).ConfigureAwait(false);
+        return new IncrementalUploadOperation(_internalUploadClient, result.GetRawResponse());
+    }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult AddDataPartToUploadJob(string uploadJobId, BinaryContent content, string contentType, RequestOptions options)
-        => _internalUploadClient.AddDataPartToUploadJob(uploadJobId, content, contentType, options);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual Task<ClientResult> CompleteUploadJobAsync(string uploadJobId, BinaryContent content, RequestOptions options)
-        => _internalUploadClient.CompleteUploadJobAsync(uploadJobId, content, options);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult CompleteUploadJob(string uploadJobId, BinaryContent content, RequestOptions options)
-        => _internalUploadClient.CompleteUploadJob(uploadJobId, content, options);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual Task<ClientResult> CancelUploadJobAsync(string uploadJobId, RequestOptions options)
-        => _internalUploadClient.CancelUploadJobAsync(uploadJobId, options);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult CancelUploadJob(string uploadJobId, RequestOptions options)
-        => _internalUploadClient.CancelUploadJob(uploadJobId, options);
+    public virtual IncrementalUploadOperation CreateIncrementalUpload(BinaryContent content, RequestOptions options)
+    {
+        ClientResult result = _internalUploadClient.CreateUploadJob(content, options);
+        return new IncrementalUploadOperation(_internalUploadClient, result.GetRawResponse());
+    }
 }

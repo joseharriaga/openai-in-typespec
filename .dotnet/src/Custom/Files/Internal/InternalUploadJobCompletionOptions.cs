@@ -6,7 +6,7 @@ namespace OpenAI.Files;
 /// Request-level options for upload job completion.
 /// </summary>
 [CodeGenModel("CompleteUploadRequest")]
-public partial class UploadJobCompletionOptions
+internal partial class InternalUploadJobCompletionOptions
 {
     [CodeGenMember("PartIds")]
     internal IList<string> DataPartIds { get; set; }

@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace OpenAI.Files
 {
-    public partial class UploadJob
+    internal partial class InternalUploadJob
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        internal UploadJob(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, UploadJobStatus status, DateTimeOffset expiresAt)
+        internal InternalUploadJob(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, InternalUploadJobStatus status, DateTimeOffset expiresAt)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(filename, nameof(filename));
@@ -26,7 +26,7 @@ namespace OpenAI.Files
             ExpiresAt = expiresAt;
         }
 
-        internal UploadJob(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, UploadJobStatus status, DateTimeOffset expiresAt, object internalObject, OpenAIFileInfo file, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadJob(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, InternalUploadJobStatus status, DateTimeOffset expiresAt, object internalObject, OpenAIFileInfo file, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -40,7 +40,7 @@ namespace OpenAI.Files
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal UploadJob()
+        internal InternalUploadJob()
         {
         }
 
@@ -49,7 +49,7 @@ namespace OpenAI.Files
         public string Filename { get; }
         public int Bytes { get; }
         public string Purpose { get; }
-        public UploadJobStatus Status { get; }
+        public InternalUploadJobStatus Status { get; }
         public DateTimeOffset ExpiresAt { get; }
         public OpenAIFileInfo File { get; }
     }

@@ -13,14 +13,17 @@ internal readonly partial struct InternalListFilesResponseObject { }
 internal readonly partial struct InternalOpenAIFileObject { }
 
 [CodeGenModel("Upload")]
-public partial class UploadJob
+internal partial class InternalUploadJob
 {
     [CodeGenMember("Object")]
     internal readonly object _internalObject;
 }
 
+[CodeGenModel("CreateUploadRequestPurpose")]
+internal readonly partial struct InternalUploadJobCreationPurpose { }
+
 [CodeGenModel("UploadPart")]
-public partial class UploadJobDataPart
+internal partial class InternalUploadJobDataPart
 {
     [CodeGenMember("Object")]
     internal readonly object _internalObject;

@@ -7,26 +7,26 @@ using System.Collections.Generic;
 
 namespace OpenAI.Files
 {
-    public partial class InternalUploadJobCreationOptions
+    internal partial class InternalUploadJobCreationOptions
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        public InternalUploadJobCreationOptions(string filename, UploadJobCreationPurpose purpose, int bytes, string mimeType)
+        public InternalUploadJobCreationOptions(string filename, InternalUploadJobCreationPurpose purpose, long totalUploadSize, string mimeType)
         {
             Argument.AssertNotNull(filename, nameof(filename));
             Argument.AssertNotNull(mimeType, nameof(mimeType));
 
             Filename = filename;
             Purpose = purpose;
-            Bytes = bytes;
+            TotalUploadSize = totalUploadSize;
             MimeType = mimeType;
         }
 
-        internal InternalUploadJobCreationOptions(string filename, UploadJobCreationPurpose purpose, int bytes, string mimeType, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadJobCreationOptions(string filename, InternalUploadJobCreationPurpose purpose, long totalUploadSize, string mimeType, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Filename = filename;
             Purpose = purpose;
-            Bytes = bytes;
+            TotalUploadSize = totalUploadSize;
             MimeType = mimeType;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -36,8 +36,7 @@ namespace OpenAI.Files
         }
 
         public string Filename { get; }
-        public UploadJobCreationPurpose Purpose { get; }
-        public int Bytes { get; }
+        public InternalUploadJobCreationPurpose Purpose { get; }
         public string MimeType { get; }
     }
 }

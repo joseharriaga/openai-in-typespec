@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.Files
 {
-    public partial class InternalUploadJobCreationOptions : IJsonModel<InternalUploadJobCreationOptions>
+    internal partial class InternalUploadJobCreationOptions : IJsonModel<InternalUploadJobCreationOptions>
     {
         void IJsonModel<InternalUploadJobCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -26,7 +26,7 @@ namespace OpenAI.Files
             writer.WritePropertyName("purpose"u8);
             writer.WriteStringValue(Purpose.ToString());
             writer.WritePropertyName("bytes"u8);
-            writer.WriteNumberValue(Bytes);
+            writer.WriteNumberValue(TotalUploadSize);
             writer.WritePropertyName("mime_type"u8);
             writer.WriteStringValue(MimeType);
             if (true && _serializedAdditionalRawData != null)
@@ -68,8 +68,8 @@ namespace OpenAI.Files
                 return null;
             }
             string filename = default;
-            UploadJobCreationPurpose purpose = default;
-            int bytes = default;
+            InternalUploadJobCreationPurpose purpose = default;
+            long bytes = default;
             string mimeType = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -82,12 +82,12 @@ namespace OpenAI.Files
                 }
                 if (property.NameEquals("purpose"u8))
                 {
-                    purpose = new UploadJobCreationPurpose(property.Value.GetString());
+                    purpose = new InternalUploadJobCreationPurpose(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("bytes"u8))
                 {
-                    bytes = property.Value.GetInt32();
+                    bytes = property.Value.GetInt64();
                     continue;
                 }
                 if (property.NameEquals("mime_type"u8))

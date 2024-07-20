@@ -1,7 +1,7 @@
 ﻿namespace OpenAI.Files;
 
 [CodeGenModel("UploadStatus")]
-public enum UploadJobStatus
+internal enum InternalUploadJobStatus
 {
     Pending,
     Completed,

@@ -8,25 +8,25 @@ using System.Linq;
 
 namespace OpenAI.Files
 {
-    public partial class UploadJobCompletionOptions
+    internal partial class InternalUploadJobCompletionOptions
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        public UploadJobCompletionOptions(IEnumerable<string> dataPartIds)
+        public InternalUploadJobCompletionOptions(IEnumerable<string> dataPartIds)
         {
             Argument.AssertNotNull(dataPartIds, nameof(dataPartIds));
 
             DataPartIds = dataPartIds.ToList();
         }
 
-        internal UploadJobCompletionOptions(IList<string> dataPartIds, string contentChecksum, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadJobCompletionOptions(IList<string> dataPartIds, string contentChecksum, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             DataPartIds = dataPartIds;
             ContentChecksum = contentChecksum;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal UploadJobCompletionOptions()
+        internal InternalUploadJobCompletionOptions()
         {
         }
     }

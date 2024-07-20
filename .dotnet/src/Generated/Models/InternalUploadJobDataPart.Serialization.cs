@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Files
 {
-    public partial class UploadJobDataPart : IJsonModel<UploadJobDataPart>
+    internal partial class InternalUploadJobDataPart : IJsonModel<InternalUploadJobDataPart>
     {
-        void IJsonModel<UploadJobDataPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalUploadJobDataPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<UploadJobDataPart>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobDataPart>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(UploadJobDataPart)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalUploadJobDataPart)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -47,19 +47,19 @@ namespace OpenAI.Files
             writer.WriteEndObject();
         }
 
-        UploadJobDataPart IJsonModel<UploadJobDataPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalUploadJobDataPart IJsonModel<InternalUploadJobDataPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<UploadJobDataPart>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobDataPart>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(UploadJobDataPart)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalUploadJobDataPart)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeUploadJobDataPart(document.RootElement, options);
+            return DeserializeInternalUploadJobDataPart(document.RootElement, options);
         }
 
-        internal static UploadJobDataPart DeserializeUploadJobDataPart(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalUploadJobDataPart DeserializeInternalUploadJobDataPart(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -101,44 +101,44 @@ namespace OpenAI.Files
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new UploadJobDataPart(id, createdAt, uploadId, @object, serializedAdditionalRawData);
+            return new InternalUploadJobDataPart(id, createdAt, uploadId, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<UploadJobDataPart>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalUploadJobDataPart>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<UploadJobDataPart>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobDataPart>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(UploadJobDataPart)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalUploadJobDataPart)} does not support writing '{options.Format}' format.");
             }
         }
 
-        UploadJobDataPart IPersistableModel<UploadJobDataPart>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalUploadJobDataPart IPersistableModel<InternalUploadJobDataPart>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<UploadJobDataPart>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobDataPart>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeUploadJobDataPart(document.RootElement, options);
+                        return DeserializeInternalUploadJobDataPart(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(UploadJobDataPart)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalUploadJobDataPart)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<UploadJobDataPart>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalUploadJobDataPart>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static UploadJobDataPart FromResponse(PipelineResponse response)
+        internal static InternalUploadJobDataPart FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeUploadJobDataPart(document.RootElement);
+            return DeserializeInternalUploadJobDataPart(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

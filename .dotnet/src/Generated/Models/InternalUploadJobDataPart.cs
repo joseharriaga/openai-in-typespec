@@ -8,11 +8,11 @@ using OpenAI.Models;
 
 namespace OpenAI.Files
 {
-    public partial class UploadJobDataPart
+    internal partial class InternalUploadJobDataPart
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        internal UploadJobDataPart(string id, DateTimeOffset createdAt, string uploadId)
+        internal InternalUploadJobDataPart(string id, DateTimeOffset createdAt, string uploadId)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(uploadId, nameof(uploadId));
@@ -22,7 +22,7 @@ namespace OpenAI.Files
             UploadId = uploadId;
         }
 
-        internal UploadJobDataPart(string id, DateTimeOffset createdAt, string uploadId, object internalObject, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadJobDataPart(string id, DateTimeOffset createdAt, string uploadId, object internalObject, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -31,7 +31,7 @@ namespace OpenAI.Files
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal UploadJobDataPart()
+        internal InternalUploadJobDataPart()
         {
         }
 

@@ -28,7 +28,7 @@ namespace OpenAI.Files
             writer.WritePropertyName("upload_id"u8);
             writer.WriteStringValue(UploadId);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<object>(_internalObject, options);
+            writer.WriteStringValue(Object.ToString());
             if (true && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -70,7 +70,7 @@ namespace OpenAI.Files
             string id = default;
             DateTimeOffset createdAt = default;
             string uploadId = default;
-            object @object = default;
+            InternalUploadPartObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -92,7 +92,7 @@ namespace OpenAI.Files
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = property.Value.GetObject();
+                    @object = new InternalUploadPartObject(property.Value.GetString());
                     continue;
                 }
                 if (true)

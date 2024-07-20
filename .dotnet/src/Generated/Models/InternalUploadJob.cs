@@ -26,7 +26,7 @@ namespace OpenAI.Files
             ExpiresAt = expiresAt;
         }
 
-        internal InternalUploadJob(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, InternalUploadJobStatus status, DateTimeOffset expiresAt, object internalObject, OpenAIFileInfo file, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadJob(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, InternalUploadJobStatus status, DateTimeOffset expiresAt, InternalUploadObject? @object, OpenAIFileInfo file, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -35,7 +35,7 @@ namespace OpenAI.Files
             Purpose = purpose;
             Status = status;
             ExpiresAt = expiresAt;
-            _internalObject = internalObject;
+            Object = @object;
             File = file;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -51,6 +51,7 @@ namespace OpenAI.Files
         public string Purpose { get; }
         public InternalUploadJobStatus Status { get; }
         public DateTimeOffset ExpiresAt { get; }
+        public InternalUploadObject? Object { get; }
         public OpenAIFileInfo File { get; }
     }
 }

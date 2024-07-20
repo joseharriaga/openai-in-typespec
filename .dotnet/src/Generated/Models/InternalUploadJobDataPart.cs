@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Files
 {
@@ -22,12 +21,12 @@ namespace OpenAI.Files
             UploadId = uploadId;
         }
 
-        internal InternalUploadJobDataPart(string id, DateTimeOffset createdAt, string uploadId, object internalObject, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadJobDataPart(string id, DateTimeOffset createdAt, string uploadId, InternalUploadPartObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
             UploadId = uploadId;
-            _internalObject = internalObject;
+            Object = @object;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -38,5 +37,6 @@ namespace OpenAI.Files
         public string Id { get; }
         public DateTimeOffset CreatedAt { get; }
         public string UploadId { get; }
+        public InternalUploadPartObject Object { get; } = InternalUploadPartObject.UploadPart;
     }
 }

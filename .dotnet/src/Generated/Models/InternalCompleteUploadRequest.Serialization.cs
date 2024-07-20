@@ -10,28 +10,28 @@ using System.Text.Json;
 
 namespace OpenAI.Files
 {
-    internal partial class InternalUploadJobCompletionOptions : IJsonModel<InternalUploadJobCompletionOptions>
+    internal partial class InternalCompleteUploadRequest : IJsonModel<InternalCompleteUploadRequest>
     {
-        void IJsonModel<InternalUploadJobCompletionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalCompleteUploadRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobCompletionOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCompleteUploadRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalUploadJobCompletionOptions)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCompleteUploadRequest)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             writer.WritePropertyName("part_ids"u8);
             writer.WriteStartArray();
-            foreach (var item in DataPartIds)
+            foreach (var item in PartIds)
             {
                 writer.WriteStringValue(item);
             }
             writer.WriteEndArray();
-            if (Optional.IsDefined(ContentChecksum))
+            if (Optional.IsDefined(Md5))
             {
                 writer.WritePropertyName("md5"u8);
-                writer.WriteStringValue(ContentChecksum);
+                writer.WriteStringValue(Md5);
             }
             if (true && _serializedAdditionalRawData != null)
             {
@@ -51,19 +51,19 @@ namespace OpenAI.Files
             writer.WriteEndObject();
         }
 
-        InternalUploadJobCompletionOptions IJsonModel<InternalUploadJobCompletionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalCompleteUploadRequest IJsonModel<InternalCompleteUploadRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobCompletionOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCompleteUploadRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalUploadJobCompletionOptions)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCompleteUploadRequest)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalUploadJobCompletionOptions(document.RootElement, options);
+            return DeserializeInternalCompleteUploadRequest(document.RootElement, options);
         }
 
-        internal static InternalUploadJobCompletionOptions DeserializeInternalUploadJobCompletionOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalCompleteUploadRequest DeserializeInternalCompleteUploadRequest(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -98,44 +98,44 @@ namespace OpenAI.Files
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalUploadJobCompletionOptions(partIds, md5, serializedAdditionalRawData);
+            return new InternalCompleteUploadRequest(partIds, md5, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalUploadJobCompletionOptions>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalCompleteUploadRequest>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobCompletionOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCompleteUploadRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalUploadJobCompletionOptions)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCompleteUploadRequest)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalUploadJobCompletionOptions IPersistableModel<InternalUploadJobCompletionOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalCompleteUploadRequest IPersistableModel<InternalCompleteUploadRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobCompletionOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCompleteUploadRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalUploadJobCompletionOptions(document.RootElement, options);
+                        return DeserializeInternalCompleteUploadRequest(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalUploadJobCompletionOptions)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCompleteUploadRequest)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalUploadJobCompletionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalCompleteUploadRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalUploadJobCompletionOptions FromResponse(PipelineResponse response)
+        internal static InternalCompleteUploadRequest FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalUploadJobCompletionOptions(document.RootElement);
+            return DeserializeInternalCompleteUploadRequest(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

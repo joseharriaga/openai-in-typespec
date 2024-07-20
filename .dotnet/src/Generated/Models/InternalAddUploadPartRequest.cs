@@ -8,24 +8,24 @@ using System.IO;
 
 namespace OpenAI.Files
 {
-    internal partial class InternalUploadJobDataPartOptions
+    internal partial class InternalAddUploadPartRequest
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        public InternalUploadJobDataPartOptions(Stream data)
+        public InternalAddUploadPartRequest(Stream data)
         {
             Argument.AssertNotNull(data, nameof(data));
 
             Data = data;
         }
 
-        internal InternalUploadJobDataPartOptions(Stream data, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalAddUploadPartRequest(Stream data, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Data = data;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal InternalUploadJobDataPartOptions()
+        internal InternalAddUploadPartRequest()
         {
         }
 

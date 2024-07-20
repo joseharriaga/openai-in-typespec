@@ -11,14 +11,14 @@ using System.Text.Json;
 
 namespace OpenAI.Files
 {
-    internal partial class InternalUploadJobDataPartOptions : IJsonModel<InternalUploadJobDataPartOptions>
+    internal partial class InternalAddUploadPartRequest : IJsonModel<InternalAddUploadPartRequest>
     {
-        void IJsonModel<InternalUploadJobDataPartOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalAddUploadPartRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobDataPartOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalAddUploadPartRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalUploadJobDataPartOptions)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalAddUploadPartRequest)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -49,19 +49,19 @@ namespace OpenAI.Files
             writer.WriteEndObject();
         }
 
-        InternalUploadJobDataPartOptions IJsonModel<InternalUploadJobDataPartOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalAddUploadPartRequest IJsonModel<InternalAddUploadPartRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobDataPartOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalAddUploadPartRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalUploadJobDataPartOptions)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalAddUploadPartRequest)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalUploadJobDataPartOptions(document.RootElement, options);
+            return DeserializeInternalAddUploadPartRequest(document.RootElement, options);
         }
 
-        internal static InternalUploadJobDataPartOptions DeserializeInternalUploadJobDataPartOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalAddUploadPartRequest DeserializeInternalAddUploadPartRequest(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -85,7 +85,7 @@ namespace OpenAI.Files
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalUploadJobDataPartOptions(data, serializedAdditionalRawData);
+            return new InternalAddUploadPartRequest(data, serializedAdditionalRawData);
         }
 
         private BinaryData SerializeMultipart(ModelReaderWriterOptions options)
@@ -110,9 +110,9 @@ namespace OpenAI.Files
             return content;
         }
 
-        BinaryData IPersistableModel<InternalUploadJobDataPartOptions>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalAddUploadPartRequest>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobDataPartOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalAddUploadPartRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
@@ -121,32 +121,32 @@ namespace OpenAI.Files
                 case "MFD":
                     return SerializeMultipart(options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalUploadJobDataPartOptions)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalAddUploadPartRequest)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalUploadJobDataPartOptions IPersistableModel<InternalUploadJobDataPartOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalAddUploadPartRequest IPersistableModel<InternalAddUploadPartRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobDataPartOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalAddUploadPartRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalUploadJobDataPartOptions(document.RootElement, options);
+                        return DeserializeInternalAddUploadPartRequest(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalUploadJobDataPartOptions)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalAddUploadPartRequest)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalUploadJobDataPartOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "MFD";
+        string IPersistableModel<InternalAddUploadPartRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "MFD";
 
-        internal static InternalUploadJobDataPartOptions FromResponse(PipelineResponse response)
+        internal static InternalAddUploadPartRequest FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalUploadJobDataPartOptions(document.RootElement);
+            return DeserializeInternalAddUploadPartRequest(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

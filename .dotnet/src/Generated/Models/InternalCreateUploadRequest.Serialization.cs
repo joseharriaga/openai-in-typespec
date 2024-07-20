@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Files
 {
-    internal partial class InternalUploadJobCreationOptions : IJsonModel<InternalUploadJobCreationOptions>
+    internal partial class InternalCreateUploadRequest : IJsonModel<InternalCreateUploadRequest>
     {
-        void IJsonModel<InternalUploadJobCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalCreateUploadRequest>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateUploadRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalUploadJobCreationOptions)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCreateUploadRequest)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -26,7 +26,7 @@ namespace OpenAI.Files
             writer.WritePropertyName("purpose"u8);
             writer.WriteStringValue(Purpose.ToString());
             writer.WritePropertyName("bytes"u8);
-            writer.WriteNumberValue(TotalUploadSize);
+            writer.WriteNumberValue(Bytes);
             writer.WritePropertyName("mime_type"u8);
             writer.WriteStringValue(MimeType);
             if (true && _serializedAdditionalRawData != null)
@@ -47,19 +47,19 @@ namespace OpenAI.Files
             writer.WriteEndObject();
         }
 
-        InternalUploadJobCreationOptions IJsonModel<InternalUploadJobCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalCreateUploadRequest IJsonModel<InternalCreateUploadRequest>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateUploadRequest>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalUploadJobCreationOptions)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalCreateUploadRequest)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalUploadJobCreationOptions(document.RootElement, options);
+            return DeserializeInternalCreateUploadRequest(document.RootElement, options);
         }
 
-        internal static InternalUploadJobCreationOptions DeserializeInternalUploadJobCreationOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalCreateUploadRequest DeserializeInternalCreateUploadRequest(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -69,7 +69,7 @@ namespace OpenAI.Files
             }
             string filename = default;
             InternalUploadJobCreationPurpose purpose = default;
-            long bytes = default;
+            int bytes = default;
             string mimeType = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -87,7 +87,7 @@ namespace OpenAI.Files
                 }
                 if (property.NameEquals("bytes"u8))
                 {
-                    bytes = property.Value.GetInt64();
+                    bytes = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("mime_type"u8))
@@ -101,44 +101,44 @@ namespace OpenAI.Files
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalUploadJobCreationOptions(filename, purpose, bytes, mimeType, serializedAdditionalRawData);
+            return new InternalCreateUploadRequest(filename, purpose, bytes, mimeType, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalUploadJobCreationOptions>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalCreateUploadRequest>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateUploadRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalUploadJobCreationOptions)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCreateUploadRequest)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalUploadJobCreationOptions IPersistableModel<InternalUploadJobCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalCreateUploadRequest IPersistableModel<InternalCreateUploadRequest>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateUploadRequest>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalUploadJobCreationOptions(document.RootElement, options);
+                        return DeserializeInternalCreateUploadRequest(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalUploadJobCreationOptions)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalCreateUploadRequest)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalUploadJobCreationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalCreateUploadRequest>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalUploadJobCreationOptions FromResponse(PipelineResponse response)
+        internal static InternalCreateUploadRequest FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalUploadJobCreationOptions(document.RootElement);
+            return DeserializeInternalCreateUploadRequest(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

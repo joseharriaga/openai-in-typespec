@@ -35,10 +35,10 @@ namespace OpenAI.Files
             writer.WriteStringValue(Status.ToSerialString());
             writer.WritePropertyName("expires_at"u8);
             writer.WriteNumberValue(ExpiresAt, "U");
-            if (Optional.IsDefined(_internalObject))
+            if (Optional.IsDefined(Object))
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteObjectValue<object>(_internalObject, options);
+                writer.WriteStringValue(Object.Value.ToString());
             }
             if (Optional.IsDefined(File))
             {
@@ -97,7 +97,7 @@ namespace OpenAI.Files
             string purpose = default;
             InternalUploadJobStatus status = default;
             DateTimeOffset expiresAt = default;
-            object @object = default;
+            InternalUploadObject? @object = default;
             OpenAIFileInfo file = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -144,7 +144,7 @@ namespace OpenAI.Files
                     {
                         continue;
                     }
-                    @object = property.Value.GetObject();
+                    @object = new InternalUploadObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("file"u8))

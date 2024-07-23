@@ -7,6 +7,33 @@ tags:
   - name: Chat
   - name: Images
 paths:
+  /audio/speech:
+    post:
+      tags:
+        - Audio
+      operationId: createSpeech
+      summary: Generates audio from the input text.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          headers:
+            Transfer-Encoding:
+              required: false
+              description: chunked
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenAI.CreateSpeechRequest'
   /chat/completions:
     post:
       tags:
@@ -54,33 +81,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/OpenAI.CreateImageRequest'
-  /speech:
-    post:
-      tags:
-        - Audio
-      operationId: createSpeech
-      summary: Generates audio from the input text.
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          headers:
-            Transfer-Encoding:
-              required: false
-              description: chunked
-              schema:
-                type: string
-          content:
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OpenAI.CreateSpeechRequest'
 security:
   - ApiKeyAuth: []
   - OAuth2Auth:
@@ -1934,8 +1934,6 @@ components:
           type: integer
           format: int64
           nullable: true
-          minimum: -9223372036854776000
-          maximum: 9223372036854776000
           description: |-
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.

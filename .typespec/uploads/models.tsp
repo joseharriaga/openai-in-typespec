@@ -9,6 +9,43 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+model CreateUploadRequest {
+  /** The name of the file to upload. */
+  filename: string;
+
+  /**
+   * The intended purpose of the uploaded file.
+   *
+   * See the [documentation on File purposes](/docs/api-reference/files/create#files-create-purpose).
+   */
+  purpose: "assistants" | "batch" | "fine-tune" | "vision";
+
+  /** The number of bytes in the file you are uploading. */
+  bytes: int32;
+
+  /**
+   * The MIME type of the file.
+   *
+   * This must fall within the supported MIME types for your file purpose. See the supported MIME types for assistants and vision.
+   */
+  mime_type: string;
+}
+
+model AddUploadPartRequest {
+  /** The chunk of bytes for this Part. */
+  data: bytes;
+}
+
+model CompleteUploadRequest {
+  /** The ordered list of Part IDs. */
+  part_ids: string[];
+
+  /** The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect. */
+  md5?: string;
+}
+
+alias CancelUploadRequest = unknown;
+
 /** The Upload object can accept byte chunks in the form of Parts. */
 model Upload {
   /** The Upload unique identifier, which can be referenced in API endpoints. */
@@ -61,40 +98,3 @@ model UploadPart {
     """)
   object: "upload.part";
 }
-
-model CreateUploadRequest {
-  /** The name of the file to upload. */
-  filename: string;
-
-  /**
-   * The intended purpose of the uploaded file.
-   *
-   * See the [documentation on File purposes](/docs/api-reference/files/create#files-create-purpose).
-   */
-  purpose: "assistants" | "batch" | "fine-tune" | "vision";
-
-  /** The number of bytes in the file you are uploading. */
-  bytes: int32;
-
-  /**
-   * The MIME type of the file.
-   *
-   * This must fall within the supported MIME types for your file purpose. See the supported MIME types for assistants and vision.
-   */
-  mime_type: string;
-}
-
-model AddUploadPartRequest {
-  /** The chunk of bytes for this Part. */
-  data: bytes;
-}
-
-model CompleteUploadRequest {
-  /** The ordered list of Part IDs. */
-  part_ids: string[];
-
-  /** The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect. */
-  md5?: string;
-}
-
-alias CancelUploadRequest = unknown;

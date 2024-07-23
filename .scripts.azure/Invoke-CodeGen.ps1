@@ -33,6 +33,7 @@ function Partialize-ClientUriBuilder {
 
 function Prune-Generated-Files {
   $patternsToKeep = @(
+      "*BingSearchTool*",
       "*DataSource*",
       "*ContentFilter*",
       "*OpenAI*Error*",
@@ -41,8 +42,10 @@ function Prune-Generated-Files {
       "*Citation*"
   )
   $patternsToDelete = @(
+      "BingSearchToolDefinition.cs",
       "*Elasticsearch*QueryType*",
-      "*FieldsMapping*"
+      "*FieldsMapping*",
+      "*ContentTextAnnotationsFileCitation*"
   )
 
   Get-ChildItem "$dotnetAzureFolder\src\Generated" -File | ForEach-Object {

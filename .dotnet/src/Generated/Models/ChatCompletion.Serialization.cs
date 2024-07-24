@@ -51,7 +51,7 @@ namespace OpenAI.Chat
                 if (ServiceTier != null)
                 {
                     writer.WritePropertyName("service_tier"u8);
-                    writer.WriteStringValue(ServiceTier.Value.ToSerialString());
+                    writer.WriteStringValue(ServiceTier.Value.ToString());
                 }
                 else
                 {
@@ -159,7 +159,7 @@ namespace OpenAI.Chat
                         serviceTier = null;
                         continue;
                     }
-                    serviceTier = property.Value.GetString().ToInternalCreateChatCompletionResponseServiceTier();
+                    serviceTier = new InternalCreateChatCompletionResponseServiceTier(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("system_fingerprint"u8))

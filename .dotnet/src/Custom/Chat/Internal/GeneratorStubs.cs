@@ -94,15 +94,10 @@ internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 internal partial class InternalFunctionParameters { }
 
 [CodeGenModel("CreateChatCompletionRequestServiceTier")]
-internal enum InternalCreateChatCompletionRequestServiceTier
-{
-    Auto,
-    Default
-}
+internal readonly partial struct InternalCreateChatCompletionRequestServiceTier { }
 
 [CodeGenModel("CreateChatCompletionResponseServiceTier")]
-internal enum InternalCreateChatCompletionResponseServiceTier
-{
-    Scale,
-    Default
-}
+internal readonly partial struct InternalCreateChatCompletionResponseServiceTier { }
+
+[CodeGenModel("CreateChatCompletionStreamResponseServiceTier")]
+internal readonly partial struct InternalCreateChatCompletionStreamResponseServiceTier { }

@@ -7,31 +7,30 @@ using System.Collections.Generic;
 
 namespace OpenAI.Files
 {
-    internal partial class InternalUploadJob
+    internal partial class InternalUploadJobInfo
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        internal InternalUploadJob(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, InternalUploadJobStatus status, DateTimeOffset expiresAt)
+        internal InternalUploadJobInfo(string id, DateTimeOffset createdAt, string filename, long totalSize, InternalCreateUploadRequestPurpose purpose, InternalUploadStatus status, DateTimeOffset expiresAt)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(filename, nameof(filename));
-            Argument.AssertNotNull(purpose, nameof(purpose));
 
             Id = id;
             CreatedAt = createdAt;
             Filename = filename;
-            Bytes = bytes;
+            TotalSize = totalSize;
             Purpose = purpose;
             Status = status;
             ExpiresAt = expiresAt;
         }
 
-        internal InternalUploadJob(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, InternalUploadJobStatus status, DateTimeOffset expiresAt, InternalUploadObject? @object, OpenAIFileInfo file, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadJobInfo(string id, DateTimeOffset createdAt, string filename, long totalSize, InternalCreateUploadRequestPurpose purpose, InternalUploadStatus status, DateTimeOffset expiresAt, InternalUploadObject? @object, OpenAIFileInfo file, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
             Filename = filename;
-            Bytes = bytes;
+            TotalSize = totalSize;
             Purpose = purpose;
             Status = status;
             ExpiresAt = expiresAt;
@@ -40,16 +39,14 @@ namespace OpenAI.Files
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal InternalUploadJob()
+        internal InternalUploadJobInfo()
         {
         }
 
         public string Id { get; }
         public DateTimeOffset CreatedAt { get; }
         public string Filename { get; }
-        public int Bytes { get; }
-        public string Purpose { get; }
-        public InternalUploadJobStatus Status { get; }
+        public InternalUploadStatus Status { get; }
         public DateTimeOffset ExpiresAt { get; }
         public InternalUploadObject? Object { get; }
         public OpenAIFileInfo File { get; }

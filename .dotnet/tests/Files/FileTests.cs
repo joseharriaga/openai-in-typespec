@@ -155,11 +155,11 @@ public partial class FileTests : SyncAsyncTestBase
             """);
         using var requestContent = BinaryContent.Create(requestData);
 
-        IncrementalUploadOperation uploadJobOperation = IsAsync
-            ? await client.CreateIncrementalUploadAsync(requestContent, new RequestOptions())
-            : client.CreateIncrementalUpload(requestContent, new RequestOptions());
-        Assert.That(uploadJobOperation, Is.Not.Null);
-        PipelineResponse rawResponse = uploadJobOperation.GetRawResponse();
+        IncrementalUploadJob uploadJob = IsAsync
+            ? await client.CreateIncrementalUploadJobAsync(requestContent, new RequestOptions())
+            : client.CreateIncrementalUploadJob(requestContent, new RequestOptions());
+        Assert.That(uploadJob, Is.Not.Null);
+        PipelineResponse rawResponse = uploadJob.GetRawResponse();
         Assert.That(rawResponse, Is.Not.Null);
         BinaryData rawResponseContent = rawResponse.Content;
         Assert.That(rawResponseContent, Is.Not.Null);
@@ -171,10 +171,19 @@ public partial class FileTests : SyncAsyncTestBase
             return idElement.GetString();
         }
 
-        Assert.That(uploadJobOperation.UploadJobId, Is.EqualTo(GetIdFromJsonResponse(rawResponse)));
-        Assert.That(uploadJobOperation.ExpiresAt, Is.GreaterThan(new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero)));
+        Assert.That(uploadJob.Id, Is.EqualTo(GetIdFromJsonResponse(rawResponse)));
+        Assert.That(uploadJob.CreatedAt, Is.GreaterThan(new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero)));
+        Assert.That(uploadJob.ExpiresAt, Is.GreaterThan(new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero)));
+        Assert.That(uploadJob.ExpiresAt, Is.GreaterThan(uploadJob.CreatedAt));
 
-        (BinaryContent Content, string ContentType) CreateMultipartFormDataForPart(Stream dataPart)
+        IncrementalUploadJob rehydratedJob = IncrementalUploadJob.Rehydrate(client, uploadJob.RehydrationToken);
+        Assert.That(rehydratedJob, Is.Not.Null);
+        Assert.That(rehydratedJob.Id, Is.EqualTo(uploadJob.Id));
+        Assert.That(rehydratedJob.CreatedAt, Is.EqualTo(uploadJob.CreatedAt));
+        Assert.That(rehydratedJob.ExpiresAt, Is.EqualTo(uploadJob.ExpiresAt));
+        Assert.Throws<InvalidOperationException>(() => rehydratedJob.GetRawResponse());
+
+        static (BinaryContent Content, string ContentType) CreateMultipartFormDataForPart(Stream dataPart)
         {
             const string boundary = "this-is-a-test-boundary-real-values-do-not-matter";
             using StreamReader reader = new(dataPart);
@@ -193,12 +202,13 @@ public partial class FileTests : SyncAsyncTestBase
         for (int i = 0; i < parts.Count; i++)
         {
             int index = i;
+            IncrementalUploadJob jobToUse = index % 2 == 0 ? uploadJob : rehydratedJob;
             dataUploadTasks[index] = Task.Run(async () =>
             {
                 (BinaryContent content, string contentType) = CreateMultipartFormDataForPart(parts[index]);
                 return IsAsync
-                    ? await uploadJobOperation.AddDataPartAsync(content, contentType, new RequestOptions())
-                    : uploadJobOperation.AddDataPart(content, contentType, new RequestOptions());
+                    ? await jobToUse.AddDataPartAsync(jobToUse.Id, content, contentType, new RequestOptions())
+                    : jobToUse.AddDataPart(jobToUse.Id, content, contentType, new RequestOptions());
             });
         }
 
@@ -210,8 +220,8 @@ public partial class FileTests : SyncAsyncTestBase
         }));
 
         ClientResult completionResult = IsAsync
-            ? await uploadJobOperation.CompleteAsync(completionRequest, new RequestOptions())
-            : uploadJobOperation.Complete(completionRequest, new RequestOptions());
+            ? await uploadJob.CompleteAsync(uploadJob.Id, completionRequest, new RequestOptions())
+            : uploadJob.Complete(uploadJob.Id, completionRequest, new RequestOptions());
 
         using JsonDocument completeJobDocument = JsonDocument.Parse(completionResult.GetRawResponse().Content);
         Assert.That(completeJobDocument.RootElement.TryGetProperty("file", out JsonElement fileProperty)

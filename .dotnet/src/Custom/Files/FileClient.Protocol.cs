@@ -210,15 +210,17 @@ public partial class FileClient
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    public virtual async Task<IncrementalUploadOperation> CreateIncrementalUploadAsync(BinaryContent content, RequestOptions options)
+    public virtual async Task<IncrementalUploadJob> CreateIncrementalUploadJobAsync(BinaryContent content, RequestOptions options)
     {
         ClientResult result = await _internalUploadClient.CreateUploadJobAsync(content, options).ConfigureAwait(false);
-        return new IncrementalUploadOperation(_internalUploadClient, result.GetRawResponse());
+        InternalUploadJobInfo jobInfo = InternalUploadJobInfo.FromResponse(result.GetRawResponse());
+        return new IncrementalUploadJob(jobInfo, _internalUploadClient, result.GetRawResponse());
     }
 
-    public virtual IncrementalUploadOperation CreateIncrementalUpload(BinaryContent content, RequestOptions options)
+    public virtual IncrementalUploadJob CreateIncrementalUploadJob(BinaryContent content, RequestOptions options)
     {
         ClientResult result = _internalUploadClient.CreateUploadJob(content, options);
-        return new IncrementalUploadOperation(_internalUploadClient, result.GetRawResponse());
+        InternalUploadJobInfo jobInfo = InternalUploadJobInfo.FromResponse(result.GetRawResponse());
+        return new IncrementalUploadJob(jobInfo, _internalUploadClient, result.GetRawResponse());
     }
 }

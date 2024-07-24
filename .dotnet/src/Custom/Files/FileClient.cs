@@ -26,7 +26,7 @@ namespace OpenAI.Files;
 [CodeGenSuppress("DownloadFile", typeof(string))]
 public partial class FileClient
 {
-    private readonly InternalUploadClient _internalUploadClient;
+    internal readonly InternalUploadClient _internalUploadClient;
 
     /// <summary>
     /// Initializes a new instance of <see cref="FileClient"/> that will use an API key when authenticating.

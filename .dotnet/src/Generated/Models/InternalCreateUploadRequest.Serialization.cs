@@ -68,7 +68,7 @@ namespace OpenAI.Files
                 return null;
             }
             string filename = default;
-            InternalUploadJobCreationPurpose purpose = default;
+            InternalCreateUploadRequestPurpose purpose = default;
             int bytes = default;
             string mimeType = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -82,7 +82,7 @@ namespace OpenAI.Files
                 }
                 if (property.NameEquals("purpose"u8))
                 {
-                    purpose = new InternalUploadJobCreationPurpose(property.Value.GetString());
+                    purpose = new InternalCreateUploadRequestPurpose(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("bytes"u8))

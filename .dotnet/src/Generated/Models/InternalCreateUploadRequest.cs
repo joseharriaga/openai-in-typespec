@@ -11,7 +11,7 @@ namespace OpenAI.Files
     {
         internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
-        public InternalCreateUploadRequest(string filename, InternalUploadJobCreationPurpose purpose, int bytes, string mimeType)
+        public InternalCreateUploadRequest(string filename, InternalCreateUploadRequestPurpose purpose, int bytes, string mimeType)
         {
             Argument.AssertNotNull(filename, nameof(filename));
             Argument.AssertNotNull(mimeType, nameof(mimeType));
@@ -22,7 +22,7 @@ namespace OpenAI.Files
             MimeType = mimeType;
         }
 
-        internal InternalCreateUploadRequest(string filename, InternalUploadJobCreationPurpose purpose, int bytes, string mimeType, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateUploadRequest(string filename, InternalCreateUploadRequestPurpose purpose, int bytes, string mimeType, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Filename = filename;
             Purpose = purpose;
@@ -36,7 +36,7 @@ namespace OpenAI.Files
         }
 
         public string Filename { get; }
-        public InternalUploadJobCreationPurpose Purpose { get; }
+        public InternalCreateUploadRequestPurpose Purpose { get; }
         public int Bytes { get; }
         public string MimeType { get; }
     }

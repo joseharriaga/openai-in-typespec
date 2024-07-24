@@ -13,13 +13,23 @@ internal readonly partial struct InternalListFilesResponseObject { }
 internal readonly partial struct InternalOpenAIFileObject { }
 
 [CodeGenModel("Upload")]
-internal partial class InternalUploadJob { }
+internal partial class InternalUploadJobInfo
+{
+    [CodeGenMember("Bytes")]
+    public long TotalSize { get; }
+
+    [CodeGenMember("Purpose")]
+    public InternalCreateUploadRequestPurpose Purpose { get; }
+}
+
+[CodeGenModel("CreateUploadRequestPurpose")]
+internal readonly partial struct InternalCreateUploadRequestPurpose { }
 
 [CodeGenModel("UploadObject")]
 internal readonly partial struct InternalUploadObject { }
 
-[CodeGenModel("CreateUploadRequestPurpose")]
-internal readonly partial struct InternalUploadJobCreationPurpose { }
+[CodeGenModel("UploadStatus")]
+internal readonly partial struct InternalUploadStatus { }
 
 [CodeGenModel("UploadPart")]
 internal partial class InternalUploadJobDataPart { }

@@ -14,18 +14,17 @@ namespace OpenAI.Tests.Images;
 [TestFixture(true)]
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
+[Category("Images")]
 public partial class ImageGenerationTests : SyncAsyncTestBase
 {
-    public ImageGenerationTests(bool isAsync)
-        : base(isAsync)
+    public ImageGenerationTests(bool isAsync) : base(isAsync)
     {
     }
 
     [Test]
-    [Category("skipInCI")]
     public async Task BasicGenerationWorks()
     {
-        ImageClient client = GetTestClient();
+        ImageClient client = GetTestClient<ImageClient>(TestScenario.Images);
 
         string prompt = "An isolated stop sign.";
 
@@ -40,10 +39,9 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     }
 
     [Test]
-    [Category("skipInCI")]
     public async Task GenerationWithOptionsWorks()
     {
-        ImageClient client = GetTestClient();
+        ImageClient client = GetTestClient<ImageClient>(TestScenario.Images);
 
         string prompt = "An isolated stop sign.";
 
@@ -60,10 +58,9 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     }
 
     [Test]
-    [Category("skipInCI")]
     public async Task GenerationWithBytesResponseWorks()
     {
-        ImageClient client = GetTestClient();
+        ImageClient client = GetTestClient<ImageClient>(TestScenario.Images);
 
         string prompt = "An isolated stop sign.";
 
@@ -82,7 +79,6 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     }
 
     [Test]
-    [Category("skipInCI")]
     public async Task GenerateImageEditWorks()
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
@@ -102,7 +98,6 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     }
 
     [Test]
-    [Category("skipInCI")]
     public async Task GenerateImageEditWithMaskFileWorks()
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
@@ -123,7 +118,6 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     }
 
     [Test]
-    [Category("skipInCI")]
     public async Task GenerateImageEditWithBytesResponseWorks()
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
@@ -146,7 +140,6 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     }
 
     [Test]
-    [Category("skipInCI")]
     public async Task GenerateImageVariationWorks()
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
@@ -164,7 +157,6 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
     }
 
     [Test]
-    [Category("skipInCI")]
     public async Task GenerateImageVariationWithBytesResponseWorks()
     {
         ImageClient client = GetTestClient<ImageClient>(TestScenario.Images, "dall-e-2");
@@ -186,7 +178,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
 
     private void ValidateGeneratedImage(Uri imageUri, string expectedSubstring, string descriptionHint = null)
     {
-        ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.VisionChat);
+        ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.Chat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
                 ChatMessageContentPart.CreateTextMessageContentPart($"Describe this image for me. {descriptionHint}"),
@@ -200,7 +192,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
 
     private void ValidateGeneratedImage(BinaryData imageBytes, string expectedSubstring, string descriptionHint = null)
     {
-        ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.VisionChat);
+        ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.Chat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
                 ChatMessageContentPart.CreateTextMessageContentPart($"Describe this image for me. {descriptionHint}"),
@@ -211,6 +203,4 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
 
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring(expectedSubstring));
     }
-
-    private static ImageClient GetTestClient() => GetTestClient<ImageClient>(TestScenario.Images);
 }

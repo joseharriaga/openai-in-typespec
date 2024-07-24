@@ -9,11 +9,11 @@ namespace OpenAI.Assistants
 {
     public abstract partial class MessageContent
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
 
         internal MessageContent(IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
     }
 }

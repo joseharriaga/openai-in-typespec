@@ -16,8 +16,8 @@ model RunStepDetailsToolCallsBingSearchObject
   id: string;
 
   @doc("""
-  The type of tool call. This is always going to be `browser` for this type of tool call.
-  """)
+    The type of tool call. This is always going to be `browser` for this type of tool call.
+    """)
   type: "browser";
 
   /** For now, this is always going to be an empty object. */
@@ -35,8 +35,8 @@ model RunStepDeltaStepDetailsToolCallsBingSearchObject
   id?: string;
 
   @doc("""
-  The type of tool call. This is always going to be `browser` for this type of tool call.
-  """)
+    The type of tool call. This is always going to be `browser` for this type of tool call.
+    """)
   type: "browser";
 
   /** For now, this is always going to be an empty object. */

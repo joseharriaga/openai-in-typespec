@@ -21,18 +21,34 @@ namespace OpenAI.Files
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("filename"u8);
-            writer.WriteStringValue(Filename);
-            writer.WritePropertyName("purpose"u8);
-            writer.WriteStringValue(Purpose.ToString());
-            writer.WritePropertyName("bytes"u8);
-            writer.WriteNumberValue(Bytes);
-            writer.WritePropertyName("mime_type"u8);
-            writer.WriteStringValue(MimeType);
-            if (true && _serializedAdditionalRawData != null)
+            if (SerializedAdditionalRawData?.ContainsKey("filename") != true)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("filename"u8);
+                writer.WriteStringValue(Filename);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("purpose") != true)
+            {
+                writer.WritePropertyName("purpose"u8);
+                writer.WriteStringValue(Purpose.ToString());
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("bytes") != true)
+            {
+                writer.WritePropertyName("bytes"u8);
+                writer.WriteNumberValue(Bytes);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("mime_type") != true)
+            {
+                writer.WritePropertyName("mime_type"u8);
+                writer.WriteStringValue(MimeType);
+            }
+            if (SerializedAdditionalRawData != null)
+            {
+                foreach (var item in SerializedAdditionalRawData)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
@@ -95,8 +111,9 @@ namespace OpenAI.Files
                     mimeType = property.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

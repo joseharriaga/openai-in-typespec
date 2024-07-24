@@ -44,7 +44,8 @@ function Prune-Generated-Files {
   $patternsToDelete = @(
       "BingSearchToolDefinition.cs",
       "*Elasticsearch*QueryType*",
-      "*FieldsMapping*"
+      "*FieldsMapping*",
+      "*ContentTextAnnotationsFileCitation*"
   )
 
   Get-ChildItem "$dotnetAzureFolder\src\Generated" -File | ForEach-Object {

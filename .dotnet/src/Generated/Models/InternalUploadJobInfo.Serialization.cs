@@ -21,26 +21,47 @@ namespace OpenAI.Files
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("filename"u8);
-            writer.WriteStringValue(Filename);
-            writer.WritePropertyName("bytes"u8);
-            writer.WriteNumberValue(TotalSize);
-            writer.WritePropertyName("purpose"u8);
-            writer.WriteStringValue(Purpose.ToString());
-            writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status.ToString());
-            writer.WritePropertyName("expires_at"u8);
-            writer.WriteNumberValue(ExpiresAt, "U");
-            if (Optional.IsDefined(Object))
+            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("filename") != true)
+            {
+                writer.WritePropertyName("filename"u8);
+                writer.WriteStringValue(Filename);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("bytes") != true)
+            {
+                writer.WritePropertyName("bytes"u8);
+                writer.WriteNumberValue(TotalSize);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("purpose") != true)
+            {
+                writer.WritePropertyName("purpose"u8);
+                writer.WriteStringValue(Purpose.ToString());
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("status") != true)
+            {
+                writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("expires_at") != true)
+            {
+                writer.WritePropertyName("expires_at"u8);
+                writer.WriteNumberValue(ExpiresAt, "U");
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true && Optional.IsDefined(Object))
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.Value.ToString());
             }
-            if (Optional.IsDefined(File))
+            if (SerializedAdditionalRawData?.ContainsKey("file") != true && Optional.IsDefined(File))
             {
                 if (File != null)
                 {
@@ -52,10 +73,14 @@ namespace OpenAI.Files
                     writer.WriteNull("file");
                 }
             }
-            if (true && _serializedAdditionalRawData != null)
+            if (SerializedAdditionalRawData != null)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                foreach (var item in SerializedAdditionalRawData)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
@@ -157,8 +182,9 @@ namespace OpenAI.Files
                     file = OpenAIFileInfo.DeserializeOpenAIFileInfo(property.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

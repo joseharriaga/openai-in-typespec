@@ -7,8 +7,8 @@ namespace AzureOpenAI;
 model MessageContentTextAnnotationsBingSearchUrlCitation
   extends OpenAI.MessageContentTextObjectAnnotation {
   @doc("""
-  Always `url_citation`.
-  """)
+    Always `url_citation`.
+    """)
   type: "url_citation";
 
   /** The text in the message content that needs to be replaced. */
@@ -32,8 +32,8 @@ model MessageDeltaContentTextAnnotationsBingSearchUrlCitation
   index: int32;
 
   @doc("""
-  Always `url_citation`.
-  """)
+    Always `url_citation`.
+    """)
   type: "url_citation";
 
   /** The text in the message content that needs to be replaced. */

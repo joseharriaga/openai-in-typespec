@@ -40,8 +40,7 @@ namespace Azure.AI.OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalBingSearchToolDefinitionBrowser"/>. </summary>
         /// <param name="bingResourceId"> The resource ID of the Bing Search resource to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="bingResourceId"/> is null. </exception>
@@ -58,7 +57,7 @@ namespace Azure.AI.OpenAI.Assistants
         internal InternalBingSearchToolDefinitionBrowser(string bingResourceId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             BingResourceId = bingResourceId;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalBingSearchToolDefinitionBrowser"/> for deserialization. </summary>

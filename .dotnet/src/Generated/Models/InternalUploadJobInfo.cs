@@ -9,8 +9,7 @@ namespace OpenAI.Files
 {
     internal partial class InternalUploadJobInfo
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalUploadJobInfo(string id, DateTimeOffset createdAt, string filename, long totalSize, InternalCreateUploadRequestPurpose purpose, InternalUploadStatus status, DateTimeOffset expiresAt)
         {
             Argument.AssertNotNull(id, nameof(id));
@@ -36,7 +35,7 @@ namespace OpenAI.Files
             ExpiresAt = expiresAt;
             Object = @object;
             File = file;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalUploadJobInfo()

@@ -41,8 +41,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="AzureChatRetrievedDocument"/>. </summary>
         /// <param name="content"> The content of the citation. </param>
         /// <param name="searchQueries"> The search queries executed to retrieve documents. </param>
@@ -82,7 +81,7 @@ namespace Azure.AI.OpenAI.Chat
             OriginalSearchScore = originalSearchScore;
             RerankScore = rerankScore;
             FilterReason = filterReason;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureChatRetrievedDocument"/> for deserialization. </summary>

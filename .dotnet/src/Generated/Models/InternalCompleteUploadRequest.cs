@@ -10,8 +10,7 @@ namespace OpenAI.Files
 {
     internal partial class InternalCompleteUploadRequest
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalCompleteUploadRequest(IEnumerable<string> partIds)
         {
             Argument.AssertNotNull(partIds, nameof(partIds));
@@ -23,7 +22,7 @@ namespace OpenAI.Files
         {
             PartIds = partIds;
             Md5 = md5;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalCompleteUploadRequest()

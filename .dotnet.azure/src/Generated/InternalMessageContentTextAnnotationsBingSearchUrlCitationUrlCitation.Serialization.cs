@@ -21,14 +21,24 @@ namespace Azure.AI.OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("url"u8);
-            writer.WriteStringValue(Url.AbsoluteUri);
-            writer.WritePropertyName("title"u8);
-            writer.WriteStringValue(Title);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (SerializedAdditionalRawData?.ContainsKey("url") != true)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("url"u8);
+                writer.WriteStringValue(Url.AbsoluteUri);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("title") != true)
+            {
+                writer.WritePropertyName("title"u8);
+                writer.WriteStringValue(Title);
+            }
+            if (SerializedAdditionalRawData != null)
+            {
+                foreach (var item in SerializedAdditionalRawData)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
@@ -81,6 +91,7 @@ namespace Azure.AI.OpenAI.Assistants
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

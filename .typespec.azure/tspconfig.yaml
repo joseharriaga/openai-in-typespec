@@ -14,3 +14,4 @@ options:
     single-top-level-client: true
     new-project: false
     flavor: "unbranded"
+    enable-internal-raw-data: true

@@ -10,8 +10,7 @@ namespace OpenAI.Files
 {
     internal partial class InternalAddUploadPartRequest
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalAddUploadPartRequest(Stream data)
         {
             Argument.AssertNotNull(data, nameof(data));
@@ -22,7 +21,7 @@ namespace OpenAI.Files
         internal InternalAddUploadPartRequest(Stream data, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Data = data;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalAddUploadPartRequest()

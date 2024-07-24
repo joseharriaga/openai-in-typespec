@@ -21,20 +21,39 @@ namespace Azure.AI.OpenAI.Assistants
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("text"u8);
-            writer.WriteStringValue(Text);
-            writer.WritePropertyName("url_citation"u8);
-            writer.WriteObjectValue(UrlCitation, options);
-            writer.WritePropertyName("start_index"u8);
-            writer.WriteNumberValue(StartIndex);
-            writer.WritePropertyName("end_index"u8);
-            writer.WriteNumberValue(EndIndex);
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
-            if (options.Format != "W" && _serializedAdditionalRawData != null)
+            if (SerializedAdditionalRawData?.ContainsKey("text") != true)
             {
-                foreach (var item in _serializedAdditionalRawData)
+                writer.WritePropertyName("text"u8);
+                writer.WriteStringValue(Text);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("url_citation") != true)
+            {
+                writer.WritePropertyName("url_citation"u8);
+                writer.WriteObjectValue(UrlCitation, options);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("start_index") != true)
+            {
+                writer.WritePropertyName("start_index"u8);
+                writer.WriteNumberValue(StartIndex);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("end_index") != true)
+            {
+                writer.WritePropertyName("end_index"u8);
+                writer.WriteNumberValue(EndIndex);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type);
+            }
+            if (SerializedAdditionalRawData != null)
+            {
+                foreach (var item in SerializedAdditionalRawData)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(item.Value);
@@ -105,6 +124,7 @@ namespace Azure.AI.OpenAI.Assistants
                 }
                 if (options.Format != "W")
                 {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }

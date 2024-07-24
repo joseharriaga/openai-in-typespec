@@ -125,14 +125,14 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="AsyncResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="AsyncCollectionResult{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
     /// <see cref="IAsyncEnumerable{T}"/> interface.
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
+    public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(messages, nameof(messages));
 
@@ -151,12 +151,12 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="AsyncResultCollection{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
+    /// <see cref="AsyncCollectionResult{T}"/> can be enumerated over using the <c>await foreach</c> pattern using the
     /// <see cref="IAsyncEnumerable{T}"/> interface.
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(params ChatMessage[] messages)
+    public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(params ChatMessage[] messages)
         => CompleteChatStreamingAsync(messages, default(ChatCompletionOptions));
 
     /// <summary>
@@ -164,14 +164,14 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
+    /// <see cref="CollectionResult{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
     /// <see cref="IEnumerable{T}"/> interface.
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <param name="options"> Additional options for the chat completion request. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
+    public virtual CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(messages, nameof(messages));
 
@@ -188,12 +188,12 @@ public partial class ChatClient
     /// history.
     /// </summary>
     /// <remarks>
-    /// <see cref="ResultCollection{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
+    /// <see cref="CollectionResult{T}"/> can be enumerated over using the <c>foreach</c> pattern using the
     /// <see cref="IEnumerable{T}"/> interface.
     /// </remarks>
     /// <param name="messages"> The messages to provide as input for chat completion. </param>
     /// <returns> A streaming result with incremental chat completion updates. </returns>
-    public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages)
+    public virtual CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages)
         => CompleteChatStreaming(messages, default(ChatCompletionOptions));
 
     private void CreateChatCompletionOptions(IEnumerable<ChatMessage> messages, ref ChatCompletionOptions options, bool stream = false)

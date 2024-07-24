@@ -8,3 +8,4 @@ options:
     emitter-output-dir: "{project-root}/../.dotnet/src"
     unreferenced-types-handling: keepAll
     disable-xml-docs: true
+    enable-internal-raw-data: true

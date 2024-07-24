@@ -52,7 +52,7 @@ public static partial class TextAnnotationUpdateExtensions
         GetInternalUrlCitationFrom(TextAnnotationUpdate baseAnnotation)
     {
         return baseAnnotation?._internalAnnotation?
-            ._serializedAdditionalRawData?.TryGetValue("url_citation", out BinaryData citationData) == true
+            .SerializedAdditionalRawData?.TryGetValue("url_citation", out BinaryData citationData) == true
                 ? ModelReaderWriter.Read<InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitationUrlCitation>(citationData)
                 : null;
     }

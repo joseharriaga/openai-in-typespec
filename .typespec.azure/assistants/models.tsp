@@ -7,14 +7,14 @@ namespace AzureOpenAI;
 
 model BingSearchToolDefinition extends OpenAI.AssistantToolDefinition {
   @doc("""
-  The type of tool being defined: `browser`
-  """)
+    The type of tool being defined: `browser`
+    """)
   type: "browser";
 
   browser?: {
     @doc("""
-    The resource ID of the Bing Search resource to use.
-    """)
+      The resource ID of the Bing Search resource to use.
+      """)
     bing_resource_id: string;
   };
 }

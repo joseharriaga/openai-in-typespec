@@ -40,8 +40,7 @@ namespace Azure.AI.OpenAI.Assistants
         /// </list>
         /// </para>
         /// </summary>
-        private IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitationUrlCitation"/>. </summary>
         internal InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitationUrlCitation()
         {
@@ -55,7 +54,7 @@ namespace Azure.AI.OpenAI.Assistants
         {
             Url = url;
             Title = title;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> Gets the url. </summary>

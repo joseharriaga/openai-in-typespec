@@ -10,7 +10,7 @@ public partial class RunStepToolCall
         => AsCodeInterpreter?.Id
         ?? AsFunction?.Id
         ?? AsFileSearch?.Id
-        ?? (_serializedAdditionalRawData?.TryGetValue("id", out BinaryData idData) == true
+        ?? (SerializedAdditionalRawData?.TryGetValue("id", out BinaryData idData) == true
             ? idData.ToString()
             : null);
 

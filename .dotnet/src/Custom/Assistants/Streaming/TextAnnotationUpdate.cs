@@ -10,7 +10,7 @@ public class TextAnnotationUpdate
     public int ContentIndex
         => _fileSearchCitation?.Index
         ?? _codeCitation?.Index
-        ?? (_internalAnnotation?._serializedAdditionalRawData.TryGetValue("index", out BinaryData indexData) == true
+        ?? (_internalAnnotation?.SerializedAdditionalRawData.TryGetValue("index", out BinaryData indexData) == true
             ? int.Parse(indexData.ToString())
             : -1);
 
@@ -20,7 +20,7 @@ public class TextAnnotationUpdate
     public int? StartIndex
         => _fileSearchCitation?.StartIndex
         ?? _codeCitation?.StartIndex
-        ?? (_internalAnnotation?._serializedAdditionalRawData.TryGetValue("start_index", out BinaryData indexData) == true
+        ?? (_internalAnnotation?.SerializedAdditionalRawData.TryGetValue("start_index", out BinaryData indexData) == true
             ? int.Parse(indexData.ToString())
             : null);
 
@@ -30,7 +30,7 @@ public class TextAnnotationUpdate
     public int? EndIndex
         => _fileSearchCitation?.EndIndex
         ?? _codeCitation?.EndIndex
-        ?? (_internalAnnotation?._serializedAdditionalRawData.TryGetValue("start_index", out BinaryData indexData) == true
+        ?? (_internalAnnotation?.SerializedAdditionalRawData.TryGetValue("start_index", out BinaryData indexData) == true
             ? int.Parse(indexData.ToString())
             : null);
 
@@ -40,7 +40,7 @@ public class TextAnnotationUpdate
     public string TextToReplace
         => _fileSearchCitation?.Text
         ?? _codeCitation?.Text
-        ?? (_internalAnnotation?._serializedAdditionalRawData.TryGetValue("text", out BinaryData textData) == true
+        ?? (_internalAnnotation?.SerializedAdditionalRawData.TryGetValue("text", out BinaryData textData) == true
             ? textData.ToString()
             : null);
 

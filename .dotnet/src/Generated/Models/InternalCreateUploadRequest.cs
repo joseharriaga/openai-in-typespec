@@ -9,8 +9,7 @@ namespace OpenAI.Files
 {
     internal partial class InternalCreateUploadRequest
     {
-        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
-
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalCreateUploadRequest(string filename, InternalCreateUploadRequestPurpose purpose, int bytes, string mimeType)
         {
             Argument.AssertNotNull(filename, nameof(filename));
@@ -28,7 +27,7 @@ namespace OpenAI.Files
             Purpose = purpose;
             Bytes = bytes;
             MimeType = mimeType;
-            _serializedAdditionalRawData = serializedAdditionalRawData;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalCreateUploadRequest()

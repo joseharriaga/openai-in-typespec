@@ -3,10 +3,14 @@ import "../common";
 
 namespace AzureOpenAI;
 
+
+// using OpenAPI;
+
 /**
  * The extended top-level chat completion response model for the Azure OpenAI service.
  * This model adds Responsible AI content filter annotations for prompt input.
  */
+// @extension("x-inherits-from-model", "OpenAI.CreateChatCompletionResponse")
 model AzureCreateChatCompletionResponse
   extends OmitProperties<OpenAI.CreateChatCompletionResponse, "choices" | "model"> {
   /**

@@ -12,7 +12,7 @@ namespace AzureOpenAI;
  */
 // @extension("x-inherits-from-model", "OpenAI.CreateChatCompletionResponse")
 model AzureCreateChatCompletionResponse
-  extends OmitProperties<OpenAI.CreateChatCompletionResponse, "choices" | "model"> {
+  extends OmitProperties<OpenAI.CreateChatCompletionResponse, "choices"> {
   /**
    * The Responsible AI content filter annotations associated with prompt inputs into chat completions.
    */

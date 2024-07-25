@@ -880,6 +880,7 @@ components:
           required:
             - id
             - created
+            - model
             - object
           properties:
             id:
@@ -889,6 +890,9 @@ components:
               type: integer
               format: unixtime
               description: The Unix timestamp (in seconds) of when the chat completion was created.
+            model:
+              type: string
+              description: The model used for the chat completion.
             system_fingerprint:
               type: string
               description: |-

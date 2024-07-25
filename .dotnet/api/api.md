@@ -1,189 +1,216 @@
 ```csharp
 namespace OpenAI {
-    public class OpenAIClient {
-        public OpenAIClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public OpenAIClient(OpenAIClientOptions options = null);
-        protected OpenAIClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
-        protected OpenAIClient();
-        public virtual ClientPipeline Pipeline { get; }
-        protected Uri Endpoint { get; }
-        internal [Experimental("OPENAI001")]
-        public virtual AssistantClient GetAssistantClient();
-        public virtual AudioClient GetAudioClient(string model);
-        public virtual BatchClient GetBatchClient();
-        public virtual ChatClient GetChatClient(string model);
-        public virtual EmbeddingClient GetEmbeddingClient(string model);
-        public virtual FileClient GetFileClient();
-        public virtual FineTuningClient GetFineTuningClient();
-        public virtual ImageClient GetImageClient(string model);
-        public virtual ModelClient GetModelClient();
-        public virtual ModerationClient GetModerationClient(string model);
-        internal [Experimental("OPENAI001")]
-        public virtual VectorStoreClient GetVectorStoreClient();
-    }
-    public class OpenAIClientOptions : ClientPipelineOptions {
-        public OpenAIClientOptions();
-        public string ApplicationId { get; init; }
-        public Uri Endpoint { get; init; }
-    }
-    public readonly struct ListOrder : IEquatable<ListOrder> {
+    public sealed class ListOrder {
         public ListOrder(string value);
         public static ListOrder NewestFirst { get; }
         public static ListOrder OldestFirst { get; }
-        public static bool operator ==(ListOrder left, ListOrder right);
-        public static implicit operator ListOrder(string value);
-        public static bool operator !=(ListOrder left, ListOrder right);
         public bool Equals(ListOrder other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(ListOrder left, ListOrder right);
+        public static implicit operator ListOrder(string value);
+        public static bool operator !=(ListOrder left, ListOrder right);
         public override string ToString();
+    }
+    public class OpenAIClient {
+        protected OpenAIClient();
+        public OpenAIClient(OpenAIClientOptions options = null);
+        public OpenAIClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        protected OpenAIClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
+        protected Uri Endpoint { get; }
+        public virtual ClientPipeline Pipeline { get; }
+        public AssistantClient GetAssistantClient();
+        public AudioClient GetAudioClient(string model);
+        public BatchClient GetBatchClient();
+        public ChatClient GetChatClient(string model);
+        public EmbeddingClient GetEmbeddingClient(string model);
+        public FileClient GetFileClient();
+        public FineTuningClient GetFineTuningClient();
+        public ImageClient GetImageClient(string model);
+        public ModelClient GetModelClient();
+        public ModerationClient GetModerationClient(string model);
+        public VectorStoreClient GetVectorStoreClient();
+    }
+    public class OpenAIClientOptions {
+        public OpenAIClientOptions();
+        public string ApplicationId { get; init; }
+        public Uri Endpoint { get; init; }
+        public string OrganizationId { get; init; }
+        public string ProjectId { get; init; }
     }
 }
 namespace OpenAI.Assistants {
-    internal [Experimental("OPENAI001")]
+    public class Assistant {
+        public DateTimeOffset CreatedAt { get; }
+        public string Description { get; }
+        public string Id { get; }
+        public string Instructions { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public string Model { get; }
+        public string Name { get; }
+        public float? NucleusSamplingFactor { get; }
+        public AssistantResponseFormat ResponseFormat { get; }
+        public float? Temperature { get; }
+        public ToolResources ToolResources { get; }
+        public IReadOnlyList<ToolDefinition> Tools { get; }
+    }
     public class AssistantClient {
         protected AssistantClient();
         public AssistantClient(OpenAIClientOptions options = null);
         public AssistantClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
-        protected AssistantClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
+        protected internal AssistantClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
+        public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<ThreadRun> CancelRun(ThreadRun run);
         public virtual ClientResult CancelRun(string threadId, string runId, RequestOptions options);
-        public virtual ClientResult<ThreadRun> CancelRun(string threadId, string runId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ThreadRun> CancelRun(string threadId, string runId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(ThreadRun run);
         public virtual Task<ClientResult> CancelRunAsync(string threadId, string runId, RequestOptions options);
-        public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<Assistant> CreateAssistant(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(string threadId, string runId, CancellationToken cancellationToken = null);
         public virtual ClientResult CreateAssistant(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<Assistant>> CreateAssistantAsync(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<Assistant> CreateAssistant(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> CreateAssistantAsync(BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult<Assistant>> CreateAssistantAsync(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = null);
         public virtual ClientResult<ThreadMessage> CreateMessage(AssistantThread thread, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
-        public virtual ClientResult<ThreadMessage> CreateMessage(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ThreadMessage> CreateMessage(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = null);
         public virtual ClientResult CreateMessage(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(AssistantThread thread, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
-        public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> CreateMessageAsync(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateRun(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual ClientResult<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateRun(string threadId, BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateRunAsync(string threadId, BinaryContent content, RequestOptions options = null);
-        public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
+        public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
+        public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null, CancellationToken cancellationToken = null);
         public virtual ClientResult CreateThread(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateThreadAndRun(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual ClientResult<ThreadRun> CreateThreadAndRun(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual ClientResult CreateThreadAndRun(BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult<ThreadRun> CreateThreadAndRun(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateThreadAndRunAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = null);
+        public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
+        public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = null);
+        public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
+        public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> CreateThreadAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<bool> DeleteAssistant(Assistant assistant);
         public virtual ClientResult DeleteAssistant(string assistantId, RequestOptions options);
-        public virtual ClientResult<bool> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<bool> DeleteAssistant(string assistantId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<bool>> DeleteAssistantAsync(Assistant assistant);
         public virtual Task<ClientResult> DeleteAssistantAsync(string assistantId, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
-
+        public virtual Task<ClientResult<bool>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = null);
         public virtual ClientResult<bool> DeleteMessage(ThreadMessage message);
         public virtual ClientResult DeleteMessage(string threadId, string messageId, RequestOptions options);
-        public virtual ClientResult<bool> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<bool> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<bool>> DeleteMessageAsync(ThreadMessage message);
         public virtual Task<ClientResult> DeleteMessageAsync(string threadId, string messageId, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<bool>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = null);
         public virtual ClientResult<bool> DeleteThread(AssistantThread thread);
         public virtual ClientResult DeleteThread(string threadId, RequestOptions options);
-        public virtual ClientResult<bool> DeleteThread(string threadId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<bool> DeleteThread(string threadId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<bool>> DeleteThreadAsync(AssistantThread thread);
         public virtual Task<ClientResult> DeleteThreadAsync(string threadId, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<bool>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = null);
         public virtual ClientResult GetAssistant(string assistantId, RequestOptions options);
-        public virtual ClientResult<Assistant> GetAssistant(string assistantId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<Assistant> GetAssistant(string assistantId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> GetAssistantAsync(string assistantId, RequestOptions options);
-        public virtual Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
-        public virtual ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId, CancellationToken cancellationToken = null);
+        public virtual PageCollection<Assistant> GetAssistants(AssistantCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual PageCollection<Assistant> GetAssistants(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual IEnumerable<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<Assistant> GetAssistantsAsync(AssistantCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual AsyncPageCollection<Assistant> GetAssistantsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual IAsyncEnumerable<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<ThreadMessage> GetMessage(ThreadMessage message);
         public virtual ClientResult GetMessage(string threadId, string messageId, RequestOptions options);
-        public virtual ClientResult<ThreadMessage> GetMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ThreadMessage> GetMessage(string threadId, string messageId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(ThreadMessage message);
         public virtual Task<ClientResult> GetMessageAsync(string threadId, string messageId, RequestOptions options);
-        public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<ThreadMessage> GetMessages(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual ClientResult GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual PageableCollection<ThreadMessage> GetMessages(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual Task<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = null);
+        public virtual PageCollection<ThreadMessage> GetMessages(AssistantThread thread, MessageCollectionOptions options = null);
+        public virtual PageCollection<ThreadMessage> GetMessages(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual PageCollection<ThreadMessage> GetMessages(string threadId, MessageCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual IEnumerable<ClientResult> GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<ThreadMessage> GetMessagesAsync(AssistantThread thread, MessageCollectionOptions options = null);
+        public virtual AsyncPageCollection<ThreadMessage> GetMessagesAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual AsyncPageCollection<ThreadMessage> GetMessagesAsync(string threadId, MessageCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual IAsyncEnumerable<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<ThreadRun> GetRun(ThreadRun run);
         public virtual ClientResult GetRun(string threadId, string runId, RequestOptions options);
-        public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<ThreadRun>> GetRunAsync(ThreadRun run);
         public virtual Task<ClientResult> GetRunAsync(string threadId, string runId, RequestOptions options);
-        public virtual Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<ThreadRun> GetRuns(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual ClientResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual PageableCollection<ThreadRun> GetRuns(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = null);
+        public virtual PageCollection<ThreadRun> GetRuns(AssistantThread thread, RunCollectionOptions options = null);
+        public virtual PageCollection<ThreadRun> GetRuns(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual PageCollection<ThreadRun> GetRuns(string threadId, RunCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual IEnumerable<ClientResult> GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<ThreadRun> GetRunsAsync(AssistantThread thread, RunCollectionOptions options = null);
+        public virtual AsyncPageCollection<ThreadRun> GetRunsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual AsyncPageCollection<ThreadRun> GetRunsAsync(string threadId, RunCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual IAsyncEnumerable<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult GetRunStep(string threadId, string runId, string stepId, RequestOptions options);
-        public virtual ClientResult<RunStep> GetRunStep(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<RunStep> GetRunStep(string threadId, string runId, string stepId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> GetRunStepAsync(string threadId, string runId, string stepId, RequestOptions options);
-        public virtual Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<RunStep> GetRunSteps(ThreadRun run, ListOrder? resultOrder = null);
-        public virtual ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual PageableCollection<RunStep> GetRunSteps(string threadId, string runId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(ThreadRun run, ListOrder? resultOrder = null);
-        public virtual Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(string threadId, string runId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = null);
+        public virtual PageCollection<RunStep> GetRunSteps(ThreadRun run, RunStepCollectionOptions options = null);
+        public virtual PageCollection<RunStep> GetRunSteps(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual PageCollection<RunStep> GetRunSteps(string threadId, string runId, RunStepCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual IEnumerable<ClientResult> GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<RunStep> GetRunStepsAsync(ThreadRun run, RunStepCollectionOptions options = null);
+        public virtual AsyncPageCollection<RunStep> GetRunStepsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual AsyncPageCollection<RunStep> GetRunStepsAsync(string threadId, string runId, RunStepCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual IAsyncEnumerable<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<AssistantThread> GetThread(AssistantThread thread);
         public virtual ClientResult GetThread(string threadId, RequestOptions options);
-        public virtual ClientResult<AssistantThread> GetThread(string threadId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<AssistantThread> GetThread(string threadId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(AssistantThread thread);
         public virtual Task<ClientResult> GetThreadAsync(string threadId, RequestOptions options);
-        public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(string threadId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(string threadId, CancellationToken cancellationToken = null);
         public virtual ClientResult<Assistant> ModifyAssistant(Assistant assistant, AssistantModificationOptions options);
-        public virtual ClientResult<Assistant> ModifyAssistant(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = default);
+        public virtual ClientResult<Assistant> ModifyAssistant(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = null);
         public virtual ClientResult ModifyAssistant(string assistantId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(Assistant assistant, AssistantModificationOptions options);
-        public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> ModifyAssistantAsync(string assistantId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadMessage> ModifyMessage(ThreadMessage message, MessageModificationOptions options);
-        public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = null);
         public virtual ClientResult ModifyMessage(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(ThreadMessage message, MessageModificationOptions options);
-        public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> ModifyMessageAsync(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult ModifyRun(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult> ModifyRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<AssistantThread> ModifyThread(AssistantThread thread, ThreadModificationOptions options);
-        public virtual ClientResult<AssistantThread> ModifyThread(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = default);
+        public virtual ClientResult<AssistantThread> ModifyThread(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = null);
         public virtual ClientResult ModifyThread(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(AssistantThread thread, ThreadModificationOptions options);
-        public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> ModifyThreadAsync(string threadId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
         public virtual ClientResult SubmitToolOutputsToRun(string threadId, string runId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
         public virtual Task<ClientResult> SubmitToolOutputsToRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
-        public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
-        public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = null);
+        public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
+        public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = null);
+        public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
+        public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = null);
+    }
+    public class AssistantCollectionOptions {
+        public AssistantCollectionOptions();
+        public string AfterId { get; init; }
+        public string BeforeId { get; init; }
+        public ListOrder? Order { get; init; }
+        public int? PageSize { get; init; }
     }
     public class AssistantCreationOptions {
         public AssistantCreationOptions();
@@ -210,73 +237,17 @@ namespace OpenAI.Assistants {
         public float? Temperature { get; init; }
         public ToolResources ToolResources { get; init; }
     }
-    public class MessageCreationOptions {
-        public MessageCreationOptions();
-        public IList<MessageCreationAttachment> Attachments { get; }
-        public IDictionary<string, string> Metadata { get; }
-        public MessageRole Role { get; }
-    }
-    public class MessageModificationOptions {
-        public MessageModificationOptions();
-        public IDictionary<string, string> Metadata { get; }
-    }
-    public class RunCreationOptions {
-        public RunCreationOptions();
-        public string AdditionalInstructions { get; init; }
-        public IList<ThreadInitializationMessage> AdditionalMessages { get; }
-        public string InstructionsOverride { get; init; }
-        public int? MaxCompletionTokens { get; init; }
-        public int? MaxPromptTokens { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string ModelOverride { get; init; }
-        public float? NucleusSamplingFactor { get; init; }
-        public bool? ParallelToolCallsEnabled { get; init; }
-        public AssistantResponseFormat ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
-        public ToolConstraint ToolConstraint { get; init; }
-        public IList<ToolDefinition> ToolsOverride { get; }
-        public RunTruncationStrategy TruncationStrategy { get; init; }
-    }
-    public class RunModificationOptions {
-        public RunModificationOptions();
-        public IDictionary<string, string> Metadata { get; }
-    }
-    public class ThreadCreationOptions {
-        public ThreadCreationOptions();
-        public IList<ThreadInitializationMessage> InitialMessages { get; }
-        public IDictionary<string, string> Metadata { get; }
-        public ToolResources ToolResources { get; init; }
-    }
-    public class ThreadModificationOptions {
-        public ThreadModificationOptions();
-        public IDictionary<string, string> Metadata { get; }
-        public ToolResources ToolResources { get; init; }
-    }
-    public class Assistant {
-        public DateTimeOffset CreatedAt { get; }
-        public string Description { get; }
-        public string Id { get; }
-        public string Instructions { get; }
-        public IReadOnlyDictionary<string, string> Metadata { get; }
-        public string Model { get; }
-        public string Name { get; }
-        public float? NucleusSamplingFactor { get; }
-        public AssistantResponseFormat ResponseFormat { get; }
-        public float? Temperature { get; }
-        public ToolResources ToolResources { get; }
-        public IReadOnlyList<ToolDefinition> Tools { get; }
-    }
     public class AssistantResponseFormat {
         protected AssistantResponseFormat();
         public static AssistantResponseFormat Auto { get; }
         public static AssistantResponseFormat JsonObject { get; }
         public static AssistantResponseFormat Text { get; }
-        public static bool operator ==(AssistantResponseFormat left, AssistantResponseFormat right);
-        public static implicit operator AssistantResponseFormat(string value);
-        public static bool operator !=(AssistantResponseFormat left, AssistantResponseFormat right);
         public bool Equals(AssistantResponseFormat other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(AssistantResponseFormat left, AssistantResponseFormat right);
+        public static implicit operator AssistantResponseFormat(string value);
+        public static bool operator !=(AssistantResponseFormat left, AssistantResponseFormat right);
         public override string ToString();
     }
     public class AssistantThread {
@@ -286,7 +257,6 @@ namespace OpenAI.Assistants {
         public ToolResources ToolResources { get; }
     }
     public class CodeInterpreterToolDefinition : ToolDefinition {
-        public CodeInterpreterToolDefinition();
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class CodeInterpreterToolResources {
@@ -294,7 +264,6 @@ namespace OpenAI.Assistants {
         public IList<string> FileIds { get; init; }
     }
     public class FileSearchToolDefinition : ToolDefinition {
-        public FileSearchToolDefinition();
         public int? MaxResults { get; init; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
@@ -304,13 +273,19 @@ namespace OpenAI.Assistants {
         public IList<string> VectorStoreIds { get; init; }
     }
     public class FunctionToolDefinition : ToolDefinition {
-        internal [SetsRequiredMembers]
-        public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null);
         public FunctionToolDefinition();
+        public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null);
         public string Description { get; init; }
         public required string FunctionName { get; init; }
         public BinaryData Parameters { get; init; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+    }
+    public class MessageCollectionOptions {
+        public MessageCollectionOptions();
+        public string AfterId { get; init; }
+        public string BeforeId { get; init; }
+        public ListOrder? Order { get; init; }
+        public int? PageSize { get; init; }
     }
     public abstract class MessageContent {
         protected MessageContent();
@@ -339,45 +314,56 @@ namespace OpenAI.Assistants {
         public string FileId { get; }
         public IReadOnlyList<ToolDefinition> Tools { get; }
     }
+    public class MessageCreationOptions {
+        public MessageCreationOptions();
+        public IList<MessageCreationAttachment> Attachments { get; }
+        public IDictionary<string, string> Metadata { get; }
+    }
     public class MessageFailureDetails {
         public MessageFailureReason Reason { get; }
     }
-    public readonly struct MessageFailureReason : IEquatable<MessageFailureReason> {
+    public sealed class MessageFailureReason {
         public MessageFailureReason(string value);
         public static MessageFailureReason ContentFilter { get; }
         public static MessageFailureReason MaxTokens { get; }
         public static MessageFailureReason RunCancelled { get; }
         public static MessageFailureReason RunExpired { get; }
         public static MessageFailureReason RunFailed { get; }
-        public static bool operator ==(MessageFailureReason left, MessageFailureReason right);
-        public static implicit operator MessageFailureReason(string value);
-        public static bool operator !=(MessageFailureReason left, MessageFailureReason right);
         public bool Equals(MessageFailureReason other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(MessageFailureReason left, MessageFailureReason right);
+        public static implicit operator MessageFailureReason(string value);
+        public static bool operator !=(MessageFailureReason left, MessageFailureReason right);
         public override string ToString();
     }
-    public readonly struct MessageStatus : IEquatable<MessageStatus> {
+    public sealed class MessageImageDetail {
+        public const MessageImageDetail Auto = 0;
+        public const MessageImageDetail High = 2;
+        public const MessageImageDetail Low = 1;
+    }
+    public class MessageModificationOptions {
+        public MessageModificationOptions();
+        public IDictionary<string, string> Metadata { get; }
+    }
+    public sealed class MessageRole {
+        public const MessageRole Assistant = 1;
+        public const MessageRole User = 0;
+    }
+    public sealed class MessageStatus {
         public MessageStatus(string value);
         public static MessageStatus Completed { get; }
         public static MessageStatus Incomplete { get; }
         public static MessageStatus InProgress { get; }
-        public static bool operator ==(MessageStatus left, MessageStatus right);
-        public static implicit operator MessageStatus(string value);
-        public static bool operator !=(MessageStatus left, MessageStatus right);
         public bool Equals(MessageStatus other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(MessageStatus left, MessageStatus right);
+        public static implicit operator MessageStatus(string value);
+        public static bool operator !=(MessageStatus left, MessageStatus right);
         public override string ToString();
     }
     public class MessageStatusUpdate : StreamingUpdate<ThreadMessage> {
-    }
-    public class MessageTextContentAnnotation {
-        public int EndIndex { get; }
-        public string InputFileId { get; }
-        public string OutputFileId { get; }
-        public int StartIndex { get; }
-        public string TextToReplace { get; }
     }
     public abstract class RequiredAction {
         protected RequiredAction();
@@ -385,45 +371,73 @@ namespace OpenAI.Assistants {
         public string FunctionName { get; }
         public string ToolCallId { get; }
     }
-    public class RequiredActionUpdate : StreamingUpdate {
+    public class RequiredActionUpdate : RunUpdate {
         public string FunctionArguments { get; }
         public string FunctionName { get; }
         public string ToolCallId { get; }
         public ThreadRun GetThreadRun();
     }
+    public class RunCollectionOptions {
+        public RunCollectionOptions();
+        public string AfterId { get; init; }
+        public string BeforeId { get; init; }
+        public ListOrder? Order { get; init; }
+        public int? PageSize { get; init; }
+    }
+    public class RunCreationOptions {
+        public RunCreationOptions();
+        public string AdditionalInstructions { get; init; }
+        public IList<ThreadInitializationMessage> AdditionalMessages { get; }
+        public string InstructionsOverride { get; init; }
+        public int? MaxCompletionTokens { get; init; }
+        public int? MaxPromptTokens { get; init; }
+        public IDictionary<string, string> Metadata { get; }
+        public string ModelOverride { get; init; }
+        public float? NucleusSamplingFactor { get; init; }
+        public bool? ParallelToolCallsEnabled { get; init; }
+        public AssistantResponseFormat ResponseFormat { get; init; }
+        public float? Temperature { get; init; }
+        public ToolConstraint ToolConstraint { get; init; }
+        public IList<ToolDefinition> ToolsOverride { get; }
+        public RunTruncationStrategy TruncationStrategy { get; init; }
+    }
     public class RunError {
         public RunErrorCode Code { get; }
         public string Message { get; }
     }
-    public readonly struct RunErrorCode : IEquatable<RunErrorCode> {
+    public sealed class RunErrorCode {
         public RunErrorCode(string value);
         public static RunErrorCode InvalidPrompt { get; }
         public static RunErrorCode RateLimitExceeded { get; }
         public static RunErrorCode ServerError { get; }
-        public static bool operator ==(RunErrorCode left, RunErrorCode right);
-        public static implicit operator RunErrorCode(string value);
-        public static bool operator !=(RunErrorCode left, RunErrorCode right);
         public bool Equals(RunErrorCode other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(RunErrorCode left, RunErrorCode right);
+        public static implicit operator RunErrorCode(string value);
+        public static bool operator !=(RunErrorCode left, RunErrorCode right);
         public override string ToString();
     }
     public class RunIncompleteDetails {
         public RunIncompleteReason? Reason { get; }
     }
-    public readonly struct RunIncompleteReason : IEquatable<RunIncompleteReason> {
+    public sealed class RunIncompleteReason {
         public RunIncompleteReason(string value);
         public static RunIncompleteReason MaxCompletionTokens { get; }
         public static RunIncompleteReason MaxPromptTokens { get; }
-        public static bool operator ==(RunIncompleteReason left, RunIncompleteReason right);
-        public static implicit operator RunIncompleteReason(string value);
-        public static bool operator !=(RunIncompleteReason left, RunIncompleteReason right);
         public bool Equals(RunIncompleteReason other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(RunIncompleteReason left, RunIncompleteReason right);
+        public static implicit operator RunIncompleteReason(string value);
+        public static bool operator !=(RunIncompleteReason left, RunIncompleteReason right);
         public override string ToString();
     }
-    public readonly struct RunStatus : IEquatable<RunStatus> {
+    public class RunModificationOptions {
+        public RunModificationOptions();
+        public IDictionary<string, string> Metadata { get; }
+    }
+    public sealed class RunStatus {
         public RunStatus(string value);
         public static RunStatus Cancelled { get; }
         public static RunStatus Cancelling { get; }
@@ -435,12 +449,12 @@ namespace OpenAI.Assistants {
         public bool IsTerminal { get; }
         public static RunStatus Queued { get; }
         public static RunStatus RequiresAction { get; }
-        public static bool operator ==(RunStatus left, RunStatus right);
-        public static implicit operator RunStatus(string value);
-        public static bool operator !=(RunStatus left, RunStatus right);
         public bool Equals(RunStatus other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(RunStatus left, RunStatus right);
+        public static implicit operator RunStatus(string value);
+        public static bool operator !=(RunStatus left, RunStatus right);
         public override string ToString();
     }
     public class RunStep {
@@ -465,6 +479,13 @@ namespace OpenAI.Assistants {
         public string ImageFileId { get; }
         public string Logs { get; }
     }
+    public class RunStepCollectionOptions {
+        public RunStepCollectionOptions();
+        public string AfterId { get; init; }
+        public string BeforeId { get; init; }
+        public ListOrder? Order { get; init; }
+        public int? PageSize { get; init; }
+    }
     public abstract class RunStepDetails {
         protected RunStepDetails();
         public string CreatedMessageId { get; }
@@ -485,31 +506,31 @@ namespace OpenAI.Assistants {
         public RunStepErrorCode Code { get; }
         public string Message { get; }
     }
-    public readonly struct RunStepErrorCode : IEquatable<RunStepErrorCode> {
+    public sealed class RunStepErrorCode {
         public RunStepErrorCode(string value);
         public static RunStepErrorCode RateLimitExceeded { get; }
         public static RunStepErrorCode ServerError { get; }
-        public static bool operator ==(RunStepErrorCode left, RunStepErrorCode right);
-        public static implicit operator RunStepErrorCode(string value);
-        public static bool operator !=(RunStepErrorCode left, RunStepErrorCode right);
         public bool Equals(RunStepErrorCode other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(RunStepErrorCode left, RunStepErrorCode right);
+        public static implicit operator RunStepErrorCode(string value);
+        public static bool operator !=(RunStepErrorCode left, RunStepErrorCode right);
         public override string ToString();
     }
-    public readonly struct RunStepStatus : IEquatable<RunStepStatus> {
+    public sealed class RunStepStatus {
         public RunStepStatus(string value);
         public static RunStepStatus Cancelled { get; }
         public static RunStepStatus Completed { get; }
         public static RunStepStatus Expired { get; }
         public static RunStepStatus Failed { get; }
         public static RunStepStatus InProgress { get; }
-        public static bool operator ==(RunStepStatus left, RunStepStatus right);
-        public static implicit operator RunStepStatus(string value);
-        public static bool operator !=(RunStepStatus left, RunStepStatus right);
         public bool Equals(RunStepStatus other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(RunStepStatus left, RunStepStatus right);
+        public static implicit operator RunStepStatus(string value);
+        public static bool operator !=(RunStepStatus left, RunStepStatus right);
         public override string ToString();
     }
     public class RunStepTokenUsage {
@@ -527,16 +548,22 @@ namespace OpenAI.Assistants {
         public string ToolCallId { get; }
         public RunStepToolCallKind ToolKind { get; }
     }
-    public readonly struct RunStepType : IEquatable<RunStepType> {
+    public sealed class RunStepToolCallKind {
+        public const RunStepToolCallKind CodeInterpreter = 1;
+        public const RunStepToolCallKind FileSearch = 2;
+        public const RunStepToolCallKind Function = 3;
+        public const RunStepToolCallKind Unknown = 0;
+    }
+    public sealed class RunStepType {
         public RunStepType(string value);
         public static RunStepType MessageCreation { get; }
         public static RunStepType ToolCalls { get; }
-        public static bool operator ==(RunStepType left, RunStepType right);
-        public static implicit operator RunStepType(string value);
-        public static bool operator !=(RunStepType left, RunStepType right);
         public bool Equals(RunStepType other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(RunStepType left, RunStepType right);
+        public static implicit operator RunStepType(string value);
+        public static bool operator !=(RunStepType left, RunStepType right);
         public override string ToString();
     }
     public class RunStepUpdate : StreamingUpdate<RunStep> {
@@ -562,7 +589,35 @@ namespace OpenAI.Assistants {
     public abstract class StreamingUpdate {
         public StreamingUpdateReason UpdateKind { get; }
     }
-    public class StreamingUpdate<T> where T : class : StreamingUpdate {
+    public sealed class StreamingUpdateReason {
+        public const StreamingUpdateReason Done = 25;
+        public const StreamingUpdateReason Error = 24;
+        public const StreamingUpdateReason MessageCompleted = 22;
+        public const StreamingUpdateReason MessageCreated = 19;
+        public const StreamingUpdateReason MessageFailed = 23;
+        public const StreamingUpdateReason MessageInProgress = 20;
+        public const StreamingUpdateReason MessageUpdated = 21;
+        public const StreamingUpdateReason RunCancelled = 10;
+        public const StreamingUpdateReason RunCancelling = 9;
+        public const StreamingUpdateReason RunCompleted = 6;
+        public const StreamingUpdateReason RunCreated = 2;
+        public const StreamingUpdateReason RunExpired = 11;
+        public const StreamingUpdateReason RunFailed = 8;
+        public const StreamingUpdateReason RunIncomplete = 7;
+        public const StreamingUpdateReason RunInProgress = 4;
+        public const StreamingUpdateReason RunQueued = 3;
+        public const StreamingUpdateReason RunRequiresAction = 5;
+        public const StreamingUpdateReason RunStepCancelled = 17;
+        public const StreamingUpdateReason RunStepCompleted = 15;
+        public const StreamingUpdateReason RunStepCreated = 12;
+        public const StreamingUpdateReason RunStepExpired = 18;
+        public const StreamingUpdateReason RunStepFailed = 16;
+        public const StreamingUpdateReason RunStepInProgress = 13;
+        public const StreamingUpdateReason RunStepUpdated = 14;
+        public const StreamingUpdateReason ThreadCreated = 1;
+        public const StreamingUpdateReason Unknown = 0;
+    }
+    public class StreamingUpdate<T> : StreamingUpdate where T : class {
         public T Value { get; }
         public static implicit operator T(StreamingUpdate<T> update);
     }
@@ -581,8 +636,14 @@ namespace OpenAI.Assistants {
         public int? StartIndex { get; }
         public string TextToReplace { get; }
     }
+    public class ThreadCreationOptions {
+        public ThreadCreationOptions();
+        public IList<ThreadInitializationMessage> InitialMessages { get; }
+        public IDictionary<string, string> Metadata { get; }
+        public ToolResources ToolResources { get; init; }
+    }
     public class ThreadInitializationMessage : MessageCreationOptions {
-        public ThreadInitializationMessage(IEnumerable<MessageContent> content);
+        public ThreadInitializationMessage(MessageRole role, IEnumerable<MessageContent> content);
         public static implicit operator ThreadInitializationMessage(string initializationMessage);
     }
     public class ThreadMessage {
@@ -599,6 +660,11 @@ namespace OpenAI.Assistants {
         public string RunId { get; }
         public MessageStatus Status { get; }
         public string ThreadId { get; }
+    }
+    public class ThreadModificationOptions {
+        public ThreadModificationOptions();
+        public IDictionary<string, string> Metadata { get; }
+        public ToolResources ToolResources { get; init; }
     }
     public class ThreadRun {
         public string AssistantId { get; }
@@ -641,16 +707,16 @@ namespace OpenAI.Assistants {
         public static ToolConstraint Required { get; }
     }
     public abstract class ToolDefinition {
-        protected ToolDefinition(string type);
         protected ToolDefinition();
+        protected ToolDefinition(string type);
         public static CodeInterpreterToolDefinition CreateCodeInterpreter();
         public static FileSearchToolDefinition CreateFileSearch(int? maxResults = null);
         public static FunctionToolDefinition CreateFunction(string name, string description = null, BinaryData parameters = null);
         protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ToolOutput {
-        public ToolOutput(string toolCallId, string output);
         public ToolOutput();
+        public ToolOutput(string toolCallId, string output);
         public string Output { get; init; }
         public string ToolCallId { get; init; }
     }
@@ -660,79 +726,55 @@ namespace OpenAI.Assistants {
         public FileSearchToolResources FileSearch { get; init; }
     }
     public class VectorStoreCreationHelper {
-        public VectorStoreCreationHelper(IEnumerable<string> fileIds, IDictionary<string, string> metadata = null);
-        public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files, IDictionary<string, string> metadata = null);
         public VectorStoreCreationHelper();
+        public VectorStoreCreationHelper(IEnumerable<Files.OpenAIFileInfo> files, IDictionary<string, string> metadata = null);
+        public VectorStoreCreationHelper(IEnumerable<string> fileIds, IDictionary<string, string> metadata = null);
         public IList<string> FileIds { get; }
         public IDictionary<string, string> Metadata { get; }
-    }
-    public enum MessageImageDetail {
-        Auto = 0,
-        Low = 1,
-        High = 2,
-    }
-    public enum MessageRole {
-        User = 0,
-        Assistant = 1,
-    }
-    public enum RunStepToolCallKind {
-        Unknown = 0,
-        CodeInterpreter = 1,
-        FileSearch = 2,
-        Function = 3,
-    }
-    public enum StreamingUpdateReason {
-        Unknown = 0,
-        ThreadCreated = 1,
-        RunCreated = 2,
-        RunQueued = 3,
-        RunInProgress = 4,
-        RunRequiresAction = 5,
-        RunCompleted = 6,
-        RunIncomplete = 7,
-        RunFailed = 8,
-        RunCancelling = 9,
-        RunCancelled = 10,
-        RunExpired = 11,
-        RunStepCreated = 12,
-        RunStepInProgress = 13,
-        RunStepUpdated = 14,
-        RunStepCompleted = 15,
-        RunStepFailed = 16,
-        RunStepCancelled = 17,
-        RunStepExpired = 18,
-        MessageCreated = 19,
-        MessageInProgress = 20,
-        MessageUpdated = 21,
-        MessageCompleted = 22,
-        MessageFailed = 23,
-        Error = 24,
-        Done = 25,
     }
 }
 namespace OpenAI.Audio {
     public class AudioClient {
-        public AudioClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public AudioClient(string model, OpenAIClientOptions options = null);
-        protected AudioClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected AudioClient();
+        protected internal AudioClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
+        public AudioClient(string model, OpenAIClientOptions options = null);
+        public AudioClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<BinaryData> GenerateSpeechFromText(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult GenerateSpeechFromText(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<BinaryData>> GenerateSpeechFromTextAsync(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<BinaryData> GenerateSpeechFromText(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> GenerateSpeechFromTextAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string audioFilename, AudioTranscriptionOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null);
+        public virtual Task<ClientResult<BinaryData>> GenerateSpeechFromTextAsync(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = null);
         public virtual ClientResult TranscribeAudio(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string audioFilename, AudioTranscriptionOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null);
+        public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string audioFilename, AudioTranscriptionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null);
         public virtual Task<ClientResult> TranscribeAudioAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string audioFilename, AudioTranslationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null);
+        public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string audioFilename, AudioTranscriptionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null);
         public virtual ClientResult TranslateAudio(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string audioFilename, AudioTranslationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null);
+        public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string audioFilename, AudioTranslationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null);
         public virtual Task<ClientResult> TranslateAudioAsync(BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string audioFilename, AudioTranslationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null);
+    }
+    public sealed class AudioTimestampGranularities {
+        public const AudioTimestampGranularities Default = 0;
+        public const AudioTimestampGranularities Segment = 2;
+        public const AudioTimestampGranularities Word = 1;
+    }
+    public class AudioTranscription {
+        public TimeSpan? Duration { get; }
+        public string Language { get; }
+        public IReadOnlyList<TranscribedSegment> Segments { get; }
+        public string Text { get; }
+        public IReadOnlyList<TranscribedWord> Words { get; }
+    }
+    public sealed class AudioTranscriptionFormat {
+        public const AudioTranscriptionFormat Simple = 1;
+        public const AudioTranscriptionFormat Srt = 3;
+        public const AudioTranscriptionFormat Text = 0;
+        public const AudioTranscriptionFormat Verbose = 2;
+        public const AudioTranscriptionFormat Vtt = 4;
     }
     public class AudioTranscriptionOptions {
         public AudioTranscriptionOptions();
@@ -742,92 +784,72 @@ namespace OpenAI.Audio {
         public AudioTranscriptionFormat? ResponseFormat { get; init; }
         public float? Temperature { get; init; }
     }
-    public class AudioTranslationOptions {
-        public AudioTranslationOptions();
-        public string Prompt { get; init; }
-        public AudioTranslationFormat? ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
-    }
-    public class SpeechGenerationOptions {
-        public SpeechGenerationOptions();
-        public GeneratedSpeechFormat? ResponseFormat { get; init; }
-        public float? Speed { get; init; }
-    }
-    public class AudioTranscription {
-        public TimeSpan? Duration { get; }
-        public string Language { get; }
-        public IReadOnlyList<TranscribedSegment> Segments { get; }
-        public string Text { get; }
-        public IReadOnlyList<TranscribedWord> Words { get; }
-    }
     public class AudioTranslation {
         public TimeSpan? Duration { get; }
         public string Language { get; }
         public IReadOnlyList<TranscribedSegment> Segments { get; }
         public string Text { get; }
     }
-    public readonly struct TranscribedSegment {
+    public sealed class AudioTranslationFormat {
+        public const AudioTranslationFormat Simple = 1;
+        public const AudioTranslationFormat Srt = 3;
+        public const AudioTranslationFormat Text = 0;
+        public const AudioTranslationFormat Verbose = 2;
+        public const AudioTranslationFormat Vtt = 4;
+    }
+    public class AudioTranslationOptions {
+        public AudioTranslationOptions();
+        public string Prompt { get; init; }
+        public AudioTranslationFormat? ResponseFormat { get; init; }
+        public float? Temperature { get; init; }
+    }
+    public sealed class GeneratedSpeechFormat {
+        public const GeneratedSpeechFormat Aac = 2;
+        public const GeneratedSpeechFormat Flac = 3;
+        public const GeneratedSpeechFormat Mp3 = 0;
+        public const GeneratedSpeechFormat Opus = 1;
+        public const GeneratedSpeechFormat Pcm = 5;
+        public const GeneratedSpeechFormat Wav = 4;
+    }
+    public sealed class GeneratedSpeechVoice {
+        public const GeneratedSpeechVoice Alloy = 0;
+        public const GeneratedSpeechVoice Echo = 1;
+        public const GeneratedSpeechVoice Fable = 2;
+        public const GeneratedSpeechVoice Nova = 4;
+        public const GeneratedSpeechVoice Onyx = 3;
+        public const GeneratedSpeechVoice Shimmer = 5;
+    }
+    public class SpeechGenerationOptions {
+        public SpeechGenerationOptions();
+        public GeneratedSpeechFormat? ResponseFormat { get; init; }
+        public float? Speed { get; init; }
+    }
+    public sealed class TranscribedSegment {
         public TranscribedSegment();
-        public double AverageLogProbability { get; }
+        public Double AverageLogProbability { get; }
         public float CompressionRatio { get; }
         public TimeSpan End { get; }
         public int Id { get; }
-        public double NoSpeechProbability { get; }
+        public Double NoSpeechProbability { get; }
         public long SeekOffset { get; }
         public TimeSpan Start { get; }
         public float Temperature { get; }
         public string Text { get; }
         public IReadOnlyList<long> TokenIds { get; }
     }
-    public readonly struct TranscribedWord {
+    public sealed class TranscribedWord {
         public TranscribedWord();
         public TimeSpan End { get; }
         public TimeSpan Start { get; }
         public string Word { get; }
     }
-    [Flags]
-    public enum AudioTimestampGranularities {
-        Default = 0,
-        Word = 1,
-        Segment = 2,
-    }
-    public enum AudioTranscriptionFormat {
-        Text = 0,
-        Simple = 1,
-        Verbose = 2,
-        Srt = 3,
-        Vtt = 4,
-    }
-    public enum AudioTranslationFormat {
-        Text = 0,
-        Simple = 1,
-        Verbose = 2,
-        Srt = 3,
-        Vtt = 4,
-    }
-    public enum GeneratedSpeechFormat {
-        Mp3 = 0,
-        Opus = 1,
-        Aac = 2,
-        Flac = 3,
-        Wav = 4,
-        Pcm = 5,
-    }
-    public enum GeneratedSpeechVoice {
-        Alloy = 0,
-        Echo = 1,
-        Fable = 2,
-        Onyx = 3,
-        Nova = 4,
-        Shimmer = 5,
-    }
 }
 namespace OpenAI.Batch {
     public class BatchClient {
-        public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public BatchClient(OpenAIClientOptions options = null);
-        protected BatchClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         protected BatchClient();
+        public BatchClient(OpenAIClientOptions options = null);
+        public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        protected internal BatchClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult CancelBatch(string batchId, RequestOptions options);
         public virtual Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options);
@@ -840,22 +862,46 @@ namespace OpenAI.Batch {
     }
 }
 namespace OpenAI.Chat {
+    public class AssistantChatMessage : ChatMessage {
+        public AssistantChatMessage(ChatCompletion chatCompletion);
+        public AssistantChatMessage(ChatFunctionCall functionCall, string content = null);
+        public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
+        public AssistantChatMessage(string content);
+        public ChatFunctionCall FunctionCall { get; init; }
+        public string ParticipantName { get; init; }
+        public IList<ChatToolCall> ToolCalls { get; }
+        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+    }
     public class ChatClient {
-        public ChatClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public ChatClient(string model, OpenAIClientOptions options = null);
-        protected ChatClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected ChatClient();
+        protected internal ChatClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
+        public ChatClient(string model, OpenAIClientOptions options = null);
+        public ChatClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<ChatCompletion> CompleteChat(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<ChatCompletion> CompleteChat(params ChatMessage[] messages);
         public virtual ClientResult CompleteChat(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ChatCompletion> CompleteChat(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(params ChatMessage[] messages);
         public virtual Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages);
-        public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
-        public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(params ChatMessage[] messages);
+        public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages);
+        public virtual CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(params ChatMessage[] messages);
+        public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = null);
+    }
+    public class ChatCompletion {
+        public IReadOnlyList<ChatMessageContentPart> Content { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities { get; }
+        public DateTimeOffset CreatedAt { get; }
+        public ChatFinishReason FinishReason { get; }
+        public ChatFunctionCall FunctionCall { get; }
+        public string Id { get; }
+        public string Model { get; }
+        public ChatMessageRole Role { get; }
+        public string SystemFingerprint { get; }
+        public IReadOnlyList<ChatToolCall> ToolCalls { get; }
+        public ChatTokenUsage Usage { get; }
+        public override string ToString();
     }
     public class ChatCompletionOptions {
         public ChatCompletionOptions();
@@ -877,31 +923,13 @@ namespace OpenAI.Chat {
         public float? TopP { get; init; }
         public string User { get; init; }
     }
-    public class AssistantChatMessage : ChatMessage {
-        public AssistantChatMessage(string content);
-        public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
-        public AssistantChatMessage(ChatFunctionCall functionCall, string content = null);
-        public AssistantChatMessage(ChatCompletion chatCompletion);
-        public ChatFunctionCall FunctionCall { get; init; }
-        public string ParticipantName { get; init; }
-        public IList<ChatToolCall> ToolCalls { get; }
-        protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+    public sealed class ChatFinishReason {
+        public const ChatFinishReason ContentFilter = 2;
+        public const ChatFinishReason FunctionCall = 4;
+        public const ChatFinishReason Length = 1;
+        public const ChatFinishReason Stop = 0;
+        public const ChatFinishReason ToolCalls = 3;
     }
-    public class ChatCompletion {
-        public IReadOnlyList<ChatMessageContentPart> Content { get; }
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities { get; }
-        public DateTimeOffset CreatedAt { get; }
-        public ChatFinishReason FinishReason { get; }
-        public ChatFunctionCall FunctionCall { get; }
-        public string Id { get; }
-        public string Model { get; }
-        public ChatMessageRole Role { get; }
-        public string SystemFingerprint { get; }
-        public IReadOnlyList<ChatToolCall> ToolCalls { get; }
-        public ChatTokenUsage Usage { get; }
-        public override string ToString();
-    }
-    [Obsolete("This field is marked as deprecated.")]
     public class ChatFunction {
         public ChatFunction(string functionName, string functionDescription = null, BinaryData functionParameters = null);
         public string FunctionDescription { get; init; }
@@ -921,16 +949,16 @@ namespace OpenAI.Chat {
     public abstract class ChatMessage {
         protected ChatMessage();
         public IList<ChatMessageContentPart> Content { get; protected init; }
-        public static AssistantChatMessage CreateAssistantMessage(string content);
-        public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
-        public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
+        public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
+        public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
+        public static AssistantChatMessage CreateAssistantMessage(string content);
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(string content);
         public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content);
-        public static UserChatMessage CreateUserMessage(string content);
-        public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
+        public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
+        public static UserChatMessage CreateUserMessage(string content);
         public static implicit operator ChatMessage(string userMessage);
         protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
@@ -941,23 +969,30 @@ namespace OpenAI.Chat {
         public Uri ImageUri { get; }
         public ChatMessageContentPartKind Kind { get; }
         public string Text { get; }
-        public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ImageChatMessageContentPartDetail? imageDetail = null);
         public static ChatMessageContentPart CreateImageMessageContentPart(BinaryData imageBytes, string imageBytesMediaType, ImageChatMessageContentPartDetail? imageDetail = null);
+        public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ImageChatMessageContentPartDetail? imageDetail = null);
         public static ChatMessageContentPart CreateTextMessageContentPart(string text);
         public static implicit operator ChatMessageContentPart(string content);
         public override string ToString();
     }
-    public readonly struct ChatMessageContentPartKind : IEquatable<ChatMessageContentPartKind> {
+    public sealed class ChatMessageContentPartKind {
         public ChatMessageContentPartKind(string value);
         public static ChatMessageContentPartKind Image { get; }
         public static ChatMessageContentPartKind Text { get; }
-        public static bool operator ==(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
-        public static implicit operator ChatMessageContentPartKind(string value);
-        public static bool operator !=(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
         public bool Equals(ChatMessageContentPartKind other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
+        public static implicit operator ChatMessageContentPartKind(string value);
+        public static bool operator !=(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
         public override string ToString();
+    }
+    public sealed class ChatMessageRole {
+        public const ChatMessageRole Assistant = 2;
+        public const ChatMessageRole Function = 4;
+        public const ChatMessageRole System = 0;
+        public const ChatMessageRole Tool = 3;
+        public const ChatMessageRole User = 1;
     }
     public class ChatResponseFormat {
         public static ChatResponseFormat JsonObject { get; }
@@ -993,15 +1028,15 @@ namespace OpenAI.Chat {
         public ChatToolCallKind Kind { get; }
         public static ChatToolCall CreateFunctionToolCall(string toolCallId, string functionName, string functionArguments);
     }
-    public readonly struct ChatToolCallKind : IEquatable<ChatToolCallKind> {
+    public sealed class ChatToolCallKind {
         public ChatToolCallKind(string value);
         public static ChatToolCallKind Function { get; }
-        public static bool operator ==(ChatToolCallKind left, ChatToolCallKind right);
-        public static implicit operator ChatToolCallKind(string value);
-        public static bool operator !=(ChatToolCallKind left, ChatToolCallKind right);
         public bool Equals(ChatToolCallKind other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(ChatToolCallKind left, ChatToolCallKind right);
+        public static implicit operator ChatToolCallKind(string value);
+        public static bool operator !=(ChatToolCallKind left, ChatToolCallKind right);
         public override string ToString();
     }
     public class ChatToolChoice {
@@ -1010,34 +1045,33 @@ namespace OpenAI.Chat {
         public static ChatToolChoice None { get; }
         public static ChatToolChoice Required { get; }
     }
-    public readonly struct ChatToolKind : IEquatable<ChatToolKind> {
+    public sealed class ChatToolKind {
         public ChatToolKind(string value);
         public static ChatToolKind Function { get; }
-        public static bool operator ==(ChatToolKind left, ChatToolKind right);
-        public static implicit operator ChatToolKind(string value);
-        public static bool operator !=(ChatToolKind left, ChatToolKind right);
         public bool Equals(ChatToolKind other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(ChatToolKind left, ChatToolKind right);
+        public static implicit operator ChatToolKind(string value);
+        public static bool operator !=(ChatToolKind left, ChatToolKind right);
         public override string ToString();
     }
-    [Obsolete("This field is marked as deprecated.")]
     public class FunctionChatMessage : ChatMessage {
         public FunctionChatMessage(string functionName, string content = null);
         public string FunctionName { get; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
-    public readonly struct ImageChatMessageContentPartDetail : IEquatable<ImageChatMessageContentPartDetail> {
+    public sealed class ImageChatMessageContentPartDetail {
         public ImageChatMessageContentPartDetail(string value);
         public static ImageChatMessageContentPartDetail Auto { get; }
         public static ImageChatMessageContentPartDetail High { get; }
         public static ImageChatMessageContentPartDetail Low { get; }
-        public static bool operator ==(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
-        public static implicit operator ImageChatMessageContentPartDetail(string value);
-        public static bool operator !=(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
         public bool Equals(ImageChatMessageContentPartDetail other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
+        public static implicit operator ImageChatMessageContentPartDetail(string value);
+        public static bool operator !=(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
         public override string ToString();
     }
     public class StreamingChatCompletionUpdate {
@@ -1075,55 +1109,41 @@ namespace OpenAI.Chat {
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class UserChatMessage : ChatMessage {
-        public UserChatMessage(string content);
-        public UserChatMessage(IEnumerable<ChatMessageContentPart> content);
         public UserChatMessage(params ChatMessageContentPart[] content);
+        public UserChatMessage(IEnumerable<ChatMessageContentPart> content);
+        public UserChatMessage(string content);
         public string ParticipantName { get; init; }
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
-    public enum ChatFinishReason {
-        Stop = 0,
-        Length = 1,
-        ContentFilter = 2,
-        ToolCalls = 3,
-        FunctionCall = 4,
-    }
-    public enum ChatMessageRole {
-        System = 0,
-        User = 1,
-        Assistant = 2,
-        Tool = 3,
-        Function = 4,
-    }
 }
 namespace OpenAI.Embeddings {
+    public class Embedding {
+        public int Index { get; }
+        public ReadOnlyMemory<float> Vector { get; }
+    }
     public class EmbeddingClient {
-        public EmbeddingClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public EmbeddingClient(string model, OpenAIClientOptions options = null);
-        protected EmbeddingClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected EmbeddingClient();
+        protected internal EmbeddingClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
+        public EmbeddingClient(string model, OpenAIClientOptions options = null);
+        public EmbeddingClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = null);
         public virtual ClientResult GenerateEmbeddings(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> GenerateEmbeddingsAsync(BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = null);
+    }
+    public class EmbeddingCollection {
+        public string Model { get; }
+        public EmbeddingTokenUsage Usage { get; }
     }
     public class EmbeddingGenerationOptions {
         public EmbeddingGenerationOptions();
         public int? Dimensions { get; init; }
         public string User { get; init; }
-    }
-    public class Embedding {
-        public int Index { get; }
-        public ReadOnlyMemory<float> Vector { get; }
-    }
-    public class EmbeddingCollection : ReadOnlyCollection<Embedding> {
-        public string Model { get; }
-        public EmbeddingTokenUsage Usage { get; }
     }
     public class EmbeddingTokenUsage {
         public int InputTokens { get; }
@@ -1132,53 +1152,68 @@ namespace OpenAI.Embeddings {
 }
 namespace OpenAI.Files {
     public class FileClient {
-        public FileClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public FileClient(OpenAIClientOptions options = null);
-        protected FileClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         protected FileClient();
+        public FileClient(OpenAIClientOptions options = null);
+        public FileClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        protected internal FileClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<bool> DeleteFile(string fileId, CancellationToken cancellationToken = default);
+        public virtual IncrementalUploadJob CreateIncrementalUploadJob(BinaryContent content, RequestOptions options);
+        public virtual Task<IncrementalUploadJob> CreateIncrementalUploadJobAsync(BinaryContent content, RequestOptions options);
         public virtual ClientResult<bool> DeleteFile(OpenAIFileInfo file);
         public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<bool> DeleteFile(string fileId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<bool>> DeleteFileAsync(OpenAIFileInfo file);
         public virtual Task<ClientResult> DeleteFileAsync(string fileId, RequestOptions options);
-        public virtual ClientResult<BinaryData> DownloadFile(string fileId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<bool>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = null);
         public virtual ClientResult<BinaryData> DownloadFile(OpenAIFileInfo file);
         public virtual ClientResult DownloadFile(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<BinaryData> DownloadFile(string fileId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(OpenAIFileInfo file);
         public virtual Task<ClientResult> DownloadFileAsync(string fileId, RequestOptions options);
-        public virtual ClientResult<OpenAIFileInfo> GetFile(string fileId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = null);
         public virtual ClientResult GetFile(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFileInfo> GetFile(string fileId, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> GetFileAsync(string fileId, RequestOptions options);
-        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId, CancellationToken cancellationToken = null);
+        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = null);
         public virtual ClientResult GetFiles(string purpose, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options);
-        public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
         public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose);
-        public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, FileUploadPurpose purpose);
         public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = null);
+        public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, FileUploadPurpose purpose);
         public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose);
-        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
         public virtual Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
     }
-    public readonly struct FileUploadPurpose : IEquatable<FileUploadPurpose> {
+    public sealed class FileUploadPurpose {
         public FileUploadPurpose(string value);
         public static FileUploadPurpose Assistants { get; }
         public static FileUploadPurpose Batch { get; }
         public static FileUploadPurpose FineTune { get; }
         public static FileUploadPurpose Vision { get; }
-        public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right);
-        public static implicit operator FileUploadPurpose(string value);
-        public static bool operator !=(FileUploadPurpose left, FileUploadPurpose right);
         public bool Equals(FileUploadPurpose other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right);
+        public static implicit operator FileUploadPurpose(string value);
+        public static bool operator !=(FileUploadPurpose left, FileUploadPurpose right);
         public override string ToString();
+    }
+    public class IncrementalUploadJob {
+        public DateTimeOffset CreatedAt { get; }
+        public DateTimeOffset ExpiresAt { get; }
+        public string Id { get; }
+        public ContinuationToken RehydrationToken { get; }
+        public virtual ClientResult AddDataPart(string jobId, BinaryContent content, string contentType, RequestOptions options);
+        public virtual Task<ClientResult> AddDataPartAsync(string jobId, BinaryContent content, string contentType, RequestOptions options);
+        public virtual ClientResult Cancel(string jobId, RequestOptions options);
+        public virtual Task<ClientResult> CancelAsync(string jobId, RequestOptions options);
+        public virtual ClientResult Complete(string jobId, BinaryContent content, RequestOptions options);
+        public virtual Task<ClientResult> CompleteAsync(string jobId, BinaryContent content, RequestOptions options);
+        public static IncrementalUploadJob Rehydrate(FileClient client, ContinuationToken rehydrationToken);
     }
     public class OpenAIFileInfo {
         public DateTimeOffset CreatedAt { get; }
@@ -1189,9 +1224,9 @@ namespace OpenAI.Files {
         public OpenAIFileStatus Status { get; }
         public string StatusDetails { get; }
     }
-    public class OpenAIFileInfoCollection : ReadOnlyCollection<OpenAIFileInfo> {
+    public class OpenAIFileInfoCollection {
     }
-    public readonly struct OpenAIFilePurpose : IEquatable<OpenAIFilePurpose> {
+    public sealed class OpenAIFilePurpose {
         public OpenAIFilePurpose(string value);
         public static OpenAIFilePurpose Assistants { get; }
         public static OpenAIFilePurpose AssistantsOutput { get; }
@@ -1200,34 +1235,34 @@ namespace OpenAI.Files {
         public static OpenAIFilePurpose FineTune { get; }
         public static OpenAIFilePurpose FineTuneResults { get; }
         public static OpenAIFilePurpose Vision { get; }
-        public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right);
-        public static implicit operator OpenAIFilePurpose(string value);
-        public static bool operator !=(OpenAIFilePurpose left, OpenAIFilePurpose right);
         public bool Equals(OpenAIFilePurpose other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right);
+        public static implicit operator OpenAIFilePurpose(string value);
+        public static bool operator !=(OpenAIFilePurpose left, OpenAIFilePurpose right);
         public override string ToString();
     }
-    public readonly struct OpenAIFileStatus : IEquatable<OpenAIFileStatus> {
+    public sealed class OpenAIFileStatus {
         public OpenAIFileStatus(string value);
         public static OpenAIFileStatus Error { get; }
         public static OpenAIFileStatus Processed { get; }
         public static OpenAIFileStatus Uploaded { get; }
-        public static bool operator ==(OpenAIFileStatus left, OpenAIFileStatus right);
-        public static implicit operator OpenAIFileStatus(string value);
-        public static bool operator !=(OpenAIFileStatus left, OpenAIFileStatus right);
         public bool Equals(OpenAIFileStatus other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(OpenAIFileStatus left, OpenAIFileStatus right);
+        public static implicit operator OpenAIFileStatus(string value);
+        public static bool operator !=(OpenAIFileStatus left, OpenAIFileStatus right);
         public override string ToString();
     }
 }
 namespace OpenAI.FineTuning {
     public class FineTuningClient {
-        public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public FineTuningClient(OpenAIClientOptions options = null);
-        protected FineTuningClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         protected FineTuningClient();
+        public FineTuningClient(OpenAIClientOptions options = null);
+        public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        protected internal FineTuningClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult CancelJob(string jobId, RequestOptions options);
         public virtual Task<ClientResult> CancelJobAsync(string jobId, RequestOptions options);
@@ -1244,46 +1279,81 @@ namespace OpenAI.FineTuning {
     }
 }
 namespace OpenAI.Images {
+    public class GeneratedImage {
+        public BinaryData ImageBytes { get; }
+        public Uri ImageUri { get; }
+        public string RevisedPrompt { get; }
+    }
+    public class GeneratedImageCollection {
+        public DateTimeOffset Created { get; }
+        public DateTimeOffset CreatedAt { get; }
+    }
+    public sealed class GeneratedImageFormat {
+        public const GeneratedImageFormat Bytes = 0;
+        public const GeneratedImageFormat Uri = 1;
+    }
+    public sealed class GeneratedImageQuality {
+        public const GeneratedImageQuality High = 0;
+        public const GeneratedImageQuality Standard = 1;
+    }
+    public sealed class GeneratedImageSize {
+        public static readonly GeneratedImageSize W1024xH1024;
+        public static readonly GeneratedImageSize W1024xH1792;
+        public static readonly GeneratedImageSize W1792xH1024;
+        public static readonly GeneratedImageSize W256xH256;
+        public static readonly GeneratedImageSize W512xH512;
+        public GeneratedImageSize(int width, int height);
+        public bool Equals(GeneratedImageSize other);
+        public override bool Equals(object obj);
+        public override int GetHashCode();
+        public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right);
+        public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right);
+        public override string ToString();
+    }
+    public sealed class GeneratedImageStyle {
+        public const GeneratedImageStyle Natural = 1;
+        public const GeneratedImageStyle Vivid = 0;
+    }
     public class ImageClient {
-        public ImageClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public ImageClient(string model, OpenAIClientOptions options = null);
-        protected ImageClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
         protected ImageClient();
+        protected internal ImageClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
+        public ImageClient(string model, OpenAIClientOptions options = null);
+        public ImageClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<GeneratedImage> GenerateImage(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<GeneratedImage>> GenerateImageAsync(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<GeneratedImage> GenerateImage(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<GeneratedImage>> GenerateImageAsync(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null, CancellationToken cancellationToken = null);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(string imageFilePath, string prompt, ImageEditOptions options = null);
-        public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(string imageFilePath, string prompt, string maskFilePath, ImageEditOptions options = null);
-        public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(string imageFilePath, string prompt, ImageEditOptions options = null);
-        public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(string imageFilePath, string prompt, string maskFilePath, ImageEditOptions options = null);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null);
         public virtual ClientResult GenerateImageEdits(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null);
         public virtual Task<ClientResult> GenerateImageEditsAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImages(string prompt, int imageCount, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null);
         public virtual ClientResult GenerateImages(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(string prompt, int imageCount, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImages(string prompt, int imageCount, ImageGenerationOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult> GenerateImagesAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<GeneratedImage> GenerateImageVariation(Stream image, string imageFilename, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(string prompt, int imageCount, ImageGenerationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<GeneratedImage> GenerateImageVariation(Stream image, string imageFilename, ImageVariationOptions options = null, CancellationToken cancellationToken = null);
         public virtual ClientResult<GeneratedImage> GenerateImageVariation(string imageFilePath, ImageVariationOptions options = null);
-        public virtual Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(Stream image, string imageFilename, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(Stream image, string imageFilename, ImageVariationOptions options = null, CancellationToken cancellationToken = null);
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(string imageFilePath, ImageVariationOptions options = null);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(string imageFilePath, int imageCount, ImageVariationOptions options = null);
         public virtual ClientResult GenerateImageVariations(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(string imageFilePath, int imageCount, ImageVariationOptions options = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(string imageFilePath, int imageCount, ImageVariationOptions options = null);
         public virtual Task<ClientResult> GenerateImageVariationsAsync(BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(string imageFilePath, int imageCount, ImageVariationOptions options = null);
     }
     public class ImageEditOptions {
         public ImageEditOptions();
@@ -1305,57 +1375,22 @@ namespace OpenAI.Images {
         public GeneratedImageSize? Size { get; init; }
         public string User { get; init; }
     }
-    public class GeneratedImage {
-        public BinaryData ImageBytes { get; }
-        public Uri ImageUri { get; }
-        public string RevisedPrompt { get; }
-    }
-    public class GeneratedImageCollection : ReadOnlyCollection<GeneratedImage> {
-        public DateTimeOffset Created { get; }
-        public DateTimeOffset CreatedAt { get; }
-    }
-    public readonly struct GeneratedImageSize : IEquatable<GeneratedImageSize> {
-        public GeneratedImageSize(int width, int height);
-        public static readonly GeneratedImageSize W1024xH1024;
-        public static readonly GeneratedImageSize W1024xH1792;
-        public static readonly GeneratedImageSize W1792xH1024;
-        public static readonly GeneratedImageSize W256xH256;
-        public static readonly GeneratedImageSize W512xH512;
-        public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right);
-        public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right);
-        public bool Equals(GeneratedImageSize other);
-        public override bool Equals(object obj);
-        public override int GetHashCode();
-        public override string ToString();
-    }
-    public enum GeneratedImageFormat {
-        Bytes = 0,
-        Uri = 1,
-    }
-    public enum GeneratedImageQuality {
-        High = 0,
-        Standard = 1,
-    }
-    public enum GeneratedImageStyle {
-        Vivid = 0,
-        Natural = 1,
-    }
 }
 namespace OpenAI.Models {
     public class ModelClient {
-        public ModelClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public ModelClient(OpenAIClientOptions options = null);
-        protected ModelClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         protected ModelClient();
+        public ModelClient(OpenAIClientOptions options = null);
+        public ModelClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        protected internal ModelClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<bool> DeleteModel(string model);
         public virtual ClientResult DeleteModel(string model, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteModelAsync(string model);
+        public virtual ClientResult<bool> DeleteModel(string model);
         public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
-        public virtual ClientResult<OpenAIModelInfo> GetModel(string model);
+        public virtual Task<ClientResult<bool>> DeleteModelAsync(string model);
         public virtual ClientResult GetModel(string model, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIModelInfo>> GetModelAsync(string model);
+        public virtual ClientResult<OpenAIModelInfo> GetModel(string model);
         public virtual Task<ClientResult> GetModelAsync(string model, RequestOptions options);
+        public virtual Task<ClientResult<OpenAIModelInfo>> GetModelAsync(string model);
         public virtual ClientResult<OpenAIModelInfoCollection> GetModels();
         public virtual ClientResult GetModels(RequestOptions options);
         public virtual Task<ClientResult<OpenAIModelInfoCollection>> GetModelsAsync();
@@ -1366,23 +1401,10 @@ namespace OpenAI.Models {
         public string Id { get; }
         public string OwnedBy { get; }
     }
-    public class OpenAIModelInfoCollection : ReadOnlyCollection<OpenAIModelInfo> {
+    public class OpenAIModelInfoCollection {
     }
 }
 namespace OpenAI.Moderations {
-    public class ModerationClient {
-        public ModerationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public ModerationClient(string model, OpenAIClientOptions options = null);
-        protected ModerationClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
-        protected ModerationClient();
-        public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<ModerationResult> ClassifyTextInput(string input, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ModerationResult>> ClassifyTextInputAsync(string input, CancellationToken cancellationToken = default);
-        public virtual ClientResult<ModerationCollection> ClassifyTextInputs(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
-        public virtual ClientResult ClassifyTextInputs(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ModerationCollection>> ClassifyTextInputsAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult> ClassifyTextInputsAsync(BinaryContent content, RequestOptions options = null);
-    }
     public class ModerationCategories {
         public bool Harassment { get; }
         public bool HarassmentThreatening { get; }
@@ -1409,7 +1431,20 @@ namespace OpenAI.Moderations {
         public float Violence { get; }
         public float ViolenceGraphic { get; }
     }
-    public class ModerationCollection : ReadOnlyCollection<ModerationResult> {
+    public class ModerationClient {
+        protected ModerationClient();
+        protected internal ModerationClient(ClientPipeline pipeline, string model, Uri endpoint, OpenAIClientOptions options);
+        public ModerationClient(string model, OpenAIClientOptions options = null);
+        public ModerationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
+        public virtual ClientPipeline Pipeline { get; }
+        public virtual ClientResult<ModerationResult> ClassifyTextInput(string input, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<ModerationResult>> ClassifyTextInputAsync(string input, CancellationToken cancellationToken = null);
+        public virtual ClientResult ClassifyTextInputs(BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult<ModerationCollection> ClassifyTextInputs(IEnumerable<string> inputs, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult> ClassifyTextInputsAsync(BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult<ModerationCollection>> ClassifyTextInputsAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = null);
+    }
+    public class ModerationCollection {
         public string Id { get; }
         public string Model { get; }
     }
@@ -1420,103 +1455,6 @@ namespace OpenAI.Moderations {
     }
 }
 namespace OpenAI.VectorStores {
-    internal [Experimental("OPENAI001")]
-    public class VectorStoreClient {
-        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(VectorStoreBatchFileJob batchJob);
-        public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
-        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
-        public virtual Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
-        public virtual ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
-        public virtual Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<bool> DeleteVectorStore(VectorStore vectorStore);
-        public virtual ClientResult DeleteVectorStore(string vectorStoreId, RequestOptions options);
-        public virtual ClientResult<bool> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(VectorStore vectorStore);
-        public virtual Task<ClientResult> DeleteVectorStoreAsync(string vectorStoreId, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(VectorStoreBatchFileJob batchJob);
-        public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
-        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
-        public virtual Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options);
-        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStore vectorStore, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStoreBatchFileJob batchJob, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual ClientResult GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStore vectorStore, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreBatchFileJob batchJob, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
-
-        public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore);
-        public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options);
-        public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(VectorStore vectorStore);
-        public virtual Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options);
-        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual ClientResult GetVectorStores(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStore> ModifyVectorStore(VectorStore vectorStore, VectorStoreModificationOptions options);
-        public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
-        public virtual ClientResult ModifyVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(VectorStore vectorStore, VectorStoreModificationOptions options);
-        public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<bool> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options);
-        public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
-        public virtual Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options);
-        public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        protected VectorStoreClient();
-        public VectorStoreClient(OpenAIClientOptions options = null);
-        public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
-        protected VectorStoreClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
-    }
-    public class VectorStoreCreationOptions {
-        public VectorStoreCreationOptions();
-        public FileChunkingStrategy ChunkingStrategy { get; init; }
-        public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
-        public IList<string> FileIds { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Name { get; init; }
-    }
-    public class VectorStoreModificationOptions {
-        public VectorStoreModificationOptions();
-        public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Name { get; init; }
-    }
     public abstract class FileChunkingStrategy {
         protected FileChunkingStrategy();
         public static FileChunkingStrategy Auto { get; }
@@ -1547,24 +1485,129 @@ namespace OpenAI.VectorStores {
         public VectorStoreBatchFileJobStatus Status { get; }
         public string VectorStoreId { get; }
     }
-    public readonly struct VectorStoreBatchFileJobStatus : IEquatable<VectorStoreBatchFileJobStatus> {
+    public sealed class VectorStoreBatchFileJobStatus {
         public VectorStoreBatchFileJobStatus(string value);
         public static VectorStoreBatchFileJobStatus Cancelled { get; }
         public static VectorStoreBatchFileJobStatus Completed { get; }
         public static VectorStoreBatchFileJobStatus Failed { get; }
         public static VectorStoreBatchFileJobStatus InProgress { get; }
-        public static bool operator ==(VectorStoreBatchFileJobStatus left, VectorStoreBatchFileJobStatus right);
-        public static implicit operator VectorStoreBatchFileJobStatus(string value);
-        public static bool operator !=(VectorStoreBatchFileJobStatus left, VectorStoreBatchFileJobStatus right);
         public bool Equals(VectorStoreBatchFileJobStatus other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(VectorStoreBatchFileJobStatus left, VectorStoreBatchFileJobStatus right);
+        public static implicit operator VectorStoreBatchFileJobStatus(string value);
+        public static bool operator !=(VectorStoreBatchFileJobStatus left, VectorStoreBatchFileJobStatus right);
         public override string ToString();
     }
+    public class VectorStoreClient {
+        protected VectorStoreClient();
+        public VectorStoreClient(OpenAIClientOptions options = null);
+        public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        protected internal VectorStoreClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
+        public virtual ClientPipeline Pipeline { get; }
+        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = null);
+        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(VectorStoreBatchFileJob batchJob);
+        public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
+        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
+        public virtual Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = null);
+        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(VectorStore vectorStore, IEnumerable<Files.OpenAIFileInfo> files);
+        public virtual ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<Files.OpenAIFileInfo> files);
+        public virtual Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = null);
+        public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = null);
+        public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult<bool> DeleteVectorStore(VectorStore vectorStore);
+        public virtual ClientResult DeleteVectorStore(string vectorStoreId, RequestOptions options);
+        public virtual ClientResult<bool> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(VectorStore vectorStore);
+        public virtual Task<ClientResult> DeleteVectorStoreAsync(string vectorStoreId, RequestOptions options);
+        public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = null);
+        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(VectorStoreBatchFileJob batchJob);
+        public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
+        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
+        public virtual Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = null);
+        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options);
+        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(string vectorStoreId, string fileId, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = null);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStore vectorStore, VectorStoreFileAssociationCollectionOptions options = null);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStoreBatchFileJob batchJob, VectorStoreFileAssociationCollectionOptions options = null);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual IEnumerable<ClientResult> GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual IEnumerable<ClientResult> GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStore vectorStore, VectorStoreFileAssociationCollectionOptions options = null);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreBatchFileJob batchJob, VectorStoreFileAssociationCollectionOptions options = null);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual IAsyncEnumerable<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual IAsyncEnumerable<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore);
+        public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options);
+        public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(VectorStore vectorStore);
+        public virtual Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options);
+        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = null);
+        public virtual PageCollection<VectorStore> GetVectorStores(VectorStoreCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual PageCollection<VectorStore> GetVectorStores(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual IEnumerable<ClientResult> GetVectorStores(int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<VectorStore> GetVectorStoresAsync(VectorStoreCollectionOptions options = null, CancellationToken cancellationToken = null);
+        public virtual AsyncPageCollection<VectorStore> GetVectorStoresAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = null);
+        public virtual IAsyncEnumerable<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options);
+        public virtual ClientResult<VectorStore> ModifyVectorStore(VectorStore vectorStore, VectorStoreModificationOptions options);
+        public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = null);
+        public virtual ClientResult ModifyVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(VectorStore vectorStore, VectorStoreModificationOptions options);
+        public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult<bool> RemoveFileFromStore(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options);
+        public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = null);
+        public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options);
+        public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = null);
+    }
+    public class VectorStoreCollectionOptions {
+        public VectorStoreCollectionOptions();
+        public string AfterId { get; init; }
+        public string BeforeId { get; init; }
+        public ListOrder? Order { get; init; }
+        public int? PageSize { get; init; }
+    }
+    public class VectorStoreCreationOptions {
+        public VectorStoreCreationOptions();
+        public FileChunkingStrategy ChunkingStrategy { get; init; }
+        public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
+        public IList<string> FileIds { get; init; }
+        public IDictionary<string, string> Metadata { get; }
+        public string Name { get; init; }
+    }
+    public sealed class VectorStoreExpirationAnchor {
+        public const VectorStoreExpirationAnchor LastActiveAt = 1;
+        public const VectorStoreExpirationAnchor Unknown = 0;
+    }
     public class VectorStoreExpirationPolicy {
-        internal [SetsRequiredMembers]
-        public VectorStoreExpirationPolicy(VectorStoreExpirationAnchor anchor, int days);
         public VectorStoreExpirationPolicy();
+        public VectorStoreExpirationPolicy(VectorStoreExpirationAnchor anchor, int days);
         public required VectorStoreExpirationAnchor Anchor { get; init; }
         public required int Days { get; init; }
     }
@@ -1577,26 +1620,41 @@ namespace OpenAI.VectorStores {
         public VectorStoreFileAssociationStatus Status { get; }
         public string VectorStoreId { get; }
     }
-    public readonly struct VectorStoreFileAssociationError {
+    public class VectorStoreFileAssociationCollectionOptions {
+        public VectorStoreFileAssociationCollectionOptions();
+        public string AfterId { get; init; }
+        public string BeforeId { get; init; }
+        public VectorStoreFileStatusFilter? Filter { get; init; }
+        public ListOrder? Order { get; init; }
+        public int? PageSize { get; init; }
+    }
+    public sealed class VectorStoreFileAssociationError {
         public VectorStoreFileAssociationError();
         public VectorStoreFileAssociationErrorCode Code { get; }
         public string Message { get; }
     }
-    public readonly struct VectorStoreFileAssociationErrorCode : IEquatable<VectorStoreFileAssociationErrorCode> {
+    public sealed class VectorStoreFileAssociationErrorCode {
         public VectorStoreFileAssociationErrorCode(string value);
         public static VectorStoreFileAssociationErrorCode FileNotFound { get; }
         public static VectorStoreFileAssociationErrorCode InternalError { get; }
         public static VectorStoreFileAssociationErrorCode ParsingError { get; }
         public static VectorStoreFileAssociationErrorCode UnhandledMimeType { get; }
-        public static bool operator ==(VectorStoreFileAssociationErrorCode left, VectorStoreFileAssociationErrorCode right);
-        public static implicit operator VectorStoreFileAssociationErrorCode(string value);
-        public static bool operator !=(VectorStoreFileAssociationErrorCode left, VectorStoreFileAssociationErrorCode right);
         public bool Equals(VectorStoreFileAssociationErrorCode other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(VectorStoreFileAssociationErrorCode left, VectorStoreFileAssociationErrorCode right);
+        public static implicit operator VectorStoreFileAssociationErrorCode(string value);
+        public static bool operator !=(VectorStoreFileAssociationErrorCode left, VectorStoreFileAssociationErrorCode right);
         public override string ToString();
     }
-    public readonly struct VectorStoreFileCounts {
+    public sealed class VectorStoreFileAssociationStatus {
+        public const VectorStoreFileAssociationStatus Cancelled = 3;
+        public const VectorStoreFileAssociationStatus Completed = 2;
+        public const VectorStoreFileAssociationStatus Failed = 4;
+        public const VectorStoreFileAssociationStatus InProgress = 1;
+        public const VectorStoreFileAssociationStatus Unknown = 0;
+    }
+    public sealed class VectorStoreFileCounts {
         public VectorStoreFileCounts();
         public int Cancelled { get; }
         public int Completed { get; }
@@ -1604,36 +1662,31 @@ namespace OpenAI.VectorStores {
         public int InProgress { get; }
         public int Total { get; }
     }
-    public readonly struct VectorStoreFileStatusFilter : IEquatable<VectorStoreFileStatusFilter> {
+    public sealed class VectorStoreFileStatusFilter {
         public VectorStoreFileStatusFilter(string value);
         public static VectorStoreFileStatusFilter Cancelled { get; }
         public static VectorStoreFileStatusFilter Completed { get; }
         public static VectorStoreFileStatusFilter Failed { get; }
         public static VectorStoreFileStatusFilter InProgress { get; }
-        public static bool operator ==(VectorStoreFileStatusFilter left, VectorStoreFileStatusFilter right);
-        public static implicit operator VectorStoreFileStatusFilter(string value);
-        public static bool operator !=(VectorStoreFileStatusFilter left, VectorStoreFileStatusFilter right);
         public bool Equals(VectorStoreFileStatusFilter other);
         public override bool Equals(object obj);
         public override int GetHashCode();
+        public static bool operator ==(VectorStoreFileStatusFilter left, VectorStoreFileStatusFilter right);
+        public static implicit operator VectorStoreFileStatusFilter(string value);
+        public static bool operator !=(VectorStoreFileStatusFilter left, VectorStoreFileStatusFilter right);
         public override string ToString();
     }
-    public enum VectorStoreExpirationAnchor {
-        Unknown = 0,
-        LastActiveAt = 1,
+    public class VectorStoreModificationOptions {
+        public VectorStoreModificationOptions();
+        public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
+        public IDictionary<string, string> Metadata { get; }
+        public string Name { get; init; }
     }
-    public enum VectorStoreFileAssociationStatus {
-        Unknown = 0,
-        InProgress = 1,
-        Completed = 2,
-        Cancelled = 3,
-        Failed = 4,
-    }
-    public enum VectorStoreStatus {
-        Unknown = 0,
-        InProgress = 1,
-        Completed = 2,
-        Expired = 3,
+    public sealed class VectorStoreStatus {
+        public const VectorStoreStatus Completed = 2;
+        public const VectorStoreStatus Expired = 3;
+        public const VectorStoreStatus InProgress = 1;
+        public const VectorStoreStatus Unknown = 0;
     }
 }
 ```

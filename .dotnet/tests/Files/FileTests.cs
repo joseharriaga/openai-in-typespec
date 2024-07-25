@@ -194,7 +194,7 @@ public partial class FileTests : SyncAsyncTestBase
                 {{reader.ReadToEnd()}}
                 --{{boundary}}--
                 """);
-            return (BinaryContent.Create(multipartData), $"multipart/form-data; boundary=\"{boundary}\"");
+            return (BinaryContent.Create(multipartData), $@"multipart/form-data; boundary=""{boundary}""");
         }
 
         List<Task<ClientResult>> dataUploadTasks = parts.Select(part => (Task<ClientResult>)null).ToList();

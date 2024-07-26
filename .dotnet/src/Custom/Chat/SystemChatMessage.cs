@@ -30,5 +30,5 @@ public partial class SystemChatMessage : ChatMessage
     /// An optional <c>name</c> for the participant.
     /// </summary>
     [CodeGenMember("Name")]
-    public string ParticipantName { get; }
+    public string ParticipantName { get; set; }
 }

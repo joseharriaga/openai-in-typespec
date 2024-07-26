@@ -1,13 +1,16 @@
 $repoRoot = Join-Path $PSScriptRoot .. -Resolve
 $dotnetFolder = Join-Path $repoRoot .dotnet\src
+$apiFolder = Join-Path $repoRoot .dotnet\api
 
-$assemblyPath = Join-Path $dotnetFolder bin\Debug\netstandard2.0\OpenAI.dll
-$apiPath = Join-Path $repoRoot .dotnet\api\api.md
+$platformTarget = "netstandard2.0"
 
-genapi --assembly $assemblyPath --output-path $apiPath
-$content = Get-Content $apiPath -Raw
+$assemblyPath = Join-Path $dotnetFolder bin\Debug $platformTarget OpenAI.dll
+$outputPath = Join-Path $apiFolder "OpenAI.$($platformTarget).cs"
 
-$content = "``````csharp`n$($content)`n``````"
+genapi --assembly $assemblyPath --output-path $outputPath
+
+$content = Get-Content $outputPath -Raw
+
 $content = $content -replace '//.*\r?\n', ''
 $content = $content -replace '\r?\n\r?\n', "`n"
 $content = $content -replace 'System.Boolean', 'bool'
@@ -38,4 +41,8 @@ $content = $content -replace ' *public int value__;\r?\n', ''
 $content = $content -replace "  * internal.*`n", ""
 $content = $content -replace '(virtual )[^ \.]*\.', '$1'
 
-Set-Content -Path $apiPath -Value $content -NoNewline
+Set-Content -Path $outputPath -Value $content -NoNewline
+
+# For PR diff only
+$markdownContent = "``````csharp`n$($content)`n``````"
+Set-Content -Path "$($apiFolder)\api.md" -Value $markdownContent -NoNewline

@@ -1,4 +1,3 @@
-```csharp
 namespace OpenAI {
     public sealed class ListOrder {
         public ListOrder(string value);
@@ -1689,4 +1688,3 @@ namespace OpenAI.VectorStores {
         public const VectorStoreStatus Unknown = 0;
     }
 }
-```

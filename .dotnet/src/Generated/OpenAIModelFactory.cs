@@ -40,6 +40,46 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
+        public static AssistantModificationOptions AssistantModificationOptions(string model = null, string name = null, string description = null, string instructions = null, IEnumerable<ToolDefinition> defaultTools = null, ToolResources toolResources = null, IDictionary<string, string> metadata = null, float? temperature = null, float? nucleusSamplingFactor = null, AssistantResponseFormat responseFormat = null)
+        {
+            defaultTools ??= new List<ToolDefinition>();
+            metadata ??= new Dictionary<string, string>();
+
+            return new AssistantModificationOptions(
+                model,
+                name,
+                description,
+                instructions,
+                defaultTools?.ToList(),
+                toolResources,
+                metadata,
+                temperature,
+                nucleusSamplingFactor,
+                responseFormat,
+                serializedAdditionalRawData: null);
+        }
+
+        public static SystemChatMessage SystemChatMessage(IEnumerable<ChatMessageContentPart> content = null, string participantName = null)
+        {
+            content ??= new List<ChatMessageContentPart>();
+
+            return new SystemChatMessage("system", content?.ToList(), serializedAdditionalRawData: null, participantName);
+        }
+
+        public static AssistantChatMessage AssistantChatMessage(IEnumerable<ChatMessageContentPart> content = null, string participantName = null, IEnumerable<ChatToolCall> toolCalls = null, ChatFunctionCall functionCall = null)
+        {
+            content ??= new List<ChatMessageContentPart>();
+            toolCalls ??= new List<ChatToolCall>();
+
+            return new AssistantChatMessage(
+                "assistant",
+                content?.ToList(),
+                serializedAdditionalRawData: null,
+                participantName,
+                toolCalls?.ToList(),
+                functionCall);
+        }
+
         public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)
         {
             content ??= new List<ChatMessageContentPart>();

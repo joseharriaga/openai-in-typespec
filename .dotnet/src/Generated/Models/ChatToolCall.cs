@@ -23,6 +23,6 @@ namespace OpenAI.Chat
         {
         }
 
-        public string Id { get; init; }
+        public string Id { get; set; }
     }
 }

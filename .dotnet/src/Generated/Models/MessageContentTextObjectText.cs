@@ -31,7 +31,7 @@ namespace OpenAI.Assistants
         {
         }
 
-        public string Value { get; init; }
+        public string Value { get; set; }
         public IList<MessageContentTextObjectAnnotation> Annotations { get; }
     }
 }

@@ -20,7 +20,7 @@ namespace OpenAI.Audio
             Speed = speed;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
-        public GeneratedSpeechFormat? ResponseFormat { get; init; }
-        public float? Speed { get; init; }
+        public GeneratedSpeechFormat? ResponseFormat { get; set; }
+        public float? Speed { get; set; }
     }
 }

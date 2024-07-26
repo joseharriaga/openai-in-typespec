@@ -15,7 +15,7 @@ function Update-Set-Accessors {
             if ($propertyDeclaration -like "*List<*" -or $propertyDeclaration -like "*Dictionary<*") {
                 $newPropertyDeclaration = "$propertyDeclaration{ get; }"
             } else {
-                $newPropertyDeclaration = "$propertyDeclaration{ get; init; }"
+                $newPropertyDeclaration = "$propertyDeclaration{ get; set; }"
             }
             $content = $content -replace [regex]::Escape($match.Value), $newPropertyDeclaration
         }

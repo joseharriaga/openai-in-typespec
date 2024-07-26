@@ -25,10 +25,10 @@ namespace OpenAI.Assistants
             ResponseFormat = responseFormat;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
-        public string Name { get; init; }
-        public string Description { get; init; }
-        public string Instructions { get; init; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Instructions { get; set; }
         public IDictionary<string, string> Metadata { get; }
-        public float? Temperature { get; init; }
+        public float? Temperature { get; set; }
     }
 }

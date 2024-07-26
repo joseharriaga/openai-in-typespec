@@ -22,9 +22,9 @@ namespace OpenAI.Audio
             TimestampGranularities = timestampGranularities;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
-        public string Language { get; init; }
-        public string Prompt { get; init; }
-        public AudioTranscriptionFormat? ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
+        public string Language { get; set; }
+        public string Prompt { get; set; }
+        public AudioTranscriptionFormat? ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
     }
 }

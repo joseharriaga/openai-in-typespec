@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalModifyThreadRequestToolResourcesFileSearch
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalModifyThreadRequestToolResourcesFileSearch()
         {
             VectorStoreIds = new ChangeTrackingList<string>();

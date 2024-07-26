@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFinetuneCompletionRequestInput
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalFinetuneCompletionRequestInput()
         {
         }

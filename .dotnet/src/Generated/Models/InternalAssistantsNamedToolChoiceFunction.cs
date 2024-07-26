@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalAssistantsNamedToolChoiceFunction
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalAssistantsNamedToolChoiceFunction(string name)
         {
             Argument.AssertNotNull(name, nameof(name));

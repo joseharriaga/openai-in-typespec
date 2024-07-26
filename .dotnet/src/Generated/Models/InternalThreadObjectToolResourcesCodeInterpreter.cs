@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalThreadObjectToolResourcesCodeInterpreter
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalThreadObjectToolResourcesCodeInterpreter()
         {
             FileIds = new ChangeTrackingList<string>();

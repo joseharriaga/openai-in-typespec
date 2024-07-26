@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalDeleteVectorStoreResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalDeleteVectorStoreResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));

@@ -10,7 +10,7 @@ namespace OpenAI.Batch
 {
     internal partial class InternalListBatchesResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalListBatchesResponse(IEnumerable<InternalBatchJob> data, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));

@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalThreadObjectToolResources
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalThreadObjectToolResources()
         {
         }

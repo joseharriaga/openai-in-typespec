@@ -9,7 +9,7 @@ namespace OpenAI
 {
     internal partial class InternalFunctionDefinition
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         public InternalFunctionDefinition(string name)
         {
             Argument.AssertNotNull(name, nameof(name));

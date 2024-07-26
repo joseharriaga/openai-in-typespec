@@ -1,27 +1,18 @@
-function Update-Set-Accessors {
+function Remove-CollectionSetters {
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
-    Get-ChildItem -Path $directory -Filter "*.cs" | Where-Object { $_.Name -notlike 'Internal*' } | ForEach-Object {
-        $content = Get-Content -Path $_.FullName -Raw
+    $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs"
 
-        $pattern = '([^{]*){ get; set; }'
-        $matches = [regex]::Matches($content, $pattern)
+    foreach ($file in $files) {
+        $content = Get-Content -Path $file -Raw
 
-        if ($matches) {
-            Write-Output "Editing $($_.Name): adjusting { set; } accessors"
-        }
-        foreach ($match in $matches) {
-            $propertyDeclaration = $match.Groups[1].Value
-            if ($propertyDeclaration -like "*List<*" -or $propertyDeclaration -like "*Dictionary<*") {
-                $newPropertyDeclaration = "$propertyDeclaration{ get; }"
-            } else {
-                $newPropertyDeclaration = "$propertyDeclaration{ get; set; }"
-            }
-            $content = $content -replace [regex]::Escape($match.Value), $newPropertyDeclaration
-        }
+        Write-Output "Editing $($file.FullName)"
 
-        Set-Content -Path $_.FullName -Value $content -NoNewline
+        $content = $content -creplace "internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }", "internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }"
+        $content = $content -creplace "public IDictionary<string, string> Metadata { get; set; }", "public IDictionary<string, string> Metadata { get; }"
+
+        $content | Set-Content -Path $file.FullName -NoNewline
     }
 }
 
-Update-Set-Accessors
+Remove-CollectionSetters

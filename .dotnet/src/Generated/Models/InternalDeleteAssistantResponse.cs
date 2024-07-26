@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalDeleteAssistantResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         internal InternalDeleteAssistantResponse(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));

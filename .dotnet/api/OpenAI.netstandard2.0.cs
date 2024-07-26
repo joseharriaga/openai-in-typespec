@@ -6,9 +6,9 @@ namespace OpenAI {
         public static ListOrder NewestFirst { get; }
         public static ListOrder OldestFirst { get; }
         public readonly bool Equals(ListOrder other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ListOrder left, ListOrder right);
         public static implicit operator ListOrder(string value);
@@ -68,205 +68,182 @@ namespace OpenAI.Assistants {
         protected internal AssistantClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<ThreadRun> CancelRun(ThreadRun run);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CancelRun(string threadId, string runId, RequestOptions options);
         public virtual ClientResult<ThreadRun> CancelRun(string threadId, string runId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(ThreadRun run);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CancelRunAsync(string threadId, string runId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateAssistant(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<Assistant> CreateAssistant(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateAssistantAsync(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<Assistant>> CreateAssistantAsync(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<ThreadMessage> CreateMessage(AssistantThread thread, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
         public virtual ClientResult<ThreadMessage> CreateMessage(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateMessage(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(AssistantThread thread, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateMessageAsync(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateRun(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateRun(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateRunAsync(string threadId, BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
         public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
         public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateThread(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateThreadAndRun(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateThreadAndRun(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateThreadAndRun(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateThreadAndRunAsync(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
         public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
         public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateThreadAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<bool> DeleteAssistant(Assistant assistant);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteAssistant(string assistantId, RequestOptions options);
         public virtual ClientResult<bool> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<bool>> DeleteAssistantAsync(Assistant assistant);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteAssistantAsync(string assistantId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<bool>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
         public virtual ClientResult<bool> DeleteMessage(ThreadMessage message);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteMessage(string threadId, string messageId, RequestOptions options);
         public virtual ClientResult<bool> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<bool>> DeleteMessageAsync(ThreadMessage message);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteMessageAsync(string threadId, string messageId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<bool>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual ClientResult<bool> DeleteThread(AssistantThread thread);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteThread(string threadId, RequestOptions options);
         public virtual ClientResult<bool> DeleteThread(string threadId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<bool>> DeleteThreadAsync(AssistantThread thread);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteThreadAsync(string threadId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<bool>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetAssistant(string assistantId, RequestOptions options);
         public virtual ClientResult<Assistant> GetAssistant(string assistantId, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetAssistantAsync(string assistantId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
         public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<ThreadMessage> GetMessage(ThreadMessage message);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetMessage(string threadId, string messageId, RequestOptions options);
         public virtual ClientResult<ThreadMessage> GetMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(ThreadMessage message);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetMessageAsync(string threadId, string messageId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual PageableCollection<ThreadMessage> GetMessages(AssistantThread thread, ListOrder? resultOrder = null);
         public virtual PageableCollection<ThreadMessage> GetMessages(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(AssistantThread thread, ListOrder? resultOrder = null);
         public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<ThreadRun> GetRun(ThreadRun run);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetRun(string threadId, string runId, RequestOptions options);
         public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ThreadRun>> GetRunAsync(ThreadRun run);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetRunAsync(string threadId, string runId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
         public virtual PageableCollection<ThreadRun> GetRuns(AssistantThread thread, ListOrder? resultOrder = null);
         public virtual PageableCollection<ThreadRun> GetRuns(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(AssistantThread thread, ListOrder? resultOrder = null);
         public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetRunStep(string threadId, string runId, string stepId, RequestOptions options);
         public virtual ClientResult<RunStep> GetRunStep(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetRunStepAsync(string threadId, string runId, string stepId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
         public virtual PageableCollection<RunStep> GetRunSteps(ThreadRun run, ListOrder? resultOrder = null);
         public virtual PageableCollection<RunStep> GetRunSteps(string threadId, string runId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(ThreadRun run, ListOrder? resultOrder = null);
         public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(string threadId, string runId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<AssistantThread> GetThread(AssistantThread thread);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetThread(string threadId, RequestOptions options);
         public virtual ClientResult<AssistantThread> GetThread(string threadId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(AssistantThread thread);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetThreadAsync(string threadId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(string threadId, CancellationToken cancellationToken = default);
         public virtual ClientResult<Assistant> ModifyAssistant(Assistant assistant, AssistantModificationOptions options);
         public virtual ClientResult<Assistant> ModifyAssistant(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyAssistant(string assistantId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(Assistant assistant, AssistantModificationOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyAssistantAsync(string assistantId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadMessage> ModifyMessage(ThreadMessage message, MessageModificationOptions options);
         public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyMessage(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(ThreadMessage message, MessageModificationOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyMessageAsync(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyRun(string threadId, string runId, BinaryContent content, RequestOptions options = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<AssistantThread> ModifyThread(AssistantThread thread, ThreadModificationOptions options);
         public virtual ClientResult<AssistantThread> ModifyThread(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyThread(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(AssistantThread thread, ThreadModificationOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyThreadAsync(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult SubmitToolOutputsToRun(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> SubmitToolOutputsToRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
         public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
         public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
@@ -312,9 +289,9 @@ namespace OpenAI.Assistants {
         public static AssistantResponseFormat JsonObject { get; }
         public static AssistantResponseFormat Text { get; }
         public bool Equals(AssistantResponseFormat other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode();
         public static bool operator ==(AssistantResponseFormat left, AssistantResponseFormat right);
         public static implicit operator AssistantResponseFormat(string value);
@@ -447,9 +424,9 @@ namespace OpenAI.Assistants {
         public static MessageFailureReason RunExpired { get; }
         public static MessageFailureReason RunFailed { get; }
         public readonly bool Equals(MessageFailureReason other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(MessageFailureReason left, MessageFailureReason right);
         public static implicit operator MessageFailureReason(string value);
@@ -481,9 +458,9 @@ namespace OpenAI.Assistants {
         public static MessageStatus Incomplete { get; }
         public static MessageStatus InProgress { get; }
         public readonly bool Equals(MessageStatus other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(MessageStatus left, MessageStatus right);
         public static implicit operator MessageStatus(string value);
@@ -541,9 +518,9 @@ namespace OpenAI.Assistants {
         public static RunErrorCode RateLimitExceeded { get; }
         public static RunErrorCode ServerError { get; }
         public readonly bool Equals(RunErrorCode other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunErrorCode left, RunErrorCode right);
         public static implicit operator RunErrorCode(string value);
@@ -565,9 +542,9 @@ namespace OpenAI.Assistants {
         public static RunIncompleteReason MaxCompletionTokens { get; }
         public static RunIncompleteReason MaxPromptTokens { get; }
         public readonly bool Equals(RunIncompleteReason other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunIncompleteReason left, RunIncompleteReason right);
         public static implicit operator RunIncompleteReason(string value);
@@ -597,9 +574,9 @@ namespace OpenAI.Assistants {
         public static RunStatus Queued { get; }
         public static RunStatus RequiresAction { get; }
         public readonly bool Equals(RunStatus other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStatus left, RunStatus right);
         public static implicit operator RunStatus(string value);
@@ -673,9 +650,9 @@ namespace OpenAI.Assistants {
         public static RunStepErrorCode RateLimitExceeded { get; }
         public static RunStepErrorCode ServerError { get; }
         public readonly bool Equals(RunStepErrorCode other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStepErrorCode left, RunStepErrorCode right);
         public static implicit operator RunStepErrorCode(string value);
@@ -692,9 +669,9 @@ namespace OpenAI.Assistants {
         public static RunStepStatus Failed { get; }
         public static RunStepStatus InProgress { get; }
         public readonly bool Equals(RunStepStatus other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStepStatus left, RunStepStatus right);
         public static implicit operator RunStepStatus(string value);
@@ -738,9 +715,9 @@ namespace OpenAI.Assistants {
         public static RunStepType MessageCreation { get; }
         public static RunStepType ToolCalls { get; }
         public readonly bool Equals(RunStepType other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStepType left, RunStepType right);
         public static implicit operator RunStepType(string value);
@@ -977,33 +954,25 @@ namespace OpenAI.Audio {
         public AudioClient(string model, OpenAIClientOptions options = null);
         public AudioClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GenerateSpeechFromText(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<BinaryData> GenerateSpeechFromText(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GenerateSpeechFromTextAsync(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<BinaryData>> GenerateSpeechFromTextAsync(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult TranscribeAudio(BinaryContent content, string contentType, RequestOptions options = null);
         public virtual ClientResult<AudioTranscription> TranscribeAudio(Stream audio, string audioFilename, AudioTranscriptionOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> TranscribeAudioAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(Stream audio, string audioFilename, AudioTranscriptionOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null);
         public virtual ClientResult TranslateAudio(BinaryContent content, string contentType, RequestOptions options = null);
         public virtual ClientResult<AudioTranslation> TranslateAudio(Stream audio, string audioFilename, AudioTranslationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> TranslateAudioAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(Stream audio, string audioFilename, AudioTranslationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null);
     }
     [Flags]
@@ -1146,16 +1115,12 @@ namespace OpenAI.Batch {
         protected internal BatchClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult CancelBatch(string batchId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options);
         public virtual ClientResult CreateBatch(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> CreateBatchAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult GetBatch(string batchId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> GetBatchAsync(string batchId, RequestOptions options);
         public virtual ClientResult GetBatches(string after, int? limit, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> GetBatchesAsync(string after, int? limit, RequestOptions options);
     }
 }
@@ -1182,15 +1147,12 @@ namespace OpenAI.Chat {
         public ChatClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<ChatCompletion> CompleteChat(params ChatMessage[] messages);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CompleteChat(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ChatCompletion> CompleteChat(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(params ChatMessage[] messages);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
         public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages);
         public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
@@ -1324,9 +1286,9 @@ namespace OpenAI.Chat {
         public static ChatMessageContentPartKind Image { get; }
         public static ChatMessageContentPartKind Text { get; }
         public readonly bool Equals(ChatMessageContentPartKind other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
         public static implicit operator ChatMessageContentPartKind(string value);
@@ -1410,9 +1372,9 @@ namespace OpenAI.Chat {
         public ChatToolCallKind(string value);
         public static ChatToolCallKind Function { get; }
         public readonly bool Equals(ChatToolCallKind other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ChatToolCallKind left, ChatToolCallKind right);
         public static implicit operator ChatToolCallKind(string value);
@@ -1436,9 +1398,9 @@ namespace OpenAI.Chat {
         public ChatToolKind(string value);
         public static ChatToolKind Function { get; }
         public readonly bool Equals(ChatToolKind other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ChatToolKind left, ChatToolKind right);
         public static implicit operator ChatToolKind(string value);
@@ -1464,9 +1426,9 @@ namespace OpenAI.Chat {
         public static ImageChatMessageContentPartDetail High { get; }
         public static ImageChatMessageContentPartDetail Low { get; }
         public readonly bool Equals(ImageChatMessageContentPartDetail other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
         public static implicit operator ImageChatMessageContentPartDetail(string value);
@@ -1562,18 +1524,14 @@ namespace OpenAI.Embeddings {
         public EmbeddingClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GenerateEmbeddings(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GenerateEmbeddingsAsync(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
     }
     public class EmbeddingCollection : ObjectModel.ReadOnlyCollection<Embedding>, IJsonModel<EmbeddingCollection>, IPersistableModel<EmbeddingCollection> {
@@ -1612,53 +1570,42 @@ namespace OpenAI.Files {
         protected internal FileClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<bool> DeleteFile(OpenAIFileInfo file);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
         public virtual ClientResult<bool> DeleteFile(string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<bool>> DeleteFileAsync(OpenAIFileInfo file);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteFileAsync(string fileId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<bool>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult<BinaryData> DownloadFile(OpenAIFileInfo file);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DownloadFile(string fileId, RequestOptions options);
         public virtual ClientResult<BinaryData> DownloadFile(string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(OpenAIFileInfo file);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DownloadFileAsync(string fileId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFile(string fileId, RequestOptions options);
         public virtual ClientResult<OpenAIFileInfo> GetFile(string fileId, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAsync(string fileId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFiles(string purpose, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options);
         public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null);
         public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
         public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, FileUploadPurpose purpose);
         public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
     }
     public readonly partial struct FileUploadPurpose : IEquatable<FileUploadPurpose> {
@@ -1670,9 +1617,9 @@ namespace OpenAI.Files {
         public static FileUploadPurpose FineTune { get; }
         public static FileUploadPurpose Vision { get; }
         public readonly bool Equals(FileUploadPurpose other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right);
         public static implicit operator FileUploadPurpose(string value);
@@ -1712,9 +1659,9 @@ namespace OpenAI.Files {
         public static OpenAIFilePurpose FineTuneResults { get; }
         public static OpenAIFilePurpose Vision { get; }
         public readonly bool Equals(OpenAIFilePurpose other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right);
         public static implicit operator OpenAIFilePurpose(string value);
@@ -1729,9 +1676,9 @@ namespace OpenAI.Files {
         public static OpenAIFileStatus Processed { get; }
         public static OpenAIFileStatus Uploaded { get; }
         public readonly bool Equals(OpenAIFileStatus other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(OpenAIFileStatus left, OpenAIFileStatus right);
         public static implicit operator OpenAIFileStatus(string value);
@@ -1747,22 +1694,16 @@ namespace OpenAI.FineTuning {
         protected internal FineTuningClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult CancelJob(string jobId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> CancelJobAsync(string jobId, RequestOptions options);
         public virtual ClientResult CreateJob(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> CreateJobAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult GetJob(string jobId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> GetJobAsync(string jobId, RequestOptions options);
         public virtual ClientResult GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options);
         public virtual ClientResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options);
         public virtual ClientResult GetJobs(string after, int? limit, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options);
     }
 }
@@ -1804,9 +1745,9 @@ namespace OpenAI.Images {
         public static readonly GeneratedImageSize W512xH512;
         public GeneratedImageSize(int width, int height);
         public readonly bool Equals(GeneratedImageSize other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right);
         public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right);
@@ -1823,61 +1764,44 @@ namespace OpenAI.Images {
         public ImageClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<GeneratedImage> GenerateImage(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageAsync(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(string imageFilePath, string prompt, ImageEditOptions options = null);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(string imageFilePath, string prompt, string maskFilePath, ImageEditOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, ImageEditOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(string imageFilePath, string prompt, ImageEditOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageEditAsync(string imageFilePath, string prompt, string maskFilePath, ImageEditOptions options = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GenerateImageEdits(BinaryContent content, string contentType, RequestOptions options = null);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GenerateImageEditsAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(Stream image, string imageFilename, string prompt, Stream mask, string maskFilename, int imageCount, ImageEditOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, int imageCount, ImageEditOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageEditsAsync(string imageFilePath, string prompt, string maskFilePath, int imageCount, ImageEditOptions options = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GenerateImages(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<GeneratedImageCollection> GenerateImages(string prompt, int imageCount, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GenerateImagesAsync(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImagesAsync(string prompt, int imageCount, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageVariation(Stream image, string imageFilename, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageVariation(string imageFilePath, ImageVariationOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(Stream image, string imageFilename, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageVariationAsync(string imageFilePath, ImageVariationOptions options = null);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GenerateImageVariations(BinaryContent content, string contentType, RequestOptions options = null);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImageCollection> GenerateImageVariations(string imageFilePath, int imageCount, ImageVariationOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GenerateImageVariationsAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(Stream image, string imageFilename, int imageCount, ImageVariationOptions options = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(string imageFilePath, int imageCount, ImageVariationOptions options = null);
     }
     public class ImageEditOptions : IJsonModel<ImageEditOptions>, IPersistableModel<ImageEditOptions> {
@@ -1920,29 +1844,23 @@ namespace OpenAI.Models {
         public ModelClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
         protected internal ModelClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteModel(string model, RequestOptions options);
         public virtual ClientResult<bool> DeleteModel(string model);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<bool>> DeleteModelAsync(string model);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetModel(string model, RequestOptions options);
         public virtual ClientResult<OpenAIModelInfo> GetModel(string model);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetModelAsync(string model, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<OpenAIModelInfo>> GetModelAsync(string model);
         public virtual ClientResult<OpenAIModelInfoCollection> GetModels();
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetModels(RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<OpenAIModelInfoCollection>> GetModelsAsync();
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetModelsAsync(RequestOptions options);
     }
     public class OpenAIModelInfo : IJsonModel<OpenAIModelInfo>, IPersistableModel<OpenAIModelInfo> {
@@ -2007,15 +1925,12 @@ namespace OpenAI.Moderations {
         public ModerationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options = null);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<ModerationResult> ClassifyTextInput(string input, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ModerationResult>> ClassifyTextInputAsync(string input, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ClassifyTextInputs(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ModerationCollection> ClassifyTextInputs(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ClassifyTextInputsAsync(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<ModerationCollection>> ClassifyTextInputsAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
     }
     public class ModerationCollection : ObjectModel.ReadOnlyCollection<ModerationResult>, IJsonModel<ModerationCollection>, IPersistableModel<ModerationCollection> {
@@ -2097,9 +2012,9 @@ namespace OpenAI.VectorStores {
         public static VectorStoreBatchFileJobStatus Failed { get; }
         public static VectorStoreBatchFileJobStatus InProgress { get; }
         public readonly bool Equals(VectorStoreBatchFileJobStatus other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(VectorStoreBatchFileJobStatus left, VectorStoreBatchFileJobStatus right);
         public static implicit operator VectorStoreBatchFileJobStatus(string value);
@@ -2113,126 +2028,103 @@ namespace OpenAI.VectorStores {
         protected internal VectorStoreClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, Files.OpenAIFileInfo file);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(VectorStoreBatchFileJob batchJob);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
         public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(VectorStore vectorStore, IEnumerable<Files.OpenAIFileInfo> files);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<Files.OpenAIFileInfo> files);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<bool> DeleteVectorStore(VectorStore vectorStore);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteVectorStore(string vectorStoreId, RequestOptions options);
         public virtual ClientResult<bool> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(VectorStore vectorStore);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteVectorStoreAsync(string vectorStoreId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(VectorStoreBatchFileJob batchJob);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
         public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(VectorStore vectorStore, Files.OpenAIFileInfo file);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options);
         public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStore vectorStore, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
         public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStoreBatchFileJob batchJob, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
         public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStore vectorStore, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
         public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreBatchFileJob batchJob, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
         public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options);
         public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(VectorStore vectorStore);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetVectorStores(int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<VectorStore> ModifyVectorStore(VectorStore vectorStore, VectorStoreModificationOptions options);
         public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(VectorStore vectorStore, VectorStoreModificationOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<bool> RemoveFileFromStore(VectorStore vectorStore, Files.OpenAIFileInfo file);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options);
         public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
-        [Diagnostics.DebuggerStepThrough]
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options);
-        [Diagnostics.DebuggerStepThrough]
         public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
     }
     public class VectorStoreCreationOptions : IJsonModel<VectorStoreCreationOptions>, IPersistableModel<VectorStoreCreationOptions> {
@@ -2301,9 +2193,9 @@ namespace OpenAI.VectorStores {
         public static VectorStoreFileAssociationErrorCode ParsingError { get; }
         public static VectorStoreFileAssociationErrorCode UnhandledMimeType { get; }
         public readonly bool Equals(VectorStoreFileAssociationErrorCode other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(VectorStoreFileAssociationErrorCode left, VectorStoreFileAssociationErrorCode right);
         public static implicit operator VectorStoreFileAssociationErrorCode(string value);
@@ -2345,9 +2237,9 @@ namespace OpenAI.VectorStores {
         public static VectorStoreFileStatusFilter Failed { get; }
         public static VectorStoreFileStatusFilter InProgress { get; }
         public readonly bool Equals(VectorStoreFileStatusFilter other);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
-        [ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(VectorStoreFileStatusFilter left, VectorStoreFileStatusFilter right);
         public static implicit operator VectorStoreFileStatusFilter(string value);

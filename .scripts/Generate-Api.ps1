@@ -19,6 +19,9 @@ $content = Get-Content $outputPath -Raw
 $content = $content -replace '//.*\r?\n', ''
 $content = $content -replace '\r?\n\r?\n', "`n"
 
+$content = $content -replace '.*Diagnostics.DebuggerStepThrough.*\n', ''
+$content = $content -replace 'ComponentModel.', ''
+
 $content = $content -replace 'System.ClientModel.Primitives.', ''
 $content = $content -replace 'System.ClientModel.', ''
 $content = $content -replace 'System.Collections.Generic.', ''

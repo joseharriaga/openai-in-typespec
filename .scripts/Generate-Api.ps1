@@ -7,20 +7,17 @@ $platformTarget = "netstandard2.0"
 $assemblyPath = Join-Path $dotnetFolder bin\Debug $platformTarget OpenAI.dll
 $outputPath = Join-Path $apiFolder "OpenAI.$($platformTarget).cs"
 
-genapi --assembly $assemblyPath --output-path $outputPath
+genapi --assembly $assemblyPath --output-path $outputPath `
+    --assembly-reference "$($env:ProgramFiles)\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.5\ref\net8.0" `
+    --assembly-reference "$($env:ProgramFiles)\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.7\ref\net8.0" `
+    --assembly-reference "$($env:UserProfile)\.nuget\packages\system.memory.data\1.0.2\lib\netstandard2.0" `
+    --assembly-reference "$($env:UserProfile)\.nuget\packages\system.clientmodel\1.1.0-beta.5\lib\netstandard2.0" `
+    --assembly-reference "$($env:UserProfile)\.nuget\packages\microsoft.bcl.asyncinterfaces\1.1.0\lib\netstandard2.0"
 
 $content = Get-Content $outputPath -Raw
 
 $content = $content -replace '//.*\r?\n', ''
 $content = $content -replace '\r?\n\r?\n', "`n"
-$content = $content -replace 'System.Boolean', 'bool'
-$content = $content -replace 'System.String', 'string'
-$content = $content -replace 'System.Object', 'object'
-$content = $content -replace 'System.Uri', 'Uri'
-$content = $content -replace 'System.Single', 'float'
-$content = $content -replace 'System.Int32', 'int'
-$content = $content -replace 'System.Int64', 'long'
-$content = $content -replace 'System.Nullable<([^>]*)>', '$1?'
 
 $content = $content -replace 'System.ClientModel.Primitives.', ''
 $content = $content -replace 'System.ClientModel.', ''

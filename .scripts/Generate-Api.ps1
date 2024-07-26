@@ -40,6 +40,7 @@ $content = $content -replace ' { *}', ';'
 $content = $content -replace ' *public int value__;\r?\n', ''
 $content = $content -replace "  * internal.*`n", ""
 $content = $content -replace '(virtual )[^ \.]*\.', '$1'
+$content = $content -replace "cancellationToken = null", "cancellationToken = default"
 
 Set-Content -Path $outputPath -Value $content -NoNewline
 

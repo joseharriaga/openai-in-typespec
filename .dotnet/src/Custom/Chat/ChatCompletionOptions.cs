@@ -59,7 +59,7 @@ public partial class ChatCompletionOptions
     // CUSTOM: Renamed.
     /// <summary> Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the message content. </summary>
     [CodeGenMember("Logprobs")]
-    public bool? IncludeLogProbabilities { get; }
+    public bool? IncludeLogProbabilities { get; set; }
 
     // CUSTOM: Renamed.
     /// <summary> An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. <see cref="IncludeLogProbabilities"/> must be set to <see langword="true"/> if this property is used. </summary>

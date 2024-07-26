@@ -27,7 +27,7 @@ public partial class AssistantModificationOptions
 
     /// <inheritdoc cref="ToolResources"/>
     [CodeGenMember("ToolResources")]
-    public ToolResources ToolResources { get; }
+    public ToolResources ToolResources { get; set; }
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     [CodeGenMember("ResponseFormat")]

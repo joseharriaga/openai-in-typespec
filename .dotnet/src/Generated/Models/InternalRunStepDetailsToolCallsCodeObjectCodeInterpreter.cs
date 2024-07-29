@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IEnumerable<RunStepCodeInterpreterOutput> outputs)
         {
             Argument.AssertNotNull(input, nameof(input));

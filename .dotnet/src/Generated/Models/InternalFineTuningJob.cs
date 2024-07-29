@@ -10,7 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJob
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalFineTuningJob(string id, DateTimeOffset createdAt, InternalFineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, InternalFineTuningJobHyperparameters hyperparameters, string model, string organizationId, IEnumerable<string> resultFiles, InternalFineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, int seed)
         {
             Argument.AssertNotNull(id, nameof(id));

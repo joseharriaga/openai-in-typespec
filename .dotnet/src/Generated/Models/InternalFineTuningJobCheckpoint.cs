@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJobCheckpoint
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalFineTuningJobCheckpoint(string id, DateTimeOffset createdAt, string fineTunedModelCheckpoint, int stepNumber, InternalFineTuningJobCheckpointMetrics metrics, string fineTuningJobId)
         {
             Argument.AssertNotNull(id, nameof(id));

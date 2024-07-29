@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore()
         {
             FileIds = new ChangeTrackingList<string>();

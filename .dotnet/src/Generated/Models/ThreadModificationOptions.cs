@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class ThreadModificationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public ThreadModificationOptions()
         {
             Metadata = new ChangeTrackingDictionary<string, string>();

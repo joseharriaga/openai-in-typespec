@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionStreamOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalChatCompletionStreamOptions()
         {
         }

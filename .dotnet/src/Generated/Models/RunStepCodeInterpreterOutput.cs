@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public abstract partial class RunStepCodeInterpreterOutput
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         protected RunStepCodeInterpreterOutput()
         {
         }

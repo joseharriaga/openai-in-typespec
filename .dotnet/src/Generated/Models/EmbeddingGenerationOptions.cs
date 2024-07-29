@@ -9,7 +9,7 @@ namespace OpenAI.Embeddings
 {
     public partial class EmbeddingGenerationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
         internal EmbeddingGenerationOptions(BinaryData input, InternalCreateEmbeddingRequestModel model, InternalCreateEmbeddingRequestEncodingFormat? encodingFormat, int? dimensions, string user, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {

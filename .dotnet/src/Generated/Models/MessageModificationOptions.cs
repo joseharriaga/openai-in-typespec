@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageModificationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public MessageModificationOptions()
         {
             Metadata = new ChangeTrackingDictionary<string, string>();

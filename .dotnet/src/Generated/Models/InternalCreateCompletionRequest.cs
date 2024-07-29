@@ -10,7 +10,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionRequest
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalCreateCompletionRequest(InternalCreateCompletionRequestModel model, BinaryData prompt)
         {
             Model = model;

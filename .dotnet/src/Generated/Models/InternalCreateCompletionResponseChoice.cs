@@ -9,7 +9,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionResponseChoice
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalCreateCompletionResponseChoice(InternalCreateCompletionResponseChoiceFinishReason finishReason, int index, InternalCreateCompletionResponseChoiceLogprobs logprobs, string text)
         {
             Argument.AssertNotNull(text, nameof(text));

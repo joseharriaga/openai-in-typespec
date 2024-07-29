@@ -8,7 +8,6 @@ function Remove-CollectionSetters {
 
         Write-Output "Editing $($file.FullName)"
 
-        $content = $content -creplace "internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }", "internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }"
         $content = $content -creplace "public IDictionary<string, string> Metadata { get; set; }", "public IDictionary<string, string> Metadata { get; }"
 
         $content | Set-Content -Path $file.FullName -NoNewline

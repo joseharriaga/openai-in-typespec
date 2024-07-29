@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJobCheckpointMetrics
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalFineTuningJobCheckpointMetrics()
         {
         }

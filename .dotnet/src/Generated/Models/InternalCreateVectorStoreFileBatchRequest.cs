@@ -10,7 +10,7 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalCreateVectorStoreFileBatchRequest
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalCreateVectorStoreFileBatchRequest(IEnumerable<string> fileIds)
         {
             Argument.AssertNotNull(fileIds, nameof(fileIds));

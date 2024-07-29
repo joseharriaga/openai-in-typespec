@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageCreationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
         internal MessageCreationOptions(MessageRole role, IList<MessageContent> content, IList<MessageCreationAttachment> attachments, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {

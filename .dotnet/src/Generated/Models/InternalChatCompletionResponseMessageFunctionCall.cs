@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionResponseMessageFunctionCall
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalChatCompletionResponseMessageFunctionCall(string arguments, string name)
         {
             Argument.AssertNotNull(arguments, nameof(arguments));

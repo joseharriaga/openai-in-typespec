@@ -9,7 +9,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionResponseChoiceLogprobs
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalCreateCompletionResponseChoiceLogprobs()
         {
             TextOffset = new ChangeTrackingList<int>();

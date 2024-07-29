@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionRequestMessageContentPartImage
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalChatCompletionRequestMessageContentPartImage(InternalChatCompletionRequestMessageContentPartImageImageUrl imageUrl)
         {
             Argument.AssertNotNull(imageUrl, nameof(imageUrl));

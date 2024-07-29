@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalListMessagesResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalListMessagesResponse(IEnumerable<ThreadMessage> data, string firstId, string lastId, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));

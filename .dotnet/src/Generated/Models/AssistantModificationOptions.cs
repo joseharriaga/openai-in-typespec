@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class AssistantModificationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public AssistantModificationOptions()
         {
             DefaultTools = new ChangeTrackingList<ToolDefinition>();

@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class RunModificationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public RunModificationOptions()
         {
             Metadata = new ChangeTrackingDictionary<string, string>();

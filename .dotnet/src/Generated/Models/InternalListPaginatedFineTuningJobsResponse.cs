@@ -10,7 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalListPaginatedFineTuningJobsResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalListPaginatedFineTuningJobsResponse(IEnumerable<InternalFineTuningJob> data, bool hasMore)
         {
             Argument.AssertNotNull(data, nameof(data));

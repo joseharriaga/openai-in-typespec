@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningIntegration
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalFineTuningIntegration(InternalFineTuningIntegrationWandb wandb)
         {
             Argument.AssertNotNull(wandb, nameof(wandb));

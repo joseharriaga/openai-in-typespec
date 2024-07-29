@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalCreateFineTuningJobRequest
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalCreateFineTuningJobRequest(InternalCreateFineTuningJobRequestModel model, string trainingFile)
         {
             Argument.AssertNotNull(trainingFile, nameof(trainingFile));

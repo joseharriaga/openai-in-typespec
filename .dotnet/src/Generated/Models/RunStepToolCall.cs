@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public abstract partial class RunStepToolCall
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         protected RunStepToolCall()
         {
         }

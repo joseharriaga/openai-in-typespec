@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsMessageCreationObjectMessageCreation
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalRunStepDetailsMessageCreationObjectMessageCreation(string messageId)
         {
             Argument.AssertNotNull(messageId, nameof(messageId));

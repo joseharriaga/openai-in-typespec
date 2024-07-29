@@ -9,7 +9,7 @@ namespace OpenAI.Audio
 {
     internal partial class InternalCreateTranscriptionResponseJson
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         internal InternalCreateTranscriptionResponseJson(string text)
         {
             Argument.AssertNotNull(text, nameof(text));

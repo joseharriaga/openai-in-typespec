@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalCreateFineTuningJobRequestIntegrationWandb
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalCreateFineTuningJobRequestIntegrationWandb(string project)
         {
             Argument.AssertNotNull(project, nameof(project));

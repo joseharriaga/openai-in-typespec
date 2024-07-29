@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionNamedToolChoice
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public InternalChatCompletionNamedToolChoice(InternalChatCompletionNamedToolChoiceFunction function)
         {
             Argument.AssertNotNull(function, nameof(function));

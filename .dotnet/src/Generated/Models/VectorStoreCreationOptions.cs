@@ -26,6 +26,6 @@ namespace OpenAI.VectorStores
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
         public string Name { get; set; }
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; set; }
     }
 }

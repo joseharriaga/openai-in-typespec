@@ -21,6 +21,6 @@ namespace OpenAI.Assistants
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
         public IList<MessageCreationAttachment> Attachments { get; set; }
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; set; }
     }
 }

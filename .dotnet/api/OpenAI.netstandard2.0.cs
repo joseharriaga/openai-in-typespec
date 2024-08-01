@@ -35,10 +35,10 @@ namespace OpenAI {
         public virtual VectorStoreClient GetVectorStoreClient();
     }
     public class OpenAIClientOptions : ClientPipelineOptions {
-        public string ApplicationId { get; init; }
-        public Uri Endpoint { get; init; }
-        public string OrganizationId { get; init; }
-        public string ProjectId { get; init; }
+        public string ApplicationId { get; set; }
+        public Uri Endpoint { get; set; }
+        public string OrganizationId { get; set; }
+        public string ProjectId { get; set; }
     }
 }
 namespace OpenAI.Assistants {
@@ -97,10 +97,10 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateRunAsync(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual ResultCollection<StreamingUpdate> CreateRunStreaming(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
+        public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
+        public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateThread(BinaryContent content, RequestOptions options = null);
@@ -112,10 +112,10 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateThreadAndRunAsync(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
-        public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual ResultCollection<StreamingUpdate> CreateThreadAndRunStreaming(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
-        public virtual AsyncResultCollection<StreamingUpdate> CreateThreadAndRunStreamingAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
+        public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
+        public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateThreadAsync(BinaryContent content, RequestOptions options = null);
@@ -149,12 +149,14 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetAssistantAsync(string assistantId, RequestOptions options);
         public virtual Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<Assistant> GetAssistants(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<Assistant> GetAssistants(AssistantCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<Assistant> GetAssistants(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<Assistant> GetAssistantsAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual IEnumerable<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<Assistant> GetAssistantsAsync(AssistantCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncPageCollection<Assistant> GetAssistantsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options);
+        public virtual IAsyncEnumerable<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<ThreadMessage> GetMessage(ThreadMessage message);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetMessage(string threadId, string messageId, RequestOptions options);
@@ -163,14 +165,16 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetMessageAsync(string threadId, string messageId, RequestOptions options);
         public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<ThreadMessage> GetMessages(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual PageableCollection<ThreadMessage> GetMessages(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<ThreadMessage> GetMessages(AssistantThread thread, MessageCollectionOptions options = null);
+        public virtual PageCollection<ThreadMessage> GetMessages(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        public virtual PageCollection<ThreadMessage> GetMessages(string threadId, MessageCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual AsyncPageableCollection<ThreadMessage> GetMessagesAsync(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual IEnumerable<ClientResult> GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<ThreadMessage> GetMessagesAsync(AssistantThread thread, MessageCollectionOptions options = null);
+        public virtual AsyncPageCollection<ThreadMessage> GetMessagesAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        public virtual AsyncPageCollection<ThreadMessage> GetMessagesAsync(string threadId, MessageCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual IAsyncEnumerable<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<ThreadRun> GetRun(ThreadRun run);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetRun(string threadId, string runId, RequestOptions options);
@@ -179,28 +183,32 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetRunAsync(string threadId, string runId, RequestOptions options);
         public virtual Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<ThreadRun> GetRuns(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual PageableCollection<ThreadRun> GetRuns(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<ThreadRun> GetRuns(AssistantThread thread, RunCollectionOptions options = null);
+        public virtual PageCollection<ThreadRun> GetRuns(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        public virtual PageCollection<ThreadRun> GetRuns(string threadId, RunCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(AssistantThread thread, ListOrder? resultOrder = null);
-        public virtual AsyncPageableCollection<ThreadRun> GetRunsAsync(string threadId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual IEnumerable<ClientResult> GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<ThreadRun> GetRunsAsync(AssistantThread thread, RunCollectionOptions options = null);
+        public virtual AsyncPageCollection<ThreadRun> GetRunsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        public virtual AsyncPageCollection<ThreadRun> GetRunsAsync(string threadId, RunCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual IAsyncEnumerable<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetRunStep(string threadId, string runId, string stepId, RequestOptions options);
         public virtual ClientResult<RunStep> GetRunStep(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetRunStepAsync(string threadId, string runId, string stepId, RequestOptions options);
         public virtual Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<RunStep> GetRunSteps(ThreadRun run, ListOrder? resultOrder = null);
-        public virtual PageableCollection<RunStep> GetRunSteps(string threadId, string runId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<RunStep> GetRunSteps(ThreadRun run, RunStepCollectionOptions options = null);
+        public virtual PageCollection<RunStep> GetRunSteps(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        public virtual PageCollection<RunStep> GetRunSteps(string threadId, string runId, RunStepCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(ThreadRun run, ListOrder? resultOrder = null);
-        public virtual AsyncPageableCollection<RunStep> GetRunStepsAsync(string threadId, string runId, ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual IEnumerable<ClientResult> GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<RunStep> GetRunStepsAsync(ThreadRun run, RunStepCollectionOptions options = null);
+        public virtual AsyncPageCollection<RunStep> GetRunStepsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        public virtual AsyncPageCollection<RunStep> GetRunStepsAsync(string threadId, string runId, RunStepCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
+        public virtual IAsyncEnumerable<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<AssistantThread> GetThread(AssistantThread thread);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetThread(string threadId, RequestOptions options);
@@ -245,20 +253,26 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> SubmitToolOutputsToRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
-        public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        public virtual ResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
-        public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
-        public virtual AsyncResultCollection<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
+        public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
+        public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
+    }
+    public class AssistantCollectionOptions {
+        public string AfterId { get; set; }
+        public string BeforeId { get; set; }
+        public ListOrder? Order { get; set; }
+        public int? PageSize { get; set; }
     }
     public class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>, IPersistableModel<AssistantCreationOptions> {
-        public string Description { get; init; }
-        public string Instructions { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Name { get; init; }
-        public float? NucleusSamplingFactor { get; init; }
-        public AssistantResponseFormat ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
-        public ToolResources ToolResources { get; init; }
+        public string Description { get; set; }
+        public string Instructions { get; set; }
+        public IDictionary<string, string> Metadata { get; set; }
+        public string Name { get; set; }
+        public float? NucleusSamplingFactor { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
+        public ToolResources ToolResources { get; set; }
         public IList<ToolDefinition> Tools { get; }
         AssistantCreationOptions IJsonModel<AssistantCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<AssistantCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -267,16 +281,16 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<AssistantCreationOptions>.Write(ModelReaderWriterOptions options);
     }
     public class AssistantModificationOptions : IJsonModel<AssistantModificationOptions>, IPersistableModel<AssistantModificationOptions> {
-        public IList<ToolDefinition> DefaultTools { get; init; }
-        public string Description { get; init; }
-        public string Instructions { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Model { get; init; }
-        public string Name { get; init; }
-        public float? NucleusSamplingFactor { get; init; }
-        public AssistantResponseFormat ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
-        public ToolResources ToolResources { get; init; }
+        public IList<ToolDefinition> DefaultTools { get; set; }
+        public string Description { get; set; }
+        public string Instructions { get; set; }
+        public IDictionary<string, string> Metadata { get; set; }
+        public string Model { get; set; }
+        public string Name { get; set; }
+        public float? NucleusSamplingFactor { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
+        public ToolResources ToolResources { get; set; }
         AssistantModificationOptions IJsonModel<AssistantModificationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<AssistantModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         AssistantModificationOptions IPersistableModel<AssistantModificationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -323,7 +337,7 @@ namespace OpenAI.Assistants {
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class CodeInterpreterToolResources : IJsonModel<CodeInterpreterToolResources>, IPersistableModel<CodeInterpreterToolResources> {
-        public IList<string> FileIds { get; init; }
+        public IList<string> FileIds { get; set; }
         CodeInterpreterToolResources IJsonModel<CodeInterpreterToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<CodeInterpreterToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         CodeInterpreterToolResources IPersistableModel<CodeInterpreterToolResources>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -331,7 +345,7 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<CodeInterpreterToolResources>.Write(ModelReaderWriterOptions options);
     }
     public class FileSearchToolDefinition : ToolDefinition, IJsonModel<FileSearchToolDefinition>, IPersistableModel<FileSearchToolDefinition> {
-        public int? MaxResults { get; init; }
+        public int? MaxResults { get; set; }
         FileSearchToolDefinition IJsonModel<FileSearchToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FileSearchToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         FileSearchToolDefinition IPersistableModel<FileSearchToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -341,7 +355,7 @@ namespace OpenAI.Assistants {
     }
     public class FileSearchToolResources : IJsonModel<FileSearchToolResources>, IPersistableModel<FileSearchToolResources> {
         public IList<VectorStoreCreationHelper> NewVectorStores { get; }
-        public IList<string> VectorStoreIds { get; init; }
+        public IList<string> VectorStoreIds { get; set; }
         FileSearchToolResources IJsonModel<FileSearchToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FileSearchToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         FileSearchToolResources IPersistableModel<FileSearchToolResources>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -351,15 +365,21 @@ namespace OpenAI.Assistants {
     public class FunctionToolDefinition : ToolDefinition, IJsonModel<FunctionToolDefinition>, IPersistableModel<FunctionToolDefinition> {
         public FunctionToolDefinition();
         public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null);
-        public string Description { get; init; }
-        public required string FunctionName { get; init; }
-        public BinaryData Parameters { get; init; }
+        public string Description { get; set; }
+        public required string FunctionName { get; set; }
+        public BinaryData Parameters { get; set; }
         FunctionToolDefinition IJsonModel<FunctionToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FunctionToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         FunctionToolDefinition IPersistableModel<FunctionToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<FunctionToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<FunctionToolDefinition>.Write(ModelReaderWriterOptions options);
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+    }
+    public class MessageCollectionOptions {
+        public string AfterId { get; set; }
+        public string BeforeId { get; set; }
+        public ListOrder? Order { get; set; }
+        public int? PageSize { get; set; }
     }
     public abstract class MessageContent : IJsonModel<MessageContent>, IPersistableModel<MessageContent> {
         public MessageImageDetail? ImageDetail { get; }
@@ -398,8 +418,8 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<MessageCreationAttachment>.Write(ModelReaderWriterOptions options);
     }
     public class MessageCreationOptions : IJsonModel<MessageCreationOptions>, IPersistableModel<MessageCreationOptions> {
-        public IList<MessageCreationAttachment> Attachments { get; }
-        public IDictionary<string, string> Metadata { get; }
+        public IList<MessageCreationAttachment> Attachments { get; set; }
+        public IDictionary<string, string> Metadata { get; set; }
         MessageCreationOptions IJsonModel<MessageCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<MessageCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         MessageCreationOptions IPersistableModel<MessageCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -439,7 +459,7 @@ namespace OpenAI.Assistants {
         High = 2
     }
     public class MessageModificationOptions : IJsonModel<MessageModificationOptions>, IPersistableModel<MessageModificationOptions> {
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; set; }
         MessageModificationOptions IJsonModel<MessageModificationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<MessageModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         MessageModificationOptions IPersistableModel<MessageModificationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -474,27 +494,33 @@ namespace OpenAI.Assistants {
         public string FunctionName { get; }
         public string ToolCallId { get; }
     }
-    public class RequiredActionUpdate : StreamingUpdate {
+    public class RequiredActionUpdate : RunUpdate {
         public string FunctionArguments { get; }
         public string FunctionName { get; }
         public string ToolCallId { get; }
         public ThreadRun GetThreadRun();
     }
+    public class RunCollectionOptions {
+        public string AfterId { get; set; }
+        public string BeforeId { get; set; }
+        public ListOrder? Order { get; set; }
+        public int? PageSize { get; set; }
+    }
     public class RunCreationOptions : IJsonModel<RunCreationOptions>, IPersistableModel<RunCreationOptions> {
-        public string AdditionalInstructions { get; init; }
+        public string AdditionalInstructions { get; set; }
         public IList<ThreadInitializationMessage> AdditionalMessages { get; }
-        public string InstructionsOverride { get; init; }
-        public int? MaxCompletionTokens { get; init; }
-        public int? MaxPromptTokens { get; init; }
+        public string InstructionsOverride { get; set; }
+        public int? MaxCompletionTokens { get; set; }
+        public int? MaxPromptTokens { get; set; }
         public IDictionary<string, string> Metadata { get; }
-        public string ModelOverride { get; init; }
-        public float? NucleusSamplingFactor { get; init; }
-        public bool? ParallelToolCallsEnabled { get; init; }
-        public AssistantResponseFormat ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
-        public ToolConstraint ToolConstraint { get; init; }
+        public string ModelOverride { get; set; }
+        public float? NucleusSamplingFactor { get; set; }
+        public bool? ParallelToolCallsEnabled { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
+        public ToolConstraint ToolConstraint { get; set; }
         public IList<ToolDefinition> ToolsOverride { get; }
-        public RunTruncationStrategy TruncationStrategy { get; init; }
+        public RunTruncationStrategy TruncationStrategy { get; set; }
         RunCreationOptions IJsonModel<RunCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<RunCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         RunCreationOptions IPersistableModel<RunCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -552,7 +578,7 @@ namespace OpenAI.Assistants {
         public override readonly string ToString();
     }
     public class RunModificationOptions : IJsonModel<RunModificationOptions>, IPersistableModel<RunModificationOptions> {
-        public IDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; set; }
         RunModificationOptions IJsonModel<RunModificationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<RunModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         RunModificationOptions IPersistableModel<RunModificationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -613,6 +639,12 @@ namespace OpenAI.Assistants {
         RunStepCodeInterpreterOutput IPersistableModel<RunStepCodeInterpreterOutput>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<RunStepCodeInterpreterOutput>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<RunStepCodeInterpreterOutput>.Write(ModelReaderWriterOptions options);
+    }
+    public class RunStepCollectionOptions {
+        public string AfterId { get; set; }
+        public string BeforeId { get; set; }
+        public ListOrder? Order { get; set; }
+        public int? PageSize { get; set; }
     }
     public abstract class RunStepDetails : IJsonModel<RunStepDetails>, IPersistableModel<RunStepDetails> {
         public string CreatedMessageId { get; }
@@ -810,8 +842,8 @@ namespace OpenAI.Assistants {
     }
     public class ThreadCreationOptions : IJsonModel<ThreadCreationOptions>, IPersistableModel<ThreadCreationOptions> {
         public IList<ThreadInitializationMessage> InitialMessages { get; }
-        public IDictionary<string, string> Metadata { get; }
-        public ToolResources ToolResources { get; init; }
+        public IDictionary<string, string> Metadata { get; set; }
+        public ToolResources ToolResources { get; set; }
         ThreadCreationOptions IJsonModel<ThreadCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ThreadCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ThreadCreationOptions IPersistableModel<ThreadCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -843,8 +875,8 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<ThreadMessage>.Write(ModelReaderWriterOptions options);
     }
     public class ThreadModificationOptions : IJsonModel<ThreadModificationOptions>, IPersistableModel<ThreadModificationOptions> {
-        public IDictionary<string, string> Metadata { get; }
-        public ToolResources ToolResources { get; init; }
+        public IDictionary<string, string> Metadata { get; set; }
+        public ToolResources ToolResources { get; set; }
         ThreadModificationOptions IJsonModel<ThreadModificationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ThreadModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ThreadModificationOptions IPersistableModel<ThreadModificationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -867,7 +899,7 @@ namespace OpenAI.Assistants {
         public IReadOnlyDictionary<string, string> Metadata { get; }
         public string Model { get; }
         public float? NucleusSamplingFactor { get; }
-        public bool? ParallelToolCallsEnabled { get; init; }
+        public bool? ParallelToolCallsEnabled { get; }
         public IReadOnlyList<RequiredAction> RequiredActions { get; }
         public AssistantResponseFormat ResponseFormat { get; }
         public DateTimeOffset? StartedAt { get; }
@@ -917,8 +949,8 @@ namespace OpenAI.Assistants {
     public class ToolOutput : IJsonModel<ToolOutput>, IPersistableModel<ToolOutput> {
         public ToolOutput();
         public ToolOutput(string toolCallId, string output);
-        public string Output { get; init; }
-        public string ToolCallId { get; init; }
+        public string Output { get; set; }
+        public string ToolCallId { get; set; }
         ToolOutput IJsonModel<ToolOutput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ToolOutput>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ToolOutput IPersistableModel<ToolOutput>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -926,8 +958,8 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<ToolOutput>.Write(ModelReaderWriterOptions options);
     }
     public class ToolResources : IJsonModel<ToolResources>, IPersistableModel<ToolResources> {
-        public CodeInterpreterToolResources CodeInterpreter { get; init; }
-        public FileSearchToolResources FileSearch { get; init; }
+        public CodeInterpreterToolResources CodeInterpreter { get; set; }
+        public FileSearchToolResources FileSearch { get; set; }
         ToolResources IJsonModel<ToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ToolResources IPersistableModel<ToolResources>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -936,7 +968,7 @@ namespace OpenAI.Assistants {
     }
     public class VectorStoreCreationHelper : IJsonModel<VectorStoreCreationHelper>, IPersistableModel<VectorStoreCreationHelper> {
         public VectorStoreCreationHelper();
-        public VectorStoreCreationHelper(IEnumerable<Files.OpenAIFileInfo> files, IDictionary<string, string> metadata = null);
+        public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files, IDictionary<string, string> metadata = null);
         public VectorStoreCreationHelper(IEnumerable<string> fileIds, IDictionary<string, string> metadata = null);
         public IList<string> FileIds { get; }
         public IDictionary<string, string> Metadata { get; }
@@ -1001,11 +1033,11 @@ namespace OpenAI.Audio {
         Vtt = 4
     }
     public class AudioTranscriptionOptions : IJsonModel<AudioTranscriptionOptions>, IPersistableModel<AudioTranscriptionOptions> {
-        public AudioTimestampGranularities Granularities { get; init; }
-        public string Language { get; init; }
-        public string Prompt { get; init; }
-        public AudioTranscriptionFormat? ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
+        public AudioTimestampGranularities Granularities { get; set; }
+        public string Language { get; set; }
+        public string Prompt { get; set; }
+        public AudioTranscriptionFormat? ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
         AudioTranscriptionOptions IJsonModel<AudioTranscriptionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<AudioTranscriptionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         AudioTranscriptionOptions IPersistableModel<AudioTranscriptionOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1031,9 +1063,9 @@ namespace OpenAI.Audio {
         Vtt = 4
     }
     public class AudioTranslationOptions : IJsonModel<AudioTranslationOptions>, IPersistableModel<AudioTranslationOptions> {
-        public string Prompt { get; init; }
-        public AudioTranslationFormat? ResponseFormat { get; init; }
-        public float? Temperature { get; init; }
+        public string Prompt { get; set; }
+        public AudioTranslationFormat? ResponseFormat { get; set; }
+        public float? Temperature { get; set; }
         AudioTranslationOptions IJsonModel<AudioTranslationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<AudioTranslationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         AudioTranslationOptions IPersistableModel<AudioTranslationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1057,8 +1089,8 @@ namespace OpenAI.Audio {
         Shimmer = 5
     }
     public class SpeechGenerationOptions : IJsonModel<SpeechGenerationOptions>, IPersistableModel<SpeechGenerationOptions> {
-        public GeneratedSpeechFormat? ResponseFormat { get; init; }
-        public float? Speed { get; init; }
+        public GeneratedSpeechFormat? ResponseFormat { get; set; }
+        public float? Speed { get; set; }
         SpeechGenerationOptions IJsonModel<SpeechGenerationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<SpeechGenerationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         SpeechGenerationOptions IPersistableModel<SpeechGenerationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1130,8 +1162,8 @@ namespace OpenAI.Chat {
         public AssistantChatMessage(ChatFunctionCall functionCall, string content = null);
         public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public AssistantChatMessage(string content);
-        public ChatFunctionCall FunctionCall { get; init; }
-        public string ParticipantName { get; init; }
+        public ChatFunctionCall FunctionCall { get; set; }
+        public string ParticipantName { get; set; }
         public IList<ChatToolCall> ToolCalls { get; }
         AssistantChatMessage IJsonModel<AssistantChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<AssistantChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1154,10 +1186,10 @@ namespace OpenAI.Chat {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CompleteChatAsync(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ChatCompletion>> CompleteChatAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages);
-        public virtual ResultCollection<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
-        public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(params ChatMessage[] messages);
-        public virtual AsyncResultCollection<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages);
+        public virtual CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(params ChatMessage[] messages);
+        public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
     }
     public class ChatCompletion : IJsonModel<ChatCompletion>, IPersistableModel<ChatCompletion> {
         public IReadOnlyList<ChatMessageContentPart> Content { get; }
@@ -1179,23 +1211,23 @@ namespace OpenAI.Chat {
         public override string ToString();
     }
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
-        public float? FrequencyPenalty { get; init; }
-        public ChatFunctionChoice FunctionChoice { get; init; }
+        public float? FrequencyPenalty { get; set; }
+        public ChatFunctionChoice FunctionChoice { get; set; }
         public IList<ChatFunction> Functions { get; }
-        public bool? IncludeLogProbabilities { get; init; }
+        public bool? IncludeLogProbabilities { get; set; }
         public IDictionary<int, int> LogitBiases { get; }
-        public int? MaxTokens { get; init; }
-        public bool? ParallelToolCallsEnabled { get; init; }
-        public float? PresencePenalty { get; init; }
-        public ChatResponseFormat ResponseFormat { get; init; }
-        public long? Seed { get; init; }
+        public int? MaxTokens { get; set; }
+        public bool? ParallelToolCallsEnabled { get; set; }
+        public float? PresencePenalty { get; set; }
+        public ChatResponseFormat ResponseFormat { get; set; }
+        public long? Seed { get; set; }
         public IList<string> StopSequences { get; }
-        public float? Temperature { get; init; }
-        public ChatToolChoice ToolChoice { get; init; }
+        public float? Temperature { get; set; }
+        public ChatToolChoice ToolChoice { get; set; }
         public IList<ChatTool> Tools { get; }
-        public int? TopLogProbabilityCount { get; init; }
-        public float? TopP { get; init; }
-        public string User { get; init; }
+        public int? TopLogProbabilityCount { get; set; }
+        public float? TopP { get; set; }
+        public string User { get; set; }
         ChatCompletionOptions IJsonModel<ChatCompletionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatCompletionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatCompletionOptions IPersistableModel<ChatCompletionOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1212,9 +1244,9 @@ namespace OpenAI.Chat {
     [Obsolete("This field is marked as deprecated.")]
     public class ChatFunction : IJsonModel<ChatFunction>, IPersistableModel<ChatFunction> {
         public ChatFunction(string functionName, string functionDescription = null, BinaryData functionParameters = null);
-        public string FunctionDescription { get; init; }
+        public string FunctionDescription { get; set; }
         public string FunctionName { get; }
-        public BinaryData FunctionParameters { get; init; }
+        public BinaryData FunctionParameters { get; set; }
         ChatFunction IJsonModel<ChatFunction>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatFunction>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatFunction IPersistableModel<ChatFunction>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1242,7 +1274,7 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ChatFunctionChoice>.Write(ModelReaderWriterOptions options);
     }
     public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
-        public IList<ChatMessageContentPart> Content { get; protected init; }
+        public IList<ChatMessageContentPart> Content { get; protected set; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
@@ -1357,7 +1389,7 @@ namespace OpenAI.Chat {
     public class ChatToolCall : IJsonModel<ChatToolCall>, IPersistableModel<ChatToolCall> {
         public string FunctionArguments { get; }
         public string FunctionName { get; }
-        public string Id { get; init; }
+        public string Id { get; set; }
         public ChatToolCallKind Kind { get; }
         public static ChatToolCall CreateFunctionToolCall(string toolCallId, string functionName, string functionArguments);
         ChatToolCall IJsonModel<ChatToolCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1476,7 +1508,7 @@ namespace OpenAI.Chat {
     }
     public class SystemChatMessage : ChatMessage, IJsonModel<SystemChatMessage>, IPersistableModel<SystemChatMessage> {
         public SystemChatMessage(string content);
-        public string ParticipantName { get; init; }
+        public string ParticipantName { get; set; }
         SystemChatMessage IJsonModel<SystemChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<SystemChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         SystemChatMessage IPersistableModel<SystemChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1498,7 +1530,7 @@ namespace OpenAI.Chat {
         public UserChatMessage(params ChatMessageContentPart[] content);
         public UserChatMessage(IEnumerable<ChatMessageContentPart> content);
         public UserChatMessage(string content);
-        public string ParticipantName { get; init; }
+        public string ParticipantName { get; set; }
         UserChatMessage IJsonModel<UserChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<UserChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         UserChatMessage IPersistableModel<UserChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1544,8 +1576,8 @@ namespace OpenAI.Embeddings {
         BinaryData IPersistableModel<EmbeddingCollection>.Write(ModelReaderWriterOptions options);
     }
     public class EmbeddingGenerationOptions : IJsonModel<EmbeddingGenerationOptions>, IPersistableModel<EmbeddingGenerationOptions> {
-        public int? Dimensions { get; init; }
-        public string User { get; init; }
+        public int? Dimensions { get; set; }
+        public string User { get; set; }
         EmbeddingGenerationOptions IJsonModel<EmbeddingGenerationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<EmbeddingGenerationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         EmbeddingGenerationOptions IPersistableModel<EmbeddingGenerationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1805,9 +1837,9 @@ namespace OpenAI.Images {
         public virtual Task<ClientResult<GeneratedImageCollection>> GenerateImageVariationsAsync(string imageFilePath, int imageCount, ImageVariationOptions options = null);
     }
     public class ImageEditOptions : IJsonModel<ImageEditOptions>, IPersistableModel<ImageEditOptions> {
-        public GeneratedImageFormat? ResponseFormat { get; init; }
-        public GeneratedImageSize? Size { get; init; }
-        public string User { get; init; }
+        public GeneratedImageFormat? ResponseFormat { get; set; }
+        public GeneratedImageSize? Size { get; set; }
+        public string User { get; set; }
         ImageEditOptions IJsonModel<ImageEditOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ImageEditOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ImageEditOptions IPersistableModel<ImageEditOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1815,11 +1847,11 @@ namespace OpenAI.Images {
         BinaryData IPersistableModel<ImageEditOptions>.Write(ModelReaderWriterOptions options);
     }
     public class ImageGenerationOptions : IJsonModel<ImageGenerationOptions>, IPersistableModel<ImageGenerationOptions> {
-        public GeneratedImageQuality? Quality { get; init; }
-        public GeneratedImageFormat? ResponseFormat { get; init; }
-        public GeneratedImageSize? Size { get; init; }
-        public GeneratedImageStyle? Style { get; init; }
-        public string User { get; init; }
+        public GeneratedImageQuality? Quality { get; set; }
+        public GeneratedImageFormat? ResponseFormat { get; set; }
+        public GeneratedImageSize? Size { get; set; }
+        public GeneratedImageStyle? Style { get; set; }
+        public string User { get; set; }
         ImageGenerationOptions IJsonModel<ImageGenerationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ImageGenerationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ImageGenerationOptions IPersistableModel<ImageGenerationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1827,9 +1859,9 @@ namespace OpenAI.Images {
         BinaryData IPersistableModel<ImageGenerationOptions>.Write(ModelReaderWriterOptions options);
     }
     public class ImageVariationOptions : IJsonModel<ImageVariationOptions>, IPersistableModel<ImageVariationOptions> {
-        public GeneratedImageFormat? ResponseFormat { get; init; }
-        public GeneratedImageSize? Size { get; init; }
-        public string User { get; init; }
+        public GeneratedImageFormat? ResponseFormat { get; set; }
+        public GeneratedImageSize? Size { get; set; }
+        public string User { get; set; }
         ImageVariationOptions IJsonModel<ImageVariationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ImageVariationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ImageVariationOptions IPersistableModel<ImageVariationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2027,11 +2059,11 @@ namespace OpenAI.VectorStores {
         public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
         protected internal VectorStoreClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
@@ -2043,11 +2075,11 @@ namespace OpenAI.VectorStores {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(VectorStore vectorStore, IEnumerable<Files.OpenAIFileInfo> files);
+        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<Files.OpenAIFileInfo> files);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
@@ -2072,30 +2104,34 @@ namespace OpenAI.VectorStores {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options);
         public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStore vectorStore, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStoreBatchFileJob batchJob, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStore vectorStore, VectorStoreFileAssociationCollectionOptions options = null);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStoreBatchFileJob batchJob, VectorStoreFileAssociationCollectionOptions options = null);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual PageableCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
+        public virtual IEnumerable<ClientResult> GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStore vectorStore, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreBatchFileJob batchJob, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
+        public virtual IEnumerable<ClientResult> GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStore vectorStore, VectorStoreFileAssociationCollectionOptions options = null);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreBatchFileJob batchJob, VectorStoreFileAssociationCollectionOptions options = null);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual AsyncPageableCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ListOrder? resultOrder = null, VectorStoreFileStatusFilter? filter = null, CancellationToken cancellationToken = default);
+        public virtual IAsyncEnumerable<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual IAsyncEnumerable<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options);
@@ -2104,12 +2140,14 @@ namespace OpenAI.VectorStores {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options);
         public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual PageableCollection<VectorStore> GetVectorStores(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<VectorStore> GetVectorStores(VectorStoreCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<VectorStore> GetVectorStores(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetVectorStores(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncPageableCollection<VectorStore> GetVectorStoresAsync(ListOrder? resultOrder = null, CancellationToken cancellationToken = default);
+        public virtual IEnumerable<ClientResult> GetVectorStores(int? limit, string order, string after, string before, RequestOptions options);
+        public virtual AsyncPageCollection<VectorStore> GetVectorStoresAsync(VectorStoreCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncPageCollection<VectorStore> GetVectorStoresAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options);
+        public virtual IAsyncEnumerable<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options);
         public virtual ClientResult<VectorStore> ModifyVectorStore(VectorStore vectorStore, VectorStoreModificationOptions options);
         public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -2118,21 +2156,27 @@ namespace OpenAI.VectorStores {
         public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<bool> RemoveFileFromStore(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual ClientResult<bool> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options);
         public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(VectorStore vectorStore, Files.OpenAIFileInfo file);
+        public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<bool>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
     }
+    public class VectorStoreCollectionOptions {
+        public string AfterId { get; set; }
+        public string BeforeId { get; set; }
+        public ListOrder? Order { get; set; }
+        public int? PageSize { get; set; }
+    }
     public class VectorStoreCreationOptions : IJsonModel<VectorStoreCreationOptions>, IPersistableModel<VectorStoreCreationOptions> {
-        public FileChunkingStrategy ChunkingStrategy { get; init; }
-        public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
-        public IList<string> FileIds { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Name { get; init; }
+        public FileChunkingStrategy ChunkingStrategy { get; set; }
+        public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
+        public IList<string> FileIds { get; set; }
+        public IDictionary<string, string> Metadata { get; set; }
+        public string Name { get; set; }
         VectorStoreCreationOptions IJsonModel<VectorStoreCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<VectorStoreCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         VectorStoreCreationOptions IPersistableModel<VectorStoreCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2146,8 +2190,8 @@ namespace OpenAI.VectorStores {
     public class VectorStoreExpirationPolicy : IJsonModel<VectorStoreExpirationPolicy>, IPersistableModel<VectorStoreExpirationPolicy> {
         public VectorStoreExpirationPolicy();
         public VectorStoreExpirationPolicy(VectorStoreExpirationAnchor anchor, int days);
-        public required VectorStoreExpirationAnchor Anchor { get; init; }
-        public required int Days { get; init; }
+        public required VectorStoreExpirationAnchor Anchor { get; set; }
+        public required int Days { get; set; }
         VectorStoreExpirationPolicy IJsonModel<VectorStoreExpirationPolicy>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<VectorStoreExpirationPolicy>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         VectorStoreExpirationPolicy IPersistableModel<VectorStoreExpirationPolicy>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2158,7 +2202,7 @@ namespace OpenAI.VectorStores {
         public FileChunkingStrategy ChunkingStrategy { get; }
         public DateTimeOffset CreatedAt { get; }
         public string FileId { get; }
-        public VectorStoreFileAssociationError? LastError { get; }
+        public VectorStoreFileAssociationError LastError { get; }
         public int Size { get; }
         public VectorStoreFileAssociationStatus Status { get; }
         public string VectorStoreId { get; }
@@ -2168,21 +2212,21 @@ namespace OpenAI.VectorStores {
         string IPersistableModel<VectorStoreFileAssociation>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<VectorStoreFileAssociation>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct VectorStoreFileAssociationError : IJsonModel<VectorStoreFileAssociationError>, IPersistableModel<VectorStoreFileAssociationError>, IJsonModel<object>, IPersistableModel<object> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
+    public class VectorStoreFileAssociationCollectionOptions {
+        public string AfterId { get; set; }
+        public string BeforeId { get; set; }
+        public VectorStoreFileStatusFilter? Filter { get; set; }
+        public ListOrder? Order { get; set; }
+        public int? PageSize { get; set; }
+    }
+    public class VectorStoreFileAssociationError : IJsonModel<VectorStoreFileAssociationError>, IPersistableModel<VectorStoreFileAssociationError> {
         public VectorStoreFileAssociationErrorCode Code { get; }
         public string Message { get; }
-        readonly VectorStoreFileAssociationError IJsonModel<VectorStoreFileAssociationError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        readonly void IJsonModel<VectorStoreFileAssociationError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        readonly object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        readonly void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        readonly VectorStoreFileAssociationError IPersistableModel<VectorStoreFileAssociationError>.Create(BinaryData data, ModelReaderWriterOptions options);
-        readonly string IPersistableModel<VectorStoreFileAssociationError>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        readonly BinaryData IPersistableModel<VectorStoreFileAssociationError>.Write(ModelReaderWriterOptions options);
-        readonly object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options);
-        readonly string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        readonly BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options);
+        VectorStoreFileAssociationError IJsonModel<VectorStoreFileAssociationError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<VectorStoreFileAssociationError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        VectorStoreFileAssociationError IPersistableModel<VectorStoreFileAssociationError>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<VectorStoreFileAssociationError>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<VectorStoreFileAssociationError>.Write(ModelReaderWriterOptions options);
     }
     public readonly partial struct VectorStoreFileAssociationErrorCode : IEquatable<VectorStoreFileAssociationErrorCode> {
         private readonly object _dummy;
@@ -2209,24 +2253,17 @@ namespace OpenAI.VectorStores {
         Cancelled = 3,
         Failed = 4
     }
-    public readonly partial struct VectorStoreFileCounts : IJsonModel<VectorStoreFileCounts>, IPersistableModel<VectorStoreFileCounts>, IJsonModel<object>, IPersistableModel<object> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
+    public class VectorStoreFileCounts : IJsonModel<VectorStoreFileCounts>, IPersistableModel<VectorStoreFileCounts> {
         public int Cancelled { get; }
         public int Completed { get; }
         public int Failed { get; }
         public int InProgress { get; }
         public int Total { get; }
-        readonly VectorStoreFileCounts IJsonModel<VectorStoreFileCounts>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        readonly void IJsonModel<VectorStoreFileCounts>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        readonly object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        readonly void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        readonly VectorStoreFileCounts IPersistableModel<VectorStoreFileCounts>.Create(BinaryData data, ModelReaderWriterOptions options);
-        readonly string IPersistableModel<VectorStoreFileCounts>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        readonly BinaryData IPersistableModel<VectorStoreFileCounts>.Write(ModelReaderWriterOptions options);
-        readonly object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options);
-        readonly string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        readonly BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options);
+        VectorStoreFileCounts IJsonModel<VectorStoreFileCounts>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<VectorStoreFileCounts>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        VectorStoreFileCounts IPersistableModel<VectorStoreFileCounts>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<VectorStoreFileCounts>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<VectorStoreFileCounts>.Write(ModelReaderWriterOptions options);
     }
     public readonly partial struct VectorStoreFileStatusFilter : IEquatable<VectorStoreFileStatusFilter> {
         private readonly object _dummy;
@@ -2247,9 +2284,9 @@ namespace OpenAI.VectorStores {
         public override readonly string ToString();
     }
     public class VectorStoreModificationOptions : IJsonModel<VectorStoreModificationOptions>, IPersistableModel<VectorStoreModificationOptions> {
-        public VectorStoreExpirationPolicy ExpirationPolicy { get; init; }
-        public IDictionary<string, string> Metadata { get; }
-        public string Name { get; init; }
+        public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
+        public IDictionary<string, string> Metadata { get; set; }
+        public string Name { get; set; }
         VectorStoreModificationOptions IJsonModel<VectorStoreModificationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<VectorStoreModificationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         VectorStoreModificationOptions IPersistableModel<VectorStoreModificationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);

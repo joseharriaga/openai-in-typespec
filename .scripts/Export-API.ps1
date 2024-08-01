@@ -58,13 +58,9 @@ $content = $content -creplace ".*Diagnostics.DebuggerStepThrough.*\n", ""
 # Remove internal APIs.
 $content = $content -creplace "  * internal.*`n", ""
 
-# Other cosmestic simplifications.
+# Other cosmetic simplifications.
 $content = $content -creplace "partial class", "class"
 $content = $content -creplace " { throw null; }", ";"
 $content = $content -creplace " { }", ";"
 
 Set-Content -Path $outputPath -Value $content -NoNewline
-
-# For PR diff only
-$markdownContent = "``````csharp`n$($content)`n``````"
-Set-Content -Path "$($apiFolder)\api.md" -Value $markdownContent -NoNewline

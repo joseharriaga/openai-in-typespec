@@ -44,7 +44,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     public async Task BasicAssistantOperationsWork()
     {
         AssistantClient client = GetTestClient();
-        string modelName = "gpt-4o"; // client.DeploymentOrThrow();
+        string modelName = "gpt-4"; // client.DeploymentOrThrow();
         Assistant assistant = await client.CreateAssistantAsync(modelName);
         Validate(assistant);
         Assert.That(assistant.Name, Is.Null.Or.Empty);
@@ -74,7 +74,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
              },
         });
         Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        AsyncPageableCollection<Assistant> recentAssistants = client.GetAssistantsAsync();
+        IAsyncEnumerable<Assistant> recentAssistants = client.GetAssistantsAsync().GetAllValuesAsync();
         //SyncOrAsync(
         //    client, c => c.GetAssistants(), c => c.GetAssistantsAsync());
         Assistant recentAssistant = null;

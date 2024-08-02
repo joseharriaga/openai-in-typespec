@@ -57,7 +57,7 @@ public class AoaiTestBase<TClient> // : RecordedTestBase<AoaiTestEnvironment>
     public TClient GetTestClient()
     {
         AzureOpenAIClient topLevelClient = GetTestTopLevelClient(null);
-        string getDeployment() => "gpt-4o";
+        string getDeployment() => "gpt-4";
 
         object clientObject = null;
 

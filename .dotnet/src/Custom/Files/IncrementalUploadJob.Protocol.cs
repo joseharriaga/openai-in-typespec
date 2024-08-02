@@ -51,7 +51,7 @@ public partial class IncrementalUploadJob
     /// that describes the newly added data part. The <c>id</c> from this part is necessary to sequence parts in the
     /// final call to <see cref="Complete(string, BinaryContent, RequestOptions)"/>.
     /// </returns>
-    public virtual Task<ClientResult> AddDataPartAsync(string jobId, BinaryContent content, string contentType, RequestOptions options)
+    public virtual Task<ClientResult> AddDataPartAsync(string jobId, BinaryContent content, string contentType, RequestOptions options = null)
         => _internalClient.AddDataPartToUploadJobAsync(jobId, content, contentType, options);
 
     /// <summary>
@@ -99,7 +99,7 @@ public partial class IncrementalUploadJob
     /// that describes the newly added data part. The <c>id</c> from this part is necessary to sequence parts in the
     /// final call to <see cref="Complete(string, BinaryContent, RequestOptions)"/>.
     /// </returns>
-    public virtual ClientResult AddDataPart(string jobId, BinaryContent content, string contentType, RequestOptions options)
+    public virtual ClientResult AddDataPart(string jobId, BinaryContent content, string contentType, RequestOptions options = null)
         => _internalClient.AddDataPartToUploadJob(jobId, content, contentType, options);
 
     /// <summary>
@@ -133,7 +133,7 @@ public partial class IncrementalUploadJob
     /// that describes the completed job. If the job was completed successfully, this will include a <c>file</c>
     /// property for the completed file that, in turn, has an <c>id</c> property usable in other operations.
     /// </returns>
-    public virtual Task<ClientResult> CompleteAsync(string jobId, BinaryContent content, RequestOptions options)
+    public virtual Task<ClientResult> CompleteAsync(string jobId, BinaryContent content, RequestOptions options = null)
         => _internalClient.CompleteUploadJobAsync(jobId, content, options);
 
     /// <summary>
@@ -167,7 +167,7 @@ public partial class IncrementalUploadJob
     /// that describes the completed job. If the job was completed successfully, this will include a <c>file</c>
     /// property for the completed file that, in turn, has an <c>id</c> property usable in other operations.
     /// </returns>
-    public virtual ClientResult Complete(string jobId, BinaryContent content, RequestOptions options)
+    public virtual ClientResult Complete(string jobId, BinaryContent content, RequestOptions options = null)
         => _internalClient.CompleteUploadJob(jobId, content, options);
 
     /// <summary>

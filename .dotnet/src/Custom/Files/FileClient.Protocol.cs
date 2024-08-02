@@ -238,7 +238,7 @@ public partial class FileClient
     /// A new instance of <see cref="IncrementalUploadJob"/> that can be used to add data parts and complete the upload.
     /// A successfully completed upload will provide an assembled file with an ID that can be used in other operations.
     /// </returns>
-    public virtual async Task<IncrementalUploadJob> CreateIncrementalUploadJobAsync(BinaryContent content, RequestOptions options)
+    public virtual async Task<IncrementalUploadJob> CreateIncrementalUploadJobAsync(BinaryContent content, RequestOptions options = null)
     {
         ClientResult result = await _internalUploadClient.CreateUploadJobAsync(content, options).ConfigureAwait(false);
         InternalUploadJobInfo jobInfo = InternalUploadJobInfo.FromResponse(result.GetRawResponse());
@@ -273,7 +273,7 @@ public partial class FileClient
     /// A new instance of <see cref="IncrementalUploadJob"/> that can be used to add data parts and complete the upload.
     /// A successfully completed upload will provide an assembled file with an ID that can be used in other operations.
     /// </returns>
-    public virtual IncrementalUploadJob CreateIncrementalUploadJob(BinaryContent content, RequestOptions options)
+    public virtual IncrementalUploadJob CreateIncrementalUploadJob(BinaryContent content, RequestOptions options = null)
     {
         ClientResult result = _internalUploadClient.CreateUploadJob(content, options);
         InternalUploadJobInfo jobInfo = InternalUploadJobInfo.FromResponse(result.GetRawResponse());

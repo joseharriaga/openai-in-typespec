@@ -13,11 +13,32 @@ dotnet build $projectPath
 
 Write-Output "Generating OpenAI.netstandard2.0.cs"
 
+$net80ref = Get-ChildItem -Recurse `
+    -Path "$($env:ProgramFiles)\dotnet\packs\Microsoft.NETCore.App.Ref" `
+    -Include "net8.0" | Select-Object -Last 1
+$systemMemoryDataRef = Get-ChildItem -Recurse `
+    -Path "$($env:UserProfile)\.nuget\packages\system.memory.data" `
+    -Include "netstandard2.0" | Select-Object -Last 1
+$systemClientmodelRef = Get-ChildItem -Recurse `
+    -Path "$($env:UserProfile)\.nuget\packages\system.clientmodel" `
+    -Include "netstandard2.0" | Select-Object -Last 1
+$microsoftBclAsyncinterfacesRef = Get-ChildItem -Recurse `
+    -Path "$($env:UserProfile)\.nuget\packages\microsoft.bcl.asyncinterfaces\1.1.0" `
+    -Include "netstandard2.0" | Select-Object -Last 1
+
+Write-Output ""
+Write-Output "Using NETCore assembly path: $($net80ref)"
+Write-Output "Using System.Memory.Data assembly path: $($systemMemoryDataRef)"
+Write-Output "Using System.ClientModel assembly path: $($systemClientmodelRef)"
+Write-Output "Using Microsoft.Bcl.AsyncInterfaces assembly path: $($microsoftBclAsyncinterfacesRef)"
+Write-Output "Note: if any of the above are empty, tool output may be inaccurate."
+Write-Output ""
+
 genapi --assembly $assemblyPath --output-path $outputPath `
-    --assembly-reference "$($env:ProgramFiles)\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.7\ref\net8.0" `
-    --assembly-reference "$($env:UserProfile)\.nuget\packages\system.memory.data\1.0.2\lib\netstandard2.0" `
-    --assembly-reference "$($env:UserProfile)\.nuget\packages\system.clientmodel\1.1.0-beta.5\lib\netstandard2.0" `
-    --assembly-reference "$($env:UserProfile)\.nuget\packages\microsoft.bcl.asyncinterfaces\1.1.0\lib\netstandard2.0"
+    --assembly-reference $net80ref `
+    --assembly-reference $systemMemoryDataRef `
+    --assembly-reference $systemClientmodelRef `
+    --assembly-reference $microsoftBclAsyncinterfacesRef
 
 Write-Output "Cleaning up OpenAI.netstandard2.0.cs"
 

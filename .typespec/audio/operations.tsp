@@ -21,7 +21,7 @@ interface Audio {
     @header("Transfer-Encoding") transferEncoding?: string;
 
     @header contentType: "application/octet-stream";
-    @body @encode("binary") audio: bytes;
+    @body @encode("binary") responseBody: bytes;
   };
 
   @route("transcriptions")
@@ -39,7 +39,7 @@ interface Audio {
         // TODO: This response is not defined in the OpenAPI spec.
         @header contentType: "text/plain";
 
-        @body text: string;
+        @body responseBody: string;
       }
     | ErrorResponse;
 
@@ -58,7 +58,7 @@ interface Audio {
         // TODO: This response is not defined in the OpenAPI spec.
         @header contentType: "text/plain";
 
-        @body text: string;
+        @body responseBody: string;
       }
     | ErrorResponse;
 }

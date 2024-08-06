@@ -25,6 +25,22 @@ namespace OpenAI.Batch
         {
         }
 
+        public virtual async Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options)
+        {
+            Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
+
+            using PipelineMessage message = CreateCancelBatchRequest(batchId, options);
+            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult CancelBatch(string batchId, RequestOptions options)
+        {
+            Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
+
+            using PipelineMessage message = CreateCancelBatchRequest(batchId, options);
+            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        }
+
         internal PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
@@ -75,6 +91,23 @@ namespace OpenAI.Batch
             uri.Reset(_endpoint);
             uri.AppendPath("/batches/", false);
             uri.AppendPath(batchId, true);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
+        }
+
+        internal PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
+        {
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "POST";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/batches/", false);
+            uri.AppendPath(batchId, true);
+            uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

@@ -1146,14 +1146,24 @@ namespace OpenAI.Batch {
         public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
         protected internal BatchClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult CancelBatch(string batchId, RequestOptions options);
-        public virtual Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options);
-        public virtual ClientResult CreateBatch(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult> CreateBatchAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult GetBatch(string batchId, RequestOptions options);
-        public virtual Task<ClientResult> GetBatchAsync(string batchId, RequestOptions options);
+        public virtual BatchOperation CreateBatch(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
+        public virtual Task<BatchOperation> CreateBatchAsync(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult GetBatches(string after, int? limit, RequestOptions options);
         public virtual Task<ClientResult> GetBatchesAsync(string after, int? limit, RequestOptions options);
+    }
+    public class BatchOperation {
+        public override bool IsCompleted { get; protected set; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public virtual ClientResult CancelBatch(string batchId, RequestOptions options);
+        public virtual Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options);
+        public virtual ClientResult GetBatch(string batchId, RequestOptions options);
+        public virtual Task<ClientResult> GetBatchAsync(string batchId, RequestOptions options);
+        public static BatchOperation Rehydrate(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<BatchOperation> RehydrateAsync(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override void WaitForCompletion(CancellationToken cancellationToken = default);
+        public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
+        public override Task WaitForCompletionAsync(CancellationToken cancellationToken = default);
+        public Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
     }
 }
 namespace OpenAI.Chat {
@@ -1725,18 +1735,28 @@ namespace OpenAI.FineTuning {
         public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
         protected internal FineTuningClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
+        public virtual FineTuningOperation CreateJob(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
+        public virtual Task<FineTuningOperation> CreateJobAsync(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult GetJobs(string after, int? limit, RequestOptions options);
+        public virtual Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options);
+    }
+    public class FineTuningOperation {
+        public override bool IsCompleted { get; protected set; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
         public virtual ClientResult CancelJob(string jobId, RequestOptions options);
         public virtual Task<ClientResult> CancelJobAsync(string jobId, RequestOptions options);
-        public virtual ClientResult CreateJob(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult> CreateJobAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult GetJob(string jobId, RequestOptions options);
         public virtual Task<ClientResult> GetJobAsync(string jobId, RequestOptions options);
         public virtual ClientResult GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options);
         public virtual Task<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options);
         public virtual ClientResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options);
         public virtual Task<ClientResult> GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options);
-        public virtual ClientResult GetJobs(string after, int? limit, RequestOptions options);
-        public virtual Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options);
+        public static FineTuningOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<FineTuningOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override void WaitForCompletion(CancellationToken cancellationToken = default);
+        public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
+        public override Task WaitForCompletionAsync(CancellationToken cancellationToken = default);
+        public Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
     }
 }
 namespace OpenAI.Images {
@@ -2067,22 +2087,14 @@ namespace OpenAI.VectorStores {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(VectorStoreBatchFileJob batchJob);
+        public virtual VectorStoreFileBatchOperation CreateBatchFileJob(ReturnWhen returnWhen, VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
-        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
+        public virtual VectorStoreFileBatchOperation CreateBatchFileJob(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual VectorStoreFileBatchOperation CreateBatchFileJob(ReturnWhen returnWhen, string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
+        public virtual Task<VectorStoreFileBatchOperation> CreateBatchFileJobAsync(ReturnWhen returnWhen, VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
+        public virtual Task<VectorStoreFileBatchOperation> CreateBatchFileJobAsync(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual Task<VectorStoreFileBatchOperation> CreateBatchFileJobAsync(ReturnWhen returnWhen, string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null);
@@ -2096,14 +2108,6 @@ namespace OpenAI.VectorStores {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteVectorStoreAsync(string vectorStoreId, RequestOptions options);
         public virtual Task<ClientResult<bool>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(VectorStoreBatchFileJob batchJob);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
-        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options);
@@ -2113,25 +2117,15 @@ namespace OpenAI.VectorStores {
         public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStore vectorStore, VectorStoreFileAssociationCollectionOptions options = null);
-        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStoreBatchFileJob batchJob, VectorStoreFileAssociationCollectionOptions options = null);
         public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IEnumerable<ClientResult> GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
-        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual IEnumerable<ClientResult> GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStore vectorStore, VectorStoreFileAssociationCollectionOptions options = null);
-        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreBatchFileJob batchJob, VectorStoreFileAssociationCollectionOptions options = null);
         public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IAsyncEnumerable<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
-        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual IAsyncEnumerable<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options);
@@ -2252,6 +2246,40 @@ namespace OpenAI.VectorStores {
         Completed = 2,
         Cancelled = 3,
         Failed = 4
+    }
+    public class VectorStoreFileBatchOperation {
+        public string BatchId { get; }
+        public override bool IsCompleted { get; protected set; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public VectorStoreBatchFileJobStatus? Status { get; }
+        public VectorStoreBatchFileJob? Value { get; }
+        public string VectorStoreId { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
+        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
+        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(CancellationToken cancellationToken = default);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(VectorStoreFileAssociationCollectionOptions? options = null, CancellationToken cancellationToken = default);
+        public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual IEnumerable<ClientResult> GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreFileAssociationCollectionOptions? options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual IAsyncEnumerable<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
+        public static VectorStoreFileBatchOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<VectorStoreFileBatchOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override void WaitForCompletion(CancellationToken cancellationToken = default);
+        public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
+        public override Task WaitForCompletionAsync(CancellationToken cancellationToken = default);
+        public Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
     }
     public class VectorStoreFileCounts : IJsonModel<VectorStoreFileCounts>, IPersistableModel<VectorStoreFileCounts> {
         public int Cancelled { get; }

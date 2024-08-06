@@ -1,6 +1,6 @@
 # A conversion of the OpenAI OpenAPI to TypeSpec
 
-Snapshot: https://raw.githubusercontent.com/openai/openai-openapi/dd73070b1d507645d24c249a63ebebd3ec38c0cb/openapi.yaml
+Snapshot: https://raw.githubusercontent.com/openai/openai-openapi/282e12b2b5595df95b66ab9aa45919c143079240/openapi.yaml
 
 There are some deltas:
 

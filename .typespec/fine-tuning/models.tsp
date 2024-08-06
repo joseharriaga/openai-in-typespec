@@ -50,10 +50,15 @@ model FineTuningJobIntegrations is FineTuningIntegration[];
 model CreateFineTuningJobRequest {
   /**
    * The name of the model to fine-tune. You can select one of the
-   * [supported models](/docs/guides/fine-tuning/what-models-can-be-fine-tuned).
+   * [supported models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | "babbage-002" | "davinci-002" | "gpt-3.5-turbo";
+  `model`:
+    | string
+    | "babbage-002"
+    | "davinci-002"
+    | "gpt-3.5-turbo"
+    | "gpt-4o-mini";
 
   @doc("""
     The ID of an uploaded file that contains training data.
@@ -92,7 +97,7 @@ model CreateFineTuningJobRequest {
   @doc("""
     A string of up to 18 characters that will be added to your fine-tuned model name.
     
-    For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+    For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
     """)
   @minLength(1)
   @maxLength(40)

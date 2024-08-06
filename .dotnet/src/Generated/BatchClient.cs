@@ -25,22 +25,6 @@ namespace OpenAI.Batch
         {
         }
 
-        public virtual async Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-            using PipelineMessage message = CreateCancelBatchRequest(batchId, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult CancelBatch(string batchId, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-            using PipelineMessage message = CreateCancelBatchRequest(batchId, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-        }
-
         internal PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();

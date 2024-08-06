@@ -49,7 +49,7 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Creates a vector store.")
   createVectorStore(
-    @body vector_store: CreateVectorStoreRequest,
+    @body requestBody: CreateVectorStoreRequest,
   ): VectorStoreObject | ErrorResponse;
 
   @route("{vector_store_id}")
@@ -71,7 +71,7 @@ interface VectorStores {
     /** The ID of the vector store to modify. */
     @path vector_store_id: string,
 
-    @body vector_store: UpdateVectorStoreRequest,
+    @body requestBody: UpdateVectorStoreRequest,
   ): VectorStoreObject | ErrorResponse;
 
   @route("{vector_store_id}")
@@ -134,7 +134,7 @@ interface VectorStores {
     /** The ID of the vector store for which to create a File. */
     @path vector_store_id: string,
 
-    @body file: CreateVectorStoreFileRequest,
+    @body requestBody: CreateVectorStoreFileRequest,
   ): VectorStoreFileObject | ErrorResponse;
 
   @route("{vector_store_id}/files/{file_id}")
@@ -172,7 +172,7 @@ interface VectorStores {
     /** The ID of the vector store for which to create a file batch. */
     @path vector_store_id: string,
 
-    @body file_batch: CreateVectorStoreFileBatchRequest,
+    @body requestBody: CreateVectorStoreFileBatchRequest,
   ): VectorStoreFileBatchObject | ErrorResponse;
 
   @route("{vector_store_id}/file_batches/{batch_id}")

@@ -16,7 +16,7 @@ interface Assistants {
   @tag("Assistants")
   @summary("Create an assistant with a model and instructions.")
   createAssistant(
-    @body assistant: CreateAssistantRequest,
+    @body requestBody: CreateAssistantRequest,
   ): AssistantObject | ErrorResponse;
 
   @get
@@ -70,7 +70,7 @@ interface Assistants {
     /** The ID of the assistant to modify. */
     @path assistant_id: string,
 
-    @body assistant: ModifyAssistantRequest,
+    @body requestBody: ModifyAssistantRequest,
   ): AssistantObject | ErrorResponse;
 
   @route("{assistant_id}")

@@ -118,14 +118,8 @@ public partial class AssistantClient
         AssistantCollectionOptions options = default,
         CancellationToken cancellationToken = default)
     {
-        AssistantsPageEnumerator enumerator = new(_pipeline, _endpoint,
-            options?.PageSize,
-            options?.Order?.ToString(),
-            options?.AfterId,
-            options?.BeforeId,
-            cancellationToken.ToRequestOptions());
-
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return GetAssistantsAsync(options?.PageSize, options?.Order.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
+            as AsyncPageCollection<Assistant>;
     }
 
     /// <summary>
@@ -144,14 +138,8 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         AssistantsPageToken pageToken = AssistantsPageToken.FromToken(firstPageToken);
-        AssistantsPageEnumerator enumerator = new(_pipeline, _endpoint,
-            pageToken.Limit,
-            pageToken.Order,
-            pageToken.After,
-            pageToken.Before,
-            cancellationToken.ToRequestOptions());
-
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return GetAssistantsAsync(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken.Before, cancellationToken.ToRequestOptions())
+            as AsyncPageCollection<Assistant>;
     }
 
     /// <summary>
@@ -167,14 +155,8 @@ public partial class AssistantClient
         AssistantCollectionOptions options = default,
         CancellationToken cancellationToken = default)
     {
-        AssistantsPageEnumerator enumerator = new(_pipeline, _endpoint,
-            options?.PageSize,
-            options?.Order?.ToString(),
-            options?.AfterId,
-            options?.BeforeId,
-            cancellationToken.ToRequestOptions());
-
-        return PageCollectionHelpers.Create(enumerator);
+        return GetAssistants(options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
+            as PageCollection<Assistant>;
     }
 
     /// <summary>
@@ -193,14 +175,8 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         AssistantsPageToken pageToken = AssistantsPageToken.FromToken(firstPageToken);
-        AssistantsPageEnumerator enumerator = new(_pipeline, _endpoint,
-            pageToken.Limit,
-            pageToken.Order,
-            pageToken.After,
-            pageToken.Before,
-            cancellationToken.ToRequestOptions());
-
-        return PageCollectionHelpers.Create(enumerator);
+        return GetAssistants(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken.Before, cancellationToken.ToRequestOptions())
+            as PageCollection<Assistant>;
     }
 
     /// <summary>

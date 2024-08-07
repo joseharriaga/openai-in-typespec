@@ -23,7 +23,8 @@ public partial class VectorStoreTests
     {
         VectorStoreClient client = GetTestClient();
 
-        VectorStore vectorStore = client.CreateVectorStore();
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Started);
+        VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
         bool deleted = client.DeleteVectorStore(vectorStore);
         Assert.That(deleted, Is.True);
@@ -31,7 +32,7 @@ public partial class VectorStoreTests
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
-        vectorStore = client.CreateVectorStore(new VectorStoreCreationOptions()
+        createOperation = client.CreateVectorStore(ReturnWhen.Started, new VectorStoreCreationOptions()
         {
             FileIds = { testFiles[0].Id },
             Name = "test vector store",
@@ -45,19 +46,21 @@ public partial class VectorStoreTests
                 ["test-key"] = "test-value",
             },
         });
-        Validate(vectorStore);
+        Validate(createOperation.Value);
+
         Assert.Multiple(() =>
         {
-            Assert.That(vectorStore.Name, Is.EqualTo("test vector store"));
-            Assert.That(vectorStore.ExpirationPolicy?.Anchor, Is.EqualTo(VectorStoreExpirationAnchor.LastActiveAt));
-            Assert.That(vectorStore.ExpirationPolicy?.Days, Is.EqualTo(3));
-            Assert.That(vectorStore.FileCounts.Total, Is.EqualTo(1));
-            Assert.That(vectorStore.CreatedAt, Is.GreaterThan(s_2024));
-            Assert.That(vectorStore.ExpiresAt, Is.GreaterThan(s_2024));
-            Assert.That(vectorStore.Status, Is.EqualTo(VectorStoreStatus.InProgress));
-            Assert.That(vectorStore.Metadata?.TryGetValue("test-key", out string metadataValue) == true && metadataValue == "test-value");
+            Assert.That(createOperation.Value.Name, Is.EqualTo("test vector store"));
+            Assert.That(createOperation.Value.ExpirationPolicy?.Anchor, Is.EqualTo(VectorStoreExpirationAnchor.LastActiveAt));
+            Assert.That(createOperation.Value.ExpirationPolicy?.Days, Is.EqualTo(3));
+            Assert.That(createOperation.Value.FileCounts.Total, Is.EqualTo(1));
+            Assert.That(createOperation.Value.CreatedAt, Is.GreaterThan(s_2024));
+            Assert.That(createOperation.Value.ExpiresAt, Is.GreaterThan(s_2024));
+            Assert.That(createOperation.Status, Is.EqualTo(VectorStoreStatus.InProgress));
+            Assert.That(createOperation.Value.Metadata?.TryGetValue("test-key", out string metadataValue) == true && metadataValue == "test-value");
         });
-        vectorStore = client.GetVectorStore(vectorStore);
+
+        vectorStore = createOperation.Value;
         Assert.Multiple(() =>
         {
             Assert.That(vectorStore.Name, Is.EqualTo("test vector store"));
@@ -73,10 +76,11 @@ public partial class VectorStoreTests
         Assert.That(deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
-        vectorStore = client.CreateVectorStore(new VectorStoreCreationOptions()
+        createOperation = client.CreateVectorStore(ReturnWhen.Started, new VectorStoreCreationOptions()
         {
             FileIds = testFiles.Select(file => file.Id).ToList()
         });
+        vectorStore = createOperation.Value;
         Validate(vectorStore);
         Assert.Multiple(() =>
         {
@@ -91,10 +95,11 @@ public partial class VectorStoreTests
         VectorStoreClient client = GetTestClient();
         for (int i = 0; i < 10; i++)
         {
-            VectorStore vectorStore = client.CreateVectorStore(new VectorStoreCreationOptions()
+            CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed, new VectorStoreCreationOptions()
             {
                 Name = $"Test Vector Store {i}",
             });
+            VectorStore vectorStore = createOperation.Value;
             Validate(vectorStore);
             Assert.That(vectorStore.Name, Is.EqualTo($"Test Vector Store {i}"));
         }
@@ -128,11 +133,14 @@ public partial class VectorStoreTests
         VectorStoreClient client = GetTestClient();
         for (int i = 0; i < 10; i++)
         {
-            VectorStore vectorStore = await client.CreateVectorStoreAsync(new VectorStoreCreationOptions()
+            CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(ReturnWhen.Completed,
+                new VectorStoreCreationOptions()
             {
                 Name = $"Test Vector Store {i}",
             });
+            VectorStore vectorStore = createOperation.Value;
             Validate(vectorStore);
+
             Assert.That(vectorStore.Name, Is.EqualTo($"Test Vector Store {i}"));
         }
 
@@ -163,7 +171,8 @@ public partial class VectorStoreTests
     public void CanAssociateFiles()
     {
         VectorStoreClient client = GetTestClient();
-        VectorStore vectorStore = client.CreateVectorStore();
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed);
+        VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> files = GetNewTestFiles(3);
@@ -203,7 +212,8 @@ public partial class VectorStoreTests
     public void Pagination_CanRehydrateFileAssociationCollection()
     {
         VectorStoreClient client = GetTestClient();
-        VectorStore vectorStore = client.CreateVectorStore();
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed);
+        VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> files = GetNewTestFiles(3);
@@ -266,7 +276,8 @@ public partial class VectorStoreTests
     public void CanUseBatchIngestion()
     {
         VectorStoreClient client = GetTestClient();
-        VectorStore vectorStore = client.CreateVectorStore();
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed);
+        VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
@@ -301,7 +312,8 @@ public partial class VectorStoreTests
     public void CanRehydrateBatchFileJob()
     {
         VectorStoreClient client = GetTestClient();
-        VectorStore vectorStore = client.CreateVectorStore();
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed);
+        VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
@@ -359,12 +371,13 @@ public partial class VectorStoreTests
             Assert.That(inputStaticStrategy.MaxTokensPerChunk, Is.EqualTo(1200));
             Assert.That(inputStaticStrategy.OverlappingTokenCount, Is.EqualTo(250));
         }
-
-        VectorStore vectorStore = await client.CreateVectorStoreAsync(new VectorStoreCreationOptions()
+        
+        CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(ReturnWhen.Completed,new VectorStoreCreationOptions()
         {
             FileIds = testFiles.Select(file => file.Id).ToList(),
             ChunkingStrategy = chunkingStrategy,
         });
+        VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
         Assert.That(vectorStore.FileCounts.Total, Is.EqualTo(5));
 

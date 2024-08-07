@@ -1735,12 +1735,12 @@ namespace OpenAI.FineTuning {
         public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
         protected internal FineTuningClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual FineTuningOperation CreateJob(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
-        public virtual Task<FineTuningOperation> CreateJobAsync(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
+        public virtual FineTuningJobOperation CreateJob(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
+        public virtual Task<FineTuningJobOperation> CreateJobAsync(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult GetJobs(string after, int? limit, RequestOptions options);
         public virtual Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options);
     }
-    public class FineTuningOperation {
+    public class FineTuningJobOperation {
         public override bool IsCompleted { get; protected set; }
         public override ContinuationToken? RehydrationToken { get; protected set; }
         public virtual ClientResult CancelJob(string jobId, RequestOptions options);
@@ -1751,8 +1751,8 @@ namespace OpenAI.FineTuning {
         public virtual Task<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options);
         public virtual ClientResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options);
         public virtual Task<ClientResult> GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options);
-        public static FineTuningOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
-        public static Task<FineTuningOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static FineTuningJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
         public override void WaitForCompletion(CancellationToken cancellationToken = default);
         public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
         public override Task WaitForCompletionAsync(CancellationToken cancellationToken = default);
@@ -2006,6 +2006,26 @@ namespace OpenAI.Moderations {
     }
 }
 namespace OpenAI.VectorStores {
+    public class CreateVectorStoreOperation {
+        public CreateVectorStoreOperation(ClientPipeline pipeline, Uri endpoint, ClientResult<VectorStore> result);
+        public override bool IsCompleted { get; protected set; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public VectorStoreStatus? Status { get; }
+        public VectorStore? Value { get; }
+        public string VectorStoreId { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options);
+        public virtual ClientResult<VectorStore> GetVectorStore(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options);
+        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(CancellationToken cancellationToken = default);
+        public static CreateVectorStoreOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<CreateVectorStoreOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override void WaitForCompletion(CancellationToken cancellationToken = default);
+        public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
+        public override Task WaitForCompletionAsync(CancellationToken cancellationToken = default);
+        public Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
+    }
     public abstract class FileChunkingStrategy : IJsonModel<FileChunkingStrategy>, IPersistableModel<FileChunkingStrategy> {
         public static FileChunkingStrategy Auto { get; }
         public static FileChunkingStrategy Unknown { get; }
@@ -2095,11 +2115,12 @@ namespace OpenAI.VectorStores {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<VectorStoreFileBatchOperation> CreateBatchFileJobAsync(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null);
         public virtual Task<VectorStoreFileBatchOperation> CreateBatchFileJobAsync(ReturnWhen returnWhen, string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
+        public virtual CreateVectorStoreOperation CreateVectorStore(ReturnWhen returnWhen, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null);
+        public virtual CreateVectorStoreOperation CreateVectorStore(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
+        public virtual Task<CreateVectorStoreOperation> CreateVectorStoreAsync(ReturnWhen returnWhen, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<CreateVectorStoreOperation> CreateVectorStoreAsync(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<bool> DeleteVectorStore(VectorStore vectorStore);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteVectorStore(string vectorStoreId, RequestOptions options);

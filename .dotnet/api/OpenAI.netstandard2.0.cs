@@ -1151,7 +1151,7 @@ namespace OpenAI.Batch {
         public virtual ClientResult GetBatches(string after, int? limit, RequestOptions options);
         public virtual Task<ClientResult> GetBatchesAsync(string after, int? limit, RequestOptions options);
     }
-    public class BatchOperation {
+    public class BatchOperation : OperationResult {
         public override bool IsCompleted { get; protected set; }
         public override ContinuationToken? RehydrationToken { get; protected set; }
         public virtual ClientResult CancelBatch(string batchId, RequestOptions options);
@@ -1740,7 +1740,7 @@ namespace OpenAI.FineTuning {
         public virtual ClientResult GetJobs(string after, int? limit, RequestOptions options);
         public virtual Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options);
     }
-    public class FineTuningJobOperation {
+    public class FineTuningJobOperation : OperationResult {
         public override bool IsCompleted { get; protected set; }
         public override ContinuationToken? RehydrationToken { get; protected set; }
         public virtual ClientResult CancelJob(string jobId, RequestOptions options);
@@ -2006,8 +2006,8 @@ namespace OpenAI.Moderations {
     }
 }
 namespace OpenAI.VectorStores {
-    public class AddFileToVectorStoreOperation {
-        public AddFileToVectorStoreOperation(ClientPipeline pipeline, Uri endpoint, ClientResult<VectorStoreFileAssociation> result);
+    public class AddFileToVectorStoreOperation : OperationResult {
+        public AddFileToVectorStoreOperation(ClientPipeline pipeline, Uri endpoint, ClientResult<VectorStoreFileAssociation> result) : base(default!);
         public string FileId { get; }
         public override bool IsCompleted { get; protected set; }
         public override ContinuationToken? RehydrationToken { get; protected set; }
@@ -2027,8 +2027,8 @@ namespace OpenAI.VectorStores {
         public override Task WaitForCompletionAsync(CancellationToken cancellationToken = default);
         public Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
     }
-    public class CreateVectorStoreOperation {
-        public CreateVectorStoreOperation(ClientPipeline pipeline, Uri endpoint, ClientResult<VectorStore> result);
+    public class CreateVectorStoreOperation : OperationResult {
+        public CreateVectorStoreOperation(ClientPipeline pipeline, Uri endpoint, ClientResult<VectorStore> result) : base(default!);
         public override bool IsCompleted { get; protected set; }
         public override ContinuationToken? RehydrationToken { get; protected set; }
         public VectorStoreStatus? Status { get; }
@@ -2289,7 +2289,7 @@ namespace OpenAI.VectorStores {
         Cancelled = 3,
         Failed = 4
     }
-    public class VectorStoreFileBatchOperation {
+    public class VectorStoreFileBatchOperation : OperationResult {
         public string BatchId { get; }
         public override bool IsCompleted { get; protected set; }
         public override ContinuationToken? RehydrationToken { get; protected set; }

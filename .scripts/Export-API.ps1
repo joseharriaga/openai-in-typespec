@@ -22,9 +22,7 @@ $net80ref = Get-ChildItem -Recurse `
 $systemMemoryDataRef = Get-ChildItem -Recurse `
     -Path "$($env:UserProfile)\.nuget\packages\system.memory.data" `
     -Include "netstandard2.0" | Select-Object -Last 1
-$systemClientmodelRef = Get-ChildItem -Recurse `
-    -Path "$($env:UserProfile)\.nuget\packages\system.clientmodel" `
-    -Include "netstandard2.0" | Select-Object -Last 1
+$systemClientmodelRef = "$($env:UserProfile)\.nuget\packages\system.clientmodel\1.1.0-beta.6\lib\netstandard2.0"
 $microsoftBclAsyncinterfacesRef = Get-ChildItem -Recurse `
     -Path "$($env:UserProfile)\.nuget\packages\microsoft.bcl.asyncinterfaces\1.1.0" `
     -Include "netstandard2.0" | Select-Object -Last 1

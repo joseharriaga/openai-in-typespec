@@ -135,9 +135,9 @@ public partial class VectorStoreTests
         {
             CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(ReturnWhen.Completed,
                 new VectorStoreCreationOptions()
-            {
-                Name = $"Test Vector Store {i}",
-            });
+                {
+                    Name = $"Test Vector Store {i}",
+                });
             VectorStore vectorStore = createOperation.Value;
             Validate(vectorStore);
 
@@ -179,7 +179,8 @@ public partial class VectorStoreTests
 
         foreach (OpenAIFileInfo file in files)
         {
-            VectorStoreFileAssociation association = client.AddFileToVectorStore(vectorStore, file);
+            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(ReturnWhen.Started, vectorStore, file);
+            VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
             {
@@ -220,7 +221,8 @@ public partial class VectorStoreTests
 
         foreach (OpenAIFileInfo file in files)
         {
-            VectorStoreFileAssociation association = client.AddFileToVectorStore(vectorStore, file);
+            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(ReturnWhen.Started, vectorStore, file);
+            VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
             {
@@ -371,8 +373,8 @@ public partial class VectorStoreTests
             Assert.That(inputStaticStrategy.MaxTokensPerChunk, Is.EqualTo(1200));
             Assert.That(inputStaticStrategy.OverlappingTokenCount, Is.EqualTo(250));
         }
-        
-        CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(ReturnWhen.Completed,new VectorStoreCreationOptions()
+
+        CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(ReturnWhen.Completed, new VectorStoreCreationOptions()
         {
             FileIds = testFiles.Select(file => file.Id).ToList(),
             ChunkingStrategy = chunkingStrategy,

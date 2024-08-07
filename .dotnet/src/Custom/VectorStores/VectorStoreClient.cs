@@ -92,7 +92,8 @@ public partial class VectorStoreClient
     /// <param name="vectorStore"> The <see cref="VectorStoreCreationOptions"/> to use. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStore"/> is null. </exception>
-    /// <remarks> Create vector store. </remarks>
+    /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store creation to complete. </returns>
     public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(ReturnWhen returnWhen, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
         using BinaryContent content = vectorStore?.ToBinaryContent();
@@ -108,7 +109,8 @@ public partial class VectorStoreClient
     /// <param name="vectorStore"> The <see cref="VectorStoreCreationOptions"/> to use. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStore"/> is null. </exception>
-    /// <remarks> Create vector store. </remarks>
+    /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store creation to complete. </returns>
     public virtual CreateVectorStoreOperation CreateVectorStore(ReturnWhen returnWhen, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
         using BinaryContent content = vectorStore?.ToBinaryContent();
@@ -312,37 +314,47 @@ public partial class VectorStoreClient
     /// <summary>
     /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
+    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
+    /// method should return when the service has finished running the 
+    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
+    /// after the operation has been created but may not have completed 
+    /// processing. </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
     /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns>
-    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
-    /// </returns>
-    public virtual async Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store file addition to complete. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
+    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(ReturnWhen returnWhen, string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        ClientResult protocolResult = await AddFileToVectorStoreAsync(vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
-        VectorStoreFileAssociation fileAssociation = VectorStoreFileAssociation.FromResponse(protocolResponse);
-        return ClientResult.FromValue(fileAssociation, protocolResponse);
+        return await AddFileToVectorStoreAsync(returnWhen,vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
+    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
+    /// method should return when the service has finished running the 
+    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
+    /// after the operation has been created but may not have completed 
+    /// processing. </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
     /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns>
-    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
-    /// </returns>
-    public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store file addition to complete. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
+    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(ReturnWhen returnWhen, string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        ClientResult protocolResult = AddFileToVectorStore(vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions());
-        PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
-        VectorStoreFileAssociation fileAssociation = VectorStoreFileAssociation.FromResponse(protocolResponse);
-        return ClientResult.FromValue(fileAssociation, protocolResponse);
+        return AddFileToVectorStore(returnWhen, vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions());
     }
 
     /// <summary>

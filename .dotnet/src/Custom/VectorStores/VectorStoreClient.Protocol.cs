@@ -338,41 +338,73 @@ public partial class VectorStoreClient
     /// <summary>
     /// [Protocol Method] Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
     /// </summary>
+    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
+    /// method should return when the service has finished running the 
+    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
+    /// after the operation has been created but may not have completed 
+    /// processing. </param>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a File. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="content"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> The response returned from the service. </returns>
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store file addition to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateVectorStoreFileRequest(vectorStoreId, content, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
+        VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
+
+        AddFileToVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
+        if (returnWhen == ReturnWhen.Started)
+        {
+            return operation;
+        }
+
+        await operation.WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
+        return operation;
     }
 
     /// <summary>
     /// [Protocol Method] Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
     /// </summary>
+    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
+    /// method should return when the service has finished running the 
+    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
+    /// after the operation has been created but may not have completed 
+    /// processing. </param>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a File. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="content"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> The response returned from the service. </returns>
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store file addition to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateVectorStoreFileRequest(vectorStoreId, content, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        PipelineResponse response = _pipeline.ProcessMessage(message, options);
+        VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
+
+        AddFileToVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
+        if (returnWhen == ReturnWhen.Started)
+        {
+            return operation;
+        }
+
+        operation.WaitForCompletion(options?.CancellationToken ?? default);
+        return operation;
     }
 
     /// <summary>

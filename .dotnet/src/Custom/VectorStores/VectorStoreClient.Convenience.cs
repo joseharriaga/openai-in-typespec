@@ -61,24 +61,32 @@ public partial class VectorStoreClient
     /// <summary>
     /// Associates an uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
+    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
+    /// method should return when the service has finished running the 
+    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
+    /// after the operation has been created but may not have completed 
+    /// processing. </param>
     /// <param name="vectorStore"> The vector store to associate the file with. </param>
     /// <param name="file"> The file to associate with the vector store. </param>
-    /// <returns>
-    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
-    /// </returns>
-    public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, OpenAIFileInfo file)
-        => AddFileToVectorStoreAsync(vectorStore?.Id, file?.Id);
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store file addition to complete. </returns>
+    public async virtual Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(ReturnWhen returnWhen, VectorStore vectorStore, OpenAIFileInfo file)
+        => await AddFileToVectorStoreAsync(returnWhen, vectorStore?.Id, file?.Id).ConfigureAwait(false);
 
     /// <summary>
     /// Associates an uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
+    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
+    /// method should return when the service has finished running the 
+    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
+    /// after the operation has been created but may not have completed 
+    /// processing. </param>
     /// <param name="vectorStore"> The vector store to associate the file with. </param>
     /// <param name="file"> The file to associate with the vector store. </param>
-    /// <returns>
-    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
-    /// </returns>
-    public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, OpenAIFileInfo file)
-        => AddFileToVectorStore(vectorStore?.Id, file?.Id);
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store file addition to complete. </returns>
+    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(ReturnWhen returnWhen, VectorStore vectorStore, OpenAIFileInfo file)
+        => AddFileToVectorStore(returnWhen, vectorStore?.Id, file?.Id);
 
     /// <summary>
     /// Gets a page collection holding <see cref="VectorStoreFileAssociation"/> instances that represent file inclusions in the

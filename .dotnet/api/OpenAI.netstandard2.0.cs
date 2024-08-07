@@ -2006,6 +2006,27 @@ namespace OpenAI.Moderations {
     }
 }
 namespace OpenAI.VectorStores {
+    public class AddFileToVectorStoreOperation {
+        public AddFileToVectorStoreOperation(ClientPipeline pipeline, Uri endpoint, ClientResult<VectorStoreFileAssociation> result);
+        public string FileId { get; }
+        public override bool IsCompleted { get; protected set; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public VectorStoreFileAssociationStatus? Status { get; }
+        public VectorStoreFileAssociation? Value { get; }
+        public string VectorStoreId { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options);
+        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(CancellationToken cancellationToken = default);
+        public static AddFileToVectorStoreOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<AddFileToVectorStoreOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override void WaitForCompletion(CancellationToken cancellationToken = default);
+        public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
+        public override Task WaitForCompletionAsync(CancellationToken cancellationToken = default);
+        public Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
+    }
     public class CreateVectorStoreOperation {
         public CreateVectorStoreOperation(ClientPipeline pipeline, Uri endpoint, ClientResult<VectorStore> result);
         public override bool IsCompleted { get; protected set; }
@@ -2099,14 +2120,14 @@ namespace OpenAI.VectorStores {
         public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
         protected internal VectorStoreClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, OpenAIFileInfo file);
+        public virtual AddFileToVectorStoreOperation AddFileToVectorStore(ReturnWhen returnWhen, VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
+        public virtual AddFileToVectorStoreOperation AddFileToVectorStore(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual AddFileToVectorStoreOperation AddFileToVectorStore(ReturnWhen returnWhen, string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
+        public virtual Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(ReturnWhen returnWhen, VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
+        public virtual Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null);
+        public virtual Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(ReturnWhen returnWhen, string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual VectorStoreFileBatchOperation CreateBatchFileJob(ReturnWhen returnWhen, VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual VectorStoreFileBatchOperation CreateBatchFileJob(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null);

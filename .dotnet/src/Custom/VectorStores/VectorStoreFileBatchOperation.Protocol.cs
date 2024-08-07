@@ -41,7 +41,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options)
+    public virtual async Task<ClientResult> GetFileBatchAsync(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -61,7 +61,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options)
+    public virtual ClientResult GetFileBatch(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -81,7 +81,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options)
+    public virtual async Task<ClientResult> CancelFileBatchAsync(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -101,7 +101,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options)
+    public virtual ClientResult CancelFileBatch(string vectorStoreId, string batchId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -140,7 +140,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IAsyncEnumerable<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    public virtual IAsyncEnumerable<ClientResult> GetFilesInBatchAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -179,7 +179,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IEnumerable<ClientResult> GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    public virtual IEnumerable<ClientResult> GetFilesInBatch(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));

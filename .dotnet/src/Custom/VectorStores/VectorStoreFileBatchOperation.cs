@@ -115,7 +115,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
 
             await _pollingInterval.WaitAsync(response, cancellationToken);
 
-            ClientResult<VectorStoreBatchFileJob> result = await GetBatchFileJobAsync(cancellationToken).ConfigureAwait(false);
+            ClientResult<VectorStoreBatchFileJob> result = await GetFileBatchAsync(cancellationToken).ConfigureAwait(false);
 
             ApplyUpdate(result);
         }
@@ -146,7 +146,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
 
             _pollingInterval.Wait(response, cancellationToken);
 
-            ClientResult<VectorStoreBatchFileJob> result = GetBatchFileJob(cancellationToken);
+            ClientResult<VectorStoreBatchFileJob> result = GetFileBatch(cancellationToken);
 
             ApplyUpdate(result);
         }
@@ -189,9 +189,9 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// </summary>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the ingestion operation. </returns>
-    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> GetFileBatchAsync(CancellationToken cancellationToken = default)
     {
-        ClientResult result = await GetBatchFileJobAsync(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        ClientResult result = await GetFileBatchAsync(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -202,9 +202,9 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// </summary>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the ingestion operation. </returns>
-    public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(CancellationToken cancellationToken = default)
+    public virtual ClientResult<VectorStoreBatchFileJob> GetFileBatch(CancellationToken cancellationToken = default)
     {
-        ClientResult result = GetBatchFileJob(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions());
+        ClientResult result = GetFileBatch(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -215,9 +215,9 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// </summary>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
-    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CancelFileBatchAsync(CancellationToken cancellationToken = default)
     {
-        ClientResult result = await CancelBatchFileJobAsync(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        ClientResult result = await CancelFileBatchAsync(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -228,9 +228,9 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// </summary>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
-    public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(CancellationToken cancellationToken = default)
+    public virtual ClientResult<VectorStoreBatchFileJob> CancelFileBatch(CancellationToken cancellationToken = default)
     {
-        ClientResult result = CancelBatchFileJob(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions());
+        ClientResult result = CancelFileBatch(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -246,7 +246,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
     /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFilesInBatchAsync(
         VectorStoreFileAssociationCollectionOptions? options = default,
         CancellationToken cancellationToken = default)
     {
@@ -272,7 +272,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
     /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFilesInBatchAsync(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
     {
@@ -317,7 +317,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
     /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual PageCollection<VectorStoreFileAssociation> GetFilesInBatch(
         VectorStoreFileAssociationCollectionOptions? options = default,
         CancellationToken cancellationToken = default)
     {
@@ -344,7 +344,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
     /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual PageCollection<VectorStoreFileAssociation> GetFilesInBatch(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
     {

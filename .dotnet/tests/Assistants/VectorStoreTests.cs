@@ -296,7 +296,7 @@ public partial class VectorStoreTests
 
         batchOperation.WaitForCompletion();
 
-        foreach (VectorStoreFileAssociation association in batchOperation.GetFileAssociations().GetAllValues())
+        foreach (VectorStoreFileAssociation association in batchOperation.GetFilesInBatch().GetAllValues())
         {
             Assert.Multiple(() =>
             {
@@ -435,7 +435,7 @@ public partial class VectorStoreTests
         };
         foreach (VectorStoreFileBatchOperation job in _jobsToCancel)
         {
-            ClientResult protocolResult = job.CancelBatchFileJob(job.VectorStoreId, job.BatchId, requestOptions);
+            ClientResult protocolResult = job.CancelFileBatch(job.VectorStoreId, job.BatchId, requestOptions);
             Console.WriteLine($"Cleanup: {job.BatchId} => {protocolResult?.GetRawResponse()?.Status}");
         }
         foreach (VectorStoreFileAssociation association in _associationsToRemove)

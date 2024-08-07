@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace OpenAI.VectorStores;
 /// <summary>
 /// Long-running operation for creating a vector store file batch.
 /// </summary>
+[Experimental("OPENAI001")]
 public partial class VectorStoreFileBatchOperation : OperationResult
 {
     internal VectorStoreFileBatchOperation(
@@ -62,9 +64,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <param name="cancellationToken"> A token that can be used to cancel the 
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
-#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     public static async Task<VectorStoreFileBatchOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
-#pragma warning restore OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
@@ -88,9 +88,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// <param name="cancellationToken"> A token that can be used to cancel the 
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
-#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     public static VectorStoreFileBatchOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
-#pragma warning restore OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));

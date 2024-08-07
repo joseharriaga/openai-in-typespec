@@ -8,9 +8,9 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning;
 
-internal class FineTuningOperationToken : ContinuationToken
+internal class FineTuningJobOperationToken : ContinuationToken
 {
-    public FineTuningOperationToken(string jobId)
+    public FineTuningJobOperationToken(string jobId)
     {
         JobId = jobId;
     }
@@ -34,9 +34,9 @@ internal class FineTuningOperationToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public static FineTuningOperationToken FromToken(ContinuationToken continuationToken)
+    public static FineTuningJobOperationToken FromToken(ContinuationToken continuationToken)
     {
-        if (continuationToken is FineTuningOperationToken token)
+        if (continuationToken is FineTuningJobOperationToken token)
         {
             return token;
         }
@@ -45,7 +45,7 @@ internal class FineTuningOperationToken : ContinuationToken
 
         if (data.ToMemory().Length == 0)
         {
-            throw new ArgumentException("Failed to create FineTuningOperationToken from provided continuationToken.", nameof(continuationToken));
+            throw new ArgumentException("Failed to create FineTuningJobOperationToken from provided continuationToken.", nameof(continuationToken));
         }
 
         Utf8JsonReader reader = new(data);
@@ -82,7 +82,7 @@ internal class FineTuningOperationToken : ContinuationToken
 
         if (jobId is null)
         {
-            throw new ArgumentException("Failed to create RunOperationToken from provided continuationToken.", nameof(continuationToken));
+            throw new ArgumentException("Failed to create FineTuningJobOperationToken from provided continuationToken.", nameof(continuationToken));
         }
 
         return new(jobId);

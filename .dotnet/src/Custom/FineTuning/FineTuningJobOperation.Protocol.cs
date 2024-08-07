@@ -12,7 +12,7 @@ namespace OpenAI.FineTuning;
 /// <summary>
 /// A long-running operation for creating a new model from a given dataset.
 /// </summary>
-public partial class FineTuningOperation : OperationResult
+public partial class FineTuningJobOperation : OperationResult
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
@@ -21,7 +21,7 @@ public partial class FineTuningOperation : OperationResult
     
     private PollingInterval? _pollingInterval;
 
-    internal FineTuningOperation(
+    internal FineTuningJobOperation(
         ClientPipeline pipeline,
         Uri endpoint,
         string jobId,
@@ -33,7 +33,7 @@ public partial class FineTuningOperation : OperationResult
         _jobId = jobId;
 
         IsCompleted = GetIsCompleted(status);
-        RehydrationToken = new FineTuningOperationToken(jobId);
+        RehydrationToken = new FineTuningJobOperationToken(jobId);
     }
 
     /// <inheritdoc/>
@@ -43,7 +43,7 @@ public partial class FineTuningOperation : OperationResult
     public override bool IsCompleted { get; protected set; }
 
     /// <summary>
-    /// Recreates a <see cref="FineTuningOperation"/> from a rehydration token.
+    /// Recreates a <see cref="FineTuningJobOperation"/> from a rehydration token.
     /// </summary>
     /// <param name="client"> The <see cref="FineTuningClient"/> used to obtain the 
     /// operation status from the service. </param>
@@ -52,12 +52,13 @@ public partial class FineTuningOperation : OperationResult
     /// <param name="cancellationToken"> A token that can be used to cancel the 
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
-    public static async Task<FineTuningOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
+    /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
+    public static async Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
 
-        FineTuningOperationToken token = FineTuningOperationToken.FromToken(rehydrationToken);
+        FineTuningJobOperationToken token = FineTuningJobOperationToken.FromToken(rehydrationToken);
 
         ClientResult result = await client.GetJobAsync(token.JobId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
@@ -65,11 +66,11 @@ public partial class FineTuningOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return new FineTuningOperation(client.Pipeline, client.Endpoint, token.JobId, status, response);
+        return new FineTuningJobOperation(client.Pipeline, client.Endpoint, token.JobId, status, response);
     }
 
     /// <summary>
-    /// Recreates a <see cref="FineTuningOperation"/> from a rehydration token.
+    /// Recreates a <see cref="FineTuningJobOperation"/> from a rehydration token.
     /// </summary>
     /// <param name="client"> The <see cref="FineTuningClient"/> used to obtain the 
     /// operation status from the service. </param>
@@ -78,12 +79,13 @@ public partial class FineTuningOperation : OperationResult
     /// <param name="cancellationToken"> A token that can be used to cancel the 
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
-    public static FineTuningOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
+    /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
+    public static FineTuningJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
 
-        FineTuningOperationToken token = FineTuningOperationToken.FromToken(rehydrationToken);
+        FineTuningJobOperationToken token = FineTuningJobOperationToken.FromToken(rehydrationToken);
 
         ClientResult result = client.GetJob(token.JobId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
@@ -91,7 +93,7 @@ public partial class FineTuningOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return new FineTuningOperation(client.Pipeline, client.Endpoint, token.JobId, status, response);
+        return new FineTuningJobOperation(client.Pipeline, client.Endpoint, token.JobId, status, response);
     }
 
     /// <inheritdoc/>
@@ -169,9 +171,9 @@ public partial class FineTuningOperation : OperationResult
 
     private static bool GetIsCompleted(string? status)
     {
-        return status == "succeeded" ||
-            status == "failed" ||
-            status == "cancelled";
+        return status == InternalFineTuningJobStatus.Succeeded.ToString() ||
+            status == InternalFineTuningJobStatus.Failed.ToString() ||
+            status == InternalFineTuningJobStatus.Cancelled.ToString();
     }
 
     // Generated protocol methods

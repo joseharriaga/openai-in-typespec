@@ -54,6 +54,7 @@ public partial class BatchOperation : OperationResult
     /// <param name="cancellationToken"> A token that can be used to cancel the 
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
     public static async Task<BatchOperation> RehydrateAsync(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
@@ -80,6 +81,7 @@ public partial class BatchOperation : OperationResult
     /// <param name="cancellationToken"> A token that can be used to cancel the 
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
     public static BatchOperation Rehydrate(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
@@ -171,10 +173,10 @@ public partial class BatchOperation : OperationResult
 
     private static bool GetIsCompleted(string? status)
     {
-        return status == "completed" ||
-            status == "cancelled" ||
-            status == "expired" ||
-            status == "failed";
+        return status == InternalBatchStatus.Completed.ToString() ||
+            status == InternalBatchStatus.Cancelled.ToString() ||
+            status == InternalBatchStatus.Expired.ToString() ||
+            status == InternalBatchStatus.Failed.ToString();
     }
 
     // Generated protocol methods

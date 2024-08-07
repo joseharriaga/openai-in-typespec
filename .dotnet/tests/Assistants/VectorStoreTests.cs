@@ -323,7 +323,7 @@ public partial class VectorStoreTests
         VectorStoreFileBatchOperation batchOperation = client.CreateBatchFileJob(ReturnWhen.Started, vectorStore, testFiles);
         Validate(batchOperation);
 
-        // Simulate rehydration of the collection
+        // Simulate rehydration of the operation
         BinaryData rehydrationBytes = batchOperation.RehydrationToken.ToBytes();
         ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
 

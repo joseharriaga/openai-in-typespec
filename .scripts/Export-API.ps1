@@ -19,13 +19,9 @@ Write-Output ""
 $net80ref = Get-ChildItem -Recurse `
     -Path "$($env:ProgramFiles)\dotnet\packs\Microsoft.NETCore.App.Ref" `
     -Include "net8.0" | Select-Object -Last 1
-$systemMemoryDataRef = Get-ChildItem -Recurse `
-    -Path "$($env:UserProfile)\.nuget\packages\system.memory.data" `
-    -Include "netstandard2.0" | Select-Object -Last 1
+$systemMemoryDataRef = "$($env:UserProfile)\.nuget\packages\system.memory.data\1.0.2\lib\netstandard2.0"
 $systemClientmodelRef = "$($env:UserProfile)\.nuget\packages\system.clientmodel\1.1.0-beta.6\lib\netstandard2.0"
-$microsoftBclAsyncinterfacesRef = Get-ChildItem -Recurse `
-    -Path "$($env:UserProfile)\.nuget\packages\microsoft.bcl.asyncinterfaces\1.1.0" `
-    -Include "netstandard2.0" | Select-Object -Last 1
+$microsoftBclAsyncinterfacesRef = "$($env:UserProfile)\.nuget\packages\microsoft.bcl.asyncinterfaces\1.1.0\lib\netstandard2.0"
 
 Write-Output "Assembly reference paths:"
 Write-Output "* NETCore:                       $($net80ref)"

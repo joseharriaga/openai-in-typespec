@@ -113,20 +113,6 @@ public partial class CreateVectorStoreOperation : OperationResult
         }
     }
 
-    /// <summary>
-    /// Waits for the operation to complete processing on the service.
-    /// </summary>
-    /// <param name="pollingInterval"> The time to wait between sending requests
-    /// for status updates from the service. </param>
-    /// <param name="cancellationToken"> A token that can be used to cancel this
-    /// method call. </param>
-    public async Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
-    {
-        _pollingInterval = new(pollingInterval);
-
-        await WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
-    }
-
     public override void WaitForCompletion(CancellationToken cancellationToken = default)
     {
         _pollingInterval ??= new();
@@ -141,20 +127,6 @@ public partial class CreateVectorStoreOperation : OperationResult
 
             ApplyUpdate(result);
         }
-    }
-
-    /// <summary>
-    /// Waits for the operation to complete processing on the service.
-    /// </summary>
-    /// <param name="pollingInterval"> The time to wait between sending requests
-    /// for status updates from the service. </param>
-    /// <param name="cancellationToken"> A token that can be used to cancel this
-    /// method call. </param>
-    public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
-    {
-        _pollingInterval = new(pollingInterval);
-
-        WaitForCompletion(cancellationToken);
     }
 
     private void ApplyUpdate(ClientResult<VectorStore> update)

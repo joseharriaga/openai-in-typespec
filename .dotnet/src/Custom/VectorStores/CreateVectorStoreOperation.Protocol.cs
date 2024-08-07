@@ -33,7 +33,7 @@ public partial class CreateVectorStoreOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options)
+    public virtual async Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
@@ -51,7 +51,7 @@ public partial class CreateVectorStoreOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options)
+    public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
@@ -59,7 +59,7 @@ public partial class CreateVectorStoreOperation : OperationResult
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions options)
+    internal PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

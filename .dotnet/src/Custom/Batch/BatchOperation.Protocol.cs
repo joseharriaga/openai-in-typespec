@@ -115,20 +115,6 @@ public partial class BatchOperation : OperationResult
         }
     }
 
-    /// <summary>
-    /// Waits for the operation to complete processing on the service.
-    /// </summary>
-    /// <param name="pollingInterval"> The time to wait between sending requests
-    /// for status updates from the service. </param>
-    /// <param name="cancellationToken"> A token that can be used to cancel this
-    /// method call. </param>
-    public async Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
-    {
-        _pollingInterval = new(pollingInterval);
-
-        await WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
-    }
-
     /// <inheritdoc/>
     public override void WaitForCompletion(CancellationToken cancellationToken = default)
     {
@@ -146,20 +132,6 @@ public partial class BatchOperation : OperationResult
         }
     }
 
-    /// <summary>
-    /// Waits for the operation to complete processing on the service.
-    /// </summary>
-    /// <param name="pollingInterval"> The time to wait between sending requests
-    /// for status updates from the service. </param>
-    /// <param name="cancellationToken"> A token that can be used to cancel this
-    /// method call. </param>
-    public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
-    {
-        _pollingInterval = new(pollingInterval);
-
-        WaitForCompletion(cancellationToken);
-    }
-
     private void ApplyUpdate(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();
@@ -173,10 +145,10 @@ public partial class BatchOperation : OperationResult
 
     private static bool GetIsCompleted(string? status)
     {
-        return status == InternalBatchStatus.Completed.ToString() ||
-            status == InternalBatchStatus.Cancelled.ToString() ||
-            status == InternalBatchStatus.Expired.ToString() ||
-            status == InternalBatchStatus.Failed.ToString();
+        return status == InternalBatchStatus.Completed ||
+            status == InternalBatchStatus.Cancelled ||
+            status == InternalBatchStatus.Expired ||
+            status == InternalBatchStatus.Failed;
     }
 
     // Generated protocol methods
@@ -190,7 +162,7 @@ public partial class BatchOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetBatchAsync(string batchId, RequestOptions options)
+    public virtual async Task<ClientResult> GetBatchAsync(string batchId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
@@ -207,7 +179,7 @@ public partial class BatchOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetBatch(string batchId, RequestOptions options)
+    public virtual ClientResult GetBatch(string batchId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
@@ -224,7 +196,7 @@ public partial class BatchOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options)
+    public virtual async Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
@@ -241,7 +213,7 @@ public partial class BatchOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult CancelBatch(string batchId, RequestOptions options)
+    public virtual ClientResult CancelBatch(string batchId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
@@ -249,7 +221,7 @@ public partial class BatchOperation : OperationResult
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
+    internal PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -265,7 +237,7 @@ public partial class BatchOperation : OperationResult
         return message;
     }
 
-    internal PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
+    internal PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

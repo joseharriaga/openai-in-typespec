@@ -113,20 +113,6 @@ public partial class FineTuningJobOperation : OperationResult
         }
     }
 
-    /// <summary>
-    /// Waits for the operation to complete processing on the service.
-    /// </summary>
-    /// <param name="pollingInterval"> The time to wait between sending requests
-    /// for status updates from the service. </param>
-    /// <param name="cancellationToken"> A token that can be used to cancel this
-    /// method call. </param>
-    public async Task WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
-    {
-        _pollingInterval = new(pollingInterval);
-
-        await WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
-    }
-
     /// <inheritdoc/>
     public override void WaitForCompletion(CancellationToken cancellationToken = default)
     {
@@ -144,20 +130,6 @@ public partial class FineTuningJobOperation : OperationResult
         }
     }
 
-    /// <summary>
-    /// Waits for the operation to complete processing on the service.
-    /// </summary>
-    /// <param name="pollingInterval"> The time to wait between sending requests
-    /// for status updates from the service. </param>
-    /// <param name="cancellationToken"> A token that can be used to cancel this
-    /// method call. </param>
-    public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
-    {
-        _pollingInterval = new(pollingInterval);
-
-        WaitForCompletion(cancellationToken);
-    }
-
     private void ApplyUpdate(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();
@@ -171,9 +143,9 @@ public partial class FineTuningJobOperation : OperationResult
 
     private static bool GetIsCompleted(string? status)
     {
-        return status == InternalFineTuningJobStatus.Succeeded.ToString() ||
-            status == InternalFineTuningJobStatus.Failed.ToString() ||
-            status == InternalFineTuningJobStatus.Cancelled.ToString();
+        return status == InternalFineTuningJobStatus.Succeeded ||
+            status == InternalFineTuningJobStatus.Failed ||
+            status == InternalFineTuningJobStatus.Cancelled;
     }
 
     // Generated protocol methods
@@ -192,7 +164,7 @@ public partial class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetJobAsync(string jobId, RequestOptions options)
+    public virtual async Task<ClientResult> GetJobAsync(string jobId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
@@ -214,7 +186,7 @@ public partial class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetJob(string jobId, RequestOptions options)
+    public virtual ClientResult GetJob(string jobId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
@@ -234,7 +206,7 @@ public partial class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> CancelJobAsync(string jobId, RequestOptions options)
+    public virtual async Task<ClientResult> CancelJobAsync(string jobId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
@@ -254,7 +226,7 @@ public partial class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult CancelJob(string jobId, RequestOptions options)
+    public virtual ClientResult CancelJob(string jobId, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
@@ -276,7 +248,7 @@ public partial class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options)
+    public virtual async Task<ClientResult> GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
@@ -298,7 +270,7 @@ public partial class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options)
+    public virtual ClientResult GetJobEvents(string jobId, string after, int? limit, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
@@ -317,7 +289,7 @@ public partial class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public virtual async Task<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -336,7 +308,7 @@ public partial class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public virtual ClientResult GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -344,7 +316,7 @@ public partial class FineTuningJobOperation : OperationResult
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
+    internal PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -360,7 +332,7 @@ public partial class FineTuningJobOperation : OperationResult
         return message;
     }
 
-    internal PipelineMessage CreateCancelFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
+    internal PipelineMessage CreateCancelFineTuningJobRequest(string fineTuningJobId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -377,7 +349,7 @@ public partial class FineTuningJobOperation : OperationResult
         return message;
     }
 
-    internal PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    internal PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -402,7 +374,7 @@ public partial class FineTuningJobOperation : OperationResult
         return message;
     }
 
-    internal PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    internal PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

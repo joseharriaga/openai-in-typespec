@@ -1601,8 +1601,8 @@ namespace OpenAI.Files {
         public FileClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
         protected internal FileClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual IncrementalUploadJob CreateIncrementalUploadJob(BinaryContent content, RequestOptions options = null);
-        public virtual Task<IncrementalUploadJob> CreateIncrementalUploadJobAsync(BinaryContent content, RequestOptions options = null);
+        public virtual IncrementalUpload CreateIncrementalUpload(BinaryContent content, RequestOptions options = null);
+        public virtual Task<IncrementalUpload> CreateIncrementalUploadAsync(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<bool> DeleteFile(OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
@@ -1660,18 +1660,18 @@ namespace OpenAI.Files {
         public static bool operator !=(FileUploadPurpose left, FileUploadPurpose right);
         public override readonly string ToString();
     }
-    public class IncrementalUploadJob : ClientResult {
+    public class IncrementalUpload : ClientResult {
+        public ContinuationToken ContinuationToken { get; }
         public DateTimeOffset CreatedAt { get; }
         public DateTimeOffset ExpiresAt { get; }
         public string Id { get; }
-        public ContinuationToken RehydrationToken { get; }
         public virtual ClientResult AddDataPart(string jobId, BinaryContent content, string contentType, RequestOptions options = null);
         public virtual Task<ClientResult> AddDataPartAsync(string jobId, BinaryContent content, string contentType, RequestOptions options = null);
         public virtual ClientResult Cancel(string jobId, RequestOptions options);
         public virtual Task<ClientResult> CancelAsync(string jobId, RequestOptions options);
         public virtual ClientResult Complete(string jobId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult> CompleteAsync(string jobId, BinaryContent content, RequestOptions options = null);
-        public static IncrementalUploadJob Rehydrate(FileClient client, ContinuationToken rehydrationToken);
+        public static IncrementalUpload FromContinuationToken(FileClient client, ContinuationToken continuationToken);
     }
     public class OpenAIFileInfo : IJsonModel<OpenAIFileInfo>, IPersistableModel<OpenAIFileInfo> {
         public DateTimeOffset CreatedAt { get; }

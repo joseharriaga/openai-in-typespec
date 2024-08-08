@@ -155,9 +155,9 @@ public partial class FileTests : SyncAsyncTestBase
             """);
         using var requestContent = BinaryContent.Create(requestData);
 
-        IncrementalUploadJob uploadJob = IsAsync
-            ? await client.CreateIncrementalUploadJobAsync(requestContent, new RequestOptions())
-            : client.CreateIncrementalUploadJob(requestContent, new RequestOptions());
+        IncrementalUpload uploadJob = IsAsync
+            ? await client.CreateIncrementalUploadAsync(requestContent, new RequestOptions())
+            : client.CreateIncrementalUpload(requestContent, new RequestOptions());
         Assert.That(uploadJob, Is.Not.Null);
         PipelineResponse rawResponse = uploadJob.GetRawResponse();
         Assert.That(rawResponse, Is.Not.Null);
@@ -176,7 +176,7 @@ public partial class FileTests : SyncAsyncTestBase
         Assert.That(uploadJob.ExpiresAt, Is.GreaterThan(new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero)));
         Assert.That(uploadJob.ExpiresAt, Is.GreaterThan(uploadJob.CreatedAt));
 
-        IncrementalUploadJob rehydratedJob = IncrementalUploadJob.Rehydrate(client, uploadJob.RehydrationToken);
+        IncrementalUpload rehydratedJob = IncrementalUpload.FromContinuationToken(client, uploadJob.ContinuationToken);
         Assert.That(rehydratedJob, Is.Not.Null);
         Assert.That(rehydratedJob.Id, Is.EqualTo(uploadJob.Id));
         Assert.That(rehydratedJob.CreatedAt, Is.EqualTo(uploadJob.CreatedAt));
@@ -202,7 +202,7 @@ public partial class FileTests : SyncAsyncTestBase
         for (int i = 0; i < parts.Count; i++)
         {
             int index = i;
-            IncrementalUploadJob jobToUse = index % 2 == 0 ? uploadJob : rehydratedJob;
+            IncrementalUpload jobToUse = index % 2 == 0 ? uploadJob : rehydratedJob;
             dataUploadTasks[index] = Task.Run(async () =>
             {
                 (BinaryContent content, string contentType) = CreateMultipartFormDataForPart(parts[index]);

@@ -7,14 +7,14 @@ namespace OpenAI.Files;
 
 internal partial class InternalIncrementalUploadJobToken : ContinuationToken
 {
-    public InternalUploadJobInfo JobInfo { get; }
+    public InternalUpload Upload { get; }
 
-    public InternalIncrementalUploadJobToken(InternalUploadJobInfo jobInfo)
+    public InternalIncrementalUploadJobToken(InternalUpload jobInfo)
     {
-        JobInfo = jobInfo;
+        Upload = jobInfo;
     }
 
-    public override BinaryData ToBytes() => ModelReaderWriter.Write(JobInfo);
+    public override BinaryData ToBytes() => ModelReaderWriter.Write(Upload);
 
     public static InternalIncrementalUploadJobToken FromToken(ContinuationToken genericToken)
     {
@@ -24,7 +24,7 @@ internal partial class InternalIncrementalUploadJobToken : ContinuationToken
         }
 
         BinaryData data = genericToken.ToBytes();
-        InternalUploadJobInfo jobInfo = ModelReaderWriter.Read<InternalUploadJobInfo>(data);
+        InternalUpload jobInfo = ModelReaderWriter.Read<InternalUpload>(data);
         return new InternalIncrementalUploadJobToken(jobInfo);
     }
 }

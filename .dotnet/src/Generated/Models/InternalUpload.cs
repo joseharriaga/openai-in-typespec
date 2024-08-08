@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.Files
 {
-    internal partial class InternalUploadJobInfo
+    internal partial class InternalUpload
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalUploadJobInfo(string id, DateTimeOffset createdAt, string filename, long totalSize, InternalCreateUploadRequestPurpose purpose, InternalUploadStatus status, DateTimeOffset expiresAt)
+        internal InternalUpload(string id, DateTimeOffset createdAt, string filename, long totalSizeInBytes, InternalCreateUploadRequestPurpose purpose, InternalUploadStatus status, DateTimeOffset expiresAt)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(filename, nameof(filename));
@@ -18,18 +18,18 @@ namespace OpenAI.Files
             Id = id;
             CreatedAt = createdAt;
             Filename = filename;
-            TotalSize = totalSize;
+            TotalSizeInBytes = totalSizeInBytes;
             Purpose = purpose;
             Status = status;
             ExpiresAt = expiresAt;
         }
 
-        internal InternalUploadJobInfo(string id, DateTimeOffset createdAt, string filename, long totalSize, InternalCreateUploadRequestPurpose purpose, InternalUploadStatus status, DateTimeOffset expiresAt, InternalUploadObject? @object, OpenAIFileInfo file, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUpload(string id, DateTimeOffset createdAt, string filename, long totalSizeInBytes, InternalCreateUploadRequestPurpose purpose, InternalUploadStatus status, DateTimeOffset expiresAt, InternalUploadObject? @object, OpenAIFileInfo file, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
             Filename = filename;
-            TotalSize = totalSize;
+            TotalSizeInBytes = totalSizeInBytes;
             Purpose = purpose;
             Status = status;
             ExpiresAt = expiresAt;
@@ -38,7 +38,7 @@ namespace OpenAI.Files
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal InternalUploadJobInfo()
+        internal InternalUpload()
         {
         }
 

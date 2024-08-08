@@ -24,13 +24,6 @@ namespace OpenAI.Files
         {
         }
 
-        internal InternalUploadClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
-        {
-            _pipeline = pipeline;
-            _keyCredential = keyCredential;
-            _endpoint = endpoint;
-        }
-
         internal PipelineMessage CreateCreateUploadRequest(BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();

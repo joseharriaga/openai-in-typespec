@@ -212,7 +212,7 @@ public partial class FileClient
 
     /// <summary>
     /// <para>[Protocol Method]</para>
-    /// Creates a new <see cref="IncrementalUploadJob"/> that can be used to incrementally create a file, uploading
+    /// Creates a new <see cref="IncrementalUpload"/> that can be used to incrementally create a file, uploading
     /// individual data parts with arbitrary ordering and parallelism before being assembled by a final completion.
     /// </summary>
     /// <param name="content">
@@ -235,19 +235,19 @@ public partial class FileClient
     /// Additional options for the protocol request, including cancellation and error behavior.
     /// </param>
     /// <returns>
-    /// A new instance of <see cref="IncrementalUploadJob"/> that can be used to add data parts and complete the upload.
+    /// A new instance of <see cref="IncrementalUpload"/> that can be used to add data parts and complete the upload.
     /// A successfully completed upload will provide an assembled file with an ID that can be used in other operations.
     /// </returns>
-    public virtual async Task<IncrementalUploadJob> CreateIncrementalUploadJobAsync(BinaryContent content, RequestOptions options = null)
+    public virtual async Task<IncrementalUpload> CreateIncrementalUploadAsync(BinaryContent content, RequestOptions options = null)
     {
         ClientResult result = await _internalUploadClient.CreateUploadJobAsync(content, options).ConfigureAwait(false);
-        InternalUploadJobInfo jobInfo = InternalUploadJobInfo.FromResponse(result.GetRawResponse());
-        return new IncrementalUploadJob(jobInfo, _internalUploadClient, result.GetRawResponse());
+        InternalUpload jobInfo = InternalUpload.FromResponse(result.GetRawResponse());
+        return new IncrementalUpload(jobInfo, _internalUploadClient, result.GetRawResponse());
     }
 
     /// <summary>
     /// <para>[Protocol Method]</para>
-    /// Creates a new <see cref="IncrementalUploadJob"/> that can be used to incrementally create a file, uploading
+    /// Creates a new <see cref="IncrementalUpload"/> that can be used to incrementally create a file, uploading
     /// individual data parts with arbitrary ordering and parallelism before being assembled by a final completion.
     /// </summary>
     /// <param name="content">
@@ -270,13 +270,13 @@ public partial class FileClient
     /// Additional options for the protocol request, including cancellation and error behavior.
     /// </param>
     /// <returns>
-    /// A new instance of <see cref="IncrementalUploadJob"/> that can be used to add data parts and complete the upload.
+    /// A new instance of <see cref="IncrementalUpload"/> that can be used to add data parts and complete the upload.
     /// A successfully completed upload will provide an assembled file with an ID that can be used in other operations.
     /// </returns>
-    public virtual IncrementalUploadJob CreateIncrementalUploadJob(BinaryContent content, RequestOptions options = null)
+    public virtual IncrementalUpload CreateIncrementalUpload(BinaryContent content, RequestOptions options = null)
     {
         ClientResult result = _internalUploadClient.CreateUploadJob(content, options);
-        InternalUploadJobInfo jobInfo = InternalUploadJobInfo.FromResponse(result.GetRawResponse());
-        return new IncrementalUploadJob(jobInfo, _internalUploadClient, result.GetRawResponse());
+        InternalUpload jobInfo = InternalUpload.FromResponse(result.GetRawResponse());
+        return new IncrementalUpload(jobInfo, _internalUploadClient, result.GetRawResponse());
     }
 }

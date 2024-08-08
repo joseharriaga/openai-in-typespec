@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.Files
 {
-    internal partial class InternalUploadJobDataPart
+    internal partial class InternalUploadPart
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalUploadJobDataPart(string id, DateTimeOffset createdAt, string uploadId)
+        internal InternalUploadPart(string id, DateTimeOffset createdAt, string uploadId)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(uploadId, nameof(uploadId));
@@ -20,7 +20,7 @@ namespace OpenAI.Files
             UploadId = uploadId;
         }
 
-        internal InternalUploadJobDataPart(string id, DateTimeOffset createdAt, string uploadId, InternalUploadPartObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadPart(string id, DateTimeOffset createdAt, string uploadId, InternalUploadPartObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -29,7 +29,7 @@ namespace OpenAI.Files
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal InternalUploadJobDataPart()
+        internal InternalUploadPart()
         {
         }
 

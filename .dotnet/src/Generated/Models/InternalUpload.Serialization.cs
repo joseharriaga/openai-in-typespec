@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Files
 {
-    internal partial class InternalUploadJobInfo : IJsonModel<InternalUploadJobInfo>
+    internal partial class InternalUpload : IJsonModel<InternalUpload>
     {
-        void IJsonModel<InternalUploadJobInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalUpload>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobInfo>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalUploadJobInfo)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalUpload)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -39,7 +39,7 @@ namespace OpenAI.Files
             if (SerializedAdditionalRawData?.ContainsKey("bytes") != true)
             {
                 writer.WritePropertyName("bytes"u8);
-                writer.WriteNumberValue(TotalSize);
+                writer.WriteNumberValue(TotalSizeInBytes);
             }
             if (SerializedAdditionalRawData?.ContainsKey("purpose") != true)
             {
@@ -95,19 +95,19 @@ namespace OpenAI.Files
             writer.WriteEndObject();
         }
 
-        InternalUploadJobInfo IJsonModel<InternalUploadJobInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalUpload IJsonModel<InternalUpload>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobInfo>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalUploadJobInfo)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalUpload)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalUploadJobInfo(document.RootElement, options);
+            return DeserializeInternalUpload(document.RootElement, options);
         }
 
-        internal static InternalUploadJobInfo DeserializeInternalUploadJobInfo(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalUpload DeserializeInternalUpload(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -189,7 +189,7 @@ namespace OpenAI.Files
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalUploadJobInfo(
+            return new InternalUpload(
                 id,
                 createdAt,
                 filename,
@@ -202,41 +202,41 @@ namespace OpenAI.Files
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalUploadJobInfo>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalUpload>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobInfo>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalUploadJobInfo)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalUpload)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalUploadJobInfo IPersistableModel<InternalUploadJobInfo>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalUpload IPersistableModel<InternalUpload>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadJobInfo>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalUploadJobInfo(document.RootElement, options);
+                        return DeserializeInternalUpload(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalUploadJobInfo)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalUpload)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalUploadJobInfo>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalUpload>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalUploadJobInfo FromResponse(PipelineResponse response)
+        internal static InternalUpload FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalUploadJobInfo(document.RootElement);
+            return DeserializeInternalUpload(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

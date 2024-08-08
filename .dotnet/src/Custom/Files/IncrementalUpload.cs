@@ -9,14 +9,14 @@ namespace OpenAI.Files;
 /// large files.
 /// </summary>
 /// <remarks>
-/// <see cref="IncrementalUploadJob"/> instances are obtained via
-/// <see cref="FileClient.CreateIncrementalUploadJob(BinaryContent, RequestOptions)"/> or rehydrated via
-/// <see cref="Rehydrate(OpenAI.Files.FileClient, ContinuationToken)"/> using a <see cref="RehydrationToken"/> from
+/// <see cref="IncrementalUpload"/> instances are obtained via
+/// <see cref="FileClient.CreateIncrementalUpload(BinaryContent, RequestOptions)"/> or rehydrated via
+/// <see cref="FromContinuationToken(OpenAI.Files.FileClient, ContinuationToken)"/> using a <see cref="ContinuationToken"/> from
 /// an existing instance.
 /// </remarks>
-public partial class IncrementalUploadJob : ClientResult
+public partial class IncrementalUpload : ClientResult
 {
-    private readonly InternalUploadJobInfo _internalJobInfo;
+    private readonly InternalUpload _internalJobInfo;
     private readonly InternalUploadClient _internalClient;
 
     /// <summary>
@@ -37,65 +37,66 @@ public partial class IncrementalUploadJob : ClientResult
     public DateTimeOffset ExpiresAt => _internalJobInfo.ExpiresAt;
 
     /// <summary>
-    /// A token that can be serialized/deserialized and used to reinstantiate an <see cref="IncrementalUploadJob"/>,
+    /// A token that can be serialized/deserialized and used to reinstantiate an <see cref="IncrementalUpload"/>,
     /// including to facilitate parallel data part uploads across multiple environments.
     /// </summary>
     /// <remarks>
     /// The full binary representation of the original server <c>Upload</c> is also represented in this token via
     /// <see cref="ContinuationToken.ToBytes"/>.
     /// </remarks>
-    public ContinuationToken RehydrationToken { get; }
+    public ContinuationToken ContinuationToken { get; }
 
     /// <summary>
-    /// Creates a new instance of <see cref="IncrementalUploadJob"/> based on a live service response.
+    /// Creates a new instance of <see cref="IncrementalUpload"/> based on a live service response.
     /// </summary>
     /// <param name="internalJobInfo"></param>
     /// <param name="internalClient"></param>
     /// <param name="protocolJobResponse"></param>
-    internal IncrementalUploadJob(InternalUploadJobInfo internalJobInfo, InternalUploadClient internalClient, PipelineResponse protocolJobResponse)
+    internal IncrementalUpload(InternalUpload internalJobInfo, InternalUploadClient internalClient, PipelineResponse protocolJobResponse)
         : base(protocolJobResponse)
     {
         _internalJobInfo = internalJobInfo;
         _internalClient = internalClient;
-        RehydrationToken = new InternalIncrementalUploadJobToken(internalJobInfo);
+        ContinuationToken = new InternalIncrementalUploadJobToken(internalJobInfo);
     }
 
     /// <summary>
-    /// Creates a new instance of <see cref="IncrementalUploadJob"/> from a rehydration <see cref="ContinuationToken"/>.
+    /// Creates a new instance of <see cref="IncrementalUpload"/> from a rehydration <see cref="ContinuationToken"/>.
     /// </summary>
-    /// <param name="rehydrationToken"></param>
+    /// <param name="continuationToken"></param>
     /// <param name="internalClient"></param>
-    internal IncrementalUploadJob(ContinuationToken rehydrationToken, InternalUploadClient internalClient)
+    internal IncrementalUpload(ContinuationToken continuationToken, InternalUploadClient internalClient)
         : base()
     {
-        InternalIncrementalUploadJobToken specificToken = InternalIncrementalUploadJobToken.FromToken(rehydrationToken);
+        InternalIncrementalUploadJobToken specificToken = InternalIncrementalUploadJobToken.FromToken(continuationToken);
 
-        _internalJobInfo = specificToken.JobInfo;
+        _internalJobInfo = specificToken.Upload;
         _internalClient = internalClient;
-        RehydrationToken = specificToken;
+        ContinuationToken = specificToken;
     }
 
     /// <summary>
-    /// Instantiates a new instance of <see cref="IncrementalUploadJob"/> that will interact with the same server
+    /// Instantiates a new instance of <see cref="IncrementalUpload"/> that will interact with the same server
     /// <c>Upload</c> object created by a previous call to
-    /// <see cref="FileClient.CreateIncrementalUploadJob(BinaryContent, RequestOptions)"/>. A rehydrated instance may
+    /// <see cref="FileClient.CreateIncrementalUpload(BinaryContent, RequestOptions)"/>. A rehydrated instance may
     /// be used to upload data parts and complete the job in a different environment relative to where the job was
     /// started.
     /// </summary>
     /// <param name="client"> The <see cref="FileClient"/> instance that the rehydrated job should use for operations. </param>
-    /// <param name="rehydrationToken">
-    /// The token, retrieved from the <see cref="IncrementalUploadJob.RehydrationToken"/> property, that will configure
+    /// <param name="continuationToken">
+    /// The token, retrieved from the <see cref="IncrementalUpload.RehydrationToken"/> property, that will configure
     /// the rehydrated job instance.
     /// </param>
     /// <returns>
-    /// A new instance of <see cref="IncrementalUploadJob"/> that will interact with the same <c>Upload</c> that the
-    /// previous job, represented by <paramref name="rehydrationToken"/>, does.
+    /// A new instance of <see cref="IncrementalUpload"/> that will interact with the same <c>Upload</c> that the
+    /// previous job, represented by <paramref name="continuationToken"/>, does.
     /// </returns>
-    public static IncrementalUploadJob Rehydrate(FileClient client, ContinuationToken rehydrationToken)
+    /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="continuationToken"/> is null. </exception>
+    public static IncrementalUpload FromContinuationToken(FileClient client, ContinuationToken continuationToken)
     {
         Argument.AssertNotNull(client, nameof(client));
-        Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
+        Argument.AssertNotNull(continuationToken, nameof(continuationToken));
 
-        return new IncrementalUploadJob(rehydrationToken, client._internalUploadClient);
+        return new IncrementalUpload(continuationToken, client._internalUploadClient);
     }
 }

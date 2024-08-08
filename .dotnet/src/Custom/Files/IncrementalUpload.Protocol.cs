@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Files;
 
-public partial class IncrementalUploadJob
+public partial class IncrementalUpload
 {
     /// <summary>
     /// <para>[Protocol Method]</para>
@@ -176,7 +176,7 @@ public partial class IncrementalUploadJob
     /// Previously uploaded data parts for a cancelled job will be discarded.
     /// </summary>
     /// <param name="jobId"> The ID of the job to cancel. This should typically match the <see cref="Id"/> property of
-    /// the <see cref="IncrementalUploadJob"/> instance.
+    /// the <see cref="IncrementalUpload"/> instance.
     /// </param>
     /// <param name="options">
     /// Additional options for the protocol request, including cancellation and error behavior.
@@ -194,7 +194,7 @@ public partial class IncrementalUploadJob
     /// Previously uploaded data parts for a cancelled job will be discarded.
     /// </summary>
     /// <param name="jobId"> The ID of the job to cancel. This should typically match the <see cref="Id"/> property of
-    /// the <see cref="IncrementalUploadJob"/> instance.
+    /// the <see cref="IncrementalUpload"/> instance.
     /// </param>
     /// <param name="options">
     /// Additional options for the protocol request, including cancellation and error behavior.

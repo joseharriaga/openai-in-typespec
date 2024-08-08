@@ -5,7 +5,7 @@ using System.ClientModel.Primitives;
 namespace OpenAI.Files;
 
 [CodeGenClient("Uploads")]
-[CodeGenSuppress("Uploads", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress(nameof(InternalUploadClient), typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateUploadAsync", typeof(InternalCreateUploadRequest))]
 [CodeGenSuppress("CreateUploadAsync", typeof(BinaryContent), typeof(RequestOptions))]
 [CodeGenSuppress("CreateUpload", typeof(InternalCreateUploadRequest))]

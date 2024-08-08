@@ -5,7 +5,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OpenAI.Internal.Chat
+namespace OpenAI.Chat
 {
     internal readonly partial struct InternalCreateChatCompletionStreamResponseServiceTier : IEquatable<InternalCreateChatCompletionStreamResponseServiceTier>
     {

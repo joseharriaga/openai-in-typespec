@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class InternalFineTuningJobError : IJsonModel<InternalFineTuningJobError>
+    public partial class FineTuningJobError : IJsonModel<FineTuningJobError>
     {
-        void IJsonModel<InternalFineTuningJobError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<FineTuningJobError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalFineTuningJobError)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(FineTuningJobError)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -65,19 +65,19 @@ namespace OpenAI.FineTuning
             writer.WriteEndObject();
         }
 
-        InternalFineTuningJobError IJsonModel<InternalFineTuningJobError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        FineTuningJobError IJsonModel<FineTuningJobError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalFineTuningJobError)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(FineTuningJobError)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalFineTuningJobError(document.RootElement, options);
+            return DeserializeFineTuningJobError(document.RootElement, options);
         }
 
-        internal static InternalFineTuningJobError DeserializeInternalFineTuningJobError(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static FineTuningJobError DeserializeFineTuningJobError(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -119,44 +119,44 @@ namespace OpenAI.FineTuning
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalFineTuningJobError(code, message, param, serializedAdditionalRawData);
+            return new FineTuningJobError(code, message, param, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalFineTuningJobError>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<FineTuningJobError>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobError>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalFineTuningJobError)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FineTuningJobError)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalFineTuningJobError IPersistableModel<InternalFineTuningJobError>.Create(BinaryData data, ModelReaderWriterOptions options)
+        FineTuningJobError IPersistableModel<FineTuningJobError>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobError>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobError>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalFineTuningJobError(document.RootElement, options);
+                        return DeserializeFineTuningJobError(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalFineTuningJobError)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FineTuningJobError)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalFineTuningJobError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<FineTuningJobError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalFineTuningJobError FromResponse(PipelineResponse response)
+        internal static FineTuningJobError FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalFineTuningJobError(document.RootElement);
+            return DeserializeFineTuningJobError(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

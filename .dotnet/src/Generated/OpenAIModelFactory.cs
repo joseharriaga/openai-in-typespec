@@ -9,6 +9,7 @@ using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
+using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.Moderations;
 using OpenAI.VectorStores;
@@ -82,6 +83,16 @@ namespace OpenAI
         public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
         {
             return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);
+        }
+
+        public static HyperparameterOptions HyperparameterOptions(HyperparameterCycleCount cycleCount = default, HyperparameterBatchSize batchSize = default, HyperparameterLearningRate learningRate = default)
+        {
+            return new HyperparameterOptions(cycleCount, batchSize, learningRate, serializedAdditionalRawData: null);
+        }
+
+        public static FineTuningJobError FineTuningJobError(string code = null, string message = null, string param = null)
+        {
+            return new FineTuningJobError(code, message, param, serializedAdditionalRawData: null);
         }
 
         public static GeneratedImageCollection GeneratedImageCollection(DateTimeOffset created = default, IEnumerable<GeneratedImage> data = null)

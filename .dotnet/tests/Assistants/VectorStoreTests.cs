@@ -363,7 +363,7 @@ public partial class VectorStoreTests
         for (int i = 0; i < count; i++)
         {
             OpenAIFileInfo file = client.UploadFile(
-                BinaryData.FromString("This is a test file").ToStream(),
+                BinaryData.FromString("This is a test sampleFile").ToStream(),
                 $"test_file_{i.ToString().PadLeft(3, '0')}.txt",
                 FileUploadPurpose.Assistants);
             Validate(file);

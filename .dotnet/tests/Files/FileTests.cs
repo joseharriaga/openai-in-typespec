@@ -40,11 +40,11 @@ public partial class FileTests : SyncAsyncTestBase
     public async Task UploadAndRetrieve()
     {
         FileClient client = GetTestClient();
-        string fileContent = "Hello! This is a test text file. Please delete me.";
+        string fileContent = "Hello! This is a test text sampleFile. Please delete me.";
         using Stream file = BinaryData.FromString(fileContent).ToStream();
-        string filename = "test-file-delete-me.txt";
+        string filename = "test-sampleFile-delete-me.txt";
 
-        // Upload file.
+        // Upload sampleFile.
         OpenAIFileInfo uploadedFile = IsAsync
             ? await client.UploadFileAsync(file, filename, FileUploadPurpose.Assistants)
             : client.UploadFile(file, filename, FileUploadPurpose.Assistants);
@@ -55,7 +55,7 @@ public partial class FileTests : SyncAsyncTestBase
             Assert.That(uploadedFile.Filename, Is.EqualTo(filename));
             Assert.That(uploadedFile.Purpose, Is.EqualTo(OpenAIFilePurpose.Assistants));
 
-            // Retrieve file.
+            // Retrieve sampleFile.
             OpenAIFileInfo retrievedFile = IsAsync
                 ? await client.GetFileAsync(uploadedFile.Id)
                 : client.GetFile(uploadedFile.Id);
@@ -64,7 +64,7 @@ public partial class FileTests : SyncAsyncTestBase
         }
         finally
         {
-            // Delete file.
+            // Delete sampleFile.
             bool deleted = IsAsync
                 ? await client.DeleteFileAsync(uploadedFile.Id)
                 : client.DeleteFile(uploadedFile.Id);
@@ -78,7 +78,7 @@ public partial class FileTests : SyncAsyncTestBase
         FileClient client = GetTestClient();
         string imagePath = Path.Combine("Assets", "images_dog_and_cat.png");
 
-        // Upload file.
+        // Upload sampleFile.
         OpenAIFileInfo uploadedFile = IsAsync
             ? await client.UploadFileAsync(imagePath, FileUploadPurpose.Vision)
             : client.UploadFile(imagePath, FileUploadPurpose.Vision);
@@ -89,7 +89,7 @@ public partial class FileTests : SyncAsyncTestBase
             Assert.That(uploadedFile.Filename, Is.EqualTo(imagePath));
             Assert.That(uploadedFile.Purpose, Is.EqualTo(OpenAIFilePurpose.Vision));
 
-            // Download file content.
+            // Download sampleFile content.
             BinaryData downloadedContent = IsAsync
                 ? await client.DownloadFileAsync(uploadedFile.Id)
                 : client.DownloadFile(uploadedFile.Id);
@@ -97,7 +97,7 @@ public partial class FileTests : SyncAsyncTestBase
         }
         finally
         {
-            // Delete file.
+            // Delete sampleFile.
             bool deleted = IsAsync
                 ? await client.DeleteFileAsync(uploadedFile.Id)
                 : client.DeleteFile(uploadedFile.Id);

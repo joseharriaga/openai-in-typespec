@@ -1,6 +1,8 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OpenAI.FineTuning;
 
@@ -61,5 +63,52 @@ public partial class FineTuningClient
     {
         _pipeline = pipeline;
         _endpoint = endpoint;
+    }
+
+    /// <summary> Creates a job with a training file and model. </summary>
+    /// <param name="model"> The model name to fine-tune. String such as "gpt-3.5-turbo" </param>
+    /// <param name="trainingFile"> The training file name that is already uploaded. String should match pattern '^file-[a-zA-Z0-9]{24}$'  </param>
+    /// <param name="options"> Additional options (<see cref="RequestOptions"/>) to customize the request. </param>
+    public ClientResult<FineTuningJob> CreateJob(string model, string trainingFile, HyperparameterOptions hyperparameters = default, RequestOptions options = default)
+    {
+        var request = new InternalCreateFineTuningJobRequest(model, trainingFile);
+        request.Hyperparameters = hyperparameters;
+        var content = request.ToBinaryContent();
+        ClientResult result = CreateJob(content, options);
+        return ClientResult.FromValue(FineTuningJob.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary> Async version of create job</summary>
+    /// <param name="model"> The model name to fine-tune. String such as "gpt-3.5-turbo" </param>
+    /// <param name="trainingFile"> The training file name that is already uploaded. String should match pattern '^file-[a-zA-Z0-9]{24}$'  </param>
+    /// <param name="options"> Additional options (<see cref="RequestOptions"/>) to customize the request. </param>
+    public async Task<ClientResult<FineTuningJob>> CreateJobAsync(string model, string trainingFile, RequestOptions options = default)
+    {
+        var request = new InternalCreateFineTuningJobRequest(model, trainingFile);
+        var content = request.ToBinaryContent();
+        ClientResult result = await CreateJobAsync(content, options);
+        return ClientResult.FromValue(FineTuningJob.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary>
+    /// Cancels a fine-tuning job with the specified job ID.
+    /// </summary>
+    /// <param name="jobId">The ID of the job to cancel.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="ClientResult{FineTuningJob}"/> containing the canceled fine-tuning job.</returns>
+    public ClientResult<FineTuningJob> CancelJob(string jobId, CancellationToken cancellationToken = default)
+    {
+        ClientResult result = CancelJob(jobId, cancellationToken.ToRequestOptions());
+        return ClientResult.FromValue(FineTuningJob.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary> Async version of cancel job</summary>
+    /// <param name="jobId"> The job ID to cancel. </param>
+    /// <param name="cancellationToken"> The cancellation token. </param>
+    /// <returns> A <see cref="Task{T}"/> of <see cref="ClientResult{FineTuningJob}"/> containing the canceled fine-tuning job. </returns>
+    public async Task<ClientResult<FineTuningJob>> CancelJobAsync(string jobId, CancellationToken cancellationToken = default)
+    {
+        ClientResult result = await CancelJobAsync(jobId, cancellationToken.ToRequestOptions());
+        return ClientResult.FromValue(FineTuningJob.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 }

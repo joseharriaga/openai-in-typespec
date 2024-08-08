@@ -62,7 +62,8 @@ public partial class FineTuningClient
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateFineTuningJobRequest(content, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        var response = _pipeline.ProcessMessage(message, options);
+        return ClientResult.FromResponse(response);
     }
 
     // CUSTOM:

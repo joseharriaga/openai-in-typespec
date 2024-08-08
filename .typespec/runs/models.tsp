@@ -164,7 +164,7 @@ model CreateThreadAndRunRequest {
         A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
         """)
       @maxItems(20)
-      file_ids?: string[] = [];
+      file_ids?: string[] = #[];
     };
     file_search?: {
       /** The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
@@ -512,7 +512,7 @@ model RunObject {
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
   @maxItems(20)
   @extension("x-oaiExpandable", true)
-  tools: AssistantToolDefinition[] = [];
+  tools: AssistantToolDefinition[] = #[];
 
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")

@@ -289,7 +289,7 @@ public partial class AssistantTests
         {
             InitialMessages =
             {
-                "Describe the contents of any available tool resource file."
+                "Describe the contents of any available tool resource sampleFile."
                 + " Graph a linear regression and provide the coefficient of correlation."
                 + " Explain any code executed to evaluate.",
             },
@@ -556,7 +556,7 @@ public partial class AssistantTests
     [Test]
     public void BasicFileSearchWorks()
     {
-        // First, we need to upload a simple test file.
+        // First, we need to upload a simple test sampleFile.
         FileClient fileClient = new();
         OpenAIFileInfo testFile = fileClient.UploadFile(
             BinaryData.FromString("""
@@ -661,7 +661,7 @@ public partial class AssistantTests
                 Console.WriteLine(content.Text);
                 foreach (TextAnnotation annotation in content.TextAnnotations)
                 {
-                    Console.WriteLine($"  --> From file: {annotation.InputFileId}, replacement: {annotation.TextToReplace}");
+                    Console.WriteLine($"  --> From sampleFile: {annotation.InputFileId}, replacement: {annotation.TextToReplace}");
                 }
 
                 if (!hasCake)
@@ -960,7 +960,7 @@ public partial class AssistantTests
         {
             InitialMessages =
             {
-                "Describe the contents of any available tool resource file."
+                "Describe the contents of any available tool resource sampleFile."
                 + " Graph a linear regression and provide the coefficient of correlation."
                 + " Explain any code executed to evaluate.",
             },

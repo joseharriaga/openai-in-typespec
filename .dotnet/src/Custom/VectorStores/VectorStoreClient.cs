@@ -560,7 +560,7 @@ public partial class VectorStoreClient
     }
 
     /// <summary>
-    /// Begins a batch job to associate multiple jobs with a vector store, beginning the ingestion process.
+    /// Adds multiple files in a batch to the vector store, beginning the ingestion process.
     /// </summary>
     /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
     /// method should return when the service has finished running the 
@@ -570,9 +570,9 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
     /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="VectorStoreFileBatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
-    public virtual async Task<VectorStoreFileBatchOperation> CreateBatchFileJobAsync(
+    public virtual async Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(
         ReturnWhen returnWhen,
         string vectorStoreId, 
         IEnumerable<string> fileIds,
@@ -588,7 +588,7 @@ public partial class VectorStoreClient
         PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
 
-        VectorStoreFileBatchOperation operation = new VectorStoreFileBatchOperation(
+        CreateBatchFileJobOperation operation = new CreateBatchFileJobOperation(
             _pipeline,
             _endpoint,
             ClientResult.FromValue(value, response));
@@ -613,9 +613,9 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
     /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="VectorStoreFileBatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
-    public virtual VectorStoreFileBatchOperation CreateBatchFileJob(
+    public virtual CreateBatchFileJobOperation CreateBatchFileJob(
         ReturnWhen returnWhen,
         string vectorStoreId,
         IEnumerable<string> fileIds, 
@@ -631,7 +631,7 @@ public partial class VectorStoreClient
         PipelineResponse response = _pipeline.ProcessMessage(message, options);
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
 
-        VectorStoreFileBatchOperation operation = new VectorStoreFileBatchOperation(
+        CreateBatchFileJobOperation operation = new CreateBatchFileJobOperation(
             _pipeline,
             _endpoint,
             ClientResult.FromValue(value, response));

@@ -13,9 +13,9 @@ namespace OpenAI.VectorStores;
 /// Long-running operation for creating a vector store file batch.
 /// </summary>
 [Experimental("OPENAI001")]
-public partial class VectorStoreFileBatchOperation : OperationResult
+public partial class CreateBatchFileJobOperation : OperationResult
 {
-    internal VectorStoreFileBatchOperation(
+    internal CreateBatchFileJobOperation(
         ClientPipeline pipeline,
         Uri endpoint,
         ClientResult<VectorStoreBatchFileJob> result)
@@ -31,7 +31,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
         _batchId = Value.BatchId;
 
         IsCompleted = GetIsCompleted(Value.Status);
-        RehydrationToken = new VectorStoreFileBatchOperationToken(VectorStoreId, BatchId);
+        RehydrationToken = new CreateBatchFileJobOperationToken(VectorStoreId, BatchId);
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     public string BatchId { get => _batchId; }
 
     /// <summary>
-    /// Recreates a <see cref="VectorStoreFileBatchOperation"/> from a rehydration token.
+    /// Recreates a <see cref="CreateBatchFileJobOperation"/> from a rehydration token.
     /// </summary>
     /// <param name="client"> The <see cref="VectorStoreClient"/> used to obtain the 
     /// operation status from the service. </param>
@@ -65,22 +65,22 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
-    public static async Task<VectorStoreFileBatchOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
+    public static async Task<CreateBatchFileJobOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
 
-        VectorStoreFileBatchOperationToken token = VectorStoreFileBatchOperationToken.FromToken(rehydrationToken);
+        CreateBatchFileJobOperationToken token = CreateBatchFileJobOperationToken.FromToken(rehydrationToken);
 
         ClientResult result = await client.GetBatchFileJobAsync(token.VectorStoreId, token.BatchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        return new VectorStoreFileBatchOperation(client.Pipeline, client.Endpoint, FromValue(job, response));
+        return new CreateBatchFileJobOperation(client.Pipeline, client.Endpoint, FromValue(job, response));
     }
 
     /// <summary>
-    /// Recreates a <see cref="VectorStoreFileBatchOperation"/> from a rehydration token.
+    /// Recreates a <see cref="CreateBatchFileJobOperation"/> from a rehydration token.
     /// </summary>
     /// <param name="client"> The <see cref="VectorStoreClient"/> used to obtain the 
     /// operation status from the service. </param>
@@ -90,18 +90,18 @@ public partial class VectorStoreFileBatchOperation : OperationResult
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
-    public static VectorStoreFileBatchOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
+    public static CreateBatchFileJobOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
 
-        VectorStoreFileBatchOperationToken token = VectorStoreFileBatchOperationToken.FromToken(rehydrationToken);
+        CreateBatchFileJobOperationToken token = CreateBatchFileJobOperationToken.FromToken(rehydrationToken);
 
         ClientResult result = client.GetBatchFileJob(token.VectorStoreId, token.BatchId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        return new VectorStoreFileBatchOperation(client.Pipeline, client.Endpoint, FromValue(job, response));
+        return new CreateBatchFileJobOperation(client.Pipeline, client.Endpoint, FromValue(job, response));
     }
 
     /// <inheritdoc/>

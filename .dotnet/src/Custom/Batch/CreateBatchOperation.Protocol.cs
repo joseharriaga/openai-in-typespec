@@ -13,7 +13,7 @@ namespace OpenAI.Batch;
 /// A long-running operation for executing a batch from an uploaded file of 
 /// requests.
 /// </summary>
-public partial class BatchOperation : OperationResult
+public partial class CreateBatchOperation : OperationResult
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
@@ -22,7 +22,7 @@ public partial class BatchOperation : OperationResult
 
     private PollingInterval? _pollingInterval;
 
-    internal BatchOperation(
+    internal CreateBatchOperation(
         ClientPipeline pipeline,
         Uri endpoint,
         string batchId,
@@ -35,7 +35,7 @@ public partial class BatchOperation : OperationResult
         _batchId = batchId;
 
         IsCompleted = GetIsCompleted(status);
-        RehydrationToken = new BatchOperationToken(batchId);
+        RehydrationToken = new CreateBatchOperationToken(batchId);
     }
 
     /// <inheritdoc/>
@@ -45,7 +45,7 @@ public partial class BatchOperation : OperationResult
     public override bool IsCompleted { get; protected set; }
 
     /// <summary>
-    /// Recreates a <see cref="BatchOperation"/> from a rehydration token.
+    /// Recreates a <see cref="CreateBatchOperation"/> from a rehydration token.
     /// </summary>
     /// <param name="client"> The <see cref="BatchClient"/> used to obtain the 
     /// operation status from the service. </param>
@@ -55,12 +55,12 @@ public partial class BatchOperation : OperationResult
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
-    public static async Task<BatchOperation> RehydrateAsync(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
+    public static async Task<CreateBatchOperation> RehydrateAsync(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
 
-        BatchOperationToken token = BatchOperationToken.FromToken(rehydrationToken);
+        CreateBatchOperationToken token = CreateBatchOperationToken.FromToken(rehydrationToken);
 
         ClientResult result = await client.GetBatchAsync(token.BatchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
@@ -68,11 +68,11 @@ public partial class BatchOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return new BatchOperation(client.Pipeline, client.Endpoint, token.BatchId, status, response);
+        return new CreateBatchOperation(client.Pipeline, client.Endpoint, token.BatchId, status, response);
     }
 
     /// <summary>
-    /// Recreates a <see cref="BatchOperation"/> from a rehydration token.
+    /// Recreates a <see cref="CreateBatchOperation"/> from a rehydration token.
     /// </summary>
     /// <param name="client"> The <see cref="BatchClient"/> used to obtain the 
     /// operation status from the service. </param>
@@ -82,12 +82,12 @@ public partial class BatchOperation : OperationResult
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
-    public static BatchOperation Rehydrate(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
+    public static CreateBatchOperation Rehydrate(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
 
-        BatchOperationToken token = BatchOperationToken.FromToken(rehydrationToken);
+        CreateBatchOperationToken token = CreateBatchOperationToken.FromToken(rehydrationToken);
 
         ClientResult result = client.GetBatch(token.BatchId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
@@ -95,7 +95,7 @@ public partial class BatchOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return new BatchOperation(client.Pipeline, client.Endpoint, token.BatchId, status, response);
+        return new CreateBatchOperation(client.Pipeline, client.Endpoint, token.BatchId, status, response);
     }
 
     /// <inheritdoc/>

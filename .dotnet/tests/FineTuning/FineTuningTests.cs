@@ -33,7 +33,7 @@ public partial class FineTuningTests
         BinaryData input = BinaryData.FromString(json);
         using BinaryContent content = BinaryContent.Create(input);
 
-        FineTuningJobOperation operation = client.CreateJob(ReturnWhen.Started, content);
+        CreateJobOperation operation = client.CreateJob(ReturnWhen.Started, content);
     }
 
     [OneTimeTearDown]

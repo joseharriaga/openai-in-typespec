@@ -12,7 +12,7 @@ namespace OpenAI.VectorStores;
 /// <summary>
 /// Long-running operation for creating a vector store file batch.
 /// </summary>
-public partial class VectorStoreFileBatchOperation : OperationResult
+public partial class CreateBatchFileJobOperation : OperationResult
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;

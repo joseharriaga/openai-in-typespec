@@ -182,9 +182,9 @@ public partial class VectorStoreClient
     /// processing. </param>
     /// <param name="vectorStore"> The vector store to associate files with. </param>
     /// <param name="files"> The files to associate with the vector store. </param>
-    /// <returns> A <see cref="VectorStoreFileBatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
-    public virtual Task<VectorStoreFileBatchOperation> CreateBatchFileJobAsync(ReturnWhen returnWhen, VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files)
+    public virtual Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(ReturnWhen returnWhen, VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files)
         => CreateBatchFileJobAsync(returnWhen, vectorStore?.Id, files?.Select(file => file.Id));
 
     /// <summary>
@@ -197,8 +197,8 @@ public partial class VectorStoreClient
     /// processing. </param>
     /// <param name="vectorStore"> The vector store to associate files with. </param>
     /// <param name="files"> The files to associate with the vector store. </param>
-    /// <returns> A <see cref="VectorStoreFileBatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
-    public virtual VectorStoreFileBatchOperation CreateBatchFileJob(ReturnWhen returnWhen, VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files)
+    public virtual CreateBatchFileJobOperation CreateBatchFileJob(ReturnWhen returnWhen, VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files)
         => CreateBatchFileJob(returnWhen, vectorStore?.Id, files?.Select(file => file.Id));
 }

@@ -75,7 +75,7 @@ public partial class BatchTests : SyncAsyncTestBase
                 testMetadataKey = "test metadata value",
             },
         }));
-        BatchOperation batchOperation = IsAsync
+        CreateBatchOperation batchOperation = IsAsync
             ? await client.CreateBatchAsync(ReturnWhen.Started, content)
             : client.CreateBatch(ReturnWhen.Started, content);
 
@@ -127,7 +127,6 @@ public partial class BatchTests : SyncAsyncTestBase
         //Assert.That(newBatchDynamic.status, Is.EqualTo("cancelling"));
     }
 
-
     [Test]
     public async Task CanRehydrateBatchOperation()
     {
@@ -153,7 +152,7 @@ public partial class BatchTests : SyncAsyncTestBase
                 testMetadataKey = "test metadata value",
             },
         }));
-        BatchOperation batchOperation = IsAsync
+        CreateBatchOperation batchOperation = IsAsync
             ? await client.CreateBatchAsync(ReturnWhen.Started, content)
             : client.CreateBatch(ReturnWhen.Started, content);
 
@@ -161,11 +160,11 @@ public partial class BatchTests : SyncAsyncTestBase
         BinaryData rehydrationBytes = batchOperation.RehydrationToken.ToBytes();
         ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
 
-        BatchOperation rehydratedOperation = IsAsync ?
-            await BatchOperation.RehydrateAsync(client, rehydrationToken) :
-            BatchOperation.Rehydrate(client, rehydrationToken);
+        CreateBatchOperation rehydratedOperation = IsAsync ?
+            await CreateBatchOperation.RehydrateAsync(client, rehydrationToken) :
+            CreateBatchOperation.Rehydrate(client, rehydrationToken);
 
-        static bool Validate(BatchOperation operation)
+        static bool Validate(CreateBatchOperation operation)
         {
             BinaryData response = operation.GetRawResponse().Content;
             JsonDocument jsonDocument = JsonDocument.Parse(response);
@@ -195,8 +194,8 @@ public partial class BatchTests : SyncAsyncTestBase
         Assert.IsTrue(Validate(rehydratedOperation));
 
         Task.WaitAll(
-            IsAsync ? batchOperation.WaitForCompletionAsync(pollingInterval: TimeSpan.FromSeconds(4)) : Task.Run(() => batchOperation.WaitForCompletion(pollingInterval: TimeSpan.FromSeconds(4))),
-            IsAsync ? rehydratedOperation.WaitForCompletionAsync(pollingInterval: TimeSpan.FromSeconds(4)) : Task.Run(() => rehydratedOperation.WaitForCompletion(pollingInterval: TimeSpan.FromSeconds(4))));
+            IsAsync ? batchOperation.WaitForCompletionAsync() : Task.Run(() => batchOperation.WaitForCompletion()),
+            IsAsync ? rehydratedOperation.WaitForCompletionAsync() : Task.Run(() => rehydratedOperation.WaitForCompletion()));
 
         Assert.IsTrue(batchOperation.IsCompleted);
         Assert.IsTrue(rehydratedOperation.IsCompleted);

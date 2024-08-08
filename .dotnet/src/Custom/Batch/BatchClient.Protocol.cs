@@ -20,9 +20,9 @@ public partial class BatchClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="BatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchOperation"/> that can be used to wait for 
     /// the operation to complete, or cancel the operation. </returns>
-    public virtual async Task<BatchOperation> CreateBatchAsync(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null)
+    public virtual async Task<CreateBatchOperation> CreateBatchAsync(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
 
@@ -34,7 +34,7 @@ public partial class BatchClient
         string batchId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        BatchOperation operation = new BatchOperation(_pipeline, _endpoint, batchId, status, response);
+        CreateBatchOperation operation = new CreateBatchOperation(_pipeline, _endpoint, batchId, status, response);
         if (returnWhen == ReturnWhen.Started)
         {
             return operation;
@@ -56,9 +56,9 @@ public partial class BatchClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="BatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchOperation"/> that can be used to wait for 
     /// the operation to complete, or cancel the operation. </returns>
-    public virtual BatchOperation CreateBatch(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null)
+    public virtual CreateBatchOperation CreateBatch(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
 
@@ -69,7 +69,7 @@ public partial class BatchClient
         string batchId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        BatchOperation operation = new BatchOperation(_pipeline, _endpoint, batchId, status, response);
+        CreateBatchOperation operation = new CreateBatchOperation(_pipeline, _endpoint, batchId, status, response);
         if (returnWhen == ReturnWhen.Started)
         {
             return operation;

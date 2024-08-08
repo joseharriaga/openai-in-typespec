@@ -6,14 +6,17 @@ using System.Text.Json;
 
 #nullable enable
 
-namespace OpenAI.Batch;
+namespace OpenAI.VectorStores;
 
-internal class BatchOperationToken : ContinuationToken
+internal class CreateBatchFileJobOperationToken : ContinuationToken
 {
-    public BatchOperationToken(string batchId)
+    public CreateBatchFileJobOperationToken(string vectorStoreId, string batchId)
     {
+        VectorStoreId = vectorStoreId;
         BatchId = batchId;
     }
+
+    public string VectorStoreId { get; }
 
     public string BatchId { get; }
 
@@ -23,6 +26,7 @@ internal class BatchOperationToken : ContinuationToken
         using Utf8JsonWriter writer = new(stream);
         writer.WriteStartObject();
 
+        writer.WriteString("vectorStoreId", VectorStoreId);
         writer.WriteString("batchId", BatchId);
 
         writer.WriteEndObject();
@@ -33,9 +37,9 @@ internal class BatchOperationToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public static BatchOperationToken FromToken(ContinuationToken continuationToken)
+    public static CreateBatchFileJobOperationToken FromToken(ContinuationToken continuationToken)
     {
-        if (continuationToken is BatchOperationToken token)
+        if (continuationToken is CreateBatchFileJobOperationToken token)
         {
             return token;
         }
@@ -44,11 +48,12 @@ internal class BatchOperationToken : ContinuationToken
 
         if (data.ToMemory().Length == 0)
         {
-            throw new ArgumentException("Failed to create BatchOperationToken from provided continuationToken.", nameof(continuationToken));
+            throw new ArgumentException("Failed to create AddFileBatchToVectorStoreOperationToken from provided continuationToken.", nameof(continuationToken));
         }
 
         Utf8JsonReader reader = new(data);
 
+        string vectorStoreId = null!;
         string batchId = null!;
 
         reader.Read();
@@ -68,6 +73,12 @@ internal class BatchOperationToken : ContinuationToken
 
             switch (propertyName)
             {
+                case "vectorStoreId":
+                    reader.Read();
+                    Debug.Assert(reader.TokenType == JsonTokenType.String);
+                    vectorStoreId = reader.GetString()!;
+                    break;
+
                 case "batchId":
                     reader.Read();
                     Debug.Assert(reader.TokenType == JsonTokenType.String);
@@ -79,12 +90,12 @@ internal class BatchOperationToken : ContinuationToken
             }
         }
 
-        if (batchId is null)
+        if (vectorStoreId is null || batchId is null)
         {
-            throw new ArgumentException("Failed to create BatchOperationToken from provided continuationToken.", nameof(continuationToken));
+            throw new ArgumentException("Failed to create AddFileBatchToVectorStoreOperationToken from provided continuationToken.", nameof(continuationToken));
         }
 
-        return new(batchId);
+        return new(vectorStoreId, batchId);
     }
 }
 

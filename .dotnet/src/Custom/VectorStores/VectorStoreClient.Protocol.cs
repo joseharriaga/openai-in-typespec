@@ -501,10 +501,10 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="content"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="VectorStoreFileBatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<VectorStoreFileBatchOperation> CreateBatchFileJobAsync(
+    public virtual async Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(
         ReturnWhen returnWhen,
         string vectorStoreId,
         BinaryContent content,
@@ -517,7 +517,7 @@ public partial class VectorStoreClient
         PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        VectorStoreFileBatchOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
+        CreateBatchFileJobOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
         if (returnWhen == ReturnWhen.Started)
         {
             return operation;
@@ -541,10 +541,10 @@ public partial class VectorStoreClient
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="content"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="VectorStoreFileBatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual VectorStoreFileBatchOperation CreateBatchFileJob(
+    public virtual CreateBatchFileJobOperation CreateBatchFileJob(
         ReturnWhen returnWhen,
         string vectorStoreId,
         BinaryContent content,
@@ -557,7 +557,7 @@ public partial class VectorStoreClient
         PipelineResponse response = _pipeline.ProcessMessage(message, options);
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        VectorStoreFileBatchOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
+        CreateBatchFileJobOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
         if (returnWhen == ReturnWhen.Started)
         {
             return operation;

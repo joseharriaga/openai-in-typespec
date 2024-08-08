@@ -39,10 +39,10 @@ public partial class FineTuningClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="FineTuningJobOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the fine tuning job, or 
     /// cancel the operation. </returns>
-    public virtual async Task<FineTuningJobOperation> CreateJobAsync(
+    public virtual async Task<CreateJobOperation> CreateJobAsync(
         ReturnWhen returnWhen,
         BinaryContent content,
         RequestOptions options = null)
@@ -56,7 +56,7 @@ public partial class FineTuningClient
         string jobId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        FineTuningJobOperation operation = new FineTuningJobOperation(_pipeline, _endpoint, jobId, status, response);
+        CreateJobOperation operation = new CreateJobOperation(_pipeline, _endpoint, jobId, status, response);
         if (returnWhen == ReturnWhen.Started)
         {
             return operation;
@@ -85,10 +85,10 @@ public partial class FineTuningClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="FineTuningJobOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the fine tuning job, or 
     /// cancel the operation. </returns>
-    public virtual FineTuningJobOperation CreateJob(
+    public virtual CreateJobOperation CreateJob(
         ReturnWhen returnWhen,
         BinaryContent content,
         RequestOptions options = null)
@@ -102,7 +102,7 @@ public partial class FineTuningClient
         string jobId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        FineTuningJobOperation operation = new FineTuningJobOperation(_pipeline, _endpoint, jobId, status, response);
+        CreateJobOperation operation = new CreateJobOperation(_pipeline, _endpoint, jobId, status, response);
         if (returnWhen == ReturnWhen.Started)
         {
             return operation;

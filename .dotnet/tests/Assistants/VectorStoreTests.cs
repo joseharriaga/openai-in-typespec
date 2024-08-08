@@ -284,7 +284,7 @@ public partial class VectorStoreTests
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
-        VectorStoreFileBatchOperation batchOperation = client.CreateBatchFileJob(ReturnWhen.Started, vectorStore, testFiles);
+        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(ReturnWhen.Started, vectorStore, testFiles);
         Validate(batchOperation);
 
         Assert.Multiple(() =>
@@ -320,14 +320,14 @@ public partial class VectorStoreTests
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
-        VectorStoreFileBatchOperation batchOperation = client.CreateBatchFileJob(ReturnWhen.Started, vectorStore, testFiles);
+        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(ReturnWhen.Started, vectorStore, testFiles);
         Validate(batchOperation);
 
         // Simulate rehydration of the operation
         BinaryData rehydrationBytes = batchOperation.RehydrationToken.ToBytes();
         ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
 
-        VectorStoreFileBatchOperation rehydratedOperation = VectorStoreFileBatchOperation.Rehydrate(client, rehydrationToken);
+        CreateBatchFileJobOperation rehydratedOperation = CreateBatchFileJobOperation.Rehydrate(client, rehydrationToken);
         Validate(rehydratedOperation);
 
         Assert.Multiple(() =>
@@ -433,7 +433,7 @@ public partial class VectorStoreTests
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
         };
-        foreach (VectorStoreFileBatchOperation job in _jobsToCancel)
+        foreach (CreateBatchFileJobOperation job in _jobsToCancel)
         {
             ClientResult protocolResult = job.CancelFileBatch(job.VectorStoreId, job.BatchId, requestOptions);
             Console.WriteLine($"Cleanup: {job.BatchId} => {protocolResult?.GetRawResponse()?.Status}");
@@ -464,7 +464,7 @@ public partial class VectorStoreTests
     /// <exception cref="NotImplementedException"> The provided instance type isn't supported. </exception>
     private void Validate<T>(T target)
     {
-        if (target is VectorStoreFileBatchOperation job)
+        if (target is CreateBatchFileJobOperation job)
         {
             Assert.That(job.BatchId, Is.Not.Null);
             _jobsToCancel.Add(job);
@@ -491,7 +491,7 @@ public partial class VectorStoreTests
         }
     }
 
-    private readonly List<VectorStoreFileBatchOperation> _jobsToCancel = [];
+    private readonly List<CreateBatchFileJobOperation> _jobsToCancel = [];
     private readonly List<VectorStoreFileAssociation> _associationsToRemove = [];
     private readonly List<OpenAIFileInfo> _filesToDelete = [];
     private readonly List<VectorStore> _vectorStoresToDelete = [];

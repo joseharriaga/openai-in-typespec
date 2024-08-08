@@ -6,25 +6,24 @@ using System.Text.Json;
 
 #nullable enable
 
-namespace OpenAI.FineTuning;
+namespace OpenAI.Batch;
 
-internal class FineTuningJobOperationToken : ContinuationToken
+internal class CreateBatchOperationToken : ContinuationToken
 {
-    public FineTuningJobOperationToken(string jobId)
+    public CreateBatchOperationToken(string batchId)
     {
-        JobId = jobId;
+        BatchId = batchId;
     }
 
-    public string JobId { get; }
+    public string BatchId { get; }
 
     public override BinaryData ToBytes()
     {
         using MemoryStream stream = new();
         using Utf8JsonWriter writer = new(stream);
-
         writer.WriteStartObject();
 
-        writer.WriteString("jobId", JobId);
+        writer.WriteString("batchId", BatchId);
 
         writer.WriteEndObject();
 
@@ -34,9 +33,9 @@ internal class FineTuningJobOperationToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public static FineTuningJobOperationToken FromToken(ContinuationToken continuationToken)
+    public static CreateBatchOperationToken FromToken(ContinuationToken continuationToken)
     {
-        if (continuationToken is FineTuningJobOperationToken token)
+        if (continuationToken is CreateBatchOperationToken token)
         {
             return token;
         }
@@ -45,12 +44,12 @@ internal class FineTuningJobOperationToken : ContinuationToken
 
         if (data.ToMemory().Length == 0)
         {
-            throw new ArgumentException("Failed to create FineTuningJobOperationToken from provided continuationToken.", nameof(continuationToken));
+            throw new ArgumentException("Failed to create CreateBatchOperationToken from provided continuationToken.", nameof(continuationToken));
         }
 
         Utf8JsonReader reader = new(data);
 
-        string jobId = null!;
+        string batchId = null!;
 
         reader.Read();
 
@@ -69,10 +68,10 @@ internal class FineTuningJobOperationToken : ContinuationToken
 
             switch (propertyName)
             {
-                case "jobId":
+                case "batchId":
                     reader.Read();
                     Debug.Assert(reader.TokenType == JsonTokenType.String);
-                    jobId = reader.GetString()!;
+                    batchId = reader.GetString()!;
                     break;
 
                 default:
@@ -80,12 +79,12 @@ internal class FineTuningJobOperationToken : ContinuationToken
             }
         }
 
-        if (jobId is null)
+        if (batchId is null)
         {
-            throw new ArgumentException("Failed to create FineTuningJobOperationToken from provided continuationToken.", nameof(continuationToken));
+            throw new ArgumentException("Failed to create CreateBatchOperationToken from provided continuationToken.", nameof(continuationToken));
         }
 
-        return new(jobId);
+        return new(batchId);
     }
 }
 

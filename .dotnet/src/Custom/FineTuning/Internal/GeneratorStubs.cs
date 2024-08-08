@@ -5,9 +5,6 @@ namespace OpenAI.FineTuning;
 [CodeGenModel("CreateFineTuningJobRequest")]
 internal partial class InternalCreateFineTuningJobRequest { }
 
-[CodeGenModel("CreateFineTuningJobRequestHyperparameters")]
-internal partial class InternalCreateFineTuningJobRequestHyperparameters { }
-
 [CodeGenModel("CreateFineTuningJobRequestIntegration")]
 internal partial class InternalCreateFineTuningJobRequestIntegration { }
 
@@ -88,3 +85,12 @@ internal partial class InternalListPaginatedFineTuningJobsResponse { }
 
 [CodeGenModel("ListPaginatedFineTuningJobsResponseObject")]
 internal readonly partial struct InternalListPaginatedFineTuningJobsResponseObject { }
+
+[CodeGenModel("FineTuningJobHyperparametersBatchSizeChoiceEnum")]
+internal readonly partial struct InternalFineTuningJobHyperparametersBatchSizeChoiceEnum { }
+
+[CodeGenModel("FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum")]
+internal readonly partial struct InternalFineTuningJobHyperparametersLearningRateChoiceEnum { }
+
+[CodeGenModel("FineTuningJobHyperparametersNEpochsChoiceEnum")]
+internal readonly partial struct InternalFineTuningJobHyperparametersNEpochsChoiceEnum { }

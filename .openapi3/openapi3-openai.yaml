@@ -3850,41 +3850,8 @@ components:
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         hyperparameters:
-          type: object
-          properties:
-            batch_size:
-              anyOf:
-                - type: string
-                  enum:
-                    - auto
-                - type: integer
-                  format: int32
-              description: |-
-                Number of examples in each batch. A larger batch size means that model parameters
-                are updated less frequently, but with lower variance.
-              default: auto
-            learning_rate_multiplier:
-              anyOf:
-                - type: string
-                  enum:
-                    - auto
-                - type: number
-                  format: float
-              description: |-
-                Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-                overfitting.
-              default: auto
-            n_epochs:
-              anyOf:
-                - type: string
-                  enum:
-                    - auto
-                - type: integer
-                  format: int32
-              description: |-
-                The number of epochs to train the model for. An epoch refers to one full cycle
-                through the training dataset.
-              default: auto
+          allOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparameters'
           description: The hyperparameters used for the fine-tuning job.
         suffix:
           type: string
@@ -3925,6 +3892,53 @@ components:
           description: |-
             The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
             If a seed is not specified, one will be generated for you.
+    CreateFineTuningJobRequestHyperparameters:
+      type: object
+      properties:
+        batch_size:
+          anyOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum'
+            - type: integer
+              format: int32
+          minimum: 1
+          maximum: 256
+          description: |-
+            Number of examples in each batch. A larger batch size means that model parameters
+            are updated less frequently, but with lower variance.
+          default: auto
+        learning_rate_multiplier:
+          anyOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum'
+            - type: number
+              format: float
+          minimum: 0
+          description: |-
+            Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+            overfitting.
+          default: auto
+        n_epochs:
+          anyOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum'
+            - type: integer
+              format: int32
+          minimum: 1
+          maximum: 50
+          description: |-
+            The number of epochs to train the model for. An epoch refers to one full cycle
+            through the training dataset.
+          default: auto
+    CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum:
+      type: string
+      enum:
+        - auto
+    CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum:
+      type: string
+      enum:
+        - auto
+    CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum:
+      type: string
+      enum:
+        - auto
     CreateFineTuningJobRequestIntegrations:
       type: array
       items:
@@ -5227,21 +5241,8 @@ components:
           nullable: true
           description: The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running.
         hyperparameters:
-          type: object
-          properties:
-            n_epochs:
-              anyOf:
-                - type: string
-                  enum:
-                    - auto
-                - type: integer
-                  format: int32
-              description: |-
-                The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
-                "auto" decides the optimal number of epochs based on the size of the dataset. If setting the number manually, we support any number between 1 and 50 epochs.
-              default: auto
-          required:
-            - n_epochs
+          allOf:
+            - $ref: '#/components/schemas/FineTuningJobHyperparameters'
           description: The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         model:
           type: string
@@ -5383,6 +5384,52 @@ components:
           enum:
             - fine_tuning.job.event
       description: Fine-tuning job event object
+    FineTuningJobHyperparameters:
+      type: object
+      required:
+        - batch_size
+        - learning_rate_multiplier
+        - n_epochs
+      properties:
+        batch_size:
+          anyOf:
+            - $ref: '#/components/schemas/FineTuningJobHyperparametersBatchSizeChoiceEnum'
+            - type: integer
+              format: int32
+          description: |-
+            Number of examples in each batch. A larger batch size means that model parameters
+            are updated less frequently, but with lower variance.
+          default: auto
+        learning_rate_multiplier:
+          anyOf:
+            - $ref: '#/components/schemas/FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum'
+            - type: number
+              format: float
+          description: |-
+            Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+            overfitting.
+          default: auto
+        n_epochs:
+          anyOf:
+            - $ref: '#/components/schemas/FineTuningJobHyperparametersNEpochsChoiceEnum'
+            - type: integer
+              format: int32
+          description: |-
+            The number of epochs to train the model for. An epoch refers to one full cycle
+            through the training dataset.
+          default: auto
+    FineTuningJobHyperparametersBatchSizeChoiceEnum:
+      type: string
+      enum:
+        - auto
+    FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum:
+      type: string
+      enum:
+        - auto
+    FineTuningJobHyperparametersNEpochsChoiceEnum:
+      type: string
+      enum:
+        - auto
     FineTuningJobIntegrationsItem:
       type: array
       items:

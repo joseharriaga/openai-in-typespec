@@ -133,7 +133,7 @@ namespace OpenAI.FineTuning
             }
             InternalCreateFineTuningJobRequestModel model = default;
             string trainingFile = default;
-            InternalCreateFineTuningJobRequestHyperparameters hyperparameters = default;
+            HyperparameterOptions hyperparameters = default;
             string suffix = default;
             string validationFile = default;
             IList<InternalCreateFineTuningJobRequestIntegration> integrations = default;
@@ -158,7 +158,7 @@ namespace OpenAI.FineTuning
                     {
                         continue;
                     }
-                    hyperparameters = InternalCreateFineTuningJobRequestHyperparameters.DeserializeInternalCreateFineTuningJobRequestHyperparameters(property.Value, options);
+                    hyperparameters = HyperparameterOptions.DeserializeHyperparameterOptions(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("suffix"u8))

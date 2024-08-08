@@ -1738,6 +1738,64 @@ namespace OpenAI.FineTuning {
         public virtual ClientResult GetJobs(string after, int? limit, RequestOptions options);
         public virtual Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options);
     }
+    public readonly partial struct HyperparameterBatchSize : IEquatable<HyperparameterBatchSize> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public HyperparameterBatchSize(int batchSize);
+        public static HyperparameterBatchSize Auto { get; }
+        public readonly bool Equals(HyperparameterBatchSize other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(HyperparameterBatchSize left, HyperparameterBatchSize right);
+        public static implicit operator HyperparameterBatchSize(int batchSize);
+        public static implicit operator HyperparameterBatchSize(string value);
+        public static bool operator !=(HyperparameterBatchSize left, HyperparameterBatchSize right);
+        public override readonly string ToString();
+    }
+    public readonly partial struct HyperparameterCycleCount : IEquatable<HyperparameterCycleCount> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public HyperparameterCycleCount(int epochCount);
+        public static HyperparameterCycleCount Auto { get; }
+        public readonly bool Equals(HyperparameterCycleCount other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(HyperparameterCycleCount left, HyperparameterCycleCount right);
+        public static implicit operator HyperparameterCycleCount(int epochCount);
+        public static implicit operator HyperparameterCycleCount(string value);
+        public static bool operator !=(HyperparameterCycleCount left, HyperparameterCycleCount right);
+        public override readonly string ToString();
+    }
+    public readonly partial struct HyperparameterLearningRate : IEquatable<HyperparameterLearningRate> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public HyperparameterLearningRate(float multiplier);
+        public static HyperparameterLearningRate Auto { get; }
+        public readonly bool Equals(HyperparameterLearningRate other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(HyperparameterLearningRate left, HyperparameterLearningRate right);
+        public static implicit operator HyperparameterLearningRate(float multiplier);
+        public static implicit operator HyperparameterLearningRate(string value);
+        public static bool operator !=(HyperparameterLearningRate left, HyperparameterLearningRate right);
+        public override readonly string ToString();
+    }
+    public class HyperparameterOptions : IJsonModel<HyperparameterOptions>, IPersistableModel<HyperparameterOptions> {
+        public HyperparameterBatchSize BatchSize { get; set; }
+        public HyperparameterCycleCount CycleCount { get; set; }
+        public HyperparameterLearningRate LearningRate { get; set; }
+        HyperparameterOptions IJsonModel<HyperparameterOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<HyperparameterOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        HyperparameterOptions IPersistableModel<HyperparameterOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<HyperparameterOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<HyperparameterOptions>.Write(ModelReaderWriterOptions options);
+    }
 }
 namespace OpenAI.Images {
     public class GeneratedImage : IJsonModel<GeneratedImage>, IPersistableModel<GeneratedImage> {

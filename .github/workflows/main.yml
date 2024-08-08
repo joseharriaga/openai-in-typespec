@@ -84,6 +84,4 @@ jobs:
 
       - name: Build
         run: dotnet build
-          -c Release
-          ${{ env.version_suffix_args }}
         working-directory: .dotnet.azure

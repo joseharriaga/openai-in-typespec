@@ -222,17 +222,9 @@ public partial class CreateBatchFileJobOperation : OperationResult
         VectorStoreFileAssociationCollectionOptions? options = default,
         CancellationToken cancellationToken = default)
     {
-        VectorStoreFileBatchesPageEnumerator enumerator = new(_pipeline, _endpoint,
-            _vectorStoreId,
-            _batchId,
-            options?.PageSize,
-            options?.Order?.ToString(),
-            options?.AfterId,
-            options?.BeforeId,
-            options?.Filter?.ToString(),
-            cancellationToken.ToRequestOptions());
-
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return GetFilesInBatchAsync(_vectorStoreId, _batchId, options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions()) is not AsyncPageCollection<VectorStoreFileAssociation> pages
+            ? throw new NotSupportedException("Failed to cast protocol method return type to AsyncPageCollection<VectorStoreFileAssociation>.")
+            : pages;
     }
 
     /// <summary>
@@ -256,27 +248,19 @@ public partial class CreateBatchFileJobOperation : OperationResult
         {
             throw new ArgumentException(
                 "Invalid page token. 'VectorStoreId' value does not match page token value.",
-                nameof(firstPageToken));
+                nameof(VectorStoreId));
         }
 
         if (_batchId != pageToken.BatchId)
         {
             throw new ArgumentException(
                 "Invalid page token. 'BatchId' value does not match page token value.",
-                nameof(firstPageToken));
+                nameof(BatchId));
         }
 
-        VectorStoreFileBatchesPageEnumerator enumerator = new(_pipeline, _endpoint,
-            pageToken.VectorStoreId,
-            pageToken.BatchId,
-            pageToken.Limit,
-            pageToken.Order,
-            pageToken.After,
-            pageToken.Before,
-            pageToken.Filter,
-            cancellationToken.ToRequestOptions());
-
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return GetFilesInBatchAsync(_vectorStoreId, _batchId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions()) is not AsyncPageCollection<VectorStoreFileAssociation> pages
+            ? throw new NotSupportedException("Failed to cast protocol method return type to PageCollection<VectorStoreFileAssociation>.")
+            : pages;
     }
 
     /// <summary>
@@ -293,17 +277,9 @@ public partial class CreateBatchFileJobOperation : OperationResult
         VectorStoreFileAssociationCollectionOptions? options = default,
         CancellationToken cancellationToken = default)
     {
-        VectorStoreFileBatchesPageEnumerator enumerator = new(_pipeline, _endpoint,
-            _vectorStoreId,
-            _batchId,
-            options?.PageSize,
-            options?.Order?.ToString(),
-            options?.AfterId,
-            options?.BeforeId,
-            options?.Filter?.ToString(),
-            cancellationToken.ToRequestOptions());
-
-        return PageCollectionHelpers.Create(enumerator);
+        return GetFilesInBatch(_vectorStoreId, _batchId, options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions()) is not PageCollection<VectorStoreFileAssociation> pages
+            ? throw new NotSupportedException("Failed to cast protocol method return type to AsyncPageCollection<VectorStoreFileAssociation>.")
+            : pages;
     }
 
     /// <summary>
@@ -324,30 +300,22 @@ public partial class CreateBatchFileJobOperation : OperationResult
 
         VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
 
-        if (_vectorStoreId != pageToken.VectorStoreId)
+        if (VectorStoreId != pageToken.VectorStoreId)
         {
             throw new ArgumentException(
                 "Invalid page token. 'VectorStoreId' value does not match page token value.",
-                nameof(firstPageToken));
+                nameof(VectorStoreId));
         }
 
-        if (_batchId != pageToken.BatchId)
+        if (BatchId != pageToken.BatchId)
         {
             throw new ArgumentException(
                 "Invalid page token. 'BatchId' value does not match page token value.",
-                nameof(firstPageToken));
+                nameof(BatchId));
         }
 
-        VectorStoreFileBatchesPageEnumerator enumerator = new(_pipeline, _endpoint,
-            pageToken.VectorStoreId,
-            pageToken.BatchId,
-            pageToken.Limit,
-            pageToken.Order,
-            pageToken.After,
-            pageToken.Before,
-            pageToken.Filter,
-            cancellationToken.ToRequestOptions());
-
-        return PageCollectionHelpers.Create(enumerator);
+        return GetFilesInBatch(_vectorStoreId, _batchId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions()) is not PageCollection<VectorStoreFileAssociation> pages
+            ? throw new NotSupportedException("Failed to cast protocol method return type to PageCollection<VectorStoreFileAssociation>.")
+            : pages;
     }
 }

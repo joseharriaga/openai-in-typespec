@@ -28,6 +28,11 @@ jobs:
           ${{ env.version_suffix_args }}
         working-directory: .dotnet
 
+      - name: AzureBuild (DevMirror-Only)
+        run: dotnet build
+          ${{ env.version_suffix_args }}
+        working-directory: .dotnet.azure
+
       - name: Test
         run: dotnet test
           --no-build

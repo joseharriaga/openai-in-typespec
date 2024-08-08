@@ -1,8 +1,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
-#nullable enable
-
 namespace Azure.AI.OpenAI.Assistants;
 
 internal partial class AzureRunStepsPageEnumerator : RunStepsPageEnumerator
@@ -14,7 +12,7 @@ internal partial class AzureRunStepsPageEnumerator : RunStepsPageEnumerator
         ClientPipeline pipeline,
         Uri endpoint,
         string threadId, string runId,
-        int? limit, string? order, string? after, string? before,
+        int? limit, string order, string after, string before,
         string apiVersion,
         RequestOptions options)
         : base(pipeline, endpoint, threadId, runId, limit, order, after, before, options)
@@ -23,7 +21,7 @@ internal partial class AzureRunStepsPageEnumerator : RunStepsPageEnumerator
         _apiVersion = apiVersion;
     }
 
-    internal override async Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string? order, string? after, string? before, RequestOptions? options)
+    internal override async Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
@@ -32,7 +30,7 @@ internal partial class AzureRunStepsPageEnumerator : RunStepsPageEnumerator
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    internal override ClientResult GetRunSteps(string threadId, string runId, int? limit, string? order, string? after, string? before, RequestOptions? options)
+    internal override ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));

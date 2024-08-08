@@ -28,11 +28,6 @@ jobs:
           ${{ env.version_suffix_args }}
         working-directory: .dotnet
 
-      - name: AzureBuild (DevMirror-Only)
-        run: dotnet build
-          ${{ env.version_suffix_args }}
-        working-directory: .dotnet.azure
-
       - name: Test
         run: dotnet test
           --no-build
@@ -75,3 +70,20 @@ jobs:
           --api-key ${{ secrets.GITHUB_TOKEN }}
           --skip-duplicate
         working-directory: .dotnet
+
+  azure_build: # Development mirror only; validate AOAI compilation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.x
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: dotnet build
+          -c Release
+          ${{ env.version_suffix_args }}
+        working-directory: .dotnet.azure

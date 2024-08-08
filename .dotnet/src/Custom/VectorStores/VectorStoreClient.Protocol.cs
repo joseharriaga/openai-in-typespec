@@ -109,13 +109,7 @@ public partial class VectorStoreClient
         VectorStore value = VectorStore.FromResponse(response);
 
         CreateVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        await operation.WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
-        return operation;
+        return await operation.WaitForAsync(returnWhen, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -140,13 +134,7 @@ public partial class VectorStoreClient
         VectorStore value = VectorStore.FromResponse(response);
 
         CreateVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        operation.WaitForCompletion(options?.CancellationToken ?? default);
-        return operation;
+        return operation.WaitFor(returnWhen, options);
     }
 
     /// <summary>
@@ -362,13 +350,7 @@ public partial class VectorStoreClient
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
         AddFileToVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        await operation.WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
-        return operation;
+        return await operation.WaitForAsync(returnWhen, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -398,13 +380,7 @@ public partial class VectorStoreClient
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
         AddFileToVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        operation.WaitForCompletion(options?.CancellationToken ?? default);
-        return operation;
+        return operation.WaitFor(returnWhen, options);
     }
 
     /// <summary>
@@ -518,13 +494,7 @@ public partial class VectorStoreClient
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
         CreateBatchFileJobOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        await operation.WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
-        return operation;
+        return await operation.WaitForAsync(returnWhen, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -558,13 +528,7 @@ public partial class VectorStoreClient
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
         CreateBatchFileJobOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        operation.WaitForCompletion(options?.CancellationToken ?? default);
-        return operation;
+        return operation.WaitFor(returnWhen, options);
     }
 
     /// <summary>

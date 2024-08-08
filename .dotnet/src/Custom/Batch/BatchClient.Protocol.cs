@@ -34,14 +34,8 @@ public partial class BatchClient
         string batchId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        CreateBatchOperation operation = new CreateBatchOperation(_pipeline, _endpoint, batchId, status, response);
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        await operation.WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
-        return operation;
+        CreateBatchOperation operation = new(_pipeline, _endpoint, batchId, status, response);
+        return await operation.WaitForAsync(returnWhen, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -69,14 +63,8 @@ public partial class BatchClient
         string batchId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        CreateBatchOperation operation = new CreateBatchOperation(_pipeline, _endpoint, batchId, status, response);
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        operation.WaitForCompletion(options?.CancellationToken ?? default);
-        return operation;
+        CreateBatchOperation operation = new(_pipeline, _endpoint, batchId, status, response);
+        return operation.WaitFor(returnWhen, options);
     }
 
     /// <summary>

@@ -132,6 +132,20 @@ public partial class CreateBatchOperation : OperationResult
         }
     }
 
+    internal async Task<CreateBatchOperation> WaitForAsync(ReturnWhen returnWhen, RequestOptions? options)
+    {
+        if (returnWhen == ReturnWhen.Started) return this;
+        await WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
+        return this;
+    }
+
+    internal CreateBatchOperation WaitFor(ReturnWhen returnWhen, RequestOptions? options)
+    {
+        if (returnWhen == ReturnWhen.Started) return this;
+        WaitForCompletion(options?.CancellationToken ?? default);
+        return this;
+    }
+
     private void ApplyUpdate(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();

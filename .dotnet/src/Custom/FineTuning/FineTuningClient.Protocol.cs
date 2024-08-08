@@ -56,14 +56,8 @@ public partial class FineTuningClient
         string jobId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        CreateJobOperation operation = new CreateJobOperation(_pipeline, _endpoint, jobId, status, response);
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        await operation.WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
-        return operation;
+        CreateJobOperation operation = new(_pipeline, _endpoint, jobId, status, response);
+        return await operation.WaitForAsync(returnWhen, options).ConfigureAwait(false);
     }
 
     // CUSTOM:
@@ -102,14 +96,8 @@ public partial class FineTuningClient
         string jobId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        CreateJobOperation operation = new CreateJobOperation(_pipeline, _endpoint, jobId, status, response);
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        operation.WaitForCompletion(options?.CancellationToken ?? default);
-        return operation;
+        CreateJobOperation operation = new(_pipeline, _endpoint, jobId, status, response);
+        return operation.WaitFor(returnWhen, options);
     }
 
     // CUSTOM:

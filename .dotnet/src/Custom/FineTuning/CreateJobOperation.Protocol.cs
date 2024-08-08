@@ -130,6 +130,20 @@ public partial class CreateJobOperation : OperationResult
         }
     }
 
+    internal async Task<CreateJobOperation> WaitForAsync(ReturnWhen returnWhen, RequestOptions? options)
+    {
+        if (returnWhen == ReturnWhen.Started) return this;
+        await WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
+        return this;
+    }
+
+    internal CreateJobOperation WaitFor(ReturnWhen returnWhen, RequestOptions? options)
+    {
+        if (returnWhen == ReturnWhen.Started) return this;
+        WaitForCompletion(options?.CancellationToken ?? default);
+        return this;
+    }
+
     private void ApplyUpdate(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();

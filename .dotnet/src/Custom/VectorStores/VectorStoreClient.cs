@@ -528,22 +528,7 @@ public partial class VectorStoreClient
         BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
         RequestOptions options = cancellationToken.ToRequestOptions();
 
-        using PipelineMessage message = CreateCreateVectorStoreFileBatchRequest(vectorStoreId, content, options);
-        PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
-
-        CreateBatchFileJobOperation operation = new CreateBatchFileJobOperation(
-            _pipeline,
-            _endpoint,
-            ClientResult.FromValue(value, response));
-
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        await operation.WaitForCompletionAsync().ConfigureAwait(false);
-        return operation;
+        return await CreateBatchFileJobAsync(returnWhen, vectorStoreId, content, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -571,21 +556,6 @@ public partial class VectorStoreClient
         BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
         RequestOptions options = cancellationToken.ToRequestOptions();
 
-        using PipelineMessage message = CreateCreateVectorStoreFileBatchRequest(vectorStoreId, content, options);
-        PipelineResponse response = _pipeline.ProcessMessage(message, options);
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
-
-        CreateBatchFileJobOperation operation = new CreateBatchFileJobOperation(
-            _pipeline,
-            _endpoint,
-            ClientResult.FromValue(value, response));
-
-        if (returnWhen == ReturnWhen.Started)
-        {
-            return operation;
-        }
-
-        operation.WaitForCompletion();
-        return operation;
+        return CreateBatchFileJob(returnWhen, vectorStoreId, content, options);
     }
 }

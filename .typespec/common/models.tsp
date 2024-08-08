@@ -35,6 +35,50 @@ model FunctionObject {
   name: string;
 
   parameters?: FunctionParameters;
+
+  @doc("""
+    Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](docs/guides/function-calling).
+    """)
+  strict?: boolean | null = false;
+}
+
+model ResponseFormatText {
+  @doc("""
+    The type of response format being defined: `text`
+    """)
+  type: "text";
+}
+
+model ResponseFormatJsonObject {
+  @doc("""
+    The type of response format being defined: `json_object`
+    """)
+  type: "json_object";
+}
+
+/** The schema for the response format, described as a JSON Schema object. */
+model ResponseFormatJsonSchemaSchema is Record<unknown>;
+
+model ResponseFormatJsonSchema {
+  @doc("""
+    The type of response format being defined: `json_schema`
+    """)
+  type: "json_schema";
+
+  json_schema: {
+    /** A description of what the response format is for, used by the model to determine how to respond in the format. */
+    description?: string;
+
+    /** The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. */
+    name: string;
+
+    schema?: ResponseFormatJsonSchemaSchema;
+
+    @doc("""
+      Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the `schema` field. Only a subset of JSON Schema is supported when `strict` is `true`. To learn more, read the [Structured Outputs guide](/docs/guides/structured-outputs).
+      """)
+    strict?: boolean | null = false;
+  };
 }
 
 /** Whether to enable [parallel function calling](/docs/guides/function-calling/parallel-function-calling) during tool use. */

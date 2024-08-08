@@ -18,6 +18,9 @@ public partial class ChatCompletion
     [CodeGenMember("Choices")]
     internal IReadOnlyList<InternalCreateChatCompletionResponseChoice> Choices { get; }
 
+    [CodeGenMember("ServiceTier")]
+    internal InternalCreateChatCompletionResponseServiceTier? ServiceTier { get; }
+
     // CUSTOM: Renamed.
     /// <summary> The Unix timestamp (in seconds) of when the chat completion was created. </summary>
     [CodeGenMember("Created")]

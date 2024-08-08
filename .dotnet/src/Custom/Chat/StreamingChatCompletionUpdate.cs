@@ -29,6 +29,9 @@ public partial class StreamingChatCompletionUpdate
     [CodeGenMember("Choices")] 
     internal IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> Choices { get; }
 
+    [CodeGenMember("ServiceTier")]
+    internal InternalCreateChatCompletionResponseServiceTier? ServiceTier;
+
     // CUSTOM: Renamed.
     /// <summary> The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. </summary>
     [CodeGenMember("Created")]

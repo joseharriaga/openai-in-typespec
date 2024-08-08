@@ -93,4 +93,11 @@ internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 [CodeGenModel("FunctionParameters")]
 internal partial class InternalFunctionParameters { }
 
+[CodeGenModel("CreateChatCompletionRequestServiceTier")]
+internal readonly partial struct InternalCreateChatCompletionRequestServiceTier { }
 
+[CodeGenModel("CreateChatCompletionResponseServiceTier")]
+internal readonly partial struct InternalCreateChatCompletionResponseServiceTier { }
+
+[CodeGenModel("CreateChatCompletionStreamResponseServiceTier")]
+internal readonly partial struct InternalCreateChatCompletionStreamResponseServiceTier { }

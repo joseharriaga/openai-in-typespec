@@ -40,6 +40,8 @@ model CreateAssistantRequest {
     | string
     | "gpt-4o"
     | "gpt-4o-2024-05-13"
+    | "gpt-4o-mini"
+    | "gpt-4o-mini-2024-07-18"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"
@@ -77,7 +79,7 @@ model CreateAssistantRequest {
     """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools?: AssistantToolDefinition[] = [];
+  tools?: AssistantToolDefinition[] = #[];
 
   @doc("""
     A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -88,7 +90,7 @@ model CreateAssistantRequest {
         A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
         """)
       @maxItems(20)
-      file_ids?: string[] = [];
+      file_ids?: string[] = #[];
     };
 
     // Tool customization: use custom type for sophisticated union
@@ -138,7 +140,7 @@ model ModifyAssistantRequest {
     """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools?: AssistantToolDefinition[] = [];
+  tools?: AssistantToolDefinition[] = #[];
 
   @doc("""
     A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -149,7 +151,7 @@ model ModifyAssistantRequest {
         Overrides the list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
         """)
       @maxItems(20)
-      file_ids?: string[] = [];
+      file_ids?: string[] = #[];
     };
     file_search?: {
       /** Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
@@ -278,7 +280,7 @@ model AssistantObject {
     """)
   @maxItems(128)
   @extension("x-oaiExpandable", true)
-  tools: AssistantToolDefinition[] = [];
+  tools: AssistantToolDefinition[] = #[];
 
   @doc("""
     A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -289,7 +291,7 @@ model AssistantObject {
         A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool.
         """)
       @maxItems(20)
-      file_ids?: string[] = [];
+      file_ids?: string[] = #[];
     };
     file_search?: {
       /** The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */

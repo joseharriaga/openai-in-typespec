@@ -23,7 +23,7 @@ model CreateThreadRequest {
         A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
         """)
       @maxItems(20)
-      file_ids?: string[] = [];
+      file_ids?: string[] = #[];
     };
 
     // Tool customization: use custom type for sophisticated union
@@ -45,7 +45,7 @@ model ModifyThreadRequest {
         A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
         """)
       @maxItems(20)
-      file_ids?: string[] = [];
+      file_ids?: string[] = #[];
     };
     file_search?: {
       /** The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. */
@@ -89,7 +89,7 @@ model ThreadObject {
         A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
         """)
       @maxItems(20)
-      file_ids?: string[] = [];
+      file_ids?: string[] = #[];
     };
     file_search?: {
       /** The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread. */

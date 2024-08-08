@@ -24,6 +24,8 @@ namespace OpenAI.Files;
 [CodeGenSuppress("DownloadFile", typeof(string))]
 public partial class FileClient
 {
+    internal readonly InternalUploadClient _internalUploadClient;
+
     /// <summary>
     /// Initializes a new instance of <see cref="FileClient"/> that will use an API key when authenticating.
     /// </summary>
@@ -65,6 +67,7 @@ public partial class FileClient
     {
         _pipeline = pipeline;
         _endpoint = endpoint;
+        _internalUploadClient = new(pipeline, endpoint, options);
     }
 
     /// <summary>
@@ -393,5 +396,5 @@ public partial class FileClient
     {
         Argument.AssertNotNull(file, nameof(file));
         return DownloadFile(file.Id);
-    }
+    } 
 }

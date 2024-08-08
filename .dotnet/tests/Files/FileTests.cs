@@ -1,8 +1,15 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using NUnit.Framework;
 using OpenAI.Files;
 using OpenAI.Tests.Utility;
 using System;
+using System.ClientModel;
+using System.ClientModel.Primitives;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
@@ -121,6 +128,107 @@ public partial class FileTests : SyncAsyncTestBase
             ? await client.UploadFileAsync(fileContent, filename, FileUploadPurpose.Assistants)
             : client.UploadFile(fileContent, filename, FileUploadPurpose.Assistants);
         Assert.That(uploadedFile?.Filename, Is.EqualTo(filename));
+    }
+
+    [Test]
+    public async Task UploadJobWorksProtocol()
+    {
+        FileClient client = GetTestClient();
+
+        List<byte[]> bytesPerPart =
+        [
+            "Hello "u8.ToArray(),
+            "World "u8.ToArray(),
+            "this is a test"u8.ToArray(),
+        ];
+        int totalSize = bytesPerPart.Sum(part => part.Length);
+
+        List<MemoryStream> parts = bytesPerPart.Select(bytes => new MemoryStream(bytes)).ToList();
+
+        var requestData = BinaryData.FromString($$"""
+            {
+                "purpose": "assistants",
+                "filename": "my-assistants-input.txt",
+                "bytes": {{totalSize}},
+                "mime_type": "text/plain"
+            }
+            """);
+        using var requestContent = BinaryContent.Create(requestData);
+
+        IncrementalUpload uploadJob = IsAsync
+            ? await client.CreateIncrementalUploadAsync(requestContent, new RequestOptions())
+            : client.CreateIncrementalUpload(requestContent, new RequestOptions());
+        Assert.That(uploadJob, Is.Not.Null);
+        PipelineResponse rawResponse = uploadJob.GetRawResponse();
+        Assert.That(rawResponse, Is.Not.Null);
+        BinaryData rawResponseContent = rawResponse.Content;
+        Assert.That(rawResponseContent, Is.Not.Null);
+
+        static string GetIdFromJsonResponse(PipelineResponse response)
+        {
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            JsonElement idElement = document.RootElement.GetProperty("id"u8);
+            return idElement.GetString();
+        }
+
+        Assert.That(uploadJob.Id, Is.EqualTo(GetIdFromJsonResponse(rawResponse)));
+        Assert.That(uploadJob.CreatedAt, Is.GreaterThan(new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero)));
+        Assert.That(uploadJob.ExpiresAt, Is.GreaterThan(new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero)));
+        Assert.That(uploadJob.ExpiresAt, Is.GreaterThan(uploadJob.CreatedAt));
+
+        IncrementalUpload rehydratedJob = IncrementalUpload.FromContinuationToken(client, uploadJob.ContinuationToken);
+        Assert.That(rehydratedJob, Is.Not.Null);
+        Assert.That(rehydratedJob.Id, Is.EqualTo(uploadJob.Id));
+        Assert.That(rehydratedJob.CreatedAt, Is.EqualTo(uploadJob.CreatedAt));
+        Assert.That(rehydratedJob.ExpiresAt, Is.EqualTo(uploadJob.ExpiresAt));
+        Assert.Throws<InvalidOperationException>(() => rehydratedJob.GetRawResponse());
+
+        static (BinaryContent Content, string ContentType) CreateMultipartFormDataForPart(Stream dataPart)
+        {
+            const string boundary = "this-is-a-test-boundary-real-values-do-not-matter";
+            using StreamReader reader = new(dataPart);
+            BinaryData multipartData = BinaryData.FromString($$"""
+                --{{boundary}}
+                Content-Disposition: form-data; name="data"; filename="data_part"
+
+                {{reader.ReadToEnd()}}
+                --{{boundary}}--
+                """);
+            return (BinaryContent.Create(multipartData), $@"multipart/form-data; boundary=""{boundary}""");
+        }
+
+        List<Task<ClientResult>> dataUploadTasks = parts.Select(part => (Task<ClientResult>)null).ToList();
+
+        for (int i = 0; i < parts.Count; i++)
+        {
+            int index = i;
+            IncrementalUpload jobToUse = index % 2 == 0 ? uploadJob : rehydratedJob;
+            dataUploadTasks[index] = Task.Run(async () =>
+            {
+                (BinaryContent content, string contentType) = CreateMultipartFormDataForPart(parts[index]);
+                return IsAsync
+                    ? await jobToUse.AddDataPartAsync(jobToUse.Id, content, contentType, new RequestOptions())
+                    : jobToUse.AddDataPart(jobToUse.Id, content, contentType, new RequestOptions());
+            });
+        }
+
+        await Task.WhenAll(dataUploadTasks);
+
+        BinaryContent completionRequest = BinaryContent.Create(BinaryData.FromObjectAsJson(new
+        {
+            part_ids = dataUploadTasks.Select(task => GetIdFromJsonResponse(task.Result.GetRawResponse())),
+        }));
+
+        ClientResult completionResult = IsAsync
+            ? await uploadJob.CompleteAsync(uploadJob.Id, completionRequest, new RequestOptions())
+            : uploadJob.Complete(uploadJob.Id, completionRequest, new RequestOptions());
+
+        using JsonDocument completeJobDocument = JsonDocument.Parse(completionResult.GetRawResponse().Content);
+        Assert.That(completeJobDocument.RootElement.TryGetProperty("file", out JsonElement fileProperty)
+            && fileProperty.TryGetProperty("id", out JsonElement fileIdProperty)
+            && !string.IsNullOrEmpty(fileIdProperty.GetString())
+            && fileProperty.TryGetProperty("bytes", out JsonElement sizeProperty)
+            && sizeProperty.GetInt64() == totalSize);
     }
 
     private static FileClient GetTestClient() => GetTestClient<FileClient>(TestScenario.Files);

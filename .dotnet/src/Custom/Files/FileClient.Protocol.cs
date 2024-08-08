@@ -209,4 +209,74 @@ public partial class FileClient
         using PipelineMessage message = CreateDownloadFileRequest(fileId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
+
+    /// <summary>
+    /// <para>[Protocol Method]</para>
+    /// Creates a new <see cref="IncrementalUpload"/> that can be used to incrementally create a file, uploading
+    /// individual data parts with arbitrary ordering and parallelism before being assembled by a final completion.
+    /// </summary>
+    /// <param name="content">
+    /// <para>
+    /// The request content describing the job to create. This is a JSON object with required <c>filename</c>,
+    /// <c>purpose</c>, <c>bytes</c>, and <c>mime_type</c> properties.
+    /// </para>
+    /// Example:
+    /// <code>
+    /// BinaryContent.Create(BinaryData.FromString($$"""
+    ///     {
+    ///         "purpose": "fine-tune",
+    ///         "filename": ""{{filenameToCreate}}"",
+    ///         "bytes": ""{{totalSizeOfFile}}"",
+    ///         "mime_type": "text/jsonl"
+    ///     }));
+    /// </code>
+    /// </param>
+    /// <param name="options">
+    /// Additional options for the protocol request, including cancellation and error behavior.
+    /// </param>
+    /// <returns>
+    /// A new instance of <see cref="IncrementalUpload"/> that can be used to add data parts and complete the upload.
+    /// A successfully completed upload will provide an assembled file with an ID that can be used in other operations.
+    /// </returns>
+    public virtual async Task<IncrementalUpload> CreateIncrementalUploadAsync(BinaryContent content, RequestOptions options = null)
+    {
+        ClientResult result = await _internalUploadClient.CreateUploadJobAsync(content, options).ConfigureAwait(false);
+        InternalUpload jobInfo = InternalUpload.FromResponse(result.GetRawResponse());
+        return new IncrementalUpload(jobInfo, _internalUploadClient, result.GetRawResponse());
+    }
+
+    /// <summary>
+    /// <para>[Protocol Method]</para>
+    /// Creates a new <see cref="IncrementalUpload"/> that can be used to incrementally create a file, uploading
+    /// individual data parts with arbitrary ordering and parallelism before being assembled by a final completion.
+    /// </summary>
+    /// <param name="content">
+    /// <para>
+    /// The request content describing the job to create. This is a JSON object with required <c>filename</c>,
+    /// <c>purpose</c>, <c>bytes</c>, and <c>mime_type</c> properties.
+    /// </para>
+    /// Example:
+    /// <code>
+    /// BinaryContent.Create(BinaryData.FromString($$"""
+    ///     {
+    ///         "purpose": "fine-tune",
+    ///         "filename": ""{{filenameToCreate}}"",
+    ///         "bytes": ""{{totalSizeOfFile}}"",
+    ///         "mime_type": "text/jsonl"
+    ///     }));
+    /// </code>
+    /// </param>
+    /// <param name="options">
+    /// Additional options for the protocol request, including cancellation and error behavior.
+    /// </param>
+    /// <returns>
+    /// A new instance of <see cref="IncrementalUpload"/> that can be used to add data parts and complete the upload.
+    /// A successfully completed upload will provide an assembled file with an ID that can be used in other operations.
+    /// </returns>
+    public virtual IncrementalUpload CreateIncrementalUpload(BinaryContent content, RequestOptions options = null)
+    {
+        ClientResult result = _internalUploadClient.CreateUploadJob(content, options);
+        InternalUpload jobInfo = InternalUpload.FromResponse(result.GetRawResponse());
+        return new IncrementalUpload(jobInfo, _internalUploadClient, result.GetRawResponse());
+    }
 }

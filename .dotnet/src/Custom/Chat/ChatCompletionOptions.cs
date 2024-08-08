@@ -46,6 +46,9 @@ public partial class ChatCompletionOptions
     internal InternalChatCompletionStreamOptions StreamOptions { get; set; }
         = new() { IncludeUsage = true };
 
+    [CodeGenMember("ServiceTier")]
+    internal InternalCreateChatCompletionRequestServiceTier? ServiceTier { get; set; }
+
     // CUSTOM: Made public now that there are no required properties.
     /// <summary> Initializes a new instance of <see cref="ChatCompletionOptions"/> for deserialization. </summary>
     public ChatCompletionOptions()

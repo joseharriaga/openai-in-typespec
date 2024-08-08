@@ -27,40 +27,26 @@ public partial class AddFileToVectorStoreOperation : OperationResult
     /// <summary>
     /// [Protocol Method] Retrieves a vector store file.
     /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store that the file belongs to. </param>
-    /// <param name="fileId"> The ID of the file being retrieved. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions? options)
+    public virtual async Task<ClientResult> GetFileAssociationAsync(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-        using PipelineMessage message = CreateGetVectorStoreFileRequest(vectorStoreId, fileId, options);
+        using PipelineMessage message = CreateGetVectorStoreFileRequest(_vectorStoreId, _fileId, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
     /// [Protocol Method] Retrieves a vector store file.
     /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store that the file belongs to. </param>
-    /// <param name="fileId"> The ID of the file being retrieved. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions? options)
+    public virtual ClientResult GetFileAssociation(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
-
-        using PipelineMessage message = CreateGetVectorStoreFileRequest(vectorStoreId, fileId, options);
+        using PipelineMessage message = CreateGetVectorStoreFileRequest(_vectorStoreId, _fileId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 

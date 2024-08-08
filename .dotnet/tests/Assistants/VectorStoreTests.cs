@@ -435,7 +435,7 @@ public partial class VectorStoreTests
         };
         foreach (CreateBatchFileJobOperation job in _jobsToCancel)
         {
-            ClientResult protocolResult = job.CancelFileBatch(job.VectorStoreId, job.BatchId, requestOptions);
+            ClientResult protocolResult = job.CancelFileBatch(requestOptions);
             Console.WriteLine($"Cleanup: {job.BatchId} => {protocolResult?.GetRawResponse()?.Status}");
         }
         foreach (VectorStoreFileAssociation association in _associationsToRemove)

@@ -163,10 +163,10 @@ public partial class CreateVectorStoreOperation : OperationResult
     /// </summary>
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <returns> A representation of an existing <see cref="VectorStore"/>. </returns>
-    public virtual async Task<ClientResult<VectorStore>> GetVectorStoreAsync( CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<VectorStore>> GetVectorStoreAsync(CancellationToken cancellationToken = default)
     {
         ClientResult result
-            = await GetVectorStoreAsync(_vectorStoreId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+            = await GetVectorStoreAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return ClientResult.FromValue(
             VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
@@ -176,9 +176,9 @@ public partial class CreateVectorStoreOperation : OperationResult
     /// </summary>
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <returns> A representation of an existing <see cref="VectorStore"/>. </returns>
-    public virtual ClientResult<VectorStore> GetVectorStore( CancellationToken cancellationToken = default)
+    public virtual ClientResult<VectorStore> GetVectorStore(CancellationToken cancellationToken = default)
     {
-        ClientResult result = GetVectorStore(_vectorStoreId, cancellationToken.ToRequestOptions());
+        ClientResult result = GetVectorStore(cancellationToken.ToRequestOptions());
         return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 }

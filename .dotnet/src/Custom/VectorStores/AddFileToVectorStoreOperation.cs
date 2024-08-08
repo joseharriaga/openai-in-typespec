@@ -172,7 +172,7 @@ public partial class AddFileToVectorStoreOperation : OperationResult
     /// <returns> A <see cref="VectorStoreFileAssociation"/> instance. </returns>
     public virtual async Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(CancellationToken cancellationToken = default)
     {
-        ClientResult result = await GetFileAssociationAsync(_vectorStoreId, _fileId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        ClientResult result = await GetFileAssociationAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -186,7 +186,7 @@ public partial class AddFileToVectorStoreOperation : OperationResult
     /// <returns> A <see cref="VectorStoreFileAssociation"/> instance. </returns>
     public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(CancellationToken cancellationToken = default)
     {
-        ClientResult result = GetFileAssociation(_vectorStoreId, _fileId, cancellationToken.ToRequestOptions());
+        ClientResult result = GetFileAssociation(cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
         return ClientResult.FromValue(value, response);

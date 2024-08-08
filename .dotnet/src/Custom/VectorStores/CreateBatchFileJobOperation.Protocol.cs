@@ -33,88 +33,58 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// <summary>
     /// [Protocol Method] Retrieves a vector store file batch.
     /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
-    /// <param name="batchId"> The ID of the file batch being retrieved. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetFileBatchAsync(string vectorStoreId, string batchId, RequestOptions? options)
+    public virtual async Task<ClientResult> GetFileBatchAsync(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        using PipelineMessage message = CreateGetVectorStoreFileBatchRequest(vectorStoreId, batchId, options);
+        using PipelineMessage message = CreateGetVectorStoreFileBatchRequest(_vectorStoreId, _batchId, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
     /// [Protocol Method] Retrieves a vector store file batch.
     /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
-    /// <param name="batchId"> The ID of the file batch being retrieved. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetFileBatch(string vectorStoreId, string batchId, RequestOptions? options)
+    public virtual ClientResult GetFileBatch(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        using PipelineMessage message = CreateGetVectorStoreFileBatchRequest(vectorStoreId, batchId, options);
+        using PipelineMessage message = CreateGetVectorStoreFileBatchRequest(_vectorStoreId, _batchId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
     /// <summary>
     /// [Protocol Method] Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
     /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
-    /// <param name="batchId"> The ID of the file batch to cancel. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> CancelFileBatchAsync(string vectorStoreId, string batchId, RequestOptions? options)
+    public virtual async Task<ClientResult> CancelFileBatchAsync(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        using PipelineMessage message = CreateCancelVectorStoreFileBatchRequest(vectorStoreId, batchId, options);
+        using PipelineMessage message = CreateCancelVectorStoreFileBatchRequest(_vectorStoreId, _batchId, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
     /// [Protocol Method] Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
     /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
-    /// <param name="batchId"> The ID of the file batch to cancel. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult CancelFileBatch(string vectorStoreId, string batchId, RequestOptions? options)
+    public virtual ClientResult CancelFileBatch(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        using PipelineMessage message = CreateCancelVectorStoreFileBatchRequest(vectorStoreId, batchId, options);
+        using PipelineMessage message = CreateCancelVectorStoreFileBatchRequest(_vectorStoreId, _batchId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
     /// <summary>
     /// [Protocol Method] Returns a paginated collection of vector store files in a batch.
     /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
-    /// <param name="batchId"> The ID of the file batch that the files belong to. </param>
     /// <param name="limit">
     /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
     /// default is 20.
@@ -135,25 +105,18 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// </param>
     /// <param name="filter"> Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IAsyncEnumerable<ClientResult> GetFilesInBatchAsync(string vectorStoreId, string batchId, int? limit, string? order, string? after, string? before, string? filter, RequestOptions? options)
+    public virtual IAsyncEnumerable<ClientResult> GetFilesInBatchAsync(int? limit, string? order, string? after, string? before, string? filter, RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        VectorStoreFileBatchesPageEnumerator enumerator = new(_pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, options);
+        VectorStoreFileBatchesPageEnumerator enumerator = new(_pipeline, _endpoint, _vectorStoreId, _batchId, limit, order, after, before, filter, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     /// <summary>
     /// [Protocol Method] Returns a paginated collection of vector store files in a batch.
     /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store that the file batch belongs to. </param>
-    /// <param name="batchId"> The ID of the file batch that the files belong to. </param>
     /// <param name="limit">
     /// A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
     /// default is 20.
@@ -174,17 +137,12 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// </param>
     /// <param name="filter"> Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="vectorStoreId"/> or <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IEnumerable<ClientResult> GetFilesInBatch(string vectorStoreId, string batchId, int? limit, string? order, string? after, string? before, string? filter, RequestOptions? options)
+    public virtual IEnumerable<ClientResult> GetFilesInBatch(int? limit, string? order, string? after, string? before, string? filter, RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        VectorStoreFileBatchesPageEnumerator enumerator = new(_pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, options);
+        VectorStoreFileBatchesPageEnumerator enumerator = new(_pipeline, _endpoint, _vectorStoreId, _batchId, limit, order, after, before, filter, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 

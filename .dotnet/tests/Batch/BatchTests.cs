@@ -106,8 +106,8 @@ public partial class BatchTests : SyncAsyncTestBase
         Assert.That(endpoint, Is.EqualTo("/v1/chat/completions"));
 
         ClientResult clientResult = IsAsync
-            ? await batchOperation.CancelBatchAsync(id, options: null)
-            : batchOperation.CancelBatch(id, options: null);
+            ? await batchOperation.CancelBatchAsync(options: null)
+            : batchOperation.CancelBatch(options: null);
 
         statusElement = jsonDocument.RootElement.GetProperty("status");
         status = statusElement.GetString();

@@ -38,6 +38,8 @@ public partial class CreateBatchOperation : OperationResult
         RehydrationToken = new CreateBatchOperationToken(batchId);
     }
 
+    public string BatchId => _batchId;
+
     /// <inheritdoc/>
     public override ContinuationToken? RehydrationToken { get; protected set; }
 
@@ -109,7 +111,7 @@ public partial class CreateBatchOperation : OperationResult
 
             await _pollingInterval.WaitAsync(response, cancellationToken);
 
-            ClientResult result = await GetBatchAsync(_batchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+            ClientResult result = await GetBatchAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
 
             ApplyUpdate(result);
         }
@@ -126,7 +128,7 @@ public partial class CreateBatchOperation : OperationResult
 
             _pollingInterval.Wait(response, cancellationToken);
 
-            ClientResult result = GetBatch(_batchId, cancellationToken.ToRequestOptions());
+            ClientResult result = GetBatch(cancellationToken.ToRequestOptions());
 
             ApplyUpdate(result);
         }
@@ -170,68 +172,48 @@ public partial class CreateBatchOperation : OperationResult
     /// <summary>
     /// [Protocol Method] Retrieves a batch.
     /// </summary>
-    /// <param name="batchId"> The ID of the batch to retrieve. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetBatchAsync(string batchId, RequestOptions? options)
+    public virtual async Task<ClientResult> GetBatchAsync(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        using PipelineMessage message = CreateRetrieveBatchRequest(batchId, options);
+        using PipelineMessage message = CreateRetrieveBatchRequest(_batchId, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
     /// [Protocol Method] Retrieves a batch.
     /// </summary>
-    /// <param name="batchId"> The ID of the batch to retrieve. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetBatch(string batchId, RequestOptions? options)
+    public virtual ClientResult GetBatch(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        using PipelineMessage message = CreateRetrieveBatchRequest(batchId, options);
+        using PipelineMessage message = CreateRetrieveBatchRequest(_batchId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
     /// <summary>
     /// [Protocol Method] Cancels an in-progress batch.
     /// </summary>
-    /// <param name="batchId"> The ID of the batch to cancel. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions? options)
+    public virtual async Task<ClientResult> CancelBatchAsync( RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        using PipelineMessage message = CreateCancelBatchRequest(batchId, options);
+        using PipelineMessage message = CreateCancelBatchRequest(_batchId, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
     /// [Protocol Method] Cancels an in-progress batch.
     /// </summary>
-    /// <param name="batchId"> The ID of the batch to cancel. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="batchId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="batchId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult CancelBatch(string batchId, RequestOptions? options)
+    public virtual ClientResult CancelBatch(RequestOptions? options)
     {
-        Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
-
-        using PipelineMessage message = CreateCancelBatchRequest(batchId, options);
+        using PipelineMessage message = CreateCancelBatchRequest(_batchId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 

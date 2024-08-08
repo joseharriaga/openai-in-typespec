@@ -176,7 +176,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the ingestion operation. </returns>
     public virtual async Task<ClientResult<VectorStoreBatchFileJob>> GetFileBatchAsync(CancellationToken cancellationToken = default)
     {
-        ClientResult result = await GetFileBatchAsync(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        ClientResult result = await GetFileBatchAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -189,7 +189,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the ingestion operation. </returns>
     public virtual ClientResult<VectorStoreBatchFileJob> GetFileBatch(CancellationToken cancellationToken = default)
     {
-        ClientResult result = GetFileBatch(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions());
+        ClientResult result = GetFileBatch(cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -202,7 +202,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
     public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CancelFileBatchAsync(CancellationToken cancellationToken = default)
     {
-        ClientResult result = await CancelFileBatchAsync(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        ClientResult result = await CancelFileBatchAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -215,7 +215,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
     public virtual ClientResult<VectorStoreBatchFileJob> CancelFileBatch(CancellationToken cancellationToken = default)
     {
-        ClientResult result = CancelFileBatch(_vectorStoreId, _batchId, cancellationToken.ToRequestOptions());
+        ClientResult result = CancelFileBatch(cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -235,7 +235,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
         VectorStoreFileAssociationCollectionOptions? options = default,
         CancellationToken cancellationToken = default)
     {
-        return GetFilesInBatchAsync(_vectorStoreId, _batchId, options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions()) is not AsyncPageCollection<VectorStoreFileAssociation> pages
+        return GetFilesInBatchAsync(options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions()) is not AsyncPageCollection<VectorStoreFileAssociation> pages
             ? throw new NotSupportedException("Failed to cast protocol method return type to AsyncPageCollection<VectorStoreFileAssociation>.")
             : pages;
     }
@@ -271,7 +271,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
                 nameof(BatchId));
         }
 
-        return GetFilesInBatchAsync(_vectorStoreId, _batchId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions()) is not AsyncPageCollection<VectorStoreFileAssociation> pages
+        return GetFilesInBatchAsync(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions()) is not AsyncPageCollection<VectorStoreFileAssociation> pages
             ? throw new NotSupportedException("Failed to cast protocol method return type to PageCollection<VectorStoreFileAssociation>.")
             : pages;
     }
@@ -290,7 +290,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
         VectorStoreFileAssociationCollectionOptions? options = default,
         CancellationToken cancellationToken = default)
     {
-        return GetFilesInBatch(_vectorStoreId, _batchId, options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions()) is not PageCollection<VectorStoreFileAssociation> pages
+        return GetFilesInBatch(options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions()) is not PageCollection<VectorStoreFileAssociation> pages
             ? throw new NotSupportedException("Failed to cast protocol method return type to AsyncPageCollection<VectorStoreFileAssociation>.")
             : pages;
     }
@@ -327,7 +327,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
                 nameof(BatchId));
         }
 
-        return GetFilesInBatch(_vectorStoreId, _batchId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions()) is not PageCollection<VectorStoreFileAssociation> pages
+        return GetFilesInBatch(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions()) is not PageCollection<VectorStoreFileAssociation> pages
             ? throw new NotSupportedException("Failed to cast protocol method return type to PageCollection<VectorStoreFileAssociation>.")
             : pages;
     }

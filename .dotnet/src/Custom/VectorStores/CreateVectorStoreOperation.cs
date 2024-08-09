@@ -129,16 +129,16 @@ public partial class CreateVectorStoreOperation : OperationResult
         }
     }
 
-    internal async Task<CreateVectorStoreOperation> WaitForAsync(ReturnWhen returnWhen, RequestOptions? options)
+    internal async Task<CreateVectorStoreOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         await WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
         return this;
     }
 
-    internal CreateVectorStoreOperation WaitFor(ReturnWhen returnWhen, RequestOptions? options)
+    internal CreateVectorStoreOperation WaitUntil(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         WaitForCompletion(options?.CancellationToken ?? default);
         return this;
     }

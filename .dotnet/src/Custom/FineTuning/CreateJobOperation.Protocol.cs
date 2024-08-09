@@ -132,16 +132,16 @@ public partial class CreateJobOperation : OperationResult
         }
     }
 
-    internal async Task<CreateJobOperation> WaitForAsync(ReturnWhen returnWhen, RequestOptions? options)
+    internal async Task<CreateJobOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         await WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
         return this;
     }
 
-    internal CreateJobOperation WaitFor(ReturnWhen returnWhen, RequestOptions? options)
+    internal CreateJobOperation WaitUntil(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         WaitForCompletion(options?.CancellationToken ?? default);
         return this;
     }

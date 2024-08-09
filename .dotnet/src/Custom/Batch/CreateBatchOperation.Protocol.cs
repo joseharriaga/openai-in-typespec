@@ -134,16 +134,16 @@ public partial class CreateBatchOperation : OperationResult
         }
     }
 
-    internal async Task<CreateBatchOperation> WaitForAsync(ReturnWhen returnWhen, RequestOptions? options)
+    internal async Task<CreateBatchOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         await WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
         return this;
     }
 
-    internal CreateBatchOperation WaitFor(ReturnWhen returnWhen, RequestOptions? options)
+    internal CreateBatchOperation WaitUntil(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         WaitForCompletion(options?.CancellationToken ?? default);
         return this;
     }

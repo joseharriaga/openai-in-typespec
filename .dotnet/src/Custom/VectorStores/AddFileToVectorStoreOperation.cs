@@ -134,16 +134,16 @@ public partial class AddFileToVectorStoreOperation : OperationResult
         }
     }
 
-    internal async Task<AddFileToVectorStoreOperation> WaitForAsync(ReturnWhen returnWhen, RequestOptions? options)
+    internal async Task<AddFileToVectorStoreOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         await WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
         return this;
     }
 
-    internal AddFileToVectorStoreOperation WaitFor(ReturnWhen returnWhen, RequestOptions? options)
+    internal AddFileToVectorStoreOperation WaitUntil(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         WaitForCompletion(options?.CancellationToken ?? default);
         return this;
     }

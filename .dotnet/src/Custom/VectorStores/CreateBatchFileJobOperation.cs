@@ -138,19 +138,20 @@ public partial class CreateBatchFileJobOperation : OperationResult
         }
     }
 
-    internal async Task<CreateBatchFileJobOperation> WaitForAsync(ReturnWhen returnWhen, RequestOptions? options)
+    internal async Task<CreateBatchFileJobOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         await WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
         return this;
     }
 
-    internal CreateBatchFileJobOperation WaitFor(ReturnWhen returnWhen, RequestOptions? options)
+    internal CreateBatchFileJobOperation WaitUntil(bool waitUntilCompleted, RequestOptions? options)
     {
-        if (returnWhen == ReturnWhen.Started) return this;
+        if (!waitUntilCompleted) return this;
         WaitForCompletion(options?.CancellationToken ?? default);
         return this;
     }
+
     private void ApplyUpdate(ClientResult<VectorStoreBatchFileJob> update)
     {
         Value = update;

@@ -23,7 +23,7 @@ public partial class VectorStoreTests
     {
         VectorStoreClient client = GetTestClient();
 
-        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Started);
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(waitUntilCompleted: false);
         VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
         bool deleted = client.DeleteVectorStore(vectorStore);
@@ -32,7 +32,7 @@ public partial class VectorStoreTests
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
-        createOperation = client.CreateVectorStore(ReturnWhen.Started, new VectorStoreCreationOptions()
+        createOperation = client.CreateVectorStore(waitUntilCompleted: false, new VectorStoreCreationOptions()
         {
             FileIds = { testFiles[0].Id },
             Name = "test vector store",
@@ -76,7 +76,7 @@ public partial class VectorStoreTests
         Assert.That(deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
-        createOperation = client.CreateVectorStore(ReturnWhen.Started, new VectorStoreCreationOptions()
+        createOperation = client.CreateVectorStore(waitUntilCompleted: false, new VectorStoreCreationOptions()
         {
             FileIds = testFiles.Select(file => file.Id).ToList()
         });
@@ -95,7 +95,7 @@ public partial class VectorStoreTests
         VectorStoreClient client = GetTestClient();
         for (int i = 0; i < 10; i++)
         {
-            CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed, new VectorStoreCreationOptions()
+            CreateVectorStoreOperation createOperation = client.CreateVectorStore(waitUntilCompleted: true, new VectorStoreCreationOptions()
             {
                 Name = $"Test Vector Store {i}",
             });
@@ -133,7 +133,7 @@ public partial class VectorStoreTests
         VectorStoreClient client = GetTestClient();
         for (int i = 0; i < 10; i++)
         {
-            CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(ReturnWhen.Completed,
+            CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(waitUntilCompleted: true,
                 new VectorStoreCreationOptions()
                 {
                     Name = $"Test Vector Store {i}",
@@ -171,7 +171,7 @@ public partial class VectorStoreTests
     public void CanAssociateFiles()
     {
         VectorStoreClient client = GetTestClient();
-        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed);
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(waitUntilCompleted: true);
         VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 
@@ -179,7 +179,7 @@ public partial class VectorStoreTests
 
         foreach (OpenAIFileInfo file in files)
         {
-            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(ReturnWhen.Started, vectorStore, file);
+            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(waitUntilCompleted: false, vectorStore, file);
             VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
@@ -213,7 +213,7 @@ public partial class VectorStoreTests
     public void Pagination_CanRehydrateFileAssociationCollection()
     {
         VectorStoreClient client = GetTestClient();
-        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed);
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(waitUntilCompleted: true);
         VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 
@@ -221,7 +221,7 @@ public partial class VectorStoreTests
 
         foreach (OpenAIFileInfo file in files)
         {
-            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(ReturnWhen.Started, vectorStore, file);
+            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(waitUntilCompleted: false, vectorStore, file);
             VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
@@ -278,13 +278,13 @@ public partial class VectorStoreTests
     public void CanUseBatchIngestion()
     {
         VectorStoreClient client = GetTestClient();
-        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed);
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(waitUntilCompleted: true);
         VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
-        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(ReturnWhen.Started, vectorStore, testFiles);
+        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(waitUntilCompleted: false, vectorStore, testFiles);
         Validate(batchOperation);
 
         Assert.Multiple(() =>
@@ -314,13 +314,13 @@ public partial class VectorStoreTests
     public void CanRehydrateBatchFileJob()
     {
         VectorStoreClient client = GetTestClient();
-        CreateVectorStoreOperation createOperation = client.CreateVectorStore(ReturnWhen.Completed);
+        CreateVectorStoreOperation createOperation = client.CreateVectorStore(waitUntilCompleted: true);
         VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
-        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(ReturnWhen.Started, vectorStore, testFiles);
+        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(waitUntilCompleted: false, vectorStore, testFiles);
         Validate(batchOperation);
 
         // Simulate rehydration of the operation
@@ -374,7 +374,7 @@ public partial class VectorStoreTests
             Assert.That(inputStaticStrategy.OverlappingTokenCount, Is.EqualTo(250));
         }
 
-        CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(ReturnWhen.Completed, new VectorStoreCreationOptions()
+        CreateVectorStoreOperation createOperation = await client.CreateVectorStoreAsync(waitUntilCompleted: true, new VectorStoreCreationOptions()
         {
             FileIds = testFiles.Select(file => file.Id).ToList(),
             ChunkingStrategy = chunkingStrategy,

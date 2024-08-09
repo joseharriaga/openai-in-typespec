@@ -84,37 +84,35 @@ public partial class VectorStoreClient
     }
 
     /// <summary> Creates a vector store. </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStore"> The <see cref="VectorStoreCreationOptions"/> to use. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStore"/> is null. </exception>
     /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
     /// the vector store creation to complete. </returns>
-    public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(ReturnWhen returnWhen, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
+    public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
         using BinaryContent content = vectorStore?.ToBinaryContent();
-        return await CreateVectorStoreAsync(returnWhen, content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        return await CreateVectorStoreAsync(waitUntilCompleted, content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
     /// <summary> Creates a vector store. </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStore"> The <see cref="VectorStoreCreationOptions"/> to use. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStore"/> is null. </exception>
     /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
     /// the vector store creation to complete. </returns>
-    public virtual CreateVectorStoreOperation CreateVectorStore(ReturnWhen returnWhen, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
+    public virtual CreateVectorStoreOperation CreateVectorStore(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
         using BinaryContent content = vectorStore?.ToBinaryContent();
-        return CreateVectorStore(returnWhen, content, cancellationToken.ToRequestOptions());
+        return CreateVectorStore(waitUntilCompleted, content, cancellationToken.ToRequestOptions());
     }
 
     /// <summary>
@@ -290,47 +288,45 @@ public partial class VectorStoreClient
     /// <summary>
     /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
     /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
     /// the vector store file addition to complete. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
-    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(ReturnWhen returnWhen, string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
+    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(bool waitUntilCompleted, string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        return await AddFileToVectorStoreAsync(returnWhen,vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        return await AddFileToVectorStoreAsync(waitUntilCompleted, vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
     /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
     /// the vector store file addition to complete. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
-    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(ReturnWhen returnWhen, string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
+    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(bool waitUntilCompleted, string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        return AddFileToVectorStore(returnWhen, vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions());
+        return AddFileToVectorStore(waitUntilCompleted, vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions());
     }
 
     /// <summary>
@@ -506,18 +502,17 @@ public partial class VectorStoreClient
     /// <summary>
     /// Adds multiple files in a batch to the vector store, beginning the ingestion process.
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
     /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     public virtual async Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(
-        ReturnWhen returnWhen,
+        bool waitUntilCompleted,
         string vectorStoreId, 
         IEnumerable<string> fileIds,
         CancellationToken cancellationToken = default)
@@ -528,24 +523,23 @@ public partial class VectorStoreClient
         BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
         RequestOptions options = cancellationToken.ToRequestOptions();
 
-        return await CreateBatchFileJobAsync(returnWhen, vectorStoreId, content, options).ConfigureAwait(false);
+        return await CreateBatchFileJobAsync(waitUntilCompleted, vectorStoreId, content, options).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Begins a batch job to associate multiple jobs with a vector store, beginning the ingestion process.
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
     /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     public virtual CreateBatchFileJobOperation CreateBatchFileJob(
-        ReturnWhen returnWhen,
+        bool waitUntilCompleted,
         string vectorStoreId,
         IEnumerable<string> fileIds, 
         CancellationToken cancellationToken = default)
@@ -556,6 +550,6 @@ public partial class VectorStoreClient
         BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
         RequestOptions options = cancellationToken.ToRequestOptions();
 
-        return CreateBatchFileJob(returnWhen, vectorStoreId, content, options);
+        return CreateBatchFileJob(waitUntilCompleted, vectorStoreId, content, options);
     }
 }

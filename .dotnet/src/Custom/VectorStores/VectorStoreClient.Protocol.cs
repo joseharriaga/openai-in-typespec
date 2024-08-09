@@ -90,11 +90,10 @@ public partial class VectorStoreClient
     /// <summary>
     /// [Protocol Method] Creates a vector store.
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
@@ -102,24 +101,23 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
     /// the vector store creation to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null)
+    public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(bool waitUntilCompleted, BinaryContent content, RequestOptions options = null)
     {
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
         PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         VectorStore value = VectorStore.FromResponse(response);
 
         CreateVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
-        return await operation.WaitForAsync(returnWhen, options).ConfigureAwait(false);
+        return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
     /// <summary>
     /// [Protocol Method] Creates a vector store.
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
@@ -127,14 +125,14 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
     /// the vector store creation to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual CreateVectorStoreOperation CreateVectorStore(ReturnWhen returnWhen, BinaryContent content, RequestOptions options = null)
+    public virtual CreateVectorStoreOperation CreateVectorStore(bool waitUntilCompleted, BinaryContent content, RequestOptions options = null)
     {
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
         PipelineResponse response = _pipeline.ProcessMessage(message, options);
         VectorStore value = VectorStore.FromResponse(response);
 
         CreateVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
-        return operation.WaitFor(returnWhen, options);
+        return operation.WaitUntil(waitUntilCompleted, options);
     }
 
     /// <summary>
@@ -326,11 +324,10 @@ public partial class VectorStoreClient
     /// <summary>
     /// [Protocol Method] Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a File. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -340,7 +337,7 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
     /// the vector store file addition to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(bool waitUntilCompleted, string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -350,17 +347,16 @@ public partial class VectorStoreClient
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
         AddFileToVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
-        return await operation.WaitForAsync(returnWhen, options).ConfigureAwait(false);
+        return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
     /// <summary>
     /// [Protocol Method] Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a File. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -370,7 +366,7 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
     /// the vector store file addition to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(ReturnWhen returnWhen, string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(bool waitUntilCompleted, string vectorStoreId, BinaryContent content, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -380,7 +376,7 @@ public partial class VectorStoreClient
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
         AddFileToVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
-        return operation.WaitFor(returnWhen, options);
+        return operation.WaitUntil(waitUntilCompleted, options);
     }
 
     /// <summary>
@@ -466,11 +462,10 @@ public partial class VectorStoreClient
     /// <summary>
     /// [Protocol Method] Create a vector store file batch.
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a file batch. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -481,7 +476,7 @@ public partial class VectorStoreClient
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(
-        ReturnWhen returnWhen,
+        bool waitUntilCompleted,
         string vectorStoreId,
         BinaryContent content,
         RequestOptions options = null)
@@ -494,17 +489,16 @@ public partial class VectorStoreClient
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
         CreateBatchFileJobOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
-        return await operation.WaitForAsync(returnWhen, options).ConfigureAwait(false);
+        return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
     /// <summary>
     /// [Protocol Method] Create a vector store file batch.
     /// </summary>
-    /// <param name="returnWhen"> <see cref="ReturnWhen.Completed"/> if the
-    /// method should return when the service has finished running the 
-    /// operation, or <see cref="ReturnWhen.Started"/> if it should return 
-    /// after the operation has been created but may not have completed 
-    /// processing. </param>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store for which to create a file batch. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -515,7 +509,7 @@ public partial class VectorStoreClient
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual CreateBatchFileJobOperation CreateBatchFileJob(
-        ReturnWhen returnWhen,
+        bool waitUntilCompleted,
         string vectorStoreId,
         BinaryContent content,
         RequestOptions options = null)
@@ -528,7 +522,7 @@ public partial class VectorStoreClient
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
         CreateBatchFileJobOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
-        return operation.WaitFor(returnWhen, options);
+        return operation.WaitUntil(waitUntilCompleted, options);
     }
 
     /// <summary>

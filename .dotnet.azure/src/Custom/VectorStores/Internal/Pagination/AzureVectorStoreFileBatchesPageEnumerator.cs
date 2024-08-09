@@ -1,6 +1,8 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
+#nullable enable
+
 namespace Azure.AI.OpenAI.VectorStores;
 
 internal partial class AzureVectorStoreFileBatchesPageEnumerator : VectorStoreFileBatchesPageEnumerator
@@ -11,7 +13,7 @@ internal partial class AzureVectorStoreFileBatchesPageEnumerator : VectorStoreFi
     public AzureVectorStoreFileBatchesPageEnumerator(
         ClientPipeline pipeline,
         Uri endpoint,
-        string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter,
+        string vectorStoreId, string batchId, int? limit, string? order, string? after, string? before, string? filter,
         string apiVersion,
         RequestOptions options)
         : base(pipeline, endpoint, vectorStoreId, batchId, limit, order, after, before, filter, options)
@@ -20,7 +22,7 @@ internal partial class AzureVectorStoreFileBatchesPageEnumerator : VectorStoreFi
         _apiVersion = apiVersion;
     }
 
-    internal override async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string? order, string? after, string? before, string? filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
@@ -29,7 +31,7 @@ internal partial class AzureVectorStoreFileBatchesPageEnumerator : VectorStoreFi
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    internal override ClientResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override ClientResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string? order, string? after, string? before, string? filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));

@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+#nullable enable
+
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -170,10 +172,10 @@ public class AoaiTestBase<TClient> // : RecordedTestBase<AoaiTestEnvironment>
     /// test configuration.</param>
     /// <param name="keyCredential">(Optional) The key credential to use instead of the one from the configuration.</param>
     public virtual AzureOpenAIClient GetTestTopLevelClient(
-        object config, // IConfiguration? config,
-        object options = null, // TestClientOptions? options = null,
-        TokenCredential tokenCredential = null,
-        ApiKeyCredential keyCredential = null)
+        object? config, // IConfiguration? config,
+        object? options = null, // TestClientOptions? options = null,
+        TokenCredential? tokenCredential = null,
+        ApiKeyCredential? keyCredential = null)
     {
         string rawEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
         Uri endpoint = new(rawEndpoint);
@@ -610,7 +612,7 @@ public class AoaiTestBase<TClient> // : RecordedTestBase<AoaiTestEnvironment>
     {
         var response = ValidateClientResultResponse(result);
 
-        TModel model = ModelReaderWriter.Read<TModel>(response.Content, ModelReaderWriterOptions.Json);
+        TModel? model = ModelReaderWriter.Read<TModel>(response.Content, ModelReaderWriterOptions.Json);
         Assert.That(model, Is.Not.Null);
         return model!;
     }

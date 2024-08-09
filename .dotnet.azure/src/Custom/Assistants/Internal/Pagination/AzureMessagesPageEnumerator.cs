@@ -1,6 +1,8 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
+#nullable enable
+
 namespace Azure.AI.OpenAI.Assistants;
 
 internal partial class AzureMessagesPageEnumerator : MessagesPageEnumerator

@@ -27,7 +27,7 @@ public partial class AssistantCreationOptions
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     [CodeGenMember("ResponseFormat")]
-    public AssistantResponseFormat ResponseFormat { get; set; }
+    public AssistantResponseFormat? ResponseFormat { get; set; }
 
     /// <summary>
     /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.

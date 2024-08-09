@@ -1,6 +1,8 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
+#nullable enable
+
 namespace Azure.AI.OpenAI.VectorStores;
 
 internal partial class AzureVectorStoreFilesPageEnumerator : VectorStoreFilesPageEnumerator
@@ -12,7 +14,7 @@ internal partial class AzureVectorStoreFilesPageEnumerator : VectorStoreFilesPag
         ClientPipeline pipeline,
         Uri endpoint,
         string vectorStoreId, 
-        int? limit, string order, string after, string before, string filter,
+        int? limit, string? order, string? after, string? before, string? filter,
         string apiVersion,
         RequestOptions options)
         : base(pipeline, endpoint, vectorStoreId, limit, order, after, before, filter, options)
@@ -21,7 +23,7 @@ internal partial class AzureVectorStoreFilesPageEnumerator : VectorStoreFilesPag
         _apiVersion = apiVersion;
     }
 
-    internal override async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, int? limit, string? order, string? after, string? before, string? filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
@@ -29,7 +31,7 @@ internal partial class AzureVectorStoreFilesPageEnumerator : VectorStoreFilesPag
         return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    internal override ClientResult GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override ClientResult GetFileAssociations(string vectorStoreId, int? limit, string? order, string? after, string? before, string? filter, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 

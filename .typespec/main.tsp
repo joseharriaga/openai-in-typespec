@@ -16,6 +16,7 @@ import "./models";
 import "./moderations";
 import "./runs";
 import "./threads";
+import "./uploads";
 import "./vector-stores";
 
 using TypeSpec.Http;

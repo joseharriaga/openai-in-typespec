@@ -34,7 +34,7 @@ internal partial class AzureAssistantsPageEnumerator : AssistantsPageEnumerator
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    private PipelineMessage CreateGetAssistantsRequest(int? limit, string order, string after, string before, RequestOptions options)
+    private new PipelineMessage CreateGetAssistantsRequest(int? limit, string order, string after, string before, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithAssistantsHeader()
             .WithOptions(options)

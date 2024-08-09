@@ -1,3 +1,5 @@
+using System;
+using OpenAI.Internal;
 using OpenAI.Models;
 
 namespace OpenAI.Chat;
@@ -18,28 +20,13 @@ namespace OpenAI.Chat;
 /// the model.
 /// </para>
 /// </remarks>
-[CodeGenModel("CreateChatCompletionRequestResponseFormat")]
-public partial class ChatResponseFormat
+[CodeGenModel("ChatResponseFormat")]
+public readonly partial struct ChatResponseFormat
 {
-    // CUSTOM: Made internal.
+    internal static ChatResponseFormat Auto { get; }
 
-    /// <summary> Must be one of `text` or `json_object`. </summary>
-    [CodeGenMember("Type")]
-    internal InternalCreateChatCompletionRequestResponseFormatType? Type { get; set; }
-
-    // CUSTOM: Made internal.
-    /// <summary> Initializes a new instance of <see cref="ChatResponseFormat"/>. </summary>
-    internal ChatResponseFormat()
-    {
-    }
-
-    internal ChatResponseFormat(InternalCreateChatCompletionRequestResponseFormatType? type)
-    {
-        Type = type;
-    }
-
-    /// <summary> text. </summary>
-    public static ChatResponseFormat Text { get; } = new ChatResponseFormat(InternalCreateChatCompletionRequestResponseFormatType.Text);
-    /// <summary> json_object. </summary>
-    public static ChatResponseFormat JsonObject { get; } = new ChatResponseFormat(InternalCreateChatCompletionRequestResponseFormatType.JsonObject);
+    public static ChatResponseFormat Text { get; } = new($@"{{""type"":""text""}}");
+    public static ChatResponseFormat JsonObject { get; } = new($@"{{""type"":""json_object""}}");
+    public static ChatResponseFormat FromJsonSchema(BinaryData jsonSchema)
+        => new($@"{{""type"":""json_schema"",""json_schema"":""{jsonSchema.ToString()}""}}");
 }

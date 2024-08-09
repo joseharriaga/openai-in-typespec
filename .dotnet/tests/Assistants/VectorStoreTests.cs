@@ -355,6 +355,20 @@ public partial class VectorStoreTests
         }
     }
 
+    [Test]
+    public void CaseSensitivity()
+    {
+        FileClient fileClient = new();
+        OpenAIFileInfo testFile = fileClient.UploadFile(BinaryData.FromString("Hello, world!"), "TEST.MD", FileUploadPurpose.Assistants);
+        Validate(testFile);
+        VectorStoreClient vectorStoreClient = new();
+        VectorStore vectorStore = vectorStoreClient.CreateVectorStore();
+        Validate(vectorStore);
+        VectorStoreBatchFileJob vectorStoreBatchFileJob
+            = vectorStoreClient.CreateBatchFileJob(vectorStore.Id, [testFile.Id]);
+
+    }
+
     private IReadOnlyList<OpenAIFileInfo> GetNewTestFiles(int count)
     {
         List<OpenAIFileInfo> files = [];

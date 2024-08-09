@@ -1,7 +1,9 @@
 import "@azure-tools/typespec-client-generator-core";
+import "@typespec/http";
 
 using Azure.ClientGenerator.Core;
 using TypeSpec.OpenAPI;
+using TypeSpec.Http;
 
 namespace OpenAI;
 
@@ -59,4 +61,6 @@ model AssistantToolDefinition {
   type: string;
 }
 
-model AssistantResponseFormat {}
+union AssistantResponseFormat {
+  "auto",
+}

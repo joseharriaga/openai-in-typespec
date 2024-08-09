@@ -7,3 +7,8 @@ union ListOrder {
   asc: "asc",
   desc: "desc",
 }
+
+@discriminator("type")
+model OmniTypedResponseFormat {
+  type: string;
+}

@@ -123,7 +123,7 @@ namespace OpenAI.Chat
             if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
-                writer.WriteObjectValue(ResponseFormat, options);
+                writer.WriteStringValue(ResponseFormat.Value.ToString());
             }
             if (SerializedAdditionalRawData?.ContainsKey("seed") != true && Optional.IsDefined(Seed))
             {
@@ -300,7 +300,7 @@ namespace OpenAI.Chat
             int? maxTokens = default;
             int? n = default;
             float? presencePenalty = default;
-            ChatResponseFormat responseFormat = default;
+            ChatResponseFormat? responseFormat = default;
             long? seed = default;
             InternalCreateChatCompletionRequestServiceTier? serviceTier = default;
             IList<string> stop = default;
@@ -404,7 +404,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    responseFormat = ChatResponseFormat.DeserializeChatResponseFormat(property.Value, options);
+                    responseFormat = new ChatResponseFormat(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("seed"u8))

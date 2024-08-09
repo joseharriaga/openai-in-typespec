@@ -5,6 +5,7 @@
 
 import "../chat";
 import "../common";
+import "./custom.tsp";
 
 using TypeSpec.OpenAPI;
 
@@ -50,10 +51,15 @@ model FineTuningJobIntegrations is FineTuningIntegration[];
 model CreateFineTuningJobRequest {
   /**
    * The name of the model to fine-tune. You can select one of the
-   * [supported models](/docs/guides/fine-tuning/what-models-can-be-fine-tuned).
+   * [supported models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
    */
   @extension("x-oaiTypeLabel", "string")
-  `model`: string | "babbage-002" | "davinci-002" | "gpt-3.5-turbo";
+  `model`:
+    | string
+    | "babbage-002"
+    | "davinci-002"
+    | "gpt-3.5-turbo"
+    | "gpt-4o-mini";
 
   @doc("""
     The ID of an uploaded file that contains training data.
@@ -68,31 +74,14 @@ model CreateFineTuningJobRequest {
     """)
   training_file: string;
 
+  // Tool customization: reflect observed wire truth (learning_rate_multiplier, n_epochs) for hyperparameters in ft responses
   /** The hyperparameters used for the fine-tuning job. */
-  hyperparameters?: {
-    /**
-     * Number of examples in each batch. A larger batch size means that model parameters
-     * are updated less frequently, but with lower variance.
-     */
-    batch_size?: "auto" | int32 = "auto";
-
-    /**
-     * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-     * overfitting.
-     */
-    learning_rate_multiplier?: "auto" | float32 = "auto";
-
-    /**
-     * The number of epochs to train the model for. An epoch refers to one full cycle
-     * through the training dataset.
-     */
-    n_epochs?: "auto" | int32 = "auto";
-  };
+  hyperparameters?: CreateFineTuningJobRequestHyperparameters;
 
   @doc("""
     A string of up to 18 characters that will be added to your fine-tuned model name.
     
-    For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+    For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
     """)
   @minLength(1)
   @maxLength(40)
@@ -179,14 +168,9 @@ model FineTuningJob {
   @encode("unixTimestamp", int32)
   finished_at: utcDateTime | null;
 
+  // Tool customization: reflect observed wire truth (learning_rate_multiplier, n_epochs) for hyperparameters in ft responses
   /** The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details. */
-  hyperparameters: {
-    /**
-     * The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
-     * "auto" decides the optimal number of epochs based on the size of the dataset. If setting the number manually, we support any number between 1 and 50 epochs.
-     */
-    n_epochs: "auto" | int32 = "auto";
-  };
+  hyperparameters: FineTuningJobHyperparameters;
 
   /** The base model that is being fine-tuned. */
   `model`: string;

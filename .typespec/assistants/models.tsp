@@ -13,24 +13,18 @@ namespace OpenAI;
 @doc("""
   Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
   
+  Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+  
   Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
   
   **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
   """)
 @extension("x-oaiExpandable", true)
 union AssistantsApiResponseFormatOption {
-  "none" | "auto",
-  AssistantsApiResponseFormat,
-}
-
-@doc("""
-  An object describing the expected output of the model. If `json_object` only `function` type `tools` are allowed to be passed to the Run. If `text` the model can return text or any value needed.
-  """)
-model AssistantsApiResponseFormat {
-  @doc("""
-    Must be one of `text` or `json_object`.
-    """)
-  type?: "text" | "json_object" = "text";
+  "auto",
+  ResponseFormatText,
+  ResponseFormatJsonObject,
+  ResponseFormatJsonSchema,
 }
 
 model CreateAssistantRequest {
@@ -39,6 +33,7 @@ model CreateAssistantRequest {
   `model`:
     | string
     | "gpt-4o"
+    | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
     | "gpt-4o-mini"
     | "gpt-4o-mini-2024-07-18"
@@ -215,7 +210,7 @@ model AssistantToolsFileSearch extends AssistantToolDefinition {
   /** Overrides for the file search tool. */
   file_search?: {
     @doc("""
-      The maximum number of results the file search tool should output. The default is 20 for gpt-4* models and 5 for gpt-3.5-turbo. This number should be between 1 and 50 inclusive.
+      The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
       
       Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/number-of-chunks-returned) for more information.
       """)

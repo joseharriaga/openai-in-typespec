@@ -71,6 +71,7 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
         IReadOnlyList<ChatMessageContentPart> content = default;
         IReadOnlyList<ChatToolCall> toolCalls = default;
         ChatMessageRole role = default;
+        string refusal = default;
         ChatFunctionCall functionCall = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -106,6 +107,15 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
                 role = property.Value.GetString().ToChatMessageRole();
                 continue;
             }
+            if (property.NameEquals("refusal"u8))
+            {
+                if (property.Value.ValueKind == JsonValueKind.Null)
+                {
+                    continue;
+                }
+                refusal = property.Value.GetString();
+                continue;
+            }
             if (property.NameEquals("function_call"u8))
             {
                 if (property.Value.ValueKind == JsonValueKind.Null)
@@ -121,6 +131,6 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new InternalChatCompletionResponseMessage(content ?? new ChangeTrackingList<ChatMessageContentPart>(), toolCalls ?? new ChangeTrackingList<ChatToolCall>(), role, functionCall, serializedAdditionalRawData);
+        return new InternalChatCompletionResponseMessage(content ?? new ChangeTrackingList<ChatMessageContentPart>(), refusal, toolCalls ?? new ChangeTrackingList<ChatToolCall>(), role, functionCall, serializedAdditionalRawData);
     }
 }

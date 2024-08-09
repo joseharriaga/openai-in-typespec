@@ -17,6 +17,7 @@ namespace OpenAI.Assistants
         }
 
         private const string Gpt4oValue = "gpt-4o";
+        private const string Gpt4o20240806Value = "gpt-4o-2024-08-06";
         private const string Gpt4o20240513Value = "gpt-4o-2024-05-13";
         private const string Gpt4oMiniValue = "gpt-4o-mini";
         private const string Gpt4oMini20240718Value = "gpt-4o-mini-2024-07-18";
@@ -40,6 +41,7 @@ namespace OpenAI.Assistants
         private const string Gpt35Turbo16k0613Value = "gpt-3.5-turbo-16k-0613";
 
         public static InternalCreateAssistantRequestModel Gpt4o { get; } = new InternalCreateAssistantRequestModel(Gpt4oValue);
+        public static InternalCreateAssistantRequestModel Gpt4o20240806 { get; } = new InternalCreateAssistantRequestModel(Gpt4o20240806Value);
         public static InternalCreateAssistantRequestModel Gpt4o20240513 { get; } = new InternalCreateAssistantRequestModel(Gpt4o20240513Value);
         public static InternalCreateAssistantRequestModel Gpt4oMini { get; } = new InternalCreateAssistantRequestModel(Gpt4oMiniValue);
         public static InternalCreateAssistantRequestModel Gpt4oMini20240718 { get; } = new InternalCreateAssistantRequestModel(Gpt4oMini20240718Value);

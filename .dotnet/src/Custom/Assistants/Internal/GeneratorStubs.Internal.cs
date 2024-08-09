@@ -99,7 +99,7 @@ internal partial class InternalCreateThreadAndRunRequest
 {
     public string Model { get; set; }
     public ToolResources ToolResources { get; set; }
-    public AssistantResponseFormat ResponseFormat { get; set; }
+    public AssistantResponseFormat? ResponseFormat { get; set; }
     public ToolConstraint ToolChoice { get; set; }
 }
 
@@ -396,3 +396,9 @@ internal partial class InternalAssistantToolsFileSearchTypeOnly { }
 
 [CodeGenModel("AssistantToolsFileSearchTypeOnlyType")]
 internal readonly partial struct InternalAssistantToolsFileSearchTypeOnlyType { }
+
+[CodeGenModel("MessageDeltaContentRefusalObject")]
+internal partial class InternalMessageDeltaContentRefusalObject { }
+
+[CodeGenModel("AssistantResponseFormatCustomEnumValue")]
+internal readonly partial struct InternalAssistantResponseFormatCustomEnumValue { }

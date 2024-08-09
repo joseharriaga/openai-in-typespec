@@ -3173,6 +3173,12 @@ components:
                 description: |-
                   A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
                   a maximum of 10000 files in a vector store.
+              chunking_strategy:
+                anyOf:
+                  - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
+                  - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
+                description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+                x-oaiExpandable: true
               metadata:
                 type: object
                 additionalProperties:
@@ -5414,8 +5420,8 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          auto: '#/components/schemas/AutoChunkingStrategyResponseParam'
           other: '#/components/schemas/OtherChunkingStrategyResponseParam'
+          auto: '#/components/schemas/AutoChunkingStrategyResponseParam'
     FineTuneChatCompletionRequestAssistantMessage:
       type: object
       allOf:

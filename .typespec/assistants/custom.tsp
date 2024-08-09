@@ -1,5 +1,6 @@
 import "@azure-tools/typespec-client-generator-core";
 import "@typespec/http";
+import "../vector-stores/models.tsp";
 
 using Azure.ClientGenerator.Core;
 using TypeSpec.OpenAPI;
@@ -46,6 +47,12 @@ alias CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelper = {
    */
   @maxItems(10000)
   file_ids?: string[];
+
+  @doc("""
+    The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+    """)
+  @extension("x-oaiExpandable", true)
+  chunking_strategy?: AutoChunkingStrategyRequestParam | StaticChunkingStrategyRequestParam;
 
   /**
    * Set of 16 key-value pairs that can be attached to a vector store. This can be useful for

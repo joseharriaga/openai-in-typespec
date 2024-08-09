@@ -4,6 +4,7 @@ using OpenAI.Files;
 using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -22,14 +23,14 @@ public partial class BatchTests : SyncAsyncTestBase
     }
 
     [Test]
-    public async Task ListBatchesProtocol()
+    public void ListBatchesProtocol()
     {
         BatchClient client = GetTestClient();
-        ClientResult result = IsAsync
-            ? await client.GetBatchesAsync(after: null, limit: null, options: null)
-            : client.GetBatches(after: null, limit: null, options: null);
+        var enumerator = client.GetBatches(after: null, limit: null, options: null).GetEnumerator();
 
-        BinaryData response = result.GetRawResponse().Content;
+        Assert.IsTrue(enumerator.MoveNext());
+
+        BinaryData response = enumerator.Current.GetRawResponse().Content;
         JsonDocument jsonDocument = JsonDocument.Parse(response);
         JsonElement dataElement = jsonDocument.RootElement.GetProperty("data");
 
